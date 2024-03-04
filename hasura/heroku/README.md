@@ -137,3 +137,9 @@ To set admin_secret after deployment
 ```
 heroku config:set HASURA_GRAPHQL_ADMIN_SECRET=<secret> --app <app-name>
 ```
+
+To set google jwt after deployment
+```
+heroku config:set HASURA_GRAPHQL_JWT_SECRET="{\"type\":\"RS256\",\"jwk_url\":\"https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com\",\"audience\":\"<firebase project id>\",\"issuer\":\"https://securetoken.google.com/<firebase project id>\"}" --app <app-name>
+
+```
