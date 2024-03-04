@@ -124,7 +124,7 @@ docker build --platform linux/amd64 -t <app-name> .
 heroku container:push web --app <app-name>
 heroku container:release web --app <app-name>
 ```
-
+Make sure to postgres addon
 
 To inspect images
 ```
