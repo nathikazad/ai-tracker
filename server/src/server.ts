@@ -1,10 +1,10 @@
-// import express, { Request, Response, NextFunction } from 'express';
+import express, { Express, Request, Response } from 'express';
+// import express, { NextFunction} from 'express';
 // import fs from 'fs';
 // import path from 'path';
 // import Busboy from 'busboy';
-
-// const app = express();
-// const PORT = process.env.PORT || 5001
+import {config} from "./config";
+const app:Express = express();
 
 // interface File {
 //     fieldname: string;
@@ -14,16 +14,16 @@
 //     path: string;
 // }
 
-// declare module 'express-serve-static-core' {
-//     interface Request {
-//         files?: File[];
-//         // body?: any;
-//     }
-// }
+declare module 'express-serve-static-core' {
+    interface Request {
+        files?: File[];
+        // body?: any;
+    }
+}
 
-// app.get('/', (req, res) => {
-//     res.send('Express + TypeScript Server');
-// });
+app.get('/test', (req, res) => {
+    res.send('Express + TypeScript Server');
+});
 
 
 // // Middleware to handle multipart/form-data
@@ -64,23 +64,14 @@
 //     }
 // });
 
-// // Define a POST endpoint to handle the form submission
-// app.post('/post', (req: Request, res: Response) => {
-//     console.log('Files:', req.files); // Files that were uploaded
-//     console.log('Body:', req.body); // Other fields in the form
-//     res.status(200).send('Files and data received successfully.');
-// });
-
-// // Start the server
-// app.listen(PORT, () => {
-//     console.log(`Server running on http://localhost:${PORT}`);
-// });
+// Define a POST endpoint to handle the form submission
+app.post('/post', (req: Request, res: Response) => {
+    console.log('Files:', req.files); // Files that were uploaded
+    console.log('Body:', req.body); // Other fields in the form
+    res.status(200).send('Files and data received successfully.');
+});
 
 
-import express, { Express, Request, Response } from 'express';
-import {config} from "./config";
-
-const app: Express = express();
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Code with Rico. Ready to run on Heroku.');
