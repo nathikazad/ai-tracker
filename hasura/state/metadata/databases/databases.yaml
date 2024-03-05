@@ -1,1 +1,10 @@
-[]
+- name: main
+  kind: postgres
+  configuration:
+    connection_info:
+      database_url:
+        from_env: DATABASE_URL
+      isolation_level: read-committed
+      use_prepared_statements: false
+  tables: "!include main/tables/tables.yaml"
+  functions: "!include main/functions/functions.yaml"
