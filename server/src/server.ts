@@ -21,6 +21,11 @@ declare module 'express-serve-static-core' {
     }
 }
 
+app.get('/', (req, res) => {
+    res.send('Express + TypeScript Server');
+});
+
+
 // Middleware to handle multipart/form-data
 app.use((req: Request, res: Response, next: NextFunction) => {
     if (req.method === 'POST' && req.headers['content-type']?.startsWith('multipart/form-data')) {

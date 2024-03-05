@@ -143,3 +143,9 @@ To set google jwt after deployment
 heroku config:set HASURA_GRAPHQL_JWT_SECRET="{\"type\":\"RS256\",\"jwk_url\":\"https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com\",\"audience\":\"<firebase project id>\",\"issuer\":\"https://securetoken.google.com/<firebase project id>\"}" --app <app-name>
 
 ```
+
+To push this folder to heroku (from root)
+```
+heroku git:remote -a <app-name> --remote heroku-hasura
+git subtree push --prefix hasura/heroku heroku-hasura master
+```

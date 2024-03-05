@@ -9,6 +9,9 @@ const path_1 = __importDefault(require("path"));
 const busboy_1 = __importDefault(require("busboy"));
 const app = (0, express_1.default)();
 const PORT = 3000;
+app.get('/', (req, res) => {
+    res.send('Express + TypeScript Server');
+});
 // Middleware to handle multipart/form-data
 app.use((req, res, next) => {
     var _a;
@@ -56,3 +59,4 @@ app.post('/post', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
+//# sourceMappingURL=server.js.map
