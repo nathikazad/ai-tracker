@@ -4,7 +4,7 @@ import path from 'path';
 import Busboy from 'busboy';
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 5001
 
 interface File {
     fieldname: string;
