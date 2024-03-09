@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interactive Webpage</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <div class="input-section">
+        <textarea id="prompt" rows="20" placeholder="Enter your prompt here..."></textarea>
+        <button id="save-btn">Save</button>
+        <button id="reload-btn">Reload</button>
+    </div>
+    
+    <div class="container">
+        <div id="gql-area" class="response" contenteditable="false"></div>
+        <button id="copyBtn">Copy to Clipboard</button>
+    </div>
+    <div class="action-section">
+        <textarea id="query" rows="3" placeholder="Enter your query here..."></textarea>
+        <button id="submit-btn">Save Event</button>
+        <button id="get-gql-btn">Get GQL</button>
+        <button id="modify-btn">Modify Prompt</button>
+    </div>
+    <div class="table-section">
+        <table id="response-table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Event Type</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Metadata</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows will be added here dynamically -->
+            </tbody>
+        </table>
+    </div>
+    <script type="module" src="script.js"></script>
+</body>
+</html>

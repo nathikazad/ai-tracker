@@ -17,11 +17,15 @@ import { Chain } from "./generated/graphql-zeus";
 
 export function getHasura() {
     checkHasuraCreds()
-    return Chain(`${config.graphqlUrl!}/v1/graphql`, {
+    return Chain(getFullHasuraUrl(), {
         headers: {
             "x-hasura-admin-secret": config.hasuraAdminSecret!
         }
     });
+}
+
+export function getFullHasuraUrl() {
+    return `${config.graphqlUrl!}/v1/graphql`
 }
 
 export function checkHasuraCreds() {

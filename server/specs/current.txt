@@ -1,0 +1,313 @@
+input: 
+{
+  "message": "I had lunch with Yareni and then I meditate for 20 minutes.",
+  "time": "2024-03-08, 06:41:11 PM -08:00",
+  "user_id": 1,
+  "recent_events": [
+    {
+      "status": "done",
+      "start_time": "2024-03-09T02:10:14",
+      "metadata": {
+        "where": "trader joes"
+      },
+      "id": 58,
+      "end_time": "2024-03-09T02:40:14",
+      "event_type": "shopping",
+      "event_type_object": {
+        "parent_tree": "chores/home/shopping"
+      }
+    },
+    {
+      "status": "done",
+      "start_time": "2024-03-08T21:00:00",
+      "metadata": {
+        "medium": "in-person",
+        "people": "[Kareem]",
+        "content": "Met Kareem for lunch"
+      },
+      "id": 53,
+      "end_time": "2024-03-08T21:00:00",
+      "event_type": "meeting",
+      "event_type_object": {
+        "parent_tree": "meeting"
+      }
+    },
+    {
+      "status": "done",
+      "start_time": "2024-03-09T02:18:05",
+      "metadata": {
+        "medium": "in-person",
+        "people": "[Tipu, Tito]",
+        "content": "We hacked at the robot for sometime, but it still isn't working. Tipu said he will work on it over the weekend."
+      },
+      "id": 52,
+      "end_time": "2024-03-09T02:18:05",
+      "event_type": "meeting",
+      "event_type_object": {
+        "parent_tree": "meeting"
+      }
+    },
+    {
+      "status": "done",
+      "start_time": "2024-03-09T02:16:47",
+      "metadata": {
+        "medium": "call",
+        "people": "[mom]",
+        "content": "She wants me to take care of the Mecca trip planning."
+      },
+      "id": 51,
+      "end_time": "2024-03-09T02:16:47",
+      "event_type": "meeting",
+      "event_type_object": {
+        "parent_tree": "meeting"
+      }
+    },
+    {
+      "status": "done",
+      "start_time": "2024-03-09T01:55:00",
+      "metadata": {
+        "medium": "call"
+      },
+      "id": 50,
+      "end_time": "2024-03-09T02:10:00",
+      "event_type": "meeting",
+      "event_type_object": {
+        "parent_tree": "meeting"
+      }
+    },
+    {
+      "status": "done",
+      "start_time": "2024-03-09T02:09:21",
+      "metadata": {
+        "muslim_type": "maghrib"
+      },
+      "id": 49,
+      "end_time": "2024-03-09T02:09:21",
+      "event_type": "prayer",
+      "event_type_object": {
+        "parent_tree": "prayer"
+      }
+    },
+    {
+      "status": "done",
+      "start_time": "2024-03-09T01:48:40",
+      "metadata": {
+        "to_location": "work",
+        "from_location": "home",
+        "commute_method": [
+          "bus",
+          "walk"
+        ]
+      },
+      "id": 48,
+      "end_time": "2024-03-09T02:08:40",
+      "event_type": "commute",
+      "event_type_object": {
+        "parent_tree": "commute"
+      }
+    },
+    {
+      "status": "done",
+      "start_time": "2024-03-09T00:57:47",
+      "metadata": null,
+      "id": 38,
+      "end_time": "2024-03-09T01:27:47",
+      "event_type": "language",
+      "event_type_object": {
+        "parent_tree": "learning/language"
+      }
+    },
+    {
+      "status": "done",
+      "start_time": "2024-03-08T23:49:10",
+      "metadata": null,
+      "id": 35,
+      "end_time": "2024-03-09T00:09:10",
+      "event_type": "cooking",
+      "event_type_object": {
+        "parent_tree": "chores/home/cooking"
+      }
+    },
+    {
+      "status": "done",
+      "start_time": "2024-03-08T22:49:25",
+      "metadata": null,
+      "id": 34,
+      "end_time": "2024-03-08T23:19:25",
+      "event_type": "sleep",
+      "event_type_object": {
+        "parent_tree": "sleep"
+      }
+    }
+  ],
+  "event_types": [
+    {
+      "name": "meeting",
+      "metadata": {
+        "for": "when meeting with people",
+        "fields": {
+          "medium": "call/in-person/video",
+          "people": "array of people like [Mom] or [Bob, Chris]",
+          "content": "(dynamic)things that were spoken about"
+        }
+      }
+    },
+    {
+      "name": "social-event",
+      "children": [
+        {
+          "name": "social"
+        }
+      ]
+    },
+    {
+      "name": "wellness",
+      "children": [
+        {
+          "name": "physical",
+          "children": [
+            {
+              "name": "gym",
+              "metadata": {
+                "for": "when working out at a gym",
+                "tag-only": "parent"
+              }
+            },
+            {
+              "name": "exercise",
+              "metadata": {
+                "fields": {
+                  "weight": "(dynamic) the weight",
+                  "repetitions": "(dynamic)number of repetitions",
+                  "excercise-name": "(dynamic)name of exercise"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "mental",
+          "children": [
+            {
+              "name": "meditation"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "distraction"
+    },
+    {
+      "name": "chores",
+      "children": [
+        {
+          "name": "home",
+          "children": [
+            {
+              "name": "cooking"
+            },
+            {
+              "name": "shopping"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "learning",
+      "children": [
+        {
+          "name": "language"
+        },
+        {
+          "name": "dancing"
+        }
+      ]
+    },
+    {
+      "name": "work"
+    },
+    {
+      "name": "prayer",
+      "metadata": {
+        "fields": {
+          "muslim-type": "fajr/dhuhr/asr/maghrib/isha"
+        }
+      }
+    },
+    {
+      "name": "reading",
+      "metadata": {
+        "for": "when reading something",
+        "fields": {
+          "name": "(dynamic)name of thing being read",
+          "type": "article/blog/book",
+          "pages": "(dynamic)number of pages",
+          "chapters": "(dynamic) array of all chapters",
+          "end_page": "(dynamic) end page",
+          "start_page": "(dynamic) start page"
+        }
+      }
+    },
+    {
+      "name": "commute",
+      "metadata": {
+        "for": "when moving from one place to another. fill from_location and to_location appropriately. When user specifies only from location without specifying to location, fill 'from_location' and leave to_location as null. Vice-versa for when to_location is given without from_location",
+        "fields": {
+          "to_location": "(dynamic) the location where user is headed",
+          "from_location": "(dynamic) the location where user is coming from",
+          "commute_method": "array of one or many of the following strings walk/run/bus/metro/ferry/train/flight"
+        }
+      }
+    },
+    {
+      "name": "sleep"
+    },
+    {
+      "name": "consumption",
+      "metadata": {
+        "for": "when eating or drinking something",
+        "fields": {
+          "where": "(dynamic)the place where the consumable was bought from"
+        }
+      },
+      "children": [
+        {
+          "name": "eating"
+        },
+        {
+          "name": "drinking"
+        }
+      ]
+    }
+  ]
+}
+output:
+mutation insert_event{
+  insert_events(objects:[
+    {
+      user_id: 1,
+      event_type: "meeting",
+      status: "done",
+      start_time: "2024-03-09T02:41:00Z",
+      end_time: "2024-03-09T03:11:00Z",
+      metadata:{
+        people: "[
+          Yareni
+        ]",
+        medium: "in-person",
+        content: "Lunch with Yareni"
+      }
+    },
+    {
+      user_id: 1,
+      event_type: "meditation",
+      status: "done",
+      start_time: "2024-03-09T03:11:00Z",
+      end_time: "2024-03-09T03:31:00Z"
+    }
+  ]){
+    affected_rows
+  }
+}

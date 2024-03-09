@@ -22,6 +22,1405 @@ enum cursor_ordering {
   DESC
 }
 
+"""
+columns and relationships of "event_tag"
+"""
+type event_tag {
+  """An object relationship"""
+  event: events!
+  event_id: Int!
+  tag_name: String!
+}
+
+"""
+aggregated selection of "event_tag"
+"""
+type event_tag_aggregate {
+  aggregate: event_tag_aggregate_fields
+  nodes: [event_tag!]!
+}
+
+input event_tag_aggregate_bool_exp {
+  count: event_tag_aggregate_bool_exp_count
+}
+
+input event_tag_aggregate_bool_exp_count {
+  arguments: [event_tag_select_column!]
+  distinct: Boolean
+  filter: event_tag_bool_exp
+  predicate: Int_comparison_exp!
+}
+
+"""
+aggregate fields of "event_tag"
+"""
+type event_tag_aggregate_fields {
+  avg: event_tag_avg_fields
+  count(columns: [event_tag_select_column!], distinct: Boolean): Int!
+  max: event_tag_max_fields
+  min: event_tag_min_fields
+  stddev: event_tag_stddev_fields
+  stddev_pop: event_tag_stddev_pop_fields
+  stddev_samp: event_tag_stddev_samp_fields
+  sum: event_tag_sum_fields
+  var_pop: event_tag_var_pop_fields
+  var_samp: event_tag_var_samp_fields
+  variance: event_tag_variance_fields
+}
+
+"""
+order by aggregate values of table "event_tag"
+"""
+input event_tag_aggregate_order_by {
+  avg: event_tag_avg_order_by
+  count: order_by
+  max: event_tag_max_order_by
+  min: event_tag_min_order_by
+  stddev: event_tag_stddev_order_by
+  stddev_pop: event_tag_stddev_pop_order_by
+  stddev_samp: event_tag_stddev_samp_order_by
+  sum: event_tag_sum_order_by
+  var_pop: event_tag_var_pop_order_by
+  var_samp: event_tag_var_samp_order_by
+  variance: event_tag_variance_order_by
+}
+
+"""
+input type for inserting array relation for remote table "event_tag"
+"""
+input event_tag_arr_rel_insert_input {
+  data: [event_tag_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: event_tag_on_conflict
+}
+
+"""aggregate avg on columns"""
+type event_tag_avg_fields {
+  event_id: Float
+}
+
+"""
+order by avg() on columns of table "event_tag"
+"""
+input event_tag_avg_order_by {
+  event_id: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "event_tag". All fields are combined with a logical 'AND'.
+"""
+input event_tag_bool_exp {
+  _and: [event_tag_bool_exp!]
+  _not: event_tag_bool_exp
+  _or: [event_tag_bool_exp!]
+  event: events_bool_exp
+  event_id: Int_comparison_exp
+  tag_name: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "event_tag"
+"""
+enum event_tag_constraint {
+  """
+  unique or primary key constraint on columns "tag_name", "event_id"
+  """
+  event_tag_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "event_tag"
+"""
+input event_tag_inc_input {
+  event_id: Int
+}
+
+"""
+input type for inserting data into table "event_tag"
+"""
+input event_tag_insert_input {
+  event: events_obj_rel_insert_input
+  event_id: Int
+  tag_name: String
+}
+
+"""aggregate max on columns"""
+type event_tag_max_fields {
+  event_id: Int
+  tag_name: String
+}
+
+"""
+order by max() on columns of table "event_tag"
+"""
+input event_tag_max_order_by {
+  event_id: order_by
+  tag_name: order_by
+}
+
+"""aggregate min on columns"""
+type event_tag_min_fields {
+  event_id: Int
+  tag_name: String
+}
+
+"""
+order by min() on columns of table "event_tag"
+"""
+input event_tag_min_order_by {
+  event_id: order_by
+  tag_name: order_by
+}
+
+"""
+response of any mutation on the table "event_tag"
+"""
+type event_tag_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [event_tag!]!
+}
+
+"""
+on_conflict condition type for table "event_tag"
+"""
+input event_tag_on_conflict {
+  constraint: event_tag_constraint!
+  update_columns: [event_tag_update_column!]! = []
+  where: event_tag_bool_exp
+}
+
+"""Ordering options when selecting data from "event_tag"."""
+input event_tag_order_by {
+  event: events_order_by
+  event_id: order_by
+  tag_name: order_by
+}
+
+"""primary key columns input for table: event_tag"""
+input event_tag_pk_columns_input {
+  event_id: Int!
+  tag_name: String!
+}
+
+"""
+select columns of table "event_tag"
+"""
+enum event_tag_select_column {
+  """column name"""
+  event_id
+
+  """column name"""
+  tag_name
+}
+
+"""
+input type for updating data in table "event_tag"
+"""
+input event_tag_set_input {
+  event_id: Int
+  tag_name: String
+}
+
+"""aggregate stddev on columns"""
+type event_tag_stddev_fields {
+  event_id: Float
+}
+
+"""
+order by stddev() on columns of table "event_tag"
+"""
+input event_tag_stddev_order_by {
+  event_id: order_by
+}
+
+"""aggregate stddev_pop on columns"""
+type event_tag_stddev_pop_fields {
+  event_id: Float
+}
+
+"""
+order by stddev_pop() on columns of table "event_tag"
+"""
+input event_tag_stddev_pop_order_by {
+  event_id: order_by
+}
+
+"""aggregate stddev_samp on columns"""
+type event_tag_stddev_samp_fields {
+  event_id: Float
+}
+
+"""
+order by stddev_samp() on columns of table "event_tag"
+"""
+input event_tag_stddev_samp_order_by {
+  event_id: order_by
+}
+
+"""
+Streaming cursor of the table "event_tag"
+"""
+input event_tag_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: event_tag_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input event_tag_stream_cursor_value_input {
+  event_id: Int
+  tag_name: String
+}
+
+"""aggregate sum on columns"""
+type event_tag_sum_fields {
+  event_id: Int
+}
+
+"""
+order by sum() on columns of table "event_tag"
+"""
+input event_tag_sum_order_by {
+  event_id: order_by
+}
+
+"""
+update columns of table "event_tag"
+"""
+enum event_tag_update_column {
+  """column name"""
+  event_id
+
+  """column name"""
+  tag_name
+}
+
+input event_tag_updates {
+  """increments the numeric columns with given value of the filtered values"""
+  _inc: event_tag_inc_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: event_tag_set_input
+
+  """filter the rows which have to be updated"""
+  where: event_tag_bool_exp!
+}
+
+"""aggregate var_pop on columns"""
+type event_tag_var_pop_fields {
+  event_id: Float
+}
+
+"""
+order by var_pop() on columns of table "event_tag"
+"""
+input event_tag_var_pop_order_by {
+  event_id: order_by
+}
+
+"""aggregate var_samp on columns"""
+type event_tag_var_samp_fields {
+  event_id: Float
+}
+
+"""
+order by var_samp() on columns of table "event_tag"
+"""
+input event_tag_var_samp_order_by {
+  event_id: order_by
+}
+
+"""aggregate variance on columns"""
+type event_tag_variance_fields {
+  event_id: Float
+}
+
+"""
+order by variance() on columns of table "event_tag"
+"""
+input event_tag_variance_order_by {
+  event_id: order_by
+}
+
+"""
+columns and relationships of "event_types"
+"""
+type event_types {
+  """An array relationship"""
+  children(
+    """distinct select on columns"""
+    distinct_on: [event_types_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [event_types_order_by!]
+
+    """filter the rows returned"""
+    where: event_types_bool_exp
+  ): [event_types!]!
+
+  """An aggregate relationship"""
+  children_aggregate(
+    """distinct select on columns"""
+    distinct_on: [event_types_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [event_types_order_by!]
+
+    """filter the rows returned"""
+    where: event_types_bool_exp
+  ): event_types_aggregate!
+  metadata(
+    """JSON select path"""
+    path: String
+  ): jsonb
+  name: String!
+  parent: String
+
+  """
+  A computed field, executes function "get_event_type_path"
+  """
+  parent_tree: String
+}
+
+"""
+aggregated selection of "event_types"
+"""
+type event_types_aggregate {
+  aggregate: event_types_aggregate_fields
+  nodes: [event_types!]!
+}
+
+input event_types_aggregate_bool_exp {
+  count: event_types_aggregate_bool_exp_count
+}
+
+input event_types_aggregate_bool_exp_count {
+  arguments: [event_types_select_column!]
+  distinct: Boolean
+  filter: event_types_bool_exp
+  predicate: Int_comparison_exp!
+}
+
+"""
+aggregate fields of "event_types"
+"""
+type event_types_aggregate_fields {
+  count(columns: [event_types_select_column!], distinct: Boolean): Int!
+  max: event_types_max_fields
+  min: event_types_min_fields
+}
+
+"""
+order by aggregate values of table "event_types"
+"""
+input event_types_aggregate_order_by {
+  count: order_by
+  max: event_types_max_order_by
+  min: event_types_min_order_by
+}
+
+"""append existing jsonb value of filtered columns with new jsonb value"""
+input event_types_append_input {
+  metadata: jsonb
+}
+
+"""
+input type for inserting array relation for remote table "event_types"
+"""
+input event_types_arr_rel_insert_input {
+  data: [event_types_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: event_types_on_conflict
+}
+
+"""
+Boolean expression to filter rows from the table "event_types". All fields are combined with a logical 'AND'.
+"""
+input event_types_bool_exp {
+  _and: [event_types_bool_exp!]
+  _not: event_types_bool_exp
+  _or: [event_types_bool_exp!]
+  children: event_types_bool_exp
+  children_aggregate: event_types_aggregate_bool_exp
+  metadata: jsonb_comparison_exp
+  name: String_comparison_exp
+  parent: String_comparison_exp
+  parent_tree: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "event_types"
+"""
+enum event_types_constraint {
+  """
+  unique or primary key constraint on columns "name"
+  """
+  tags_name_key
+
+  """
+  unique or primary key constraint on columns "name"
+  """
+  tags_pkey
+}
+
+"""
+delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+"""
+input event_types_delete_at_path_input {
+  metadata: [String!]
+}
+
+"""
+delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array
+"""
+input event_types_delete_elem_input {
+  metadata: Int
+}
+
+"""
+delete key/value pair or string element. key/value pairs are matched based on their key value
+"""
+input event_types_delete_key_input {
+  metadata: String
+}
+
+"""
+input type for inserting data into table "event_types"
+"""
+input event_types_insert_input {
+  children: event_types_arr_rel_insert_input
+  metadata: jsonb
+  name: String
+  parent: String
+}
+
+"""aggregate max on columns"""
+type event_types_max_fields {
+  name: String
+  parent: String
+
+  """
+  A computed field, executes function "get_event_type_path"
+  """
+  parent_tree: String
+}
+
+"""
+order by max() on columns of table "event_types"
+"""
+input event_types_max_order_by {
+  name: order_by
+  parent: order_by
+}
+
+"""aggregate min on columns"""
+type event_types_min_fields {
+  name: String
+  parent: String
+
+  """
+  A computed field, executes function "get_event_type_path"
+  """
+  parent_tree: String
+}
+
+"""
+order by min() on columns of table "event_types"
+"""
+input event_types_min_order_by {
+  name: order_by
+  parent: order_by
+}
+
+"""
+response of any mutation on the table "event_types"
+"""
+type event_types_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [event_types!]!
+}
+
+"""
+input type for inserting object relation for remote table "event_types"
+"""
+input event_types_obj_rel_insert_input {
+  data: event_types_insert_input!
+
+  """upsert condition"""
+  on_conflict: event_types_on_conflict
+}
+
+"""
+on_conflict condition type for table "event_types"
+"""
+input event_types_on_conflict {
+  constraint: event_types_constraint!
+  update_columns: [event_types_update_column!]! = []
+  where: event_types_bool_exp
+}
+
+"""Ordering options when selecting data from "event_types"."""
+input event_types_order_by {
+  children_aggregate: event_types_aggregate_order_by
+  metadata: order_by
+  name: order_by
+  parent: order_by
+  parent_tree: order_by
+}
+
+"""primary key columns input for table: event_types"""
+input event_types_pk_columns_input {
+  name: String!
+}
+
+"""prepend existing jsonb value of filtered columns with new jsonb value"""
+input event_types_prepend_input {
+  metadata: jsonb
+}
+
+"""
+select columns of table "event_types"
+"""
+enum event_types_select_column {
+  """column name"""
+  metadata
+
+  """column name"""
+  name
+
+  """column name"""
+  parent
+}
+
+"""
+input type for updating data in table "event_types"
+"""
+input event_types_set_input {
+  metadata: jsonb
+  name: String
+  parent: String
+}
+
+"""
+Streaming cursor of the table "event_types"
+"""
+input event_types_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: event_types_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input event_types_stream_cursor_value_input {
+  metadata: jsonb
+  name: String
+  parent: String
+}
+
+"""
+update columns of table "event_types"
+"""
+enum event_types_update_column {
+  """column name"""
+  metadata
+
+  """column name"""
+  name
+
+  """column name"""
+  parent
+}
+
+input event_types_updates {
+  """append existing jsonb value of filtered columns with new jsonb value"""
+  _append: event_types_append_input
+
+  """
+  delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+  """
+  _delete_at_path: event_types_delete_at_path_input
+
+  """
+  delete the array element with specified index (negative integers count from
+  the end). throws an error if top level container is not an array
+  """
+  _delete_elem: event_types_delete_elem_input
+
+  """
+  delete key/value pair or string element. key/value pairs are matched based on their key value
+  """
+  _delete_key: event_types_delete_key_input
+
+  """prepend existing jsonb value of filtered columns with new jsonb value"""
+  _prepend: event_types_prepend_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: event_types_set_input
+
+  """filter the rows which have to be updated"""
+  where: event_types_bool_exp!
+}
+
+"""
+columns and relationships of "events"
+"""
+type events {
+  """An array relationship"""
+  children(
+    """distinct select on columns"""
+    distinct_on: [events_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [events_order_by!]
+
+    """filter the rows returned"""
+    where: events_bool_exp
+  ): [events!]!
+
+  """An aggregate relationship"""
+  children_aggregate(
+    """distinct select on columns"""
+    distinct_on: [events_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [events_order_by!]
+
+    """filter the rows returned"""
+    where: events_bool_exp
+  ): events_aggregate!
+  cost_money: Int
+  cost_time: Int
+  end_time: timestamp
+
+  """An array relationship"""
+  event_tags(
+    """distinct select on columns"""
+    distinct_on: [event_tag_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [event_tag_order_by!]
+
+    """filter the rows returned"""
+    where: event_tag_bool_exp
+  ): [event_tag!]!
+
+  """An aggregate relationship"""
+  event_tags_aggregate(
+    """distinct select on columns"""
+    distinct_on: [event_tag_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [event_tag_order_by!]
+
+    """filter the rows returned"""
+    where: event_tag_bool_exp
+  ): event_tag_aggregate!
+  event_type: String!
+
+  """An object relationship"""
+  event_type_object: event_types!
+  id: Int!
+
+  """An object relationship"""
+  interaction: interactions
+  interaction_id: Int
+  logs(
+    """JSON select path"""
+    path: String
+  ): jsonb
+  metadata(
+    """JSON select path"""
+    path: String
+  ): jsonb
+
+  """An object relationship"""
+  parent: events
+  parent_id: Int
+  start_time: timestamp
+  status: String
+
+  """An object relationship"""
+  user: user!
+  user_id: Int!
+}
+
+"""
+aggregated selection of "events"
+"""
+type events_aggregate {
+  aggregate: events_aggregate_fields
+  nodes: [events!]!
+}
+
+input events_aggregate_bool_exp {
+  count: events_aggregate_bool_exp_count
+}
+
+input events_aggregate_bool_exp_count {
+  arguments: [events_select_column!]
+  distinct: Boolean
+  filter: events_bool_exp
+  predicate: Int_comparison_exp!
+}
+
+"""
+aggregate fields of "events"
+"""
+type events_aggregate_fields {
+  avg: events_avg_fields
+  count(columns: [events_select_column!], distinct: Boolean): Int!
+  max: events_max_fields
+  min: events_min_fields
+  stddev: events_stddev_fields
+  stddev_pop: events_stddev_pop_fields
+  stddev_samp: events_stddev_samp_fields
+  sum: events_sum_fields
+  var_pop: events_var_pop_fields
+  var_samp: events_var_samp_fields
+  variance: events_variance_fields
+}
+
+"""
+order by aggregate values of table "events"
+"""
+input events_aggregate_order_by {
+  avg: events_avg_order_by
+  count: order_by
+  max: events_max_order_by
+  min: events_min_order_by
+  stddev: events_stddev_order_by
+  stddev_pop: events_stddev_pop_order_by
+  stddev_samp: events_stddev_samp_order_by
+  sum: events_sum_order_by
+  var_pop: events_var_pop_order_by
+  var_samp: events_var_samp_order_by
+  variance: events_variance_order_by
+}
+
+"""append existing jsonb value of filtered columns with new jsonb value"""
+input events_append_input {
+  logs: jsonb
+  metadata: jsonb
+}
+
+"""
+input type for inserting array relation for remote table "events"
+"""
+input events_arr_rel_insert_input {
+  data: [events_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: events_on_conflict
+}
+
+"""aggregate avg on columns"""
+type events_avg_fields {
+  cost_money: Float
+  cost_time: Float
+  id: Float
+  interaction_id: Float
+  parent_id: Float
+  user_id: Float
+}
+
+"""
+order by avg() on columns of table "events"
+"""
+input events_avg_order_by {
+  cost_money: order_by
+  cost_time: order_by
+  id: order_by
+  interaction_id: order_by
+  parent_id: order_by
+  user_id: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "events". All fields are combined with a logical 'AND'.
+"""
+input events_bool_exp {
+  _and: [events_bool_exp!]
+  _not: events_bool_exp
+  _or: [events_bool_exp!]
+  children: events_bool_exp
+  children_aggregate: events_aggregate_bool_exp
+  cost_money: Int_comparison_exp
+  cost_time: Int_comparison_exp
+  end_time: timestamp_comparison_exp
+  event_tags: event_tag_bool_exp
+  event_tags_aggregate: event_tag_aggregate_bool_exp
+  event_type: String_comparison_exp
+  event_type_object: event_types_bool_exp
+  id: Int_comparison_exp
+  interaction: interactions_bool_exp
+  interaction_id: Int_comparison_exp
+  logs: jsonb_comparison_exp
+  metadata: jsonb_comparison_exp
+  parent: events_bool_exp
+  parent_id: Int_comparison_exp
+  start_time: timestamp_comparison_exp
+  status: String_comparison_exp
+  user: user_bool_exp
+  user_id: Int_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "events"
+"""
+enum events_constraint {
+  """
+  unique or primary key constraint on columns "id"
+  """
+  events_pkey
+}
+
+"""
+delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+"""
+input events_delete_at_path_input {
+  logs: [String!]
+  metadata: [String!]
+}
+
+"""
+delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array
+"""
+input events_delete_elem_input {
+  logs: Int
+  metadata: Int
+}
+
+"""
+delete key/value pair or string element. key/value pairs are matched based on their key value
+"""
+input events_delete_key_input {
+  logs: String
+  metadata: String
+}
+
+"""
+input type for incrementing numeric columns in table "events"
+"""
+input events_inc_input {
+  cost_money: Int
+  cost_time: Int
+  id: Int
+  interaction_id: Int
+  parent_id: Int
+  user_id: Int
+}
+
+"""
+input type for inserting data into table "events"
+"""
+input events_insert_input {
+  children: events_arr_rel_insert_input
+  cost_money: Int
+  cost_time: Int
+  end_time: timestamp
+  event_tags: event_tag_arr_rel_insert_input
+  event_type: String
+  event_type_object: event_types_obj_rel_insert_input
+  id: Int
+  interaction: interactions_obj_rel_insert_input
+  interaction_id: Int
+  logs: jsonb
+  metadata: jsonb
+  parent: events_obj_rel_insert_input
+  parent_id: Int
+  start_time: timestamp
+  status: String
+  user: user_obj_rel_insert_input
+  user_id: Int
+}
+
+"""aggregate max on columns"""
+type events_max_fields {
+  cost_money: Int
+  cost_time: Int
+  end_time: timestamp
+  event_type: String
+  id: Int
+  interaction_id: Int
+  parent_id: Int
+  start_time: timestamp
+  status: String
+  user_id: Int
+}
+
+"""
+order by max() on columns of table "events"
+"""
+input events_max_order_by {
+  cost_money: order_by
+  cost_time: order_by
+  end_time: order_by
+  event_type: order_by
+  id: order_by
+  interaction_id: order_by
+  parent_id: order_by
+  start_time: order_by
+  status: order_by
+  user_id: order_by
+}
+
+"""aggregate min on columns"""
+type events_min_fields {
+  cost_money: Int
+  cost_time: Int
+  end_time: timestamp
+  event_type: String
+  id: Int
+  interaction_id: Int
+  parent_id: Int
+  start_time: timestamp
+  status: String
+  user_id: Int
+}
+
+"""
+order by min() on columns of table "events"
+"""
+input events_min_order_by {
+  cost_money: order_by
+  cost_time: order_by
+  end_time: order_by
+  event_type: order_by
+  id: order_by
+  interaction_id: order_by
+  parent_id: order_by
+  start_time: order_by
+  status: order_by
+  user_id: order_by
+}
+
+"""
+response of any mutation on the table "events"
+"""
+type events_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [events!]!
+}
+
+"""
+input type for inserting object relation for remote table "events"
+"""
+input events_obj_rel_insert_input {
+  data: events_insert_input!
+
+  """upsert condition"""
+  on_conflict: events_on_conflict
+}
+
+"""
+on_conflict condition type for table "events"
+"""
+input events_on_conflict {
+  constraint: events_constraint!
+  update_columns: [events_update_column!]! = []
+  where: events_bool_exp
+}
+
+"""Ordering options when selecting data from "events"."""
+input events_order_by {
+  children_aggregate: events_aggregate_order_by
+  cost_money: order_by
+  cost_time: order_by
+  end_time: order_by
+  event_tags_aggregate: event_tag_aggregate_order_by
+  event_type: order_by
+  event_type_object: event_types_order_by
+  id: order_by
+  interaction: interactions_order_by
+  interaction_id: order_by
+  logs: order_by
+  metadata: order_by
+  parent: events_order_by
+  parent_id: order_by
+  start_time: order_by
+  status: order_by
+  user: user_order_by
+  user_id: order_by
+}
+
+"""primary key columns input for table: events"""
+input events_pk_columns_input {
+  id: Int!
+}
+
+"""prepend existing jsonb value of filtered columns with new jsonb value"""
+input events_prepend_input {
+  logs: jsonb
+  metadata: jsonb
+}
+
+"""
+select columns of table "events"
+"""
+enum events_select_column {
+  """column name"""
+  cost_money
+
+  """column name"""
+  cost_time
+
+  """column name"""
+  end_time
+
+  """column name"""
+  event_type
+
+  """column name"""
+  id
+
+  """column name"""
+  interaction_id
+
+  """column name"""
+  logs
+
+  """column name"""
+  metadata
+
+  """column name"""
+  parent_id
+
+  """column name"""
+  start_time
+
+  """column name"""
+  status
+
+  """column name"""
+  user_id
+}
+
+"""
+input type for updating data in table "events"
+"""
+input events_set_input {
+  cost_money: Int
+  cost_time: Int
+  end_time: timestamp
+  event_type: String
+  id: Int
+  interaction_id: Int
+  logs: jsonb
+  metadata: jsonb
+  parent_id: Int
+  start_time: timestamp
+  status: String
+  user_id: Int
+}
+
+"""aggregate stddev on columns"""
+type events_stddev_fields {
+  cost_money: Float
+  cost_time: Float
+  id: Float
+  interaction_id: Float
+  parent_id: Float
+  user_id: Float
+}
+
+"""
+order by stddev() on columns of table "events"
+"""
+input events_stddev_order_by {
+  cost_money: order_by
+  cost_time: order_by
+  id: order_by
+  interaction_id: order_by
+  parent_id: order_by
+  user_id: order_by
+}
+
+"""aggregate stddev_pop on columns"""
+type events_stddev_pop_fields {
+  cost_money: Float
+  cost_time: Float
+  id: Float
+  interaction_id: Float
+  parent_id: Float
+  user_id: Float
+}
+
+"""
+order by stddev_pop() on columns of table "events"
+"""
+input events_stddev_pop_order_by {
+  cost_money: order_by
+  cost_time: order_by
+  id: order_by
+  interaction_id: order_by
+  parent_id: order_by
+  user_id: order_by
+}
+
+"""aggregate stddev_samp on columns"""
+type events_stddev_samp_fields {
+  cost_money: Float
+  cost_time: Float
+  id: Float
+  interaction_id: Float
+  parent_id: Float
+  user_id: Float
+}
+
+"""
+order by stddev_samp() on columns of table "events"
+"""
+input events_stddev_samp_order_by {
+  cost_money: order_by
+  cost_time: order_by
+  id: order_by
+  interaction_id: order_by
+  parent_id: order_by
+  user_id: order_by
+}
+
+"""
+Streaming cursor of the table "events"
+"""
+input events_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: events_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input events_stream_cursor_value_input {
+  cost_money: Int
+  cost_time: Int
+  end_time: timestamp
+  event_type: String
+  id: Int
+  interaction_id: Int
+  logs: jsonb
+  metadata: jsonb
+  parent_id: Int
+  start_time: timestamp
+  status: String
+  user_id: Int
+}
+
+"""aggregate sum on columns"""
+type events_sum_fields {
+  cost_money: Int
+  cost_time: Int
+  id: Int
+  interaction_id: Int
+  parent_id: Int
+  user_id: Int
+}
+
+"""
+order by sum() on columns of table "events"
+"""
+input events_sum_order_by {
+  cost_money: order_by
+  cost_time: order_by
+  id: order_by
+  interaction_id: order_by
+  parent_id: order_by
+  user_id: order_by
+}
+
+"""
+update columns of table "events"
+"""
+enum events_update_column {
+  """column name"""
+  cost_money
+
+  """column name"""
+  cost_time
+
+  """column name"""
+  end_time
+
+  """column name"""
+  event_type
+
+  """column name"""
+  id
+
+  """column name"""
+  interaction_id
+
+  """column name"""
+  logs
+
+  """column name"""
+  metadata
+
+  """column name"""
+  parent_id
+
+  """column name"""
+  start_time
+
+  """column name"""
+  status
+
+  """column name"""
+  user_id
+}
+
+input events_updates {
+  """append existing jsonb value of filtered columns with new jsonb value"""
+  _append: events_append_input
+
+  """
+  delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+  """
+  _delete_at_path: events_delete_at_path_input
+
+  """
+  delete the array element with specified index (negative integers count from
+  the end). throws an error if top level container is not an array
+  """
+  _delete_elem: events_delete_elem_input
+
+  """
+  delete key/value pair or string element. key/value pairs are matched based on their key value
+  """
+  _delete_key: events_delete_key_input
+
+  """increments the numeric columns with given value of the filtered values"""
+  _inc: events_inc_input
+
+  """prepend existing jsonb value of filtered columns with new jsonb value"""
+  _prepend: events_prepend_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: events_set_input
+
+  """filter the rows which have to be updated"""
+  where: events_bool_exp!
+}
+
+"""aggregate var_pop on columns"""
+type events_var_pop_fields {
+  cost_money: Float
+  cost_time: Float
+  id: Float
+  interaction_id: Float
+  parent_id: Float
+  user_id: Float
+}
+
+"""
+order by var_pop() on columns of table "events"
+"""
+input events_var_pop_order_by {
+  cost_money: order_by
+  cost_time: order_by
+  id: order_by
+  interaction_id: order_by
+  parent_id: order_by
+  user_id: order_by
+}
+
+"""aggregate var_samp on columns"""
+type events_var_samp_fields {
+  cost_money: Float
+  cost_time: Float
+  id: Float
+  interaction_id: Float
+  parent_id: Float
+  user_id: Float
+}
+
+"""
+order by var_samp() on columns of table "events"
+"""
+input events_var_samp_order_by {
+  cost_money: order_by
+  cost_time: order_by
+  id: order_by
+  interaction_id: order_by
+  parent_id: order_by
+  user_id: order_by
+}
+
+"""aggregate variance on columns"""
+type events_variance_fields {
+  cost_money: Float
+  cost_time: Float
+  id: Float
+  interaction_id: Float
+  parent_id: Float
+  user_id: Float
+}
+
+"""
+order by variance() on columns of table "events"
+"""
+input events_variance_order_by {
+  cost_money: order_by
+  cost_time: order_by
+  id: order_by
+  interaction_id: order_by
+  parent_id: order_by
+  user_id: order_by
+}
+
 scalar float8
 
 """
@@ -149,6 +1548,16 @@ type interactions_mutation_response {
 
   """data from the rows affected by the mutation"""
   returning: [interactions!]!
+}
+
+"""
+input type for inserting object relation for remote table "interactions"
+"""
+input interactions_obj_rel_insert_input {
+  data: interactions_insert_input!
+
+  """upsert condition"""
+  on_conflict: interactions_on_conflict
 }
 
 """
@@ -298,6 +1707,43 @@ type interactions_variance_fields {
   user_id: Float
 }
 
+scalar jsonb
+
+input jsonb_cast_exp {
+  String: String_comparison_exp
+}
+
+"""
+Boolean expression to compare columns of type "jsonb". All fields are combined with logical 'AND'.
+"""
+input jsonb_comparison_exp {
+  _cast: jsonb_cast_exp
+
+  """is the column contained in the given json value"""
+  _contained_in: jsonb
+
+  """does the column contain the given json value at the top level"""
+  _contains: jsonb
+  _eq: jsonb
+  _gt: jsonb
+  _gte: jsonb
+
+  """does the string exist as a top-level key in the column"""
+  _has_key: String
+
+  """do all of these strings exist as top-level keys in the column"""
+  _has_keys_all: [String!]
+
+  """do any of these strings exist as top-level keys in the column"""
+  _has_keys_any: [String!]
+  _in: [jsonb!]
+  _is_null: Boolean
+  _lt: jsonb
+  _lte: jsonb
+  _neq: jsonb
+  _nin: [jsonb!]
+}
+
 input match_interactions_args {
   match_threshold: float8
   query_embedding: vector
@@ -306,6 +1752,45 @@ input match_interactions_args {
 
 """mutation root"""
 type mutation_root {
+  """
+  delete data from the table: "event_tag"
+  """
+  delete_event_tag(
+    """filter the rows which have to be deleted"""
+    where: event_tag_bool_exp!
+  ): event_tag_mutation_response
+
+  """
+  delete single row from the table: "event_tag"
+  """
+  delete_event_tag_by_pk(event_id: Int!, tag_name: String!): event_tag
+
+  """
+  delete data from the table: "event_types"
+  """
+  delete_event_types(
+    """filter the rows which have to be deleted"""
+    where: event_types_bool_exp!
+  ): event_types_mutation_response
+
+  """
+  delete single row from the table: "event_types"
+  """
+  delete_event_types_by_pk(name: String!): event_types
+
+  """
+  delete data from the table: "events"
+  """
+  delete_events(
+    """filter the rows which have to be deleted"""
+    where: events_bool_exp!
+  ): events_mutation_response
+
+  """
+  delete single row from the table: "events"
+  """
+  delete_events_by_pk(id: Int!): events
+
   """
   delete data from the table: "interactions"
   """
@@ -331,6 +1816,72 @@ type mutation_root {
   delete single row from the table: "user"
   """
   delete_user_by_pk(id: Int!): user
+
+  """
+  insert data into the table: "event_tag"
+  """
+  insert_event_tag(
+    """the rows to be inserted"""
+    objects: [event_tag_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: event_tag_on_conflict
+  ): event_tag_mutation_response
+
+  """
+  insert a single row into the table: "event_tag"
+  """
+  insert_event_tag_one(
+    """the row to be inserted"""
+    object: event_tag_insert_input!
+
+    """upsert condition"""
+    on_conflict: event_tag_on_conflict
+  ): event_tag
+
+  """
+  insert data into the table: "event_types"
+  """
+  insert_event_types(
+    """the rows to be inserted"""
+    objects: [event_types_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: event_types_on_conflict
+  ): event_types_mutation_response
+
+  """
+  insert a single row into the table: "event_types"
+  """
+  insert_event_types_one(
+    """the row to be inserted"""
+    object: event_types_insert_input!
+
+    """upsert condition"""
+    on_conflict: event_types_on_conflict
+  ): event_types
+
+  """
+  insert data into the table: "events"
+  """
+  insert_events(
+    """the rows to be inserted"""
+    objects: [events_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: events_on_conflict
+  ): events_mutation_response
+
+  """
+  insert a single row into the table: "events"
+  """
+  insert_events_one(
+    """the row to be inserted"""
+    object: events_insert_input!
+
+    """upsert condition"""
+    on_conflict: events_on_conflict
+  ): events
 
   """
   insert data into the table: "interactions"
@@ -375,6 +1926,190 @@ type mutation_root {
     """upsert condition"""
     on_conflict: user_on_conflict
   ): user
+
+  """
+  update data of the table: "event_tag"
+  """
+  update_event_tag(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: event_tag_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: event_tag_set_input
+
+    """filter the rows which have to be updated"""
+    where: event_tag_bool_exp!
+  ): event_tag_mutation_response
+
+  """
+  update single row of the table: "event_tag"
+  """
+  update_event_tag_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: event_tag_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: event_tag_set_input
+    pk_columns: event_tag_pk_columns_input!
+  ): event_tag
+
+  """
+  update multiples rows of table: "event_tag"
+  """
+  update_event_tag_many(
+    """updates to execute, in order"""
+    updates: [event_tag_updates!]!
+  ): [event_tag_mutation_response]
+
+  """
+  update data of the table: "event_types"
+  """
+  update_event_types(
+    """append existing jsonb value of filtered columns with new jsonb value"""
+    _append: event_types_append_input
+
+    """
+    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    """
+    _delete_at_path: event_types_delete_at_path_input
+
+    """
+    delete the array element with specified index (negative integers count from
+    the end). throws an error if top level container is not an array
+    """
+    _delete_elem: event_types_delete_elem_input
+
+    """
+    delete key/value pair or string element. key/value pairs are matched based on their key value
+    """
+    _delete_key: event_types_delete_key_input
+
+    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    _prepend: event_types_prepend_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: event_types_set_input
+
+    """filter the rows which have to be updated"""
+    where: event_types_bool_exp!
+  ): event_types_mutation_response
+
+  """
+  update single row of the table: "event_types"
+  """
+  update_event_types_by_pk(
+    """append existing jsonb value of filtered columns with new jsonb value"""
+    _append: event_types_append_input
+
+    """
+    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    """
+    _delete_at_path: event_types_delete_at_path_input
+
+    """
+    delete the array element with specified index (negative integers count from
+    the end). throws an error if top level container is not an array
+    """
+    _delete_elem: event_types_delete_elem_input
+
+    """
+    delete key/value pair or string element. key/value pairs are matched based on their key value
+    """
+    _delete_key: event_types_delete_key_input
+
+    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    _prepend: event_types_prepend_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: event_types_set_input
+    pk_columns: event_types_pk_columns_input!
+  ): event_types
+
+  """
+  update multiples rows of table: "event_types"
+  """
+  update_event_types_many(
+    """updates to execute, in order"""
+    updates: [event_types_updates!]!
+  ): [event_types_mutation_response]
+
+  """
+  update data of the table: "events"
+  """
+  update_events(
+    """append existing jsonb value of filtered columns with new jsonb value"""
+    _append: events_append_input
+
+    """
+    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    """
+    _delete_at_path: events_delete_at_path_input
+
+    """
+    delete the array element with specified index (negative integers count from
+    the end). throws an error if top level container is not an array
+    """
+    _delete_elem: events_delete_elem_input
+
+    """
+    delete key/value pair or string element. key/value pairs are matched based on their key value
+    """
+    _delete_key: events_delete_key_input
+
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: events_inc_input
+
+    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    _prepend: events_prepend_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: events_set_input
+
+    """filter the rows which have to be updated"""
+    where: events_bool_exp!
+  ): events_mutation_response
+
+  """
+  update single row of the table: "events"
+  """
+  update_events_by_pk(
+    """append existing jsonb value of filtered columns with new jsonb value"""
+    _append: events_append_input
+
+    """
+    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    """
+    _delete_at_path: events_delete_at_path_input
+
+    """
+    delete the array element with specified index (negative integers count from
+    the end). throws an error if top level container is not an array
+    """
+    _delete_elem: events_delete_elem_input
+
+    """
+    delete key/value pair or string element. key/value pairs are matched based on their key value
+    """
+    _delete_key: events_delete_key_input
+
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: events_inc_input
+
+    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    _prepend: events_prepend_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: events_set_input
+    pk_columns: events_pk_columns_input!
+  ): events
+
+  """
+  update multiples rows of table: "events"
+  """
+  update_events_many(
+    """updates to execute, in order"""
+    updates: [events_updates!]!
+  ): [events_mutation_response]
 
   """
   update data of the table: "interactions"
@@ -467,6 +2202,135 @@ enum order_by {
 }
 
 type query_root {
+  """
+  fetch data from the table: "event_tag"
+  """
+  event_tag(
+    """distinct select on columns"""
+    distinct_on: [event_tag_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [event_tag_order_by!]
+
+    """filter the rows returned"""
+    where: event_tag_bool_exp
+  ): [event_tag!]!
+
+  """
+  fetch aggregated fields from the table: "event_tag"
+  """
+  event_tag_aggregate(
+    """distinct select on columns"""
+    distinct_on: [event_tag_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [event_tag_order_by!]
+
+    """filter the rows returned"""
+    where: event_tag_bool_exp
+  ): event_tag_aggregate!
+
+  """fetch data from the table: "event_tag" using primary key columns"""
+  event_tag_by_pk(event_id: Int!, tag_name: String!): event_tag
+
+  """
+  fetch data from the table: "event_types"
+  """
+  event_types(
+    """distinct select on columns"""
+    distinct_on: [event_types_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [event_types_order_by!]
+
+    """filter the rows returned"""
+    where: event_types_bool_exp
+  ): [event_types!]!
+
+  """
+  fetch aggregated fields from the table: "event_types"
+  """
+  event_types_aggregate(
+    """distinct select on columns"""
+    distinct_on: [event_types_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [event_types_order_by!]
+
+    """filter the rows returned"""
+    where: event_types_bool_exp
+  ): event_types_aggregate!
+
+  """fetch data from the table: "event_types" using primary key columns"""
+  event_types_by_pk(name: String!): event_types
+
+  """
+  fetch data from the table: "events"
+  """
+  events(
+    """distinct select on columns"""
+    distinct_on: [events_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [events_order_by!]
+
+    """filter the rows returned"""
+    where: events_bool_exp
+  ): [events!]!
+
+  """
+  fetch aggregated fields from the table: "events"
+  """
+  events_aggregate(
+    """distinct select on columns"""
+    distinct_on: [events_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [events_order_by!]
+
+    """filter the rows returned"""
+    where: events_bool_exp
+  ): events_aggregate!
+
+  """fetch data from the table: "events" using primary key columns"""
+  events_by_pk(id: Int!): events
+
   """
   fetch data from the table: "interactions"
   """
@@ -659,6 +2523,177 @@ input String_comparison_exp {
 
 type subscription_root {
   """
+  fetch data from the table: "event_tag"
+  """
+  event_tag(
+    """distinct select on columns"""
+    distinct_on: [event_tag_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [event_tag_order_by!]
+
+    """filter the rows returned"""
+    where: event_tag_bool_exp
+  ): [event_tag!]!
+
+  """
+  fetch aggregated fields from the table: "event_tag"
+  """
+  event_tag_aggregate(
+    """distinct select on columns"""
+    distinct_on: [event_tag_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [event_tag_order_by!]
+
+    """filter the rows returned"""
+    where: event_tag_bool_exp
+  ): event_tag_aggregate!
+
+  """fetch data from the table: "event_tag" using primary key columns"""
+  event_tag_by_pk(event_id: Int!, tag_name: String!): event_tag
+
+  """
+  fetch data from the table in a streaming manner: "event_tag"
+  """
+  event_tag_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [event_tag_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: event_tag_bool_exp
+  ): [event_tag!]!
+
+  """
+  fetch data from the table: "event_types"
+  """
+  event_types(
+    """distinct select on columns"""
+    distinct_on: [event_types_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [event_types_order_by!]
+
+    """filter the rows returned"""
+    where: event_types_bool_exp
+  ): [event_types!]!
+
+  """
+  fetch aggregated fields from the table: "event_types"
+  """
+  event_types_aggregate(
+    """distinct select on columns"""
+    distinct_on: [event_types_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [event_types_order_by!]
+
+    """filter the rows returned"""
+    where: event_types_bool_exp
+  ): event_types_aggregate!
+
+  """fetch data from the table: "event_types" using primary key columns"""
+  event_types_by_pk(name: String!): event_types
+
+  """
+  fetch data from the table in a streaming manner: "event_types"
+  """
+  event_types_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [event_types_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: event_types_bool_exp
+  ): [event_types!]!
+
+  """
+  fetch data from the table: "events"
+  """
+  events(
+    """distinct select on columns"""
+    distinct_on: [events_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [events_order_by!]
+
+    """filter the rows returned"""
+    where: events_bool_exp
+  ): [events!]!
+
+  """
+  fetch aggregated fields from the table: "events"
+  """
+  events_aggregate(
+    """distinct select on columns"""
+    distinct_on: [events_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [events_order_by!]
+
+    """filter the rows returned"""
+    where: events_bool_exp
+  ): events_aggregate!
+
+  """fetch data from the table: "events" using primary key columns"""
+  events_by_pk(id: Int!): events
+
+  """
+  fetch data from the table in a streaming manner: "events"
+  """
+  events_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [events_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: events_bool_exp
+  ): [events!]!
+
+  """
   fetch data from the table: "interactions"
   """
   interactions(
@@ -823,6 +2858,23 @@ type subscription_root {
   ): [user!]!
 }
 
+scalar timestamp
+
+"""
+Boolean expression to compare columns of type "timestamp". All fields are combined with logical 'AND'.
+"""
+input timestamp_comparison_exp {
+  _eq: timestamp
+  _gt: timestamp
+  _gte: timestamp
+  _in: [timestamp!]
+  _is_null: Boolean
+  _lt: timestamp
+  _lte: timestamp
+  _neq: timestamp
+  _nin: [timestamp!]
+}
+
 """
 columns and relationships of "user"
 """
@@ -913,6 +2965,16 @@ type user_mutation_response {
 
   """data from the rows affected by the mutation"""
   returning: [user!]!
+}
+
+"""
+input type for inserting object relation for remote table "user"
+"""
+input user_obj_rel_insert_input {
+  data: user_insert_input!
+
+  """upsert condition"""
+  on_conflict: user_on_conflict
 }
 
 """

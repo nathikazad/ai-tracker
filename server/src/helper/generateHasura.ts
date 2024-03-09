@@ -1,5 +1,5 @@
 
-import { checkHasuraCreds, config } from "./../config";
+import { checkHasuraCreds, config, getFullHasuraUrl } from "./../config";
 import { exec } from 'child_process';
 
 
@@ -7,7 +7,7 @@ import { exec } from 'child_process';
 
 checkHasuraCreds()
 
-const command: string = `zeus ${config.graphqlUrl}/v1/graphql ./src/generated --node --typescript --header='x-hasura-admin-secret:${config.hasuraAdminSecret}' --graphql=./src/generated`;
+const command: string = `zeus ${getFullHasuraUrl()} ./src/generated --node --typescript --header='x-hasura-admin-secret:${config.hasuraAdminSecret}' --graphql=./src/generated`;
 
 exec(command, (error, stdout, stderr) => {
     if (error) {
