@@ -30,7 +30,7 @@ app.get('/dodge', (req: Request, res: Response) => {
 
 app.post('/convertMessageToEvent', async (req, res) => {
     console.log(req.body.time, ": ", req.body.query);
-    let prompt = (req.body.prompt == null) ? req.body.prompt : getPrompt()
+    let prompt = getPrompt()
     
     if(config.testing)
         savePrompt({prompt}); 
