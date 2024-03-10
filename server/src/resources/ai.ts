@@ -25,7 +25,9 @@ export async function convertMessageToEvent(instruction: string, message: string
 
     
     
+    
     let response = await complete(prompt)
+    console.log(response);
     if(!returnGqlOnly)        
         await mutateEvents(JSON.parse(response).gql);
 
