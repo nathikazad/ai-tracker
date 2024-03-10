@@ -30,11 +30,9 @@ app.get('/dodge', (req: Request, res: Response) => {
 
 app.post('/convertMessageToEvent', async (req, res) => {
     console.log(req.body.time, ": ", req.body.query);
-    // let prompt = (req.body.prompt == null) ? req.body.prompt : readLatestPrompt()
-    let prompt = readLatestPrompt()
-    console.log("prompt")
-    console.log(prompt)
-    // savePrompt({prompt}); 
+    let prompt = (req.body.prompt == null) ? req.body.prompt : readLatestPrompt()
+    if(config.testing)
+        savePrompt({prompt}); 
 
     const gql = await convertMessageToEvent(prompt, req.body.query, req.body.time)
     res.json({

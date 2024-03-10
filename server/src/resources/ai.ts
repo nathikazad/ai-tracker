@@ -1,3 +1,4 @@
+import { config } from "../config";
 import { complete } from "../third/openai";
 import { getEventTypes } from "./eventTypes";
 // import { complete3 } from "../third/openai";
@@ -36,7 +37,8 @@ export async function convertMessageToEvent(instruction: string, message: string
         event_types
     }, null, 2); // The '2' argument here adds indentation for readability
     dataToWrite += "\noutput:\n" + printGQL(JSON.parse(response).gql);
-    fs.writeFileSync("./specs/current.txt", dataToWrite);
+    if(config.testing)
+      fs.writeFileSync("./specs/current.txt", dataToWrite);
 
     return response
 }
