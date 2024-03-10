@@ -1,9 +1,46 @@
 input: 
 {
-  "message": "I had lunch with Yareni and then I meditate for 20 minutes.",
-  "time": "2024-03-08, 06:41:11 PM -08:00",
+  "message": "",
+  "time": "2024-03-09, 07:40:51 PM -08:00",
   "user_id": 1,
   "recent_events": [
+    {
+      "status": "doing",
+      "start_time": "2024-03-10T03:35:57",
+      "metadata": null,
+      "id": 62,
+      "end_time": null,
+      "event_type": "sleep",
+      "event_type_object": {
+        "parent_tree": "sleep"
+      }
+    },
+    {
+      "status": "done",
+      "start_time": "2024-03-09T03:11:00",
+      "metadata": null,
+      "id": 60,
+      "end_time": "2024-03-09T03:31:00",
+      "event_type": "meditation",
+      "event_type_object": {
+        "parent_tree": "wellness/mental/meditation"
+      }
+    },
+    {
+      "status": "done",
+      "start_time": "2024-03-09T02:41:00",
+      "metadata": {
+        "medium": "in-person",
+        "people": "[Yareni]",
+        "content": "Lunch with Yareni"
+      },
+      "id": 59,
+      "end_time": "2024-03-09T03:11:00",
+      "event_type": "meeting",
+      "event_type_object": {
+        "parent_tree": "meeting"
+      }
+    },
     {
       "status": "done",
       "start_time": "2024-03-09T02:10:14",
@@ -104,39 +141,6 @@ input:
       "event_type": "commute",
       "event_type_object": {
         "parent_tree": "commute"
-      }
-    },
-    {
-      "status": "done",
-      "start_time": "2024-03-09T00:57:47",
-      "metadata": null,
-      "id": 38,
-      "end_time": "2024-03-09T01:27:47",
-      "event_type": "language",
-      "event_type_object": {
-        "parent_tree": "learning/language"
-      }
-    },
-    {
-      "status": "done",
-      "start_time": "2024-03-08T23:49:10",
-      "metadata": null,
-      "id": 35,
-      "end_time": "2024-03-09T00:09:10",
-      "event_type": "cooking",
-      "event_type_object": {
-        "parent_tree": "chores/home/cooking"
-      }
-    },
-    {
-      "status": "done",
-      "start_time": "2024-03-08T22:49:25",
-      "metadata": null,
-      "id": 34,
-      "end_time": "2024-03-08T23:19:25",
-      "event_type": "sleep",
-      "event_type_object": {
-        "parent_tree": "sleep"
       }
     }
   ],
@@ -284,30 +288,14 @@ input:
   ]
 }
 output:
-mutation insert_event{
-  insert_events(objects:[
-    {
-      user_id: 1,
-      event_type: "meeting",
-      status: "done",
-      start_time: "2024-03-09T02:41:00Z",
-      end_time: "2024-03-09T03:11:00Z",
-      metadata:{
-        people: "[
-          Yareni
-        ]",
-        medium: "in-person",
-        content: "Lunch with Yareni"
-      }
-    },
-    {
-      user_id: 1,
-      event_type: "meditation",
-      status: "done",
-      start_time: "2024-03-09T03:11:00Z",
-      end_time: "2024-03-09T03:31:00Z"
-    }
-  ]){
-    affected_rows
+mutation update_event{
+  update_events_by_pk(pk_columns:{
+    id: 62
+  },
+  _set:{
+    end_time: "2024-03-10T03:40:51Z",
+    status: "done"
+  }){
+    id
   }
 }

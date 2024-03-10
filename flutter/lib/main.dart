@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+// import 'package:flutter_sound/flutter_sound.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 void main() {
   runApp(const MyApp());
@@ -56,7 +61,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  final stt.SpeechToText _speech = stt.SpeechToText();
+  bool _isListening = false;
+  String _text = 'Press the button and start speaking';
   static const platform = MethodChannel('com.improve/intents');
 
   @override
@@ -66,13 +73,16 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<dynamic> _handleMethod(MethodCall call) async {
-    print("received on dart side");
+    print("received on dart side ${call.method} ${call.arguments}");
     switch (call.method) {
       case 'logBreak':
         // Handle the 'logBreak' method
         print("Break logged from iOS");
         // Perform any action here. For example, updating the UI
         return "Received in Flutter: Break logged";
+      case 'sendMessageToAi':
+        convertMessageToEvent(call.arguments);
+        break;
       default:
         throw MissingPluginException('notImplemented');
     }
@@ -87,70 +97,108 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void _incrementCounter() {
-    logBreak();
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  Future<void> _startListening() async {
+    convertMessageToEvent("I just did a 30 minute workout");
+    if (!_isListening) {
+      bool available = await _speech.initialize(
+        onStatus: (val) => print('onStatus: $val'),
+        onError: (val) => print('onError: $val'),
+      );
+      if (available) {
+        setState(() => _isListening = true);
+        _speech.listen(
+          onResult: (val) => setState(() {
+            _text = val.recognizedWords;
+            if (val.finalResult) {
+              _isListening = false;
+              // convertMessageToEvent(_text);
+            }
+          }),
+        );
+      }
+    } else {
+      setState(() => _isListening = false);
+      _speech.stop();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Voice to Text'),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                _text,
+                style: const TextStyle(
+                  fontSize: 24.0,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              ElevatedButton(
+                onPressed: _startListening,
+                child: Icon(_isListening ? Icons.mic_off : Icons.mic),
+              ),
+            ],
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+}
+
+Future<void> convertMessageToEvent(String query) async {
+  const String url =
+      'http://ai-tracker-server-613e3dd103bb.herokuapp.com/convertMessageToEvent'; // Change localhost to the appropriate IP if needed
+  final response = await http.post(
+    Uri.parse(url),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode({'query': query, 'time': getTime()}),
+  );
+
+  if (response.statusCode == 200) {
+    // If the server did return a 200 OK response,
+    // then parse the JSON.
+    print('Server responded with: ${response.body}');
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    print('Failed to load data: ${response.statusCode}');
+  }
+}
+
+String getTime() {
+  DateTime now = DateTime.now();
+
+  // Dart's DateTime object contains the local time zone offset as a Duration object
+  String offsetSign = now.timeZoneOffset.isNegative
+      ? "+"
+      : "-"; // Invert sign because Dart's offset is positive if ahead of UTC
+  int offsetHours = now.timeZoneOffset.inHours.abs();
+  int offsetMinutes = now.timeZoneOffset.inMinutes.abs() % 60;
+
+  // Format the current date and time
+  String year = now.year.toString();
+  String month = now.month.toString().padLeft(2, '0');
+  String day = now.day.toString().padLeft(2, '0');
+  int hour24 = now
+      .hour; // No need to convert, Dart provides both .hour (0-23) and .hour12 (1-12)
+  String hours = (hour24 % 12 == 0 ? 12 : hour24 % 12)
+      .toString()
+      .padLeft(2, '0'); // Convert 24h to 12h format
+  String minutes = now.minute.toString().padLeft(2, '0');
+  String seconds = now.second.toString().padLeft(2, '0');
+  String ampm = hour24 >= 12 ? 'PM' : 'AM';
+
+  // Construct the formatted date and time string with time zone offset
+  String formattedDateTimeWithTimeZone =
+      "$year-$month-$day, $hours:$minutes:$seconds $ampm ${offsetSign}${offsetHours.toString().padLeft(2, '0')}:${offsetMinutes.toString().padLeft(2, '0')}";
+
+  return formattedDateTimeWithTimeZone;
 }

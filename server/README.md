@@ -10,3 +10,7 @@ To generate hasura mappings from server
 npm install -g graphql-zeus@2.8.6
 npm run generate-hasura
 ```
+
+To get logs
+
+heroku logs --tail --app ai-tracker-server
