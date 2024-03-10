@@ -40,16 +40,10 @@ function getMaxVersionNumber(files: string[]): number {
 export function readLatestPrompt(): string {
     const files = fs.readdirSync(directoryPath);
     const maxVersionNumber = getMaxVersionNumber(files);
-    console.log("maxVersionNumber");
-    console.log(maxVersionNumber);
-    
     if (maxVersionNumber === 0) {
         return '';
     }
     const latestFilePath = path.join(directoryPath, `v${maxVersionNumber}`);
-
-    console.log("latestFilePath");
-    console.log(latestFilePath);
     try {
         return fs.readFileSync(latestFilePath, 'utf8');
     } catch (error) {
@@ -99,9 +93,6 @@ export async function modifyPrompt({ oldPrompt, instruction }: { oldPrompt: stri
     let prompt = instruction
     prompt += "for the prompt below enclosed in square brackets\n"
     prompt += `[${oldPrompt}]`
-    console.log(prompt);
     let newPrompt = await complete(prompt)
-    console.log();
-    console.log(newPrompt);
     return newPrompt
 }

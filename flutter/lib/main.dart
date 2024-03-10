@@ -98,7 +98,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _startListening() async {
-    convertMessageToEvent("I just did a 30 minute workout");
     if (!_isListening) {
       bool available = await _speech.initialize(
         onStatus: (val) => print('onStatus: $val'),
@@ -111,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
             _text = val.recognizedWords;
             if (val.finalResult) {
               _isListening = false;
-              // convertMessageToEvent(_text);
+              convertMessageToEvent(_text);
             }
           }),
         );
