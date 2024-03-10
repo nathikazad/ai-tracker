@@ -40,10 +40,16 @@ function getMaxVersionNumber(files: string[]): number {
 export function readLatestPrompt(): string {
     const files = fs.readdirSync(directoryPath);
     const maxVersionNumber = getMaxVersionNumber(files);
+    console.log("maxVersionNumber");
+    console.log(maxVersionNumber);
+    
     if (maxVersionNumber === 0) {
         return '';
     }
     const latestFilePath = path.join(directoryPath, `v${maxVersionNumber}`);
+
+    console.log("latestFilePath");
+    console.log(latestFilePath);
     try {
         return fs.readFileSync(latestFilePath, 'utf8');
     } catch (error) {

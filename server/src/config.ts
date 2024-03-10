@@ -10,7 +10,8 @@ export const config = {
     },
     openApiKey: process.env.OPENAI_API_KEY,
     graphqlUrl: process.env.GRAPHQL_URL,
-    hasuraAdminSecret: process.env.HASURA_ADMIN_SECRET
+    hasuraAdminSecret: process.env.HASURA_ADMIN_SECRET,
+    testing:process.env.TEST
 };
 
 import { Chain } from "./generated/graphql-zeus";
