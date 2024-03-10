@@ -37,7 +37,9 @@ function getMaxVersionNumber(files: string[]): number {
         .reduce((max, curr) => Math.max(max, curr), 0);
 }
 
-function readLatestPrompt(maxVersionNumber: number): string {
+export function readLatestPrompt(): string {
+    const files = fs.readdirSync(directoryPath);
+    const maxVersionNumber = getMaxVersionNumber(files);
     if (maxVersionNumber === 0) {
         return '';
     }
@@ -52,15 +54,13 @@ function readLatestPrompt(maxVersionNumber: number): string {
 
 export function savePrompt({ prompt }: { prompt: string }): void {
     try {
-        const files = fs.readdirSync(directoryPath);
-        const maxVersionNumber = getMaxVersionNumber(files);
-        const latestPrompt = readLatestPrompt(maxVersionNumber);
-
+        const latestPrompt = readLatestPrompt();
         if (prompt === latestPrompt) {
             console.log('The new prompt matches the latest version. Skipping save.');
             return;
         }
-
+        const files = fs.readdirSync(directoryPath);
+        const maxVersionNumber = getMaxVersionNumber(files);
         const nextVersionNumber = maxVersionNumber + 1;
         const filePath = path.join(directoryPath, `v${nextVersionNumber}`);
         fs.writeFileSync(filePath, prompt);

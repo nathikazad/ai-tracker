@@ -4,7 +4,7 @@ import { getMatchingInteractions, insertInteraction } from './resources/interact
 import path from 'path';
 import { deleteEvent, getEvents } from './resources/events';
 import { convertMessageToEvent } from './resources/ai';
-import { loadPromptApi, savePrompt } from './resources/prompt';
+import { loadPromptApi, readLatestPrompt, savePrompt } from './resources/prompt';
 
 const app: Express = express();
 
@@ -30,8 +30,11 @@ app.get('/dodge', (req: Request, res: Response) => {
 
 app.post('/convertMessageToEvent', async (req, res) => {
     console.log(req.body.time, ": ", req.body.query);
-    savePrompt({prompt: req.body.prompt});
-    const gql = await convertMessageToEvent(req.body.prompt, req.body.query, req.body.time)
+    let prompt = (req.body.prompt == null) ? req.body.prompt : readLatestPrompt()
+    console.log("prompt")
+    console.log(prompt)
+    // savePrompt({prompt}); 
+    const gql = await convertMessageToEvent(prompt, req.body.query, req.body.time)
     res.json({
         gql
     });
