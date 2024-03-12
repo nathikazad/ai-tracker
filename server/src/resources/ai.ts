@@ -6,9 +6,14 @@ import { getEventTypes } from "./eventTypes";
 import { getEvents, mutateEvents } from "./events";
 // import { getTags } from "./tags";
 import * as fs from 'fs';
+import { insertInteraction } from "./interactions";
 
 
 export async function convertMessageToEvent(instruction: string, message: string, time: string, returnGqlOnly: boolean = false) {
+
+    let interaction_id =await insertInteraction(1, message);
+    console.log("interaction_id: ", interaction_id);
+    
     const events = await getEvents({user_id: 1});
     const event_types =  await getEventTypes();
     // const tags = await getTags();
@@ -19,6 +24,7 @@ export async function convertMessageToEvent(instruction: string, message: string
         message,
         time,
         user_id: 1,
+        interaction_id,
         recent_events: events,
         event_types
     });

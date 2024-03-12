@@ -154,6 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 Future<void> convertMessageToEvent(String query) async {
   const String url =
+      // 'http://localhost:3000/convertMessageToEvent'; // Change localhost to the appropriate IP if needed
       'http://ai-tracker-server-613e3dd103bb.herokuapp.com/convertMessageToEvent'; // Change localhost to the appropriate IP if needed
   final response = await http.post(
     Uri.parse(url),
@@ -177,8 +178,8 @@ String getTime() {
 
   // Dart's DateTime object contains the local time zone offset as a Duration object
   String offsetSign = now.timeZoneOffset.isNegative
-      ? "+"
-      : "-"; // Invert sign because Dart's offset is positive if ahead of UTC
+      ? "-"
+      : "+"; // Invert sign because Dart's offset is positive if ahead of UTC
   int offsetHours = now.timeZoneOffset.inHours.abs();
   int offsetMinutes = now.timeZoneOffset.inMinutes.abs() % 60;
 
@@ -197,7 +198,7 @@ String getTime() {
 
   // Construct the formatted date and time string with time zone offset
   String formattedDateTimeWithTimeZone =
-      "$year-$month-$day, $hours:$minutes:$seconds $ampm ${offsetSign}${offsetHours.toString().padLeft(2, '0')}:${offsetMinutes.toString().padLeft(2, '0')}";
+      "$year-$month-$day, $hours:$minutes:$seconds $ampm $offsetSign${offsetHours.toString().padLeft(2, '0')}:${offsetMinutes.toString().padLeft(2, '0')}";
 
   return formattedDateTimeWithTimeZone;
 }
