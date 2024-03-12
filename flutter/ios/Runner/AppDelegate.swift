@@ -46,7 +46,7 @@ extension Notification.Name {
         let controller = window?.rootViewController as! FlutterViewController
         registerCustomMethodChannel(with: controller)
         setupNotificationListener()
-        GeneratedPluginRegistrant.register(with: self)
+        GeneratedPluginRegistrant.register(withRegistry: self)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
 }

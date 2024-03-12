@@ -35,9 +35,10 @@ app.post('/convertMessageToEvent', async (req, res) => {
     if(config.testing)
         savePrompt({prompt}); 
 
-    const gql = await convertMessageToEvent(prompt, req.body.query, req.body.time)
+    // const gql = await convertMessageToEvent(prompt, req.body.query, req.body.time)
+    insertInteraction(1, req.body.query);
     res.json({
-        gql
+        // gql
     });
 });
 
