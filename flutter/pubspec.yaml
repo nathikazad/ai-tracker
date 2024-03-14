@@ -37,6 +37,10 @@ dependencies:
   cupertino_icons: ^1.0.2
   http: ^1.1.0
   speech_to_text: ^6.6.0
+  intl: ^0.17.0
+  timezone: 
+  flutter_local_notifications: ^8.1.1+2
+  
 
 dev_dependencies:
   flutter_test:

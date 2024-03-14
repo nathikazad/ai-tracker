@@ -1446,6 +1446,7 @@ type interactions {
   content_type: String
   embedding: vector!
   id: Int!
+  timestamp: timestamptz
   user_id: Int!
 }
 
@@ -1491,6 +1492,7 @@ input interactions_bool_exp {
   content_type: String_comparison_exp
   embedding: vector_comparison_exp
   id: Int_comparison_exp
+  timestamp: timestamptz_comparison_exp
   user_id: Int_comparison_exp
 }
 
@@ -1520,6 +1522,7 @@ input interactions_insert_input {
   content_type: String
   embedding: vector
   id: Int
+  timestamp: timestamptz
   user_id: Int
 }
 
@@ -1528,6 +1531,7 @@ type interactions_max_fields {
   content: String
   content_type: String
   id: Int
+  timestamp: timestamptz
   user_id: Int
 }
 
@@ -1536,6 +1540,7 @@ type interactions_min_fields {
   content: String
   content_type: String
   id: Int
+  timestamp: timestamptz
   user_id: Int
 }
 
@@ -1575,6 +1580,7 @@ input interactions_order_by {
   content_type: order_by
   embedding: order_by
   id: order_by
+  timestamp: order_by
   user_id: order_by
 }
 
@@ -1600,6 +1606,9 @@ enum interactions_select_column {
   id
 
   """column name"""
+  timestamp
+
+  """column name"""
   user_id
 }
 
@@ -1611,6 +1620,7 @@ input interactions_set_input {
   content_type: String
   embedding: vector
   id: Int
+  timestamp: timestamptz
   user_id: Int
 }
 
@@ -1649,6 +1659,7 @@ input interactions_stream_cursor_value_input {
   content_type: String
   embedding: vector
   id: Int
+  timestamp: timestamptz
   user_id: Int
 }
 
@@ -1673,6 +1684,9 @@ enum interactions_update_column {
 
   """column name"""
   id
+
+  """column name"""
+  timestamp
 
   """column name"""
   user_id
@@ -2873,6 +2887,23 @@ input timestamp_comparison_exp {
   _lte: timestamp
   _neq: timestamp
   _nin: [timestamp!]
+}
+
+scalar timestamptz
+
+"""
+Boolean expression to compare columns of type "timestamptz". All fields are combined with logical 'AND'.
+"""
+input timestamptz_comparison_exp {
+  _eq: timestamptz
+  _gt: timestamptz
+  _gte: timestamptz
+  _in: [timestamptz!]
+  _is_null: Boolean
+  _lt: timestamptz
+  _lte: timestamptz
+  _neq: timestamptz
+  _nin: [timestamptz!]
 }
 
 """

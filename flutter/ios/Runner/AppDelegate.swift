@@ -1,5 +1,6 @@
 import UIKit
 import Flutter
+import flutter_local_notifications
 
 
 extension Notification.Name {
@@ -43,10 +44,13 @@ extension Notification.Name {
      }
 
     override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        // FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
+        //   GeneratedPluginRegistrant.register(with: registry)
+        // }
         let controller = window?.rootViewController as! FlutterViewController
         registerCustomMethodChannel(with: controller)
         setupNotificationListener()
-        GeneratedPluginRegistrant.register(withRegistry: self)
+        GeneratedPluginRegistrant.register(with: self)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
 }

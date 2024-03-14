@@ -1,14 +1,69 @@
 input: 
 {
-  "message": "",
-  "time": "2024-03-09, 07:40:51 PM -08:00",
+  "message": "I just had a diet coke",
+  "time": "2024-03-12, 03:17:55 AM -07:00",
   "user_id": 1,
   "recent_events": [
     {
-      "status": "doing",
-      "start_time": "2024-03-10T03:35:57",
+      "status": "done",
+      "start_time": "2024-03-12T10:15:54",
       "metadata": null,
-      "id": 62,
+      "id": 77,
+      "end_time": "2024-03-12T10:15:54",
+      "event_type": "drinking",
+      "event_type_object": {
+        "parent_tree": "consumption/drinking"
+      }
+    },
+    {
+      "status": "done",
+      "start_time": "2024-03-12T10:10:45",
+      "metadata": null,
+      "id": 76,
+      "end_time": "2024-03-12T10:10:45",
+      "event_type": "cooking",
+      "event_type_object": {
+        "parent_tree": "chores/home/cooking"
+      }
+    },
+    {
+      "status": "done",
+      "start_time": "2024-03-12T09:41:39",
+      "metadata": null,
+      "id": 75,
+      "end_time": "2024-03-12T10:12:14",
+      "event_type": "sleep",
+      "event_type_object": {
+        "parent_tree": "sleep"
+      }
+    },
+    {
+      "status": "done",
+      "start_time": "2024-03-12T09:30:59",
+      "metadata": null,
+      "id": 74,
+      "end_time": "2024-03-12T09:31:17",
+      "event_type": "gym",
+      "event_type_object": {
+        "parent_tree": "wellness/physical/gym"
+      }
+    },
+    {
+      "status": "doing",
+      "start_time": "2024-03-09T12:17:34",
+      "metadata": null,
+      "id": 69,
+      "end_time": null,
+      "event_type": "sleep",
+      "event_type_object": {
+        "parent_tree": "sleep"
+      }
+    },
+    {
+      "status": "doing",
+      "start_time": "2024-03-09T12:16:45",
+      "metadata": null,
+      "id": 68,
       "end_time": null,
       "event_type": "sleep",
       "event_type_object": {
@@ -17,130 +72,46 @@ input:
     },
     {
       "status": "done",
-      "start_time": "2024-03-09T03:11:00",
+      "start_time": "2024-03-10T04:16:19",
       "metadata": null,
-      "id": 60,
-      "end_time": "2024-03-09T03:31:00",
-      "event_type": "meditation",
+      "id": 67,
+      "end_time": "2024-03-12T10:14:58",
+      "event_type": "sleep",
       "event_type_object": {
-        "parent_tree": "wellness/mental/meditation"
+        "parent_tree": "sleep"
       }
     },
     {
       "status": "done",
-      "start_time": "2024-03-09T02:41:00",
-      "metadata": {
-        "medium": "in-person",
-        "people": "[Yareni]",
-        "content": "Lunch with Yareni"
-      },
-      "id": 59,
-      "end_time": "2024-03-09T03:11:00",
-      "event_type": "meeting",
+      "start_time": "2024-03-09T11:21:07",
+      "metadata": null,
+      "id": 65,
+      "end_time": "2024-03-09T11:51:07",
+      "event_type": "exercise",
       "event_type_object": {
-        "parent_tree": "meeting"
+        "parent_tree": "wellness/physical/exercise"
       }
     },
     {
       "status": "done",
-      "start_time": "2024-03-09T02:10:14",
-      "metadata": {
-        "where": "trader joes"
-      },
-      "id": 58,
-      "end_time": "2024-03-09T02:40:14",
-      "event_type": "shopping",
+      "start_time": "2024-03-10T03:41:22",
+      "metadata": null,
+      "id": 64,
+      "end_time": "2024-03-09T12:06:30",
+      "event_type": "sleep",
       "event_type_object": {
-        "parent_tree": "chores/home/shopping"
+        "parent_tree": "sleep"
       }
     },
     {
       "status": "done",
-      "start_time": "2024-03-08T21:00:00",
-      "metadata": {
-        "medium": "in-person",
-        "people": "[Kareem]",
-        "content": "Met Kareem for lunch"
-      },
-      "id": 53,
-      "end_time": "2024-03-08T21:00:00",
-      "event_type": "meeting",
+      "start_time": "2024-03-10T03:41:03",
+      "metadata": null,
+      "id": 63,
+      "end_time": "2024-03-10T04:13:28",
+      "event_type": "sleep",
       "event_type_object": {
-        "parent_tree": "meeting"
-      }
-    },
-    {
-      "status": "done",
-      "start_time": "2024-03-09T02:18:05",
-      "metadata": {
-        "medium": "in-person",
-        "people": "[Tipu, Tito]",
-        "content": "We hacked at the robot for sometime, but it still isn't working. Tipu said he will work on it over the weekend."
-      },
-      "id": 52,
-      "end_time": "2024-03-09T02:18:05",
-      "event_type": "meeting",
-      "event_type_object": {
-        "parent_tree": "meeting"
-      }
-    },
-    {
-      "status": "done",
-      "start_time": "2024-03-09T02:16:47",
-      "metadata": {
-        "medium": "call",
-        "people": "[mom]",
-        "content": "She wants me to take care of the Mecca trip planning."
-      },
-      "id": 51,
-      "end_time": "2024-03-09T02:16:47",
-      "event_type": "meeting",
-      "event_type_object": {
-        "parent_tree": "meeting"
-      }
-    },
-    {
-      "status": "done",
-      "start_time": "2024-03-09T01:55:00",
-      "metadata": {
-        "medium": "call"
-      },
-      "id": 50,
-      "end_time": "2024-03-09T02:10:00",
-      "event_type": "meeting",
-      "event_type_object": {
-        "parent_tree": "meeting"
-      }
-    },
-    {
-      "status": "done",
-      "start_time": "2024-03-09T02:09:21",
-      "metadata": {
-        "muslim_type": "maghrib"
-      },
-      "id": 49,
-      "end_time": "2024-03-09T02:09:21",
-      "event_type": "prayer",
-      "event_type_object": {
-        "parent_tree": "prayer"
-      }
-    },
-    {
-      "status": "done",
-      "start_time": "2024-03-09T01:48:40",
-      "metadata": {
-        "to_location": "work",
-        "from_location": "home",
-        "commute_method": [
-          "bus",
-          "walk"
-        ]
-      },
-      "id": 48,
-      "end_time": "2024-03-09T02:08:40",
-      "event_type": "commute",
-      "event_type_object": {
-        "parent_tree": "commute"
+        "parent_tree": "sleep"
       }
     }
   ],
@@ -288,14 +259,16 @@ input:
   ]
 }
 output:
-mutation update_event{
-  update_events_by_pk(pk_columns:{
-    id: 62
-  },
-  _set:{
-    end_time: "2024-03-10T03:40:51Z",
-    status: "done"
-  }){
-    id
+mutation insert_event{
+  insert_events(objects:[
+    {
+      user_id: 1,
+      event_type: "drinking",
+      status: "done",
+      start_time: "2024-03-12T10:17:55Z",
+      end_time: "2024-03-12T10:17:55Z"
+    }
+  ]){
+    affected_rows
   }
 }

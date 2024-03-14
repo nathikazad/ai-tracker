@@ -49,5 +49,12 @@
 	<string>This app requires microphone access to record audio.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>This app requires speech recognition access to transcribe audio.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
+	<key>NSUserNotificationUsageDescription</key>
+	<string>Need permission to send you notification</string>
 </dict>
 </plist>
