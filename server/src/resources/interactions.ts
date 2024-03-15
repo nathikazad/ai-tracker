@@ -44,11 +44,10 @@ export async function getMatchingInteractions(user_id: number, content: string):
     return resp.match_interactions
 }
 
-export async function getInteractions({ user_id, limit = 10, date = new Date().toISOString().split('T')[0] }: { user_id: number; limit?: number; date?: string; }) {
+export async function getInteractions({ user_id, date = new Date().toISOString().split('T')[0] }: { user_id: number; limit?: number; date?: string; }) {
     const chain = getHasura();
     const resp = await chain.query({
         interactions: [{
-            limit: limit,
             order_by: [{
                 id: order_by.asc
             }],
