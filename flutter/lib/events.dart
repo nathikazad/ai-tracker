@@ -1,3 +1,4 @@
+import 'package:Logger/util.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert'; // For converting the fetched data and handling JSON.
@@ -37,6 +38,9 @@ class Interaction {
 }
 
 class EventPage extends StatefulWidget {
+  final ValueNotifier<bool> fetchEventsNotifier;
+
+  EventPage(this.fetchEventsNotifier);
   @override
   _EventPageState createState() => _EventPageState();
 }
@@ -48,26 +52,32 @@ class _EventPageState extends State<EventPage> {
   void initState() {
     super.initState();
     _fetchEvents();
+    widget.fetchEventsNotifier.addListener(() {
+      if (widget.fetchEventsNotifier.value) {
+        _fetchEvents();
+        widget.fetchEventsNotifier.value = false;
+      }
+    });
   }
 
   Future<void> _fetchEvents() async {
-    // final response =
-    //     await http.get(Uri.parse('http://localhost:3000/getinteractions'));
-    // print(response.body);
-    // if (response.statusCode == 200) {
-    //   List jsonResponse = json.decode(response.body);
-    //   setState(() {
-    //     _events =
-    //         jsonResponse.map((data) => Interaction.fromJson(data)).toList();
-    //   });
-    // } else {
-    //   throw Exception('Failed to load events');
-    // }
+    final response =
+        await http.get(Uri.parse('http://$serverUrl/getinteractions'));
+    print(response.body);
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      setState(() {
+        _events =
+            jsonResponse.map((data) => Interaction.fromJson(data)).toList();
+      });
+    } else {
+      throw Exception('Failed to load events');
+    }
   }
 
   Future<void> _deleteEvent(int id) async {
     final response =
-        await http.delete(Uri.parse('http://localhost:3000/interaction/$id'));
+        await http.delete(Uri.parse('http://$serverUrl/interaction/$id'));
     if (response.statusCode == 200) {
       _fetchEvents(); // Refresh the events list
     } else {

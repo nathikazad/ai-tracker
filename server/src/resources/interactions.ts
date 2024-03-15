@@ -50,7 +50,7 @@ export async function getInteractions({ user_id, limit = 10, date = new Date().t
         interactions: [{
             limit: limit,
             order_by: [{
-                id: order_by.desc
+                id: order_by.asc
             }],
             where: {
                 user_id: {

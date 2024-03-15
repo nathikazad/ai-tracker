@@ -4,13 +4,16 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
+const String serverUrl = 'ai-tracker-server-613e3dd103bb.herokuapp.com';
+// String serverUrl = 'localhost:3000'; // Change localhost to the appropriate IP if needed
+
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 Future<void> convertMessageToEvent(String query) async {
   const String url =
       // 'http://localhost:3000/convertMessageToEvent'; // Change localhost to the appropriate IP if needed
-      'http://ai-tracker-server-613e3dd103bb.herokuapp.com/convertMessageToEvent';
+      'http://$serverUrl/convertMessageToEvent';
   final response = await http.post(
     Uri.parse(url),
     headers: {'Content-Type': 'application/json'},

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:Logger/events.dart';
 import 'package:Logger/util.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _isListening = false;
   String _text = 'Press the button and start speaking';
   static const platform = MethodChannel('com.improve/intents');
+  ValueNotifier<bool> fetchEventsNotifier = ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -68,11 +71,12 @@ class _MyHomePageState extends State<MyHomePage> {
       if (available) {
         setState(() => _isListening = true);
         _speech.listen(
-          onResult: (val) => setState(() {
+          onResult: (val) => setState(() async {
             _text = val.recognizedWords;
             if (val.finalResult) {
               _isListening = false;
-              convertMessageToEvent(_text);
+              await convertMessageToEvent(_text);
+              fetchEventsNotifier.value = true;
             }
           }),
         );
@@ -130,7 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [EventPage()],
+            children: [EventPage(fetchEventsNotifier)],
           ),
         ),
         bottomNavigationBar: _buildBottomBar(),
