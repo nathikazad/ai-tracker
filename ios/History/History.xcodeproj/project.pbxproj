@@ -1,0 +1,551 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FE4F7BA32BA7D79E0041CB6A /* HistoryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BA22BA7D79E0041CB6A /* HistoryApp.swift */; };
+		FE4F7BA52BA7D79E0041CB6A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BA42BA7D79E0041CB6A /* ContentView.swift */; };
+		FE4F7BA72BA7D79F0041CB6A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE4F7BA62BA7D79F0041CB6A /* Assets.xcassets */; };
+		FE4F7BAA2BA7D79F0041CB6A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE4F7BA92BA7D79F0041CB6A /* Preview Assets.xcassets */; };
+		FE4F7BB12BA7D7C80041CB6A /* iOSToWatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BB02BA7D7C80041CB6A /* iOSToWatch.swift */; };
+		FE4F7BB92BA7D7E60041CB6A /* MiniHistoryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BB82BA7D7E60041CB6A /* MiniHistoryApp.swift */; };
+		FE4F7BBB2BA7D7E60041CB6A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BBA2BA7D7E60041CB6A /* ContentView.swift */; };
+		FE4F7BBD2BA7D7E70041CB6A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE4F7BBC2BA7D7E70041CB6A /* Assets.xcassets */; };
+		FE4F7BC02BA7D7E70041CB6A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE4F7BBF2BA7D7E70041CB6A /* Preview Assets.xcassets */; };
+		FE4F7BC32BA7D7E70041CB6A /* MiniHistory Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = FE4F7BB62BA7D7E60041CB6A /* MiniHistory Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FE4F7BC92BA7D7FA0041CB6A /* WatchToiOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BC82BA7D7FA0041CB6A /* WatchToiOS.swift */; };
+		FE4F7BCC2BA7DBB70041CB6A /* WatchConnectivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE4F7BCB2BA7DBB60041CB6A /* WatchConnectivity.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		FE4F7BC12BA7D7E70041CB6A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FE4F7B972BA7D79E0041CB6A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FE4F7BB52BA7D7E60041CB6A;
+			remoteInfo = "MiniHistory Watch App";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FE4F7BC72BA7D7E70041CB6A /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				FE4F7BC32BA7D7E70041CB6A /* MiniHistory Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		FE4F7B9F2BA7D79E0041CB6A /* History.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = History.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FE4F7BA22BA7D79E0041CB6A /* HistoryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryApp.swift; sourceTree = "<group>"; };
+		FE4F7BA42BA7D79E0041CB6A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		FE4F7BA62BA7D79F0041CB6A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FE4F7BA92BA7D79F0041CB6A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		FE4F7BB02BA7D7C80041CB6A /* iOSToWatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSToWatch.swift; sourceTree = "<group>"; };
+		FE4F7BB62BA7D7E60041CB6A /* MiniHistory Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MiniHistory Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FE4F7BB82BA7D7E60041CB6A /* MiniHistoryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniHistoryApp.swift; sourceTree = "<group>"; };
+		FE4F7BBA2BA7D7E60041CB6A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		FE4F7BBC2BA7D7E70041CB6A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FE4F7BBF2BA7D7E70041CB6A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		FE4F7BC82BA7D7FA0041CB6A /* WatchToiOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchToiOS.swift; sourceTree = "<group>"; };
+		FE4F7BCB2BA7DBB60041CB6A /* WatchConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WatchConnectivity.framework; path = System/Library/Frameworks/WatchConnectivity.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FE4F7B9C2BA7D79E0041CB6A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FE4F7BCC2BA7DBB70041CB6A /* WatchConnectivity.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE4F7BB32BA7D7E60041CB6A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FE4F7B962BA7D79E0041CB6A = {
+			isa = PBXGroup;
+			children = (
+				FE4F7BA12BA7D79E0041CB6A /* History */,
+				FE4F7BB72BA7D7E60041CB6A /* MiniHistory Watch App */,
+				FE4F7BA02BA7D79E0041CB6A /* Products */,
+				FE4F7BCA2BA7DBB60041CB6A /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		FE4F7BA02BA7D79E0041CB6A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FE4F7B9F2BA7D79E0041CB6A /* History.app */,
+				FE4F7BB62BA7D7E60041CB6A /* MiniHistory Watch App.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FE4F7BA12BA7D79E0041CB6A /* History */ = {
+			isa = PBXGroup;
+			children = (
+				FE4F7BA22BA7D79E0041CB6A /* HistoryApp.swift */,
+				FE4F7BA42BA7D79E0041CB6A /* ContentView.swift */,
+				FE4F7BA62BA7D79F0041CB6A /* Assets.xcassets */,
+				FE4F7BA82BA7D79F0041CB6A /* Preview Content */,
+				FE4F7BB02BA7D7C80041CB6A /* iOSToWatch.swift */,
+			);
+			path = History;
+			sourceTree = "<group>";
+		};
+		FE4F7BA82BA7D79F0041CB6A /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				FE4F7BA92BA7D79F0041CB6A /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		FE4F7BB72BA7D7E60041CB6A /* MiniHistory Watch App */ = {
+			isa = PBXGroup;
+			children = (
+				FE4F7BB82BA7D7E60041CB6A /* MiniHistoryApp.swift */,
+				FE4F7BBA2BA7D7E60041CB6A /* ContentView.swift */,
+				FE4F7BBC2BA7D7E70041CB6A /* Assets.xcassets */,
+				FE4F7BBE2BA7D7E70041CB6A /* Preview Content */,
+				FE4F7BC82BA7D7FA0041CB6A /* WatchToiOS.swift */,
+			);
+			path = "MiniHistory Watch App";
+			sourceTree = "<group>";
+		};
+		FE4F7BBE2BA7D7E70041CB6A /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				FE4F7BBF2BA7D7E70041CB6A /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		FE4F7BCA2BA7DBB60041CB6A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FE4F7BCB2BA7DBB60041CB6A /* WatchConnectivity.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FE4F7B9E2BA7D79E0041CB6A /* History */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FE4F7BAD2BA7D79F0041CB6A /* Build configuration list for PBXNativeTarget "History" */;
+			buildPhases = (
+				FE4F7B9B2BA7D79E0041CB6A /* Sources */,
+				FE4F7B9C2BA7D79E0041CB6A /* Frameworks */,
+				FE4F7B9D2BA7D79E0041CB6A /* Resources */,
+				FE4F7BC72BA7D7E70041CB6A /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FE4F7BC22BA7D7E70041CB6A /* PBXTargetDependency */,
+			);
+			name = History;
+			productName = History;
+			productReference = FE4F7B9F2BA7D79E0041CB6A /* History.app */;
+			productType = "com.apple.product-type.application";
+		};
+		FE4F7BB52BA7D7E60041CB6A /* MiniHistory Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FE4F7BC42BA7D7E70041CB6A /* Build configuration list for PBXNativeTarget "MiniHistory Watch App" */;
+			buildPhases = (
+				FE4F7BB22BA7D7E60041CB6A /* Sources */,
+				FE4F7BB32BA7D7E60041CB6A /* Frameworks */,
+				FE4F7BB42BA7D7E60041CB6A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "MiniHistory Watch App";
+			productName = "MiniHistory Watch App";
+			productReference = FE4F7BB62BA7D7E60041CB6A /* MiniHistory Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FE4F7B972BA7D79E0041CB6A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1520;
+				LastUpgradeCheck = 1520;
+				TargetAttributes = {
+					FE4F7B9E2BA7D79E0041CB6A = {
+						CreatedOnToolsVersion = 15.2;
+					};
+					FE4F7BB52BA7D7E60041CB6A = {
+						CreatedOnToolsVersion = 15.2;
+					};
+				};
+			};
+			buildConfigurationList = FE4F7B9A2BA7D79E0041CB6A /* Build configuration list for PBXProject "History" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = FE4F7B962BA7D79E0041CB6A;
+			productRefGroup = FE4F7BA02BA7D79E0041CB6A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FE4F7B9E2BA7D79E0041CB6A /* History */,
+				FE4F7BB52BA7D7E60041CB6A /* MiniHistory Watch App */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FE4F7B9D2BA7D79E0041CB6A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FE4F7BAA2BA7D79F0041CB6A /* Preview Assets.xcassets in Resources */,
+				FE4F7BA72BA7D79F0041CB6A /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE4F7BB42BA7D7E60041CB6A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FE4F7BC02BA7D7E70041CB6A /* Preview Assets.xcassets in Resources */,
+				FE4F7BBD2BA7D7E70041CB6A /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FE4F7B9B2BA7D79E0041CB6A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FE4F7BA52BA7D79E0041CB6A /* ContentView.swift in Sources */,
+				FE4F7BB12BA7D7C80041CB6A /* iOSToWatch.swift in Sources */,
+				FE4F7BA32BA7D79E0041CB6A /* HistoryApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE4F7BB22BA7D7E60041CB6A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FE4F7BBB2BA7D7E60041CB6A /* ContentView.swift in Sources */,
+				FE4F7BC92BA7D7FA0041CB6A /* WatchToiOS.swift in Sources */,
+				FE4F7BB92BA7D7E60041CB6A /* MiniHistoryApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		FE4F7BC22BA7D7E70041CB6A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FE4F7BB52BA7D7E60041CB6A /* MiniHistory Watch App */;
+			targetProxy = FE4F7BC12BA7D7E70041CB6A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		FE4F7BAB2BA7D79F0041CB6A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		FE4F7BAC2BA7D79F0041CB6A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		FE4F7BAE2BA7D79F0041CB6A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"History/Preview Content\"";
+				DEVELOPMENT_TEAM = C22W55L7FR;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FE4F7BAF2BA7D79F0041CB6A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"History/Preview Content\"";
+				DEVELOPMENT_TEAM = C22W55L7FR;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		FE4F7BC52BA7D7E70041CB6A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"MiniHistory Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = C22W55L7FR;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = MiniHistory;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.evol.History;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.2;
+			};
+			name = Debug;
+		};
+		FE4F7BC62BA7D7E70041CB6A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"MiniHistory Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = C22W55L7FR;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = MiniHistory;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.evol.History;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.2;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FE4F7B9A2BA7D79E0041CB6A /* Build configuration list for PBXProject "History" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FE4F7BAB2BA7D79F0041CB6A /* Debug */,
+				FE4F7BAC2BA7D79F0041CB6A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FE4F7BAD2BA7D79F0041CB6A /* Build configuration list for PBXNativeTarget "History" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FE4F7BAE2BA7D79F0041CB6A /* Debug */,
+				FE4F7BAF2BA7D79F0041CB6A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FE4F7BC42BA7D7E70041CB6A /* Build configuration list for PBXNativeTarget "MiniHistory Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FE4F7BC52BA7D7E70041CB6A /* Debug */,
+				FE4F7BC62BA7D7E70041CB6A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FE4F7B972BA7D79E0041CB6A /* Project object */;
+}
