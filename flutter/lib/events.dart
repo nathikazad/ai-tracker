@@ -47,10 +47,23 @@ class EventPage extends StatefulWidget {
 
 class _EventPageState extends State<EventPage> {
   List<Interaction> _events = [];
+  ScrollController _scrollController = ScrollController();
+
+  _scrollListener() {
+    if (_scrollController.offset >=
+            _scrollController.position.maxScrollExtent &&
+        !_scrollController.position.outOfRange) {
+      setState(() {
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    // _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    // _scrollController.addListener(_scrollListener);
     _fetchEvents();
     widget.fetchEventsNotifier.addListener(() {
       if (widget.fetchEventsNotifier.value) {
@@ -69,6 +82,9 @@ class _EventPageState extends State<EventPage> {
       setState(() {
         _events =
             jsonResponse.map((data) => Interaction.fromJson(data)).toList();
+      });
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
       });
     } else {
       throw Exception('Failed to load events');
@@ -89,6 +105,7 @@ class _EventPageState extends State<EventPage> {
   Widget build(BuildContext context) {
     return Expanded(
       child: ListView.builder(
+        controller: _scrollController,
         itemCount: _events.length,
         itemBuilder: (context, index) {
           final event = _events[index];

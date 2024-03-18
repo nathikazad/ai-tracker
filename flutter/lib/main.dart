@@ -72,11 +72,14 @@ class _MyHomePageState extends State<MyHomePage> {
         setState(() => _isListening = true);
         _speech.listen(
           onResult: (val) => setState(() async {
-            _text = val.recognizedWords;
             if (val.finalResult) {
               _isListening = false;
               await convertMessageToEvent(_text);
               fetchEventsNotifier.value = true;
+              setState(() => _text = 'Press the button and start speaking');
+              // print(_text);
+            } else {
+              _text = val.recognizedWords;
             }
           }),
         );

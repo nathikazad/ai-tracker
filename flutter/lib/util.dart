@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
+// import 'package:timezone/timezone.dart' as tz;
 
 const String serverUrl = 'ai-tracker-server-613e3dd103bb.herokuapp.com';
 // String serverUrl = 'localhost:3000'; // Change localhost to the appropriate IP if needed
@@ -63,7 +63,7 @@ void scheduleHourlyNotification() async {
         0,
         'Log Reminder',
         'Time to log your progress',
-        RepeatInterval.everyMinute,
+        RepeatInterval.hourly,
         platformChannelSpecifics);
   } catch (e) {
     print('Error scheduling notification: $e');
@@ -71,8 +71,8 @@ void scheduleHourlyNotification() async {
 }
 
 void scheduleNotification() async {
-  tz.TZDateTime scheduledNotificationDateTime =
-      tz.TZDateTime.now(tz.local).add(Duration(seconds: 15));
+  // tz.TZDateTime scheduledNotificationDateTime =
+  //     tz.TZDateTime.now(tz.local).add(Duration(seconds: 15));
 
   // var androidPlatformChannelSpecifics = AndroidNotificationDetails(
   //   'channel id 2',
