@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 struct BottomBar: View {
     @State private var isListening = false
     @State private var text = "Press the button and start speaking"
 //    @StateObject var speechRecognizer = SpeechRecognizer()
     @StateObject var audioRecorder = AudioRecorder();
+    @StateObject var audioUploader = AudioUploader()
     
     var body: some View {
         HStack {
@@ -44,11 +46,29 @@ struct BottomBar: View {
     
     private func stopListening() async {
         
-        let filename = await audioRecorder.stopRecording()
-        print("Audio was saved in file: \(filename)")
+        let fileUrl = await audioRecorder.stopRecording()
+        print("Audio was saved in file: \(fileUrl.path)")
+        await audioRecorder.playRecording()
+//        audioUploader.uploadAudioFile(at: fileUrl, to: "http://100.87.137.10:3000/upload")
 //        speechRecognizer.stopTranscribing()
 //        print(speechRecognizer.transcript)
     }
+    
+    func playAudioFile(at fileUrl: URL) {
+        var audioPlayer: AVAudioPlayer?
+       
+
+       do {
+           audioPlayer = try AVAudioPlayer(contentsOf: fileUrl)
+           audioPlayer?.prepareToPlay()
+           audioPlayer?.play()
+       } catch {
+           print("Could not load file: \(error.localizedDescription)")
+       }
+   }
+    
+    
+
 }
 
 struct ContentView_Previews: PreviewProvider {

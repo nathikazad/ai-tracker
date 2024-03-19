@@ -5,6 +5,7 @@ import path from 'path';
 import { deleteEvent, getEvents } from './resources/events';
 import { convertMessageToEvent } from './resources/ai';
 import { getPrompt, loadPromptApi, savePrompt  } from './resources/prompt';
+import { convertAudioToInteraction } from './helper/receiveFile';
 
 const app: Express = express();
 
@@ -12,6 +13,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.json());
 
 loadPromptApi(app)
+app.post('/convertAudioToInteraction', convertAudioToInteraction);
 
 app.get('/test', (req, res) => {
     res.send('Express + TypeScript Server');

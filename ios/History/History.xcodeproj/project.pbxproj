@@ -25,6 +25,8 @@
 		FE4F7BD92BA94D580041CB6A /* SpeechRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BD82BA94D580041CB6A /* SpeechRecognizer.swift */; };
 		FE4F7BDB2BA957780041CB6A /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */; };
 		FE4F7BDC2BA957780041CB6A /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */; };
+		FE5264812BA99AF700502521 /* AudioUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5264802BA99AF700502521 /* AudioUploader.swift */; };
+		FE5264822BA99AF700502521 /* AudioUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5264802BA99AF700502521 /* AudioUploader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +72,8 @@
 		FE4F7BD12BA8FC600041CB6A /* BottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBar.swift; sourceTree = "<group>"; };
 		FE4F7BD82BA94D580041CB6A /* SpeechRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognizer.swift; sourceTree = "<group>"; };
 		FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
+		FE5264802BA99AF700502521 /* AudioUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioUploader.swift; sourceTree = "<group>"; };
+		FE5264832BA9A1A400502521 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +117,7 @@
 		FE4F7BA12BA7D79E0041CB6A /* History */ = {
 			isa = PBXGroup;
 			children = (
+				FE5264832BA9A1A400502521 /* Info.plist */,
 				FE4F7BA22BA7D79E0041CB6A /* HistoryApp.swift */,
 				FE4F7BA42BA7D79E0041CB6A /* ContentView.swift */,
 				FE4F7BA62BA7D79F0041CB6A /* Assets.xcassets */,
@@ -123,6 +128,7 @@
 				FE4F7BD12BA8FC600041CB6A /* BottomBar.swift */,
 				FE4F7BD82BA94D580041CB6A /* SpeechRecognizer.swift */,
 				FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */,
+				FE5264802BA99AF700502521 /* AudioUploader.swift */,
 			);
 			path = History;
 			sourceTree = "<group>";
@@ -272,6 +278,7 @@
 				FE4F7BA32BA7D79E0041CB6A /* HistoryApp.swift in Sources */,
 				FE4F7BD02BA8F50F0041CB6A /* InteractionModel.swift in Sources */,
 				FE4F7BDB2BA957780041CB6A /* AudioRecorder.swift in Sources */,
+				FE5264812BA99AF700502521 /* AudioUploader.swift in Sources */,
 				FE4F7BCE2BA8F3C50041CB6A /* InteractionsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -280,6 +287,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE5264822BA99AF700502521 /* AudioUploader.swift in Sources */,
 				FE4F7BBB2BA7D7E60041CB6A /* ContentView.swift in Sources */,
 				FE4F7BC92BA7D7FA0041CB6A /* WatchToiOS.swift in Sources */,
 				FE4F7BDC2BA957780041CB6A /* AudioRecorder.swift in Sources */,
@@ -429,6 +437,7 @@
 				DEVELOPMENT_TEAM = C22W55L7FR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = History/Info.plist;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "To get audio to log an event";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "To log an event";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -461,6 +470,7 @@
 				DEVELOPMENT_TEAM = C22W55L7FR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = History/Info.plist;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "To get audio to log an event";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "To log an event";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
