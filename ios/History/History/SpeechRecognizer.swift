@@ -2,6 +2,7 @@
  See LICENSE folder for this sample’s licensing information.
  */
 
+
 import Foundation
 import AVFoundation
 import Speech
@@ -100,6 +101,8 @@ actor SpeechRecognizer: ObservableObject {
         }
     }
     
+
+    
     /// Reset the speech recognizer.
     private func reset() {
         task?.cancel()
@@ -140,13 +143,14 @@ actor SpeechRecognizer: ObservableObject {
         }
         
         if let result {
-            transcribe(result.bestTranscription.formattedString, isFinal: receivedFinalResult)
+            transcribe(result.bestTranscription.formattedString)
         }
     }
 
-    nonisolated private func transcribe(_ message: String, isFinal: Bool) {
+    nonisolated private func transcribe(_ message: String) {
         Task { @MainActor in
             transcript = message
+            
         }
     }
     

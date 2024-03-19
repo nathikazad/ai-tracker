@@ -23,6 +23,8 @@
 		FE4F7BD02BA8F50F0041CB6A /* InteractionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BCF2BA8F50F0041CB6A /* InteractionModel.swift */; };
 		FE4F7BD22BA8FC600041CB6A /* BottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BD12BA8FC600041CB6A /* BottomBar.swift */; };
 		FE4F7BD92BA94D580041CB6A /* SpeechRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BD82BA94D580041CB6A /* SpeechRecognizer.swift */; };
+		FE4F7BDB2BA957780041CB6A /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */; };
+		FE4F7BDC2BA957780041CB6A /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +69,7 @@
 		FE4F7BCF2BA8F50F0041CB6A /* InteractionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionModel.swift; sourceTree = "<group>"; };
 		FE4F7BD12BA8FC600041CB6A /* BottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBar.swift; sourceTree = "<group>"; };
 		FE4F7BD82BA94D580041CB6A /* SpeechRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognizer.swift; sourceTree = "<group>"; };
+		FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +122,7 @@
 				FE4F7BCF2BA8F50F0041CB6A /* InteractionModel.swift */,
 				FE4F7BD12BA8FC600041CB6A /* BottomBar.swift */,
 				FE4F7BD82BA94D580041CB6A /* SpeechRecognizer.swift */,
+				FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */,
 			);
 			path = History;
 			sourceTree = "<group>";
@@ -267,6 +271,7 @@
 				FE4F7BB12BA7D7C80041CB6A /* iOSToWatch.swift in Sources */,
 				FE4F7BA32BA7D79E0041CB6A /* HistoryApp.swift in Sources */,
 				FE4F7BD02BA8F50F0041CB6A /* InteractionModel.swift in Sources */,
+				FE4F7BDB2BA957780041CB6A /* AudioRecorder.swift in Sources */,
 				FE4F7BCE2BA8F3C50041CB6A /* InteractionsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -277,6 +282,7 @@
 			files = (
 				FE4F7BBB2BA7D7E60041CB6A /* ContentView.swift in Sources */,
 				FE4F7BC92BA7D7FA0041CB6A /* WatchToiOS.swift in Sources */,
+				FE4F7BDC2BA957780041CB6A /* AudioRecorder.swift in Sources */,
 				FE4F7BB92BA7D7E60041CB6A /* MiniHistoryApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
