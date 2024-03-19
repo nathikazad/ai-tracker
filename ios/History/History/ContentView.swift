@@ -8,14 +8,21 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var isListening = false
+    
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            Text("Observe and Improve")
+                .font(.largeTitle)
+                .padding()
+            
+            InteractionsView() 
+            
+            Spacer()
+            
+
+            BottomBar()
         }
-        .padding()
     }
 }
 

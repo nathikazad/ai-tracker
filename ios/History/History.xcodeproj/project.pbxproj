@@ -19,6 +19,10 @@
 		FE4F7BC32BA7D7E70041CB6A /* MiniHistory Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = FE4F7BB62BA7D7E60041CB6A /* MiniHistory Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		FE4F7BC92BA7D7FA0041CB6A /* WatchToiOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BC82BA7D7FA0041CB6A /* WatchToiOS.swift */; };
 		FE4F7BCC2BA7DBB70041CB6A /* WatchConnectivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE4F7BCB2BA7DBB60041CB6A /* WatchConnectivity.framework */; };
+		FE4F7BCE2BA8F3C50041CB6A /* InteractionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BCD2BA8F3C50041CB6A /* InteractionsView.swift */; };
+		FE4F7BD02BA8F50F0041CB6A /* InteractionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BCF2BA8F50F0041CB6A /* InteractionModel.swift */; };
+		FE4F7BD22BA8FC600041CB6A /* BottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BD12BA8FC600041CB6A /* BottomBar.swift */; };
+		FE4F7BD92BA94D580041CB6A /* SpeechRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BD82BA94D580041CB6A /* SpeechRecognizer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +63,10 @@
 		FE4F7BBF2BA7D7E70041CB6A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		FE4F7BC82BA7D7FA0041CB6A /* WatchToiOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchToiOS.swift; sourceTree = "<group>"; };
 		FE4F7BCB2BA7DBB60041CB6A /* WatchConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WatchConnectivity.framework; path = System/Library/Frameworks/WatchConnectivity.framework; sourceTree = SDKROOT; };
+		FE4F7BCD2BA8F3C50041CB6A /* InteractionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionsView.swift; sourceTree = "<group>"; };
+		FE4F7BCF2BA8F50F0041CB6A /* InteractionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionModel.swift; sourceTree = "<group>"; };
+		FE4F7BD12BA8FC600041CB6A /* BottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBar.swift; sourceTree = "<group>"; };
+		FE4F7BD82BA94D580041CB6A /* SpeechRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognizer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +115,10 @@
 				FE4F7BA62BA7D79F0041CB6A /* Assets.xcassets */,
 				FE4F7BA82BA7D79F0041CB6A /* Preview Content */,
 				FE4F7BB02BA7D7C80041CB6A /* iOSToWatch.swift */,
+				FE4F7BCD2BA8F3C50041CB6A /* InteractionsView.swift */,
+				FE4F7BCF2BA8F50F0041CB6A /* InteractionModel.swift */,
+				FE4F7BD12BA8FC600041CB6A /* BottomBar.swift */,
+				FE4F7BD82BA94D580041CB6A /* SpeechRecognizer.swift */,
 			);
 			path = History;
 			sourceTree = "<group>";
@@ -249,9 +261,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE4F7BD92BA94D580041CB6A /* SpeechRecognizer.swift in Sources */,
+				FE4F7BD22BA8FC600041CB6A /* BottomBar.swift in Sources */,
 				FE4F7BA52BA7D79E0041CB6A /* ContentView.swift in Sources */,
 				FE4F7BB12BA7D7C80041CB6A /* iOSToWatch.swift in Sources */,
 				FE4F7BA32BA7D79E0041CB6A /* HistoryApp.swift in Sources */,
+				FE4F7BD02BA8F50F0041CB6A /* InteractionModel.swift in Sources */,
+				FE4F7BCE2BA8F3C50041CB6A /* InteractionsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -407,6 +423,8 @@
 				DEVELOPMENT_TEAM = C22W55L7FR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "To get audio to log an event";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "To log an event";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -437,6 +455,8 @@
 				DEVELOPMENT_TEAM = C22W55L7FR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "To get audio to log an event";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "To log an event";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
