@@ -10,10 +10,9 @@ import Foundation
 class AudioUploader: ObservableObject {
     let session = URLSession.shared
     
-    func uploadAudioFile(at fileUrl: URL, to uploadUrlString: String) {
+    func uploadAudioFile(at fileUrl: URL, to uploadUrlString: String) throws -> Data? {
         guard let uploadUrl = URL(string: uploadUrlString) else {
-            print("Invalid upload URL.")
-            return
+            throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Invalid upload URL."])
         }
         
         var request = URLRequest(url: uploadUrl)
@@ -25,22 +24,35 @@ class AudioUploader: ObservableObject {
         do {
             request.httpBody = try createBody(with: fileUrl, boundary: boundary)
             
+            var responseData: Data? = nil
+            let semaphore = DispatchSemaphore(value: 0)
+            
             let task = session.dataTask(with: request) { data, response, error in
                 if let error = error {
                     print("Error: \(error)")
+                    semaphore.signal()
                     return
                 }
                 
                 if let response = response as? HTTPURLResponse, response.statusCode == 200 {
-                    print("File uploaded successfully.")
+                    responseData = data
                 } else {
                     print("Failed to upload file.")
                 }
+                semaphore.signal()
             }
             
             task.resume()
+            semaphore.wait()
+            
+            if responseData == nil {
+                throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Failed to upload file."])
+            }
+            
+            return responseData
+            
         } catch {
-            print("Failed to create request body: \(error)")
+            throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Failed to create request body: \(error)"])
         }
     }
     

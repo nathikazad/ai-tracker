@@ -2,14 +2,9 @@ import { Request, Response, NextFunction } from 'express';
 import fs from 'fs';
 import path from 'path';
 import Busboy from 'busboy';
-import OpenAI from 'openai';
+import { speechToText } from '../third/openai';
 
-import { config } from "./../config";
 
-const openai = new OpenAI({
-  apiKey: config.openApiKey, // This is the default and can be omitted
-});
-// const app: Express = express();
 
 interface File {
     fieldname: string;
@@ -32,10 +27,16 @@ export function convertAudioToInteraction(req: Request, res: Response, next: Nex
         const bb = Busboy({ headers: req.headers });
         req.files = []; // Ensure files is initialized
         req.body = {};
+        var text: string | undefined;
+        var speechToTextPromise: Promise<any> | undefined;
 
         bb.on('file', (fieldname: string, file: NodeJS.ReadableStream, info: { filename: string; encoding: string; mimetype: string }) => {
             const { filename, encoding, mimetype } = info;
-            const saveTo = path.join(__dirname, 'uploads', path.basename(filename));
+            const uploadDir = path.join(__dirname, 'uploads');
+            if (!fs.existsSync(uploadDir)) {
+                fs.mkdirSync(uploadDir);
+            }
+            const saveTo = path.join(uploadDir, path.basename(filename));
             file.pipe(fs.createWriteStream(saveTo));
             file.on('end', () => {
                 const newFile = {
@@ -45,15 +46,14 @@ export function convertAudioToInteraction(req: Request, res: Response, next: Nex
                     mimetype,
                     path: saveTo
                 };
-                req.files?.push(newFile);
+                
                 if (req.files) {
-                    openai.audio.transcriptions.create({
-                        file: fs.createReadStream(newFile.path),
-                        model: "whisper-1" 
-                    }).then((value) => {
-                        console.log(value.text)
+                    req.files!.push(newFile);
+                    speechToTextPromise = speechToText(newFile.path).then((value) => {
+                        text = value.text;
                     });
                 }
+                
             });
         });
 
@@ -62,7 +62,14 @@ export function convertAudioToInteraction(req: Request, res: Response, next: Nex
         });
 
         bb.on('finish', () => {
-            next();
+            if (speechToTextPromise) {
+                speechToTextPromise.then(() => {
+                    res.status(200).send(text);
+                    next();
+                });
+            } else {
+                next();
+            }
         });
 
         req.pipe(bb);
