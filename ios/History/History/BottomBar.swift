@@ -42,7 +42,7 @@ struct BottomBar: View {
     private func stopListening() async {
         let fileUrl = await audioRecorder.stopRecording()
         do {
-            let data = try AudioUploader().uploadAudioFile(at: fileUrl, to: "http://100.87.137.10:3000/convertAudioToInteraction")
+            let data = try AudioUploader().uploadAudioFile(at: fileUrl, to: "https://ai-tracker-server-613e3dd103bb.herokuapp.com/convertAudioToInteraction")
             if let data = data, let responseText = String(data: data, encoding: .utf8) {
                 print("Received text: \(responseText)")
             }

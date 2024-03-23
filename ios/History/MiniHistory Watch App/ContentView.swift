@@ -11,7 +11,6 @@ struct ContentView: View {
     @StateObject var watchConnector = WatchToiOS()
     @State private var isListening = false
     @StateObject var audioRecorder = AudioRecorder();
-    @StateObject var audioUploader = AudioUploader()
     var body: some View {
         VStack {
             Button(action: {
@@ -42,14 +41,15 @@ struct ContentView: View {
     }
     
     private func stopListening() async {
-        print("start listenting")
-        let filename = await audioRecorder.stopRecording()
-        print("Audio was saved in file: \(filename)")
-        
-        // Usage
-        
-//        let fileUrl = URL(fileURLWithPath: filename)  // Make sure the path is correct
-//        audioUploader.uploadAudioFile(at: fileUrl, to: "http://localhost:3000/upload")
+        let fileUrl = await audioRecorder.stopRecording()
+        do {
+            let data = try AudioUploader().uploadAudioFile(at: fileUrl, to: "https://ai-tracker-server-613e3dd103bb.herokuapp.com/convertAudioToInteraction")
+            if let data = data, let responseText = String(data: data, encoding: .utf8) {
+                print("Received text: \(responseText)")
+            }
+        } catch {
+            print("Some uploading error")
+        }
     }
 }
 
