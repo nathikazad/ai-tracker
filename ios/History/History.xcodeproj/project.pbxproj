@@ -27,8 +27,16 @@
 		FE4F7BDC2BA957780041CB6A /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */; };
 		FE5264812BA99AF700502521 /* AudioUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5264802BA99AF700502521 /* AudioUploader.swift */; };
 		FE5264822BA99AF700502521 /* AudioUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5264802BA99AF700502521 /* AudioUploader.swift */; };
+		FE7EF1DE2BBE0F0700279E18 /* DailyRemindersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7EF1DD2BBE0F0700279E18 /* DailyRemindersView.swift */; };
 		FEB8FD1F2BAA253100EE9B68 /* Intents.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB8FD1E2BAA253100EE9B68 /* Intents.swift */; };
 		FEB8FD202BAA253100EE9B68 /* Intents.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB8FD1E2BAA253100EE9B68 /* Intents.swift */; };
+		FEC5386E2BBDE4E5006BDBDA /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEC5386D2BBDE4E5006BDBDA /* WidgetKit.framework */; };
+		FEC538702BBDE4E5006BDBDA /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEC5386F2BBDE4E5006BDBDA /* SwiftUI.framework */; };
+		FEC538732BBDE4E5006BDBDA /* Shortcut.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEC538722BBDE4E5006BDBDA /* Shortcut.swift */; };
+		FEC538752BBDE4E5006BDBDA /* AppIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEC538742BBDE4E5006BDBDA /* AppIntent.swift */; };
+		FEC538772BBDE4E6006BDBDA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FEC538762BBDE4E6006BDBDA /* Assets.xcassets */; };
+		FEC5387B2BBDE4E6006BDBDA /* ShortcutExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FEC5386C2BBDE4E5006BDBDA /* ShortcutExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FEC538812BBDF8C7006BDBDA /* WidgetIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEC538802BBDF8C7006BDBDA /* WidgetIntent.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +46,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = FE4F7BB52BA7D7E60041CB6A;
 			remoteInfo = "MiniHistory Watch App";
+		};
+		FEC538792BBDE4E6006BDBDA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FE4F7B972BA7D79E0041CB6A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FEC5386B2BBDE4E5006BDBDA;
+			remoteInfo = ShortcutExtension;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -51,6 +66,17 @@
 				FE4F7BC32BA7D7E70041CB6A /* History.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FEC5387F2BBDE4E6006BDBDA /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				FEC5387B2BBDE4E6006BDBDA /* ShortcutExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -76,7 +102,16 @@
 		FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
 		FE5264802BA99AF700502521 /* AudioUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioUploader.swift; sourceTree = "<group>"; };
 		FE5264832BA9A1A400502521 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		FE7EF1DD2BBE0F0700279E18 /* DailyRemindersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyRemindersView.swift; sourceTree = "<group>"; };
 		FEB8FD1E2BAA253100EE9B68 /* Intents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intents.swift; sourceTree = "<group>"; };
+		FEC5386C2BBDE4E5006BDBDA /* ShortcutExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ShortcutExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		FEC5386D2BBDE4E5006BDBDA /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		FEC5386F2BBDE4E5006BDBDA /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		FEC538722BBDE4E5006BDBDA /* Shortcut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shortcut.swift; sourceTree = "<group>"; };
+		FEC538742BBDE4E5006BDBDA /* AppIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntent.swift; sourceTree = "<group>"; };
+		FEC538762BBDE4E6006BDBDA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FEC538782BBDE4E6006BDBDA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FEC538802BBDF8C7006BDBDA /* WidgetIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetIntent.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +130,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FEC538692BBDE4E5006BDBDA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FEC538702BBDE4E5006BDBDA /* SwiftUI.framework in Frameworks */,
+				FEC5386E2BBDE4E5006BDBDA /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -103,6 +147,7 @@
 			children = (
 				FE4F7BA12BA7D79E0041CB6A /* History */,
 				FE4F7BB72BA7D7E60041CB6A /* MiniHistory Watch App */,
+				FEC538712BBDE4E5006BDBDA /* Shortcut */,
 				FE4F7BA02BA7D79E0041CB6A /* Products */,
 				FE4F7BCA2BA7DBB60041CB6A /* Frameworks */,
 			);
@@ -113,6 +158,7 @@
 			children = (
 				FE4F7B9F2BA7D79E0041CB6A /* History.app */,
 				FE4F7BB62BA7D7E60041CB6A /* History.app */,
+				FEC5386C2BBDE4E5006BDBDA /* ShortcutExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -120,19 +166,14 @@
 		FE4F7BA12BA7D79E0041CB6A /* History */ = {
 			isa = PBXGroup;
 			children = (
+				FE7EF1DC2BBE0EE700279E18 /* Utilities */,
+				FE7EF1DB2BBE0EDD00279E18 /* Models */,
+				FE7EF1DA2BBE0ECB00279E18 /* Views */,
 				FE5264832BA9A1A400502521 /* Info.plist */,
 				FE4F7BA22BA7D79E0041CB6A /* HistoryApp.swift */,
 				FE4F7BA42BA7D79E0041CB6A /* ContentView.swift */,
 				FE4F7BA62BA7D79F0041CB6A /* Assets.xcassets */,
 				FE4F7BA82BA7D79F0041CB6A /* Preview Content */,
-				FE4F7BB02BA7D7C80041CB6A /* iOSToWatch.swift */,
-				FE4F7BCD2BA8F3C50041CB6A /* InteractionsView.swift */,
-				FE4F7BCF2BA8F50F0041CB6A /* InteractionModel.swift */,
-				FE4F7BD12BA8FC600041CB6A /* BottomBar.swift */,
-				FE4F7BD82BA94D580041CB6A /* SpeechRecognizer.swift */,
-				FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */,
-				FE5264802BA99AF700502521 /* AudioUploader.swift */,
-				FEB8FD1E2BAA253100EE9B68 /* Intents.swift */,
 			);
 			path = History;
 			sourceTree = "<group>";
@@ -153,6 +194,7 @@
 				FE4F7BBC2BA7D7E70041CB6A /* Assets.xcassets */,
 				FE4F7BBE2BA7D7E70041CB6A /* Preview Content */,
 				FE4F7BC82BA7D7FA0041CB6A /* WatchToiOS.swift */,
+				FEC538802BBDF8C7006BDBDA /* WidgetIntent.swift */,
 			);
 			path = "MiniHistory Watch App";
 			sourceTree = "<group>";
@@ -169,8 +211,51 @@
 			isa = PBXGroup;
 			children = (
 				FE4F7BCB2BA7DBB60041CB6A /* WatchConnectivity.framework */,
+				FEC5386D2BBDE4E5006BDBDA /* WidgetKit.framework */,
+				FEC5386F2BBDE4E5006BDBDA /* SwiftUI.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FE7EF1DA2BBE0ECB00279E18 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				FE4F7BCD2BA8F3C50041CB6A /* InteractionsView.swift */,
+				FE4F7BD12BA8FC600041CB6A /* BottomBar.swift */,
+				FE7EF1DD2BBE0F0700279E18 /* DailyRemindersView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		FE7EF1DB2BBE0EDD00279E18 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				FE4F7BCF2BA8F50F0041CB6A /* InteractionModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		FE7EF1DC2BBE0EE700279E18 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				FE4F7BD82BA94D580041CB6A /* SpeechRecognizer.swift */,
+				FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */,
+				FE5264802BA99AF700502521 /* AudioUploader.swift */,
+				FEB8FD1E2BAA253100EE9B68 /* Intents.swift */,
+				FE4F7BB02BA7D7C80041CB6A /* iOSToWatch.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		FEC538712BBDE4E5006BDBDA /* Shortcut */ = {
+			isa = PBXGroup;
+			children = (
+				FEC538722BBDE4E5006BDBDA /* Shortcut.swift */,
+				FEC538742BBDE4E5006BDBDA /* AppIntent.swift */,
+				FEC538762BBDE4E6006BDBDA /* Assets.xcassets */,
+				FEC538782BBDE4E6006BDBDA /* Info.plist */,
+			);
+			path = Shortcut;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -202,15 +287,34 @@
 				FE4F7BB22BA7D7E60041CB6A /* Sources */,
 				FE4F7BB32BA7D7E60041CB6A /* Frameworks */,
 				FE4F7BB42BA7D7E60041CB6A /* Resources */,
+				FEC5387F2BBDE4E6006BDBDA /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				FEC5387A2BBDE4E6006BDBDA /* PBXTargetDependency */,
 			);
 			name = "MiniHistory Watch App";
 			productName = "MiniHistory Watch App";
 			productReference = FE4F7BB62BA7D7E60041CB6A /* History.app */;
 			productType = "com.apple.product-type.application";
+		};
+		FEC5386B2BBDE4E5006BDBDA /* ShortcutExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FEC5387C2BBDE4E6006BDBDA /* Build configuration list for PBXNativeTarget "ShortcutExtension" */;
+			buildPhases = (
+				FEC538682BBDE4E5006BDBDA /* Sources */,
+				FEC538692BBDE4E5006BDBDA /* Frameworks */,
+				FEC5386A2BBDE4E5006BDBDA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ShortcutExtension;
+			productName = ShortcutExtension;
+			productReference = FEC5386C2BBDE4E5006BDBDA /* ShortcutExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -226,6 +330,9 @@
 						CreatedOnToolsVersion = 15.2;
 					};
 					FE4F7BB52BA7D7E60041CB6A = {
+						CreatedOnToolsVersion = 15.2;
+					};
+					FEC5386B2BBDE4E5006BDBDA = {
 						CreatedOnToolsVersion = 15.2;
 					};
 				};
@@ -245,6 +352,7 @@
 			targets = (
 				FE4F7B9E2BA7D79E0041CB6A /* History */,
 				FE4F7BB52BA7D7E60041CB6A /* MiniHistory Watch App */,
+				FEC5386B2BBDE4E5006BDBDA /* ShortcutExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -268,6 +376,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FEC5386A2BBDE4E5006BDBDA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FEC538772BBDE4E6006BDBDA /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -284,6 +400,7 @@
 				FE4F7BD02BA8F50F0041CB6A /* InteractionModel.swift in Sources */,
 				FE4F7BDB2BA957780041CB6A /* AudioRecorder.swift in Sources */,
 				FE5264812BA99AF700502521 /* AudioUploader.swift in Sources */,
+				FE7EF1DE2BBE0F0700279E18 /* DailyRemindersView.swift in Sources */,
 				FE4F7BCE2BA8F3C50041CB6A /* InteractionsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -298,6 +415,16 @@
 				FE4F7BC92BA7D7FA0041CB6A /* WatchToiOS.swift in Sources */,
 				FE4F7BDC2BA957780041CB6A /* AudioRecorder.swift in Sources */,
 				FE4F7BB92BA7D7E60041CB6A /* MiniHistoryApp.swift in Sources */,
+				FEC538812BBDF8C7006BDBDA /* WidgetIntent.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FEC538682BBDE4E5006BDBDA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FEC538732BBDE4E5006BDBDA /* Shortcut.swift in Sources */,
+				FEC538752BBDE4E5006BDBDA /* AppIntent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -308,6 +435,11 @@
 			isa = PBXTargetDependency;
 			target = FE4F7BB52BA7D7E60041CB6A /* MiniHistory Watch App */;
 			targetProxy = FE4F7BC12BA7D7E70041CB6A /* PBXContainerItemProxy */;
+		};
+		FEC5387A2BBDE4E6006BDBDA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FEC5386B2BBDE4E5006BDBDA /* ShortcutExtension */;
+			targetProxy = FEC538792BBDE4E6006BDBDA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -500,6 +632,7 @@
 		FE4F7BC52BA7D7E70041CB6A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -508,6 +641,7 @@
 				DEVELOPMENT_TEAM = C22W55L7FR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "For listening to user command";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.evol.History;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -529,6 +663,7 @@
 		FE4F7BC62BA7D7E70041CB6A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -537,6 +672,7 @@
 				DEVELOPMENT_TEAM = C22W55L7FR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "For listening to user command";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.evol.History;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -546,6 +682,66 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History.watchkitapp;
 				PRODUCT_NAME = History;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.2;
+			};
+			name = Release;
+		};
+		FEC5387D2BBDE4E6006BDBDA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = C22W55L7FR;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Shortcut/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Shortcut;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History.watchkitapp.Shortcut;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.2;
+			};
+			name = Debug;
+		};
+		FEC5387E2BBDE4E6006BDBDA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = C22W55L7FR;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Shortcut/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Shortcut;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History.watchkitapp.Shortcut;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -581,6 +777,15 @@
 			buildConfigurations = (
 				FE4F7BC52BA7D7E70041CB6A /* Debug */,
 				FE4F7BC62BA7D7E70041CB6A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FEC5387C2BBDE4E6006BDBDA /* Build configuration list for PBXNativeTarget "ShortcutExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FEC5387D2BBDE4E6006BDBDA /* Debug */,
+				FEC5387E2BBDE4E6006BDBDA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

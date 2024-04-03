@@ -35,10 +35,11 @@ actor AudioRecorder: NSObject, ObservableObject, AVAudioRecorderDelegate, AVAudi
         }
     }
     
-    @MainActor func startRecording() {
-        Task {
+    @MainActor func startRecording() async {
+        await Task {
             await record()
-        }
+        }.value
+        return;
     }
     
     @MainActor func stopRecording() async -> URL {
@@ -63,6 +64,7 @@ actor AudioRecorder: NSObject, ObservableObject, AVAudioRecorderDelegate, AVAudi
             audioRecorder = try AVAudioRecorder(url: audioFilename, settings: settings)
             audioRecorder.delegate = self
             audioRecorder.record()
+            isRecording = true;
             
         } catch {
             stop()

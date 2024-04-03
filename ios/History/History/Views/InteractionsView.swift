@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct InteractionsView: View {
     @StateObject var interactionModel = InteractionModel()
     

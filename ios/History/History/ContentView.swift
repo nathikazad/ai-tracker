@@ -7,16 +7,18 @@
 
 import SwiftUI
 
-struct ContentView: View {
-    @State private var isListening = false
-    
+struct ContentView: View {    
     var body: some View {
         VStack {
             Text("Observe and Improve")
                 .font(.largeTitle)
                 .padding()
             
-            InteractionsView() 
+            Spacer()
+                        
+                        // Toggle Button for Expandable Widget
+            DailyRemindersView()
+            InteractionsView()
             
             Spacer()
             

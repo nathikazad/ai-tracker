@@ -7,47 +7,108 @@
 
 import SwiftUI
 
+enum RecordingState {
+    case ready
+    case waitingForRecordingToStart
+    case recording
+    case waitingForRecordingToStop
+}
+
 struct ContentView: View {
     @StateObject var watchConnector = WatchToiOS()
-    @State private var isListening = false
+    @State private var processingClickButton = false;
+    @State var recordingState: RecordingState = .ready
+    @State private var responseText: String?
     @StateObject var audioRecorder = AudioRecorder();
     var body: some View {
         VStack {
-            Button(action: {
-                if isListening {
-                    Task.init { await stopListening() }
-                } else {
-                    startListening()
-                }
-                isListening.toggle()
-            }) {
-                Image(systemName: isListening ? "stop.fill" : "mic.fill")
+            if let responseText = responseText {
+                Text(responseText).padding()
+            }
+            Button(action: clickButton) {
+                Image(systemName: systemImageNameForRecordingState())
                     .font(.largeTitle)
                     .padding()
             }
+            .disabled(recordingState == .waitingForRecordingToStart || recordingState == .waitingForRecordingToStop)
         }
         .padding()
-//        .onAppear(perform: startListening)
+        .onAppear {
+            appeared();
+        }
     }
+    
+    func clickButton() {
+        if recordingState == .recording {
+            self.recordingState = .waitingForRecordingToStop
+            print("waitingForRecordingToStop")
+            Task.init {
+                await stopListening()
+                print("recording stopped")
+
+            }
+        } else if recordingState == .ready {
+            self.recordingState = .waitingForRecordingToStart
+            print("waitingForRecordingToStart")
+            Task.init {
+                await startListening()
+                print("recording started")
+            }
+        }
+    }
+    
     
     func sendData() {
         print("send data")
         watchConnector.sendDataToiOS(data: "Testing")
     }
     
-    private func startListening() {
+    private func systemImageNameForRecordingState() -> String {
+            switch recordingState {
+            case .ready:
+                    return "mic.fill"
+            case .recording:
+                    return "stop.fill"
+            case .waitingForRecordingToStart:
+                return "heart.fill"
+            case .waitingForRecordingToStop:
+                return "heart.fill"
+            }
+        }
+    
+    func appeared() {
+        NotificationCenter.default.addObserver(forName: .startListeningNotification, object: nil, queue: .main) { _ in
+            Task.init {
+                await self.startListening()
+            }
+        }
+    }
+    
+    private func startListening() async {
         print("start listenting")
-        audioRecorder.startRecording();
+        responseText = nil
+        
+        await audioRecorder.startRecording();
+        self.recordingState = .recording
     }
     
     private func stopListening() async {
         let fileUrl = await audioRecorder.stopRecording()
         do {
             let data = try AudioUploader().uploadAudioFile(at: fileUrl, to: "https://ai-tracker-server-613e3dd103bb.herokuapp.com/convertAudioToInteraction")
-            if let data = data, let responseText = String(data: data, encoding: .utf8) {
+            if let data = data, let responseText = String(data: data, encoding: .utf8)
+            {
+                DispatchQueue.main.async { // Ensure UI updates are performed on the main thread
+                    self.responseText = responseText // Update the response text state
+                    self.recordingState = .ready
+                }
                 print("Received text: \(responseText)")
             }
         } catch {
+            DispatchQueue.main.async {
+                self.responseText = "Some uploading error" // Handle error by updating the response text
+                self.recordingState = .ready
+            }
             print("Some uploading error")
         }
     }

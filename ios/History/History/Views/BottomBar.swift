@@ -24,7 +24,7 @@ struct BottomBar: View {
                 if isListening {
                     Task.init { await stopListening() }
                 } else {
-                    startListening()
+                    Task.init { await startListening() }
                 }
                 isListening.toggle()
             }) {
@@ -35,8 +35,8 @@ struct BottomBar: View {
         }
     }
     
-    private func startListening() {
-        audioRecorder.startRecording();
+    private func startListening() async {
+        await audioRecorder.startRecording();
     }
     
     private func stopListening() async {
