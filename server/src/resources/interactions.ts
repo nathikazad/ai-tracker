@@ -44,7 +44,7 @@ export async function getMatchingInteractions(user_id: number, content: string):
     return resp.match_interactions
 }
 
-export async function getInteractions({ user_id, date = new Date().toISOString().split('T')[0] }: { user_id: number; limit?: number; date?: string; }) {
+export async function getInteractions({ user_id }: { user_id: number; limit?: number; date?: string; }) {
     const chain = getHasura();
     const resp = await chain.query({
         interactions: [{
@@ -54,10 +54,6 @@ export async function getInteractions({ user_id, date = new Date().toISOString()
             where: {
                 user_id: {
                     _eq: user_id
-                },
-                timestamp: {
-                    _gte: date,
-                    _lt: `${date}T23:59:59Z`
                 }
             }
         }, {
