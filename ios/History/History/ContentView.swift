@@ -12,16 +12,12 @@ struct ContentView: View {
         VStack {
             Text("Observe and Improve")
                 .font(.largeTitle)
-                .padding()
             
             Spacer()
                         
                         // Toggle Button for Expandable Widget
             DailyRemindersView()
             InteractionsView()
-            
-            Spacer()
-            
 
             BottomBar()
         }
