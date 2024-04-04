@@ -16,7 +16,7 @@
 		FE4F7BBB2BA7D7E60041CB6A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BBA2BA7D7E60041CB6A /* ContentView.swift */; };
 		FE4F7BBD2BA7D7E70041CB6A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE4F7BBC2BA7D7E70041CB6A /* Assets.xcassets */; };
 		FE4F7BC02BA7D7E70041CB6A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE4F7BBF2BA7D7E70041CB6A /* Preview Assets.xcassets */; };
-		FE4F7BC32BA7D7E70041CB6A /* History.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = FE4F7BB62BA7D7E60041CB6A /* History.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FE4F7BC32BA7D7E70041CB6A /* Trackr Watch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = FE4F7BB62BA7D7E60041CB6A /* Trackr Watch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		FE4F7BC92BA7D7FA0041CB6A /* WatchToiOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BC82BA7D7FA0041CB6A /* WatchToiOS.swift */; };
 		FE4F7BCC2BA7DBB70041CB6A /* WatchConnectivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE4F7BCB2BA7DBB60041CB6A /* WatchConnectivity.framework */; };
 		FE4F7BCE2BA8F3C50041CB6A /* InteractionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BCD2BA8F3C50041CB6A /* InteractionsView.swift */; };
@@ -63,7 +63,7 @@
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
-				FE4F7BC32BA7D7E70041CB6A /* History.app in Embed Watch Content */,
+				FE4F7BC32BA7D7E70041CB6A /* Trackr Watch.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -88,7 +88,7 @@
 		FE4F7BA62BA7D79F0041CB6A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FE4F7BA92BA7D79F0041CB6A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		FE4F7BB02BA7D7C80041CB6A /* iOSToWatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSToWatch.swift; sourceTree = "<group>"; };
-		FE4F7BB62BA7D7E60041CB6A /* History.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = History.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FE4F7BB62BA7D7E60041CB6A /* Trackr Watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Trackr Watch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE4F7BB82BA7D7E60041CB6A /* MiniHistoryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniHistoryApp.swift; sourceTree = "<group>"; };
 		FE4F7BBA2BA7D7E60041CB6A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		FE4F7BBC2BA7D7E70041CB6A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -157,7 +157,7 @@
 			isa = PBXGroup;
 			children = (
 				FE4F7B9F2BA7D79E0041CB6A /* History.app */,
-				FE4F7BB62BA7D7E60041CB6A /* History.app */,
+				FE4F7BB62BA7D7E60041CB6A /* Trackr Watch.app */,
 				FEC5386C2BBDE4E5006BDBDA /* ShortcutExtension.appex */,
 			);
 			name = Products;
@@ -296,7 +296,7 @@
 			);
 			name = "MiniHistory Watch App";
 			productName = "MiniHistory Watch App";
-			productReference = FE4F7BB62BA7D7E60041CB6A /* History.app */;
+			productReference = FE4F7BB62BA7D7E60041CB6A /* Trackr Watch.app */;
 			productType = "com.apple.product-type.application";
 		};
 		FEC5386B2BBDE4E5006BDBDA /* ShortcutExtension */ = {
@@ -576,6 +576,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = History/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Trackr;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "To get audio to log an event";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "To log an event";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -587,12 +589,16 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -609,6 +615,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = History/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Trackr;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "To get audio to log an event";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "To log an event";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -620,12 +628,16 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -648,9 +660,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History.watchkitapp;
-				PRODUCT_NAME = History;
+				PRODUCT_NAME = "Trackr Watch";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -679,9 +691,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History.watchkitapp;
-				PRODUCT_NAME = History;
+				PRODUCT_NAME = "Trackr Watch";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;

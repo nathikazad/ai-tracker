@@ -23,6 +23,10 @@ struct DailyRemindersView: View {
         // Expandable Scrollable Widget
         if isExpanded {
             ScrollView {
+                Text("There is nothing God cannot fix in an instant, so just focus on your work and leave the rest up to him.")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.bottom, 10)
+                
                 Text("Bias towards action.")
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.bottom, 10)
