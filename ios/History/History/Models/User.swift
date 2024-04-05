@@ -10,51 +10,100 @@ import AuthenticationServices
 class User {
     static let shared = User()
     
-    private let jwtKey = "userJWTKey" // Key for UserDefaults
+    private let hasuraJwtKey = "hasuraJWTKey"
+    private let appleJwtKey = "appleJWTKey"
     
     private init() {
-        // Attempt to load the JWT from UserDefaults upon initialization
-        self.jwt = UserDefaults.standard.string(forKey: jwtKey)
+        
+        
     }
     
-    private var jwt: String? {
-        didSet {
-            if let jwt = jwt {
-                // Save to UserDefaults if jwt is not nil
-                UserDefaults.standard.set(jwt, forKey: jwtKey)
-            } else {
-                // If jwt is nil, remove it from UserDefaults
-                UserDefaults.standard.removeObject(forKey: jwtKey)
+    var hasuraJwt: String? {
+        get {
+            var jwt = UserDefaults.standard.string(forKey: hasuraJwtKey)
+            if(UserDefaults.standard.string(forKey: hasuraJwtKey) != nil && UserDefaults.standard.string(forKey: appleJwtKey) != nil) {
+                checkAndReloadHasuraJwt(jwt: jwt!)
             }
+            return jwt
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: hasuraJwtKey)
         }
     }
     
-    func setJWT(_ key: String) {
-        self.jwt = key
+    var appleJwt: String? {
+        get {
+            UserDefaults.standard.string(forKey: appleJwtKey)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: appleJwtKey)
+        }
     }
     
-    var getJWT: String? {
-        return jwt
+    func checkAndReloadHasuraJwt(jwt: String) {
+        if(isJwtExpired(jwt: jwt)){
+            Task {
+                await fetchHasuraJwt(appleJwt: appleJwt!)
+            }
+        }
     }
+
     
-    // Add a method to clear the JWT
     func clearJWT() {
-        self.jwt = nil // This will also clear it from UserDefaults
+        UserDefaults.standard.removeObject(forKey: hasuraJwtKey)
+        UserDefaults.standard.removeObject(forKey: appleJwtKey)
     }
+}
+
+func isJwtExpired(jwt: String?) -> Bool {
+    guard let jwt = jwt else { return true }
+    
+    let parts = jwt.components(separatedBy: ".")
+    guard parts.count > 1 else { return true }
+    
+    let payload = parts[1]
+    guard let payloadData = base64UrlDecodedData(base64Url: payload) else { return true }
+    
+    do {
+        if let payloadDict = try JSONSerialization.jsonObject(with: payloadData, options: []) as? [String: Any],
+           let exp = payloadDict["exp"] as? TimeInterval {
+            // Create a date for the current time plus one hour (3600 seconds).
+            let oneHourAhead = Date().addingTimeInterval(3600)
+            let expirationDate = Date(timeIntervalSince1970: exp)
+            // Consider the token expired if the expiration date is less than one hour ahead.
+            return expirationDate <= oneHourAhead
+        }
+    } catch {
+        print("Error decoding JWT: \(error.localizedDescription)")
+    }
+    
+    return true
+}
+
+private func base64UrlDecodedData(base64Url: String) -> Data? {
+    var base64 = base64Url
+        .replacingOccurrences(of: "-", with: "+")
+        .replacingOccurrences(of: "_", with: "/")
+    
+    while base64.count % 4 != 0 {
+        base64.append("=")
+    }
+    
+    return Data(base64Encoded: base64)
 }
 
 func handleSignIn(result: Result<ASAuthorization, any Error>, completion: @escaping (Bool) -> Void) {
    switch result {
        case .success(let authResults):
            print("Authorisation successful")
-           guard let credentials = authResults.credential as? ASAuthorizationAppleIDCredential, let identityToken = credentials.identityToken, let identityTokenString = String(data: identityToken, encoding: .utf8) else {
-                   completion(false)
-                   return
-               }
-               print(identityTokenString)
-               sendAppleKeyToServer(appleKey: identityTokenString) { isSuccess in
-                   completion(isSuccess)
-               }
+            guard let credentials = authResults.credential as? ASAuthorizationAppleIDCredential, let identityToken = credentials.identityToken, let identityTokenString = String(data: identityToken, encoding: .utf8) else {
+               completion(false)
+               return
+            }
+            User.shared.hasuraJwt = identityTokenString
+            getHasuraJwt(appleJwt: identityTokenString) { isSuccess in
+               completion(isSuccess)
+            }
         case .failure(let error):
             print("Authorisation failed: \(error.localizedDescription)")
             completion(false)
@@ -62,41 +111,44 @@ func handleSignIn(result: Result<ASAuthorization, any Error>, completion: @escap
    }
 }
 
-private func sendAppleKeyToServer(appleKey: String, completion: @escaping (Bool) -> Void) {
+private func getHasuraJwt(appleJwt: String, completion: @escaping (Bool) -> Void) {
+    Task {
+        let success = await fetchHasuraJwt(appleJwt: appleJwt)
+        completion(success)
+    }
+}
+
+private func fetchHasuraJwt(appleJwt: String) async -> Bool {
     guard let url = URL(string: "https://ai-tracker-server-613e3dd103bb.herokuapp.com/hasuraJWT") else {
-        completion(false)
-        return
+        return false
     }
     var request = URLRequest(url: url)
     request.httpMethod = "POST"
     request.addValue("application/json", forHTTPHeaderField: "Content-Type")
     
-    let body: [String: Any] = ["appleKey": appleKey]
+    let body: [String: Any] = ["appleKey": appleJwt]
     request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
     
-    let task = URLSession.shared.dataTask(with: request) { data, response, error in
-        guard let data = data, error == nil else {
-            print("Error sending apple key to server: \(error?.localizedDescription ?? "Unknown error")")
-            completion(false)
-            return
+    do {
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            return false
         }
         
-        do {
-            if let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any], let jwt = jsonResponse["jwt"] as? String {
-                User.shared.setJWT(jwt)
-                print("JWT: \(jwt)")
-                completion(true)
-            } else {
-                print("Invalid response received from the server")
-                completion(false)
-            }
-        } catch {
-            print("Error parsing server response: \(error.localizedDescription)")
-            completion(false)
+        if let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any], let jwt = jsonResponse["jwt"] as? String {
+            User.shared.hasuraJwt = jwt
+            print("JWT: \(jwt)")
+            return true
+        } else {
+            print("Invalid response received from the server")
+            return false
         }
+    } catch {
+        print("Error sending apple key to server or parsing server response: \(error.localizedDescription)")
+        return false
     }
-    task.resume()
 }
+
 
 
 // User.shared.setJWTKey("your_jwt_token_here")
