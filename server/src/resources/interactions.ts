@@ -22,7 +22,7 @@ export async function insertInteraction(user_id: number, content: string) {
     }, {
         "embedding": JSON.stringify(embedding)
     })
-    parse(content, user_id);
+    parse(content, user_id, resp.insert_interactions_one?.id);
     return resp.insert_interactions_one?.id;
 }
 

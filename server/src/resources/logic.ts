@@ -2,7 +2,7 @@ import { getHasura } from "../config";
 import { complete3 } from "../third/openai";
 
 
-export async function parse(text: string, user_id: number) {
+export async function parse(text: string, user_id: number, interaction_id: number) {
     let classification = await classify(text)
     console.log(`${text} \nClassification: ${classification}`)
     switch (classification) {
@@ -11,7 +11,7 @@ export async function parse(text: string, user_id: number) {
         case "goal":
             return parseGoal(text, user_id)
         case "event":
-            return parseEvent(text, user_id)
+            return parseEvent(text, user_id, interaction_id)
         case "query":
             return "query"
         case "command":
@@ -22,7 +22,7 @@ export async function parse(text: string, user_id: number) {
     }
 }
 
-export async function parseEvent(event: string, user_id: number) {
+export async function parseEvent(event: string, user_id: number, interaction_id: number) {
     // see if any todos can be checked off
     const chain = getHasura();
     let response = await chain.query({
@@ -70,7 +70,8 @@ export async function parseEvent(event: string, user_id: number) {
                 name: event,
                 user_id: user_id,
                 event_type: "root",
-                goal_id: matchedTodo?.goal_id
+                goal_id: matchedTodo?.goal_id,
+                interaction_id: interaction_id
             }
         }, {
             id: true
