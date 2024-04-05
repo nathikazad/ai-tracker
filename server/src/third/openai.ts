@@ -31,11 +31,12 @@ export async function complete(prompt: string) {
   return result.choices[0].message.content!;
 }
 
-export async function complete3(prompt: string) {
+export async function complete3(prompt: string, temperature: number | null = null) {
   const result = await openai.completions.create({
     prompt,
     model: "gpt-3.5-turbo-instruct",
     max_tokens: 1000,
+    temperature:temperature
   });
   console.log(result.usage, result.choices[0].finish_reason);
 

@@ -4,9 +4,9 @@ import { deleteInteraction, getInteractions, getMatchingInteractions, insertInte
 import path from 'path';
 import { deleteEvent, getEvents } from './resources/events';
 import { convertMessageToEvent } from './resources/ai';
-import { getPrompt, loadPromptApi, savePrompt  } from './resources/prompt';
+import { getPrompt, loadPromptApi, savePrompt } from './resources/prompt';
 import { convertAudioToInteraction } from './helper/receiveFile';
-
+import { parse } from './resources/logic';
 const app: Express = express();
 
 app.use(express.static(path.join(__dirname, '../public')));
@@ -22,20 +22,20 @@ app.get('/test', (req, res) => {
 app.get('/dodge', (req: Request, res: Response) => {
     let content = "Dodge this"
     insertInteraction(1, content).then((id) => {
-        res.status(200).send({ id:  id});
+        res.status(200).send({ id: id });
     })
     getMatchingInteractions(1, content).then((matches) => {
         res.status(200).send(matches);
     })
-    
+
 });
 
 app.post('/convertMessageToEvent', async (req, res) => {
     console.log(req.body.time, ": ", req.body.query);
     let prompt = getPrompt()
-    
-    if(config.testing)
-        savePrompt({prompt}); 
+
+    if (config.testing)
+        savePrompt({ prompt });
 
     // const gql = await convertMessageToEvent(prompt, req.body.query, req.body.time)
     await insertInteraction(1, req.body.query);
@@ -44,28 +44,32 @@ app.post('/convertMessageToEvent', async (req, res) => {
     });
 });
 
+app.post('/test', async (req, res) => {
+    let classification = await parse(req.body.prompt, 1)
+    res.json({
+        response: classification
+    });
+});
+
 app.post('/getgql', async (req, res) => {
     console.log(req.body.time, ": ", req.body.query);
-    savePrompt({prompt: req.body.prompt});
+    savePrompt({ prompt: req.body.prompt });
     let gql = await convertMessageToEvent(req.body.prompt, req.body.query, req.body.time, true)
     res.json({
         gql
     });
 });
 
-
-
-
-app.get('/getevents', async (req, res) => {    
+app.get('/getevents', async (req, res) => {
     let events = await getEvents({ user_id: 1 });
     res.json(JSON.parse(JSON.stringify(events)));
-    
+
 });
 
-app.get('/getInteractions', async (req, res) => {    
+app.get('/getInteractions', async (req, res) => {
     let interactions = await getInteractions({ user_id: 1 });
     res.json(JSON.parse(JSON.stringify(interactions)));
-    
+
 });
 
 app.delete('/interaction/:id', (req, res) => {

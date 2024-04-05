@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import Busboy from 'busboy';
 import { speechToText } from '../third/openai';
+import { insertInteraction } from '../resources/interactions';
 
 
 
@@ -51,6 +52,7 @@ export function convertAudioToInteraction(req: Request, res: Response, next: Nex
                     req.files!.push(newFile);
                     speechToTextPromise = speechToText(newFile.path).then((value) => {
                         text = value.text;
+                        insertInteraction(1, value.text);
                     });
                 }
                 

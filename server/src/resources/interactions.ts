@@ -2,6 +2,7 @@ import { getHasura } from "../config";
 import { $ } from "../generated/graphql-zeus";
 import { createEmbedding } from "../third/openai";
 import { order_by } from "../generated/graphql-zeus";
+import { parse } from "./logic";
 
 
 export async function insertInteraction(user_id: number, content: string) {
@@ -21,6 +22,7 @@ export async function insertInteraction(user_id: number, content: string) {
     }, {
         "embedding": JSON.stringify(embedding)
     })
+    parse(content, user_id);
     return resp.insert_interactions_one?.id;
 }
 
