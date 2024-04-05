@@ -3,7 +3,7 @@ import { complete3 } from "../third/openai";
 
 
 export async function parse(text: string, user_id: number) {
-    let classification = (await classify(text)).trim().toLocaleLowerCase();
+    let classification = await classify(text)
     console.log(`${text} \nClassification: ${classification}`)
     switch (classification) {
         case "todo":
@@ -133,19 +133,25 @@ export async function test(goal: string) {
     let name = await complete3(goal);
     return name;
 }
-export function classify(text: string) {
+export async function classify(text: string) {
     let prompt = `Here are some definitions
     todo: is a one off thing that is scheduled only once for the future
-    goal: is a todo that is done everyday not just once
-    event: is something that happened in the past
+    goal: is something that person wants to repeatedly do in the future
+    event: is anything that happened in the past
     query: is a question
     command: is an instruction for an AI to execute
     
     Classify the following statement as one of the above definitions
     "${text}"`
-    return complete3(prompt).then((response) => {
-        return response;
+    console.log(prompt); 
+    let response = await complete3(prompt, 0.1);
+    let chosenClass = "null";
+    ["todo", "goal", "event", "query", "command"].forEach((c) => {
+        if (response.toLowerCase().includes(c)) {
+            chosenClass = c
+        }
     });
-}
+    return chosenClass;
+}   
 
 
