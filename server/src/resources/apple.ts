@@ -49,7 +49,7 @@ function generateJWT(userId: number) {
         "https://hasura.io/jwt/claims": {
             "x-hasura-default-role": "user",
             "x-hasura-allowed-roles": ["user"],
-            "x-hasura-user-id": 1,
+            "x-hasura-user-id": userId.toString(),
         }
     };
 
