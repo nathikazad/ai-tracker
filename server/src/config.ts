@@ -11,6 +11,7 @@ export const config = {
     openApiKey: process.env.OPENAI_API_KEY,
     graphqlUrl: process.env.GRAPHQL_URL,
     hasuraAdminSecret: process.env.HASURA_ADMIN_SECRET,
+    hasuraPrivateKey: process.env.HASURA_PRIVATE_KEY,
     testing:process.env.TEST
 };
 

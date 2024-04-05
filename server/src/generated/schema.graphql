@@ -4250,6 +4250,7 @@ input todo_variance_order_by {
 columns and relationships of "user"
 """
 type user {
+  apple_id: String
   id: Int!
 }
 
@@ -4290,6 +4291,7 @@ input user_bool_exp {
   _and: [user_bool_exp!]
   _not: user_bool_exp
   _or: [user_bool_exp!]
+  apple_id: String_comparison_exp
   id: Int_comparison_exp
 }
 
@@ -4314,16 +4316,19 @@ input user_inc_input {
 input type for inserting data into table "user"
 """
 input user_insert_input {
+  apple_id: String
   id: Int
 }
 
 """aggregate max on columns"""
 type user_max_fields {
+  apple_id: String
   id: Int
 }
 
 """aggregate min on columns"""
 type user_min_fields {
+  apple_id: String
   id: Int
 }
 
@@ -4359,6 +4364,7 @@ input user_on_conflict {
 
 """Ordering options when selecting data from "user"."""
 input user_order_by {
+  apple_id: order_by
   id: order_by
 }
 
@@ -4372,6 +4378,9 @@ select columns of table "user"
 """
 enum user_select_column {
   """column name"""
+  apple_id
+
+  """column name"""
   id
 }
 
@@ -4379,6 +4388,7 @@ enum user_select_column {
 input type for updating data in table "user"
 """
 input user_set_input {
+  apple_id: String
   id: Int
 }
 
@@ -4410,6 +4420,7 @@ input user_stream_cursor_input {
 
 """Initial value of the column from where the streaming should start"""
 input user_stream_cursor_value_input {
+  apple_id: String
   id: Int
 }
 
@@ -4422,6 +4433,9 @@ type user_sum_fields {
 update columns of table "user"
 """
 enum user_update_column {
+  """column name"""
+  apple_id
+
   """column name"""
   id
 }

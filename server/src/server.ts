@@ -7,6 +7,7 @@ import { convertMessageToEvent } from './resources/ai';
 import { getPrompt, loadPromptApi, savePrompt } from './resources/prompt';
 import { convertAudioToInteraction } from './helper/receiveFile';
 import { parse } from './resources/logic';
+import { convertAppleJWTtoHasuraJWT } from './resources/apple';
 const app: Express = express();
 
 app.use(express.static(path.join(__dirname, '../public')));
@@ -45,9 +46,16 @@ app.post('/convertMessageToEvent', async (req, res) => {
 });
 
 app.post('/test', async (req, res) => {
-    let classification = await parse(req.body.prompt, 1)
+    let classification = await parse(req.body.prompt, 1, 5)
     res.json({
         response: classification
+    });
+});
+
+app.post('/hasuraJWT', async (req, res) => {
+    let jwt = await convertAppleJWTtoHasuraJWT(req.body.appleKey)
+    res.json({
+        jwt: jwt
     });
 });
 
