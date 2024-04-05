@@ -8,7 +8,7 @@
 import SwiftUI
 
 class ContentViewModel: ObservableObject {
-    @Published var notSignedInAlready: Bool = User.shared.getJWT == nil
+    @Published var notSignedIn: Bool = User.shared.hasuraJwt == nil
 }
 
 struct ContentView: View {
@@ -29,7 +29,7 @@ struct ContentView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         User.shared.clearJWT()
-                        contentViewModel.notSignedInAlready = true
+                        contentViewModel.notSignedIn = true
                     } label: {
                         Text("Signout")
                             .foregroundColor(.red)
@@ -37,7 +37,7 @@ struct ContentView: View {
                 }
             }
         }
-        .fullScreenCover(isPresented: $contentViewModel.notSignedInAlready) {
+        .fullScreenCover(isPresented: $contentViewModel.notSignedIn) {
             ChatView(contentViewModel: contentViewModel)
         }
     }

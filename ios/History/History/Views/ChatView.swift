@@ -37,7 +37,7 @@ struct ChatView: View {
                                 result in handleSignIn(result: result) { isSuccess in
                                     if isSuccess {
                                         DispatchQueue.main.async {
-                                            self.contentViewModel.notSignedInAlready = false
+                                            self.contentViewModel.notSignedIn = false
                                         }
                                     }
                                 }
