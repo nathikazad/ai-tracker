@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FE1C0EAB2BC043D500FF56AB /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EAA2BC043D500FF56AB /* Message.swift */; };
+		FE1C0EAE2BC0713B00FF56AB /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EAD2BC0713B00FF56AB /* User.swift */; };
+		FE1C0EAF2BC0713B00FF56AB /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EAD2BC0713B00FF56AB /* User.swift */; };
 		FE4F7BA32BA7D79E0041CB6A /* HistoryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BA22BA7D79E0041CB6A /* HistoryApp.swift */; };
 		FE4F7BA52BA7D79E0041CB6A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BA42BA7D79E0041CB6A /* ContentView.swift */; };
 		FE4F7BA72BA7D79F0041CB6A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE4F7BA62BA7D79F0041CB6A /* Assets.xcassets */; };
@@ -28,6 +31,8 @@
 		FE5264812BA99AF700502521 /* AudioUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5264802BA99AF700502521 /* AudioUploader.swift */; };
 		FE5264822BA99AF700502521 /* AudioUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5264802BA99AF700502521 /* AudioUploader.swift */; };
 		FE7EF1DE2BBE0F0700279E18 /* DailyRemindersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7EF1DD2BBE0F0700279E18 /* DailyRemindersView.swift */; };
+		FE9EAE4F2BC03F280082DE87 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9EAE4E2BC03F280082DE87 /* MessageView.swift */; };
+		FE9EAE512BC042260082DE87 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9EAE502BC042260082DE87 /* ChatView.swift */; };
 		FEB8FD1F2BAA253100EE9B68 /* Intents.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB8FD1E2BAA253100EE9B68 /* Intents.swift */; };
 		FEB8FD202BAA253100EE9B68 /* Intents.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB8FD1E2BAA253100EE9B68 /* Intents.swift */; };
 		FEC5386E2BBDE4E5006BDBDA /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEC5386D2BBDE4E5006BDBDA /* WidgetKit.framework */; };
@@ -82,6 +87,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		FE1C0EAA2BC043D500FF56AB /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		FE1C0EAC2BC0583A00FF56AB /* History.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = History.entitlements; sourceTree = "<group>"; };
+		FE1C0EAD2BC0713B00FF56AB /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		FE4F7B9F2BA7D79E0041CB6A /* History.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = History.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE4F7BA22BA7D79E0041CB6A /* HistoryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryApp.swift; sourceTree = "<group>"; };
 		FE4F7BA42BA7D79E0041CB6A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -103,6 +111,8 @@
 		FE5264802BA99AF700502521 /* AudioUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioUploader.swift; sourceTree = "<group>"; };
 		FE5264832BA9A1A400502521 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		FE7EF1DD2BBE0F0700279E18 /* DailyRemindersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyRemindersView.swift; sourceTree = "<group>"; };
+		FE9EAE4E2BC03F280082DE87 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
+		FE9EAE502BC042260082DE87 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		FEB8FD1E2BAA253100EE9B68 /* Intents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intents.swift; sourceTree = "<group>"; };
 		FEC5386C2BBDE4E5006BDBDA /* ShortcutExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ShortcutExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		FEC5386D2BBDE4E5006BDBDA /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
@@ -166,6 +176,7 @@
 		FE4F7BA12BA7D79E0041CB6A /* History */ = {
 			isa = PBXGroup;
 			children = (
+				FE1C0EAC2BC0583A00FF56AB /* History.entitlements */,
 				FE7EF1DC2BBE0EE700279E18 /* Utilities */,
 				FE7EF1DB2BBE0EDD00279E18 /* Models */,
 				FE7EF1DA2BBE0ECB00279E18 /* Views */,
@@ -223,6 +234,8 @@
 				FE4F7BCD2BA8F3C50041CB6A /* InteractionsView.swift */,
 				FE4F7BD12BA8FC600041CB6A /* BottomBar.swift */,
 				FE7EF1DD2BBE0F0700279E18 /* DailyRemindersView.swift */,
+				FE9EAE4E2BC03F280082DE87 /* MessageView.swift */,
+				FE9EAE502BC042260082DE87 /* ChatView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -231,6 +244,8 @@
 			isa = PBXGroup;
 			children = (
 				FE4F7BCF2BA8F50F0041CB6A /* InteractionModel.swift */,
+				FE1C0EAA2BC043D500FF56AB /* Message.swift */,
+				FE1C0EAD2BC0713B00FF56AB /* User.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -391,17 +406,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE9EAE4F2BC03F280082DE87 /* MessageView.swift in Sources */,
 				FE4F7BD92BA94D580041CB6A /* SpeechRecognizer.swift in Sources */,
 				FE4F7BD22BA8FC600041CB6A /* BottomBar.swift in Sources */,
 				FE4F7BA52BA7D79E0041CB6A /* ContentView.swift in Sources */,
 				FE4F7BB12BA7D7C80041CB6A /* iOSToWatch.swift in Sources */,
 				FE4F7BA32BA7D79E0041CB6A /* HistoryApp.swift in Sources */,
+				FE9EAE512BC042260082DE87 /* ChatView.swift in Sources */,
 				FEB8FD1F2BAA253100EE9B68 /* Intents.swift in Sources */,
+				FE1C0EAE2BC0713B00FF56AB /* User.swift in Sources */,
 				FE4F7BD02BA8F50F0041CB6A /* InteractionModel.swift in Sources */,
 				FE4F7BDB2BA957780041CB6A /* AudioRecorder.swift in Sources */,
 				FE5264812BA99AF700502521 /* AudioUploader.swift in Sources */,
 				FE7EF1DE2BBE0F0700279E18 /* DailyRemindersView.swift in Sources */,
 				FE4F7BCE2BA8F3C50041CB6A /* InteractionsView.swift in Sources */,
+				FE1C0EAB2BC043D500FF56AB /* Message.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -413,6 +432,7 @@
 				FEB8FD202BAA253100EE9B68 /* Intents.swift in Sources */,
 				FE4F7BBB2BA7D7E60041CB6A /* ContentView.swift in Sources */,
 				FE4F7BC92BA7D7FA0041CB6A /* WatchToiOS.swift in Sources */,
+				FE1C0EAF2BC0713B00FF56AB /* User.swift in Sources */,
 				FE4F7BDC2BA957780041CB6A /* AudioRecorder.swift in Sources */,
 				FE4F7BB92BA7D7E60041CB6A /* MiniHistoryApp.swift in Sources */,
 				FEC538812BBDF8C7006BDBDA /* WidgetIntent.swift in Sources */,
@@ -569,6 +589,8 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = History/History.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"History/Preview Content\"";
@@ -592,6 +614,7 @@
 				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -608,6 +631,8 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = History/History.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"History/Preview Content\"";
@@ -631,6 +656,7 @@
 				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
