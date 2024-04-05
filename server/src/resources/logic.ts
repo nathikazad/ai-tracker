@@ -4,7 +4,7 @@ import { complete3 } from "../third/openai";
 
 export async function parse(text: string, user_id: number) {
     let classification = (await classify(text)).trim().toLocaleLowerCase();
-    console.log(`Classification: ${classification}`)
+    console.log(`${text} \nClassification: ${classification}`)
     switch (classification) {
         case "todo":
             return "todo"
