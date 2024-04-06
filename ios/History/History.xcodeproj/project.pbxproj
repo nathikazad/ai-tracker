@@ -10,6 +10,8 @@
 		FE1C0EAB2BC043D500FF56AB /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EAA2BC043D500FF56AB /* Message.swift */; };
 		FE1C0EAE2BC0713B00FF56AB /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EAD2BC0713B00FF56AB /* User.swift */; };
 		FE1C0EAF2BC0713B00FF56AB /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EAD2BC0713B00FF56AB /* User.swift */; };
+		FE1C0EB12BC0A29300FF56AB /* Hasura.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EB02BC0A29300FF56AB /* Hasura.swift */; };
+		FE1C0EB22BC0A29300FF56AB /* Hasura.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EB02BC0A29300FF56AB /* Hasura.swift */; };
 		FE4F7BA32BA7D79E0041CB6A /* HistoryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BA22BA7D79E0041CB6A /* HistoryApp.swift */; };
 		FE4F7BA52BA7D79E0041CB6A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BA42BA7D79E0041CB6A /* ContentView.swift */; };
 		FE4F7BA72BA7D79F0041CB6A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE4F7BA62BA7D79F0041CB6A /* Assets.xcassets */; };
@@ -90,6 +92,7 @@
 		FE1C0EAA2BC043D500FF56AB /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		FE1C0EAC2BC0583A00FF56AB /* History.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = History.entitlements; sourceTree = "<group>"; };
 		FE1C0EAD2BC0713B00FF56AB /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		FE1C0EB02BC0A29300FF56AB /* Hasura.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hasura.swift; sourceTree = "<group>"; };
 		FE4F7B9F2BA7D79E0041CB6A /* History.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = History.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE4F7BA22BA7D79E0041CB6A /* HistoryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryApp.swift; sourceTree = "<group>"; };
 		FE4F7BA42BA7D79E0041CB6A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -258,6 +261,7 @@
 				FE5264802BA99AF700502521 /* AudioUploader.swift */,
 				FEB8FD1E2BAA253100EE9B68 /* Intents.swift */,
 				FE4F7BB02BA7D7C80041CB6A /* iOSToWatch.swift */,
+				FE1C0EB02BC0A29300FF56AB /* Hasura.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -291,6 +295,8 @@
 				FE4F7BC22BA7D7E70041CB6A /* PBXTargetDependency */,
 			);
 			name = History;
+			packageProductDependencies = (
+			);
 			productName = History;
 			productReference = FE4F7B9F2BA7D79E0041CB6A /* History.app */;
 			productType = "com.apple.product-type.application";
@@ -310,6 +316,8 @@
 				FEC5387A2BBDE4E6006BDBDA /* PBXTargetDependency */,
 			);
 			name = "MiniHistory Watch App";
+			packageProductDependencies = (
+			);
 			productName = "MiniHistory Watch App";
 			productReference = FE4F7BB62BA7D7E60041CB6A /* Trackr Watch.app */;
 			productType = "com.apple.product-type.application";
@@ -361,6 +369,10 @@
 				Base,
 			);
 			mainGroup = FE4F7B962BA7D79E0041CB6A;
+			packageReferences = (
+				FE1C0EB32BC0A46200FF56AB /* XCRemoteSwiftPackageReference "swift-graphql" */,
+				FE1C0EC22BC0BFDE00FF56AB /* XCRemoteSwiftPackageReference "apollo-ios" */,
+			);
 			productRefGroup = FE4F7BA02BA7D79E0041CB6A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -417,6 +429,7 @@
 				FE1C0EAE2BC0713B00FF56AB /* User.swift in Sources */,
 				FE4F7BD02BA8F50F0041CB6A /* InteractionModel.swift in Sources */,
 				FE4F7BDB2BA957780041CB6A /* AudioRecorder.swift in Sources */,
+				FE1C0EB12BC0A29300FF56AB /* Hasura.swift in Sources */,
 				FE5264812BA99AF700502521 /* AudioUploader.swift in Sources */,
 				FE7EF1DE2BBE0F0700279E18 /* DailyRemindersView.swift in Sources */,
 				FE4F7BCE2BA8F3C50041CB6A /* InteractionsView.swift in Sources */,
@@ -431,6 +444,7 @@
 				FE5264822BA99AF700502521 /* AudioUploader.swift in Sources */,
 				FEB8FD202BAA253100EE9B68 /* Intents.swift in Sources */,
 				FE4F7BBB2BA7D7E60041CB6A /* ContentView.swift in Sources */,
+				FE1C0EB22BC0A29300FF56AB /* Hasura.swift in Sources */,
 				FE4F7BC92BA7D7FA0041CB6A /* WatchToiOS.swift in Sources */,
 				FE1C0EAF2BC0713B00FF56AB /* User.swift in Sources */,
 				FE4F7BDC2BA957780041CB6A /* AudioRecorder.swift in Sources */,
@@ -829,6 +843,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		FE1C0EB32BC0A46200FF56AB /* XCRemoteSwiftPackageReference "swift-graphql" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/maticzav/swift-graphql/";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.2;
+			};
+		};
+		FE1C0EC22BC0BFDE00FF56AB /* XCRemoteSwiftPackageReference "apollo-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apollographql/apollo-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.9.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
 	};
 	rootObject = FE4F7B972BA7D79E0041CB6A /* Project object */;
 }

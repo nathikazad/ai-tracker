@@ -48,7 +48,6 @@ class User {
         }
     }
 
-    
     func clearJWT() {
         UserDefaults.standard.removeObject(forKey: hasuraJwtKey)
         UserDefaults.standard.removeObject(forKey: appleJwtKey)
