@@ -7,24 +7,15 @@
 
 import Foundation
 import AuthenticationServices
-class User {
-    static let shared = User()
+class Authentication {
+    static let shared = Authentication()
     
     private let hasuraJwtKey = "hasuraJWTKey"
     private let appleJwtKey = "appleJWTKey"
     
-    private init() {
-        
-        
-    }
-    
     var hasuraJwt: String? {
         get {
-            var jwt = UserDefaults.standard.string(forKey: hasuraJwtKey)
-            if(UserDefaults.standard.string(forKey: hasuraJwtKey) != nil && UserDefaults.standard.string(forKey: appleJwtKey) != nil) {
-                checkAndReloadHasuraJwt(jwt: jwt!)
-            }
-            return jwt
+            UserDefaults.standard.string(forKey: hasuraJwtKey)
         }
         set {
             UserDefaults.standard.set(newValue, forKey: hasuraJwtKey)
@@ -40,15 +31,21 @@ class User {
         }
     }
     
-    func checkAndReloadHasuraJwt(jwt: String) {
-        if(isJwtExpired(jwt: jwt)){
-            Task {
-                await fetchHasuraJwt(appleJwt: appleJwt!)
+    func checkAndReloadHasuraJwt() async {
+        if(isJwtExpired(jwt: hasuraJwt)){
+            if(Authentication.shared.appleJwt != nil) {
+                await fetchHasuraJwt()
             }
         }
     }
+    
+    func isSignedIn() -> Bool {
+        return appleJwt != nil
+    }
+    
+    
 
-    func clearJWT() {
+    func signOut() {
         UserDefaults.standard.removeObject(forKey: hasuraJwtKey)
         UserDefaults.standard.removeObject(forKey: appleJwtKey)
     }
@@ -91,7 +88,7 @@ private func base64UrlDecodedData(base64Url: String) -> Data? {
     return Data(base64Encoded: base64)
 }
 
-func handleSignIn(result: Result<ASAuthorization, any Error>, completion: @escaping (Bool) -> Void) {
+func handleSignIn(result: Result<ASAuthorization, any Error>, completion: @escaping (Bool) -> Void) async {
    switch result {
        case .success(let authResults):
            print("Authorisation successful")
@@ -99,10 +96,9 @@ func handleSignIn(result: Result<ASAuthorization, any Error>, completion: @escap
                completion(false)
                return
             }
-            User.shared.hasuraJwt = identityTokenString
-            getHasuraJwt(appleJwt: identityTokenString) { isSuccess in
-               completion(isSuccess)
-            }
+            Authentication.shared.appleJwt = identityTokenString
+            let success = await fetchHasuraJwt()
+            completion(success)
         case .failure(let error):
             print("Authorisation failed: \(error.localizedDescription)")
             completion(false)
@@ -110,14 +106,9 @@ func handleSignIn(result: Result<ASAuthorization, any Error>, completion: @escap
    }
 }
 
-private func getHasuraJwt(appleJwt: String, completion: @escaping (Bool) -> Void) {
-    Task {
-        let success = await fetchHasuraJwt(appleJwt: appleJwt)
-        completion(success)
-    }
-}
 
-private func fetchHasuraJwt(appleJwt: String) async -> Bool {
+
+private func fetchHasuraJwt() async -> Bool {
     guard let url = URL(string: "https://ai-tracker-server-613e3dd103bb.herokuapp.com/hasuraJWT") else {
         return false
     }
@@ -125,7 +116,7 @@ private func fetchHasuraJwt(appleJwt: String) async -> Bool {
     request.httpMethod = "POST"
     request.addValue("application/json", forHTTPHeaderField: "Content-Type")
     
-    let body: [String: Any] = ["appleKey": appleJwt]
+    let body: [String: Any] = ["appleKey": Authentication.shared.appleJwt!]
     request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
     
     do {
@@ -135,7 +126,7 @@ private func fetchHasuraJwt(appleJwt: String) async -> Bool {
         }
         
         if let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any], let jwt = jsonResponse["jwt"] as? String {
-            User.shared.hasuraJwt = jwt
+            Authentication.shared.hasuraJwt = jwt
             print("JWT: \(jwt)")
             return true
         } else {

@@ -9,11 +9,11 @@ import Foundation
 import SwiftUI
 
 // Define a function that asynchronously sends a GraphQL query and returns the data.
-func fetchGraphQLData(jwtToken: String?, graphqlQuery: String) async throws -> Data {
+func fetchGraphQLData(graphqlQuery: String) async throws -> Data {
     // Define the request body using the provided graphqlQuery parameter.
     let requestBody = """
     {
-      "query": "\(graphqlQuery)"
+      "query": "\(graphqlQuery.replacingOccurrences(of: "\n", with: ""))"
     }
     """
     guard let jsonData = requestBody.data(using: .utf8) else {
@@ -30,8 +30,8 @@ func fetchGraphQLData(jwtToken: String?, graphqlQuery: String) async throws -> D
     var request = URLRequest(url: url)
     request.httpMethod = "POST"
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-    if(jwtToken != nil) {
-        request.setValue("Bearer \(jwtToken!)", forHTTPHeaderField: "Authorization")
+    if(Authentication.shared.hasuraJwt != nil) {
+        request.setValue("Bearer \(Authentication.shared.hasuraJwt!)", forHTTPHeaderField: "Authorization")
     }
     request.httpBody = jsonData
     
@@ -53,16 +53,23 @@ enum SubscriptionStatus {
     case active
 }
 
+enum SocketStatus {
+    case initialized
+    case handshaking
+    case ready
+}
+
 
 class HasuraSocket {
+    static let shared = HasuraSocket()
     private var webSocketTask: URLSessionWebSocketTask?
     private var session: URLSession?
     private var currentID = 0
-    private var socketReady: Bool = false
+    private var socketStatus: SocketStatus = .initialized
     // Tracks callbacks for each subscription ID
-    private var subscriptions = [String: (query: String, status: SubscriptionStatus, callback: (String) -> Void)]()
+    private var subscriptions = [String: (query: String, status: SubscriptionStatus, callback: (Any?) -> Void)]()
      
-    init(didEnterBackgroundNotification: NSNotification.Name, willEnterForegroundNotification: NSNotification.Name) {
+    func setBackgroundNotifiers(didEnterBackgroundNotification: NSNotification.Name, willEnterForegroundNotification: NSNotification.Name) {
         NotificationCenter.default.addObserver(forName: didEnterBackgroundNotification, object: nil, queue: .main) { _ in
                 print("App entered background. Pausing socket.")
                 self.pause()
@@ -70,21 +77,28 @@ class HasuraSocket {
             
         NotificationCenter.default.addObserver(forName: willEnterForegroundNotification, object: nil, queue: .main) { _ in
             print("App will enter foreground. Resuming socket.")
-            // Ensure the JWT token is still valid or fetch a new one if needed
-            self.setup()
+            if(Authentication.shared.isSignedIn()) {
+                self.setup()
+            }
         }
     }
      func setup() {
-         var token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MTIzNTM2OTcsImh0dHBzOi8vaGFzdXJhLmlvL2p3dC9jbGFpbXMiOnsieC1oYXN1cmEtZGVmYXVsdC1yb2xlIjoidXNlciIsIngtaGFzdXJhLWFsbG93ZWQtcm9sZXMiOlsidXNlciJdLCJ4LWhhc3VyYS11c2VyLWlkIjoiMSJ9LCJleHAiOjM0MjQ3OTM3OTR9.bPhZj6hLPmpxf_r0Sp43_dD5hTZ8ecYdqu_r_SKHF8Gokn1q8XOQ5VwNkvHBPyVGCpE69nTucz2nl_QlliFb3Bfq7QapYb7BqOHUcdoSH_PtkK5Ec0t78mitiIL6-F7N9Xg6vD8OA6mdvQoh8AHr-hRTLHw6CjlohU92UiiFJbyrJX1czieWnMEW_STkYGbQ98nsrpeajPBvnV4AgIEqMlfSvbRha3zJaVWDlijgUg7Yp1UhnVBELqMY2oIgICg0Swv2MmWsK7ZpYPol1xGSlRu3pokZ1mPshXwK-aKn_4zXar7Kt5inI9z6LIMd6q0-83YuezAPXq9FsmFjRg0wlw"
-        let url = URL(string: "wss://ai-tracker-hasura-a1071aad7764.herokuapp.com/v1/graphql")!
-        var request = URLRequest(url: url)
-        request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        request.addValue("graphql-ws", forHTTPHeaderField: "Sec-WebSocket-Protocol")
+         socketStatus = .handshaking
+         Task {
+             await Authentication.shared.checkAndReloadHasuraJwt()
+             let url = URL(string: "wss://ai-tracker-hasura-a1071aad7764.herokuapp.com/v1/graphql")!
+             var request = URLRequest(url: url)
+             
+             let token = Authentication.shared.hasuraJwt!
+             request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+             request.addValue("graphql-ws", forHTTPHeaderField: "Sec-WebSocket-Protocol")
+             
+             session = URLSession(configuration: .default)
+             webSocketTask = session?.webSocketTask(with: request)
+             webSocketTask?.resume()
+             sendInitializationMessage()
+         }
         
-        session = URLSession(configuration: .default)
-        webSocketTask = session?.webSocketTask(with: request)
-        webSocketTask?.resume()
-        sendInitializationMessage()
     }
     
     private func sendInitializationMessage() {
@@ -102,16 +116,16 @@ class HasuraSocket {
         }
     }
     
-     func startListening(subscriptionQuery: String, callback: @escaping (String) -> Void) -> String {
-         if(!socketReady) {
+     func startListening(subscriptionQuery: String, callback: @escaping (Any?) -> Void) -> String {
+         if(socketStatus == .initialized) {
              setup()
          }
          currentID += 1
          let uniqueID = String(currentID)
          subscriptions[uniqueID] = (query: subscriptionQuery, status: .registered, callback: callback)
 
-         if socketReady {
-             sendSubscriptionMessage(uniqueID: uniqueID, subscriptionQuery: subscriptionQuery)
+         if socketStatus == .ready {
+             startSubscription(uniqueID: uniqueID, subscriptionQuery: subscriptionQuery)
          } else {
              print("Socket not ready, subscription \(uniqueID) registered and will be activated upon connection.")
          }
@@ -119,13 +133,13 @@ class HasuraSocket {
      }
 
      
-     private func sendSubscriptionMessage(uniqueID: String, subscriptionQuery: String) {
+     private func startSubscription(uniqueID: String, subscriptionQuery: String) {
          let subscriptionMessage = """
          {
            "type": "start",
            "id": "\(uniqueID)",
            "payload": {
-             "query": "\(subscriptionQuery)"
+             "query": "\(subscriptionQuery.replacingOccurrences(of: "\n", with: ""))"
            }
          }
          """
@@ -182,12 +196,9 @@ class HasuraSocket {
                 // Handle data messages
                 if let idValue = json["id"] {
                     print("Received subscription id \(idValue)")
-                    // Now that idValue is unwrapped, cast it to String for dictionary lookup
                     if let id = idValue as? String {
-                        // Check if there's a callback for the id
                         if let callback = subscriptions[id]?.callback {
-                            // If a callback exists, proceed to use it
-                            callback(text)
+                            callback(json["payload"]) // Pass the 'data' to the callback
                         } else {
                             // No callback found for the unwrapped and correctly typed id
                             print("Data message does not match any subscription ID or no callback found: \(text)")
@@ -204,12 +215,12 @@ class HasuraSocket {
                 break
             case "connection_ack":
                 // Handle keep-alive messages; simply ignore or log as needed
-                socketReady = true;
+                socketStatus = .ready;
                 print("Received connection_ack message. Activating registered subscriptions.")
 
                 subscriptions.forEach { uniqueID, details in
                     if details.status == .registered {
-                        sendSubscriptionMessage(uniqueID: uniqueID, subscriptionQuery: details.query)
+                        startSubscription(uniqueID: uniqueID, subscriptionQuery: details.query)
                     }
                 }
                 print("Received connection_ack message.")
@@ -226,7 +237,7 @@ class HasuraSocket {
          subscriptions.keys.forEach { id in
              subscriptions[id]?.status = .registered
          }
-         socketReady = false;
+         socketStatus = .initialized
          closeConnection()
      }
 

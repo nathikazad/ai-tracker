@@ -34,10 +34,13 @@ struct ChatView: View {
                             SignInWithAppleButton(.signIn) { request in
                                 request.requestedScopes = [.fullName]
                             } onCompletion: {
-                                result in handleSignIn(result: result) { isSuccess in
-                                    if isSuccess {
-                                        DispatchQueue.main.async {
-                                            self.contentViewModel.notSignedIn = false
+                                result in 
+                                Task {
+                                    await handleSignIn(result: result) { isSuccess in
+                                        if isSuccess {
+                                            DispatchQueue.main.async {
+                                                self.contentViewModel.showChat = false
+                                            }
                                         }
                                     }
                                 }

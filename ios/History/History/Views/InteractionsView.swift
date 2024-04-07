@@ -14,7 +14,12 @@ struct InteractionsView: View {
         ScrollView {
             interactionsList
         }
-        .onAppear(perform: interactionModel.fetchInteractions)
+        .onAppear(perform: {
+            Task {
+                await interactionModel.fetchInteractions()
+                interactionModel.listenToInteractions()
+            }
+        })
     }
 
     private var interactionsList: some View {

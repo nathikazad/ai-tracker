@@ -7,27 +7,75 @@
 
 import Foundation
 class InteractionModel: ObservableObject {
+    
     @Published var interactions: [Interaction] = []
-
-    func fetchInteractions() {
-        print("fetching")
-        guard let url = URL(string: "https://ai-tracker-server-613e3dd103bb.herokuapp.com/getinteractions") else { return }
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
-            if let data = data {
-                do {
-                    let decodedData = try JSONDecoder().decode([Interaction].self, from: data)
-                    DispatchQueue.main.async {
-                        self.interactions = decodedData
-                        print("fetched")
-                    }
-                } catch {
-                    print("Failed to decode JSON")
-                }
-            } else if let error = error {
-                print("HTTP request failed: \(error)")
+    var subscriptionId: String?
+    func fetchInteractions() async {
+        let graphqlQuery = 
+        """
+            query MyQuery {
+                interactions(order_by: {timestamp: desc}, limit: 5) {
+                    timestamp
+                    id
+                    content
+                  }
             }
-        }.resume()
+        """
+
+        do {
+            let data = try await fetchGraphQLData(graphqlQuery: graphqlQuery)
+            let decoder = JSONDecoder()
+            let responseData = try decoder.decode(ResponseData.self, from: data)
+            DispatchQueue.main.async {
+                self.interactions = responseData.data.interactions
+            }
+        } catch {
+            print("Error: \(error.localizedDescription)")
+        }
     }
+    struct ResponseData: Decodable {
+        var data: InteractionsWrapper
+    }
+
+    struct InteractionsWrapper: Decodable {
+        var interactions: [Interaction]
+    }
+    
+    func listenToInteractions() {
+        let subscriptionQuery = """
+            subscription { 
+            interactions(order_by: {timestamp: desc}, limit: 5) {
+                timestamp
+                id
+                content
+              }
+        }
+        """
+        subscriptionId = HasuraSocket.shared.startListening(subscriptionQuery: subscriptionQuery) { messageDictionary in
+            
+            do {
+                // Convert the dictionary back to Data for decoding
+                let data = try JSONSerialization.data(withJSONObject: messageDictionary, options: [])
+                let decoder = JSONDecoder()
+                // Assuming your JSON structure matches what your models expect
+                let responseData = try decoder.decode(ResponseData.self, from: data)
+                DispatchQueue.main.async {
+                    self.interactions = responseData.data.interactions
+                }
+            } catch {
+                print("Error processing message: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    func cancelListener() {
+        if(subscriptionId != nil) {
+            HasuraSocket.shared.stopListening(uniqueID: subscriptionId!)
+            subscriptionId = nil
+        }
+    }
+
+    
     
     var interactionsGroupedByDate: [(date: String, interactions: [Interaction])] {
         // Group interactions by justDate
@@ -61,19 +109,19 @@ class InteractionModel: ObservableObject {
 struct Interaction: Decodable, Equatable {
     var id: Int
     var content: String
-    var time: String
+    var timestamp: String
     
     enum CodingKeys: String, CodingKey {
         case id
         case content
-        case time = "timestamp" // if the key in your JSON is "timestamp" instead of "time"
+        case timestamp // if the key in your JSON is "timestamp" instead of "time"
     }
     var justDate: String {
         let isoFormatter = ISO8601DateFormatter()
         isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
 
         // Attempt to parse the ISO 8601 date string into a Date object
-        guard let date = isoFormatter.date(from: time) else {
+        guard let date = isoFormatter.date(from: timestamp) else {
             return "Invalid Date"
         }
 
@@ -89,7 +137,7 @@ struct Interaction: Decodable, Equatable {
     var formattedTime: String {
         let isoFormatter = ISO8601DateFormatter()
         isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds] // Ensure fractional seconds are parsed
-        if let date = isoFormatter.date(from: time) {
+        if let date = isoFormatter.date(from: timestamp) {
             let localFormatter = DateFormatter()
             localFormatter.timeZone = TimeZone.current // Convert to local time zone
             localFormatter.dateFormat = "hh:mm a" // Specify your desired format

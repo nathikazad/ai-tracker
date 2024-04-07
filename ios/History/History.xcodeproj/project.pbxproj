@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		FE1C0EAB2BC043D500FF56AB /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EAA2BC043D500FF56AB /* Message.swift */; };
-		FE1C0EAE2BC0713B00FF56AB /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EAD2BC0713B00FF56AB /* User.swift */; };
-		FE1C0EAF2BC0713B00FF56AB /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EAD2BC0713B00FF56AB /* User.swift */; };
+		FE1C0EAE2BC0713B00FF56AB /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EAD2BC0713B00FF56AB /* Authentication.swift */; };
+		FE1C0EAF2BC0713B00FF56AB /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EAD2BC0713B00FF56AB /* Authentication.swift */; };
 		FE1C0EB12BC0A29300FF56AB /* Hasura.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EB02BC0A29300FF56AB /* Hasura.swift */; };
 		FE1C0EB22BC0A29300FF56AB /* Hasura.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EB02BC0A29300FF56AB /* Hasura.swift */; };
 		FE4F7BA32BA7D79E0041CB6A /* HistoryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BA22BA7D79E0041CB6A /* HistoryApp.swift */; };
@@ -91,7 +91,7 @@
 /* Begin PBXFileReference section */
 		FE1C0EAA2BC043D500FF56AB /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		FE1C0EAC2BC0583A00FF56AB /* History.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = History.entitlements; sourceTree = "<group>"; };
-		FE1C0EAD2BC0713B00FF56AB /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		FE1C0EAD2BC0713B00FF56AB /* Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
 		FE1C0EB02BC0A29300FF56AB /* Hasura.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hasura.swift; sourceTree = "<group>"; };
 		FE4F7B9F2BA7D79E0041CB6A /* History.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = History.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE4F7BA22BA7D79E0041CB6A /* HistoryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryApp.swift; sourceTree = "<group>"; };
@@ -248,7 +248,6 @@
 			children = (
 				FE4F7BCF2BA8F50F0041CB6A /* InteractionModel.swift */,
 				FE1C0EAA2BC043D500FF56AB /* Message.swift */,
-				FE1C0EAD2BC0713B00FF56AB /* User.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -256,6 +255,7 @@
 		FE7EF1DC2BBE0EE700279E18 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				FE1C0EAD2BC0713B00FF56AB /* Authentication.swift */,
 				FE4F7BD82BA94D580041CB6A /* SpeechRecognizer.swift */,
 				FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */,
 				FE5264802BA99AF700502521 /* AudioUploader.swift */,
@@ -426,7 +426,7 @@
 				FE4F7BA32BA7D79E0041CB6A /* HistoryApp.swift in Sources */,
 				FE9EAE512BC042260082DE87 /* ChatView.swift in Sources */,
 				FEB8FD1F2BAA253100EE9B68 /* Intents.swift in Sources */,
-				FE1C0EAE2BC0713B00FF56AB /* User.swift in Sources */,
+				FE1C0EAE2BC0713B00FF56AB /* Authentication.swift in Sources */,
 				FE4F7BD02BA8F50F0041CB6A /* InteractionModel.swift in Sources */,
 				FE4F7BDB2BA957780041CB6A /* AudioRecorder.swift in Sources */,
 				FE1C0EB12BC0A29300FF56AB /* Hasura.swift in Sources */,
@@ -446,7 +446,7 @@
 				FE4F7BBB2BA7D7E60041CB6A /* ContentView.swift in Sources */,
 				FE1C0EB22BC0A29300FF56AB /* Hasura.swift in Sources */,
 				FE4F7BC92BA7D7FA0041CB6A /* WatchToiOS.swift in Sources */,
-				FE1C0EAF2BC0713B00FF56AB /* User.swift in Sources */,
+				FE1C0EAF2BC0713B00FF56AB /* Authentication.swift in Sources */,
 				FE4F7BDC2BA957780041CB6A /* AudioRecorder.swift in Sources */,
 				FE4F7BB92BA7D7E60041CB6A /* MiniHistoryApp.swift in Sources */,
 				FEC538812BBDF8C7006BDBDA /* WidgetIntent.swift in Sources */,
