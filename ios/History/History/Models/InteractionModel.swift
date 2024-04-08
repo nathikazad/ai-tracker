@@ -74,8 +74,6 @@ class InteractionModel: ObservableObject {
             subscriptionId = nil
         }
     }
-
-    
     
     var interactionsGroupedByDate: [(date: String, interactions: [Interaction])] {
         // Group interactions by justDate
