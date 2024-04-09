@@ -13,6 +13,16 @@ class Authentication {
     private let hasuraJwtKey = "hasuraJWTKey"
     private let appleJwtKey = "appleJWTKey"
     
+    init() {
+        if(isSignedIn()) {
+            signInCallback()
+        }
+    }
+    
+    func isSignedIn() -> Bool {
+        return appleJwt != nil
+    }
+    
     var hasuraJwt: String? {
         get {
             UserDefaults.standard.string(forKey: hasuraJwtKey)
@@ -39,15 +49,14 @@ class Authentication {
         }
     }
     
-    func isSignedIn() -> Bool {
-        return appleJwt != nil
+    func signInCallback() {
+        Hasura.shared.setup()
     }
     
-    
-
-    func signOut() {
+    func signOutCallback() {
         UserDefaults.standard.removeObject(forKey: hasuraJwtKey)
         UserDefaults.standard.removeObject(forKey: appleJwtKey)
+        Hasura.shared.closeConnection()
     }
 }
 
@@ -88,21 +97,19 @@ private func base64UrlDecodedData(base64Url: String) -> Data? {
     return Data(base64Encoded: base64)
 }
 
-func handleSignIn(result: Result<ASAuthorization, any Error>, completion: @escaping (Bool) -> Void) async {
+func handleSignIn(result: Result<ASAuthorization, any Error>) async -> Bool {
    switch result {
        case .success(let authResults):
            print("Authorisation successful")
             guard let credentials = authResults.credential as? ASAuthorizationAppleIDCredential, let identityToken = credentials.identityToken, let identityTokenString = String(data: identityToken, encoding: .utf8) else {
-               completion(false)
-               return
+               return false
             }
             Authentication.shared.appleJwt = identityTokenString
             let success = await fetchHasuraJwt()
-            completion(success)
+            return true
         case .failure(let error):
             print("Authorisation failed: \(error.localizedDescription)")
-            completion(false)
-        
+            return false
    }
 }
 

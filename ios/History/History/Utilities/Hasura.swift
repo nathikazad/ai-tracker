@@ -8,44 +8,7 @@
 import Foundation
 import SwiftUI
 
-// Define a function that asynchronously sends a GraphQL query and returns the data.
-func fetchGraphQLData(graphqlQuery: String) async throws -> Data {
-    // Define the request body using the provided graphqlQuery parameter.
-    let requestBody = """
-    {
-      "query": "\(graphqlQuery.replacingOccurrences(of: "\n", with: ""))"
-    }
-    """
-    guard let jsonData = requestBody.data(using: .utf8) else {
-        throw URLError(.badURL)
-    }
-    
-    // Specify the URL of your GraphQL server.
-    let urlString = "https://ai-tracker-hasura-a1071aad7764.herokuapp.com/v1/graphql"
-    guard let url = URL(string: urlString) else {
-        throw URLError(.badURL)
-    }
-    
-    // Create a URLRequest and specify it's a POST request.
-    var request = URLRequest(url: url)
-    request.httpMethod = "POST"
-    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-    if(Authentication.shared.hasuraJwt != nil) {
-        request.setValue("Bearer \(Authentication.shared.hasuraJwt!)", forHTTPHeaderField: "Authorization")
-    }
-    request.httpBody = jsonData
-    
-    // Perform the network request asynchronously.
-    let (data, response) = try await URLSession.shared.data(for: request)
-    
-    // Check the response status code.
-    guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-        throw URLError(.badServerResponse)
-    }
-    
-    // Return the data for further processing or usage.
-    return data
-}
+
 
 
 enum SubscriptionStatus {
@@ -60,8 +23,8 @@ enum SocketStatus {
 }
 
 
-class HasuraSocket {
-    static let shared = HasuraSocket()
+class Hasura {
+    static let shared = Hasura()
     private var webSocketTask: URLSessionWebSocketTask?
     private var session: URLSession?
     private var currentID = 0
@@ -82,6 +45,42 @@ class HasuraSocket {
             }
         }
     }
+    
+    struct GraphQLRequest: Codable {
+        let query: String
+    }
+
+    func sendGraphQL(actionQuery: String) async throws -> Data {
+        let requestPayload = GraphQLRequest(query: actionQuery)
+        
+        let encoder = JSONEncoder()
+        guard let jsonData = try? encoder.encode(requestPayload) else {
+            throw URLError(.badURL)
+        }
+        
+        let urlString = "https://ai-tracker-hasura-a1071aad7764.herokuapp.com/v1/graphql"
+        guard let url = URL(string: urlString) else {
+            throw URLError(.badURL)
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        if let jwt = Authentication.shared.hasuraJwt {
+            request.setValue("Bearer \(jwt)", forHTTPHeaderField: "Authorization")
+        }
+        request.httpBody = jsonData
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw URLError(.badServerResponse)
+        }
+        
+        return data
+    }
+
+    
      func setup() {
          socketStatus = .handshaking
          Task {
@@ -131,22 +130,38 @@ class HasuraSocket {
          }
          return uniqueID
      }
+    
+    struct SubscriptionMessage: Codable {
+        let type: String
+        let id: String
+        let payload: GraphQLRequestPayload
+    }
 
+    struct GraphQLRequestPayload: Codable {
+        let query: String
+    }
      
-     private func startSubscription(uniqueID: String, subscriptionQuery: String) {
-         let subscriptionMessage = """
-         {
-           "type": "start",
-           "id": "\(uniqueID)",
-           "payload": {
-             "query": "\(subscriptionQuery.replacingOccurrences(of: "\n", with: ""))"
-           }
-         }
-         """
-         sendMessage(text: subscriptionMessage)
-         subscriptions[uniqueID]?.status = .active
-         print("Subscription message sent for \(uniqueID), status updated to active.")
-     }
+    private func startSubscription(uniqueID: String, subscriptionQuery: String) {
+        let queryPayload = GraphQLRequestPayload(query: subscriptionQuery.replacingOccurrences(of: "\n", with: " "))
+        
+        let subscriptionMessage = SubscriptionMessage(type: "start", id: uniqueID, payload: queryPayload)
+        
+        do {
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = .withoutEscapingSlashes // Helps keep the query clean, but use if necessary
+            let jsonData = try encoder.encode(subscriptionMessage)
+            guard let jsonString = String(data: jsonData, encoding: .utf8) else {
+                print("Failed to encode subscription message to JSON string.")
+                return
+            }
+            sendMessage(text: jsonString)
+            subscriptions[uniqueID]?.status = .active
+            print("Subscription message sent for \(uniqueID), status updated to active.")
+        } catch {
+            print("Error encoding subscription message: \(error)")
+        }
+    }
+
 
     
      func stopListening(uniqueID: String) {
@@ -243,6 +258,7 @@ class HasuraSocket {
 
     func closeConnection() {
         let reason = "Closing connection".data(using: .utf8)
+        socketStatus = .initialized
         webSocketTask?.cancel(with: .goingAway, reason: reason)
         webSocketTask = nil
         session = nil
@@ -250,7 +266,12 @@ class HasuraSocket {
     }
 }
 
-
+func dateToUTCString(date: Date) -> String {
+    let formatter = ISO8601DateFormatter()
+    formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+    formatter.timeZone = TimeZone(secondsFromGMT: 0) // Set formatter timezone to UTC
+    return formatter.string(from: date)
+}
 
 //func hasura(jwtToken: String) {
 //

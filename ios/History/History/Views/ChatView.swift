@@ -20,7 +20,7 @@ class ChatViewModel: ObservableObject {
 }
 
 struct ChatView: View {
-    @StateObject var contentViewModel: ContentViewModel
+//    @StateObject var contentViewModel: ContentViewModel
     @StateObject var chatViewModel = ChatViewModel()
     var body: some View {
         NavigationStack {
@@ -36,19 +36,16 @@ struct ChatView: View {
                             } onCompletion: {
                                 result in 
                                 Task {
-                                    await handleSignIn(result: result) { isSuccess in
-                                        if isSuccess {
-                                            DispatchQueue.main.async {
-                                                self.contentViewModel.showChat = false
-                                            }
-                                        }
+                                    var  isSuccess = await handleSignIn(result: result)
+                                    if isSuccess {
+                                        Authentication.shared.signInCallback()
                                     }
                                 }
                             }
                             // black button
-                            .signInWithAppleButtonStyle(.black)
-                            // white button
-                            .signInWithAppleButtonStyle(.white)
+//                            .signInWithAppleButtonStyle(.black)
+//                            // white button
+//                            .signInWithAppleButtonStyle(.white)
                             // white with border
                             .signInWithAppleButtonStyle(.whiteOutline)
                         }
@@ -65,7 +62,7 @@ struct ChatView: View {
 
 struct ChatView_Previews : PreviewProvider {
     static var previews: some View {
-        ChatView(contentViewModel: ContentViewModel())
+        ChatView()
     }
 }
 

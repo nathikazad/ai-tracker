@@ -10,20 +10,45 @@ class InteractionModel: ObservableObject {
     
     @Published var interactions: [Interaction] = []
     var subscriptionId: String?
-    func fetchInteractions() async {
-        let graphqlQuery = 
-        """
-            query MyQuery {
-                interactions(order_by: {timestamp: desc}, limit: 5) {
-                    timestamp
-                    id
-                    content
-                  }
+    
+    struct ResponseData: Decodable {
+        var data: InteractionsWrapper
+    }
+
+    struct InteractionsWrapper: Decodable {
+        var interactions: [Interaction]
+    }
+    
+    func generateInteractionQuery(limit: Int? = 20, gte: Date? = nil, isSubscription: Bool = false) -> String {
+        let limitClause = limit.map { ", limit: \($0)" } ?? ""
+        let gteClause: String
+        if let gteDate = gte {
+            let startOfTodayUTCString = dateToUTCString(date: gteDate)
+            gteClause = ", where: {timestamp: {_gte: \"\(startOfTodayUTCString)\"}}"
+        } else {
+            gteClause = ""
+        }
+        
+        let operationType = isSubscription ? "subscription" : "query"
+        
+        return """
+        \(operationType) {
+            interactions(order_by: {timestamp: asc}\(limitClause)\(gteClause)) {
+                timestamp
+                id
+                content
             }
+        }
         """
+    }
+    
+    func fetchInteractions() async {
+        // Use the generateGraphQLQuery function to dynamically create the query
+        let startOfToday = Calendar.current.startOfDay(for: Date())
+        let graphqlQuery = generateInteractionQuery(gte: startOfToday)
 
         do {
-            let data = try await fetchGraphQLData(graphqlQuery: graphqlQuery)
+            let data = try await Hasura.shared.sendGraphQL(actionQuery: graphqlQuery)
             let decoder = JSONDecoder()
             let responseData = try decoder.decode(ResponseData.self, from: data)
             DispatchQueue.main.async {
@@ -33,26 +58,38 @@ class InteractionModel: ObservableObject {
             print("Error: \(error.localizedDescription)")
         }
     }
-    struct ResponseData: Decodable {
-        var data: InteractionsWrapper
-    }
-
-    struct InteractionsWrapper: Decodable {
-        var interactions: [Interaction]
-    }
     
-    func listenToInteractions() {
-        let subscriptionQuery = """
-            subscription { 
-            interactions(order_by: {timestamp: desc}, limit: 5) {
-                timestamp
-                id
-                content
-              }
+    func deleteInteraction(id: Int, onSuccess: (() -> Void)? = nil) {
+        let mutationQuery = """
+        mutation {
+            delete_interactions_by_pk(id: \(id)) {
+              id
+            }
         }
         """
-        subscriptionId = HasuraSocket.shared.startListening(subscriptionQuery: subscriptionQuery) { messageDictionary in
-            
+
+        do {
+            Task {
+                let data = try await Hasura.shared.sendGraphQL(actionQuery: mutationQuery)
+                let decoder = JSONDecoder()
+                let response = try decoder.decode(ResponseData.self, from: data)
+                DispatchQueue.main.async {
+                    print("Interaction deleted: \(response)")
+                    onSuccess?()
+                }
+            }
+        } catch {
+            print("Error deleting interaction: \(error.localizedDescription)")
+        }
+    }
+
+    
+    func listenToInteractions() {
+        // Utilize the generateGraphQLQuery function, but ensure to replace it with a function that supports subscriptions if necessary.
+        let startOfToday = Calendar.current.startOfDay(for: Date())
+        let subscriptionQuery = generateInteractionQuery(gte: startOfToday, isSubscription: true)
+        
+        subscriptionId = Hasura.shared.startListening(subscriptionQuery: subscriptionQuery) { messageDictionary in
             do {
                 // Convert the dictionary back to Data for decoding
                 let data = try JSONSerialization.data(withJSONObject: messageDictionary, options: [])
@@ -67,10 +104,11 @@ class InteractionModel: ObservableObject {
             }
         }
     }
+
     
     func cancelListener() {
         if(subscriptionId != nil) {
-            HasuraSocket.shared.stopListening(uniqueID: subscriptionId!)
+            Hasura.shared.stopListening(uniqueID: subscriptionId!)
             subscriptionId = nil
         }
     }
@@ -84,24 +122,7 @@ class InteractionModel: ObservableObject {
         return sortedGroups
     }
 
-    func deleteInteraction(id: Int) {
-
-            guard let url = URL(string: "http://serverUrl/interaction/\(id)") else { return }
-            var request = URLRequest(url: url)
-            request.httpMethod = "DELETE"
-            URLSession.shared.dataTask(with: request) { (data, response, error) in
-                if let error = error {
-                    print("Failed to delete interaction: \(error)")
-                } else {
-                    DispatchQueue.main.async {
-                        self.interactions.removeAll(where: { interaction in
-                            interaction.id == id
-                        })
-                    }
-                }
-            }.resume()
-        
-    }
+    
 }
 
 struct Interaction: Decodable, Equatable {
