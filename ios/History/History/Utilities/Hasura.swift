@@ -50,13 +50,8 @@ class Hasura {
         let query: String
     }
 
-    func sendGraphQL(actionQuery: String) async throws -> Data {
-        let requestPayload = GraphQLRequest(query: actionQuery)
-        
-        let encoder = JSONEncoder()
-        guard let jsonData = try? encoder.encode(requestPayload) else {
-            throw URLError(.badURL)
-        }
+    func sendGraphQL<T: Decodable>(query: String, responseType: T.Type) async throws -> T {
+        let jsonData = try JSONEncoder().encode(["query": query])
         
         let urlString = "https://ai-tracker-hasura-a1071aad7764.herokuapp.com/v1/graphql"
         guard let url = URL(string: urlString) else {
@@ -77,7 +72,9 @@ class Hasura {
             throw URLError(.badServerResponse)
         }
         
-        return data
+        // Decode the data to the specified responseType and return it.
+        let decodedResponse = try JSONDecoder().decode(responseType, from: data)
+        return decodedResponse
     }
 
     
@@ -115,21 +112,39 @@ class Hasura {
         }
     }
     
-     func startListening(subscriptionQuery: String, callback: @escaping (Any?) -> Void) -> String {
-         if(socketStatus == .initialized) {
-             setup()
-         }
-         currentID += 1
-         let uniqueID = String(currentID)
-         subscriptions[uniqueID] = (query: subscriptionQuery, status: .registered, callback: callback)
-
-         if socketStatus == .ready {
-             startSubscription(uniqueID: uniqueID, subscriptionQuery: subscriptionQuery)
-         } else {
-             print("Socket not ready, subscription \(uniqueID) registered and will be activated upon connection.")
-         }
-         return uniqueID
-     }
+    
+    func startListening<T: Decodable>(subscriptionQuery: String, responseType: T.Type, callback: @escaping (Result<T, Error>) -> Void) -> String {
+        if(socketStatus == .initialized) {
+            setup()
+        }
+        
+        currentID += 1
+        let uniqueID = String(currentID)
+        
+        // Register the subscription with a callback that correctly handles decoding.
+        // Ensure the callback matches the expected signature.
+        subscriptions[uniqueID] = (query: subscriptionQuery, status: .registered, callback: { message in
+            guard let data = try? JSONSerialization.data(withJSONObject: message, options: []) else {
+                callback(.failure(URLError(.cannotParseResponse)))
+                return
+            }
+            
+            do {
+                let decodedResponse = try JSONDecoder().decode(responseType, from: data)
+                callback(.success(decodedResponse))
+            } catch {
+                callback(.failure(error))
+            }
+        })
+        
+        if socketStatus == .ready {
+            startSubscription(uniqueID: uniqueID, subscriptionQuery: subscriptionQuery)
+        } else {
+            print("Socket not ready, subscription \(uniqueID) registered and will be activated upon connection.")
+        }
+        
+        return uniqueID
+    }
     
     struct SubscriptionMessage: Codable {
         let type: String
@@ -266,64 +281,43 @@ class Hasura {
     }
 }
 
-func dateToUTCString(date: Date) -> String {
-    let formatter = ISO8601DateFormatter()
-    formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-    formatter.timeZone = TimeZone(secondsFromGMT: 0) // Set formatter timezone to UTC
-    return formatter.string(from: date)
+class HasuraUtil {
+    static func dateToUTCString(date: Date) -> String {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        formatter.timeZone = TimeZone(secondsFromGMT: 0) // Set formatter timezone to UTC
+        return formatter.string(from: date)
+    }
+    
+    static func justDate(timestamp: String) -> String {
+        let isoFormatter = ISO8601DateFormatter()
+        isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        
+        // Attempt to parse the ISO 8601 date string into a Date object
+        guard let date = isoFormatter.date(from: timestamp) else {
+            return "Invalid Date"
+        }
+        
+        // Create a DateFormatter to output just the date part
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = TimeZone.current // Convert to the local time zone or specify if needed (e.g., PST)
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        // Return the formatted date string adjusted to the local time zone
+        return dateFormatter.string(from: date)
+    }
+    
+    static func formattedTime(timestamp: String) -> String {
+        let isoFormatter = ISO8601DateFormatter()
+        isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds] // Ensure fractional seconds are parsed
+        if let date = isoFormatter.date(from: timestamp) {
+            let localFormatter = DateFormatter()
+            localFormatter.timeZone = TimeZone.current // Convert to local time zone
+            localFormatter.dateFormat = "hh:mm a" // Specify your desired format
+            
+            return localFormatter.string(from: date)
+        }
+        return "Invalid Time" // Return a default or error message if parsing fails
+    }
+    
 }
-
-//func hasura(jwtToken: String) {
-//
-//    // Define your GraphQL query as a string.
-//    let graphqlQuery = """
-//    {
-//      "query": "query MyQuery { interactions(where: {user_id: {_eq: 1}}, limit: 10) { id timestamp } }"
-//    }
-//    """
-//    guard let jsonData = graphqlQuery.data(using: .utf8) else { return }
-//    // Specify the URL of your GraphQL server.
-//    let urlString = "https://ai-tracker-hasura-a1071aad7764.herokuapp.com/v1/graphql"
-//    guard let url = URL(string: urlString) else { return }
-//
-//    // Create a URLRequest for the URL and specify it's a POST request.
-//    var request = URLRequest(url: url)
-//    request.httpMethod = "POST"
-//
-//    // Add necessary headers.
-//    // Content-Type header specifies the media type of the resource.
-//    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-//
-//    // Authorization header with Bearer token.
-//    // Replace YOUR_TOKEN with your actual token.
-//    request.setValue("Bearer \(jwtToken)", forHTTPHeaderField: "Authorization")
-//
-//    // Convert your GraphQL query to Data and set it as the HTTP body.
-//    request.httpBody = jsonData
-//
-//    // Create a URLSessionDataTask to send the request.
-//    let task = URLSession.shared.dataTask(with: request) { data, response, error in
-//        if let error = error {
-//            print("Error: \(error.localizedDescription)")
-//            return
-//        }
-//
-//        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200, let data = data else {
-//            print("Error: Invalid response or data")
-//            return
-//        }
-//        
-//        print(data)
-//
-//        do {
-//            let jsonResult = try JSONSerialization.jsonObject(with: data, options: [])
-//            print("Response: \(jsonResult)")
-//        } catch {
-//            print("Error: Parsing JSON data failed")
-//        }
-//    }
-//
-//    // Start the network task.
-//    task.resume()
-//
-//}
