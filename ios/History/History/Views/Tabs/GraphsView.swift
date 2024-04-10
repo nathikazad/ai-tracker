@@ -31,28 +31,25 @@ struct GraphsView: View {
     ]
     
     var body: some View {
-          NavigationView {
-              ScrollView {
-                  VStack(alignment: .leading) {
-                      ForEach(graphs.indices, id: \.self) { index in
-                          VStack(alignment: .leading) {
-                              Text(graphs[index].title)
-//                                  .font(.title2)
-                                  .padding(.top, index == 0 ? 20 : 40) // Add space at the top for the first item, more for others
-                                  .padding(.bottom, 15)
-                              
-                              graphs[index].chartView()
-                                  .frame(height: 100) // Adjust height as necessary
-                          }
-                          .padding(.horizontal)
-                      }
-                  }
-              }
-              .navigationTitle("Graphs")
-          }
-      }
+        ScrollView {
+            VStack(alignment: .leading) {
+                ForEach(graphs.indices, id: \.self) { index in
+                    VStack(alignment: .leading) {
+                        Text(graphs[index].title)
+                        //                                  .font(.title2)
+                            .padding(.top, index == 0 ? 20 : 40) // Add space at the top for the first item, more for others
+                            .padding(.bottom, 15)
+                        
+                        graphs[index].chartView()
+                            .frame(height: 100) // Adjust height as necessary
+                    }
+                    .padding(.horizontal)
+                }
+            }
+        }
+    }
 }
-    // Preview for ContentView
+// Preview for ContentView
 
 
 

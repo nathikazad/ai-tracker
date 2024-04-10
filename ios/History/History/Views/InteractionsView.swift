@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct InteractionsView: View {
-    @StateObject var interactionModel = InteractionModel()
+    @StateObject var interactionModel = InteractionsModel()
 
     var body: some View {
         ScrollView {

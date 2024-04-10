@@ -6,15 +6,20 @@
 //
 
 import Foundation
+//
+//struct Message: Decodable, Identifiable {
+////    var id = UUID()
+////    let userUid: String
+////    let text: String
+////    let photoURL: String
+////    let createdAt: Date
+//    let id: Int
+//    let sender: String
+//    let content: String
+//    let isCurrentUser: Bool // to differentiate between sender and receiver
+//    
+//    func isFromCurrentUser() -> Bool {
+//        return false
+//    }
+//}
 
-struct Message: Decodable, Identifiable {
-    var id = UUID()
-    let userUid: String
-    let text: String
-    let photoURL: String
-    let createdAt: Date
-    
-    func isFromCurrentUser() -> Bool {
-        return false
-    }
-}

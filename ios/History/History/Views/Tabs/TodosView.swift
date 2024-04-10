@@ -8,36 +8,36 @@
 import SwiftUI
 
 struct TodosView: View {
-        @State private var tasks = [
-            ("Morning meeting", false),
-            ("Check emails", false),
-            ("Go running", false),
-            ("Discuss marketing", false)
-        ]
-        
-        var body: some View {
-            NavigationView {
-                List {
-                    ForEach($tasks, id: \.0) { $task in
-                        HStack {
-                            Button(action: {
-                                task.1.toggle()
-                            }) {
-                                HStack {
-                                    Image(systemName: task.1 ? "checkmark.square.fill" : "square")
-                                        .foregroundColor(task.1 ? .blue : .gray)
-                                    Text(task.0)
-                                }
-                            }
-                            .buttonStyle(PlainButtonStyle())
-                        }
+    @StateObject var todoModel = TodosModel()
+
+    var body: some View {
+        List {
+            ForEach(todoModel.todos, id: \.id) { todo in
+                Button(action: {
+                    // Example toggle action
+                }) {
+                    HStack {
+                        Image(systemName: todo.isDone ? "checkmark.square.fill" : "square")
+                            .foregroundColor(todo.isDone ? .blue : .gray)
+                        Text(todo.name)
                     }
                 }
-                .navigationTitle("Todos")
+                .buttonStyle(PlainButtonStyle())
             }
-            
+        }
+        .onAppear {
+            Task {
+                await todoModel.fetchTodos()
+                todoModel.listenToTodos()
+            }
+        }
+        .onDisappear {
+            todoModel.cancelListener()
+            print("TodosView has disappeared")
         }
     }
+}
+
 
 #Preview {
     TodosView()

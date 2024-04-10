@@ -6,7 +6,7 @@
 //
 
 import Foundation
-class InteractionModel: ObservableObject {
+class InteractionsModel: ObservableObject {
     
     @Published var interactions: [Interaction] = []
     var subscriptionId: String?

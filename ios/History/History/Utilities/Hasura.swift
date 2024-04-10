@@ -50,6 +50,31 @@ class Hasura {
         let query: String
     }
 
+    private func decodeData<T: Decodable>(_ responseType: T.Type, _ data: Data) throws -> T {
+        // Decode the data to the specified responseType and return it.
+        do {
+            let decodedResponse = try JSONDecoder().decode(responseType, from: data)
+            return decodedResponse
+//        } catch let DecodingError.dataCorrupted(context) {
+//            print("Data corrupted: \(context)")
+//        } catch let DecodingError.keyNotFound(key, context) {
+//            print("Key '\(key)' not found: \(context.debugDescription), codingPath: \(context.codingPath)")
+//        } catch let DecodingError.typeMismatch(type, context) {
+//            print("Type '\(type)' mismatch: \(context.debugDescription), codingPath: \(context.codingPath)")
+//        } catch let DecodingError.valueNotFound(value, context) {
+//            print("Value '\(value)' not found: \(context.debugDescription), codingPath: \(context.codingPath)")
+        } catch let error {
+            // If decoding fails, print the raw data as a string for debugging.
+            print("Error decoding data: \(error.localizedDescription)")
+            if let rawResponse = String(data: data, encoding: .utf8) {
+                print("Failed to decode response: \(rawResponse)")
+            } else {
+                print("Failed to decode response and could not convert data to string.")
+            }
+            throw error
+        }
+    }
+    
     func sendGraphQL<T: Decodable>(query: String, responseType: T.Type) async throws -> T {
         let jsonData = try JSONEncoder().encode(["query": query])
         
@@ -71,10 +96,9 @@ class Hasura {
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
             throw URLError(.badServerResponse)
         }
+        print(data)
         
-        // Decode the data to the specified responseType and return it.
-        let decodedResponse = try JSONDecoder().decode(responseType, from: data)
-        return decodedResponse
+        return try decodeData(responseType, data)
     }
 
     
@@ -84,7 +108,9 @@ class Hasura {
              await Authentication.shared.checkAndReloadHasuraJwt()
              let url = URL(string: "wss://ai-tracker-hasura-a1071aad7764.herokuapp.com/v1/graphql")!
              var request = URLRequest(url: url)
-             
+             if(Authentication.shared.hasuraJwt == nil){
+                 return
+             }
              let token = Authentication.shared.hasuraJwt!
              request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
              request.addValue("graphql-ws", forHTTPHeaderField: "Sec-WebSocket-Protocol")
@@ -130,7 +156,7 @@ class Hasura {
             }
             
             do {
-                let decodedResponse = try JSONDecoder().decode(responseType, from: data)
+                let decodedResponse = try self.decodeData(responseType, data)
                 callback(.success(decodedResponse))
             } catch {
                 callback(.failure(error))

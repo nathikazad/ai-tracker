@@ -12,11 +12,14 @@
 		FE12C5EA2BC4B330002CDC60 /* GoalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12C5E92BC4B330002CDC60 /* GoalsView.swift */; };
 		FE12C5EC2BC4B359002CDC60 /* GraphsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12C5EB2BC4B359002CDC60 /* GraphsView.swift */; };
 		FE12C5EF2BC4B832002CDC60 /* MicrophoneButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12C5EE2BC4B832002CDC60 /* MicrophoneButton.swift */; };
+		FE12C5F12BC5B739002CDC60 /* TodosModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12C5F02BC5B739002CDC60 /* TodosModel.swift */; };
+		FE12C5F32BC5C8B1002CDC60 /* GoalsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12C5F22BC5C8B1002CDC60 /* GoalsModel.swift */; };
 		FE1C0EAB2BC043D500FF56AB /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EAA2BC043D500FF56AB /* Message.swift */; };
 		FE1C0EAE2BC0713B00FF56AB /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EAD2BC0713B00FF56AB /* Authentication.swift */; };
 		FE1C0EAF2BC0713B00FF56AB /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EAD2BC0713B00FF56AB /* Authentication.swift */; };
 		FE1C0EB12BC0A29300FF56AB /* Hasura.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EB02BC0A29300FF56AB /* Hasura.swift */; };
 		FE1C0EB22BC0A29300FF56AB /* Hasura.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EB02BC0A29300FF56AB /* Hasura.swift */; };
+		FE20CA262BC5E4CD00863604 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE20CA252BC5E4CD00863604 /* SettingsView.swift */; };
 		FE4F7BA32BA7D79E0041CB6A /* HistoryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BA22BA7D79E0041CB6A /* HistoryApp.swift */; };
 		FE4F7BA52BA7D79E0041CB6A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BA42BA7D79E0041CB6A /* ContentView.swift */; };
 		FE4F7BA72BA7D79F0041CB6A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE4F7BA62BA7D79F0041CB6A /* Assets.xcassets */; };
@@ -30,7 +33,7 @@
 		FE4F7BC92BA7D7FA0041CB6A /* WatchToiOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BC82BA7D7FA0041CB6A /* WatchToiOS.swift */; };
 		FE4F7BCC2BA7DBB70041CB6A /* WatchConnectivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE4F7BCB2BA7DBB60041CB6A /* WatchConnectivity.framework */; };
 		FE4F7BCE2BA8F3C50041CB6A /* InteractionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BCD2BA8F3C50041CB6A /* InteractionsView.swift */; };
-		FE4F7BD02BA8F50F0041CB6A /* InteractionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BCF2BA8F50F0041CB6A /* InteractionModel.swift */; };
+		FE4F7BD02BA8F50F0041CB6A /* InteractionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BCF2BA8F50F0041CB6A /* InteractionsModel.swift */; };
 		FE4F7BD22BA8FC600041CB6A /* BottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BD12BA8FC600041CB6A /* BottomBar.swift */; };
 		FE4F7BD92BA94D580041CB6A /* SpeechRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BD82BA94D580041CB6A /* SpeechRecognizer.swift */; };
 		FE4F7BDB2BA957780041CB6A /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */; };
@@ -99,10 +102,13 @@
 		FE12C5E92BC4B330002CDC60 /* GoalsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsView.swift; sourceTree = "<group>"; };
 		FE12C5EB2BC4B359002CDC60 /* GraphsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphsView.swift; sourceTree = "<group>"; };
 		FE12C5EE2BC4B832002CDC60 /* MicrophoneButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneButton.swift; sourceTree = "<group>"; };
+		FE12C5F02BC5B739002CDC60 /* TodosModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosModel.swift; sourceTree = "<group>"; };
+		FE12C5F22BC5C8B1002CDC60 /* GoalsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsModel.swift; sourceTree = "<group>"; };
 		FE1C0EAA2BC043D500FF56AB /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		FE1C0EAC2BC0583A00FF56AB /* History.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = History.entitlements; sourceTree = "<group>"; };
 		FE1C0EAD2BC0713B00FF56AB /* Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
 		FE1C0EB02BC0A29300FF56AB /* Hasura.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hasura.swift; sourceTree = "<group>"; };
+		FE20CA252BC5E4CD00863604 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		FE4F7B9F2BA7D79E0041CB6A /* History.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = History.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE4F7BA22BA7D79E0041CB6A /* HistoryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryApp.swift; sourceTree = "<group>"; };
 		FE4F7BA42BA7D79E0041CB6A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -117,7 +123,7 @@
 		FE4F7BC82BA7D7FA0041CB6A /* WatchToiOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchToiOS.swift; sourceTree = "<group>"; };
 		FE4F7BCB2BA7DBB60041CB6A /* WatchConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WatchConnectivity.framework; path = System/Library/Frameworks/WatchConnectivity.framework; sourceTree = SDKROOT; };
 		FE4F7BCD2BA8F3C50041CB6A /* InteractionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionsView.swift; sourceTree = "<group>"; };
-		FE4F7BCF2BA8F50F0041CB6A /* InteractionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionModel.swift; sourceTree = "<group>"; };
+		FE4F7BCF2BA8F50F0041CB6A /* InteractionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionsModel.swift; sourceTree = "<group>"; };
 		FE4F7BD12BA8FC600041CB6A /* BottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBar.swift; sourceTree = "<group>"; };
 		FE4F7BD82BA94D580041CB6A /* SpeechRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognizer.swift; sourceTree = "<group>"; };
 		FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
@@ -270,6 +276,7 @@
 				FE7EF1DD2BBE0F0700279E18 /* DailyRemindersView.swift */,
 				FE9EAE4E2BC03F280082DE87 /* MessageView.swift */,
 				FE9EAE502BC042260082DE87 /* ChatView.swift */,
+				FE20CA252BC5E4CD00863604 /* SettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -277,8 +284,10 @@
 		FE7EF1DB2BBE0EDD00279E18 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				FE4F7BCF2BA8F50F0041CB6A /* InteractionModel.swift */,
+				FE4F7BCF2BA8F50F0041CB6A /* InteractionsModel.swift */,
 				FE1C0EAA2BC043D500FF56AB /* Message.swift */,
+				FE12C5F02BC5B739002CDC60 /* TodosModel.swift */,
+				FE12C5F22BC5C8B1002CDC60 /* GoalsModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -449,19 +458,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE12C5F32BC5C8B1002CDC60 /* GoalsModel.swift in Sources */,
 				FE9EAE4F2BC03F280082DE87 /* MessageView.swift in Sources */,
 				FE4F7BD92BA94D580041CB6A /* SpeechRecognizer.swift in Sources */,
 				FE4F7BD22BA8FC600041CB6A /* BottomBar.swift in Sources */,
+				FE12C5F12BC5B739002CDC60 /* TodosModel.swift in Sources */,
 				FE4F7BA52BA7D79E0041CB6A /* ContentView.swift in Sources */,
 				FE12C5EA2BC4B330002CDC60 /* GoalsView.swift in Sources */,
 				FE4F7BB12BA7D7C80041CB6A /* iOSToWatch.swift in Sources */,
 				FE4F7BA32BA7D79E0041CB6A /* HistoryApp.swift in Sources */,
+				FE20CA262BC5E4CD00863604 /* SettingsView.swift in Sources */,
 				FE12C5EF2BC4B832002CDC60 /* MicrophoneButton.swift in Sources */,
 				FE12C5EC2BC4B359002CDC60 /* GraphsView.swift in Sources */,
 				FE9EAE512BC042260082DE87 /* ChatView.swift in Sources */,
 				FEB8FD1F2BAA253100EE9B68 /* Intents.swift in Sources */,
 				FE1C0EAE2BC0713B00FF56AB /* Authentication.swift in Sources */,
-				FE4F7BD02BA8F50F0041CB6A /* InteractionModel.swift in Sources */,
+				FE4F7BD02BA8F50F0041CB6A /* InteractionsModel.swift in Sources */,
 				FE4F7BDB2BA957780041CB6A /* AudioRecorder.swift in Sources */,
 				FE12C5E62BC4B2A5002CDC60 /* TimelineView.swift in Sources */,
 				FE1C0EB12BC0A29300FF56AB /* Hasura.swift in Sources */,
