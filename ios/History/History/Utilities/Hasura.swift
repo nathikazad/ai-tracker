@@ -75,7 +75,7 @@ class Hasura {
     func sendGraphQL<T: Decodable>(query: String, responseType: T.Type) async throws -> T {
         let jsonData = try JSONEncoder().encode(["query": query])
         
-        let urlString = "https://ai-tracker-hasura-a1071aad7764.herokuapp.com/v1/graphql"
+        let urlString = "https://\(HasuraAddress)/v1/graphql"
         guard let url = URL(string: urlString) else {
             throw URLError(.badURL)
         }
@@ -112,8 +112,11 @@ class Hasura {
          socketStatus = .handshaking
          Task {
              await Authentication.shared.checkAndReloadHasuraJwt()
-             let url = URL(string: "wss://ai-tracker-hasura-a1071aad7764.herokuapp.com/v1/graphql")!
+             let url = URL(string: "wss://\(HasuraAddress)/v1/graphql")!
              var request = URLRequest(url: url)
+             if(Authentication.shared.hasuraJwt == nil) { //sometimes socket tries to connect after logout, this is to catch that edge case, so don't remove
+                 return
+             }
              let token = Authentication.shared.hasuraJwt!
              request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
              request.addValue("graphql-ws", forHTTPHeaderField: "Sec-WebSocket-Protocol")

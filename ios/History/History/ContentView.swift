@@ -9,7 +9,15 @@ import SwiftUI
 
 class AppState: ObservableObject {
     static let shared = AppState()
-    @Published var chatViewToShow: ChatViewToShow = .none
+    @Published private(set) var chatViewToShow: ChatViewToShow = .none
+    
+    func hideChat() {
+        chatViewToShow = .none
+    }
+    
+    func showChat(newChatViewToShow: ChatViewToShow) {
+        chatViewToShow = newChatViewToShow
+    }
 }
 enum ChatViewToShow {
     case none, onBoard, normal
@@ -18,13 +26,17 @@ enum ChatViewToShow {
 struct ContentView: View {
     @ObservedObject var appState = AppState.shared
     var chatViewPresented: Binding<Bool> {
-            Binding(
-                get: { self.appState.chatViewToShow != .none },
-                set: { isPresented in
-                    self.appState.chatViewToShow = isPresented ? .normal : .none
+        Binding(
+            get: { self.appState.chatViewToShow != .none },
+            set: { isPresented in
+                if(isPresented) {
+                    self.appState.showChat(newChatViewToShow: .normal)
+                } else {
+                    self.appState.showChat(newChatViewToShow: .none)
                 }
-            )
-        }
+            }
+        )
+    }
     var body: some View {
         Group {
             if appState.chatViewToShow == ChatViewToShow.none {
@@ -37,7 +49,7 @@ struct ContentView: View {
         .onAppear {
             DispatchQueue.main.async {
                 if(!Authentication.shared.areJwtSet) {
-                    self.appState.chatViewToShow = .onBoard
+                    self.appState.showChat(newChatViewToShow:.onBoard)
                 }
             }
             registerBackroundNotifiers()
@@ -107,10 +119,10 @@ struct MainView: View {
                 .sheet(isPresented: $showingSettings) {
                     SettingsView()
                 }
-
+                
                 // Positioned the MicrophoneButton on top of the TabView
                 MicrophoneButton()
-               
+                
             }
         }
     }

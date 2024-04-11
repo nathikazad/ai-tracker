@@ -10,14 +10,13 @@ import SwiftUI
 struct MicrophoneButton: View {
     @State private var isRecording: Bool = false
     @ObservedObject var appState = AppState.shared
-    
-     
+    @StateObject var audioRecorder = AudioRecorder();
     
     var body: some View {
         VStack {
             Button(action: {
-                self.isRecording.toggle()
-                print("Center button tapped!")
+                clickButton()
+                print("Mic button tapped!")
             }) {
                 Image(systemName: isRecording ? "stop.circle.fill" : "mic.circle.fill")
                     .resizable()
@@ -33,9 +32,44 @@ struct MicrophoneButton: View {
             .padding(.bottom, -30)
             // Applying the long press gesture
             .simultaneousGesture(LongPressGesture().onEnded { _ in
-                appState.chatViewToShow = .normal
+                appState.showChat(newChatViewToShow: .normal)
                 print("long press")
             })
+        }
+    }
+    
+    func clickButton() {
+        if isRecording == false {
+            Task.init {
+                await audioRecorder.startRecording();
+                print("recording started")
+                isRecording = true
+            }
+        } else if isRecording == true {
+            Task.init {
+                isRecording = false
+                await stopListening()
+                print("recording stopped")
+            }
+        }
+        
+    }
+    
+    private func stopListening() async {
+        let fileUrl = await audioRecorder.stopRecording()
+        do {
+            let data = try AudioUploader().uploadAudioFile(at: fileUrl, to: uploadAudioEndpoint)
+            if let data = data, let responseText = String(data: data, encoding: .utf8)
+            {
+                DispatchQueue.main.async {
+                    print("Received text: \(responseText)")
+                }
+                
+            }
+        } catch {
+            DispatchQueue.main.async {
+                print("Some uploading error")
+            }
         }
     }
 }

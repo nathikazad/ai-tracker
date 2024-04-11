@@ -8,8 +8,6 @@
 import SwiftUI
 import AuthenticationServices
 
-
-
 struct Message: Identifiable {
     let id: Int
     let sender: String
@@ -53,64 +51,104 @@ struct ChatMessageRow: View {
                 Spacer()
             }
         }
+        .padding(.top)
         .padding(.horizontal)
         .padding(.bottom)
     }
 }
 
-// The main chat view
-struct ChatView: View {
-    @State var chatContents: [IdentifiableView] = [
-        IdentifiableView(
+import SwiftUI
+import Combine
+import AuthenticationServices
+
+class ChatViewModel: ObservableObject {
+    @Published var chatContents: [IdentifiableView] = []
+    @Published var isSignedIn: Bool = false
+    
+    init() {
+        setupInitialChatContents()
+    }
+
+    private func setupInitialChatContents() {
+        let welcomeMessage = IdentifiableView(
             id: 1,
-            ChatMessageRow(message: Message(id: 0, sender: "Sophie", content: "Hi my name is Maximus, I'm an AI agent built with the singular purpose to help you reach your goals. Would you like to give me a try?", timestamp: "Yesterday 8:30 PM", isCurrentUser: false))),
-        
-        IdentifiableView(
-            id: 2,
-            ChatMessageRow(message: Message(id: 1, sender: "ChatGPT", content: "Sure", timestamp: "Yesterday 8:31 PM", isCurrentUser: true))),
-        IdentifiableView(
-            id: 3,
-            ChatMessageRow(message: Message(id: 0, sender: "Sophie", content: "Ok sign in by clicking the button below and I will set everything up.", timestamp: "Yesterday 8:30 PM", isCurrentUser: false))),
-        IdentifiableView(
+            ChatMessageRow(message: Message(id: 0, sender: "Sophie", content: "Hi my name is Maximus, I'm an AI agent built with the singular purpose to help you reach your goals. Sign in by clicking the button below and we will get started.", timestamp: "Yesterday 8:30 PM", isCurrentUser: false))
+        )
+
+        let signInButton = IdentifiableView(
             id: 4,
             SignInWithAppleButton(.signIn, onRequest: { request in
                 request.requestedScopes = [.fullName]
             }, onCompletion: { result in
                 Task {
-                    var  isSuccess = await handleSignIn(result: result)
-                    if isSuccess {
-                        AppState.shared.chatViewToShow = .none
-                    }
+                    await self.localHandleSignIn(result: result)
                 }
             })
             .frame(width: 200)
+            .disabled(isSignedIn)
         )
-    ]
+        chatContents = [welcomeMessage, signInButton]
+    }
+
+    @MainActor
+    private func localHandleSignIn(result: Result<ASAuthorization, Error>) async {
+        let isSuccess = await handleSignIn(result: result)
+        if isSuccess {
+            isSignedIn = true
+            addLoginConfirmationMessage()
+        }
+    }
+
+    @MainActor
+    private func addLoginConfirmationMessage() {
+        let newMessage = Message(id: chatContents.count, sender: "System", content: "Great, you are logged in now. You can click on the microphone and talk to me.", timestamp: "\(Date())", isCurrentUser: false)
+        let successSignInMessage = IdentifiableView(id: chatContents.count + 1, ChatMessageRow(message: newMessage))
+        
+        let okButton = IdentifiableView(
+            id: chatContents.count,
+            Button(action: {
+                AppState.shared.showChat(newChatViewToShow:.none)
+            }) {
+                Text("Ok")
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
+                    .background(Color.black)
+                    .cornerRadius(8)
+            }
+        )
+        chatContents.append(successSignInMessage)
+        chatContents.append(okButton)
+        
+    }
+}
+
+
+struct ChatView: View {
+    @StateObject var chatViewModel = ChatViewModel()
     @ObservedObject var appState = AppState.shared
     
     var body: some View {
         NavigationView {
             VStack {
                 ScrollView {
-                    ForEach(chatContents) { content in
+                    ForEach(chatViewModel.chatContents) { content in
                         content.view
                     }
-                    
                 }
                 .padding()
-                SendBar()
+//                SendBar()
                 
             }
             .navigationBarTitle("Maximus", displayMode: .inline)
             .navigationBarItems(
-                        leading: appState.chatViewToShow == .normal ? Button(action: {
-                            // Your action to go back
-                            appState.chatViewToShow = .none
-                        }) {
-                            Image(systemName: "chevron.left")
-                                .foregroundColor(.black)
-                        } : nil  // No button when not in normal chat view
-                    )
+                leading: appState.chatViewToShow == .normal ? Button(action: {
+                    self.appState.showChat(newChatViewToShow:.none)
+                }) {
+                    Image(systemName: "chevron.left")
+                        .foregroundColor(.black)
+                } : nil  // No button when not in normal chat view
+            )
         }
     }
 }
@@ -131,7 +169,7 @@ struct SendButton: View {
 
 struct SendBar: View {
     @State var currentMessage: String = ""
-    @State var isRecording: Bool = false 
+    @State var isRecording: Bool = false
     @FocusState private var isTextFieldFocused: Bool
     
     var body: some View {
@@ -156,13 +194,9 @@ struct SendBar: View {
             .padding(.leading, 0)
             
             SendButton {
-                // Action to send message
-                // Make sure to stop recording if the message is sent while recording
-                if isRecording {
-                    self.isRecording = false
-                    // Add logic to handle stopping of recording here
-                }
+                AppState.shared.showChat(newChatViewToShow:.none)
             }
+            .disabled(isRecording)
         }
         .padding(.bottom, 10)
         .padding(.horizontal, 20)
@@ -174,6 +208,12 @@ struct SendBar: View {
     ChatView()
 }
 
+//        IdentifiableView(
+//            id: 2,
+//            ChatMessageRow(message: Message(id: 1, sender: "ChatGPT", content: "Sure", timestamp: "Yesterday 8:31 PM", isCurrentUser: true))),
+//        IdentifiableView(
+//            id: 3,
+//            ChatMessageRow(message: Message(id: 0, sender: "Sophie", content: "Ok sign in by clicking the button below and I will set everything up.", timestamp: "Yesterday 8:30 PM", isCurrentUser: false))),
 
 //class ChatViewModel: ObservableObject {
 //

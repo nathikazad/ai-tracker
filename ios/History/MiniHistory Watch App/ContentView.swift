@@ -77,11 +77,11 @@ struct ContentView: View {
         }
     
     func appeared() {
-        NotificationCenter.default.addObserver(forName: .startListeningNotification, object: nil, queue: .main) { _ in
-            Task.init {
-                await self.startListening()
-            }
-        }
+//        NotificationCenter.default.addObserver(forName: .startListeningNotification, object: nil, queue: .main) { _ in
+//            Task.init {
+//                await self.startListening()
+//            }
+//        }
     }
     
     private func startListening() async {
@@ -95,18 +95,18 @@ struct ContentView: View {
     private func stopListening() async {
         let fileUrl = await audioRecorder.stopRecording()
         do {
-            let data = try AudioUploader().uploadAudioFile(at: fileUrl, to: "https://ai-tracker-server-613e3dd103bb.herokuapp.com/convertAudioToInteraction")
+            let data = try AudioUploader().uploadAudioFile(at: fileUrl, to: uploadAudioEndpoint)
             if let data = data, let responseText = String(data: data, encoding: .utf8)
             {
-                DispatchQueue.main.async { // Ensure UI updates are performed on the main thread
-                    self.responseText = responseText // Update the response text state
+                DispatchQueue.main.async {
+                    self.responseText = responseText //
                     self.recordingState = .ready
                 }
                 print("Received text: \(responseText)")
             }
         } catch {
             DispatchQueue.main.async {
-                self.responseText = "Some uploading error" // Handle error by updating the response text
+                self.responseText = "Some uploading error"
                 self.recordingState = .ready
             }
             print("Some uploading error")
