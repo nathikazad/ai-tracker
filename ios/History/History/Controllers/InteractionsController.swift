@@ -6,27 +6,28 @@
 //
 
 import Foundation
-class InteractionsModel: ObservableObject {
+class InteractionsController: ObservableObject {
     
-    @Published var interactions: [Interaction] = []
+    @Published var interactions: [InteractionModel] = []
     var subscriptionId: String?
     
-    struct ResponseData: Decodable {
+    struct InteractionsResponseData: Decodable {
         var data: InteractionsWrapper
+        struct InteractionsWrapper: Decodable {
+            var interactions: [InteractionModel]
+        }
     }
     
-    struct InteractionsWrapper: Decodable {
-        var interactions: [Interaction]
-    }
+    
     
     
     func fetchInteractions() async {
         let startOfToday = Calendar.current.startOfDay(for: Date())
-        let graphqlQuery = Interaction.generateQuery(gte: startOfToday)
+        let graphqlQuery = InteractionsController.generateQuery(gte: startOfToday)
         
         do {
             // Directly get the decoded ResponseData object from sendGraphQL
-            let responseData: ResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, responseType: ResponseData.self)
+            let responseData: InteractionsResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, responseType: InteractionsResponseData.self)
             DispatchQueue.main.async {
                 self.interactions = responseData.data.interactions
             }
@@ -67,9 +68,9 @@ class InteractionsModel: ObservableObject {
     
     func listenToInteractions() {
         let startOfToday = Calendar.current.startOfDay(for: Date())
-        let subscriptionQuery = Interaction.generateQuery(gte: startOfToday, isSubscription: true)
+        let subscriptionQuery = InteractionsController.generateQuery(gte: startOfToday, isSubscription: true)
         
-        subscriptionId = Hasura.shared.startListening(subscriptionQuery: subscriptionQuery, responseType: ResponseData.self) {result in
+        subscriptionId = Hasura.shared.startListening(subscriptionQuery: subscriptionQuery, responseType: InteractionsResponseData.self) {result in
             switch result {
             case .success(let responseData):
                 DispatchQueue.main.async {
@@ -89,19 +90,33 @@ class InteractionsModel: ObservableObject {
         }
     }
     
-    var interactionsGroupedByDate: [(date: String, interactions: [Interaction])] {
-        // Group interactions by justDate
-        let groups = Dictionary(grouping: interactions) { $0.justDate }
+    static private func generateQuery(limit: Int? = 20, gte: Date? = nil, isSubscription: Bool = false) -> String {
+        let limitClause = limit.map { ", limit: \($0)" } ?? ""
+        let user_id: Int = Authentication.shared.userId! // Ensure this does not force unwrap a nil value in your actual code
         
-        // Convert Dictionary to sorted array of tuples
-        let sortedGroups = groups.sorted { $0.key < $1.key }.map { (date: $0.key, interactions: $0.value) }
-        return sortedGroups
+        var whereClauses: [String] = ["user_id: {_eq: \(user_id)}"]
+        
+        if let gteDate = gte {
+            let startOfTodayUTCString = HasuraUtil.dateToUTCString(date: gteDate)
+            whereClauses.append("timestamp: {_gte: \"\(startOfTodayUTCString)\"}")
+        }
+        
+        let whereClause = whereClauses.isEmpty ? "" : "where: {\(whereClauses.joined(separator: ", "))}"
+        let operationType = isSubscription ? "subscription" : "query"
+        
+        return """
+        \(operationType) {
+            interactions(order_by: {timestamp: asc}\(limitClause.isEmpty ? "" : limitClause) \(whereClause)) {
+                timestamp
+                id
+                content
+            }
+        }
+        """
     }
-    
-    
 }
 
-struct Interaction: Decodable, Equatable {
+struct InteractionModel: Decodable, Equatable {
     var id: Int
     var content: String
     var timestamp: String
@@ -110,29 +125,6 @@ struct Interaction: Decodable, Equatable {
         case id
         case content
         case timestamp // if the key in your JSON is "timestamp" instead of "time"
-    }
-    
-    static func generateQuery(limit: Int? = 20, gte: Date? = nil, isSubscription: Bool = false) -> String {
-        let limitClause = limit.map { ", limit: \($0)" } ?? ""
-        let gteClause: String
-        if let gteDate = gte {
-            let startOfTodayUTCString = HasuraUtil.dateToUTCString(date: gteDate)
-            gteClause = ", where: {timestamp: {_gte: \"\(startOfTodayUTCString)\"}}"
-        } else {
-            gteClause = ""
-        }
-        
-        let operationType = isSubscription ? "subscription" : "query"
-        
-        return """
-        \(operationType) {
-            interactions(order_by: {timestamp: asc}\(limitClause)\(gteClause)) {
-                timestamp
-                id
-                content
-            }
-        }
-        """
     }
     
     var justDate: String {

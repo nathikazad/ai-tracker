@@ -9,10 +9,10 @@ import SwiftUI
 
 // Define your custom views for each tab
 struct TimelineView: View {
-    @StateObject var interactionModel = InteractionsModel()    
+    @StateObject var interactionController = InteractionsController()    
     var body: some View {
         List {
-            ForEach(interactionModel.interactions, id: \.id) { interaction in
+            ForEach(interactionController.interactions, id: \.id) { interaction in
                 HStack {
                     Text(interaction.formattedTime)
                         .font(.headline)
@@ -25,12 +25,12 @@ struct TimelineView: View {
         }
         .onAppear {
             Task {
-                await interactionModel.fetchInteractions()
-                interactionModel.listenToInteractions()
+                await interactionController.fetchInteractions()
+                interactionController.listenToInteractions()
             }
         }
         .onDisappear {
-            interactionModel.cancelListener()
+            interactionController.cancelListener()
             print("View has disappeared")
         }
     }

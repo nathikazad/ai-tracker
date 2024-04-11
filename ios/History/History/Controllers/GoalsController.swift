@@ -6,27 +6,26 @@
 //
 
 import Foundation
-class GoalsModel: ObservableObject {
+class GoalsController: ObservableObject {
     
-    @Published var goals: [Goal] = []
+    @Published var goals: [GoalModel] = []
     var subscriptionId: String?
     
-    struct ResponseData: Decodable {
+    struct GoalsResponseData: Decodable {
         var data: GoalsWrapper
-    }
-    
-    struct GoalsWrapper: Decodable {
-        var goals: [Goal]
+        struct GoalsWrapper: Decodable {
+            var goals: [GoalModel]
+        }
     }
     
     
     func fetchGoals() async {
         let startOfToday = Calendar.current.startOfDay(for: Date())
-        let graphqlQuery = Goal.generateQuery()
+        let graphqlQuery = GoalsController.generateQuery()
         
         do {
             // Directly get the decoded ResponseData object from sendGraphQL
-            let responseData: ResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, responseType: ResponseData.self)
+            let responseData: GoalsResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, responseType: GoalsResponseData.self)
             DispatchQueue.main.async {
                 self.goals = responseData.data.goals
             }
@@ -69,9 +68,9 @@ class GoalsModel: ObservableObject {
     
     func listenToGoals() {
         let startOfToday = Calendar.current.startOfDay(for: Date())
-        let subscriptionQuery = Goal.generateQuery(isSubscription: true)
+        let subscriptionQuery = GoalsController.generateQuery(isSubscription: true)
         
-        subscriptionId = Hasura.shared.startListening(subscriptionQuery: subscriptionQuery, responseType: ResponseData.self) {result in
+        subscriptionId = Hasura.shared.startListening(subscriptionQuery: subscriptionQuery, responseType: GoalsResponseData.self) {result in
             switch result {
             case .success(let responseData):
                 DispatchQueue.main.async {
@@ -91,19 +90,27 @@ class GoalsModel: ObservableObject {
         }
     }
     
-//    var goalsGroupedByDate: [(date: String, goals: [Goal])] {
-//        // Group goals by justDate
-//        let groups = Dictionary(grouping: goals) { $0.justDate }
-//
-//        // Convert Dictionary to sorted array of tuples
-//        let sortedGroups = groups.sorted { $0.key < $1.key }.map { (date: $0.key, goals: $0.value) }
-//        return sortedGroups
-//    }
-    
+    static private func generateQuery(limit: Int? = 20, isSubscription: Bool = false) -> String {
+        let limitClause = limit.map { ", limit: \($0)" } ?? ""
+        let operationType = isSubscription ? "subscription" : "query"
+        
+        let user_id: Int = Authentication.shared.userId!
+        
+        return """
+        \(operationType) {
+            goals(where: {user_id: {_eq: \(user_id)}}\(limitClause)) {
+                id
+                name
+                status
+                period
+            }
+        }
+        """
+    }
     
 }
 
-struct Goal: Decodable, Equatable {
+struct GoalModel: Decodable, Equatable {
     var id: Int
     var name: String
     var status: String
@@ -114,30 +121,6 @@ struct Goal: Decodable, Equatable {
         case name
         case status
         case period
-    }
-    
-    static func generateQuery(limit: Int? = 20, isSubscription: Bool = false) -> String {
-        let limitClause = limit.map { " limit: \($0)" } ?? ""
-        let gteClause: String
-//        if let gteDate = gte {
-//            let startOfTodayUTCString = HasuraUtil.dateToUTCString(date: gteDate)
-//            gteClause = ", where: {timestamp: {_gte: \"\(startOfTodayUTCString)\"}}"
-//        } else {
-            gteClause = ""
-//        }
-        
-        let operationType = isSubscription ? "subscription" : "query"
-        
-        return """
-        \(operationType) {
-            goals(\(limitClause)\(gteClause)) {
-                id
-                name
-                status
-                period
-            }
-        }
-        """
     }
     
 }

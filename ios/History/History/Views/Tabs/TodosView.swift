@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct TodosView: View {
-    @StateObject var todoModel = TodosModel()
+    @StateObject var todoController = TodosController()
 
     var body: some View {
         List {
-            ForEach(todoModel.todos, id: \.id) { todo in
+            ForEach(todoController.todos, id: \.id) { todo in
                 Button(action: {
                     // Example toggle action
                 }) {
@@ -27,12 +27,12 @@ struct TodosView: View {
         }
         .onAppear {
             Task {
-                await todoModel.fetchTodos()
-                todoModel.listenToTodos()
+                await todoController.fetchTodos()
+                todoController.listenToTodos()
             }
         }
         .onDisappear {
-            todoModel.cancelListener()
+            todoController.cancelListener()
             print("TodosView has disappeared")
         }
     }

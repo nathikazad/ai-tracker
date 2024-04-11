@@ -6,27 +6,28 @@
 //
 
 import Foundation
-class TodosModel: ObservableObject {
+class TodosController: ObservableObject {
     
     @Published var todos: [Todo] = []
     var subscriptionId: String?
     
-    struct ResponseData: Decodable {
+    struct TodosResponseData: Decodable {
         var data: TodosWrapper
+        struct TodosWrapper: Decodable {
+            var todos: [Todo]
+        }
     }
     
-    struct TodosWrapper: Decodable {
-        var todos: [Todo]
-    }
+    
     
     
     func fetchTodos() async {
         let startOfToday = Calendar.current.startOfDay(for: Date())
-        let graphqlQuery = Todo.generateQuery()
+        let graphqlQuery = TodosController.generateQuery()
         
         do {
             // Directly get the decoded ResponseData object from sendGraphQL
-            let responseData: ResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, responseType: ResponseData.self)
+            let responseData: TodosResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, responseType: TodosResponseData.self)
             DispatchQueue.main.async {
                 self.todos = responseData.data.todos
             }
@@ -69,9 +70,9 @@ class TodosModel: ObservableObject {
     
     func listenToTodos() {
         let startOfToday = Calendar.current.startOfDay(for: Date())
-        let subscriptionQuery = Todo.generateQuery(isSubscription: true)
+        let subscriptionQuery = TodosController.generateQuery(isSubscription: true)
         
-        subscriptionId = Hasura.shared.startListening(subscriptionQuery: subscriptionQuery, responseType: ResponseData.self) {result in
+        subscriptionId = Hasura.shared.startListening(subscriptionQuery: subscriptionQuery, responseType: TodosResponseData.self) {result in
             switch result {
             case .success(let responseData):
                 DispatchQueue.main.async {
@@ -91,15 +92,20 @@ class TodosModel: ObservableObject {
         }
     }
     
-//    var todosGroupedByDate: [(date: String, todos: [Todo])] {
-//        // Group todos by justDate
-//        let groups = Dictionary(grouping: todos) { $0.justDate }
-//        
-//        // Convert Dictionary to sorted array of tuples
-//        let sortedGroups = groups.sorted { $0.key < $1.key }.map { (date: $0.key, todos: $0.value) }
-//        return sortedGroups
-//    }
-    
+    static private func generateQuery(limit: Int? = 20, isSubscription: Bool = false) -> String {
+        let limitClause = limit.map { ", limit: \($0)" } ?? ""
+        let operationType = isSubscription ? "subscription" : "query"
+        let user_id: Int = Authentication.shared.userId!
+        return """
+        \(operationType) {
+            todos(where: {user_id: {_eq: \(user_id)}}\(limitClause)) {
+                id
+                name
+                status
+            }
+        }
+        """
+    }
     
 }
 
@@ -114,38 +120,7 @@ struct Todo: Decodable, Equatable {
         case status
     }
     
-    static func generateQuery(limit: Int? = 20, isSubscription: Bool = false) -> String {
-        let limitClause = limit.map { " limit: \($0)" } ?? ""
-        let gteClause: String
-//        if let gteDate = gte {
-//            let startOfTodayUTCString = HasuraUtil.dateToUTCString(date: gteDate)
-//            gteClause = ", where: {timestamp: {_gte: \"\(startOfTodayUTCString)\"}}"
-//        } else {
-            gteClause = ""
-//        }
-        
-        let operationType = isSubscription ? "subscription" : "query"
-        
-        return """
-        \(operationType) {
-            todos(\(limitClause)\(gteClause)) {
-                id
-                name
-                status
-            }
-        }
-        """
-    }
-    
     var isDone: Bool {
         return status == "done"
     }
-    
-//    var justDate: String {
-//        return HasuraUtil.justDate(timestamp: timestamp)
-//    }
-//    
-//    var formattedTime: String {
-//        return HasuraUtil.formattedTime(timestamp: timestamp)
-//    }
 }

@@ -36,7 +36,7 @@ struct ContentView: View {
         }
         .onAppear {
             DispatchQueue.main.async {
-                if(!Authentication.shared.isSignedIn()) {
+                if(!Authentication.shared.areJwtSet) {
                     self.appState.chatViewToShow = .onBoard
                 }
             }

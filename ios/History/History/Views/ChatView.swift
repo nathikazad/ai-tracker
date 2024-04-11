@@ -79,7 +79,6 @@ struct ChatView: View {
                 Task {
                     var  isSuccess = await handleSignIn(result: result)
                     if isSuccess {
-                        Authentication.shared.signInCallback()
                         AppState.shared.chatViewToShow = .none
                     }
                 }

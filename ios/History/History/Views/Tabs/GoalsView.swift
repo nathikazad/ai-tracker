@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct GoalsView: View {
-    @StateObject var goalsModel = GoalsModel()
+    @StateObject var goalsController = GoalsController()
     
     var body: some View {
         List {
-            ForEach(goalsModel.goals, id: \.id) { goal in
+            ForEach(goalsController.goals, id: \.id) { goal in
                 VStack(alignment: .leading) {
                     Text(goal.name)
                         .font(.headline)
@@ -24,12 +24,12 @@ struct GoalsView: View {
         }
         .onAppear {
             Task {
-                await goalsModel.fetchGoals()
-                goalsModel.listenToGoals()
+                await goalsController.fetchGoals()
+                goalsController.listenToGoals()
             }
         }
         .onDisappear {
-            goalsModel.cancelListener()
+            goalsController.cancelListener()
             print("View has disappeared")
         }
     }

@@ -8,9 +8,6 @@
 import Foundation
 import SwiftUI
 
-
-
-
 enum SubscriptionStatus {
     case registered
     case active
@@ -40,7 +37,7 @@ class Hasura {
             
         NotificationCenter.default.addObserver(forName: willEnterForegroundNotification, object: nil, queue: .main) { _ in
             print("App will enter foreground. Resuming socket.")
-            if(Authentication.shared.isSignedIn()) {
+            if(Authentication.shared.areJwtSet) {
                 self.setup()
             }
         }
@@ -96,7 +93,16 @@ class Hasura {
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
             throw URLError(.badServerResponse)
         }
-        print(data)
+        if let httpResponse = response as? HTTPURLResponse {
+//            print("HTTP Status Code: \(httpResponse.statusCode)")
+//                    if let responseBody = String(data: data, encoding: .utf8) {
+//                        print("Server Response:\n\(responseBody)")
+//                    }
+
+            if httpResponse.statusCode != 200, let responseBody = String(data: data, encoding: .utf8) {
+                print("Response body: \(responseBody)")
+            }
+        }
         
         return try decodeData(responseType, data)
     }
@@ -108,9 +114,6 @@ class Hasura {
              await Authentication.shared.checkAndReloadHasuraJwt()
              let url = URL(string: "wss://ai-tracker-hasura-a1071aad7764.herokuapp.com/v1/graphql")!
              var request = URLRequest(url: url)
-             if(Authentication.shared.hasuraJwt == nil){
-                 return
-             }
              let token = Authentication.shared.hasuraJwt!
              request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
              request.addValue("graphql-ws", forHTTPHeaderField: "Sec-WebSocket-Protocol")
@@ -166,7 +169,7 @@ class Hasura {
         if socketStatus == .ready {
             startSubscription(uniqueID: uniqueID, subscriptionQuery: subscriptionQuery)
         } else {
-            print("Socket not ready, subscription \(uniqueID) registered and will be activated upon connection.")
+//            print("Socket not ready, subscription \(uniqueID) registered and will be activated upon connection.")
         }
         
         return uniqueID
@@ -197,7 +200,7 @@ class Hasura {
             }
             sendMessage(text: jsonString)
             subscriptions[uniqueID]?.status = .active
-            print("Subscription message sent for \(uniqueID), status updated to active.")
+//            print("Subscription message sent for \(uniqueID), status updated to active.")
         } catch {
             print("Error encoding subscription message: \(error)")
         }
@@ -251,7 +254,7 @@ class Hasura {
             case "data":
                 // Handle data messages
                 if let idValue = json["id"] {
-                    print("Received subscription id \(idValue)")
+//                    print("Received subscription id \(idValue)")
                     if let id = idValue as? String {
                         if let callback = subscriptions[id]?.callback {
                             callback(json["payload"]) // Pass the 'data' to the callback
@@ -272,14 +275,14 @@ class Hasura {
             case "connection_ack":
                 // Handle keep-alive messages; simply ignore or log as needed
                 socketStatus = .ready;
-                print("Received connection_ack message. Activating registered subscriptions.")
+//                print("Received connection_ack message. Activating registered subscriptions.")
 
                 subscriptions.forEach { uniqueID, details in
                     if details.status == .registered {
                         startSubscription(uniqueID: uniqueID, subscriptionQuery: details.query)
                     }
                 }
-                print("Received connection_ack message.")
+//                print("Received connection_ack message.")
             default:
                 print("Received unhandled message type: \(type)")
             }
