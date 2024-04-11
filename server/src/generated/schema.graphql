@@ -793,7 +793,7 @@ type events {
   time: timestamp
 
   """An object relationship"""
-  user: user!
+  user: users!
   user_id: Int!
 }
 
@@ -921,7 +921,7 @@ input events_bool_exp {
   parent_id: Int_comparison_exp
   status: String_comparison_exp
   time: timestamp_comparison_exp
-  user: user_bool_exp
+  user: users_bool_exp
   user_id: Int_comparison_exp
 }
 
@@ -1000,7 +1000,7 @@ input events_insert_input {
   parent_id: Int
   status: String
   time: timestamp
-  user: user_obj_rel_insert_input
+  user: users_obj_rel_insert_input
   user_id: Int
 }
 
@@ -1124,7 +1124,7 @@ input events_order_by {
   parent_id: order_by
   status: order_by
   time: order_by
-  user: user_order_by
+  user: users_order_by
   user_id: order_by
 }
 
@@ -1518,86 +1518,61 @@ input events_variance_order_by {
 scalar float8
 
 """
-columns and relationships of "goal"
+columns and relationships of "goals"
 """
-type goal {
+type goals {
   created: timestamptz!
+  frequency(
+    """JSON select path"""
+    path: String
+  ): jsonb
   id: Int!
-  last_todo_mutated: timestamptz
   name: String!
   nl_description: String!
   period: Int!
   status: String!
   target_number: Int
 
-  """An array relationship"""
-  todos(
-    """distinct select on columns"""
-    distinct_on: [todo_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [todo_order_by!]
-
-    """filter the rows returned"""
-    where: todo_bool_exp
-  ): [todo!]!
-
-  """An aggregate relationship"""
-  todos_aggregate(
-    """distinct select on columns"""
-    distinct_on: [todo_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [todo_order_by!]
-
-    """filter the rows returned"""
-    where: todo_bool_exp
-  ): todo_aggregate!
+  """An object relationship"""
+  todo: todos
 
   """An object relationship"""
-  user: user!
+  user: users!
   user_id: Int!
 }
 
 """
-aggregated selection of "goal"
+aggregated selection of "goals"
 """
-type goal_aggregate {
-  aggregate: goal_aggregate_fields
-  nodes: [goal!]!
+type goals_aggregate {
+  aggregate: goals_aggregate_fields
+  nodes: [goals!]!
 }
 
 """
-aggregate fields of "goal"
+aggregate fields of "goals"
 """
-type goal_aggregate_fields {
-  avg: goal_avg_fields
-  count(columns: [goal_select_column!], distinct: Boolean): Int!
-  max: goal_max_fields
-  min: goal_min_fields
-  stddev: goal_stddev_fields
-  stddev_pop: goal_stddev_pop_fields
-  stddev_samp: goal_stddev_samp_fields
-  sum: goal_sum_fields
-  var_pop: goal_var_pop_fields
-  var_samp: goal_var_samp_fields
-  variance: goal_variance_fields
+type goals_aggregate_fields {
+  avg: goals_avg_fields
+  count(columns: [goals_select_column!], distinct: Boolean): Int!
+  max: goals_max_fields
+  min: goals_min_fields
+  stddev: goals_stddev_fields
+  stddev_pop: goals_stddev_pop_fields
+  stddev_samp: goals_stddev_samp_fields
+  sum: goals_sum_fields
+  var_pop: goals_var_pop_fields
+  var_samp: goals_var_samp_fields
+  variance: goals_variance_fields
+}
+
+"""append existing jsonb value of filtered columns with new jsonb value"""
+input goals_append_input {
+  frequency: jsonb
 }
 
 """aggregate avg on columns"""
-type goal_avg_fields {
+type goals_avg_fields {
   id: Float
   period: Float
   target_number: Float
@@ -1605,30 +1580,29 @@ type goal_avg_fields {
 }
 
 """
-Boolean expression to filter rows from the table "goal". All fields are combined with a logical 'AND'.
+Boolean expression to filter rows from the table "goals". All fields are combined with a logical 'AND'.
 """
-input goal_bool_exp {
-  _and: [goal_bool_exp!]
-  _not: goal_bool_exp
-  _or: [goal_bool_exp!]
+input goals_bool_exp {
+  _and: [goals_bool_exp!]
+  _not: goals_bool_exp
+  _or: [goals_bool_exp!]
   created: timestamptz_comparison_exp
+  frequency: jsonb_comparison_exp
   id: Int_comparison_exp
-  last_todo_mutated: timestamptz_comparison_exp
   name: String_comparison_exp
   nl_description: String_comparison_exp
   period: Int_comparison_exp
   status: String_comparison_exp
   target_number: Int_comparison_exp
-  todos: todo_bool_exp
-  todos_aggregate: todo_aggregate_bool_exp
-  user: user_bool_exp
+  todo: todos_bool_exp
+  user: users_bool_exp
   user_id: Int_comparison_exp
 }
 
 """
-unique or primary key constraints on table "goal"
+unique or primary key constraints on table "goals"
 """
-enum goal_constraint {
+enum goals_constraint {
   """
   unique or primary key constraint on columns "id"
   """
@@ -1636,9 +1610,31 @@ enum goal_constraint {
 }
 
 """
-input type for incrementing numeric columns in table "goal"
+delete the field or element with specified path (for JSON arrays, negative integers count from the end)
 """
-input goal_inc_input {
+input goals_delete_at_path_input {
+  frequency: [String!]
+}
+
+"""
+delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array
+"""
+input goals_delete_elem_input {
+  frequency: Int
+}
+
+"""
+delete key/value pair or string element. key/value pairs are matched based on their key value
+"""
+input goals_delete_key_input {
+  frequency: String
+}
+
+"""
+input type for incrementing numeric columns in table "goals"
+"""
+input goals_inc_input {
   id: Int
   period: Int
   target_number: Int
@@ -1646,27 +1642,26 @@ input goal_inc_input {
 }
 
 """
-input type for inserting data into table "goal"
+input type for inserting data into table "goals"
 """
-input goal_insert_input {
+input goals_insert_input {
   created: timestamptz
+  frequency: jsonb
   id: Int
-  last_todo_mutated: timestamptz
   name: String
   nl_description: String
   period: Int
   status: String
   target_number: Int
-  todos: todo_arr_rel_insert_input
-  user: user_obj_rel_insert_input
+  todo: todos_obj_rel_insert_input
+  user: users_obj_rel_insert_input
   user_id: Int
 }
 
 """aggregate max on columns"""
-type goal_max_fields {
+type goals_max_fields {
   created: timestamptz
   id: Int
-  last_todo_mutated: timestamptz
   name: String
   nl_description: String
   period: Int
@@ -1676,10 +1671,9 @@ type goal_max_fields {
 }
 
 """aggregate min on columns"""
-type goal_min_fields {
+type goals_min_fields {
   created: timestamptz
   id: Int
-  last_todo_mutated: timestamptz
   name: String
   nl_description: String
   period: Int
@@ -1689,67 +1683,72 @@ type goal_min_fields {
 }
 
 """
-response of any mutation on the table "goal"
+response of any mutation on the table "goals"
 """
-type goal_mutation_response {
+type goals_mutation_response {
   """number of rows affected by the mutation"""
   affected_rows: Int!
 
   """data from the rows affected by the mutation"""
-  returning: [goal!]!
+  returning: [goals!]!
 }
 
 """
-input type for inserting object relation for remote table "goal"
+input type for inserting object relation for remote table "goals"
 """
-input goal_obj_rel_insert_input {
-  data: goal_insert_input!
+input goals_obj_rel_insert_input {
+  data: goals_insert_input!
 
   """upsert condition"""
-  on_conflict: goal_on_conflict
+  on_conflict: goals_on_conflict
 }
 
 """
-on_conflict condition type for table "goal"
+on_conflict condition type for table "goals"
 """
-input goal_on_conflict {
-  constraint: goal_constraint!
-  update_columns: [goal_update_column!]! = []
-  where: goal_bool_exp
+input goals_on_conflict {
+  constraint: goals_constraint!
+  update_columns: [goals_update_column!]! = []
+  where: goals_bool_exp
 }
 
-"""Ordering options when selecting data from "goal"."""
-input goal_order_by {
+"""Ordering options when selecting data from "goals"."""
+input goals_order_by {
   created: order_by
+  frequency: order_by
   id: order_by
-  last_todo_mutated: order_by
   name: order_by
   nl_description: order_by
   period: order_by
   status: order_by
   target_number: order_by
-  todos_aggregate: todo_aggregate_order_by
-  user: user_order_by
+  todo: todos_order_by
+  user: users_order_by
   user_id: order_by
 }
 
-"""primary key columns input for table: goal"""
-input goal_pk_columns_input {
+"""primary key columns input for table: goals"""
+input goals_pk_columns_input {
   id: Int!
 }
 
+"""prepend existing jsonb value of filtered columns with new jsonb value"""
+input goals_prepend_input {
+  frequency: jsonb
+}
+
 """
-select columns of table "goal"
+select columns of table "goals"
 """
-enum goal_select_column {
+enum goals_select_column {
   """column name"""
   created
 
   """column name"""
-  id
+  frequency
 
   """column name"""
-  last_todo_mutated
+  id
 
   """column name"""
   name
@@ -1771,12 +1770,12 @@ enum goal_select_column {
 }
 
 """
-input type for updating data in table "goal"
+input type for updating data in table "goals"
 """
-input goal_set_input {
+input goals_set_input {
   created: timestamptz
+  frequency: jsonb
   id: Int
-  last_todo_mutated: timestamptz
   name: String
   nl_description: String
   period: Int
@@ -1786,7 +1785,7 @@ input goal_set_input {
 }
 
 """aggregate stddev on columns"""
-type goal_stddev_fields {
+type goals_stddev_fields {
   id: Float
   period: Float
   target_number: Float
@@ -1794,7 +1793,7 @@ type goal_stddev_fields {
 }
 
 """aggregate stddev_pop on columns"""
-type goal_stddev_pop_fields {
+type goals_stddev_pop_fields {
   id: Float
   period: Float
   target_number: Float
@@ -1802,7 +1801,7 @@ type goal_stddev_pop_fields {
 }
 
 """aggregate stddev_samp on columns"""
-type goal_stddev_samp_fields {
+type goals_stddev_samp_fields {
   id: Float
   period: Float
   target_number: Float
@@ -1810,21 +1809,21 @@ type goal_stddev_samp_fields {
 }
 
 """
-Streaming cursor of the table "goal"
+Streaming cursor of the table "goals"
 """
-input goal_stream_cursor_input {
+input goals_stream_cursor_input {
   """Stream column input with initial value"""
-  initial_value: goal_stream_cursor_value_input!
+  initial_value: goals_stream_cursor_value_input!
 
   """cursor ordering"""
   ordering: cursor_ordering
 }
 
 """Initial value of the column from where the streaming should start"""
-input goal_stream_cursor_value_input {
+input goals_stream_cursor_value_input {
   created: timestamptz
+  frequency: jsonb
   id: Int
-  last_todo_mutated: timestamptz
   name: String
   nl_description: String
   period: Int
@@ -1834,7 +1833,7 @@ input goal_stream_cursor_value_input {
 }
 
 """aggregate sum on columns"""
-type goal_sum_fields {
+type goals_sum_fields {
   id: Int
   period: Int
   target_number: Int
@@ -1842,17 +1841,17 @@ type goal_sum_fields {
 }
 
 """
-update columns of table "goal"
+update columns of table "goals"
 """
-enum goal_update_column {
+enum goals_update_column {
   """column name"""
   created
 
   """column name"""
-  id
+  frequency
 
   """column name"""
-  last_todo_mutated
+  id
 
   """column name"""
   name
@@ -1873,19 +1872,41 @@ enum goal_update_column {
   user_id
 }
 
-input goal_updates {
+input goals_updates {
+  """append existing jsonb value of filtered columns with new jsonb value"""
+  _append: goals_append_input
+
+  """
+  delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+  """
+  _delete_at_path: goals_delete_at_path_input
+
+  """
+  delete the array element with specified index (negative integers count from
+  the end). throws an error if top level container is not an array
+  """
+  _delete_elem: goals_delete_elem_input
+
+  """
+  delete key/value pair or string element. key/value pairs are matched based on their key value
+  """
+  _delete_key: goals_delete_key_input
+
   """increments the numeric columns with given value of the filtered values"""
-  _inc: goal_inc_input
+  _inc: goals_inc_input
+
+  """prepend existing jsonb value of filtered columns with new jsonb value"""
+  _prepend: goals_prepend_input
 
   """sets the columns of the filtered rows to the given values"""
-  _set: goal_set_input
+  _set: goals_set_input
 
   """filter the rows which have to be updated"""
-  where: goal_bool_exp!
+  where: goals_bool_exp!
 }
 
 """aggregate var_pop on columns"""
-type goal_var_pop_fields {
+type goals_var_pop_fields {
   id: Float
   period: Float
   target_number: Float
@@ -1893,7 +1914,7 @@ type goal_var_pop_fields {
 }
 
 """aggregate var_samp on columns"""
-type goal_var_samp_fields {
+type goals_var_samp_fields {
   id: Float
   period: Float
   target_number: Float
@@ -1901,7 +1922,7 @@ type goal_var_samp_fields {
 }
 
 """aggregate variance on columns"""
-type goal_variance_fields {
+type goals_variance_fields {
   id: Float
   period: Float
   target_number: Float
@@ -2291,17 +2312,17 @@ type mutation_root {
   delete_events_by_pk(id: Int!): events
 
   """
-  delete data from the table: "goal"
+  delete data from the table: "goals"
   """
-  delete_goal(
+  delete_goals(
     """filter the rows which have to be deleted"""
-    where: goal_bool_exp!
-  ): goal_mutation_response
+    where: goals_bool_exp!
+  ): goals_mutation_response
 
   """
-  delete single row from the table: "goal"
+  delete single row from the table: "goals"
   """
-  delete_goal_by_pk(id: Int!): goal
+  delete_goals_by_pk(id: Int!): goals
 
   """
   delete data from the table: "interactions"
@@ -2317,30 +2338,30 @@ type mutation_root {
   delete_interactions_by_pk(id: Int!): interactions
 
   """
-  delete data from the table: "todo"
+  delete data from the table: "todos"
   """
-  delete_todo(
+  delete_todos(
     """filter the rows which have to be deleted"""
-    where: todo_bool_exp!
-  ): todo_mutation_response
+    where: todos_bool_exp!
+  ): todos_mutation_response
 
   """
-  delete single row from the table: "todo"
+  delete single row from the table: "todos"
   """
-  delete_todo_by_pk(id: Int!): todo
+  delete_todos_by_pk(id: Int!): todos
 
   """
-  delete data from the table: "user"
+  delete data from the table: "users"
   """
-  delete_user(
+  delete_users(
     """filter the rows which have to be deleted"""
-    where: user_bool_exp!
-  ): user_mutation_response
+    where: users_bool_exp!
+  ): users_mutation_response
 
   """
-  delete single row from the table: "user"
+  delete single row from the table: "users"
   """
-  delete_user_by_pk(id: Int!): user
+  delete_users_by_pk(id: Int!): users
 
   """
   insert data into the table: "event_tag"
@@ -2409,26 +2430,26 @@ type mutation_root {
   ): events
 
   """
-  insert data into the table: "goal"
+  insert data into the table: "goals"
   """
-  insert_goal(
+  insert_goals(
     """the rows to be inserted"""
-    objects: [goal_insert_input!]!
+    objects: [goals_insert_input!]!
 
     """upsert condition"""
-    on_conflict: goal_on_conflict
-  ): goal_mutation_response
+    on_conflict: goals_on_conflict
+  ): goals_mutation_response
 
   """
-  insert a single row into the table: "goal"
+  insert a single row into the table: "goals"
   """
-  insert_goal_one(
+  insert_goals_one(
     """the row to be inserted"""
-    object: goal_insert_input!
+    object: goals_insert_input!
 
     """upsert condition"""
-    on_conflict: goal_on_conflict
-  ): goal
+    on_conflict: goals_on_conflict
+  ): goals
 
   """
   insert data into the table: "interactions"
@@ -2453,48 +2474,48 @@ type mutation_root {
   ): interactions
 
   """
-  insert data into the table: "todo"
+  insert data into the table: "todos"
   """
-  insert_todo(
+  insert_todos(
     """the rows to be inserted"""
-    objects: [todo_insert_input!]!
+    objects: [todos_insert_input!]!
 
     """upsert condition"""
-    on_conflict: todo_on_conflict
-  ): todo_mutation_response
+    on_conflict: todos_on_conflict
+  ): todos_mutation_response
 
   """
-  insert a single row into the table: "todo"
+  insert a single row into the table: "todos"
   """
-  insert_todo_one(
+  insert_todos_one(
     """the row to be inserted"""
-    object: todo_insert_input!
+    object: todos_insert_input!
 
     """upsert condition"""
-    on_conflict: todo_on_conflict
-  ): todo
+    on_conflict: todos_on_conflict
+  ): todos
 
   """
-  insert data into the table: "user"
+  insert data into the table: "users"
   """
-  insert_user(
+  insert_users(
     """the rows to be inserted"""
-    objects: [user_insert_input!]!
+    objects: [users_insert_input!]!
 
     """upsert condition"""
-    on_conflict: user_on_conflict
-  ): user_mutation_response
+    on_conflict: users_on_conflict
+  ): users_mutation_response
 
   """
-  insert a single row into the table: "user"
+  insert a single row into the table: "users"
   """
-  insert_user_one(
+  insert_users_one(
     """the row to be inserted"""
-    object: user_insert_input!
+    object: users_insert_input!
 
     """upsert condition"""
-    on_conflict: user_on_conflict
-  ): user
+    on_conflict: users_on_conflict
+  ): users
 
   """
   update data of the table: "event_tag"
@@ -2681,38 +2702,82 @@ type mutation_root {
   ): [events_mutation_response]
 
   """
-  update data of the table: "goal"
+  update data of the table: "goals"
   """
-  update_goal(
+  update_goals(
+    """append existing jsonb value of filtered columns with new jsonb value"""
+    _append: goals_append_input
+
+    """
+    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    """
+    _delete_at_path: goals_delete_at_path_input
+
+    """
+    delete the array element with specified index (negative integers count from
+    the end). throws an error if top level container is not an array
+    """
+    _delete_elem: goals_delete_elem_input
+
+    """
+    delete key/value pair or string element. key/value pairs are matched based on their key value
+    """
+    _delete_key: goals_delete_key_input
+
     """increments the numeric columns with given value of the filtered values"""
-    _inc: goal_inc_input
+    _inc: goals_inc_input
+
+    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    _prepend: goals_prepend_input
 
     """sets the columns of the filtered rows to the given values"""
-    _set: goal_set_input
+    _set: goals_set_input
 
     """filter the rows which have to be updated"""
-    where: goal_bool_exp!
-  ): goal_mutation_response
+    where: goals_bool_exp!
+  ): goals_mutation_response
 
   """
-  update single row of the table: "goal"
+  update single row of the table: "goals"
   """
-  update_goal_by_pk(
+  update_goals_by_pk(
+    """append existing jsonb value of filtered columns with new jsonb value"""
+    _append: goals_append_input
+
+    """
+    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    """
+    _delete_at_path: goals_delete_at_path_input
+
+    """
+    delete the array element with specified index (negative integers count from
+    the end). throws an error if top level container is not an array
+    """
+    _delete_elem: goals_delete_elem_input
+
+    """
+    delete key/value pair or string element. key/value pairs are matched based on their key value
+    """
+    _delete_key: goals_delete_key_input
+
     """increments the numeric columns with given value of the filtered values"""
-    _inc: goal_inc_input
+    _inc: goals_inc_input
+
+    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    _prepend: goals_prepend_input
 
     """sets the columns of the filtered rows to the given values"""
-    _set: goal_set_input
-    pk_columns: goal_pk_columns_input!
-  ): goal
+    _set: goals_set_input
+    pk_columns: goals_pk_columns_input!
+  ): goals
 
   """
-  update multiples rows of table: "goal"
+  update multiples rows of table: "goals"
   """
-  update_goal_many(
+  update_goals_many(
     """updates to execute, in order"""
-    updates: [goal_updates!]!
-  ): [goal_mutation_response]
+    updates: [goals_updates!]!
+  ): [goals_mutation_response]
 
   """
   update data of the table: "interactions"
@@ -2749,72 +2814,72 @@ type mutation_root {
   ): [interactions_mutation_response]
 
   """
-  update data of the table: "todo"
+  update data of the table: "todos"
   """
-  update_todo(
+  update_todos(
     """increments the numeric columns with given value of the filtered values"""
-    _inc: todo_inc_input
+    _inc: todos_inc_input
 
     """sets the columns of the filtered rows to the given values"""
-    _set: todo_set_input
+    _set: todos_set_input
 
     """filter the rows which have to be updated"""
-    where: todo_bool_exp!
-  ): todo_mutation_response
+    where: todos_bool_exp!
+  ): todos_mutation_response
 
   """
-  update single row of the table: "todo"
+  update single row of the table: "todos"
   """
-  update_todo_by_pk(
+  update_todos_by_pk(
     """increments the numeric columns with given value of the filtered values"""
-    _inc: todo_inc_input
+    _inc: todos_inc_input
 
     """sets the columns of the filtered rows to the given values"""
-    _set: todo_set_input
-    pk_columns: todo_pk_columns_input!
-  ): todo
+    _set: todos_set_input
+    pk_columns: todos_pk_columns_input!
+  ): todos
 
   """
-  update multiples rows of table: "todo"
+  update multiples rows of table: "todos"
   """
-  update_todo_many(
+  update_todos_many(
     """updates to execute, in order"""
-    updates: [todo_updates!]!
-  ): [todo_mutation_response]
+    updates: [todos_updates!]!
+  ): [todos_mutation_response]
 
   """
-  update data of the table: "user"
+  update data of the table: "users"
   """
-  update_user(
+  update_users(
     """increments the numeric columns with given value of the filtered values"""
-    _inc: user_inc_input
+    _inc: users_inc_input
 
     """sets the columns of the filtered rows to the given values"""
-    _set: user_set_input
+    _set: users_set_input
 
     """filter the rows which have to be updated"""
-    where: user_bool_exp!
-  ): user_mutation_response
+    where: users_bool_exp!
+  ): users_mutation_response
 
   """
-  update single row of the table: "user"
+  update single row of the table: "users"
   """
-  update_user_by_pk(
+  update_users_by_pk(
     """increments the numeric columns with given value of the filtered values"""
-    _inc: user_inc_input
+    _inc: users_inc_input
 
     """sets the columns of the filtered rows to the given values"""
-    _set: user_set_input
-    pk_columns: user_pk_columns_input!
-  ): user
+    _set: users_set_input
+    pk_columns: users_pk_columns_input!
+  ): users
 
   """
-  update multiples rows of table: "user"
+  update multiples rows of table: "users"
   """
-  update_user_many(
+  update_users_many(
     """updates to execute, in order"""
-    updates: [user_updates!]!
-  ): [user_mutation_response]
+    updates: [users_updates!]!
+  ): [users_mutation_response]
 }
 
 """column ordering options"""
@@ -2969,11 +3034,11 @@ type query_root {
   events_by_pk(id: Int!): events
 
   """
-  fetch data from the table: "goal"
+  fetch data from the table: "goals"
   """
-  goal(
+  goals(
     """distinct select on columns"""
-    distinct_on: [goal_select_column!]
+    distinct_on: [goals_select_column!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -2982,18 +3047,18 @@ type query_root {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [goal_order_by!]
+    order_by: [goals_order_by!]
 
     """filter the rows returned"""
-    where: goal_bool_exp
-  ): [goal!]!
+    where: goals_bool_exp
+  ): [goals!]!
 
   """
-  fetch aggregated fields from the table: "goal"
+  fetch aggregated fields from the table: "goals"
   """
-  goal_aggregate(
+  goals_aggregate(
     """distinct select on columns"""
-    distinct_on: [goal_select_column!]
+    distinct_on: [goals_select_column!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -3002,14 +3067,14 @@ type query_root {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [goal_order_by!]
+    order_by: [goals_order_by!]
 
     """filter the rows returned"""
-    where: goal_bool_exp
-  ): goal_aggregate!
+    where: goals_bool_exp
+  ): goals_aggregate!
 
-  """fetch data from the table: "goal" using primary key columns"""
-  goal_by_pk(id: Int!): goal
+  """fetch data from the table: "goals" using primary key columns"""
+  goals_by_pk(id: Int!): goals
 
   """
   fetch data from the table: "interactions"
@@ -3105,11 +3170,11 @@ type query_root {
   ): interactions_aggregate!
 
   """
-  fetch data from the table: "todo"
+  fetch data from the table: "todos"
   """
-  todo(
+  todos(
     """distinct select on columns"""
-    distinct_on: [todo_select_column!]
+    distinct_on: [todos_select_column!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -3118,18 +3183,18 @@ type query_root {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [todo_order_by!]
+    order_by: [todos_order_by!]
 
     """filter the rows returned"""
-    where: todo_bool_exp
-  ): [todo!]!
+    where: todos_bool_exp
+  ): [todos!]!
 
   """
-  fetch aggregated fields from the table: "todo"
+  fetch aggregated fields from the table: "todos"
   """
-  todo_aggregate(
+  todos_aggregate(
     """distinct select on columns"""
-    distinct_on: [todo_select_column!]
+    distinct_on: [todos_select_column!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -3138,21 +3203,21 @@ type query_root {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [todo_order_by!]
+    order_by: [todos_order_by!]
 
     """filter the rows returned"""
-    where: todo_bool_exp
-  ): todo_aggregate!
+    where: todos_bool_exp
+  ): todos_aggregate!
 
-  """fetch data from the table: "todo" using primary key columns"""
-  todo_by_pk(id: Int!): todo
+  """fetch data from the table: "todos" using primary key columns"""
+  todos_by_pk(id: Int!): todos
 
   """
-  fetch data from the table: "user"
+  fetch data from the table: "users"
   """
-  user(
+  users(
     """distinct select on columns"""
-    distinct_on: [user_select_column!]
+    distinct_on: [users_select_column!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -3161,18 +3226,18 @@ type query_root {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [user_order_by!]
+    order_by: [users_order_by!]
 
     """filter the rows returned"""
-    where: user_bool_exp
-  ): [user!]!
+    where: users_bool_exp
+  ): [users!]!
 
   """
-  fetch aggregated fields from the table: "user"
+  fetch aggregated fields from the table: "users"
   """
-  user_aggregate(
+  users_aggregate(
     """distinct select on columns"""
-    distinct_on: [user_select_column!]
+    distinct_on: [users_select_column!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -3181,14 +3246,14 @@ type query_root {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [user_order_by!]
+    order_by: [users_order_by!]
 
     """filter the rows returned"""
-    where: user_bool_exp
-  ): user_aggregate!
+    where: users_bool_exp
+  ): users_aggregate!
 
-  """fetch data from the table: "user" using primary key columns"""
-  user_by_pk(id: Int!): user
+  """fetch data from the table: "users" using primary key columns"""
+  users_by_pk(id: Int!): users
 }
 
 """
@@ -3417,11 +3482,11 @@ type subscription_root {
   ): [events!]!
 
   """
-  fetch data from the table: "goal"
+  fetch data from the table: "goals"
   """
-  goal(
+  goals(
     """distinct select on columns"""
-    distinct_on: [goal_select_column!]
+    distinct_on: [goals_select_column!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -3430,18 +3495,18 @@ type subscription_root {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [goal_order_by!]
+    order_by: [goals_order_by!]
 
     """filter the rows returned"""
-    where: goal_bool_exp
-  ): [goal!]!
+    where: goals_bool_exp
+  ): [goals!]!
 
   """
-  fetch aggregated fields from the table: "goal"
+  fetch aggregated fields from the table: "goals"
   """
-  goal_aggregate(
+  goals_aggregate(
     """distinct select on columns"""
-    distinct_on: [goal_select_column!]
+    distinct_on: [goals_select_column!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -3450,28 +3515,28 @@ type subscription_root {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [goal_order_by!]
+    order_by: [goals_order_by!]
 
     """filter the rows returned"""
-    where: goal_bool_exp
-  ): goal_aggregate!
+    where: goals_bool_exp
+  ): goals_aggregate!
 
-  """fetch data from the table: "goal" using primary key columns"""
-  goal_by_pk(id: Int!): goal
+  """fetch data from the table: "goals" using primary key columns"""
+  goals_by_pk(id: Int!): goals
 
   """
-  fetch data from the table in a streaming manner: "goal"
+  fetch data from the table in a streaming manner: "goals"
   """
-  goal_stream(
+  goals_stream(
     """maximum number of rows returned in a single batch"""
     batch_size: Int!
 
     """cursor to stream the results returned by the query"""
-    cursor: [goal_stream_cursor_input]!
+    cursor: [goals_stream_cursor_input]!
 
     """filter the rows returned"""
-    where: goal_bool_exp
-  ): [goal!]!
+    where: goals_bool_exp
+  ): [goals!]!
 
   """
   fetch data from the table: "interactions"
@@ -3581,11 +3646,11 @@ type subscription_root {
   ): interactions_aggregate!
 
   """
-  fetch data from the table: "todo"
+  fetch data from the table: "todos"
   """
-  todo(
+  todos(
     """distinct select on columns"""
-    distinct_on: [todo_select_column!]
+    distinct_on: [todos_select_column!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -3594,18 +3659,18 @@ type subscription_root {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [todo_order_by!]
+    order_by: [todos_order_by!]
 
     """filter the rows returned"""
-    where: todo_bool_exp
-  ): [todo!]!
+    where: todos_bool_exp
+  ): [todos!]!
 
   """
-  fetch aggregated fields from the table: "todo"
+  fetch aggregated fields from the table: "todos"
   """
-  todo_aggregate(
+  todos_aggregate(
     """distinct select on columns"""
-    distinct_on: [todo_select_column!]
+    distinct_on: [todos_select_column!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -3614,35 +3679,35 @@ type subscription_root {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [todo_order_by!]
+    order_by: [todos_order_by!]
 
     """filter the rows returned"""
-    where: todo_bool_exp
-  ): todo_aggregate!
+    where: todos_bool_exp
+  ): todos_aggregate!
 
-  """fetch data from the table: "todo" using primary key columns"""
-  todo_by_pk(id: Int!): todo
+  """fetch data from the table: "todos" using primary key columns"""
+  todos_by_pk(id: Int!): todos
 
   """
-  fetch data from the table in a streaming manner: "todo"
+  fetch data from the table in a streaming manner: "todos"
   """
-  todo_stream(
+  todos_stream(
     """maximum number of rows returned in a single batch"""
     batch_size: Int!
 
     """cursor to stream the results returned by the query"""
-    cursor: [todo_stream_cursor_input]!
+    cursor: [todos_stream_cursor_input]!
 
     """filter the rows returned"""
-    where: todo_bool_exp
-  ): [todo!]!
+    where: todos_bool_exp
+  ): [todos!]!
 
   """
-  fetch data from the table: "user"
+  fetch data from the table: "users"
   """
-  user(
+  users(
     """distinct select on columns"""
-    distinct_on: [user_select_column!]
+    distinct_on: [users_select_column!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -3651,18 +3716,18 @@ type subscription_root {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [user_order_by!]
+    order_by: [users_order_by!]
 
     """filter the rows returned"""
-    where: user_bool_exp
-  ): [user!]!
+    where: users_bool_exp
+  ): [users!]!
 
   """
-  fetch aggregated fields from the table: "user"
+  fetch aggregated fields from the table: "users"
   """
-  user_aggregate(
+  users_aggregate(
     """distinct select on columns"""
-    distinct_on: [user_select_column!]
+    distinct_on: [users_select_column!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -3671,28 +3736,28 @@ type subscription_root {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [user_order_by!]
+    order_by: [users_order_by!]
 
     """filter the rows returned"""
-    where: user_bool_exp
-  ): user_aggregate!
+    where: users_bool_exp
+  ): users_aggregate!
 
-  """fetch data from the table: "user" using primary key columns"""
-  user_by_pk(id: Int!): user
+  """fetch data from the table: "users" using primary key columns"""
+  users_by_pk(id: Int!): users
 
   """
-  fetch data from the table in a streaming manner: "user"
+  fetch data from the table in a streaming manner: "users"
   """
-  user_stream(
+  users_stream(
     """maximum number of rows returned in a single batch"""
     batch_size: Int!
 
     """cursor to stream the results returned by the query"""
-    cursor: [user_stream_cursor_input]!
+    cursor: [users_stream_cursor_input]!
 
     """filter the rows returned"""
-    where: user_bool_exp
-  ): [user!]!
+    where: users_bool_exp
+  ): [users!]!
 }
 
 scalar timestamp
@@ -3730,91 +3795,53 @@ input timestamptz_comparison_exp {
 }
 
 """
-columns and relationships of "todo"
+columns and relationships of "todos"
 """
-type todo {
-  created: timestamptz!
+type todos {
   current_count: Int
   due: timestamptz!
 
   """An object relationship"""
-  goal: goal
+  goal: goals
   goal_id: Int
   id: Int!
   name: String!
   status: String!
   target_count: Int
+  updated: timestamptz!
 
   """An object relationship"""
-  user: user!
+  user: users!
   user_id: Int!
 }
 
 """
-aggregated selection of "todo"
+aggregated selection of "todos"
 """
-type todo_aggregate {
-  aggregate: todo_aggregate_fields
-  nodes: [todo!]!
-}
-
-input todo_aggregate_bool_exp {
-  count: todo_aggregate_bool_exp_count
-}
-
-input todo_aggregate_bool_exp_count {
-  arguments: [todo_select_column!]
-  distinct: Boolean
-  filter: todo_bool_exp
-  predicate: Int_comparison_exp!
+type todos_aggregate {
+  aggregate: todos_aggregate_fields
+  nodes: [todos!]!
 }
 
 """
-aggregate fields of "todo"
+aggregate fields of "todos"
 """
-type todo_aggregate_fields {
-  avg: todo_avg_fields
-  count(columns: [todo_select_column!], distinct: Boolean): Int!
-  max: todo_max_fields
-  min: todo_min_fields
-  stddev: todo_stddev_fields
-  stddev_pop: todo_stddev_pop_fields
-  stddev_samp: todo_stddev_samp_fields
-  sum: todo_sum_fields
-  var_pop: todo_var_pop_fields
-  var_samp: todo_var_samp_fields
-  variance: todo_variance_fields
-}
-
-"""
-order by aggregate values of table "todo"
-"""
-input todo_aggregate_order_by {
-  avg: todo_avg_order_by
-  count: order_by
-  max: todo_max_order_by
-  min: todo_min_order_by
-  stddev: todo_stddev_order_by
-  stddev_pop: todo_stddev_pop_order_by
-  stddev_samp: todo_stddev_samp_order_by
-  sum: todo_sum_order_by
-  var_pop: todo_var_pop_order_by
-  var_samp: todo_var_samp_order_by
-  variance: todo_variance_order_by
-}
-
-"""
-input type for inserting array relation for remote table "todo"
-"""
-input todo_arr_rel_insert_input {
-  data: [todo_insert_input!]!
-
-  """upsert condition"""
-  on_conflict: todo_on_conflict
+type todos_aggregate_fields {
+  avg: todos_avg_fields
+  count(columns: [todos_select_column!], distinct: Boolean): Int!
+  max: todos_max_fields
+  min: todos_min_fields
+  stddev: todos_stddev_fields
+  stddev_pop: todos_stddev_pop_fields
+  stddev_samp: todos_stddev_samp_fields
+  sum: todos_sum_fields
+  var_pop: todos_var_pop_fields
+  var_samp: todos_var_samp_fields
+  variance: todos_variance_fields
 }
 
 """aggregate avg on columns"""
-type todo_avg_fields {
+type todos_avg_fields {
   current_count: Float
   goal_id: Float
   id: Float
@@ -3823,40 +3850,29 @@ type todo_avg_fields {
 }
 
 """
-order by avg() on columns of table "todo"
+Boolean expression to filter rows from the table "todos". All fields are combined with a logical 'AND'.
 """
-input todo_avg_order_by {
-  current_count: order_by
-  goal_id: order_by
-  id: order_by
-  target_count: order_by
-  user_id: order_by
-}
-
-"""
-Boolean expression to filter rows from the table "todo". All fields are combined with a logical 'AND'.
-"""
-input todo_bool_exp {
-  _and: [todo_bool_exp!]
-  _not: todo_bool_exp
-  _or: [todo_bool_exp!]
-  created: timestamptz_comparison_exp
+input todos_bool_exp {
+  _and: [todos_bool_exp!]
+  _not: todos_bool_exp
+  _or: [todos_bool_exp!]
   current_count: Int_comparison_exp
   due: timestamptz_comparison_exp
-  goal: goal_bool_exp
+  goal: goals_bool_exp
   goal_id: Int_comparison_exp
   id: Int_comparison_exp
   name: String_comparison_exp
   status: String_comparison_exp
   target_count: Int_comparison_exp
-  user: user_bool_exp
+  updated: timestamptz_comparison_exp
+  user: users_bool_exp
   user_id: Int_comparison_exp
 }
 
 """
-unique or primary key constraints on table "todo"
+unique or primary key constraints on table "todos"
 """
-enum todo_constraint {
+enum todos_constraint {
   """
   unique or primary key constraint on columns "user_id", "goal_id"
   """
@@ -3869,9 +3885,9 @@ enum todo_constraint {
 }
 
 """
-input type for incrementing numeric columns in table "todo"
+input type for incrementing numeric columns in table "todos"
 """
-input todo_inc_input {
+input todos_inc_input {
   current_count: Int
   goal_id: Int
   id: Int
@@ -3880,25 +3896,24 @@ input todo_inc_input {
 }
 
 """
-input type for inserting data into table "todo"
+input type for inserting data into table "todos"
 """
-input todo_insert_input {
-  created: timestamptz
+input todos_insert_input {
   current_count: Int
   due: timestamptz
-  goal: goal_obj_rel_insert_input
+  goal: goals_obj_rel_insert_input
   goal_id: Int
   id: Int
   name: String
   status: String
   target_count: Int
-  user: user_obj_rel_insert_input
+  updated: timestamptz
+  user: users_obj_rel_insert_input
   user_id: Int
 }
 
 """aggregate max on columns"""
-type todo_max_fields {
-  created: timestamptz
+type todos_max_fields {
   current_count: Int
   due: timestamptz
   goal_id: Int
@@ -3906,27 +3921,12 @@ type todo_max_fields {
   name: String
   status: String
   target_count: Int
+  updated: timestamptz
   user_id: Int
-}
-
-"""
-order by max() on columns of table "todo"
-"""
-input todo_max_order_by {
-  created: order_by
-  current_count: order_by
-  due: order_by
-  goal_id: order_by
-  id: order_by
-  name: order_by
-  status: order_by
-  target_count: order_by
-  user_id: order_by
 }
 
 """aggregate min on columns"""
-type todo_min_fields {
-  created: timestamptz
+type todos_min_fields {
   current_count: Int
   due: timestamptz
   goal_id: Int
@@ -3934,71 +3934,64 @@ type todo_min_fields {
   name: String
   status: String
   target_count: Int
+  updated: timestamptz
   user_id: Int
 }
 
 """
-order by min() on columns of table "todo"
+response of any mutation on the table "todos"
 """
-input todo_min_order_by {
-  created: order_by
-  current_count: order_by
-  due: order_by
-  goal_id: order_by
-  id: order_by
-  name: order_by
-  status: order_by
-  target_count: order_by
-  user_id: order_by
-}
-
-"""
-response of any mutation on the table "todo"
-"""
-type todo_mutation_response {
+type todos_mutation_response {
   """number of rows affected by the mutation"""
   affected_rows: Int!
 
   """data from the rows affected by the mutation"""
-  returning: [todo!]!
+  returning: [todos!]!
 }
 
 """
-on_conflict condition type for table "todo"
+input type for inserting object relation for remote table "todos"
 """
-input todo_on_conflict {
-  constraint: todo_constraint!
-  update_columns: [todo_update_column!]! = []
-  where: todo_bool_exp
+input todos_obj_rel_insert_input {
+  data: todos_insert_input!
+
+  """upsert condition"""
+  on_conflict: todos_on_conflict
 }
 
-"""Ordering options when selecting data from "todo"."""
-input todo_order_by {
-  created: order_by
+"""
+on_conflict condition type for table "todos"
+"""
+input todos_on_conflict {
+  constraint: todos_constraint!
+  update_columns: [todos_update_column!]! = []
+  where: todos_bool_exp
+}
+
+"""Ordering options when selecting data from "todos"."""
+input todos_order_by {
   current_count: order_by
   due: order_by
-  goal: goal_order_by
+  goal: goals_order_by
   goal_id: order_by
   id: order_by
   name: order_by
   status: order_by
   target_count: order_by
-  user: user_order_by
+  updated: order_by
+  user: users_order_by
   user_id: order_by
 }
 
-"""primary key columns input for table: todo"""
-input todo_pk_columns_input {
+"""primary key columns input for table: todos"""
+input todos_pk_columns_input {
   id: Int!
 }
 
 """
-select columns of table "todo"
+select columns of table "todos"
 """
-enum todo_select_column {
-  """column name"""
-  created
-
+enum todos_select_column {
   """column name"""
   current_count
 
@@ -4021,14 +4014,16 @@ enum todo_select_column {
   target_count
 
   """column name"""
+  updated
+
+  """column name"""
   user_id
 }
 
 """
-input type for updating data in table "todo"
+input type for updating data in table "todos"
 """
-input todo_set_input {
-  created: timestamptz
+input todos_set_input {
   current_count: Int
   due: timestamptz
   goal_id: Int
@@ -4036,51 +4031,30 @@ input todo_set_input {
   name: String
   status: String
   target_count: Int
+  updated: timestamptz
   user_id: Int
 }
 
 """aggregate stddev on columns"""
-type todo_stddev_fields {
+type todos_stddev_fields {
   current_count: Float
   goal_id: Float
   id: Float
   target_count: Float
   user_id: Float
-}
-
-"""
-order by stddev() on columns of table "todo"
-"""
-input todo_stddev_order_by {
-  current_count: order_by
-  goal_id: order_by
-  id: order_by
-  target_count: order_by
-  user_id: order_by
 }
 
 """aggregate stddev_pop on columns"""
-type todo_stddev_pop_fields {
+type todos_stddev_pop_fields {
   current_count: Float
   goal_id: Float
   id: Float
   target_count: Float
   user_id: Float
-}
-
-"""
-order by stddev_pop() on columns of table "todo"
-"""
-input todo_stddev_pop_order_by {
-  current_count: order_by
-  goal_id: order_by
-  id: order_by
-  target_count: order_by
-  user_id: order_by
 }
 
 """aggregate stddev_samp on columns"""
-type todo_stddev_samp_fields {
+type todos_stddev_samp_fields {
   current_count: Float
   goal_id: Float
   id: Float
@@ -4089,30 +4063,18 @@ type todo_stddev_samp_fields {
 }
 
 """
-order by stddev_samp() on columns of table "todo"
+Streaming cursor of the table "todos"
 """
-input todo_stddev_samp_order_by {
-  current_count: order_by
-  goal_id: order_by
-  id: order_by
-  target_count: order_by
-  user_id: order_by
-}
-
-"""
-Streaming cursor of the table "todo"
-"""
-input todo_stream_cursor_input {
+input todos_stream_cursor_input {
   """Stream column input with initial value"""
-  initial_value: todo_stream_cursor_value_input!
+  initial_value: todos_stream_cursor_value_input!
 
   """cursor ordering"""
   ordering: cursor_ordering
 }
 
 """Initial value of the column from where the streaming should start"""
-input todo_stream_cursor_value_input {
-  created: timestamptz
+input todos_stream_cursor_value_input {
   current_count: Int
   due: timestamptz
   goal_id: Int
@@ -4120,11 +4082,12 @@ input todo_stream_cursor_value_input {
   name: String
   status: String
   target_count: Int
+  updated: timestamptz
   user_id: Int
 }
 
 """aggregate sum on columns"""
-type todo_sum_fields {
+type todos_sum_fields {
   current_count: Int
   goal_id: Int
   id: Int
@@ -4133,23 +4096,9 @@ type todo_sum_fields {
 }
 
 """
-order by sum() on columns of table "todo"
+update columns of table "todos"
 """
-input todo_sum_order_by {
-  current_count: order_by
-  goal_id: order_by
-  id: order_by
-  target_count: order_by
-  user_id: order_by
-}
-
-"""
-update columns of table "todo"
-"""
-enum todo_update_column {
-  """column name"""
-  created
-
+enum todos_update_column {
   """column name"""
   current_count
 
@@ -4172,62 +4121,43 @@ enum todo_update_column {
   target_count
 
   """column name"""
+  updated
+
+  """column name"""
   user_id
 }
 
-input todo_updates {
+input todos_updates {
   """increments the numeric columns with given value of the filtered values"""
-  _inc: todo_inc_input
+  _inc: todos_inc_input
 
   """sets the columns of the filtered rows to the given values"""
-  _set: todo_set_input
+  _set: todos_set_input
 
   """filter the rows which have to be updated"""
-  where: todo_bool_exp!
+  where: todos_bool_exp!
 }
 
 """aggregate var_pop on columns"""
-type todo_var_pop_fields {
+type todos_var_pop_fields {
   current_count: Float
   goal_id: Float
   id: Float
   target_count: Float
   user_id: Float
-}
-
-"""
-order by var_pop() on columns of table "todo"
-"""
-input todo_var_pop_order_by {
-  current_count: order_by
-  goal_id: order_by
-  id: order_by
-  target_count: order_by
-  user_id: order_by
 }
 
 """aggregate var_samp on columns"""
-type todo_var_samp_fields {
+type todos_var_samp_fields {
   current_count: Float
   goal_id: Float
   id: Float
   target_count: Float
   user_id: Float
-}
-
-"""
-order by var_samp() on columns of table "todo"
-"""
-input todo_var_samp_order_by {
-  current_count: order_by
-  goal_id: order_by
-  id: order_by
-  target_count: order_by
-  user_id: order_by
 }
 
 """aggregate variance on columns"""
-type todo_variance_fields {
+type todos_variance_fields {
   current_count: Float
   goal_id: Float
   id: Float
@@ -4236,69 +4166,60 @@ type todo_variance_fields {
 }
 
 """
-order by variance() on columns of table "todo"
+columns and relationships of "users"
 """
-input todo_variance_order_by {
-  current_count: order_by
-  goal_id: order_by
-  id: order_by
-  target_count: order_by
-  user_id: order_by
-}
-
-"""
-columns and relationships of "user"
-"""
-type user {
+type users {
   apple_id: String
   id: Int!
+  timezone: String
 }
 
 """
-aggregated selection of "user"
+aggregated selection of "users"
 """
-type user_aggregate {
-  aggregate: user_aggregate_fields
-  nodes: [user!]!
+type users_aggregate {
+  aggregate: users_aggregate_fields
+  nodes: [users!]!
 }
 
 """
-aggregate fields of "user"
+aggregate fields of "users"
 """
-type user_aggregate_fields {
-  avg: user_avg_fields
-  count(columns: [user_select_column!], distinct: Boolean): Int!
-  max: user_max_fields
-  min: user_min_fields
-  stddev: user_stddev_fields
-  stddev_pop: user_stddev_pop_fields
-  stddev_samp: user_stddev_samp_fields
-  sum: user_sum_fields
-  var_pop: user_var_pop_fields
-  var_samp: user_var_samp_fields
-  variance: user_variance_fields
+type users_aggregate_fields {
+  avg: users_avg_fields
+  count(columns: [users_select_column!], distinct: Boolean): Int!
+  max: users_max_fields
+  min: users_min_fields
+  stddev: users_stddev_fields
+  stddev_pop: users_stddev_pop_fields
+  stddev_samp: users_stddev_samp_fields
+  sum: users_sum_fields
+  var_pop: users_var_pop_fields
+  var_samp: users_var_samp_fields
+  variance: users_variance_fields
 }
 
 """aggregate avg on columns"""
-type user_avg_fields {
+type users_avg_fields {
   id: Float
 }
 
 """
-Boolean expression to filter rows from the table "user". All fields are combined with a logical 'AND'.
+Boolean expression to filter rows from the table "users". All fields are combined with a logical 'AND'.
 """
-input user_bool_exp {
-  _and: [user_bool_exp!]
-  _not: user_bool_exp
-  _or: [user_bool_exp!]
+input users_bool_exp {
+  _and: [users_bool_exp!]
+  _not: users_bool_exp
+  _or: [users_bool_exp!]
   apple_id: String_comparison_exp
   id: Int_comparison_exp
+  timezone: String_comparison_exp
 }
 
 """
-unique or primary key constraints on table "user"
+unique or primary key constraints on table "users"
 """
-enum user_constraint {
+enum users_constraint {
   """
   unique or primary key constraint on columns "id"
   """
@@ -4306,163 +4227,175 @@ enum user_constraint {
 }
 
 """
-input type for incrementing numeric columns in table "user"
+input type for incrementing numeric columns in table "users"
 """
-input user_inc_input {
+input users_inc_input {
   id: Int
 }
 
 """
-input type for inserting data into table "user"
+input type for inserting data into table "users"
 """
-input user_insert_input {
+input users_insert_input {
   apple_id: String
   id: Int
+  timezone: String
 }
 
 """aggregate max on columns"""
-type user_max_fields {
+type users_max_fields {
   apple_id: String
   id: Int
+  timezone: String
 }
 
 """aggregate min on columns"""
-type user_min_fields {
+type users_min_fields {
   apple_id: String
   id: Int
+  timezone: String
 }
 
 """
-response of any mutation on the table "user"
+response of any mutation on the table "users"
 """
-type user_mutation_response {
+type users_mutation_response {
   """number of rows affected by the mutation"""
   affected_rows: Int!
 
   """data from the rows affected by the mutation"""
-  returning: [user!]!
+  returning: [users!]!
 }
 
 """
-input type for inserting object relation for remote table "user"
+input type for inserting object relation for remote table "users"
 """
-input user_obj_rel_insert_input {
-  data: user_insert_input!
+input users_obj_rel_insert_input {
+  data: users_insert_input!
 
   """upsert condition"""
-  on_conflict: user_on_conflict
+  on_conflict: users_on_conflict
 }
 
 """
-on_conflict condition type for table "user"
+on_conflict condition type for table "users"
 """
-input user_on_conflict {
-  constraint: user_constraint!
-  update_columns: [user_update_column!]! = []
-  where: user_bool_exp
+input users_on_conflict {
+  constraint: users_constraint!
+  update_columns: [users_update_column!]! = []
+  where: users_bool_exp
 }
 
-"""Ordering options when selecting data from "user"."""
-input user_order_by {
+"""Ordering options when selecting data from "users"."""
+input users_order_by {
   apple_id: order_by
   id: order_by
+  timezone: order_by
 }
 
-"""primary key columns input for table: user"""
-input user_pk_columns_input {
+"""primary key columns input for table: users"""
+input users_pk_columns_input {
   id: Int!
 }
 
 """
-select columns of table "user"
+select columns of table "users"
 """
-enum user_select_column {
+enum users_select_column {
   """column name"""
   apple_id
 
   """column name"""
   id
+
+  """column name"""
+  timezone
 }
 
 """
-input type for updating data in table "user"
+input type for updating data in table "users"
 """
-input user_set_input {
+input users_set_input {
   apple_id: String
   id: Int
+  timezone: String
 }
 
 """aggregate stddev on columns"""
-type user_stddev_fields {
+type users_stddev_fields {
   id: Float
 }
 
 """aggregate stddev_pop on columns"""
-type user_stddev_pop_fields {
+type users_stddev_pop_fields {
   id: Float
 }
 
 """aggregate stddev_samp on columns"""
-type user_stddev_samp_fields {
+type users_stddev_samp_fields {
   id: Float
 }
 
 """
-Streaming cursor of the table "user"
+Streaming cursor of the table "users"
 """
-input user_stream_cursor_input {
+input users_stream_cursor_input {
   """Stream column input with initial value"""
-  initial_value: user_stream_cursor_value_input!
+  initial_value: users_stream_cursor_value_input!
 
   """cursor ordering"""
   ordering: cursor_ordering
 }
 
 """Initial value of the column from where the streaming should start"""
-input user_stream_cursor_value_input {
+input users_stream_cursor_value_input {
   apple_id: String
   id: Int
+  timezone: String
 }
 
 """aggregate sum on columns"""
-type user_sum_fields {
+type users_sum_fields {
   id: Int
 }
 
 """
-update columns of table "user"
+update columns of table "users"
 """
-enum user_update_column {
+enum users_update_column {
   """column name"""
   apple_id
 
   """column name"""
   id
+
+  """column name"""
+  timezone
 }
 
-input user_updates {
+input users_updates {
   """increments the numeric columns with given value of the filtered values"""
-  _inc: user_inc_input
+  _inc: users_inc_input
 
   """sets the columns of the filtered rows to the given values"""
-  _set: user_set_input
+  _set: users_set_input
 
   """filter the rows which have to be updated"""
-  where: user_bool_exp!
+  where: users_bool_exp!
 }
 
 """aggregate var_pop on columns"""
-type user_var_pop_fields {
+type users_var_pop_fields {
   id: Float
 }
 
 """aggregate var_samp on columns"""
-type user_var_samp_fields {
+type users_var_samp_fields {
   id: Float
 }
 
 """aggregate variance on columns"""
-type user_variance_fields {
+type users_variance_fields {
   id: Float
 }
 

@@ -65,7 +65,7 @@ function generateJWT(userId: number) {
 async function getHasuraUserId(decoded: jwt.JwtPayload | undefined) {
     let chain = getHasura();
     let resp = await chain.query({
-        user: [{
+        users: [{
             where: {
                 apple_id: {
                     _eq: decoded!.sub
@@ -75,11 +75,11 @@ async function getHasuraUserId(decoded: jwt.JwtPayload | undefined) {
             id: true
         }]
     });
-    if (resp.user.length >= 1) 
-        return resp.user[0].id;
+    if (resp.users.length >= 1) 
+        return resp.users[0].id;
     
     let resp2 = await chain.mutation({
-            insert_user_one: [{
+            insert_users_one: [{
                 object: {
                     apple_id: decoded!.sub
                 }
@@ -87,5 +87,5 @@ async function getHasuraUserId(decoded: jwt.JwtPayload | undefined) {
                 id: true
             }]
         });
-    return resp2.insert_user_one!.id;
+    return resp2.insert_users_one!.id;
 }

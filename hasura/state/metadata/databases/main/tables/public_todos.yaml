@@ -1,0 +1,25 @@
+table:
+  name: todos
+  schema: public
+object_relationships:
+  - name: goal
+    using:
+      foreign_key_constraint_on: goal_id
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - current_count
+        - goal_id
+        - id
+        - target_count
+        - user_id
+        - name
+        - status
+        - updated
+        - due
+      filter: {}
+    comment: ""

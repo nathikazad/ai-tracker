@@ -1,0 +1,31 @@
+table:
+  name: goals
+  schema: public
+object_relationships:
+  - name: todo
+    using:
+      manual_configuration:
+        column_mapping:
+          id: goal_id
+          user_id: user_id
+        insertion_order: null
+        remote_table:
+          name: todos
+          schema: public
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - created
+        - id
+        - name
+        - nl_description
+        - period
+        - status
+        - target_number
+        - user_id
+      filter: {}
+    comment: ""

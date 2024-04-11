@@ -26,7 +26,7 @@ export async function parseEvent(event: string, user_id: number, interaction_id:
     // see if any todos can be checked off
     const chain = getHasura();
     let response = await chain.query({
-        todo: [{
+        todos: [{
             where: { _and: [{ user_id: { _eq: user_id } }] }
         }, {
             id: true,
@@ -37,13 +37,13 @@ export async function parseEvent(event: string, user_id: number, interaction_id:
         }]
     });
     let prompt = `Do any of the following todos match the event "${event}"?\n`
-    response.todo.forEach(async (todo: any) => {
+    response.todos.forEach(async (todo: any) => {
         prompt += `${todo.name}\n`;
     }); 
     // prompt += "If yes, give me the number of the todo, if no, just say no"
     let resp = await complete3(prompt, 0.2);
     let matchedTodo: any = null;
-    response.todo.forEach((todo: any) => {
+    response.todos.forEach((todo: any) => {
         if (resp.includes(todo.name)) {
             matchedTodo = todo;
         }
@@ -52,7 +52,7 @@ export async function parseEvent(event: string, user_id: number, interaction_id:
     console.log("matchedTodo ", matchedTodo);
     if (matchedTodo != null)
         await chain.mutation({
-            update_todo_by_pk: [{
+            update_todos_by_pk: [{
                 pk_columns: { id: matchedTodo.id },
                 _inc: {
                     current_count: 1
@@ -110,7 +110,7 @@ export async function parseGoal(goal: string, user_id: number) {
 
     const chain = getHasura();
     let response = await chain.mutation({
-        insert_goal_one: [{
+        insert_goals_one: [{
             object: {
                 name: name,
                 period: parseInt(period),
@@ -122,7 +122,7 @@ export async function parseGoal(goal: string, user_id: number) {
             id: true
         }]
     })
-    return response.insert_goal_one?.id
+    return response.insert_goals_one?.id
 }
 
 export async function test(goal: string) {

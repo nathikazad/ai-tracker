@@ -1,3 +1,17 @@
 table:
   name: interactions
   schema: public
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - content_type
+        - id
+        - user_id
+        - content
+        - timestamp
+        - embedding
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+    comment: ""

@@ -1,0 +1,17 @@
+table:
+  name: event_types
+  schema: public
+array_relationships:
+  - name: children
+    using:
+      foreign_key_constraint_on:
+        column: parent
+        table:
+          name: event_types
+          schema: public
+computed_fields:
+  - name: parent_tree
+    definition:
+      function:
+        name: get_event_type_path
+        schema: public
