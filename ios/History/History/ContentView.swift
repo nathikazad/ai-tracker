@@ -10,6 +10,8 @@ import SwiftUI
 class AppState: ObservableObject {
     static let shared = AppState()
     @Published private(set) var chatViewToShow: ChatViewToShow = .none
+    @Published private(set) var sheetViewToShow: SheetViewToShow = .none
+    
     
     func hideChat() {
         chatViewToShow = .none
@@ -18,9 +20,24 @@ class AppState: ObservableObject {
     func showChat(newChatViewToShow: ChatViewToShow) {
         chatViewToShow = newChatViewToShow
     }
+    
+    func hideSheet() {
+        sheetViewToShow = .none
+    }
+    
+    func showSheet(newSheetToShow: SheetViewToShow) {
+        sheetViewToShow = newSheetToShow
+    }
+    
+    
 }
+
 enum ChatViewToShow {
     case none, onBoard, normal
+}
+
+enum SheetViewToShow {
+    case none, settings, dailyQuotes
 }
 
 struct ContentView: View {
@@ -63,66 +80,56 @@ struct ContentView: View {
 
 
 struct MainView: View {
-    @State private var showingSettings = false
     @State private var selectedTab: Tab = .todos
     @ObservedObject var appState = AppState.shared
+    
+    var sheetViewPresented: Binding<Bool> {
+        Binding(
+            get: { self.appState.sheetViewToShow != .none },
+            set: { isPresented in
+                if(isPresented) {
+                    self.appState.showSheet(newSheetToShow: .settings)
+                } else {
+                    self.appState.showSheet(newSheetToShow: .none)
+                }
+            }
+        )
+    }
     var body: some View {
         NavigationView {
             ZStack(alignment: .bottom) {
-                // TabView for managing your tabs
                 TabView(selection: $selectedTab) {
-                    TodosView()
-                        .tabItem {
-                            Image(systemName: "checklist")
-                            Text("Todos")
-                        }
-                        .tag(Tab.todos)
-                    
-                    TimelineView()
-                        .tabItem {
-                            Image(systemName: "clock")
-                            Text("Timeline")
-                        }
-                        .tag(Tab.timeline)
-                    
-                    // Placeholder for the center button
-                    Text("")
-                        .tabItem {
-                            Image(systemName: "mic.fill") // Just a placeholder to keep the layout consistent
-                        }
-                    
-                    GoalsView()
-                        .tabItem {
-                            Image(systemName: "target")
-                            Text("Goals")
-                        }
-                        .tag(Tab.goals)
-                    
-                    GraphsView()
-                        .tabItem {
-                            Image(systemName: "chart.line.uptrend.xyaxis")
-                            Text("Graphs")
-                        }
-                        .tag(Tab.graphs)
+                    TodosView().tabItem { Label("Todos", systemImage: "checklist") }.tag(Tab.todos)
+                    TimelineView().tabItem { Label("Timeline", systemImage: "clock") }.tag(Tab.timeline)
+                    Text("").tabItem { Image(systemName: "mic.fill") } // Placeholder
+                    GoalsView().tabItem { Label("Goals", systemImage: "target") }.tag(Tab.goals)
+                    GraphsView().tabItem { Label("Graphs", systemImage: "chart.line.uptrend.xyaxis") }.tag(Tab.graphs)
                 }
-                .navigationTitle(titleForTab(selectedTab))
+                .onAppear {
+                    self.selectedTab = .timeline
+                }
                 .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        NavigationTitle(title: titleForTab(selectedTab)) {
+                            appState.showSheet(newSheetToShow: .dailyQuotes)
+                        }
+                    }
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {
-                            showingSettings = true
+                            appState.showSheet(newSheetToShow: .settings)
                         }) {
-                            Image(systemName: "line.horizontal.3")
-                                .foregroundColor(.black)
+                            Image(systemName: "line.horizontal.3").foregroundColor(.black)
                         }
                     }
                 }
-                .sheet(isPresented: $showingSettings) {
-                    SettingsView()
+                .sheet(isPresented: sheetViewPresented) {
+                    if appState.sheetViewToShow == .settings {
+                        SettingsView()
+                    } else if appState.sheetViewToShow == .dailyQuotes {
+                        RemindersView()
+                    }
                 }
-                
-                // Positioned the MicrophoneButton on top of the TabView
                 MicrophoneButton()
-                
             }
         }
     }

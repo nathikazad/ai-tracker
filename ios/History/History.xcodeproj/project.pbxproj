@@ -15,6 +15,7 @@
 		FE1C0EAE2BC0713B00FF56AB /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EAD2BC0713B00FF56AB /* Authentication.swift */; };
 		FE1C0EB12BC0A29300FF56AB /* Hasura.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EB02BC0A29300FF56AB /* Hasura.swift */; };
 		FE20CA262BC5E4CD00863604 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE20CA252BC5E4CD00863604 /* SettingsView.swift */; };
+		FE3E9F662BC8ACAD008BD120 /* NavigationTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3E9F652BC8ACAD008BD120 /* NavigationTitle.swift */; };
 		FE4F7BA32BA7D79E0041CB6A /* HistoryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BA22BA7D79E0041CB6A /* HistoryApp.swift */; };
 		FE4F7BA52BA7D79E0041CB6A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BA42BA7D79E0041CB6A /* ContentView.swift */; };
 		FE4F7BA72BA7D79F0041CB6A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE4F7BA62BA7D79F0041CB6A /* Assets.xcassets */; };
@@ -24,24 +25,22 @@
 		FE4F7BBB2BA7D7E60041CB6A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BBA2BA7D7E60041CB6A /* ContentView.swift */; };
 		FE4F7BBD2BA7D7E70041CB6A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE4F7BBC2BA7D7E70041CB6A /* Assets.xcassets */; };
 		FE4F7BC02BA7D7E70041CB6A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE4F7BBF2BA7D7E70041CB6A /* Preview Assets.xcassets */; };
-		FE4F7BC32BA7D7E70041CB6A /* Trackr Watch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = FE4F7BB62BA7D7E60041CB6A /* Trackr Watch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FE4F7BC32BA7D7E70041CB6A /* Aspire Watch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = FE4F7BB62BA7D7E60041CB6A /* Aspire Watch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		FE4F7BC92BA7D7FA0041CB6A /* WatchToiOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BC82BA7D7FA0041CB6A /* WatchToiOS.swift */; };
 		FE4F7BCC2BA7DBB70041CB6A /* WatchConnectivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE4F7BCB2BA7DBB60041CB6A /* WatchConnectivity.framework */; };
-		FE4F7BCE2BA8F3C50041CB6A /* InteractionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BCD2BA8F3C50041CB6A /* InteractionsView.swift */; };
 		FE4F7BD22BA8FC600041CB6A /* BottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BD12BA8FC600041CB6A /* BottomBar.swift */; };
 		FE4F7BD92BA94D580041CB6A /* SpeechRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BD82BA94D580041CB6A /* SpeechRecognizer.swift */; };
 		FE4F7BDB2BA957780041CB6A /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */; };
 		FE4F7BDC2BA957780041CB6A /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */; };
 		FE5264812BA99AF700502521 /* AudioUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5264802BA99AF700502521 /* AudioUploader.swift */; };
 		FE5264822BA99AF700502521 /* AudioUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5264802BA99AF700502521 /* AudioUploader.swift */; };
-		FE7EF1DE2BBE0F0700279E18 /* DailyRemindersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7EF1DD2BBE0F0700279E18 /* DailyRemindersView.swift */; };
 		FE8811EB2BC799BF00B112A8 /* GoalsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8811E62BC799BE00B112A8 /* GoalsController.swift */; };
 		FE8811EC2BC799BF00B112A8 /* InteractionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8811E72BC799BE00B112A8 /* InteractionsController.swift */; };
 		FE8811EF2BC799BF00B112A8 /* TodosController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8811EA2BC799BF00B112A8 /* TodosController.swift */; };
 		FE8965AA2BC7B31D00E9D633 /* UserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8965A92BC7B31D00E9D633 /* UserController.swift */; };
 		FE8965AF2BC85FE000E9D633 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8965AE2BC85FE000E9D633 /* Constants.swift */; };
 		FE8965B02BC8606900E9D633 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8965AE2BC85FE000E9D633 /* Constants.swift */; };
-		FE9EAE4F2BC03F280082DE87 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9EAE4E2BC03F280082DE87 /* MessageView.swift */; };
+		FE9959542BC8B5B000F3187B /* RemindersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9959532BC8B5B000F3187B /* RemindersView.swift */; };
 		FE9EAE512BC042260082DE87 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9EAE502BC042260082DE87 /* ChatView.swift */; };
 		FEB8FD1F2BAA253100EE9B68 /* Intents.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB8FD1E2BAA253100EE9B68 /* Intents.swift */; };
 		FEB8FD202BAA253100EE9B68 /* Intents.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB8FD1E2BAA253100EE9B68 /* Intents.swift */; };
@@ -78,7 +77,7 @@
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
-				FE4F7BC32BA7D7E70041CB6A /* Trackr Watch.app in Embed Watch Content */,
+				FE4F7BC32BA7D7E70041CB6A /* Aspire Watch.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -106,32 +105,31 @@
 		FE1C0EAD2BC0713B00FF56AB /* Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
 		FE1C0EB02BC0A29300FF56AB /* Hasura.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hasura.swift; sourceTree = "<group>"; };
 		FE20CA252BC5E4CD00863604 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		FE3E9F652BC8ACAD008BD120 /* NavigationTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationTitle.swift; sourceTree = "<group>"; };
 		FE4F7B9F2BA7D79E0041CB6A /* History.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = History.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE4F7BA22BA7D79E0041CB6A /* HistoryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryApp.swift; sourceTree = "<group>"; };
 		FE4F7BA42BA7D79E0041CB6A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		FE4F7BA62BA7D79F0041CB6A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FE4F7BA92BA7D79F0041CB6A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		FE4F7BB02BA7D7C80041CB6A /* iOSToWatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSToWatch.swift; sourceTree = "<group>"; };
-		FE4F7BB62BA7D7E60041CB6A /* Trackr Watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Trackr Watch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FE4F7BB62BA7D7E60041CB6A /* Aspire Watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Aspire Watch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE4F7BB82BA7D7E60041CB6A /* MiniHistoryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniHistoryApp.swift; sourceTree = "<group>"; };
 		FE4F7BBA2BA7D7E60041CB6A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		FE4F7BBC2BA7D7E70041CB6A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FE4F7BBF2BA7D7E70041CB6A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		FE4F7BC82BA7D7FA0041CB6A /* WatchToiOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchToiOS.swift; sourceTree = "<group>"; };
 		FE4F7BCB2BA7DBB60041CB6A /* WatchConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WatchConnectivity.framework; path = System/Library/Frameworks/WatchConnectivity.framework; sourceTree = SDKROOT; };
-		FE4F7BCD2BA8F3C50041CB6A /* InteractionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionsView.swift; sourceTree = "<group>"; };
 		FE4F7BD12BA8FC600041CB6A /* BottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBar.swift; sourceTree = "<group>"; };
 		FE4F7BD82BA94D580041CB6A /* SpeechRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognizer.swift; sourceTree = "<group>"; };
 		FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
 		FE5264802BA99AF700502521 /* AudioUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioUploader.swift; sourceTree = "<group>"; };
 		FE5264832BA9A1A400502521 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		FE7EF1DD2BBE0F0700279E18 /* DailyRemindersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyRemindersView.swift; sourceTree = "<group>"; };
 		FE8811E62BC799BE00B112A8 /* GoalsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoalsController.swift; sourceTree = "<group>"; };
 		FE8811E72BC799BE00B112A8 /* InteractionsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractionsController.swift; sourceTree = "<group>"; };
 		FE8811EA2BC799BF00B112A8 /* TodosController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodosController.swift; sourceTree = "<group>"; };
 		FE8965A92BC7B31D00E9D633 /* UserController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserController.swift; sourceTree = "<group>"; };
 		FE8965AE2BC85FE000E9D633 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		FE9EAE4E2BC03F280082DE87 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
+		FE9959532BC8B5B000F3187B /* RemindersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemindersView.swift; sourceTree = "<group>"; };
 		FE9EAE502BC042260082DE87 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		FEB8FD1E2BAA253100EE9B68 /* Intents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intents.swift; sourceTree = "<group>"; };
 		FEC5386C2BBDE4E5006BDBDA /* ShortcutExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ShortcutExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -187,6 +185,7 @@
 			isa = PBXGroup;
 			children = (
 				FE12C5EE2BC4B832002CDC60 /* MicrophoneButton.swift */,
+				FE3E9F652BC8ACAD008BD120 /* NavigationTitle.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -206,7 +205,7 @@
 			isa = PBXGroup;
 			children = (
 				FE4F7B9F2BA7D79E0041CB6A /* History.app */,
-				FE4F7BB62BA7D7E60041CB6A /* Trackr Watch.app */,
+				FE4F7BB62BA7D7E60041CB6A /* Aspire Watch.app */,
 				FEC5386C2BBDE4E5006BDBDA /* ShortcutExtension.appex */,
 			);
 			name = Products;
@@ -273,12 +272,10 @@
 			children = (
 				FE12C5ED2BC4B822002CDC60 /* Components */,
 				FE12C5E42BC4B29C002CDC60 /* Tabs */,
-				FE4F7BCD2BA8F3C50041CB6A /* InteractionsView.swift */,
 				FE4F7BD12BA8FC600041CB6A /* BottomBar.swift */,
-				FE7EF1DD2BBE0F0700279E18 /* DailyRemindersView.swift */,
-				FE9EAE4E2BC03F280082DE87 /* MessageView.swift */,
 				FE9EAE502BC042260082DE87 /* ChatView.swift */,
 				FE20CA252BC5E4CD00863604 /* SettingsView.swift */,
+				FE9959532BC8B5B000F3187B /* RemindersView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -361,7 +358,7 @@
 			packageProductDependencies = (
 			);
 			productName = "MiniHistory Watch App";
-			productReference = FE4F7BB62BA7D7E60041CB6A /* Trackr Watch.app */;
+			productReference = FE4F7BB62BA7D7E60041CB6A /* Aspire Watch.app */;
 			productType = "com.apple.product-type.application";
 		};
 		FEC5386B2BBDE4E5006BDBDA /* ShortcutExtension */ = {
@@ -461,7 +458,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FE8965AF2BC85FE000E9D633 /* Constants.swift in Sources */,
-				FE9EAE4F2BC03F280082DE87 /* MessageView.swift in Sources */,
+				FE9959542BC8B5B000F3187B /* RemindersView.swift in Sources */,
 				FE4F7BD92BA94D580041CB6A /* SpeechRecognizer.swift in Sources */,
 				FE4F7BD22BA8FC600041CB6A /* BottomBar.swift in Sources */,
 				FE4F7BA52BA7D79E0041CB6A /* ContentView.swift in Sources */,
@@ -482,8 +479,7 @@
 				FE8965AA2BC7B31D00E9D633 /* UserController.swift in Sources */,
 				FE5264812BA99AF700502521 /* AudioUploader.swift in Sources */,
 				FE8811EF2BC799BF00B112A8 /* TodosController.swift in Sources */,
-				FE7EF1DE2BBE0F0700279E18 /* DailyRemindersView.swift in Sources */,
-				FE4F7BCE2BA8F3C50041CB6A /* InteractionsView.swift in Sources */,
+				FE3E9F662BC8ACAD008BD120 /* NavigationTitle.swift in Sources */,
 				FE12C5E82BC4B30B002CDC60 /* TodosView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -656,13 +652,13 @@
 				CODE_SIGN_ENTITLEMENTS = History/History.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"History/Preview Content\"";
 				DEVELOPMENT_TEAM = C22W55L7FR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = History/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Trackr;
+				INFOPLIST_KEY_CFBundleDisplayName = Aspire;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "To get audio to log an event";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "To log an event";
@@ -675,7 +671,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1;
+				MARKETING_VERSION = 0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -698,13 +694,13 @@
 				CODE_SIGN_ENTITLEMENTS = History/History.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"History/Preview Content\"";
 				DEVELOPMENT_TEAM = C22W55L7FR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = History/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Trackr;
+				INFOPLIST_KEY_CFBundleDisplayName = Aspire;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "To get audio to log an event";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "To log an event";
@@ -717,7 +713,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1;
+				MARKETING_VERSION = 0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -738,7 +734,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"MiniHistory Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = C22W55L7FR;
 				ENABLE_PREVIEWS = YES;
@@ -750,9 +746,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1;
+				MARKETING_VERSION = 0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History.watchkitapp;
-				PRODUCT_NAME = "Trackr Watch";
+				PRODUCT_NAME = "Aspire Watch";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -769,7 +765,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"MiniHistory Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = C22W55L7FR;
 				ENABLE_PREVIEWS = YES;
@@ -781,9 +777,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1;
+				MARKETING_VERSION = 0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History.watchkitapp;
-				PRODUCT_NAME = "Trackr Watch";
+				PRODUCT_NAME = "Aspire Watch";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;

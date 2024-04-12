@@ -39,8 +39,10 @@ struct TodosView: View {
                         .buttonStyle(PlainButtonStyle())
                     }
                 }
+                .padding(.all, 0)
             }
         }
+        .padding(.all, 0)
         .onAppear {
             Task {
                 if(Authentication.shared.areJwtSet) {
