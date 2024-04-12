@@ -56,7 +56,7 @@ export async function convertAppleJWTtoHasuraJWT(appleJWT: string) {
 }
 
 function generateJWT(userId: number) {
-    const privateKey = config.hasuraPrivateKey?.replace(/\\n/g, '\n') || '';
+    const privateKey: string = config.hasuraPrivateKey!; 
     const payload: HasuraJWTClaims = {
         "iat": Math.floor(Date.now() / 1000),
         "https://hasura.io/jwt/claims": {
@@ -110,9 +110,9 @@ export function authorize(req: Request): number {
     if (!token) {
         throw new Error('No authorizaiton provided')
     }
-    const secret: string = config.hasuraPrivateKey!; 
+    const privateKey: string = config.hasuraPrivateKey!; 
     // try {
-        const decoded = jwt.verify(token, secret) as HasuraJWTClaims;
+        const decoded = jwt.verify(token, privateKey) as HasuraJWTClaims;
         console.log(`decoded`)
         console.log(decoded)
         const hasuraJWTClaims = decoded as HasuraJWTClaims;
