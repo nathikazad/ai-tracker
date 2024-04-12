@@ -38,7 +38,6 @@ export async function parseEvent(event: string, user_id: number, interaction_id:
             name: true,
             goal_id: true,
             current_count: true,
-            target_count: true
         }]
     });
     let prompt = `Do any of the following todos match the event "${event}"?\n`
