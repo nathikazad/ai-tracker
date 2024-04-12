@@ -1,7 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import{ Express } from 'express';
-import { complete } from '../third/openai';
 
 
 export function loadPromptApi(app:Express) {
@@ -19,12 +18,12 @@ export function loadPromptApi(app:Express) {
         });
     });
 
-    app.post('/modifyPrompt', async (req, res) => {
-        const newPrompt = await modifyPrompt({ oldPrompt: req.body.prompt, instruction: req.body.query })
-        res.json({
-            newPrompt
-        });
-    });
+    // app.post('/modifyPrompt', async (req, res) => {
+    //     const newPrompt = await modifyPrompt({ oldPrompt: req.body.prompt, instruction: req.body.query })
+    //     res.json({
+    //         newPrompt
+    //     });
+    // });
 }
 
 
@@ -87,14 +86,14 @@ export function getPrompt(): string {
     }
 }
 
-export async function modifyPrompt({ oldPrompt, instruction }: { oldPrompt: string; instruction: string; }) {
+// export async function modifyPrompt({ oldPrompt, instruction }: { oldPrompt: string; instruction: string; }) {
 
-    let prompt = instruction
-    prompt += "for the prompt below enclosed in square brackets\n"
-    prompt += `[${oldPrompt}]`
-    console.log(prompt);
-    let newPrompt = await complete(prompt)
-    console.log();
-    console.log(newPrompt);
-    return newPrompt
-}
+//     let prompt = instruction
+//     prompt += "for the prompt below enclosed in square brackets\n"
+//     prompt += `[${oldPrompt}]`
+//     console.log(prompt);
+//     let newPrompt = await complete(prompt)
+//     console.log();
+//     console.log(newPrompt);
+//     return newPrompt
+// }

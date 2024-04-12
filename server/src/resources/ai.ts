@@ -1,10 +1,7 @@
 import { config } from "../config";
-import { complete } from "../third/openai";
+import { complete4 } from "../third/openai";
 import { getEventTypes } from "./eventTypes";
-// import { complete3 } from "../third/openai";
-// import { mutateEvents } from "./events";
 import { getEvents, mutateEvents } from "./events";
-// import { getTags } from "./tags";
 import * as fs from 'fs';
 import { insertInteraction } from "./interactions";
 
@@ -32,7 +29,7 @@ export async function convertMessageToEvent(instruction: string, message: string
     
     
     
-    let response = await complete(prompt)
+    let response = await complete4(prompt)
     console.log(response);
     if(!returnGqlOnly)        
         await mutateEvents(JSON.parse(response).gql);

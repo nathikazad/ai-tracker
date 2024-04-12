@@ -25,7 +25,6 @@ export async function generateTodosFromGoals(user_id: number) {
             name: goal.name,
             frequency: goal.frequency,
             last_todo_updated: goal.todo?.updated,
-            target_number: goal.target_number ?? 1,
             user_timezone: goal.user?.timezone ?? 'America/Los_Angeles'
         };
     });
@@ -86,11 +85,11 @@ export async function generateTodosFromGoals(user_id: number) {
                 const isWeekend = todayDayName === 'saturday' || todayDayName === 'sunday';
     
                 // Special handling for "weekdays" and "weekends"
-                if (goal.frequency.days?.includes('weekdays') && isWeekday) return true;
-                if (goal.frequency.days?.includes('weekends') && isWeekend) return true;
+                if (goal.frequency.daysOfWeek?.includes('weekdays') && isWeekday) return true;
+                if (goal.frequency.daysOfWeek?.includes('weekends') && isWeekend) return true;
     
                 // Check for specific days
-                const dayMatch = goal.frequency.days?.some(day => {
+                const dayMatch = goal.frequency.daysOfWeek?.some(day => {
                     const dayLower = day.toLowerCase();
                     return (dayLower === todayDayName) ||
                            (dayLower === 'weekdays' && isWeekday) ||
@@ -109,22 +108,21 @@ export async function generateTodosFromGoals(user_id: number) {
 
 
 
-interface Frequency {
+export interface Frequency {
     type: 'weekly' | 'periodic';
-    days?: string[]; // For 'weekly' type schedules
+    daysOfWeek?: string[]; // For 'weekly' type schedules
     timesPerDay: number;
-    preferredHours: string[];
+    preferredHours?: string[];
     duration?: string; // Optional, for schedules that specify a duration
     period?: number; // Optional, for 'periodic' type schedules
 }
 
 
-interface Goal {
+export interface Goal {
     id: number;
     name: string;
     frequency: Frequency;
     last_todo_updated: string;
-    target_number: number;
     user_timezone: string
 }
 

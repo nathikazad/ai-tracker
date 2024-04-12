@@ -1,5 +1,8 @@
 import { getHasura } from "../config";
 import { complete3 } from "../third/openai";
+import { parseGoal } from "./logic/goalLogic";
+
+
 
 
 export async function parse(text: string, user_id: number, interaction_id: number) {
@@ -39,7 +42,7 @@ export async function parseEvent(event: string, user_id: number, interaction_id:
     let prompt = `Do any of the following todos match the event "${event}"?\n`
     response.todos.forEach(async (todo: any) => {
         prompt += `${todo.name}\n`;
-    }); 
+    });
     // prompt += "If yes, give me the number of the todo, if no, just say no"
     let resp = await complete3(prompt, 0.2);
     let matchedTodo: any = null;
@@ -80,50 +83,6 @@ export async function parseEvent(event: string, user_id: number, interaction_id:
     return matchedTodo;
 }
 
-export async function parseGoal(goal: string, user_id: number) {
-    goal = goal.replace(/\n/g, "").replace(/"/g, '')
-    let prompt = `Your purpose is to convert long term goals into short daily todos. Ignore all temporal information when creating todos
-    example goal: I want to learn Spanish everyday for 30 minutes
-    example todo: Learn Spanish
-    give todo for the goal 
-    "${goal}"
-    
-    Just give me single string as your response, it goes into next part of the program. So don't add anything extra`
-    let name = (await complete3(prompt, 0.2)).replace(/\n/g, "").replace(/"/g, '').trim();
-    
-    prompt = `Your purpose is to extract repeating period in days  from a text, just give me a single integer as your response and nothing.
-    for example statement "I want to do learn Spanish everyday" your response would be 1
-    if it was weekly then 7, if it was monthly then 30.
-
-    Just give me single integer as your response
-    "${goal}"`
-    let period = await complete3(prompt, 0.2);
-
-
-    prompt = `Your purpose is to extract number of times to do something per day from a text, just give me a single integer as your response and nothing.
-    for example statement "I want to do learn workout twice a day" your response would be 2,
-    if it was once a day then 1, if it was 3 times a day then 3.
-    Just give me single integer as your response
-    "${goal}"`
-    let target = await complete3(prompt, 0.2);
-
-
-    const chain = getHasura();
-    let response = await chain.mutation({
-        insert_goals_one: [{
-            object: {
-                name: name,
-                period: parseInt(period),
-                nl_description: goal,
-                user_id: user_id,
-                target_number: parseInt(target)
-            }
-        }, {
-            id: true
-        }]
-    })
-    return response.insert_goals_one?.id
-}
 
 export async function test(goal: string) {
     // let prompt = `Your purpose is to convert long term goals into short daily todos. Ignore all temporal information when creating todos
@@ -134,6 +93,7 @@ export async function test(goal: string) {
     let name = await complete3(goal);
     return name;
 }
+
 export async function classify(text: string) {
     let prompt = `Here are some definitions
     todo: is a one off thing that is scheduled only once for the future
@@ -144,7 +104,7 @@ export async function classify(text: string) {
     
     Classify the following statement as one of the above definitions
     "${text}"`
-    console.log(prompt); 
+    console.log(prompt);
     let response = await complete3(prompt, 0.1);
     let chosenClass = "null";
     ["todo", "goal", "event", "query", "command"].forEach((c) => {
@@ -153,6 +113,6 @@ export async function classify(text: string) {
         }
     });
     return chosenClass;
-}   
+}
 
 

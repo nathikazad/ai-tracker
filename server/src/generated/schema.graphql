@@ -13,6 +13,21 @@ directive @cached(
   refresh: Boolean! = false
 ) on QUERY
 
+"""
+Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'.
+"""
+input Boolean_comparison_exp {
+  _eq: Boolean
+  _gt: Boolean
+  _gte: Boolean
+  _in: [Boolean!]
+  _is_null: Boolean
+  _lt: Boolean
+  _lte: Boolean
+  _neq: Boolean
+  _nin: [Boolean!]
+}
+
 """ordering argument of a cursor"""
 enum cursor_ordering {
   """ascending ordering of the cursor"""
@@ -1529,9 +1544,7 @@ type goals {
   id: Int!
   name: String!
   nl_description: String!
-  period: Int!
   status: String!
-  target_number: Int
 
   """An object relationship"""
   todo: todos
@@ -1574,8 +1587,6 @@ input goals_append_input {
 """aggregate avg on columns"""
 type goals_avg_fields {
   id: Float
-  period: Float
-  target_number: Float
   user_id: Float
 }
 
@@ -1591,9 +1602,7 @@ input goals_bool_exp {
   id: Int_comparison_exp
   name: String_comparison_exp
   nl_description: String_comparison_exp
-  period: Int_comparison_exp
   status: String_comparison_exp
-  target_number: Int_comparison_exp
   todo: todos_bool_exp
   user: users_bool_exp
   user_id: Int_comparison_exp
@@ -1636,8 +1645,6 @@ input type for incrementing numeric columns in table "goals"
 """
 input goals_inc_input {
   id: Int
-  period: Int
-  target_number: Int
   user_id: Int
 }
 
@@ -1650,9 +1657,7 @@ input goals_insert_input {
   id: Int
   name: String
   nl_description: String
-  period: Int
   status: String
-  target_number: Int
   todo: todos_obj_rel_insert_input
   user: users_obj_rel_insert_input
   user_id: Int
@@ -1664,9 +1669,7 @@ type goals_max_fields {
   id: Int
   name: String
   nl_description: String
-  period: Int
   status: String
-  target_number: Int
   user_id: Int
 }
 
@@ -1676,9 +1679,7 @@ type goals_min_fields {
   id: Int
   name: String
   nl_description: String
-  period: Int
   status: String
-  target_number: Int
   user_id: Int
 }
 
@@ -1719,9 +1720,7 @@ input goals_order_by {
   id: order_by
   name: order_by
   nl_description: order_by
-  period: order_by
   status: order_by
-  target_number: order_by
   todo: todos_order_by
   user: users_order_by
   user_id: order_by
@@ -1757,13 +1756,7 @@ enum goals_select_column {
   nl_description
 
   """column name"""
-  period
-
-  """column name"""
   status
-
-  """column name"""
-  target_number
 
   """column name"""
   user_id
@@ -1778,33 +1771,25 @@ input goals_set_input {
   id: Int
   name: String
   nl_description: String
-  period: Int
   status: String
-  target_number: Int
   user_id: Int
 }
 
 """aggregate stddev on columns"""
 type goals_stddev_fields {
   id: Float
-  period: Float
-  target_number: Float
   user_id: Float
 }
 
 """aggregate stddev_pop on columns"""
 type goals_stddev_pop_fields {
   id: Float
-  period: Float
-  target_number: Float
   user_id: Float
 }
 
 """aggregate stddev_samp on columns"""
 type goals_stddev_samp_fields {
   id: Float
-  period: Float
-  target_number: Float
   user_id: Float
 }
 
@@ -1826,17 +1811,13 @@ input goals_stream_cursor_value_input {
   id: Int
   name: String
   nl_description: String
-  period: Int
   status: String
-  target_number: Int
   user_id: Int
 }
 
 """aggregate sum on columns"""
 type goals_sum_fields {
   id: Int
-  period: Int
-  target_number: Int
   user_id: Int
 }
 
@@ -1860,13 +1841,7 @@ enum goals_update_column {
   nl_description
 
   """column name"""
-  period
-
-  """column name"""
   status
-
-  """column name"""
-  target_number
 
   """column name"""
   user_id
@@ -1908,24 +1883,18 @@ input goals_updates {
 """aggregate var_pop on columns"""
 type goals_var_pop_fields {
   id: Float
-  period: Float
-  target_number: Float
   user_id: Float
 }
 
 """aggregate var_samp on columns"""
 type goals_var_samp_fields {
   id: Float
-  period: Float
-  target_number: Float
   user_id: Float
 }
 
 """aggregate variance on columns"""
 type goals_variance_fields {
   id: Float
-  period: Float
-  target_number: Float
   user_id: Float
 }
 
@@ -3799,6 +3768,7 @@ columns and relationships of "todos"
 """
 type todos {
   current_count: Int
+  done_as_expected: Boolean
   due: timestamptz!
 
   """An object relationship"""
@@ -3807,7 +3777,6 @@ type todos {
   id: Int!
   name: String!
   status: String!
-  target_count: Int
   updated: timestamptz!
 
   """An object relationship"""
@@ -3845,7 +3814,6 @@ type todos_avg_fields {
   current_count: Float
   goal_id: Float
   id: Float
-  target_count: Float
   user_id: Float
 }
 
@@ -3857,13 +3825,13 @@ input todos_bool_exp {
   _not: todos_bool_exp
   _or: [todos_bool_exp!]
   current_count: Int_comparison_exp
+  done_as_expected: Boolean_comparison_exp
   due: timestamptz_comparison_exp
   goal: goals_bool_exp
   goal_id: Int_comparison_exp
   id: Int_comparison_exp
   name: String_comparison_exp
   status: String_comparison_exp
-  target_count: Int_comparison_exp
   updated: timestamptz_comparison_exp
   user: users_bool_exp
   user_id: Int_comparison_exp
@@ -3891,7 +3859,6 @@ input todos_inc_input {
   current_count: Int
   goal_id: Int
   id: Int
-  target_count: Int
   user_id: Int
 }
 
@@ -3900,13 +3867,13 @@ input type for inserting data into table "todos"
 """
 input todos_insert_input {
   current_count: Int
+  done_as_expected: Boolean
   due: timestamptz
   goal: goals_obj_rel_insert_input
   goal_id: Int
   id: Int
   name: String
   status: String
-  target_count: Int
   updated: timestamptz
   user: users_obj_rel_insert_input
   user_id: Int
@@ -3920,7 +3887,6 @@ type todos_max_fields {
   id: Int
   name: String
   status: String
-  target_count: Int
   updated: timestamptz
   user_id: Int
 }
@@ -3933,7 +3899,6 @@ type todos_min_fields {
   id: Int
   name: String
   status: String
-  target_count: Int
   updated: timestamptz
   user_id: Int
 }
@@ -3971,13 +3936,13 @@ input todos_on_conflict {
 """Ordering options when selecting data from "todos"."""
 input todos_order_by {
   current_count: order_by
+  done_as_expected: order_by
   due: order_by
   goal: goals_order_by
   goal_id: order_by
   id: order_by
   name: order_by
   status: order_by
-  target_count: order_by
   updated: order_by
   user: users_order_by
   user_id: order_by
@@ -3996,6 +3961,9 @@ enum todos_select_column {
   current_count
 
   """column name"""
+  done_as_expected
+
+  """column name"""
   due
 
   """column name"""
@@ -4011,9 +3979,6 @@ enum todos_select_column {
   status
 
   """column name"""
-  target_count
-
-  """column name"""
   updated
 
   """column name"""
@@ -4025,12 +3990,12 @@ input type for updating data in table "todos"
 """
 input todos_set_input {
   current_count: Int
+  done_as_expected: Boolean
   due: timestamptz
   goal_id: Int
   id: Int
   name: String
   status: String
-  target_count: Int
   updated: timestamptz
   user_id: Int
 }
@@ -4040,7 +4005,6 @@ type todos_stddev_fields {
   current_count: Float
   goal_id: Float
   id: Float
-  target_count: Float
   user_id: Float
 }
 
@@ -4049,7 +4013,6 @@ type todos_stddev_pop_fields {
   current_count: Float
   goal_id: Float
   id: Float
-  target_count: Float
   user_id: Float
 }
 
@@ -4058,7 +4021,6 @@ type todos_stddev_samp_fields {
   current_count: Float
   goal_id: Float
   id: Float
-  target_count: Float
   user_id: Float
 }
 
@@ -4076,12 +4038,12 @@ input todos_stream_cursor_input {
 """Initial value of the column from where the streaming should start"""
 input todos_stream_cursor_value_input {
   current_count: Int
+  done_as_expected: Boolean
   due: timestamptz
   goal_id: Int
   id: Int
   name: String
   status: String
-  target_count: Int
   updated: timestamptz
   user_id: Int
 }
@@ -4091,7 +4053,6 @@ type todos_sum_fields {
   current_count: Int
   goal_id: Int
   id: Int
-  target_count: Int
   user_id: Int
 }
 
@@ -4101,6 +4062,9 @@ update columns of table "todos"
 enum todos_update_column {
   """column name"""
   current_count
+
+  """column name"""
+  done_as_expected
 
   """column name"""
   due
@@ -4116,9 +4080,6 @@ enum todos_update_column {
 
   """column name"""
   status
-
-  """column name"""
-  target_count
 
   """column name"""
   updated
@@ -4143,7 +4104,6 @@ type todos_var_pop_fields {
   current_count: Float
   goal_id: Float
   id: Float
-  target_count: Float
   user_id: Float
 }
 
@@ -4152,7 +4112,6 @@ type todos_var_samp_fields {
   current_count: Float
   goal_id: Float
   id: Float
-  target_count: Float
   user_id: Float
 }
 
@@ -4161,7 +4120,6 @@ type todos_variance_fields {
   current_count: Float
   goal_id: Float
   id: Float
-  target_count: Float
   user_id: Float
 }
 
