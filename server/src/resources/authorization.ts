@@ -111,13 +111,16 @@ export function authorize(req: Request): number {
         throw new Error('No authorizaiton provided')
     }
     const secret: string = config.hasuraPrivateKey!; 
-    try {
+    // try {
         const decoded = jwt.verify(token, secret) as HasuraJWTClaims;
-        console.log(`HasuraJWTClaims`)
+        console.log(`decoded`)
         console.log(decoded)
-        return parseInt(decoded['https://hasura.io/jwt/claims']['x-hasura-user-id']);
-    } catch (error) {
-        throw new Error('Invalid or expired JWT');
-    }
+        const hasuraJWTClaims = decoded as HasuraJWTClaims;
+        console.log("hasuraJWTClaims")
+        console.log(hasuraJWTClaims)
+        return parseInt(hasuraJWTClaims['https://hasura.io/jwt/claims']['x-hasura-user-id']);
+    // } catch (error) {
+    //     throw new Error('Invalid or expired JWT');
+    // }
 }
 
