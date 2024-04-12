@@ -11,6 +11,7 @@ export async function generateTodosFromGoals(user_id: number) {
             name: true,
             frequency: [{}, true],
             target_number: true,
+            status: true,
             user: {
                 timezone: true
             },
@@ -23,6 +24,7 @@ export async function generateTodosFromGoals(user_id: number) {
         return {
             id: goal.id,
             name: goal.name,
+            status: goal.status,
             frequency: goal.frequency,
             last_todo_updated: goal.todo?.updated,
             user_timezone: goal.user?.timezone ?? 'America/Los_Angeles'
@@ -121,6 +123,7 @@ export interface Frequency {
 export interface Goal {
     id: number;
     name: string;
+    status: string;
     frequency: Frequency;
     last_todo_updated: string;
     user_timezone: string

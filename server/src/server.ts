@@ -1,106 +1,72 @@
-import express, { Express, Request, Response } from 'express';
+
+import express, { Express, Request, Response, NextFunction } from 'express';
 import { config } from "./config";
-import { deleteInteraction, getInteractions, getMatchingInteractions, insertInteraction } from './resources/interactions';
 import path from 'path';
-import { deleteEvent, getEvents } from './resources/events';
-import { convertMessageToEvent } from './resources/ai';
-import { getPrompt, loadPromptApi, savePrompt } from './resources/prompt';
-import { convertAudioToInteraction } from './helper/receiveFile';
-import { parse } from './resources/logic';
-import { convertAppleJWTtoHasuraJWT } from './resources/apple';
+import { convertAudioToText } from './helper/receiveFile';
+
+import { authorize, convertAppleJWTtoHasuraJWT } from './resources/authorization';
+import { parseUserRequest } from './resources/logic';
 const app: Express = express();
 
 app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.json());
 
-loadPromptApi(app)
-app.post('/convertAudioToInteraction', convertAudioToInteraction);
+// app.post('/parseUserRequest', convertAudioToInteraction);
 
-app.get('/test', (req, res) => {
-    res.send('Express + TypeScript Server');
+
+app.post('/parseUserRequestFromAudio', async (req: Request, res: Response, next: NextFunction) => {
+    console.log(`inside parseUserRequestFromAudio`)
+    try {
+        const userId = authorize(req); 
+        console.log(`userId: ${userId}`)
+        convertAudioToText(req, res, next, (text: string) => {
+            console.log(`text: ${text}`)
+            try {
+                parseUserRequest(text, userId); 
+                res.status(200).json({
+                    status: "success",
+                    text: text
+                });
+            } catch (parseError) {
+                console.error('Parsing error:', parseError);
+                res.status(500).json({ error: 'Error processing text' });
+            }
+        });
+    } catch (authError) {
+        console.error('Authentication error:', authError);
+        res.status(401).json({ error: 'Unauthorized: ' + authError });
+    }
 });
 
-app.get('/dodge', (req: Request, res: Response) => {
-    let content = "Dodge this"
-    insertInteraction(1, content).then((id) => {
-        res.status(200).send({ id: id });
-    })
-    getMatchingInteractions(1, content).then((matches) => {
-        res.status(200).send(matches);
-    })
-
+app.post('/parseUserRequestFromText', async (req: Request, res: Response) => {
+    try {
+        const userId = authorize(req); 
+        const text = req.body["text"]    
+        try {
+            parseUserRequest(text, userId); 
+            res.status(200).json({
+                status: "success",
+                text: text
+            });
+        } catch (parseError) {
+            console.error('Parsing error:', parseError);
+            res.status(500).json({ error: 'Error processing text' });
+        }
+    } catch (authError) {
+        console.error('Authentication error:', authError);
+        res.status(401).json({ error: 'Unauthorized: ' + authError });
+    }
 });
 
-app.post('/convertMessageToEvent', async (req, res) => {
-    console.log(req.body.time, ": ", req.body.query);
-    let prompt = getPrompt()
 
-    if (config.testing)
-        savePrompt({ prompt });
-
-    // const gql = await convertMessageToEvent(prompt, req.body.query, req.body.time)
-    await insertInteraction(1, req.body.query);
-    res.json({
-        // gql
-    });
-});
-
-app.post('/test', async (req, res) => {
-    let classification = await parse(req.body.prompt, 1, 5)
-    res.json({
-        response: classification
-    });
-});
 
 app.post('/hasuraJWT', async (req, res) => {
     let jwt = await convertAppleJWTtoHasuraJWT(req.body.appleKey)
     res.json({
+        status: "success",
         jwt: jwt
     });
 });
-
-app.post('/getgql', async (req, res) => {
-    console.log(req.body.time, ": ", req.body.query);
-    savePrompt({ prompt: req.body.prompt });
-    let gql = await convertMessageToEvent(req.body.prompt, req.body.query, req.body.time, true)
-    res.json({
-        gql
-    });
-});
-
-app.get('/getevents', async (req, res) => {
-    let events = await getEvents({ user_id: 1 });
-    res.json(JSON.parse(JSON.stringify(events)));
-
-});
-
-app.get('/getInteractions', async (req, res) => {
-    let interactions = await getInteractions({ user_id: 1 });
-    res.json(JSON.parse(JSON.stringify(interactions)));
-
-});
-
-app.delete('/interaction/:id', (req, res) => {
-    const { id } = req.params;
-    deleteInteraction(parseInt(id))
-        .then(response => res.json(response))
-        .catch(error => {
-            console.error('Failed to delete event:', error);
-            res.status(500).json({ success: false, message: 'Failed to delete event.' });
-        });
-});
-
-
-app.delete('/event/:id', (req, res) => {
-    const { id } = req.params;
-    deleteEvent(parseInt(id))
-        .then(response => res.json(response))
-        .catch(error => {
-            console.error('Failed to delete event:', error);
-            res.status(500).json({ success: false, message: 'Failed to delete event.' });
-        });
-});
-
 
 app.listen(config.server.port, () => {
     return console.log(`[server]: Server is running on ${config.server.port}`);

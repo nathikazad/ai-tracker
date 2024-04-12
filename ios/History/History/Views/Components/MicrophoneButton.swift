@@ -58,7 +58,7 @@ struct MicrophoneButton: View {
     private func stopListening() async {
         let fileUrl = await audioRecorder.stopRecording()
         do {
-            let data = try AudioUploader().uploadAudioFile(at: fileUrl, to: uploadAudioEndpoint)
+            let data = try AudioUploader().uploadAudioFile(at: fileUrl, to: parseAudioEndpoint)
             if let data = data, let responseText = String(data: data, encoding: .utf8)
             {
                 DispatchQueue.main.async {

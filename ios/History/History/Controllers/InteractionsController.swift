@@ -21,9 +21,9 @@ class InteractionsController: ObservableObject {
     
     
     
-    func fetchInteractions() async {
+    func fetchInteractions(userId: Int) async {
         let startOfToday = Calendar.current.startOfDay(for: Date())
-        let graphqlQuery = InteractionsController.generateQuery(gte: startOfToday)
+        let graphqlQuery = InteractionsController.generateQuery(userId: userId, gte: startOfToday)
         
         do {
             // Directly get the decoded ResponseData object from sendGraphQL
@@ -66,9 +66,9 @@ class InteractionsController: ObservableObject {
     
     
     
-    func listenToInteractions() {
+    func listenToInteractions(userId: Int) {
         let startOfToday = Calendar.current.startOfDay(for: Date())
-        let subscriptionQuery = InteractionsController.generateQuery(gte: startOfToday, isSubscription: true)
+        let subscriptionQuery = InteractionsController.generateQuery(userId: userId, gte: startOfToday, isSubscription: true)
         
         subscriptionId = Hasura.shared.startListening(subscriptionQuery: subscriptionQuery, responseType: InteractionsResponseData.self) {result in
             switch result {
@@ -90,11 +90,9 @@ class InteractionsController: ObservableObject {
         }
     }
     
-    static private func generateQuery(limit: Int? = 20, gte: Date? = nil, isSubscription: Bool = false) -> String {
+    static private func generateQuery(userId: Int, limit: Int? = 20, gte: Date? = nil, isSubscription: Bool = false) -> String {
         let limitClause = limit.map { ", limit: \($0)" } ?? ""
-        let user_id: Int = Authentication.shared.userId! // Ensure this does not force unwrap a nil value in your actual code
-        
-        var whereClauses: [String] = ["user_id: {_eq: \(user_id)}"]
+        var whereClauses: [String] = ["user_id: {_eq: \(userId)}"]
         
         if let gteDate = gte {
             let startOfTodayUTCString = HasuraUtil.dateToUTCString(date: gteDate)

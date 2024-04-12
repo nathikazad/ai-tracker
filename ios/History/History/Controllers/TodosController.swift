@@ -21,9 +21,9 @@ class TodosController: ObservableObject {
     
     
     
-    func fetchTodos() async {
+    func fetchTodos(userId: Int) async {
         let startOfToday = Calendar.current.startOfDay(for: Date())
-        let graphqlQuery = TodosController.generateQuery()
+        let graphqlQuery = TodosController.generateQuery(userId: userId)
         
         do {
             // Directly get the decoded ResponseData object from sendGraphQL
@@ -68,9 +68,9 @@ class TodosController: ObservableObject {
     
     
     
-    func listenToTodos() {
+    func listenToTodos(userId: Int) {
         let startOfToday = Calendar.current.startOfDay(for: Date())
-        let subscriptionQuery = TodosController.generateQuery(isSubscription: true)
+        let subscriptionQuery = TodosController.generateQuery(userId: userId, isSubscription: true)
         
         subscriptionId = Hasura.shared.startListening(subscriptionQuery: subscriptionQuery, responseType: TodosResponseData.self) {result in
             switch result {
@@ -92,13 +92,12 @@ class TodosController: ObservableObject {
         }
     }
     
-    static private func generateQuery(limit: Int? = 20, isSubscription: Bool = false) -> String {
+    static private func generateQuery(userId: Int, limit: Int? = 20, isSubscription: Bool = false) -> String {
         let limitClause = limit.map { ", limit: \($0)" } ?? ""
         let operationType = isSubscription ? "subscription" : "query"
-        let user_id: Int = Authentication.shared.userId!
         return """
         \(operationType) {
-            todos(where: {user_id: {_eq: \(user_id)}}\(limitClause)) {
+            todos(where: {user_id: {_eq: \(userId)}}\(limitClause)) {
                 id
                 name
                 status

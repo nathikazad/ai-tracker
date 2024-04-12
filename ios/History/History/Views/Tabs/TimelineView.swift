@@ -21,9 +21,11 @@ struct TimelineView: View {
 //            }
         }
         .onAppear {
-            Task {
-                await interactionController.fetchInteractions()
-                interactionController.listenToInteractions()
+            if(Authentication.shared.areJwtSet) {
+                Task {
+                    await interactionController.fetchInteractions(userId: Authentication.shared.userId!)
+                    interactionController.listenToInteractions(userId: Authentication.shared.userId!)
+                }
             }
         }
         .onDisappear {

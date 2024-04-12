@@ -14,4 +14,5 @@ func fullURL(for path: String) -> String {
 }
 
 // Example usage of the function
-let uploadAudioEndpoint = fullURL(for: "convertAudioToInteraction")
+let parseAudioEndpoint = fullURL(for: "parseUserRequestFromAudio")
+let parseTextEndpoint = fullURL(for: "parseUserRequestFromText")

@@ -31,6 +31,7 @@ class Authentication {
     }
     
     var userId: Int? {
+        print("user id: \(hasuraJWTObject?.userId ?? 0)")
         return hasuraJWTObject?.userId
     }
     

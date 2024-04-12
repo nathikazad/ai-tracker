@@ -1,8 +1,19 @@
 
 import * as jwt from 'jsonwebtoken';
-import * as jwksRsa from 'jwks-rsa';;
+import * as jwksRsa from 'jwks-rsa';
+import { Request } from 'express';
 
 import { config, getHasura } from '../config';
+
+
+interface HasuraJWTClaims extends jwt.JwtPayload {
+    "iat": number,
+    "https://hasura.io/jwt/claims": {
+        "x-hasura-default-role": string;
+        "x-hasura-allowed-roles": string[];
+        "x-hasura-user-id": string;
+    };
+}
 
 function getKey(header: jwt.JwtHeader, callback: jwt.SigningKeyCallback): void {
     const client = new jwksRsa.JwksClient({
@@ -37,6 +48,8 @@ export function verifyAppleJwt(token: string): Promise<jwt.JwtPayload | undefine
 
 export async function convertAppleJWTtoHasuraJWT(appleJWT: string) {
     const decoded =  await verifyAppleJwt(appleJWT)
+    console.log("apple jwt")
+    console.log(decoded)
     const userId = await getHasuraUserId(decoded);
     const token = generateJWT(userId);
     return token;
@@ -44,7 +57,7 @@ export async function convertAppleJWTtoHasuraJWT(appleJWT: string) {
 
 function generateJWT(userId: number) {
     const privateKey = config.hasuraPrivateKey?.replace(/\\n/g, '\n') || '';
-    const payload = {
+    const payload: HasuraJWTClaims = {
         "iat": Math.floor(Date.now() / 1000),
         "https://hasura.io/jwt/claims": {
             "x-hasura-default-role": "user",
@@ -89,3 +102,19 @@ async function getHasuraUserId(decoded: jwt.JwtPayload | undefined) {
         });
     return resp2.insert_users_one!.id;
 }
+
+
+export function authorize(req: Request): number {
+    let token =  req.headers.authorization?.split(' ')[1]; // Assumes Bearer token
+    if (!token) {
+        throw new Error('No authorizaiton provided')
+    }
+    const secret: string = config.hasuraPrivateKey!; 
+    try {
+        const decoded = jwt.verify(token, secret) as HasuraJWTClaims;
+        return parseInt(decoded['https://hasura.io/jwt/claims']['x-hasura-user-id']);
+    } catch (error) {
+        throw new Error('Invalid or expired JWT');
+    }
+}
+

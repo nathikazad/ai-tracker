@@ -19,9 +19,9 @@ class GoalsController: ObservableObject {
     }
     
     
-    func fetchGoals() async {
+    func fetchGoals(userId: Int) async {
         let startOfToday = Calendar.current.startOfDay(for: Date())
-        let graphqlQuery = GoalsController.generateQuery()
+        let graphqlQuery = GoalsController.generateQuery(userId: userId)
         
         do {
             // Directly get the decoded ResponseData object from sendGraphQL
@@ -66,9 +66,9 @@ class GoalsController: ObservableObject {
     
     
     
-    func listenToGoals() {
+    func listenToGoals(userId: Int) {
         let startOfToday = Calendar.current.startOfDay(for: Date())
-        let subscriptionQuery = GoalsController.generateQuery(isSubscription: true)
+        let subscriptionQuery = GoalsController.generateQuery(userId: userId, isSubscription: true)
         
         subscriptionId = Hasura.shared.startListening(subscriptionQuery: subscriptionQuery, responseType: GoalsResponseData.self) {result in
             switch result {
@@ -90,19 +90,18 @@ class GoalsController: ObservableObject {
         }
     }
     
-    static private func generateQuery(limit: Int? = 20, isSubscription: Bool = false) -> String {
+    static private func generateQuery(userId: Int, limit: Int? = 20, isSubscription: Bool = false) -> String {
         let limitClause = limit.map { ", limit: \($0)" } ?? ""
         let operationType = isSubscription ? "subscription" : "query"
         
-        let user_id: Int = Authentication.shared.userId!
-        
         return """
         \(operationType) {
-            goals(where: {user_id: {_eq: \(user_id)}}\(limitClause)) {
+            goals(where: {user_id: {_eq: \(userId)}}\(limitClause)) {
                 id
                 name
                 status
-                period
+                frequency
+                nl_description
             }
         }
         """
@@ -110,17 +109,26 @@ class GoalsController: ObservableObject {
     
 }
 
-struct GoalModel: Decodable, Equatable {
+struct Frequency: Codable, Equatable {
+    var type: String // "weekly" or "periodic"
+    var daysOfWeek: [String]? // Optional: ["monday", "tuesday", ..., "weekends"]
+    var timesPerDay: Int
+    var preferredHours: [String]? // Optional
+    var duration: String? // Optional
+    var period: Int? // Optional
+}
+
+// Updated GoalModel struct in Swift
+struct GoalModel: Codable, Equatable {
     var id: Int
     var name: String
-    var status: String
-    var period: Int
-    
+    var frequency: Frequency
+    var nlDescription: String
+
     enum CodingKeys: String, CodingKey {
         case id
         case name
-        case status
-        case period
+        case frequency
+        case nlDescription = "nl_description"
     }
-    
 }

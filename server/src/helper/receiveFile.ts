@@ -3,7 +3,6 @@ import fs from 'fs';
 import path from 'path';
 import Busboy from 'busboy';
 import { speechToText } from '../third/openai';
-import { insertInteraction } from '../resources/interactions';
 
 
 
@@ -23,7 +22,7 @@ declare module 'express-serve-static-core' {
 }
 
 // // Middleware to handle multipart/form-data
-export function convertAudioToInteraction(req: Request, res: Response, next: NextFunction) {
+export function convertAudioToText(req: Request, res: Response, next: NextFunction, callback: (text: string) => void): void {
     if (req.method === 'POST' && req.headers['content-type']?.startsWith('multipart/form-data')) {
         const bb = Busboy({ headers: req.headers });
         req.files = []; // Ensure files is initialized
@@ -51,8 +50,7 @@ export function convertAudioToInteraction(req: Request, res: Response, next: Nex
                 if (req.files) {
                     req.files!.push(newFile);
                     speechToTextPromise = speechToText(newFile.path).then((value) => {
-                        text = value.text;
-                        insertInteraction(1, value.text);
+                        callback(value.text)
                     });
                 }
                 

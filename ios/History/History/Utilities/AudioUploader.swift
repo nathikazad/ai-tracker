@@ -10,13 +10,18 @@ import Foundation
 class AudioUploader: ObservableObject {
     let session = URLSession.shared
     
-    func uploadAudioFile(at fileUrl: URL, to uploadUrlString: String) throws -> Data? {
+    func uploadAudioFile(at fileUrl: URL, to uploadUrlString: String, token: String? = nil) throws -> Data? {
         guard let uploadUrl = URL(string: uploadUrlString) else {
             throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Invalid upload URL."])
         }
         
         var request = URLRequest(url: uploadUrl)
         request.httpMethod = "POST"
+        
+        if let token = token {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+            
         
         let boundary = "Boundary-\(UUID().uuidString)"
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
