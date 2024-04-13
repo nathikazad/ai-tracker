@@ -94,7 +94,8 @@ func handleSignIn(result: Result<ASAuthorization, any Error>) async -> Bool {
             ].compactMap { $0 }.joined(separator: " ")
             print("User Name: \(username!)")
         }
-        let userLanguage = Locale.preferredLanguages.first ?? "en"
+        let userLanguage = Locale(identifier:Locale.preferredLanguages.first ?? "en").language.languageCode?.identifier ?? "en"
+        print("User Language: \(userLanguage)")
         Authentication.shared.appleJwt = identityTokenString
         let jwt = await fetchHasuraJwt(appleKey: identityTokenString, username: username, userLanguage: userLanguage)
         if(jwt != nil) {
