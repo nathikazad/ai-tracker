@@ -20,18 +20,21 @@ app.post('/parseUserRequestFromAudio', async (req: Request, res: Response, next:
     try {
         const userId = authorize(req); 
         console.log(`userId: ${userId}`)
-        convertAudioToText(req, res, next, async (text: string) =>  {
-            text = (await isSpanish(text)) || text
-            console.log(`text: ${text}`)
+        convertAudioToText(req, res, next, async (text: string) => {
             try {
+                console.log(`pre translation text: ${text}`);
+                text = (await isSpanish(text)) || text;
+                console.log(`post translation text: ${text}`);
                 await parseUserRequest(text, userId); 
                 res.status(200).json({
                     status: "success",
                     text: text
                 });
+                return; // This ensures that the control ends here after sending the response
             } catch (parseError) {
                 console.error('Parsing error:', parseError);
                 res.status(500).json({ error: 'Error processing text' });
+                return; // Prevent further execution in case of an error
             }
         });
     } catch (authError) {
