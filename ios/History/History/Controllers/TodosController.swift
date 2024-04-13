@@ -107,6 +107,7 @@ class TodosController: ObservableObject {
                 id
                 name
                 status
+                current_count
                 goal {
                     id
                     name
@@ -125,6 +126,7 @@ struct Todo: Decodable, Equatable {
     var id: Int
     var name: String
     var status: String
+    var currentCount: Int?
     var goal: GoalModel?
 
     enum CodingKeys: String, CodingKey {
@@ -132,6 +134,7 @@ struct Todo: Decodable, Equatable {
         case name
         case status
         case goal
+        case currentCount = "current_count"
     }
     
     var isDone: Bool {

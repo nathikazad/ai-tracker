@@ -38,6 +38,11 @@ struct TodosView: View {
                                 Image(systemName: todo.isDone ? "checkmark.square.fill" : "square")
                                     .foregroundColor(todo.isDone ? .blue : .gray)
                                 Text(todo.name)
+                                if let timesPerDay = todo.goal?.frequency.timesPerDay {
+                                    if(timesPerDay > 1) {
+                                        Text("\(todo.currentCount ?? 0)/\(timesPerDay)")
+                                    }
+                                }
                             }
                         }
                         .buttonStyle(PlainButtonStyle())

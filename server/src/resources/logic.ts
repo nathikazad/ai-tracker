@@ -47,7 +47,7 @@ export async function parseEvent(event: string, user_id: number, interaction_id:
     response.todos.forEach((todo, index) => {
         prompt += `${index}. ${todo.name}\n`;
     });
-    prompt += "If yes, give me the number of the todo, if no, just say no"
+    prompt += "If yes, give me the number of the todo as an integer, if no, just say no"
     let resp = await complete3(prompt, 0.2);
     console.log(`matched response ${resp}`);
     
