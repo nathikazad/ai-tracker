@@ -1,18 +1,16 @@
-// import { parseEvent } from "./resources/logic"
+import { parseEvent } from "./resources/logic"
 
 
-import { parseUserRequest } from "./resources/logic"
+// import { parseUserRequest } from "./resources/logic"
 
 // import { classify } from "./resources/logic"
 
 // import { generateTodosFromGoals } from "./resources/goal";
 
 async function main() {
-    // generateTodosFromGoals(1);
-    // parseEvent("I finished praying isha", 1)
-    // let resp = await classify("Cancel my spanish goal")
-    // console.log(resp);
-    parseUserRequest("Call my mother once a week during work commute", 1)
+
+    parseEvent("Finished working out.", 5, 222)
+
     
 }
 main()

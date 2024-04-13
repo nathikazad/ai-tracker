@@ -38,50 +38,74 @@ export async function parseEvent(event: string, user_id: number, interaction_id:
             name: true,
             goal_id: true,
             current_count: true,
+            goal: {
+                frequency: [{}, true]
+            }
         }]
     });
     let prompt = `Do any of the following todos match the event "${event}"?\n`
     response.todos.forEach((todo, index) => {
-        prompt += `${index + 1}. ${todo.name}\n`;
+        prompt += `${index}. ${todo.name}\n`;
     });
-    // prompt += "If yes, give me the number of the todo, if no, just say no"
+    prompt += "If yes, give me the number of the todo, if no, just say no"
     let resp = await complete3(prompt, 0.2);
-    let matchedTodo: any = null;
-    response.todos.forEach((todo: any) => {
-        if (resp.includes(todo.name)) {
-            matchedTodo = todo;
+    console.log(`matched response ${resp}`);
+    
+    let matchedIndex: number | null = parseInt(resp);
+    if (isNaN(matchedIndex) || matchedIndex < 0 || matchedIndex >= response.todos.length) {
+        matchedIndex =  null
+    }
+    let goal_id: number | undefined
+    if (matchedIndex != null){
+        var matchedTodo = response.todos[matchedIndex!];    
+        goal_id = matchedTodo?.goal_id
+        console.log("matchedTodo ", matchedTodo);
+        if(matchedTodo.goal?.frequency?.timesPerDay == null) {
+            await chain.mutation({
+                update_todos_by_pk: [{
+                    pk_columns: { id: matchedTodo.id },
+                    _set: {
+                        status: "done"
+                    }
+                }, {
+                    id: true
+                }]
+            });
+        } else {
+            const targetTimesPerDay = matchedTodo.goal?.frequency?.timesPerDay!
+            const currentCount = matchedTodo.current_count ?? 0;
+            const newCount = currentCount + 1;
+            const newStatus = newCount >= targetTimesPerDay ? "done" : "todo";
+            await chain.mutation({
+                update_todos_by_pk: [{
+                    pk_columns: { id: matchedTodo.id },
+                    _inc: {
+                        current_count: 1
+                    },
+                    _set: {
+                        status: newStatus
+                    }
+                }, {
+                    id: true
+                }]
+            }); 
         }
-    });
-    console.log(prompt)
-    console.log("matchedTodo ", matchedTodo);
-    if (matchedTodo != null)
-        await chain.mutation({
-            update_todos_by_pk: [{
-                pk_columns: { id: matchedTodo.id },
-                _inc: {
-                    current_count: 1
-                },
-                _set: {
-                    status: (matchedTodo.current_count + 1) >= matchedTodo.target_count ? "done" : "todo"
-                }
-            }, {
-                id: true
-            }]
-        });
+    } else {
+        console.log("no matches");
+    }
     await chain.mutation({
         insert_events_one: [{
             object: {
                 name: event,
                 user_id: user_id,
                 event_type: "root",
-                goal_id: matchedTodo?.goal_id,
+                goal_id: goal_id,
                 interaction_id: interaction_id
             }
         }, {
             id: true
         }]
     })
-    return matchedTodo;
 }
 
 
