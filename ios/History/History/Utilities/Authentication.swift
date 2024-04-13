@@ -88,9 +88,13 @@ func handleSignIn(result: Result<ASAuthorization, any Error>) async -> Bool {
         }
         Authentication.shared.appleJwt = identityTokenString
         let jwt = await fetchHasuraJwt(appleKey: identityTokenString)
-        Authentication.shared.hasuraJwt = jwt
-        Authentication.shared.signInCallback()
-        return jwt != nil
+        if(jwt != nil) {
+            Authentication.shared.hasuraJwt = jwt
+            Authentication.shared.signInCallback()
+            return true
+        } else {
+            return false
+        }
     case .failure(let error):
         print("Authorisation failed: \(error.localizedDescription)")
         return false

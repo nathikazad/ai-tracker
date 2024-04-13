@@ -1,6 +1,6 @@
 import { getHasura } from "../../config";
 import { complete3, complete4 } from "../../third/openai";
-import { Frequency } from "../goal";
+import { Frequency, generateTodosFromGoals } from "../goal";
 import { $ } from "../../generated/graphql-zeus";
 
 export async function parseGoal(goal: string, user_id: number) {
@@ -48,6 +48,7 @@ export async function parseGoal(goal: string, user_id: number) {
     {
         "frequency": frequency
     })
+    generateTodosFromGoals(user_id)
     return response.insert_goals_one?.id
 }
 
