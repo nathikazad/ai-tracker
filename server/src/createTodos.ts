@@ -4,7 +4,7 @@ import { generateTodosFromGoals } from "./resources/goal";
 
 
 async function main() {    
-    generateTodosFromGoals(1);
+    generateTodosFromGoals(5);
 }
 main()
 

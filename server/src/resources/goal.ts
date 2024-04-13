@@ -10,7 +10,6 @@ export async function generateTodosFromGoals(user_id: number) {
             id: true,
             name: true,
             frequency: [{}, true],
-            target_number: true,
             status: true,
             user: {
                 timezone: true
