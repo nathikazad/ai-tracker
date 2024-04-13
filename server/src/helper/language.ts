@@ -8,7 +8,7 @@ export async function translateToSpanish(text: string) : Promise<string> {
     // if(resp.includes("spanish")){
         let prompt = `translate the text below to english:
         "${text}"`
-        let resp = (await complete3(prompt, 0.2, 10));
+        let resp = (await complete3(prompt, 0.2, 10, false));
         return resp
     // } 
     // return null

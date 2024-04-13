@@ -4,6 +4,7 @@ import * as jwksRsa from 'jwks-rsa';
 import { Request } from 'express';
 
 import { config, getHasura } from '../config';
+import { updateUserFields } from './user';
 
 
 interface HasuraJWTClaims extends jwt.JwtPayload {
@@ -46,13 +47,13 @@ export function verifyAppleJwt(token: string): Promise<jwt.JwtPayload | undefine
     });
 }
 
-export async function convertAppleJWTtoHasuraJWT(appleJWT: string) {
-    const decoded =  await verifyAppleJwt(appleJWT)
+export async function convertAppleJWTtoHasuraJWT(appleJWT: string, username: string | null, language: string | null) {
+    const decoded = await verifyAppleJwt(appleJWT)
     console.log("apple jwt")
     console.log(decoded)
-    if(decoded!["aud"] == 'com.evol.History'){
+    if (decoded!["aud"] == 'com.evol.History') {
         console.log("Correct app")
-        const userId = await getHasuraUserId(decoded);
+        const userId = await getHasuraUserId(decoded, username, language);
         const token = generateJWT(userId);
         return token;
     } else {
@@ -61,7 +62,7 @@ export async function convertAppleJWTtoHasuraJWT(appleJWT: string) {
 }
 
 function generateJWT(userId: number) {
-    const privateKey: string = config.hasuraPrivateKey!; 
+    const privateKey: string = config.hasuraPrivateKey!;
     const payload: HasuraJWTClaims = {
         "iat": Math.floor(Date.now() / 1000),
         "https://hasura.io/jwt/claims": {
@@ -80,7 +81,7 @@ function generateJWT(userId: number) {
     return token;
 }
 
-async function getHasuraUserId(decoded: jwt.JwtPayload | undefined) {
+async function getHasuraUserId(decoded: jwt.JwtPayload | undefined, username: string | null, language: string | null) {
     let chain = getHasura();
     let resp = await chain.query({
         users: [{
@@ -90,40 +91,48 @@ async function getHasuraUserId(decoded: jwt.JwtPayload | undefined) {
                 }
             }
         }, {
+            id: true,
+            name: true,
+            language: true
+        }]
+    });
+    if (resp.users.length >= 1) {
+        const user = resp.users[0]
+        updateUserFields(user, username, language);
+        return user.id;
+    }
+
+    let resp2 = await chain.mutation({
+        insert_users_one: [{
+            object: {
+                apple_id: decoded!.sub,
+                name: username ?? undefined,
+                language: language ?? undefined
+            }
+        }, {
             id: true
         }]
     });
-    if (resp.users.length >= 1) 
-        return resp.users[0].id;
-    
-    let resp2 = await chain.mutation({
-            insert_users_one: [{
-                object: {
-                    apple_id: decoded!.sub
-                }
-            }, {
-                id: true
-            }]
-        });
+
     return resp2.insert_users_one!.id;
 }
 
 
 export function authorize(req: Request): number {
     console.log(`authorization header: ${req.headers.authorization}`)
-    let token =  req.headers.authorization?.split(' ')[1]; 
+    let token = req.headers.authorization?.split(' ')[1];
     if (!token) {
         throw new Error('No authorizaiton provided')
     }
-    const privateKey: string = config.hasuraPrivateKey!; 
+    const privateKey: string = config.hasuraPrivateKey!;
     // try {
-        const decoded = jwt.verify(token, privateKey) as HasuraJWTClaims;
-        console.log(`decoded`)
-        console.log(decoded)
-        const hasuraJWTClaims = decoded as HasuraJWTClaims;
-        console.log("hasuraJWTClaims")
-        console.log(hasuraJWTClaims)
-        return parseInt(hasuraJWTClaims['https://hasura.io/jwt/claims']['x-hasura-user-id']);
+    const decoded = jwt.verify(token, privateKey) as HasuraJWTClaims;
+    console.log(`decoded`)
+    console.log(decoded)
+    const hasuraJWTClaims = decoded as HasuraJWTClaims;
+    console.log("hasuraJWTClaims")
+    console.log(hasuraJWTClaims)
+    return parseInt(hasuraJWTClaims['https://hasura.io/jwt/claims']['x-hasura-user-id']);
     // } catch (error) {
     //     throw new Error('Invalid or expired JWT');
     // }

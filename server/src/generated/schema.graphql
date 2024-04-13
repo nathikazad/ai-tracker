@@ -4129,6 +4129,8 @@ columns and relationships of "users"
 type users {
   apple_id: String
   id: Int!
+  language: String!
+  name: String!
   timezone: String
 }
 
@@ -4171,6 +4173,8 @@ input users_bool_exp {
   _or: [users_bool_exp!]
   apple_id: String_comparison_exp
   id: Int_comparison_exp
+  language: String_comparison_exp
+  name: String_comparison_exp
   timezone: String_comparison_exp
 }
 
@@ -4197,6 +4201,8 @@ input type for inserting data into table "users"
 input users_insert_input {
   apple_id: String
   id: Int
+  language: String
+  name: String
   timezone: String
 }
 
@@ -4204,6 +4210,8 @@ input users_insert_input {
 type users_max_fields {
   apple_id: String
   id: Int
+  language: String
+  name: String
   timezone: String
 }
 
@@ -4211,6 +4219,8 @@ type users_max_fields {
 type users_min_fields {
   apple_id: String
   id: Int
+  language: String
+  name: String
   timezone: String
 }
 
@@ -4248,6 +4258,8 @@ input users_on_conflict {
 input users_order_by {
   apple_id: order_by
   id: order_by
+  language: order_by
+  name: order_by
   timezone: order_by
 }
 
@@ -4267,6 +4279,12 @@ enum users_select_column {
   id
 
   """column name"""
+  language
+
+  """column name"""
+  name
+
+  """column name"""
   timezone
 }
 
@@ -4276,6 +4294,8 @@ input type for updating data in table "users"
 input users_set_input {
   apple_id: String
   id: Int
+  language: String
+  name: String
   timezone: String
 }
 
@@ -4309,6 +4329,8 @@ input users_stream_cursor_input {
 input users_stream_cursor_value_input {
   apple_id: String
   id: Int
+  language: String
+  name: String
   timezone: String
 }
 
@@ -4326,6 +4348,12 @@ enum users_update_column {
 
   """column name"""
   id
+
+  """column name"""
+  language
+
+  """column name"""
+  name
 
   """column name"""
   timezone

@@ -86,8 +86,17 @@ func handleSignIn(result: Result<ASAuthorization, any Error>) async -> Bool {
         guard let credentials = authResults.credential as? ASAuthorizationAppleIDCredential, let identityToken = credentials.identityToken, let identityTokenString = String(data: identityToken, encoding: .utf8) else {
             return false
         }
+        var username: String?
+        if let fullName = credentials.fullName {
+            username = [
+                fullName.givenName,
+                fullName.familyName
+            ].compactMap { $0 }.joined(separator: " ")
+            print("User Name: \(username!)")
+        }
+        let userLanguage = Locale.preferredLanguages.first ?? "en"
         Authentication.shared.appleJwt = identityTokenString
-        let jwt = await fetchHasuraJwt(appleKey: identityTokenString)
+        let jwt = await fetchHasuraJwt(appleKey: identityTokenString, username: username, userLanguage: userLanguage)
         if(jwt != nil) {
             Authentication.shared.hasuraJwt = jwt
             Authentication.shared.signInCallback()
@@ -103,7 +112,7 @@ func handleSignIn(result: Result<ASAuthorization, any Error>) async -> Bool {
 
 
 
-private func fetchHasuraJwt(appleKey: String) async -> String? {
+private func fetchHasuraJwt(appleKey: String, username: String? = nil, userLanguage: String? = nil) async -> String? {
     guard let url = URL(string: "https://ai-tracker-server-613e3dd103bb.herokuapp.com/hasuraJWT") else {
         return nil
     }
@@ -111,7 +120,13 @@ private func fetchHasuraJwt(appleKey: String) async -> String? {
     request.httpMethod = "POST"
     request.addValue("application/json", forHTTPHeaderField: "Content-Type")
     
-    let body: [String: Any] = ["appleKey": appleKey]
+    var body: [String: Any] = ["appleKey": appleKey, ]
+    if let username = username {
+        body["username"] = username
+    }
+    if let userLanguage = userLanguage {
+        body["language"] = userLanguage
+    }
     request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
     do {
         let (data, response) = try await URLSession.shared.data(for: request)

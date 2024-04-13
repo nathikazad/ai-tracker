@@ -14,7 +14,7 @@ export async function createEmbedding(input: string): Promise<Number[]> {
   return result.data[0].embedding
 }
 
-export async function complete4(prompt: string, temperature: number | null = null, max_tokens: number = 100) {
+export async function complete4(prompt: string, temperature: number | null = null, max_tokens: number = 100, toLowerCase : boolean = true) {
   const result = await openai.chat.completions.create({
     messages: [
       {
@@ -29,10 +29,11 @@ export async function complete4(prompt: string, temperature: number | null = nul
     //   type: "json_object"
     // }
   });
-  return result.choices[0].message.content!.replace(/\n/g, "").replace(/"/g, '').trim().toLocaleLowerCase();
+  let message = result.choices[0].message.content!
+  return toLowerCase ? message.replace(/\n/g, "").replace(/"/g, '').trim().toLocaleLowerCase() : message
 }
 
-export async function complete3(prompt: string, temperature: number | null = null, max_tokens: number = 100) {
+export async function complete3(prompt: string, temperature: number | null = null, max_tokens: number = 100, toLowerCase : boolean = true) {
   const result = await openai.completions.create({
     prompt,
     model: "gpt-3.5-turbo-instruct",
@@ -41,7 +42,8 @@ export async function complete3(prompt: string, temperature: number | null = nul
   });
   console.log(result.usage, result.choices[0].finish_reason);
 
-  return result.choices[0].text.replace(/\n/g, "").replace(/"/g, '').trim().toLocaleLowerCase();
+  let message = result.choices[0].text
+  return toLowerCase ? message.replace(/\n/g, "").replace(/"/g, '').trim().toLocaleLowerCase() : message
 }
 
 export async function speechToText(filePath: string, language?: string) {

@@ -2,16 +2,15 @@
 import express, { Express, Request, Response, NextFunction } from 'express';
 import { config } from "./config";
 import path from 'path';
-import { convertAudioToText } from './helper/receiveFile';
+import { convertAudioToText } from './helper/audio';
 
 import { authorize, convertAppleJWTtoHasuraJWT } from './resources/authorization';
 import { parseUserRequest } from './resources/logic';
+import { getUserLanguage } from './resources/user';
 const app: Express = express();
 
 app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.json());
-
-// app.post('/parseUserRequest', convertAudioToInteraction);
 
 
 app.post('/parseUserRequestFromAudio', async (req: Request, res: Response, next: NextFunction) => {
@@ -19,8 +18,8 @@ app.post('/parseUserRequestFromAudio', async (req: Request, res: Response, next:
     try {
         const userId = authorize(req); 
         console.log(`userId: ${userId}`)
-        // get user language
-        let userLanguage = "es"
+
+        let userLanguage = await getUserLanguage(userId)
         convertAudioToText(req, res, userLanguage, next, async (text: string) => {
             try {
                 parseUserRequest(text, userId); 
@@ -64,8 +63,9 @@ app.post('/parseUserRequestFromText', async (req: Request, res: Response) => {
 
 
 app.post('/hasuraJWT', async (req, res) => {
+    console.log(`hasuraJWT user:${req.body.username}`);
     try {
-        let jwt = await convertAppleJWTtoHasuraJWT(req.body.appleKey)
+        let jwt = await convertAppleJWTtoHasuraJWT(req.body.appleKey, req.body.username, req.body.language)
         res.status(200).json({
             status: "success",
             jwt: jwt
