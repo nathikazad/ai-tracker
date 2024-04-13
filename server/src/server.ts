@@ -63,7 +63,7 @@ app.post('/parseUserRequestFromText', async (req: Request, res: Response) => {
 app.post('/hasuraJWT', async (req, res) => {
     try {
         let jwt = await convertAppleJWTtoHasuraJWT(req.body.appleKey)
-        res.status(500).json({
+        res.status(200).json({
             status: "success",
             jwt: jwt
         });
