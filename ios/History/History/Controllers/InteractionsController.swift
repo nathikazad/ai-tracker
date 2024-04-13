@@ -93,7 +93,7 @@ class InteractionsController: ObservableObject {
     
     static private func generateQuery(userId: Int, limit: Int? = 20, gte: Date? = nil, isSubscription: Bool = false) -> String {
         let limitClause = limit.map { ", limit: \($0)" } ?? ""
-        var whereClauses: [String] = ["user_id: {_eq: \(userId)}"]
+        var whereClauses: [String] = ["user_id: {_eq: \(userId)}", "content_type: {_eq: \"event\"}"]
         
         if let gteDate = gte {
             let startOfTodayUTCString = HasuraUtil.dateToUTCString(date: gteDate)

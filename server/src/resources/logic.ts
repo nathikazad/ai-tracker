@@ -9,7 +9,7 @@ import { parseGoal } from "./logic/goalLogic";
 export async function parseUserRequest(text: string, user_id: number) {
     let classification = await classify(text)
     console.log(`${text} \nClassification: ${classification}`)
-    let interaction_id = await insertInteraction(1, text, classification);
+    let interaction_id = await insertInteraction(user_id, text, classification);
     switch (classification) {
         case "todo":
             return "todo"

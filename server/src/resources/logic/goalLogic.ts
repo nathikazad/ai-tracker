@@ -130,16 +130,17 @@ async function extractDaysOfWeek(goal: string) {
     return chosenDays
 }
 
-async function extractPreferredHours(goal: string) {
+async function extractPreferredHours(goal: string) : Promise<string[] | null> {
     let prompt = `Your purpose is to extract the hour of a day from a text if it is there.
     if the text was "I want to do learn Spanish everyday at 7pm" your response would be "19:00"
     if the text was "I want to do learn Spanish everyday" your response would be "none"
     Either give me the hours in "hh:mm" format or "none" as your response, don't add anything else to response
         "${goal}"`;
     let resp = (await complete3(prompt, 0.2, 10));
-    console.log(`preferredHours ${resp}`);
-    if (resp != "none") {
-        return[resp];
+    let hours = extractHours(resp);
+    if (hours) {
+        console.log(`preferredHours ${hours}`);
+        return [hours]
     } else {
         prompt = `Your purpose is to extract the hour of a day from a text if it is there.
         if text says morning return "09:00"
@@ -150,28 +151,35 @@ async function extractPreferredHours(goal: string) {
         Either give me the hours in "hh:mm" format or "none" as your response, don't add anything else to response
             "${goal}"`;
         resp = (await complete3(prompt, 0.2, 10));
-        console.log(`preferredHours ${resp}`);
-        if (!resp.includes("none")) {
-            return [resp];
+        let hours = extractHours(resp);
+        if (hours) {
+            console.log(`preferredHours ${hours}`);
+            return [hours]
         }
     }
-    return null   
+    return null
+}
+
+function extractHours(resp: string): string | null {
+    const timeRegex = /(\d{2}:\d{2})/;
+    const match = timeRegex.exec(resp);
+    if (match) {
+        return match[1]; 
+    } else {
+        return null;
+    }
 }
 
 async function extractDuration(goal: string) {
-    let prompt = `Your purpose is to extract the duration user wants to do certain activity from a text, but only if it is there.
-    if the text was "I want to do learn Spanish everyday for 30 minutes" your response would be "00:30"
-    if the text was "I want to do learn dance on mondays for an hour" your response would be "01:00"
-    if the text was "I want to do learn Spanish everyday" your response would be "none"
+    let prompt = `Your purpose is to extract the amount of time user wants to do certain activity from a text, but only if it is there.
+    but do not give me the hour of the day in which activity takes place, only the total time to do something.
+    if the text was "I want to do learn Spanish everyday for 30 minutes at 18:00" your response would be "00:30"
+    if the text was "I want to do learn dance on mondays for an hour at 6am" your response would be "01:00"
+    if the text was "I want to do learn Spanish everyday at 1pm" your response would be "none"
     Either give me the hours in "hh:mm" format or "none" as your response, don't add anything else to response
         "${goal}"`;
     let resp = (await complete3(prompt, 0.2, 10));
-    console.log(`preferredHours ${resp}`);
-    if (!resp.includes("none")) {
-        return resp;
-    } else {
-        return null  
-    }
+    return extractHours(resp);
 }
 
 
