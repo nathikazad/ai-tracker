@@ -1,16 +1,20 @@
 import { getHasura } from "../config";
-import { todos_constraint, todos_update_column } from "../generated/graphql-zeus";
+import { todos_constraint, todos_update_column, ValueTypes } from "../generated/graphql-zeus";
 
-export async function generateTodosFromGoals(user_id: number) {
+export async function generateTodosFromGoals(user_id?: number | null) {
     const chain = getHasura();
+    const user_filter: ValueTypes['Int_comparison_exp'] = {
+        _eq: user_id ?? undefined
+    };
     let response = await chain.query({
         goals: [{
-            where: { _and: [{ user_id: { _eq: user_id } }, { status: { _eq: "active" } }] },
+            where: { _and: [{ user_id: user_filter }, { status: { _eq: "active" } }] },
         }, {
             id: true,
             name: true,
             frequency: [{}, true],
             status: true,
+            user_id: true,
             user: {
                 timezone: true
             },
@@ -22,6 +26,7 @@ export async function generateTodosFromGoals(user_id: number) {
     const goalsList: Goal[] = response.goals.map((goal): Goal => {
         return {
             id: goal.id,
+            user_id: goal.user_id,
             name: goal.name,
             status: goal.status,
             frequency: goal.frequency,
@@ -43,7 +48,7 @@ export async function generateTodosFromGoals(user_id: number) {
                         object: {
                             name: goal.name,
                             goal_id: goal.id,
-                            user_id: user_id,
+                            user_id: goal.user_id,
                             current_count: 0,
                             status: "todo",
                             updated: new Date().toISOString()
@@ -126,6 +131,7 @@ export interface Goal {
     frequency: Frequency;
     last_todo_updated: string;
     user_timezone: string
+    user_id: number
 }
 
 // {
