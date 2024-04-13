@@ -18,6 +18,15 @@ class TodosController: ObservableObject {
         }
     }
     
+    func sortAndAssign(_ newTodos: [Todo]) {
+        DispatchQueue.main.async {
+            self.todos = newTodos.sorted { (todo1, todo2) -> Bool in
+                let preferredHour1 = todo1.goal?.frequency.preferredHour() ?? "12:00"
+                let preferredHour2 = todo2.goal?.frequency.preferredHour() ?? "12:00"
+                return preferredHour1 < preferredHour2
+            }
+        }
+    }
     
     
     
@@ -28,9 +37,7 @@ class TodosController: ObservableObject {
         do {
             // Directly get the decoded ResponseData object from sendGraphQL
             let responseData: TodosResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, responseType: TodosResponseData.self)
-            DispatchQueue.main.async {
-                self.todos = responseData.data.todos
-            }
+            self.sortAndAssign(responseData.data.todos)
         } catch {
             print("Error: \(error.localizedDescription)")
         }
@@ -76,9 +83,7 @@ class TodosController: ObservableObject {
         subscriptionId = Hasura.shared.startListening(subscriptionQuery: subscriptionQuery, responseType: TodosResponseData.self) {result in
             switch result {
             case .success(let responseData):
-                DispatchQueue.main.async {
-                    self.todos = responseData.data.todos
-                }
+                self.sortAndAssign(responseData.data.todos)
             case .failure(let error):
                 print("Error processing message: \(error.localizedDescription)")
             }
@@ -102,6 +107,13 @@ class TodosController: ObservableObject {
                 id
                 name
                 status
+                goal {
+                    id
+                    name
+                    status
+                    frequency
+                    nl_description
+                }
             }
         }
         """
@@ -113,11 +125,13 @@ struct Todo: Decodable, Equatable {
     var id: Int
     var name: String
     var status: String
-    
+    var goal: GoalModel?
+
     enum CodingKeys: String, CodingKey {
         case id
         case name
         case status
+        case goal
     }
     
     var isDone: Bool {

@@ -6,15 +6,30 @@
 //
 
 import Foundation
+
+
+
+
 class GoalsController: ObservableObject {
     
     @Published var goals: [GoalModel] = []
     var subscriptionId: String?
+    // Extension on Array where Elements are GoalModel
     
     struct GoalsResponseData: Decodable {
         var data: GoalsWrapper
         struct GoalsWrapper: Decodable {
             var goals: [GoalModel]
+        }
+    }
+    
+    func sortAndAssign(_ newGoals: [GoalModel]) {
+        DispatchQueue.main.async {
+            self.goals = newGoals.sorted { (goal1, goal2) -> Bool in
+                let firstPreferredHour1 = goal1.frequency.preferredHour()
+                let firstPreferredHour2 = goal2.frequency.preferredHour()
+                return firstPreferredHour1 < firstPreferredHour2
+            }
         }
     }
     
@@ -26,9 +41,7 @@ class GoalsController: ObservableObject {
         do {
             // Directly get the decoded ResponseData object from sendGraphQL
             let responseData: GoalsResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, responseType: GoalsResponseData.self)
-            DispatchQueue.main.async {
-                self.goals = responseData.data.goals
-            }
+            sortAndAssign(responseData.data.goals)
         } catch {
             print("Error: \(error.localizedDescription)")
         }
@@ -74,9 +87,7 @@ class GoalsController: ObservableObject {
         subscriptionId = Hasura.shared.startListening(subscriptionQuery: subscriptionQuery, responseType: GoalsResponseData.self) {result in
             switch result {
             case .success(let responseData):
-                DispatchQueue.main.async {
-                    self.goals = responseData.data.goals
-                }
+                self.sortAndAssign(responseData.data.goals)
             case .failure(let error):
                 print("Error processing message: \(error.localizedDescription)")
             }
@@ -117,6 +128,14 @@ struct Frequency: Codable, Equatable {
     var preferredHours: [String]? // Optional
     var duration: String? // Optional
     var period: Int? // Optional
+    
+    func preferredHour() -> String {
+        if let preferredHours = self.preferredHours, !preferredHours.isEmpty {
+            return preferredHours[0]
+        } else {
+            return "12:00"  // Default to noon in "HH:mm" format
+        }
+    }
 }
 
 // Updated GoalModel struct in Swift
@@ -125,11 +144,13 @@ struct GoalModel: Codable, Equatable {
     var name: String
     var frequency: Frequency
     var nlDescription: String
-
+    
     enum CodingKeys: String, CodingKey {
         case id
         case name
         case frequency
         case nlDescription = "nl_description"
     }
+    
+    
 }
