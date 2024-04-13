@@ -6,7 +6,6 @@ import { convertAudioToText } from './helper/receiveFile';
 
 import { authorize, convertAppleJWTtoHasuraJWT } from './resources/authorization';
 import { parseUserRequest } from './resources/logic';
-import { isSpanish } from './helper/language';
 const app: Express = express();
 
 app.use(express.static(path.join(__dirname, '../public')));
@@ -20,12 +19,11 @@ app.post('/parseUserRequestFromAudio', async (req: Request, res: Response, next:
     try {
         const userId = authorize(req); 
         console.log(`userId: ${userId}`)
-        convertAudioToText(req, res, next, async (text: string) => {
+        // get user language
+        let userLanguage = "es"
+        convertAudioToText(req, res, userLanguage, next, async (text: string) => {
             try {
-                console.log(`pre translation text: ${text}`);
-                text = (await isSpanish(text)) || text;
-                console.log(`post translation text: ${text}`);
-                await parseUserRequest(text, userId); 
+                parseUserRequest(text, userId); 
                 res.status(200).json({
                     status: "success",
                     text: text

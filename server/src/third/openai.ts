@@ -44,9 +44,10 @@ export async function complete3(prompt: string, temperature: number | null = nul
   return result.choices[0].text.replace(/\n/g, "").replace(/"/g, '').trim().toLocaleLowerCase();
 }
 
-export async function speechToText(filePath: string) {
+export async function speechToText(filePath: string, language?: string) {
   return openai.audio.transcriptions.create({
     file: fs.createReadStream(filePath),
+    language: language ?? "en",
     model: "whisper-1"
   })
 }

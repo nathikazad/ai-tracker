@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import Busboy from 'busboy';
 import { speechToText } from '../third/openai';
+import { translateToSpanish } from './language';
 
 
 
@@ -22,7 +23,7 @@ declare module 'express-serve-static-core' {
 }
 
 // // Middleware to handle multipart/form-data
-export function convertAudioToText(req: Request, res: Response, next: NextFunction, callback: (text: string) => void): void {
+export function convertAudioToText(req: Request, res: Response, userLanguage: string, next: NextFunction, callback: (text: string) => void): void {
     if (req.method === 'POST' && req.headers['content-type']?.startsWith('multipart/form-data')) {
         const bb = Busboy({ headers: req.headers });
         req.files = []; // Ensure files is initialized
@@ -49,8 +50,14 @@ export function convertAudioToText(req: Request, res: Response, next: NextFuncti
                 
                 if (req.files) {
                     req.files!.push(newFile);
-                    speechToTextPromise = speechToText(newFile.path).then((value) => {
+                    speechToTextPromise = speechToText(newFile.path, userLanguage).then(async (value) => {
+                        if(userLanguage == "es") {
+                            console.log(`pre translation text: ${value.text}`);
+                            value.text = await translateToSpanish(value.text);
+                            console.log(`post translation text: ${text}`);
+                        }
                         callback(value.text)
+                        fs.unlink(newFile.path, () => {})
                     });
                 }
                 
