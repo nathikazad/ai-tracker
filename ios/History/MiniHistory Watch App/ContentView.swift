@@ -95,7 +95,8 @@ struct ContentView: View {
     private func stopListening() async {
         let fileUrl = await audioRecorder.stopRecording()
         do {
-            let data = try AudioUploader().uploadAudioFile(at: fileUrl, to: parseAudioEndpoint, token: Authentication.shared.hasuraJwt)
+            // get token from received end point
+            let data = try AudioUploader().uploadAudioFile(at: fileUrl, to: parseAudioEndpoint, token: "test")
             if let data = data, let responseText = String(data: data, encoding: .utf8)
             {
                 DispatchQueue.main.async {

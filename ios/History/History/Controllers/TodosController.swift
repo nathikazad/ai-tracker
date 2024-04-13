@@ -69,6 +69,7 @@ class TodosController: ObservableObject {
     
     
     func listenToTodos(userId: Int) {
+        print("lsitening for todos")
         let startOfToday = Calendar.current.startOfDay(for: Date())
         let subscriptionQuery = TodosController.generateQuery(userId: userId, isSubscription: true)
         

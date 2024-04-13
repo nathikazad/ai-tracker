@@ -61,11 +61,17 @@ app.post('/parseUserRequestFromText', async (req: Request, res: Response) => {
 
 
 app.post('/hasuraJWT', async (req, res) => {
-    let jwt = await convertAppleJWTtoHasuraJWT(req.body.appleKey)
-    res.json({
-        status: "success",
-        jwt: jwt
-    });
+    try {
+        let jwt = await convertAppleJWTtoHasuraJWT(req.body.appleKey)
+        res.status(500).json({
+            status: "success",
+            jwt: jwt
+        });
+    } catch (error) {
+        console.error('hasuraJWT:', error);
+        res.status(401).json({ error: error });
+    }
+    
 });
 
 app.listen(config.server.port, () => {

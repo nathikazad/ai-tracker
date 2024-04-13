@@ -9,6 +9,10 @@ import SwiftUI
 
 struct TodosView: View {
     @StateObject var todoController = TodosController()
+    
+    init() {
+        
+    }
     var body: some View {
         Group {
             if todoController.todos.isEmpty {
@@ -44,8 +48,9 @@ struct TodosView: View {
         }
         .padding(.all, 0)
         .onAppear {
-            Task {
-                if(Authentication.shared.areJwtSet) {
+            print("TodosView has appeared")
+            if(Authentication.shared.areJwtSet) {
+                Task {
                     await todoController.fetchTodos(userId: Authentication.shared.userId!)
                     todoController.listenToTodos(userId: Authentication.shared.userId!)
                 }

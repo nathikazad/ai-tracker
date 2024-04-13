@@ -15,6 +15,7 @@ struct Quote: Identifiable {
 
 struct RemindersView: View {
     let quotes = [
+        Quote(text: "How we spend our days is, of course, how we spend our lives. A schedule defends from chaos and whim. It is a net for catching days. It is a scaffolding on which a worker can stand and labor with both hands at sections of time. It is a haven set into the wreck of time; it is a lifeboat on which you find yourself. -Anne Dillard"),
         Quote(text: "Focus on the work that is in front of you, forget about the things you can't control. Trust in the Universe."),
         Quote(text: "Bias towards action, one step at a time."),
         Quote(text: "If tired or overwhelmed, work out, cook or do nothing. Don't scroll on insta, news or twitter."),

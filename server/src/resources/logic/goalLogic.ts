@@ -117,7 +117,7 @@ async function extractDaysOfWeek(goal: string) {
         if no such information is give, return ["everyday"]
         classify the goal:
         "${goal}"
-        Give me an array of strings as your response.
+        Give me an array of strings as your response, it will be parsed using JSON.parse(response), so make sure it will work with that
         Don't add anything extra because goes into next part of the program. `;
 
     let resp = (await complete4(prompt, 0.2, 40));

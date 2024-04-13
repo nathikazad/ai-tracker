@@ -69,13 +69,9 @@ struct ContentView: View {
                     self.appState.showChat(newChatViewToShow:.onBoard)
                 }
             }
-            registerBackroundNotifiers()
         }
     }
     
-    func registerBackroundNotifiers() {
-        Hasura.shared.setBackgroundNotifiers(didEnterBackgroundNotification: UIApplication.didEnterBackgroundNotification, willEnterForegroundNotification: UIApplication.willEnterForegroundNotification)
-    }
 }
 
 

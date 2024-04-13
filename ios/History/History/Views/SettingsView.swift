@@ -25,6 +25,7 @@ struct SettingsView: View {
 //                    }
                     Button(action: {
                         Authentication.shared.signOutCallback()
+                        AppState.shared.hideSheet()
                         AppState.shared.showChat(newChatViewToShow: .onBoard)
                     }) {
                         Label("Logout", systemImage: "arrow.right.square.fill")

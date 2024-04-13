@@ -9,26 +9,45 @@ import SwiftUI
 
 // Define your custom views for each tab
 struct TimelineView: View {
+    
+    init() {
+        print("timeline init")
+    }
     @StateObject var interactionController = InteractionsController()
-
+    @State private var refreshID = UUID()
     var body: some View {
         Group {
-//            if interactionController.interactions.isEmpty {
-//                List {
-//                }
-//            } else {
+            if interactionController.interactions.isEmpty {
+                VStack {
+                    Spacer()
+                    Text("No Events Yet")
+                        .foregroundColor(.black)
+                        .font(.title2)
+                    Text("Create an event by clicking the microphone below")
+                        .foregroundColor(.gray)
+                        .multilineTextAlignment(.center) // This will center-align the text horizontally
+                        .padding(.horizontal, 20)
+                    Spacer()
+                }
+            } else {
                 listView
-//            }
+            }
         }
+        .id(refreshID)
         .onAppear {
+            print("Timelineview has appeared")
+            
             if(Authentication.shared.areJwtSet) {
+//                Hasura.shared.setup()
                 Task {
                     await interactionController.fetchInteractions(userId: Authentication.shared.userId!)
+
                     interactionController.listenToInteractions(userId: Authentication.shared.userId!)
                 }
             }
         }
         .onDisappear {
+            print("Timelineview has disappeared")
             interactionController.cancelListener()
         }
     }

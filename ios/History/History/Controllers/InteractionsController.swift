@@ -67,6 +67,7 @@ class InteractionsController: ObservableObject {
     
     
     func listenToInteractions(userId: Int) {
+        print("lsitening for interactions")
         let startOfToday = Calendar.current.startOfDay(for: Date())
         let subscriptionQuery = InteractionsController.generateQuery(userId: userId, gte: startOfToday, isSubscription: true)
         

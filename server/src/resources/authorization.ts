@@ -50,9 +50,14 @@ export async function convertAppleJWTtoHasuraJWT(appleJWT: string) {
     const decoded =  await verifyAppleJwt(appleJWT)
     console.log("apple jwt")
     console.log(decoded)
-    const userId = await getHasuraUserId(decoded);
-    const token = generateJWT(userId);
-    return token;
+    if(decoded!["aud"] == 'com.evol.History'){
+        console.log("Correct app")
+        const userId = await getHasuraUserId(decoded);
+        const token = generateJWT(userId);
+        return token;
+    } else {
+        throw Error("some other app's jwt")
+    }
 }
 
 function generateJWT(userId: number) {

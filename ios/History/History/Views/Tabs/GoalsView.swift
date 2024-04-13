@@ -12,20 +12,19 @@ struct GoalsView: View {
     
     var body: some View {
         Group {
-//            if goalsController.goals.isEmpty {
-//                // Fullscreen message for no todos
-//                VStack {
-//                    Spacer()
-//                    Text("No Goals Yet")
-//                        .foregroundColor(.black)
-//                        .font(.title2)
-//                    Text("Create a goal by clicking the microphone below")
-//                        .foregroundColor(.gray)
-//                        .multilineTextAlignment(.center) // This will center-align the text horizontally
-//                        .padding(.horizontal, 20)
-//                    Spacer()
-//                }
-//            } else {
+            if goalsController.goals.isEmpty {
+                VStack {
+                    Spacer()
+                    Text("No Goals Yet")
+                        .foregroundColor(.black)
+                        .font(.title2)
+                    Text("Create a goal by clicking the microphone below")
+                        .foregroundColor(.gray)
+                        .multilineTextAlignment(.center) // This will center-align the text horizontally
+                        .padding(.horizontal, 20)
+                    Spacer()
+                }
+            } else {
                 List {
                     ForEach(goalsController.goals, id: \.id) { goal in
                         VStack(alignment: .leading) {
@@ -39,11 +38,12 @@ struct GoalsView: View {
                         }
                     }
                 }
-//            }
+            }
         }
         .onAppear {
             if(Authentication.shared.areJwtSet) {
                 print("Goal View has appeared")
+//                Hasura.shared.setup()
                 Task {
                     await goalsController.fetchGoals(userId: Authentication.shared.userId!)
                     goalsController.listenToGoals(userId: Authentication.shared.userId!)

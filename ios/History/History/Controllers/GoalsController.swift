@@ -67,6 +67,7 @@ class GoalsController: ObservableObject {
     
     
     func listenToGoals(userId: Int) {
+        print("lsitening for goals")
         let startOfToday = Calendar.current.startOfDay(for: Date())
         let subscriptionQuery = GoalsController.generateQuery(userId: userId, isSubscription: true)
         

@@ -25,13 +25,11 @@ class Authentication {
         }
     }
     
-    
     var areJwtSet: Bool {
         return appleJwt != nil && hasuraJwt != nil
     }
     
     var userId: Int? {
-        print("user id: \(hasuraJWTObject?.userId ?? 0)")
         return hasuraJWTObject?.userId
     }
     
@@ -44,6 +42,7 @@ class Authentication {
             if(newValue != nil) {
                 hasuraJWTObject = HasuraJWTObject(jwt: newValue!)
             }
+            // TODO: send to apple watch
         }
     }
     
@@ -59,6 +58,8 @@ class Authentication {
     func checkAndReloadHasuraJwt() async {
         if(hasuraJWTObject?.isExpired ?? true){
             hasuraJwt = await fetchHasuraJwt(appleKey: appleJwt!)
+        } else {
+            print("jwt not expired")
         }
     }
     
@@ -131,7 +132,7 @@ private func fetchHasuraJwt(appleKey: String) async -> String? {
 struct HasuraJWTObject {
     let exp: TimeInterval
     let userId: Int
-
+    
     init(jwt: String) {
         let parts = jwt.components(separatedBy: ".")
         let payloadData = base64UrlDecodedData(base64Url: parts[1])!
@@ -143,10 +144,11 @@ struct HasuraJWTObject {
         self.exp = exp
         self.userId = userId!
     }
-
+    
     var isExpired: Bool {
         let expirationDate = Date(timeIntervalSince1970: exp)
-        return expirationDate <= Date()
+        let sixHoursBeforeExpiration = expirationDate.addingTimeInterval(-6 * 3600)
+        return sixHoursBeforeExpiration <= Date()
     }
 }
 
@@ -154,10 +156,10 @@ private func base64UrlDecodedData(base64Url: String) -> Data? {
     var base64 = base64Url
         .replacingOccurrences(of: "-", with: "+")
         .replacingOccurrences(of: "_", with: "/")
-
+    
     while base64.count % 4 != 0 {
         base64.append("=")
     }
-
+    
     return Data(base64Encoded: base64)
 }

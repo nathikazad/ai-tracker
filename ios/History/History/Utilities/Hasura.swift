@@ -28,20 +28,6 @@ class Hasura {
     private var socketStatus: SocketStatus = .initialized
     // Tracks callbacks for each subscription ID
     private var subscriptions = [String: (query: String, status: SubscriptionStatus, callback: (Any?) -> Void)]()
-     
-    func setBackgroundNotifiers(didEnterBackgroundNotification: NSNotification.Name, willEnterForegroundNotification: NSNotification.Name) {
-        NotificationCenter.default.addObserver(forName: didEnterBackgroundNotification, object: nil, queue: .main) { _ in
-                print("App entered background. Pausing socket.")
-                self.pause()
-            }
-            
-        NotificationCenter.default.addObserver(forName: willEnterForegroundNotification, object: nil, queue: .main) { _ in
-            print("App will enter foreground. Resuming socket.")
-            if(Authentication.shared.areJwtSet) {
-                self.setup()
-            }
-        }
-    }
     
     struct GraphQLRequest: Codable {
         let query: String
@@ -109,6 +95,7 @@ class Hasura {
 
     
      func setup() {
+         print("setting up hasura socket")
          socketStatus = .handshaking
          Task {
              await Authentication.shared.checkAndReloadHasuraJwt()
@@ -147,6 +134,7 @@ class Hasura {
     
     func startListening<T: Decodable>(subscriptionQuery: String, responseType: T.Type, callback: @escaping (Result<T, Error>) -> Void) -> String {
         if(socketStatus == .initialized) {
+            print("calling setup because socket not initialized for listening")
             setup()
         }
         
@@ -238,9 +226,10 @@ class Hasura {
                 if case .string(let text) = message {
                     self.handleMessage(text: text)
                 }
+                self.receiveMessage()
             }
             
-            self.receiveMessage()
+            
         }
     }
     
@@ -262,7 +251,7 @@ class Hasura {
                         if let callback = subscriptions[id]?.callback {
                             callback(json["payload"]) // Pass the 'data' to the callback
                         } else {
-                            // No callback found for the unwrapped and correctly typed id
+                            stopListening(uniqueID: id)
                             print("Data message does not match any subscription ID or no callback found: \(text)")
                         }
                     } else {
