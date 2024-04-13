@@ -41,8 +41,8 @@ export async function parseEvent(event: string, user_id: number, interaction_id:
         }]
     });
     let prompt = `Do any of the following todos match the event "${event}"?\n`
-    response.todos.forEach(async (todo: any) => {
-        prompt += `${todo.name}\n`;
+    response.todos.forEach((todo, index) => {
+        prompt += `${index + 1}. ${todo.name}\n`;
     });
     // prompt += "If yes, give me the number of the todo, if no, just say no"
     let resp = await complete3(prompt, 0.2);
