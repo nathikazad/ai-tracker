@@ -125,7 +125,7 @@ async function extractDaysOfWeek(goal: string) {
     const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday", "weekdays", "weekends", "everyday"];
 
     // Filter the response to ensure it only contains valid days and is formatted correctly
-    let chosenDays = days.filter(day => days.includes(day.toLowerCase()));
+    let chosenDays = days.filter(day => resp.includes(day.toLowerCase()));
 
     return chosenDays
 }
