@@ -1,4 +1,5 @@
-import { parseEvent } from "./resources/logic"
+import { isSpanish } from "./helper/language"
+
 
 
 // import { parseUserRequest } from "./resources/logic"
@@ -9,8 +10,18 @@ import { parseEvent } from "./resources/logic"
 
 async function main() {
 
-    parseEvent("Finished working out.", 5, 222)
+    // isSpanish("Ya terminé de hacer el mercado.")
+    await convert("Nueve AM, desperté.")
+    await convert("Una cuarenta y cuatro. Apenas voy a dormir.")
+    await convert("Hola, hoy usé la copa menstrual con éxito.")
+    await convert("Hi my name is Nathik")
+    await convert("I finished cooking")
+    
+}
 
+async function convert(text: string) {
+    let resp = (await isSpanish(text)) || text
+    console.log(resp);
     
 }
 main()
