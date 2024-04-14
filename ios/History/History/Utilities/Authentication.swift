@@ -33,6 +33,7 @@ class Authentication {
         return hasuraJWTObject?.userId
     }
     
+    
     var hasuraJwt: String? {
         get {
             UserDefaults.standard.string(forKey: hasuraJwtKey)
@@ -42,7 +43,6 @@ class Authentication {
             if(newValue != nil) {
                 hasuraJWTObject = HasuraJWTObject(jwt: newValue!)
             }
-            // TODO: send to apple watch
         }
     }
     
@@ -65,6 +65,7 @@ class Authentication {
     
     func signInCallback() {
         Hasura.shared.setup()
+        WatchCommunicator.shared.sendToWatch(hasuraJwt: hasuraJwt, userId: hasuraJWTObject?.userId)
         Task {
             user = try await UserController.fetchUser()
             await UserController.ensureUserTimezone()
@@ -74,6 +75,7 @@ class Authentication {
     func signOutCallback() {
         UserDefaults.standard.removeObject(forKey: hasuraJwtKey)
         UserDefaults.standard.removeObject(forKey: appleJwtKey)
+        WatchCommunicator.shared.sendToWatch(hasuraJwt: nil, userId: nil)
         Hasura.shared.closeConnection()
     }
 }

@@ -7,9 +7,9 @@
 
 import SwiftUI
 
+
 @main
 struct HistoryApp: App {
-    @StateObject var watchConnector = iOSToWatch()
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     var body: some Scene {
