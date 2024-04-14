@@ -39,6 +39,7 @@ class InteractionsController: ObservableObject {
     
     
     func deleteInteraction(id: Int, onSuccess: (() -> Void)? = nil) {
+        print("deleting interaction")
         let mutationQuery = """
         mutation {
             delete_interactions_by_pk(id: \(id)) {
@@ -48,16 +49,20 @@ class InteractionsController: ObservableObject {
         """
         
         struct DeleteInteractionResponse: Decodable {
-            var delete_interactions_by_pk: DeletedInteraction
-            struct DeletedInteraction: Decodable {
-                var id: Int
+            var data: DeletedInteractionWrapper
+            struct DeletedInteractionWrapper: Decodable {
+                var delete_interactions_by_pk: DeletedInteraction
+                struct DeletedInteraction: Decodable {
+                    var id: Int
+                }
             }
+            
+            
         }
         Task {
-            
             let response: DeleteInteractionResponse = try await Hasura.shared.sendGraphQL(query: mutationQuery, responseType: DeleteInteractionResponse.self)
             DispatchQueue.main.async {
-                print("Interaction deleted: \(response.delete_interactions_by_pk.id)")
+                print("Interaction deleted: \(response.data.delete_interactions_by_pk.id)")
                 onSuccess?()
             }
             

@@ -15,7 +15,7 @@ enum RecordingState {
 }
 
 struct ContentView: View {
-    @State private var processingClickButton = false;
+    @StateObject var phoneCommunicator = PhoneCommunicator()
     @State var recordingState: RecordingState = .ready
     @State private var responseText: String?
     @StateObject var audioRecorder = AudioRecorder();
@@ -32,9 +32,6 @@ struct ContentView: View {
             .disabled(recordingState == .waitingForRecordingToStart || recordingState == .waitingForRecordingToStop)
         }
         .padding()
-        .onAppear {
-            appeared();
-        }
     }
     
     func clickButton() {
@@ -65,6 +62,7 @@ struct ContentView: View {
         }
     }
     
+    
     private func systemImageNameForRecordingState() -> String {
             switch recordingState {
             case .ready:
@@ -78,13 +76,7 @@ struct ContentView: View {
             }
         }
     
-    func appeared() {
-//        NotificationCenter.default.addObserver(forName: .startListeningNotification, object: nil, queue: .main) { _ in
-//            Task.init {
-//                await self.startListening()
-//            }
-//        }
-    }
+
     
     private func startListening() async {
         print("start listenting")

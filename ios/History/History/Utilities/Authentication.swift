@@ -15,6 +15,7 @@ class Authentication {
     private let appleJwtKey = "appleJWTKey"
     var hasuraJWTObject: HasuraJWTObject?
     var user: UserModel?
+    var isAdmin: Bool = false
     
     init() {
         if(areJwtSet) {
@@ -69,6 +70,9 @@ class Authentication {
         Task {
             user = try await UserController.fetchUser()
             await UserController.ensureUserTimezone()
+        }
+        if(userId == 1){
+            isAdmin = true
         }
     }
     
@@ -153,7 +157,7 @@ private func fetchHasuraJwt(appleKey: String, username: String? = nil, userLangu
 
 struct HasuraJWTObject {
     let exp: TimeInterval
-    let userId: Int
+    var userId: Int //change to let later
     
     init(jwt: String) {
         let parts = jwt.components(separatedBy: ".")

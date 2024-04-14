@@ -10,24 +10,39 @@ import Foundation
 
 
 class PhoneCommunicator: NSObject, WCSessionDelegate, ObservableObject {
-    static let shared = PhoneCommunicator()
     var session: WCSession
     
-    init(session: WCSession = .default) {
-        self.session = session
+    override init() {
+        print("PhoneCommunicator init")
+        self.session = WCSession.default
         super.init()
-        self.session.delegate = self
-        self.session.activate()
-        print("PhoneCommunicator activated")
+        if WCSession.isSupported() {
+            self.session = WCSession.default
+            self.session.delegate = self
+            self.session.activate()
+        } else {
+            print("PhoneCommunicator not supported")
+        }
     }
     
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        if let error = error {
-            print("WC Session activation failed with error: \(error.localizedDescription)")
-            return
+        switch activationState {
+        case .activated:
+            if session.isReachable {
+                print("Phone is reachable.")
+            } else {
+                print("Phone is not reachable, but session is activated.")
+            }
+        case .inactive, .notActivated:
+            print("WCSession failed to activate.")
+            if let error = error {
+                print("Error: \(error.localizedDescription)")
+            }
+        @unknown default:
+            fatalError("A new case was added that needs to be handled.")
         }
-        print("WC Session activated with state: \(activationState.rawValue)")
     }
+    
     
     func sendDataToiOS(data: String) {
         if session.isReachable {

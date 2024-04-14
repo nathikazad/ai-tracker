@@ -59,16 +59,20 @@ class GoalsController: ObservableObject {
         """
         
         struct DeleteGoalResponse: Decodable {
-            var delete_goals_by_pk: DeletedGoal
-            struct DeletedGoal: Decodable {
-                var id: Int
+            var data: DeletedInteractionWrapper
+            struct DeletedInteractionWrapper: Decodable {
+                var delete_goals_by_pk: DeletedInteraction
+                struct DeletedInteraction: Decodable {
+                    var id: Int
+                }
             }
         }
+
         Task {
             do {
                 let response: DeleteGoalResponse = try await Hasura.shared.sendGraphQL(query: mutationQuery, responseType: DeleteGoalResponse.self)
                 DispatchQueue.main.async {
-                    print("Goal deleted: \(response.delete_goals_by_pk.id)")
+                    print("Goal deleted: \(response.data.delete_goals_by_pk.id)")
                     onSuccess?()
                 }
             } catch {

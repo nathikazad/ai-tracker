@@ -37,6 +37,12 @@ struct GoalsView: View {
                                 
                         }
                     }
+                    .onDelete { indices in
+                        indices.forEach { index in
+                            let goalId = goalsController.goals[index].id
+                            goalsController.deleteGoal(id: goalId)
+                        }
+                    }
                 }
             }
         }

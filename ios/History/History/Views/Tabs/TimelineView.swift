@@ -38,10 +38,8 @@ struct TimelineView: View {
             print("Timelineview has appeared")
             
             if(Authentication.shared.areJwtSet) {
-//                Hasura.shared.setup()
                 Task {
                     await interactionController.fetchInteractions(userId: Authentication.shared.userId!)
-
                     interactionController.listenToInteractions(userId: Authentication.shared.userId!)
                 }
             }
@@ -51,7 +49,7 @@ struct TimelineView: View {
             interactionController.cancelListener()
         }
     }
-
+    
     private var emptyStateView: some View {
         VStack {
             Spacer()
@@ -65,7 +63,7 @@ struct TimelineView: View {
             Spacer()
         }
     }
-
+    
     private var listView: some View {
         List {
             ForEach(interactionController.interactions, id: \.id) { interaction in
@@ -76,6 +74,13 @@ struct TimelineView: View {
                     Divider()
                     Text(interaction.content)
                         .font(.subheadline)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+            }
+            .onDelete { indices in
+                indices.forEach { index in
+                    let interactionId = interactionController.interactions[index].id
+                    interactionController.deleteInteraction(id: interactionId)
                 }
             }
         }
