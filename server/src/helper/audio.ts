@@ -52,10 +52,10 @@ export function convertAudioToText(req: Request, res: Response, userLanguage: st
                     req.files!.push(newFile);
                     speechToTextPromise = speechToText(newFile.path, userLanguage).then(async (value) => {
                         if(userLanguage == "es") {
-                            console.log(`pre translation text: ${value.text}`);
+                            console.log(`spanish text to translate: ${value.text}`);
                             value.text = await translateToSpanish(value.text);
-                            console.log(`post translation text: ${text}`);
                         }
+                        console.log(`final text: ${text}`);
                         callback(value.text)
                         fs.unlink(newFile.path, () => {})
                     });

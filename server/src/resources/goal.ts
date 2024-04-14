@@ -37,11 +37,11 @@ export async function generateTodosFromGoals(user_id?: number | null) {
 
     generateTodos(goalsList);
     async function generateTodos(goalsList: Goal[]) {
+        console.log("checking if time to generate todo for goal");
         goalsList.forEach(async (goal: Goal) => {
-            console.log(goal.name);
             // Check if it's time for a new todo based on the goal's frequency
             let checkIfTime = checkIfTimeForNewTodo(goal)
-            console.log(`\t${checkIfTime}`)
+            console.log(`time for ${goal.name}? ${checkIfTime}`)
             if (goal.last_todo_updated === null || checkIfTime) {
                 let response = await chain.mutation({
                     insert_todos_one: [{

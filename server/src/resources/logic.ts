@@ -47,48 +47,25 @@ export async function parseEvent(event: string, user_id: number, interaction_id:
     response.todos.forEach((todo, index) => {
         prompt += `${index}. ${todo.name}\n`;
     });
-    prompt += "If yes, give me the number of the todo as an integer, if no, just say no"
-    let resp = await complete3(prompt, 0.2);
+    prompt += `If yes, give me the number of the todo as an integer, if no, just say no`
+    console.log(`prompt to find match \n\t${prompt}`);
+    let resp = await complete3(prompt, 0.1);
     console.log(`matched response ${resp}`);
-    
-    let matchedIndex: number | null = parseInt(resp);
-    if (isNaN(matchedIndex) || matchedIndex < 0 || matchedIndex >= response.todos.length) {
+    let matchedIndex: number | null = extractNumber(resp);
+    console.log(`extract number id ${matchedIndex}`);
+    if (matchedIndex == null || matchedIndex < 0 || matchedIndex >= response.todos.length) {
         matchedIndex =  null
     }
+    console.log(`matched id ${matchedIndex}`);
     let goal_id: number | undefined
     if (matchedIndex != null){
         var matchedTodo = response.todos[matchedIndex!];    
         goal_id = matchedTodo?.goal_id
         console.log("matchedTodo ", matchedTodo);
         if(matchedTodo.goal?.frequency?.timesPerDay == null) {
-            await chain.mutation({
-                update_todos_by_pk: [{
-                    pk_columns: { id: matchedTodo.id },
-                    _set: {
-                        status: "done"
-                    }
-                }, {
-                    id: true
-                }]
-            });
+            await markTodoAsDone();
         } else {
-            const targetTimesPerDay = matchedTodo.goal?.frequency?.timesPerDay!
-            const currentCount = matchedTodo.current_count ?? 0;
-            const newCount = currentCount + 1;
-            const newStatus = newCount >= targetTimesPerDay ? "done" : "todo";
-            await chain.mutation({
-                update_todos_by_pk: [{
-                    pk_columns: { id: matchedTodo.id },
-                    _inc: {
-                        current_count: 1
-                    },
-                    _set: {
-                        status: newStatus
-                    }
-                }, {
-                    id: true
-                }]
-            }); 
+            await incrementTargetNumber(matchedTodo); 
         }
     } else {
         console.log("no matches");
@@ -106,6 +83,52 @@ export async function parseEvent(event: string, user_id: number, interaction_id:
             id: true
         }]
     })
+
+    async function markTodoAsDone() {
+        await chain.mutation({
+            update_todos_by_pk: [{
+                pk_columns: { id: matchedTodo.id },
+                _set: {
+                    status: "done"
+                }
+            }, {
+                id: true
+            }]
+        });
+    }
+
+    async function incrementTargetNumber(matchedTodo: any) {
+        const targetTimesPerDay = matchedTodo.goal?.frequency?.timesPerDay!;
+        const currentCount = matchedTodo.current_count ?? 0;
+        const newCount = currentCount + 1;
+        const newStatus = newCount >= targetTimesPerDay ? "done" : "todo";
+        await chain.mutation({
+            update_todos_by_pk: [{
+                pk_columns: { id: matchedTodo.id },
+                _inc: {
+                    current_count: 1
+                },
+                _set: {
+                    status: newStatus
+                }
+            }, {
+                id: true
+            }]
+        });
+    }
+
+    function extractNumber(text: string): number | null {
+        // Regular expression to find the first sequence of digits
+        const match = text.match(/\d+/);
+        
+        // If a match is found, convert it to a number and return
+        if (match) {
+            return parseInt(match[0], 10);
+        }
+    
+        // Return null if no numbers are found
+        return null;
+    }
 }
 
 
