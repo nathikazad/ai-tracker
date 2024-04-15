@@ -7,6 +7,7 @@ import { convertAudioToText } from './helper/audio';
 import { authorize, convertAppleJWTtoHasuraJWT } from './resources/authorization';
 import { parseUserRequest } from './resources/logic';
 import { getUserLanguage } from './resources/user';
+import { updateMovement } from './helper/logic';
 const app: Express = express();
 
 app.use(express.static(path.join(__dirname, '../public')));
@@ -77,33 +78,6 @@ app.post('/updateMovement', async (req: Request, res: Response) => {
         res.status(401).json({ error: 'Unauthorized: ' + authError });
     }
 });
-
-interface Location {
-    lat: number;
-    lon: number;
-}
-
-interface MovementRequest {
-    eventName: string;
-    locations?: Location[];
-}
-
-function updateMovement(movementRequest:MovementRequest, userId: number) {
-    console.log(`Event Received: ${movementRequest.eventName} from User ${userId}`);
-    // npm install @mapbox/polyline
-    // import * as polyline from '@mapbox/polyline';
-    // if (movementRequest.locations && movementRequest.locations.length > 0) {
-    //     const encodedPolyline = polyline.encode(movementRequest.locations.map(loc => [loc.lat, loc.lon]));
-    //     console.log(`Encoded Polyline: ${encodedPolyline}`);
-    // } 
-    if (movementRequest.locations) {
-        const polyline = movementRequest.locations.map(loc => `${loc.lat},${loc.lon}`).join('|');
-        console.log(`Polyline: ${polyline}`);
-    } else {
-        console.log('No locations provided or locations array is empty.');
-    }
-}
-
 
 
 app.post('/hasuraJWT', async (req, res) => {
