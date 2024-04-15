@@ -60,6 +60,50 @@ app.post('/parseUserRequestFromText', async (req: Request, res: Response) => {
     }
 });
 
+app.post('/updateMovement', async (req: Request, res: Response) => {
+    try {
+        const userId = authorize(req); 
+        try {
+            updateMovement(req.body, userId); 
+            res.status(200).json({
+                status: "success",
+            });
+        } catch (parseError) {
+            console.error('Parsing error:', parseError);
+            res.status(500).json({ error: 'Error processing text' });
+        }
+    } catch (authError) {
+        console.error('Authentication error:', authError);
+        res.status(401).json({ error: 'Unauthorized: ' + authError });
+    }
+});
+
+interface Location {
+    lat: number;
+    lon: number;
+}
+
+interface MovementRequest {
+    eventName: string;
+    locations?: Location[];
+}
+
+function updateMovement(movementRequest:MovementRequest, userId: number) {
+    console.log(`Event Received: ${movementRequest.eventName} from User ${userId}`);
+    // npm install @mapbox/polyline
+    // import * as polyline from '@mapbox/polyline';
+    // if (movementRequest.locations && movementRequest.locations.length > 0) {
+    //     const encodedPolyline = polyline.encode(movementRequest.locations.map(loc => [loc.lat, loc.lon]));
+    //     console.log(`Encoded Polyline: ${encodedPolyline}`);
+    // } 
+    if (movementRequest.locations) {
+        const polyline = movementRequest.locations.map(loc => `${loc.lat},${loc.lon}`).join('|');
+        console.log(`Polyline: ${polyline}`);
+    } else {
+        console.log('No locations provided or locations array is empty.');
+    }
+}
+
 
 
 app.post('/hasuraJWT', async (req, res) => {
