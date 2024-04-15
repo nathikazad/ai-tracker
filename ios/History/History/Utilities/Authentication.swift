@@ -81,6 +81,7 @@ class Authentication {
         UserDefaults.standard.removeObject(forKey: appleJwtKey)
         WatchCommunicator.shared.sendToWatch(hasuraJwt: nil, userId: nil)
         Hasura.shared.closeConnection()
+        LocationManager.shared.stopMonitoringLocation()
     }
 }
 

@@ -7,7 +7,7 @@ import { convertAudioToText } from './helper/audio';
 import { authorize, convertAppleJWTtoHasuraJWT } from './resources/authorization';
 import { parseUserRequest } from './resources/logic';
 import { getUserLanguage } from './resources/user';
-import { updateMovement } from './helper/logic';
+import { updateMovement } from './helper/location';
 const app: Express = express();
 
 app.use(express.static(path.join(__dirname, '../public')));

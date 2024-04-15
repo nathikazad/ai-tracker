@@ -11,7 +11,7 @@ import SwiftUI
 @main
 struct HistoryApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    
+    private var locationManager = LocationManager.shared
     var body: some Scene {
         WindowGroup {
             ContentView()

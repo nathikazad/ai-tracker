@@ -35,7 +35,7 @@ struct TimelineView: View {
         }
         .id(refreshID)
         .onAppear {
-            print("Timelineview has appeared")
+            print("Timelineview has appeared, going to listen to user \(Authentication.shared.userId)")
             
             if(Authentication.shared.areJwtSet) {
                 Task {

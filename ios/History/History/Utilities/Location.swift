@@ -13,13 +13,13 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     var movementLocations: [(location: CLLocation, time: Date)] = []
     var lastStationaryLocation: CLLocation?
     var movementCheckTimer: Timer?
-
+    
     enum UserState {
         case stationary
         case moving
     }
     
-    // Current user state
+    @Published var isTrackingLocation = false
     var currentState: UserState = .moving
     
     override init() {
@@ -30,6 +30,28 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         locationManager.distanceFilter = locationUpdateDistanceFilter
         locationManager.allowsBackgroundLocationUpdates = true
         locationManager.pausesLocationUpdatesAutomatically = false
+        initializeTrackingState()
+    }
+    
+    private func initializeTrackingState() {
+        print("initalize tracking")
+        let status = locationManager.authorizationStatus
+        switch status {
+        case .authorizedAlways, .authorizedWhenInUse:
+            print("initalize tracking true")
+            isTrackingLocation = true
+            locationManager.startUpdatingLocation()
+        default:
+            print("initalize tracking false")
+            isTrackingLocation = false
+        }
+    }
+    
+    
+    func stopMonitoringLocation() {
+        print("stop monitoring")
+        locationManager.stopUpdatingLocation()
+        isTrackingLocation = false
     }
     
     func startMonitoringLocation() {
@@ -54,10 +76,13 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         case .authorizedWhenInUse, .authorizedAlways:
             if CLLocationManager.locationServicesEnabled() {
                 manager.startUpdatingLocation()
+                isTrackingLocation = true
             }
         case .notDetermined, .restricted, .denied:
             print("Location authorization denied or restricted.")
+            isTrackingLocation = false
         @unknown default:
+            isTrackingLocation = false
             fatalError("Unhandled authorization status")
         }
     }
@@ -88,7 +113,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
         print("\(currentState), New location: \(location.coordinate.latitude), \(location.coordinate.longitude)")
-
+        
         if(lastStationaryLocation == nil) {
             lastStationaryLocation = location
         }
@@ -152,7 +177,13 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
                     print("Failed to receive data or no data returned")
                     return
                 }
-                print("Received data: \(data.base64EncodedString())")
+                if let json = try? JSONSerialization.jsonObject(with: data, options: []),
+                   let jsonData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted),
+                   let jsonString = String(data: jsonData, encoding: .utf8) {
+                    print("Received JSON: \(jsonString)")
+                } else {
+                    print("Failed to decode JSON data")
+                }
             } catch {
                 print("Error sending data to server or parsing server response: \(error.localizedDescription)")
             }
