@@ -120,24 +120,19 @@ func handleSignIn(result: Result<ASAuthorization, any Error>) async -> Bool {
 
 
 private func fetchHasuraJwt(appleKey: String, username: String? = nil, userLanguage: String? = nil) async -> String? {
-    guard let url = URL(string: "https://ai-tracker-server-613e3dd103bb.herokuapp.com/hasuraJWT") else {
-        return nil
-    }
-    var request = URLRequest(url: url)
-    request.httpMethod = "POST"
-    request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-    
-    var body: [String: Any] = ["appleKey": appleKey, ]
+    let jwtEndpoint = getJwtEndpoint
+    var body: [String: Any] = ["appleKey": appleKey]
     if let username = username {
-        body["username"] = username
+        if(username.count > 0) {
+            body["username"] = username
+        }
     }
     if let userLanguage = userLanguage {
         body["language"] = userLanguage
     }
-    request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
     do {
-        let (data, response) = try await URLSession.shared.data(for: request)
-        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+        guard let data = try await ServerCommunicator.sendPostRequest(to: jwtEndpoint, body: body, token: nil) else {
+            print("Failed to receive data")
             return nil
         }
         if let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any], let jwt = jsonResponse["jwt"] as? String {
@@ -151,7 +146,6 @@ private func fetchHasuraJwt(appleKey: String, username: String? = nil, userLangu
         return nil
     }
 }
-
 
 
 

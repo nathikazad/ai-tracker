@@ -33,6 +33,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                     Hasura.shared.setup()
                 }
             }
+            // check if location services is necessary
         }
         backgroundObserver = NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: .main) { _ in
             print("entered background")

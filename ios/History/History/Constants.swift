@@ -16,3 +16,5 @@ func fullURL(for path: String) -> String {
 // Example usage of the function
 let parseAudioEndpoint = fullURL(for: "parseUserRequestFromAudio")
 let parseTextEndpoint = fullURL(for: "parseUserRequestFromText")
+let getJwtEndpoint = fullURL(for: "hasuraJWT")
+let updateMovementEndpoint = fullURL(for: "updateMovement")

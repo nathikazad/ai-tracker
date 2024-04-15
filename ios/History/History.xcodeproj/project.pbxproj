@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		FE129BE42BCB3CFB004058EA /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE129BE32BCB3CFB004058EA /* Authentication.swift */; };
+		FE129BE62BCB87B9004058EA /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE129BE52BCB87B9004058EA /* Location.swift */; };
 		FE12C5E62BC4B2A5002CDC60 /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12C5E52BC4B2A4002CDC60 /* TimelineView.swift */; };
 		FE12C5E82BC4B30B002CDC60 /* TodosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12C5E72BC4B30B002CDC60 /* TodosView.swift */; };
 		FE12C5EA2BC4B330002CDC60 /* GoalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12C5E92BC4B330002CDC60 /* GoalsView.swift */; };
@@ -33,8 +34,8 @@
 		FE4F7BD92BA94D580041CB6A /* SpeechRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BD82BA94D580041CB6A /* SpeechRecognizer.swift */; };
 		FE4F7BDB2BA957780041CB6A /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */; };
 		FE4F7BDC2BA957780041CB6A /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */; };
-		FE5264812BA99AF700502521 /* AudioUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5264802BA99AF700502521 /* AudioUploader.swift */; };
-		FE5264822BA99AF700502521 /* AudioUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5264802BA99AF700502521 /* AudioUploader.swift */; };
+		FE5264812BA99AF700502521 /* ServerCommunicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5264802BA99AF700502521 /* ServerCommunicator.swift */; };
+		FE5264822BA99AF700502521 /* ServerCommunicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5264802BA99AF700502521 /* ServerCommunicator.swift */; };
 		FE8811EB2BC799BF00B112A8 /* GoalsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8811E62BC799BE00B112A8 /* GoalsController.swift */; };
 		FE8811EC2BC799BF00B112A8 /* InteractionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8811E72BC799BE00B112A8 /* InteractionsController.swift */; };
 		FE8811EF2BC799BF00B112A8 /* TodosController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8811EA2BC799BF00B112A8 /* TodosController.swift */; };
@@ -98,6 +99,7 @@
 
 /* Begin PBXFileReference section */
 		FE129BE32BCB3CFB004058EA /* Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
+		FE129BE52BCB87B9004058EA /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		FE12C5E52BC4B2A4002CDC60 /* TimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
 		FE12C5E72BC4B30B002CDC60 /* TodosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosView.swift; sourceTree = "<group>"; };
 		FE12C5E92BC4B330002CDC60 /* GoalsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsView.swift; sourceTree = "<group>"; };
@@ -124,7 +126,7 @@
 		FE4F7BD12BA8FC600041CB6A /* BottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBar.swift; sourceTree = "<group>"; };
 		FE4F7BD82BA94D580041CB6A /* SpeechRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognizer.swift; sourceTree = "<group>"; };
 		FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
-		FE5264802BA99AF700502521 /* AudioUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioUploader.swift; sourceTree = "<group>"; };
+		FE5264802BA99AF700502521 /* ServerCommunicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommunicator.swift; sourceTree = "<group>"; };
 		FE5264832BA9A1A400502521 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		FE8811E62BC799BE00B112A8 /* GoalsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoalsController.swift; sourceTree = "<group>"; };
 		FE8811E72BC799BE00B112A8 /* InteractionsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractionsController.swift; sourceTree = "<group>"; };
@@ -300,10 +302,11 @@
 				FE1C0EAD2BC0713B00FF56AB /* Authentication.swift */,
 				FE4F7BD82BA94D580041CB6A /* SpeechRecognizer.swift */,
 				FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */,
-				FE5264802BA99AF700502521 /* AudioUploader.swift */,
+				FE5264802BA99AF700502521 /* ServerCommunicator.swift */,
 				FEB8FD1E2BAA253100EE9B68 /* Intents.swift */,
 				FE4F7BB02BA7D7C80041CB6A /* WatchCommunicator.swift */,
 				FE1C0EB02BC0A29300FF56AB /* Hasura.swift */,
+				FE129BE52BCB87B9004058EA /* Location.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -467,6 +470,7 @@
 				FE4F7BA52BA7D79E0041CB6A /* ContentView.swift in Sources */,
 				FE8811EB2BC799BF00B112A8 /* GoalsController.swift in Sources */,
 				FE12C5EA2BC4B330002CDC60 /* GoalsView.swift in Sources */,
+				FE129BE62BCB87B9004058EA /* Location.swift in Sources */,
 				FE4F7BB12BA7D7C80041CB6A /* WatchCommunicator.swift in Sources */,
 				FE4F7BA32BA7D79E0041CB6A /* HistoryApp.swift in Sources */,
 				FE20CA262BC5E4CD00863604 /* SettingsView.swift in Sources */,
@@ -480,7 +484,7 @@
 				FE12C5E62BC4B2A5002CDC60 /* TimelineView.swift in Sources */,
 				FE1C0EB12BC0A29300FF56AB /* Hasura.swift in Sources */,
 				FE8965AA2BC7B31D00E9D633 /* UserController.swift in Sources */,
-				FE5264812BA99AF700502521 /* AudioUploader.swift in Sources */,
+				FE5264812BA99AF700502521 /* ServerCommunicator.swift in Sources */,
 				FE8811EF2BC799BF00B112A8 /* TodosController.swift in Sources */,
 				FE3E9F662BC8ACAD008BD120 /* NavigationTitle.swift in Sources */,
 				FE12C5E82BC4B30B002CDC60 /* TodosView.swift in Sources */,
@@ -491,7 +495,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FE5264822BA99AF700502521 /* AudioUploader.swift in Sources */,
+				FE5264822BA99AF700502521 /* ServerCommunicator.swift in Sources */,
 				FEB8FD202BAA253100EE9B68 /* Intents.swift in Sources */,
 				FE4F7BBB2BA7D7E60041CB6A /* ContentView.swift in Sources */,
 				FE4F7BC92BA7D7FA0041CB6A /* PhoneCommunicator.swift in Sources */,
@@ -664,6 +668,8 @@
 				INFOPLIST_FILE = History/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Aspire;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "For a user to trackk their movement";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "For a user to track their movements";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "To get audio to log an event";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "To log an event";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -706,6 +712,8 @@
 				INFOPLIST_FILE = History/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Aspire;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "For a user to trackk their movement";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "For a user to track their movements";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "To get audio to log an event";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "To log an event";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

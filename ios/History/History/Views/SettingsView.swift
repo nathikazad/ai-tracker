@@ -24,25 +24,14 @@ struct SettingsView: View {
                     //                            .foregroundColor(.black)
                     //                    }
                     if(Authentication.shared.isAdmin){
-                        Button(action: {
-                            
-                            guard var currentUserId = Authentication.shared.hasuraJWTObject?.userId else { return }
-                            
-                            switch currentUserId {
-                            case 1:
-                                currentUserId = 3
-                            case 3:
-                                currentUserId = 4
-                            case 4:
-                                currentUserId = 1
-                            default:
-                                currentUserId = 1  // default to 1 if currentUserId is not one of the expected values
-                            }
-                            
-                            Authentication.shared.hasuraJWTObject?.userId = currentUserId
-                            print("User switched to \(currentUserId)")
-                        }) {
+                        Button(action: changeUserId) {
                             Label("Change User", systemImage: "person.2.fill")
+                                .foregroundColor(.black)
+                        }
+                        Button(action: {
+                            LocationManager.shared.startMonitoringLocation()
+                        }) {
+                            Label("Listen for location", systemImage: "person.2.fill")
                                 .foregroundColor(.black)
                         }
                     }
@@ -59,6 +48,24 @@ struct SettingsView: View {
             .navigationTitle("Settings")
         }
     }
+}
+
+func changeUserId() {
+    guard var currentUserId = Authentication.shared.hasuraJWTObject?.userId else { return }
+    
+    switch currentUserId {
+    case 1:
+        currentUserId = 3
+    case 3:
+        currentUserId = 4
+    case 4:
+        currentUserId = 1
+    default:
+        currentUserId = 1  // default to 1 if currentUserId is not one of the expected values
+    }
+    
+    Authentication.shared.hasuraJWTObject?.userId = currentUserId
+    print("User switched to \(currentUserId)")
 }
 
 struct PlacesView: View {

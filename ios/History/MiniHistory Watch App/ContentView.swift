@@ -92,7 +92,7 @@ struct ContentView: View {
         let fileUrl = await audioRecorder.stopRecording()
         do {
             // get token from received end point
-            let data = try AudioUploader().uploadAudioFile(at: fileUrl, to: parseAudioEndpoint, token: Authentication.shared.hasuraJwt)
+            let data = try ServerCommunicator.uploadAudioFile(at: fileUrl, to: parseAudioEndpoint, token: Authentication.shared.hasuraJwt)
             if let data = data {
                 let decoder = JSONDecoder()
                 do {

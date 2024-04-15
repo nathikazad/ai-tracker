@@ -7,10 +7,8 @@
 
 import Foundation
 
-class AudioUploader: ObservableObject {
-    let session = URLSession.shared
-    
-    func uploadAudioFile(at fileUrl: URL, to uploadUrlString: String, token: String? = nil) throws -> Data? {
+class ServerCommunicator: ObservableObject {
+    static func uploadAudioFile(at fileUrl: URL, to uploadUrlString: String, token: String? = nil) throws -> Data? {
         guard let uploadUrl = URL(string: uploadUrlString) else {
             throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Invalid upload URL."])
         }
@@ -27,12 +25,12 @@ class AudioUploader: ObservableObject {
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
         
         do {
-            request.httpBody = try createBody(with: fileUrl, boundary: boundary)
+            request.httpBody = try createBodyForAudiofile(with: fileUrl, boundary: boundary)
             
             var responseData: Data? = nil
             let semaphore = DispatchSemaphore(value: 0)
             
-            let task = session.dataTask(with: request) { data, response, error in
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
                 if let error = error {
                     print("Error: \(error)")
                     semaphore.signal()
@@ -61,7 +59,7 @@ class AudioUploader: ObservableObject {
         }
     }
     
-    private func createBody(with fileUrl: URL, boundary: String) throws -> Data {
+    static private func createBodyForAudiofile(with fileUrl: URL, boundary: String) throws -> Data {
         var data = Data()
         
         let mimeType = "audio/mp4"  // Updated MIME type for .m4a files
@@ -78,6 +76,33 @@ class AudioUploader: ObservableObject {
         data.append("--\(boundary)--\r\n")
         
         return data
+    }
+    
+    static func sendPostRequest(to uploadUrlString: String, body: [String: Any]? = [:], token: String?) async throws -> Data? {
+        guard let uploadUrl = URL(string: uploadUrlString) else {
+            throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Invalid upload URL."])
+        }
+        
+        var request = URLRequest(url: uploadUrl)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        if let token = token {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+        request.httpMethod = "POST"
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            if let response = response as? HTTPURLResponse, response.statusCode == 200 {
+                return data
+            } else {
+                print("Invalid response received from the server")
+                return nil
+            }
+
+        } catch {
+            print("Error sending apple key to server or parsing server response: \(error.localizedDescription)")
+            return nil
+        }
     }
 }
 
