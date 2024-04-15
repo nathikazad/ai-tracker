@@ -1,4 +1,5 @@
 import * as polyline from '@mapbox/polyline';
+import { insertInteraction } from '../resources/interactions';
 interface Location {
     lat: number;
     lon: number;
@@ -20,4 +21,5 @@ export function updateMovement(movementRequest:MovementRequest, userId: number) 
     } else {
         console.log('No locations provided or locations array is empty.');
     }
+    insertInteraction(userId, movementRequest.eventName, "event")
 }
