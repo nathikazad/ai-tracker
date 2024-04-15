@@ -117,22 +117,17 @@ async function getHasuraUserId(decoded: jwt.JwtPayload | undefined, username: st
 
 
 export function authorize(req: Request): number {
-    console.log(`authorization header: ${req.headers.authorization}`)
     let token = req.headers.authorization?.split(' ')[1];
     if (!token) {
         throw new Error('No authorizaiton provided')
     }
     const privateKey: string = config.hasuraPrivateKey!;
-    // try {
-    const decoded = jwt.verify(token, privateKey) as HasuraJWTClaims;
-    console.log(`decoded`)
-    console.log(decoded)
-    const hasuraJWTClaims = decoded as HasuraJWTClaims;
-    console.log("hasuraJWTClaims")
-    console.log(hasuraJWTClaims)
-    return parseInt(hasuraJWTClaims['https://hasura.io/jwt/claims']['x-hasura-user-id']);
-    // } catch (error) {
-    //     throw new Error('Invalid or expired JWT');
-    // }
+    try {
+        const decoded = jwt.verify(token, privateKey) as HasuraJWTClaims;
+        const hasuraJWTClaims = decoded as HasuraJWTClaims;
+        return parseInt(hasuraJWTClaims['https://hasura.io/jwt/claims']['x-hasura-user-id']);
+    } catch (error) {
+        throw new Error('Invalid or expired JWT');
+    }
 }
 
