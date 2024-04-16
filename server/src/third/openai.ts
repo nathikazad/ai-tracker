@@ -40,7 +40,7 @@ export async function complete3(prompt: string, temperature: number | null = nul
     max_tokens: max_tokens,
     temperature:temperature
   });
-  console.log(result.usage, result.choices[0].finish_reason);
+  // console.log(result.usage, result.choices[0].finish_reason);
 
   let message = result.choices[0].text
   return toLowerCase ? message.replace(/\n/g, "").replace(/"/g, '').trim().toLocaleLowerCase() : message

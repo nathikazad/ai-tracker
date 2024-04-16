@@ -116,19 +116,19 @@ export async function parseEvent(event: string, user_id: number, interaction_id:
             }]
         });
     }
+}
 
-    function extractNumber(text: string): number | null {
-        // Regular expression to find the first sequence of digits
-        const match = text.match(/\d+/);
-        
-        // If a match is found, convert it to a number and return
-        if (match) {
-            return parseInt(match[0], 10);
-        }
+function extractNumber(text: string): number | null {
+    // Regular expression to find the first sequence of digits
+    const match = text.match(/\d+/);
     
-        // Return null if no numbers are found
-        return null;
+    // If a match is found, convert it to a number and return
+    if (match) {
+        return parseInt(match[0], 10);
     }
+
+    // Return null if no numbers are found
+    return null;
 }
 
 
@@ -142,25 +142,88 @@ export async function test(goal: string) {
     return name;
 }
 
-export async function classify(text: string) {
-    let prompt = `Here are some definitions
-    todo: is a one off thing that is scheduled only once for the future
-    goal: is something that person wants to repeatedly do in the future
-    event: is anything that happened in the past
-    query: is a question
-    command: is an instruction for an AI to execute
+// export async function classify(text: string) {
+//     let prompt = `Here are some definitions
+//     todo: is a one off thing that is scheduled only once for the future
+//     goal: is something that person wants to repeatedly do in the future
+//     event: is anything that happened in the past
+//     query: is a question
+//     command: is an instruction for an AI to execute
     
-    Classify the following statement as one of the above definitions
-    "${text}"`
-    console.log(prompt);
-    let response = await complete3(prompt, 0.1);
-    let chosenClass = "null";
-    ["todo", "goal", "event", "query", "command"].forEach((c) => {
-        if (response.toLowerCase().includes(c)) {
-            chosenClass = c
-        }
-    });
-    return chosenClass;
+//     Classify the following statement as one of the above definitions
+//     "${text}"`
+//     console.log(prompt);
+//     let response = await complete3(prompt, 0.1);
+//     let chosenClass = "null";
+//     ["todo", "goal", "event", "query", "command"].forEach((c) => {
+//         if (response.toLowerCase().includes(c)) {
+//             chosenClass = c
+//         }
+//     });
+//     return chosenClass;
+// }
+
+
+
+// Define a generic classification function
+// Generic function to handle classification
+async function classify(text: string, options: string[], pathPrefix: string | null = null) {
+    let prompt = `
+    You are a smart assistant, your job is understand what a user wants from you.
+    These are the possible things user may want
+
+    ${options.map((option, index) => `${index + 1}. ${option}`).join('\n')}
+
+    Classify the following statement as one of the above, give me the number, if none match, say none
+    "${text}"`;
+    let response = await complete3(prompt, 0.1); 
+    let index = extractNumber(response);
+
+    if (pathPrefix)
+        return (index ? `${pathPrefix}.${index}` : `${pathPrefix}.none`) 
+    else  
+        return (index ? `${index}` : 'none');
+}
+
+export async function classifyText(text: string) {
+    let firstLevelOptions = [
+        "User has finished doing something",
+        "User is doing something now or is going to do something now or next.",
+        "User wants, has or needs to do something in the future"
+    ];
+    let secondLevelOptions = [
+        "User wants to create a goal",
+        "User wants to create a todo",
+        "User wants to create a reminder",
+        "User wants to record a dream",
+        "User wants to record a thought",
+        "Something else"
+    ];
+    let thirdLevelOptions = [
+        "User wants to, needs to, or has to do something",
+        "Something else"
+    ];
+
+    let firstPath = await classify(text, firstLevelOptions);
+    if (!(firstPath.endsWith('none') || firstPath.endsWith('3'))) {
+        return firstPath
+    }
+    firstPath = "3"
+
+    let secondPath = await classify(text, secondLevelOptions, firstPath);
+    // console.log(`secondPath: ${secondPath}`);
+    if (!(secondPath.endsWith('none') || secondPath.endsWith('6'))) {
+        return secondPath
+    }
+    secondPath = "3.6"
+
+    let thirdPath = await classify(text, thirdLevelOptions, secondPath);
+    // console.log(thirdPath);
+    
+    if (!(thirdPath.endsWith('none') || thirdPath.endsWith('2'))) {
+        return thirdPath
+    }
+    return "3.6.2"
 }
 
 
