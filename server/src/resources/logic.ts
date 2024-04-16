@@ -169,14 +169,18 @@ export async function test(goal: string) {
 // Generic function to handle classification
 async function classify(text: string, options: string[], pathPrefix: string | null = null) {
     let prompt = `
-    You are a smart assistant, your job is understand what a user wants from you.
+    You are a smart assistant, your job is understand what a user is doing. 
+    He will tell you things like "I something something" and you will interpret it
+    Or he will ask you to do something as an imperative like "Do this" and you will interpret it
     These are the possible things user may want
 
     ${options.map((option, index) => `${index + 1}. ${option}`).join('\n')}
 
-    Classify the following statement as one of the above, give me the number, if none match, say none
+    Classify the following statement as one of the above, give me the number and state your reason
     "${text}"`;
-    let response = await complete3(prompt, 0.1); 
+    let response = await complete3(prompt, 0.1, 10);
+    // console.log(response);
+    
     let index = extractNumber(response);
 
     if (pathPrefix)
@@ -185,45 +189,101 @@ async function classify(text: string, options: string[], pathPrefix: string | nu
         return (index ? `${index}` : 'none');
 }
 
+async function processClassification(text: string, options: DecisionMaker[], currentPath: string | null = null) {
+    const conditionLabels = options.map(opt => opt.condition);
+    const path = await classify(text, conditionLabels as string[], currentPath);
+    if (currentPath == null)
+        return path.endsWith('none') || path.endsWith(`${conditionLabels.length}`) ?
+           `${conditionLabels.length}` : path;
+    else
+        return path.endsWith('none') || path.endsWith(`${conditionLabels.length}`) ?
+           `${currentPath}.${conditionLabels.length}` : path;
+}
+
+interface DecisionMaker {
+    condition: String,
+    nextConditions?: DecisionMaker[] | null
+}
+
 export async function classifyText(text: string) {
-    let firstLevelOptions = [
-        "User has finished doing something",
-        "User is doing something now or is going to do something now or next.",
-        "User wants, has or needs to do something in the future"
-    ];
-    let secondLevelOptions = [
-        "User wants to create a goal",
-        "User wants to create a todo",
-        "User wants to create a reminder",
-        "User wants to record a dream",
-        "User wants to record a thought",
-        "Something else"
-    ];
-    let thirdLevelOptions = [
-        "User wants to, needs to, or has to do something",
-        "Something else"
-    ];
+    let options: DecisionMaker[] = [
+        { condition: "User has finished doing something"},
+        { condition: "User is doing something now or is going to do something now or next."},
+        { condition: "User is talking about a dream or thought he had", 
+            nextConditions: [
+                { condition: "User wants to record a dream" },
+                { condition: "User wants to record a thought" },
+            ]},
+        { condition: "User wants, has or needs to do something in the future",
+            nextConditions:  [
+                { condition: "User wants to create a goal" },
+                { condition: "User wants to do something in future" },
+                { condition: "User wants to create a reminder" },
+                { condition: "Something else" }
+            ]
+        },
+        { condition: "User is not asking me to do something and is also not being clear about what he is doing" }
+    ]
 
-    let firstPath = await classify(text, firstLevelOptions);
-    if (!(firstPath.endsWith('none') || firstPath.endsWith('3'))) {
-        return firstPath
-    }
-    firstPath = "3"
+    let currentOptions = options;
+    let currentPath = null;
+    let pathIndices = [];
+    while (currentOptions) {
+        currentPath = await processClassification(text, currentOptions, currentPath);
+        pathIndices = currentPath.split('.').map(index => parseInt(index, 10) - 1); // Update path indices to zero-based
+        const lastValidIndex = pathIndices[pathIndices.length - 1];
 
-    let secondPath = await classify(text, secondLevelOptions, firstPath);
-    // console.log(`secondPath: ${secondPath}`);
-    if (!(secondPath.endsWith('none') || secondPath.endsWith('6'))) {
-        return secondPath
+        // Check if we can continue navigating into nextConditions
+        if (currentOptions[lastValidIndex] && currentOptions[lastValidIndex].nextConditions) {
+            currentOptions = currentOptions[lastValidIndex].nextConditions!;
+        } else {
+            // If there are no further nextConditions, we conclude here
+            return currentOptions[lastValidIndex].condition;
+        }
     }
-    secondPath = "3.6"
 
-    let thirdPath = await classify(text, thirdLevelOptions, secondPath);
-    // console.log(thirdPath);
-    
-    if (!(thirdPath.endsWith('none') || thirdPath.endsWith('2'))) {
-        return thirdPath
-    }
-    return "3.6.2"
+    return "Unknown";  // Default return if no conclusive path is found
 }
 
 
+
+// export async function classifyText(text: string) {
+//     let firstLevelOptions = [
+//         "User has finished doing something",
+//         "User is doing something now or is going to do something now or next.",
+//         "User wants, has or needs to do something in the future"
+//     ];
+//     let secondLevelOptions = [
+//         "User wants to create a goal",
+//         "User wants to create a todo",
+//         "User wants to create a reminder",
+//         "User wants to record a dream",
+//         "User wants to record a thought",
+//         "Something else"
+//     ];
+//     let thirdLevelOptions = [
+//         "User wants to, needs to, or has to do something",
+//         "Something else"
+//     ];
+
+//     let firstPath = await classify(text, firstLevelOptions);
+//     if (!(firstPath.endsWith('none') || firstPath.endsWith('3'))) {
+//         return firstPath
+//     }
+//     firstPath = "3"
+
+//     let secondPath = await classify(text, secondLevelOptions, firstPath);
+//     // console.log(`secondPath: ${secondPath}`);
+//     if (!(secondPath.endsWith('none') || secondPath.endsWith('6'))) {
+//         return secondPath
+//     }
+//     secondPath = "3.6"
+
+//     let thirdPath = await classify(text, thirdLevelOptions, secondPath);
+//     // console.log(thirdPath);
+    
+//     if (!(thirdPath.endsWith('none') || thirdPath.endsWith('2'))) {
+//         return thirdPath
+//     }
+//     return "3.6.2"
+// }
