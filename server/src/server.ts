@@ -23,7 +23,7 @@ app.post('/parseUserRequestFromAudio', async (req: Request, res: Response, next:
         let userLanguage = await getUserLanguage(userId)
         convertAudioToText(req, res, userLanguage, next, async (text: string) => {
             try {
-                parseUserRequest(text, userId); 
+                parseUserRequest(text.replace(/"/g, '').trim(), userId); 
                 res.status(200).json({
                     status: "success",
                     text: text

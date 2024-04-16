@@ -1,30 +1,30 @@
 import { getHasura } from "../config";
 import { complete3 } from "../third/openai";
 import { insertInteraction } from "./interactions";
-import { parseGoal } from "./logic/goalLogic";
+// import { parseGoal } from "./logic/goalLogic";
 
 
 
 
 export async function parseUserRequest(text: string, user_id: number) {
-    let classification = await classify(text)
-    console.log(`${text} \nClassification: ${classification}`)
-    let interaction_id = await insertInteraction(user_id, text, classification);
-    switch (classification) {
-        case "todo":
-            return "todo"
-        case "goal":
-            return parseGoal(text, user_id)
-        case "event":
+    // let classification = await classify(text)
+    // console.log(`${text} \nClassification: ${classification}`)
+    let interaction_id = await insertInteraction(user_id, text, "event");
+    // switch (classification) {
+    //     case "todo":
+    //         return "todo"
+    //     case "goal":
+    //         return parseGoal(text, user_id)
+    //     case "event":
             return parseEvent(text, user_id, interaction_id!)
-        case "query":
-            return "query"
-        case "command":
-            return "command"
-        default:
-            console.log(classification)
-            throw new Error("Invalid classification")
-    }
+    //     case "query":
+    //         return "query"
+    //     case "command":
+    //         return "command"
+    //     default:
+    //         console.log(classification)
+    //         throw new Error("Invalid classification")
+    // }
 }
 
 export async function parseEvent(event: string, user_id: number, interaction_id: number) {
