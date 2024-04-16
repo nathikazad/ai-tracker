@@ -132,18 +132,23 @@ class Hasura {
     }
     
     
-    func startListening<T: Decodable>(subscriptionQuery: String, responseType: T.Type, callback: @escaping (Result<T, Error>) -> Void) -> String {
+    func startListening<T: Decodable>(subscriptionId: String, subscriptionQuery: String, responseType: T.Type, callback: @escaping (Result<T, Error>) -> Void) {
         if(socketStatus == .initialized) {
             print("calling setup because socket not initialized for listening")
             setup()
         }
         
-        currentID += 1
-        let uniqueID = String(currentID)
+        print("Hasura start listening id:\(subscriptionId)")
+        
+        if(subscriptions[subscriptionId] != nil) {
+            print("Hasura subscription already listening")
+            return
+        }
+        
         
         // Register the subscription with a callback that correctly handles decoding.
         // Ensure the callback matches the expected signature.
-        subscriptions[uniqueID] = (query: subscriptionQuery, status: .registered, callback: { message in
+        subscriptions[subscriptionId] = (query: subscriptionQuery, status: .registered, callback: { message in
             guard let data = try? JSONSerialization.data(withJSONObject: message, options: []) else {
                 callback(.failure(URLError(.cannotParseResponse)))
                 return
@@ -158,12 +163,10 @@ class Hasura {
         })
         
         if socketStatus == .ready {
-            startSubscription(uniqueID: uniqueID, subscriptionQuery: subscriptionQuery)
+            startSubscription(uniqueID: subscriptionId, subscriptionQuery: subscriptionQuery)
         } else {
-//            print("Socket not ready, subscription \(uniqueID) registered and will be activated upon connection.")
+            print("Socket not ready, subscription \(subscriptionId) registered and will be activated upon connection.")
         }
-        
-        return uniqueID
     }
     
     struct SubscriptionMessage: Codable {
@@ -199,7 +202,8 @@ class Hasura {
 
 
     
-     func stopListening(uniqueID: String) {
+    func stopListening(uniqueID: String) {
+        print("Hasura stop listening id:\(uniqueID)")
          guard subscriptions[uniqueID] != nil else {
              print("Subscription ID \(uniqueID) not found.")
              return
@@ -252,7 +256,7 @@ class Hasura {
                             callback(json["payload"]) // Pass the 'data' to the callback
                         } else {
                             stopListening(uniqueID: id)
-                            print("Data message does not match any subscription ID or no callback found: \(text)")
+                            print("Data message does not match any subscription ID or no callback found for subscription: \(id)")
                         }
                     } else {
                         print("ID value is not a string: \(idValue)")

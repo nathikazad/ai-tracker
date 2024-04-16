@@ -49,11 +49,10 @@ struct GoalsView: View {
         .onAppear {
             if(Authentication.shared.areJwtSet) {
                 print("Goal View has appeared")
-//                Hasura.shared.setup()
                 Task {
                     await goalsController.fetchGoals(userId: Authentication.shared.userId!)
-                    goalsController.listenToGoals(userId: Authentication.shared.userId!)
                 }
+                goalsController.listenToGoals(userId: Authentication.shared.userId!)
             }
         }
         .onDisappear {

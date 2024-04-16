@@ -9,7 +9,7 @@ import Foundation
 class TodosController: ObservableObject {
     
     @Published var todos: [Todo] = []
-    var subscriptionId: String?
+    let subscriptionId: String = "todos"
     
     struct TodosResponseData: Decodable {
         var data: TodosWrapper
@@ -76,11 +76,11 @@ class TodosController: ObservableObject {
     
     
     func listenToTodos(userId: Int) {
-        print("lsitening for todos")
+        print("listening for todos")
         let startOfToday = Calendar.current.startOfDay(for: Date())
         let subscriptionQuery = TodosController.generateQuery(userId: userId, isSubscription: true)
         
-        subscriptionId = Hasura.shared.startListening(subscriptionQuery: subscriptionQuery, responseType: TodosResponseData.self) {result in
+        Hasura.shared.startListening(subscriptionId: "todos", subscriptionQuery: subscriptionQuery, responseType: TodosResponseData.self) {result in
             switch result {
             case .success(let responseData):
                 self.sortAndAssign(responseData.data.todos)
@@ -92,10 +92,7 @@ class TodosController: ObservableObject {
     
     
     func cancelListener() {
-        if(subscriptionId != nil) {
-            Hasura.shared.stopListening(uniqueID: subscriptionId!)
-            subscriptionId = nil
-        }
+        Hasura.shared.stopListening(uniqueID: subscriptionId)
     }
     
     static private func generateQuery(userId: Int, limit: Int? = 20, isSubscription: Bool = false) -> String {

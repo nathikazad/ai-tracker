@@ -40,8 +40,8 @@ struct TimelineView: View {
             if(Authentication.shared.areJwtSet) {
                 Task {
                     await interactionController.fetchInteractions(userId: Authentication.shared.userId!)
-                    interactionController.listenToInteractions(userId: Authentication.shared.userId!)
                 }
+                interactionController.listenToInteractions(userId: Authentication.shared.userId!)
             }
         }
         .onDisappear {
@@ -83,6 +83,7 @@ struct TimelineView: View {
                     interactionController.deleteInteraction(id: interactionId)
                 }
             }
+            
         }
     }
 }

@@ -13,8 +13,7 @@ import Foundation
 class GoalsController: ObservableObject {
     
     @Published var goals: [GoalModel] = []
-    var subscriptionId: String?
-    // Extension on Array where Elements are GoalModel
+    let subscriptionId: String = "goals"
     
     struct GoalsResponseData: Decodable {
         var data: GoalsWrapper
@@ -84,11 +83,11 @@ class GoalsController: ObservableObject {
     
     
     func listenToGoals(userId: Int) {
-        print("lsitening for goals")
+        print("listening for goals")
         let startOfToday = Calendar.current.startOfDay(for: Date())
         let subscriptionQuery = GoalsController.generateQuery(userId: userId, isSubscription: true)
         
-        subscriptionId = Hasura.shared.startListening(subscriptionQuery: subscriptionQuery, responseType: GoalsResponseData.self) {result in
+        Hasura.shared.startListening(subscriptionId:subscriptionId, subscriptionQuery: subscriptionQuery, responseType: GoalsResponseData.self) {result in
             switch result {
             case .success(let responseData):
                 self.sortAndAssign(responseData.data.goals)
@@ -100,10 +99,7 @@ class GoalsController: ObservableObject {
     
     
     func cancelListener() {
-        if(subscriptionId != nil) {
-            Hasura.shared.stopListening(uniqueID: subscriptionId!)
-            subscriptionId = nil
-        }
+        Hasura.shared.stopListening(uniqueID: subscriptionId)
     }
     
     static private func generateQuery(userId: Int, limit: Int? = 20, isSubscription: Bool = false) -> String {

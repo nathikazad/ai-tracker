@@ -57,8 +57,8 @@ struct TodosView: View {
             if(Authentication.shared.areJwtSet) {
                 Task {
                     await todoController.fetchTodos(userId: Authentication.shared.userId!)
-                    todoController.listenToTodos(userId: Authentication.shared.userId!)
                 }
+                todoController.listenToTodos(userId: Authentication.shared.userId!)
             }
         }
         .onDisappear {

@@ -9,7 +9,7 @@ import Foundation
 class InteractionsController: ObservableObject {
     
     @Published var interactions: [InteractionModel] = []
-    var subscriptionId: String?
+    let subscriptionId: String = "interactions"
     
     struct InteractionsResponseData: Decodable {
         var data: InteractionsWrapper
@@ -72,11 +72,12 @@ class InteractionsController: ObservableObject {
     
     
     func listenToInteractions(userId: Int) {
-        print("lsitening for interactions")
+
+        print("listening for interactions")
         let startOfToday = Calendar.current.startOfDay(for: Date())
         let subscriptionQuery = InteractionsController.generateQuery(userId: userId, gte: startOfToday, isSubscription: true)
         
-        subscriptionId = Hasura.shared.startListening(subscriptionQuery: subscriptionQuery, responseType: InteractionsResponseData.self) {result in
+        Hasura.shared.startListening(subscriptionId: subscriptionId, subscriptionQuery: subscriptionQuery, responseType: InteractionsResponseData.self) {result in
             switch result {
             case .success(let responseData):
                 DispatchQueue.main.async {
@@ -90,10 +91,7 @@ class InteractionsController: ObservableObject {
     
     
     func cancelListener() {
-        if(subscriptionId != nil) {
-            Hasura.shared.stopListening(uniqueID: subscriptionId!)
-            subscriptionId = nil
-        }
+            Hasura.shared.stopListening(uniqueID: subscriptionId)
     }
     
     static private func generateQuery(userId: Int, limit: Int? = 20, gte: Date? = nil, isSubscription: Bool = false) -> String {

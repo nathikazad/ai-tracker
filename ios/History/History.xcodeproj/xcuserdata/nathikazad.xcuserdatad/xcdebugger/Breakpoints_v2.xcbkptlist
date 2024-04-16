@@ -52,5 +52,53 @@
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A975FEE2-A4A3-48E0-8917-0A14A58EFCB5"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "History/Utilities/Location.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "27"
+            endingLineNumber = "27"
+            landmarkName = "init()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "A975FEE2-A4A3-48E0-8917-0A14A58EFCB5 - fb7a8e61a27bb496"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "History.LocationManager.init() -&gt; History.LocationManager"
+                  moduleName = "History"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/nathikazad/Projects/ai-tracker/ios/History/History/Utilities/Location.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "27"
+                  endingLineNumber = "27"
+                  offsetFromSymbolStart = "684">
+               </Location>
+               <Location
+                  uuid = "A975FEE2-A4A3-48E0-8917-0A14A58EFCB5 - fb7a8e61a27bb496"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "History.LocationManager.init() -&gt; History.LocationManager"
+                  moduleName = "History"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/nathikazad/Projects/ai-tracker/ios/History/History/Utilities/Location.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "27"
+                  endingLineNumber = "27"
+                  offsetFromSymbolStart = "704">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

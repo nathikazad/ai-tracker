@@ -6,9 +6,9 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     
     let locationManager = CLLocationManager()
     
-    private let locationUpdateDistanceFilter: CLLocationDistance = 20 // meters
-    private let movementDistanceThreshold: CLLocationDistance = 50 // meters
-    private let movementCheckInterval: TimeInterval = 60 // seconds
+    private let locationUpdateDistanceFilter: CLLocationDistance = 50 // meters
+    private let movementDistanceThreshold: CLLocationDistance = 100 // meters
+    private let movementCheckInterval: TimeInterval = 300 // seconds
     
     var movementLocations: [(location: CLLocation, time: Date)] = []
     var lastStationaryLocation: CLLocation?
@@ -92,8 +92,11 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
             print("Distance since last movement \(location.distance(from: movementLocations.last!.location))")
         }
         
-        if movementLocations.isEmpty || location.distance(from: movementLocations.last!.location) > movementDistanceThreshold {
-            print("Appending location")
+        if movementLocations.isEmpty {
+            print("Appending location because empty")
+            movementLocations.append((location: location, time: Date()))
+        } else if (location.distance(from: movementLocations.last!.location) > movementDistanceThreshold + location.horizontalAccuracy + movementLocations.last!.location.horizontalAccuracy) {
+            print("Appending location because past threshold")
             movementLocations.append((location: location, time: Date()))
         }
         
@@ -113,7 +116,6 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
         print("\(currentState), New location: \(location.coordinate.latitude), \(location.coordinate.longitude)")
-        
         if(lastStationaryLocation == nil) {
             lastStationaryLocation = location
         }
@@ -126,7 +128,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
             if let lastStationaryLocation = lastStationaryLocation {
                 let distance = location.distance(from: lastStationaryLocation)
                 print("Distance from last stationary location: \(distance)")
-                if distance > movementDistanceThreshold {
+                if distance > movementDistanceThreshold + location.horizontalAccuracy + lastStationaryLocation.horizontalAccuracy {
                     startedMoving()
                 } else {
                     print("Not enough distance to consider moving")
