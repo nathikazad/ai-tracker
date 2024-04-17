@@ -129,7 +129,20 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
                 let distance = location.distance(from: lastStationaryLocation)
                 print("Distance from last stationary location: \(distance)")
                 if distance > movementDistanceThreshold + location.horizontalAccuracy + lastStationaryLocation.horizontalAccuracy {
-                    startedMoving()
+                    startedMoving(debugInfo: [
+                        "distanceChange": distance,
+                        "threshold": movementDistanceThreshold,
+                        "oldLocation": [
+                            "lat": lastStationaryLocation.coordinate.latitude,
+                            "lng": lastStationaryLocation.coordinate.longitude,
+                            "accuracy": lastStationaryLocation.horizontalAccuracy
+                        ],
+                        "newLocation": [
+                            "lat": location.coordinate.latitude,
+                            "lng": location.coordinate.longitude,
+                            "accuracy": location.horizontalAccuracy
+                        ],
+                    ])
                 } else {
                     print("Not enough distance to consider moving")
                 }
@@ -137,22 +150,25 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         }
     }
     
-    func startedMoving() {
+    func startedMoving(debugInfo: [String: Any] = [:]) {
         print("User started moving.")
         currentState = .moving
-        notifyServer()
+        notifyServer(debugInfo: debugInfo)
         movementLocations = []
     }
     
     @objc func stoppedMoving() {
         print("User has stopped moving for more than \(movementCheckInterval) seconds.")
         currentState = .stationary
-        notifyServer()
+        notifyServer(debugInfo: [
+            "numberOfPoints": movementLocations.count,
+            "timeSinceLastMovement": Date().timeIntervalSince(movementLocations.last!.time)
+        ])
         lastStationaryLocation = movementLocations.last!.location
     }
     
     
-    func notifyServer() {
+    func notifyServer(debugInfo: [String: Any] = [:]) {
         let locationsData: [[String: Double]]
         if currentState == .stationary {
             locationsData = movementLocations.map {
@@ -169,10 +185,9 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         print("Notifying server...")
     }
     
-    private func sendToServer(eventName: String, locationsData: [[String: Double]]) {
-        var body: [String: Any] = ["eventName": eventName, "locations": locationsData]
-        let bodyCopy = body  // Make an immutable copy for the send to server task
-        
+    private func sendToServer(eventName: String, locationsData: [[String: Double]], debugInfo: [String: Any] = [:]) {
+        var body: [String: Any] = ["eventName": eventName, "locations": locationsData, "debugInfo": debugInfo]
+        let bodyCopy = body // Make an immutable copy for the send to server task
         Task {
             do {
                 guard let data = try await ServerCommunicator.sendPostRequest(to: updateMovementEndpoint, body: bodyCopy, token: Authentication.shared.hasuraJwt) else {

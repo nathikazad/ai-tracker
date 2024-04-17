@@ -1919,6 +1919,10 @@ columns and relationships of "interactions"
 type interactions {
   content: String!
   content_type: String
+  debug(
+    """JSON select path"""
+    path: String
+  ): jsonb
   embedding: vector!
   id: Int!
   timestamp: timestamptz
@@ -1950,6 +1954,11 @@ type interactions_aggregate_fields {
   variance: interactions_variance_fields
 }
 
+"""append existing jsonb value of filtered columns with new jsonb value"""
+input interactions_append_input {
+  debug: jsonb
+}
+
 """aggregate avg on columns"""
 type interactions_avg_fields {
   id: Float
@@ -1965,6 +1974,7 @@ input interactions_bool_exp {
   _or: [interactions_bool_exp!]
   content: String_comparison_exp
   content_type: String_comparison_exp
+  debug: jsonb_comparison_exp
   embedding: vector_comparison_exp
   id: Int_comparison_exp
   timestamp: timestamptz_comparison_exp
@@ -1982,6 +1992,28 @@ enum interactions_constraint {
 }
 
 """
+delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+"""
+input interactions_delete_at_path_input {
+  debug: [String!]
+}
+
+"""
+delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array
+"""
+input interactions_delete_elem_input {
+  debug: Int
+}
+
+"""
+delete key/value pair or string element. key/value pairs are matched based on their key value
+"""
+input interactions_delete_key_input {
+  debug: String
+}
+
+"""
 input type for incrementing numeric columns in table "interactions"
 """
 input interactions_inc_input {
@@ -1995,6 +2027,7 @@ input type for inserting data into table "interactions"
 input interactions_insert_input {
   content: String
   content_type: String
+  debug: jsonb
   embedding: vector
   id: Int
   timestamp: timestamptz
@@ -2053,6 +2086,7 @@ input interactions_on_conflict {
 input interactions_order_by {
   content: order_by
   content_type: order_by
+  debug: order_by
   embedding: order_by
   id: order_by
   timestamp: order_by
@@ -2064,6 +2098,11 @@ input interactions_pk_columns_input {
   id: Int!
 }
 
+"""prepend existing jsonb value of filtered columns with new jsonb value"""
+input interactions_prepend_input {
+  debug: jsonb
+}
+
 """
 select columns of table "interactions"
 """
@@ -2073,6 +2112,9 @@ enum interactions_select_column {
 
   """column name"""
   content_type
+
+  """column name"""
+  debug
 
   """column name"""
   embedding
@@ -2093,6 +2135,7 @@ input type for updating data in table "interactions"
 input interactions_set_input {
   content: String
   content_type: String
+  debug: jsonb
   embedding: vector
   id: Int
   timestamp: timestamptz
@@ -2132,6 +2175,7 @@ input interactions_stream_cursor_input {
 input interactions_stream_cursor_value_input {
   content: String
   content_type: String
+  debug: jsonb
   embedding: vector
   id: Int
   timestamp: timestamptz
@@ -2155,6 +2199,9 @@ enum interactions_update_column {
   content_type
 
   """column name"""
+  debug
+
+  """column name"""
   embedding
 
   """column name"""
@@ -2168,8 +2215,30 @@ enum interactions_update_column {
 }
 
 input interactions_updates {
+  """append existing jsonb value of filtered columns with new jsonb value"""
+  _append: interactions_append_input
+
+  """
+  delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+  """
+  _delete_at_path: interactions_delete_at_path_input
+
+  """
+  delete the array element with specified index (negative integers count from
+  the end). throws an error if top level container is not an array
+  """
+  _delete_elem: interactions_delete_elem_input
+
+  """
+  delete key/value pair or string element. key/value pairs are matched based on their key value
+  """
+  _delete_key: interactions_delete_key_input
+
   """increments the numeric columns with given value of the filtered values"""
   _inc: interactions_inc_input
+
+  """prepend existing jsonb value of filtered columns with new jsonb value"""
+  _prepend: interactions_prepend_input
 
   """sets the columns of the filtered rows to the given values"""
   _set: interactions_set_input
@@ -2752,8 +2821,30 @@ type mutation_root {
   update data of the table: "interactions"
   """
   update_interactions(
+    """append existing jsonb value of filtered columns with new jsonb value"""
+    _append: interactions_append_input
+
+    """
+    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    """
+    _delete_at_path: interactions_delete_at_path_input
+
+    """
+    delete the array element with specified index (negative integers count from
+    the end). throws an error if top level container is not an array
+    """
+    _delete_elem: interactions_delete_elem_input
+
+    """
+    delete key/value pair or string element. key/value pairs are matched based on their key value
+    """
+    _delete_key: interactions_delete_key_input
+
     """increments the numeric columns with given value of the filtered values"""
     _inc: interactions_inc_input
+
+    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    _prepend: interactions_prepend_input
 
     """sets the columns of the filtered rows to the given values"""
     _set: interactions_set_input
@@ -2766,8 +2857,30 @@ type mutation_root {
   update single row of the table: "interactions"
   """
   update_interactions_by_pk(
+    """append existing jsonb value of filtered columns with new jsonb value"""
+    _append: interactions_append_input
+
+    """
+    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    """
+    _delete_at_path: interactions_delete_at_path_input
+
+    """
+    delete the array element with specified index (negative integers count from
+    the end). throws an error if top level container is not an array
+    """
+    _delete_elem: interactions_delete_elem_input
+
+    """
+    delete key/value pair or string element. key/value pairs are matched based on their key value
+    """
+    _delete_key: interactions_delete_key_input
+
     """increments the numeric columns with given value of the filtered values"""
     _inc: interactions_inc_input
+
+    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    _prepend: interactions_prepend_input
 
     """sets the columns of the filtered rows to the given values"""
     _set: interactions_set_input

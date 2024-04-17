@@ -7,23 +7,24 @@ import { insertInteraction } from "./interactions";
 
 
 export async function parseUserRequest(text: string, user_id: number) {
-    // let classification = await classify(text)
+    let classification = await classifyText(text)
     // console.log(`${text} \nClassification: ${classification}`)
-    let interaction_id = await insertInteraction(user_id, text, "event");
+    await insertInteraction(user_id, text, "event", {"classification": Classification[classification]});
+    // let interaction_id = 
     // switch (classification) {
     //     case "todo":
     //         return "todo"
     //     case "goal":
     //         return parseGoal(text, user_id)
-    //     case "event":
-            return parseEvent(text, user_id, interaction_id!)
+        // case Classification.Past:
+            // return parseEvent(text, user_id, interaction_id)
     //     case "query":
     //         return "query"
     //     case "command":
     //         return "command"
-    //     default:
-    //         console.log(classification)
-    //         throw new Error("Invalid classification")
+        // default:
+        //     console.log(classification)
+        //     throw new Error("Invalid classification")
     // }
 }
 
@@ -201,28 +202,56 @@ async function processClassification(text: string, options: DecisionMaker[], cur
 }
 
 interface DecisionMaker {
-    condition: String,
-    nextConditions?: DecisionMaker[] | null
+    condition: string,
+    nextConditions?: DecisionMaker[] | null,
+    uniqueIdentifier?: Classification
 }
 
-export async function classifyText(text: string) {
+export enum Classification {
+    Past,
+    Present,
+    Dream,
+    Thought,
+    Goal,
+    Todo,
+    Reminder,
+    Unknown
+}
+
+function findUniqueId(condition: string, options: DecisionMaker[]): Classification {
+    for (const option of options) {
+        if (option.condition === condition) {
+            return option.uniqueIdentifier ?? Classification.Unknown;
+        }
+        if (option.nextConditions) {
+            const foundId = findUniqueId(condition, option.nextConditions);
+            if (foundId) {
+                return foundId;
+            }
+        }
+    }
+    return Classification.Unknown
+}
+
+export async function classifyText(text: string): Promise<Classification> {
     let options: DecisionMaker[] = [
-        { condition: "User has finished doing something"},
-        { condition: "User is doing something now or is going to do something now or next."},
-        { condition: "User is talking about a dream or thought he had", 
+        { condition: "User has finished doing something", uniqueIdentifier: Classification.Past},
+        { condition: "User is doing something now or is going to do something now or next.", uniqueIdentifier: Classification.Present},
+        { condition: "User is talking about a dream, thought, memory or incident he experienced", 
             nextConditions: [
-                { condition: "User wants to record a dream" },
-                { condition: "User wants to record a thought" },
+                { condition: "User wants to record a dream", uniqueIdentifier: Classification.Dream },
+                { condition: "User wants to record a thought", uniqueIdentifier: Classification.Thought },
+                { condition: "User wants to record a memory", uniqueIdentifier: Classification.Past },
             ]},
         { condition: "User wants, has or needs to do something in the future",
             nextConditions:  [
-                { condition: "User wants to create a goal" },
-                { condition: "User wants to do something in future" },
-                { condition: "User wants to create a reminder" },
-                { condition: "Something else" }
+                { condition: "User wants to create a goal", uniqueIdentifier: Classification.Goal },
+                { condition: "User wants to do something in future", uniqueIdentifier: Classification.Todo },
+                { condition: "User wants to create a reminder", uniqueIdentifier: Classification.Reminder },
+                { condition: "Something else", uniqueIdentifier: Classification.Unknown }
             ]
         },
-        { condition: "User is not asking me to do something and is also not being clear about what he is doing" }
+        { condition: "User is not asking me to do something and is also not being clear about what he is doing", uniqueIdentifier: Classification.Unknown}
     ]
 
     let currentOptions = options;
@@ -238,11 +267,11 @@ export async function classifyText(text: string) {
             currentOptions = currentOptions[lastValidIndex].nextConditions!;
         } else {
             // If there are no further nextConditions, we conclude here
-            return currentOptions[lastValidIndex].condition;
+            return findUniqueId(currentOptions[lastValidIndex].condition, currentOptions);
         }
     }
 
-    return "Unknown";  // Default return if no conclusive path is found
+    return Classification.Unknown;  // Default return if no conclusive path is found
 }
 
 
