@@ -82,7 +82,6 @@ app.post('/updateMovement', async (req: Request, res: Response) => {
 
 
 app.post('/hasuraJWT', async (req, res) => {
-    console.log(`hasuraJWT user:${req.body.username}`);
     try {
         let jwt = await convertAppleJWTtoHasuraJWT(req.body.appleKey, req.body.username, req.body.language)
         res.status(200).json({

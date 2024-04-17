@@ -7,13 +7,17 @@
 
 import SwiftUI
 import AuthenticationServices
+import Combine
 
 struct Message: Identifiable {
     let id: Int
-    let sender: String
+    let sender: Sender
     let content: String
     let timestamp: String
-    let isCurrentUser: Bool // to differentiate between sender and receiver
+    
+    var isUser: Bool {
+        return sender == .User
+    }
 }
 
 struct IdentifiableView: Identifiable {
@@ -31,7 +35,7 @@ struct ChatMessageRow: View {
     var message: Message
     var body: some View {
         HStack(alignment: .bottom, spacing: 10) {
-            if message.isCurrentUser {
+            if message.isUser {
                 Spacer()
                 VStack(alignment: .trailing) {
                     Text(message.content)
@@ -51,33 +55,36 @@ struct ChatMessageRow: View {
                 Spacer()
             }
         }
-        .padding(.top)
+//        .padding(.top)
         .padding(.horizontal)
-        .padding(.bottom)
+//        .padding(.bottom)
     }
 }
 
-import SwiftUI
-import Combine
-import AuthenticationServices
+
+
+
+
+enum Sender {
+    case Maximus, User
+}
 
 class ChatViewModel: ObservableObject {
     @Published var chatContents: [IdentifiableView] = []
     @Published var isSignedIn: Bool = false
+    @ObservedObject var appState = AppState.shared
+    @Published var currentMessage: String = ""
     
     init() {
         setupInitialChatContents()
     }
-
+    
     private func setupInitialChatContents() {
-        let welcomeMessage = IdentifiableView(
-            id: 1,
-            ChatMessageRow(message: Message(id: 0, sender: "Sophie", content: "Hi my name is Maximus, I'm an AI agent built with the singular purpose to help you reach your goals. Sign in by clicking the button below and we will get started.", timestamp: "Yesterday 8:30 PM", isCurrentUser: false))
-        )
-
-        let signInButton = IdentifiableView(
-            id: 4,
-            SignInWithAppleButton(.signIn, onRequest: { request in
+        chatContents = []
+        let welcomeMessage =
+            ChatMessageRow(message: Message(id: 0, sender: .Maximus, content: "Hi my name is Maximus, I'm an AI agent built with the singular purpose to help you reach your goals. Sign in by clicking the button below and we will get started.", timestamp: "\(Date())"))
+        
+        let signInButton = SignInWithAppleButton(.signIn, onRequest: { request in
                 request.requestedScopes = [.fullName]
             }, onCompletion: { result in
                 Task {
@@ -86,10 +93,21 @@ class ChatViewModel: ObservableObject {
             })
             .frame(width: 200)
             .disabled(isSignedIn)
-        )
-        chatContents = [welcomeMessage, signInButton]
-    }
+        
+        
+        
+        let normalMessage = ChatMessageRow(message: Message(id: 0, sender: .Maximus, content: "Hi, how can I help you?", timestamp: "Yesterday 8:30 PM"))
+        
+        
 
+        if (appState.chatViewToShow == .onBoard) {
+            addChatContent(view: welcomeMessage)
+            addChatContent(view: signInButton)
+        } else {
+            addChatContent(view: normalMessage)
+        }
+    }
+    
     @MainActor
     private func localHandleSignIn(result: Result<ASAuthorization, Error>) async {
         let isSuccess = await handleSignIn(result: result)
@@ -98,15 +116,24 @@ class ChatViewModel: ObservableObject {
             addLoginConfirmationMessage()
         }
     }
-
+    
     @MainActor
     private func addLoginConfirmationMessage() {
-        let newMessage = Message(id: chatContents.count, sender: "System", content: "Great, you are logged in now. You can click on the microphone and talk to me.", timestamp: "\(Date())", isCurrentUser: false)
-        let successSignInMessage = IdentifiableView(id: chatContents.count + 1, ChatMessageRow(message: newMessage))
+        let newMessage = Message(id: chatContents.count, sender: .Maximus, content: "Great, you are logged in now. You can click on the microphone and talk to me.", timestamp: "\(Date())")
+        let successSignInMessage = ChatMessageRow(message: newMessage)
         
-        let okButton = IdentifiableView(
-            id: chatContents.count,
-            Button(action: {
+        
+        addChatContent(view: successSignInMessage)
+        addOkButton()
+    }
+    
+    func addMessage(content: String, sender: Sender) {
+        let newMessage = Message(id: chatContents.count, sender: sender, content: content, timestamp: "\(Date())")
+        addChatContent(view: ChatMessageRow(message: newMessage))
+    }
+    
+    func addOkButton() {
+        let okButton = Button(action: {
                 AppState.shared.showChat(newChatViewToShow:.none)
             }) {
                 Text("Ok")
@@ -116,10 +143,14 @@ class ChatViewModel: ObservableObject {
                     .background(Color.black)
                     .cornerRadius(8)
             }
-        )
-        chatContents.append(successSignInMessage)
-        chatContents.append(okButton)
-        
+        addChatContent(view: okButton)
+    }
+    
+    func addChatContent<V: View>(view: V) {
+        let newChatMessageView = IdentifiableView(id: chatContents.count, AnyView(view))
+//        DispatchQueue.main.async {
+            self.chatContents.append(newChatMessageView)
+//        }
     }
 }
 
@@ -137,8 +168,10 @@ struct ChatView: View {
                     }
                 }
                 .padding()
-//                SendBar()
-                
+                if(appState.chatViewToShow == .normal) {
+                    SendBar(currentMessage: $chatViewModel.currentMessage, chatViewModel: chatViewModel)
+                    
+                }
             }
             .navigationBarTitle("Maximus", displayMode: .inline)
             .navigationBarItems(
@@ -168,7 +201,8 @@ struct SendButton: View {
 }
 
 struct SendBar: View {
-    @State var currentMessage: String = ""
+    @Binding var currentMessage: String
+    var chatViewModel: ChatViewModel  // Pass ViewModel to SendBar
     @State var isRecording: Bool = false
     @FocusState private var isTextFieldFocused: Bool
     
@@ -194,9 +228,22 @@ struct SendBar: View {
             .padding(.leading, 0)
             
             SendButton {
-                AppState.shared.showChat(newChatViewToShow:.none)
+                if !currentMessage.isEmpty {
+                    chatViewModel.addMessage(content: currentMessage, sender: .User)
+                    var messageToSend = currentMessage
+                    Task {
+                        do {
+                            let response = try await ServerCommunicator.sendPostRequest(to: parseTextEndpoint, body: ["text": messageToSend], token: Authentication.shared.hasuraJwt!)
+                            chatViewModel.addMessage(content: "Your message has been registered", sender: .Maximus)
+                            chatViewModel.addOkButton()
+                        } catch {
+                            print("Server communication error")
+                        }
+                    }
+                    currentMessage = ""
+                }
             }
-            .disabled(isRecording)
+            .disabled(isRecording || currentMessage.isEmpty)
         }
         .padding(.bottom, 10)
         .padding(.horizontal, 20)
