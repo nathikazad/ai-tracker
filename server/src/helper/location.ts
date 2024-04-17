@@ -25,5 +25,6 @@ export function updateMovement(movementRequest:MovementRequest, userId: number) 
     } else {
         console.log('No locations provided or locations array is empty.');
     }
+    console.log(movementRequest.debugInfo)
     insertInteraction(userId, movementRequest.eventName, "event", movementRequest.debugInfo)
 }
