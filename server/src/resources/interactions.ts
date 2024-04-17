@@ -21,7 +21,7 @@ export async function insertInteraction(user_id: number, content: string, intera
         }]
     }, {
         "embedding": JSON.stringify(embedding),
-        "debug": JSON.stringify(debugInfo)
+        "debug": debugInfo
     })
     return resp.insert_interactions_one!.id;
 }
