@@ -21,6 +21,7 @@ async function main() {
     check("Remind me to grab my speaker tomorrow", Classification.Reminder)
     check("Record this memory, I had a wonderful time with Yareni at the park. A dog chased me and I almost got bit", Classification.Past)
     check("I went to the market and bought some cookies", Classification.Past)
+    check("I'm feeling a bit low", Classification.Feeling)
 }
 
 async function check(text: string, expected: Classification) {

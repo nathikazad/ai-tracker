@@ -181,7 +181,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
                 locationsData = []
             }
         }
-        sendToServer(eventName: currentState == .stationary ? "stoppedMoving" : "startedMoving", locationsData: locationsData)
+        sendToServer(eventName: currentState == .stationary ? "stoppedMoving" : "startedMoving", locationsData: locationsData, debugInfo: debugInfo)
         print("Notifying server...")
     }
     

@@ -25,6 +25,7 @@ class PhoneCommunicator: NSObject, WCSessionDelegate, ObservableObject {
         }
     }
     
+    
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
         switch activationState {
         case .activated:
@@ -44,23 +45,31 @@ class PhoneCommunicator: NSObject, WCSessionDelegate, ObservableObject {
     }
     
     
-    func sendDataToiOS(data: String) {
-        if session.isReachable {
-            let dict: [String: Any] = ["data": data]
-            session.sendMessage(dict, replyHandler: { response in
-                print("Received reply from iOS: \(response)")
-            }, errorHandler: { error in
+    func sendDataToiOS() {
+        
+        if(session.isReachable && Authentication.shared.hasuraJwt == nil) {
+            print("sending data to iOS")
+            let dict: [String: Any] = ["data": "send me jwt"]
+            session.sendMessage(dict, replyHandler: nil, errorHandler: { error in
                 print("Error sending message: \(error.localizedDescription)")
             })
+        }
+        
+    }
+    
+    func sessionReachabilityDidChange(_ session: WCSession) {
+        if session.isReachable {
+            print("Phone became reachable.")
+            sendDataToiOS()
         } else {
-            print("Session is not reachable.")
+            print("Phone became unreachable.")
         }
     }
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
         DispatchQueue.main.async {
             // Update UI or process data here
-            print("Received message: \(message)")
+            print("Received message from phone")
             
             // Extract jwtToken handling string "nil"
             if let jwt = message["hasuraJwt"] as? String, jwt != "nil" {
@@ -75,6 +84,7 @@ class PhoneCommunicator: NSObject, WCSessionDelegate, ObservableObject {
             } else {
                 Authentication.shared.userId = nil
             }
+
         }
     }
 }

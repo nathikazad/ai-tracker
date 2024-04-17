@@ -215,6 +215,7 @@ export enum Classification {
     Goal,
     Todo,
     Reminder,
+    Feeling,
     Unknown
 }
 
@@ -237,10 +238,11 @@ export async function classifyText(text: string): Promise<Classification> {
     let options: DecisionMaker[] = [
         { condition: "User has finished doing something", uniqueIdentifier: Classification.Past},
         { condition: "User is doing something now or is going to do something now or next.", uniqueIdentifier: Classification.Present},
-        { condition: "User is talking about a dream, thought, memory or incident he experienced", 
+        { condition: "User is talking about a dream, thought, feeling, memory or incident he experienced", 
             nextConditions: [
                 { condition: "User wants to record a dream", uniqueIdentifier: Classification.Dream },
                 { condition: "User wants to record a thought", uniqueIdentifier: Classification.Thought },
+                { condition: "User wants to record a feeling", uniqueIdentifier: Classification.Feeling },
                 { condition: "User wants to record a memory", uniqueIdentifier: Classification.Past },
             ]},
         { condition: "User wants, has or needs to do something in the future",

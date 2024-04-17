@@ -41,10 +41,20 @@ class WatchCommunicator: NSObject, WCSessionDelegate, ObservableObject {
             fatalError("A new case was added that needs to be handled.")
         }
     }
+    
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
+        // Handle the received message
+        print("received something")
+        if let messageContent = message["data"] as? String {
+            print("Received message: \(messageContent)")
+            sendToWatch()
+        }
+    }
 
     func sessionReachabilityDidChange(_ session: WCSession) {
         if session.isReachable {
             print("Watch became reachable.")
+            sendToWatch()
         } else {
             print("Watch became unreachable.")
         }
@@ -59,24 +69,12 @@ class WatchCommunicator: NSObject, WCSessionDelegate, ObservableObject {
     }
     
     
-//    func sendDataToWatch(data: String) {
-//        print("sending data")
-//        if session.isReachable {
-//            let dict: [String: Any] = [
-//                "data": data
-//            ]
-//            session.sendMessage(dict, replyHandler: nil)
-//        } else {
-//            print("session is not reachable")
-//        }
-//    }
-    
-    func sendToWatch(hasuraJwt: String?, userId: Int?) {
+    func sendToWatch() {
         print("sending data to watch")
         if session.isReachable {
             print("watch reachable")
-
-            let message = ["hasuraJwt": hasuraJwt ?? "nil", "userId": (userId != nil) ? String(userId!) : "nil"]
+            let userId = Authentication.shared.hasuraJWTObject?.userId
+            let message = ["hasuraJwt": Authentication.shared.hasuraJwt ?? "nil", "userId": (userId != nil) ? String(userId!) : "nil"]
             session.sendMessage(message as [String : Any], replyHandler: nil) { (error) in
                 print(error.localizedDescription)
             }

@@ -31,6 +31,9 @@ struct ContentView: View {
             }
             .disabled(recordingState == .waitingForRecordingToStart || recordingState == .waitingForRecordingToStop)
         }
+        .onAppear{
+            phoneCommunicator.sendDataToiOS()
+        }
         .padding()
     }
     
@@ -57,6 +60,7 @@ struct ContentView: View {
                     print("recording started")
                 }
             } else {
+                phoneCommunicator.sendDataToiOS()
                 responseText = "You need to sign in on ios"
             }
         }

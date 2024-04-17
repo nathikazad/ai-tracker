@@ -66,7 +66,7 @@ class Authentication {
     
     func signInCallback() {
         Hasura.shared.setup()
-        WatchCommunicator.shared.sendToWatch(hasuraJwt: hasuraJwt, userId: hasuraJWTObject?.userId)
+        WatchCommunicator.shared.sendToWatch()
         Task {
             user = try await UserController.fetchUser()
             await UserController.ensureUserTimezone()
@@ -79,7 +79,7 @@ class Authentication {
     func signOutCallback() {
         UserDefaults.standard.removeObject(forKey: hasuraJwtKey)
         UserDefaults.standard.removeObject(forKey: appleJwtKey)
-        WatchCommunicator.shared.sendToWatch(hasuraJwt: nil, userId: nil)
+        WatchCommunicator.shared.sendToWatch()
         Hasura.shared.closeConnection()
         LocationManager.shared.stopMonitoringLocation()
     }
