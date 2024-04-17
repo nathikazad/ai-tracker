@@ -20,7 +20,6 @@ actor AudioRecorder: NSObject, ObservableObject, AVAudioRecorderDelegate, AVAudi
         recordingSession = AVAudioSession.sharedInstance()
         do {
             try recordingSession.setCategory(.playAndRecord, mode: .default)
-            try recordingSession.setActive(true)
             recordingSession.requestRecordPermission() { [unowned self] allowed in
                 DispatchQueue.main.async {
                     if allowed {
@@ -37,7 +36,12 @@ actor AudioRecorder: NSObject, ObservableObject, AVAudioRecorderDelegate, AVAudi
     
     @MainActor func startRecording() async {
         await Task {
-            await record()
+            do {
+                try await recordingSession.setActive(true, options: [])
+                await record()
+            } catch {
+              print("activate recording error")
+            }
         }.value
         return;
     }
@@ -45,6 +49,11 @@ actor AudioRecorder: NSObject, ObservableObject, AVAudioRecorderDelegate, AVAudi
     @MainActor func stopRecording() async -> URL {
         await Task {
             await stop()
+            do {
+                try await recordingSession.setActive(false, options: [])
+            } catch {
+                print("deactivate recording error")
+            }
         }.value
 
         return await getFileName()

@@ -249,6 +249,7 @@ export async function classifyText(text: string): Promise<Classification> {
             nextConditions:  [
                 { condition: "User wants to create a goal", uniqueIdentifier: Classification.Goal },
                 { condition: "User wants to do something in future", uniqueIdentifier: Classification.Todo },
+                // TODO: check for goals like I want to do something repeatedly or something specific
                 { condition: "User wants to create a reminder", uniqueIdentifier: Classification.Reminder },
                 { condition: "Something else", uniqueIdentifier: Classification.Unknown }
             ]

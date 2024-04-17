@@ -31,9 +31,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                     await Authentication.shared.checkAndReloadHasuraJwt()
                     print("calling setup from foreground observer")
                     Hasura.shared.setup()
+                    LocationManager.shared.requestLocation()
                 }
             }
-            // check if location services is necessary
+            
         }
         backgroundObserver = NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: .main) { _ in
             print("entered background")

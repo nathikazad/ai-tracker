@@ -68,13 +68,14 @@ struct SettingsView: View {
     }
     
     func changeUserId() {
+        let originalUser =  HasuraJWTObject(jwt: Authentication.shared.hasuraJwt!)
         guard var currentUserId = Authentication.shared.hasuraJWTObject?.userId else { return }
         
         switch currentUserId {
         case 1:
-            currentUserId = 3
+            currentUserId = (originalUser.userId == 4) ? 4 : 3
         case 3:
-            currentUserId = 4
+            currentUserId = (originalUser.userId == 1) ? 4 : 1
         case 4:
             currentUserId = 1
         default:

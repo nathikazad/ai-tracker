@@ -31,11 +31,10 @@
 		FE4F7BC92BA7D7FA0041CB6A /* PhoneCommunicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BC82BA7D7FA0041CB6A /* PhoneCommunicator.swift */; };
 		FE4F7BCC2BA7DBB70041CB6A /* WatchConnectivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE4F7BCB2BA7DBB60041CB6A /* WatchConnectivity.framework */; };
 		FE4F7BD22BA8FC600041CB6A /* BottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BD12BA8FC600041CB6A /* BottomBar.swift */; };
-		FE4F7BD92BA94D580041CB6A /* SpeechRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BD82BA94D580041CB6A /* SpeechRecognizer.swift */; };
-		FE4F7BDB2BA957780041CB6A /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */; };
 		FE4F7BDC2BA957780041CB6A /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */; };
 		FE5264812BA99AF700502521 /* ServerCommunicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5264802BA99AF700502521 /* ServerCommunicator.swift */; };
 		FE5264822BA99AF700502521 /* ServerCommunicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5264802BA99AF700502521 /* ServerCommunicator.swift */; };
+		FE71B3882BD07BCE008F7D1A /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */; };
 		FE8811EB2BC799BF00B112A8 /* GoalsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8811E62BC799BE00B112A8 /* GoalsController.swift */; };
 		FE8811EC2BC799BF00B112A8 /* InteractionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8811E72BC799BE00B112A8 /* InteractionsController.swift */; };
 		FE8811EF2BC799BF00B112A8 /* TodosController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8811EA2BC799BF00B112A8 /* TodosController.swift */; };
@@ -465,11 +464,11 @@
 			files = (
 				FE8965AF2BC85FE000E9D633 /* Constants.swift in Sources */,
 				FE9959542BC8B5B000F3187B /* RemindersView.swift in Sources */,
-				FE4F7BD92BA94D580041CB6A /* SpeechRecognizer.swift in Sources */,
 				FE4F7BD22BA8FC600041CB6A /* BottomBar.swift in Sources */,
 				FE4F7BA52BA7D79E0041CB6A /* ContentView.swift in Sources */,
 				FE8811EB2BC799BF00B112A8 /* GoalsController.swift in Sources */,
 				FE12C5EA2BC4B330002CDC60 /* GoalsView.swift in Sources */,
+				FE71B3882BD07BCE008F7D1A /* AudioRecorder.swift in Sources */,
 				FE129BE62BCB87B9004058EA /* Location.swift in Sources */,
 				FE4F7BB12BA7D7C80041CB6A /* WatchCommunicator.swift in Sources */,
 				FE4F7BA32BA7D79E0041CB6A /* HistoryApp.swift in Sources */,
@@ -480,7 +479,6 @@
 				FE8811EC2BC799BF00B112A8 /* InteractionsController.swift in Sources */,
 				FEB8FD1F2BAA253100EE9B68 /* Intents.swift in Sources */,
 				FE1C0EAE2BC0713B00FF56AB /* Authentication.swift in Sources */,
-				FE4F7BDB2BA957780041CB6A /* AudioRecorder.swift in Sources */,
 				FE12C5E62BC4B2A5002CDC60 /* TimelineView.swift in Sources */,
 				FE1C0EB12BC0A29300FF56AB /* Hasura.swift in Sources */,
 				FE8965AA2BC7B31D00E9D633 /* UserController.swift in Sources */,
@@ -660,7 +658,7 @@
 				CODE_SIGN_ENTITLEMENTS = History/History.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_ASSET_PATHS = "\"History/Preview Content\"";
 				DEVELOPMENT_TEAM = C22W55L7FR;
 				ENABLE_PREVIEWS = YES;
@@ -681,7 +679,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.13;
+				MARKETING_VERSION = 0.14;
 				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -704,7 +702,7 @@
 				CODE_SIGN_ENTITLEMENTS = History/History.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_ASSET_PATHS = "\"History/Preview Content\"";
 				DEVELOPMENT_TEAM = C22W55L7FR;
 				ENABLE_PREVIEWS = YES;
@@ -725,7 +723,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.13;
+				MARKETING_VERSION = 0.14;
 				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -746,7 +744,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_ASSET_PATHS = "\"MiniHistory Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = C22W55L7FR;
 				ENABLE_PREVIEWS = YES;
@@ -758,7 +756,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.13;
+				MARKETING_VERSION = 0.14;
 				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History.watchkitapp;
 				PRODUCT_NAME = "Aspire Watch";
 				SDKROOT = watchos;
@@ -777,7 +775,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_ASSET_PATHS = "\"MiniHistory Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = C22W55L7FR;
 				ENABLE_PREVIEWS = YES;
@@ -789,7 +787,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.13;
+				MARKETING_VERSION = 0.14;
 				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History.watchkitapp;
 				PRODUCT_NAME = "Aspire Watch";
 				SDKROOT = watchos;

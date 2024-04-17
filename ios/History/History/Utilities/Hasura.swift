@@ -58,9 +58,12 @@ class Hasura {
         }
     }
     
-    func sendGraphQL<T: Decodable>(query: String, responseType: T.Type) async throws -> T {
-        let jsonData = try JSONEncoder().encode(["query": query])
-        
+    func sendGraphQL<T: Decodable>(query: String, variables: [String: Any]? = nil, responseType: T.Type) async throws -> T {
+        var body: [String: Any] = ["query": query]
+        if let vars = variables {
+            body["variables"] = vars
+        }
+        let jsonData = try JSONSerialization.data(withJSONObject: body, options: [])
         let urlString = "https://\(HasuraAddress)/v1/graphql"
         guard let url = URL(string: urlString) else {
             throw URLError(.badURL)
