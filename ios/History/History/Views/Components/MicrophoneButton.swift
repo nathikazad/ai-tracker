@@ -26,7 +26,7 @@ struct MicrophoneButton: View {
                     .cornerRadius(30)
                     .shadow(radius: 4)
             }
-            .offset(y: -30)
+            .offset(y: -60)
             .padding(.bottom, -30)
             // Applying the long press gesture
             .simultaneousGesture(LongPressGesture().onEnded { _ in
