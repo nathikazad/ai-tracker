@@ -11,7 +11,8 @@ class AppState: ObservableObject {
     static let shared = AppState()
     @Published private(set) var chatViewToShow: ChatViewToShow = .none
     @Published private(set) var sheetViewToShow: SheetViewToShow = .none
-    
+    @Published private(set) var isRecording: Bool = false
+    private var audioRecorder: AudioRecorder? = nil
     
     func hideChat() {
         chatViewToShow = .none
@@ -29,7 +30,41 @@ class AppState: ObservableObject {
         sheetViewToShow = newSheetToShow
     }
     
+    func microphoneButtonClick() {
+        if isRecording == false {
+            isRecording = true
+            Task.init {
+                audioRecorder = AudioRecorder()
+                await audioRecorder!.startRecording();
+                print("recording started")
+            }
+        } else if isRecording == true {
+            isRecording = false
+            Task.init {
+                await stopRecording()
+                audioRecorder = nil
+                print("recording stopped")
+            }
+        }
+    }
     
+    private func stopRecording() async {
+        let fileUrl = await audioRecorder!.stopRecording()
+        do {
+            let data = try ServerCommunicator.uploadAudioFile(at: fileUrl, to: parseAudioEndpoint, token: Authentication.shared.hasuraJwt)
+            if let data = data, let responseText = String(data: data, encoding: .utf8)
+            {
+                DispatchQueue.main.async {
+                    print("Received text: \(responseText)")
+                }
+                
+            }
+        } catch {
+            DispatchQueue.main.async {
+                print("Some uploading error")
+            }
+        }
+    }
 }
 
 enum ChatViewToShow {
@@ -127,6 +162,7 @@ struct MainView: View {
                 }
                 MicrophoneButton()
             }
+            .edgesIgnoringSafeArea(.bottom)
         }
     }
     

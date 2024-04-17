@@ -8,17 +8,15 @@
 import SwiftUI
 
 struct MicrophoneButton: View {
-    @State private var isRecording: Bool = false
     @ObservedObject var appState = AppState.shared
-    @StateObject var audioRecorder = AudioRecorder();
     
     var body: some View {
         VStack {
             Button(action: {
-                clickButton()
+                appState.microphoneButtonClick()
                 print("Mic button tapped!")
             }) {
-                Image(systemName: isRecording ? "stop.circle.fill" : "mic.circle.fill")
+                Image(systemName: appState.isRecording ? "stop.circle.fill" : "mic.circle.fill")
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 60, height: 60)
@@ -35,41 +33,6 @@ struct MicrophoneButton: View {
                 appState.showChat(newChatViewToShow: .normal)
                 print("long press")
             })
-        }
-    }
-    
-    func clickButton() {
-        if isRecording == false {
-            Task.init {
-                await audioRecorder.startRecording();
-                print("recording started")
-                isRecording = true
-            }
-        } else if isRecording == true {
-            Task.init {
-                isRecording = false
-                await stopListening()
-                print("recording stopped")
-            }
-        }
-        
-    }
-    
-    private func stopListening() async {
-        let fileUrl = await audioRecorder.stopRecording()
-        do {
-            let data = try ServerCommunicator.uploadAudioFile(at: fileUrl, to: parseAudioEndpoint, token: Authentication.shared.hasuraJwt)
-            if let data = data, let responseText = String(data: data, encoding: .utf8)
-            {
-                DispatchQueue.main.async {
-                    print("Received text: \(responseText)")
-                }
-                
-            }
-        } catch {
-            DispatchQueue.main.async {
-                print("Some uploading error")
-            }
         }
     }
 }
