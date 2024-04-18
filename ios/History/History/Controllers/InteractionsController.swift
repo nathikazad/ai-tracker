@@ -119,7 +119,7 @@ class InteractionsController: ObservableObject {
     
     func listenToInteractions(userId: Int) {
         cancelListener()
-        print("listening for interactions")
+        // print("listening for interactions")
         let subscriptionQuery = InteractionsController.generateQuery(userId: userId, gte: currentDate, isSubscription: true)
         
         Hasura.shared.startListening(subscriptionId: subscriptionId, subscriptionQuery: subscriptionQuery, responseType: InteractionsResponseData.self) {result in

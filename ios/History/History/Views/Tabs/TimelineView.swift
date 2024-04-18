@@ -9,9 +9,6 @@ import SwiftUI
 
 // Define your custom views for each tab
 struct TimelineView: View {
-    init() {
-        print("timeline init")
-    }
     @StateObject var interactionController = InteractionsController()
     @State private var showPopupForId: Int?
     @State private var draftContent = ""
@@ -52,7 +49,6 @@ struct TimelineView: View {
                 }
             }
             .onAppear {
-                print("Timelineview has appeared, going to listen to user \(Authentication.shared.userId)")
                 if(Authentication.shared.areJwtSet) {
                     interactionController.fetchInteractions(userId: Authentication.shared.userId!)
                     interactionController.listenToInteractions(userId: Authentication.shared.userId!)

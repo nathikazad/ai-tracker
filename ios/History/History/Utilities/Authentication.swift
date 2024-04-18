@@ -15,7 +15,7 @@ class Authentication {
     private let appleJwtKey = "appleJWTKey"
     var hasuraJWTObject: HasuraJWTObject?
     var user: UserModel?
-    var isAdmin: Bool = false
+    
     
     init() {
         if(areJwtSet) {
@@ -24,6 +24,10 @@ class Authentication {
         } else {
             signOutCallback()
         }
+    }
+    
+    var isAdmin: Bool {
+        return userId == 1
     }
     
     var areJwtSet: Bool {
@@ -59,9 +63,10 @@ class Authentication {
     func checkAndReloadHasuraJwt() async {
         if(hasuraJWTObject?.isExpired ?? true){
             hasuraJwt = await fetchHasuraJwt(appleKey: appleJwt!)
-        } else {
-            print("jwt not expired")
-        }
+        } 
+        // else {
+            // print("jwt not expired")
+        // }
     }
     
     func signInCallback() {
@@ -71,9 +76,7 @@ class Authentication {
             user = try await UserController.fetchUser()
             await UserController.ensureUserTimezone()
         }
-        if(userId == 1){
-            isAdmin = true
-        }
+        LocationManager.shared.startMonitoringLocation()
     }
     
     func signOutCallback() {

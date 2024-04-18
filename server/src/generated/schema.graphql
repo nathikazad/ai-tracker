@@ -28,6 +28,17 @@ input Boolean_comparison_exp {
   _nin: [Boolean!]
 }
 
+input closest_user_location_args {
+  radius: float8
+  ref_point: String
+  user_row: users_scalar
+}
+
+input closest_user_location_users_args {
+  radius: float8
+  ref_point: String
+}
+
 """ordering argument of a cursor"""
 enum cursor_ordering {
   """ascending ordering of the cursor"""
@@ -1532,6 +1543,92 @@ input events_variance_order_by {
 
 scalar float8
 
+scalar geography
+
+input geography_cast_exp {
+  geometry: geometry_comparison_exp
+}
+
+"""
+Boolean expression to compare columns of type "geography". All fields are combined with logical 'AND'.
+"""
+input geography_comparison_exp {
+  _cast: geography_cast_exp
+  _eq: geography
+  _gt: geography
+  _gte: geography
+  _in: [geography!]
+  _is_null: Boolean
+  _lt: geography
+  _lte: geography
+  _neq: geography
+  _nin: [geography!]
+
+  """is the column within a given distance from the given geography value"""
+  _st_d_within: st_d_within_geography_input
+
+  """does the column spatially intersect the given geography value"""
+  _st_intersects: geography
+}
+
+scalar geometry
+
+input geometry_cast_exp {
+  geography: geography_comparison_exp
+}
+
+"""
+Boolean expression to compare columns of type "geometry". All fields are combined with logical 'AND'.
+"""
+input geometry_comparison_exp {
+  _cast: geometry_cast_exp
+  _eq: geometry
+  _gt: geometry
+  _gte: geometry
+  _in: [geometry!]
+  _is_null: Boolean
+  _lt: geometry
+  _lte: geometry
+  _neq: geometry
+  _nin: [geometry!]
+
+  """is the column within a given 3D distance from the given geometry value"""
+  _st_3d_d_within: st_d_within_input
+
+  """does the column spatially intersect the given geometry value in 3D"""
+  _st_3d_intersects: geometry
+
+  """does the column contain the given geometry value"""
+  _st_contains: geometry
+
+  """does the column cross the given geometry value"""
+  _st_crosses: geometry
+
+  """is the column within a given distance from the given geometry value"""
+  _st_d_within: st_d_within_input
+
+  """
+  is the column equal to given geometry value (directionality is ignored)
+  """
+  _st_equals: geometry
+
+  """does the column spatially intersect the given geometry value"""
+  _st_intersects: geometry
+
+  """
+  does the column 'spatially overlap' (intersect but not completely contain) the given geometry value
+  """
+  _st_overlaps: geometry
+
+  """
+  does the column have atleast one point in common with the given geometry value
+  """
+  _st_touches: geometry
+
+  """is the column contained in the given geometry value"""
+  _st_within: geometry
+}
+
 """
 columns and relationships of "goals"
 """
@@ -2302,6 +2399,352 @@ input jsonb_comparison_exp {
   _nin: [jsonb!]
 }
 
+"""
+columns and relationships of "locations"
+"""
+type locations {
+  id: Int!
+  location: geography!
+  user_id: Int!
+}
+
+type locations_aggregate {
+  aggregate: locations_aggregate_fields
+  nodes: [locations!]!
+}
+
+input locations_aggregate_bool_exp {
+  count: locations_aggregate_bool_exp_count
+}
+
+input locations_aggregate_bool_exp_count {
+  arguments: [locations_select_column!]
+  distinct: Boolean
+  filter: locations_bool_exp
+  predicate: Int_comparison_exp!
+}
+
+"""
+aggregate fields of "locations"
+"""
+type locations_aggregate_fields {
+  avg: locations_avg_fields
+  count(columns: [locations_select_column!], distinct: Boolean): Int!
+  max: locations_max_fields
+  min: locations_min_fields
+  stddev: locations_stddev_fields
+  stddev_pop: locations_stddev_pop_fields
+  stddev_samp: locations_stddev_samp_fields
+  sum: locations_sum_fields
+  var_pop: locations_var_pop_fields
+  var_samp: locations_var_samp_fields
+  variance: locations_variance_fields
+}
+
+"""
+order by aggregate values of table "locations"
+"""
+input locations_aggregate_order_by {
+  avg: locations_avg_order_by
+  count: order_by
+  max: locations_max_order_by
+  min: locations_min_order_by
+  stddev: locations_stddev_order_by
+  stddev_pop: locations_stddev_pop_order_by
+  stddev_samp: locations_stddev_samp_order_by
+  sum: locations_sum_order_by
+  var_pop: locations_var_pop_order_by
+  var_samp: locations_var_samp_order_by
+  variance: locations_variance_order_by
+}
+
+"""
+input type for inserting array relation for remote table "locations"
+"""
+input locations_arr_rel_insert_input {
+  data: [locations_insert_input!]!
+
+  """upsert condition"""
+  on_conflict: locations_on_conflict
+}
+
+"""aggregate avg on columns"""
+type locations_avg_fields {
+  id: Float
+  user_id: Float
+}
+
+"""
+order by avg() on columns of table "locations"
+"""
+input locations_avg_order_by {
+  id: order_by
+  user_id: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "locations". All fields are combined with a logical 'AND'.
+"""
+input locations_bool_exp {
+  _and: [locations_bool_exp!]
+  _not: locations_bool_exp
+  _or: [locations_bool_exp!]
+  id: Int_comparison_exp
+  location: geography_comparison_exp
+  user_id: Int_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "locations"
+"""
+enum locations_constraint {
+  """
+  unique or primary key constraint on columns "id"
+  """
+  locations_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "locations"
+"""
+input locations_inc_input {
+  id: Int
+  user_id: Int
+}
+
+"""
+input type for inserting data into table "locations"
+"""
+input locations_insert_input {
+  id: Int
+  location: geography
+  user_id: Int
+}
+
+"""aggregate max on columns"""
+type locations_max_fields {
+  id: Int
+  user_id: Int
+}
+
+"""
+order by max() on columns of table "locations"
+"""
+input locations_max_order_by {
+  id: order_by
+  user_id: order_by
+}
+
+"""aggregate min on columns"""
+type locations_min_fields {
+  id: Int
+  user_id: Int
+}
+
+"""
+order by min() on columns of table "locations"
+"""
+input locations_min_order_by {
+  id: order_by
+  user_id: order_by
+}
+
+"""
+response of any mutation on the table "locations"
+"""
+type locations_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [locations!]!
+}
+
+"""
+on_conflict condition type for table "locations"
+"""
+input locations_on_conflict {
+  constraint: locations_constraint!
+  update_columns: [locations_update_column!]! = []
+  where: locations_bool_exp
+}
+
+"""Ordering options when selecting data from "locations"."""
+input locations_order_by {
+  id: order_by
+  location: order_by
+  user_id: order_by
+}
+
+"""primary key columns input for table: locations"""
+input locations_pk_columns_input {
+  id: Int!
+}
+
+"""
+select columns of table "locations"
+"""
+enum locations_select_column {
+  """column name"""
+  id
+
+  """column name"""
+  location
+
+  """column name"""
+  user_id
+}
+
+"""
+input type for updating data in table "locations"
+"""
+input locations_set_input {
+  id: Int
+  location: geography
+  user_id: Int
+}
+
+"""aggregate stddev on columns"""
+type locations_stddev_fields {
+  id: Float
+  user_id: Float
+}
+
+"""
+order by stddev() on columns of table "locations"
+"""
+input locations_stddev_order_by {
+  id: order_by
+  user_id: order_by
+}
+
+"""aggregate stddev_pop on columns"""
+type locations_stddev_pop_fields {
+  id: Float
+  user_id: Float
+}
+
+"""
+order by stddev_pop() on columns of table "locations"
+"""
+input locations_stddev_pop_order_by {
+  id: order_by
+  user_id: order_by
+}
+
+"""aggregate stddev_samp on columns"""
+type locations_stddev_samp_fields {
+  id: Float
+  user_id: Float
+}
+
+"""
+order by stddev_samp() on columns of table "locations"
+"""
+input locations_stddev_samp_order_by {
+  id: order_by
+  user_id: order_by
+}
+
+"""
+Streaming cursor of the table "locations"
+"""
+input locations_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: locations_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input locations_stream_cursor_value_input {
+  id: Int
+  location: geography
+  user_id: Int
+}
+
+"""aggregate sum on columns"""
+type locations_sum_fields {
+  id: Int
+  user_id: Int
+}
+
+"""
+order by sum() on columns of table "locations"
+"""
+input locations_sum_order_by {
+  id: order_by
+  user_id: order_by
+}
+
+"""
+update columns of table "locations"
+"""
+enum locations_update_column {
+  """column name"""
+  id
+
+  """column name"""
+  location
+
+  """column name"""
+  user_id
+}
+
+input locations_updates {
+  """increments the numeric columns with given value of the filtered values"""
+  _inc: locations_inc_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: locations_set_input
+
+  """filter the rows which have to be updated"""
+  where: locations_bool_exp!
+}
+
+"""aggregate var_pop on columns"""
+type locations_var_pop_fields {
+  id: Float
+  user_id: Float
+}
+
+"""
+order by var_pop() on columns of table "locations"
+"""
+input locations_var_pop_order_by {
+  id: order_by
+  user_id: order_by
+}
+
+"""aggregate var_samp on columns"""
+type locations_var_samp_fields {
+  id: Float
+  user_id: Float
+}
+
+"""
+order by var_samp() on columns of table "locations"
+"""
+input locations_var_samp_order_by {
+  id: order_by
+  user_id: order_by
+}
+
+"""aggregate variance on columns"""
+type locations_variance_fields {
+  id: Float
+  user_id: Float
+}
+
+"""
+order by variance() on columns of table "locations"
+"""
+input locations_variance_order_by {
+  id: order_by
+  user_id: order_by
+}
+
 input match_interactions_args {
   match_threshold: float8
   query_embedding: vector
@@ -2374,6 +2817,19 @@ type mutation_root {
   delete single row from the table: "interactions"
   """
   delete_interactions_by_pk(id: Int!): interactions
+
+  """
+  delete data from the table: "locations"
+  """
+  delete_locations(
+    """filter the rows which have to be deleted"""
+    where: locations_bool_exp!
+  ): locations_mutation_response
+
+  """
+  delete single row from the table: "locations"
+  """
+  delete_locations_by_pk(id: Int!): locations
 
   """
   delete data from the table: "todos"
@@ -2510,6 +2966,28 @@ type mutation_root {
     """upsert condition"""
     on_conflict: interactions_on_conflict
   ): interactions
+
+  """
+  insert data into the table: "locations"
+  """
+  insert_locations(
+    """the rows to be inserted"""
+    objects: [locations_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: locations_on_conflict
+  ): locations_mutation_response
+
+  """
+  insert a single row into the table: "locations"
+  """
+  insert_locations_one(
+    """the row to be inserted"""
+    object: locations_insert_input!
+
+    """upsert condition"""
+    on_conflict: locations_on_conflict
+  ): locations
 
   """
   insert data into the table: "todos"
@@ -2896,6 +3374,40 @@ type mutation_root {
   ): [interactions_mutation_response]
 
   """
+  update data of the table: "locations"
+  """
+  update_locations(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: locations_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: locations_set_input
+
+    """filter the rows which have to be updated"""
+    where: locations_bool_exp!
+  ): locations_mutation_response
+
+  """
+  update single row of the table: "locations"
+  """
+  update_locations_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: locations_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: locations_set_input
+    pk_columns: locations_pk_columns_input!
+  ): locations
+
+  """
+  update multiples rows of table: "locations"
+  """
+  update_locations_many(
+    """updates to execute, in order"""
+    updates: [locations_updates!]!
+  ): [locations_mutation_response]
+
+  """
   update data of the table: "todos"
   """
   update_todos(
@@ -2986,6 +3498,56 @@ enum order_by {
 }
 
 type query_root {
+  """
+  execute function "closest_user_location" which returns "locations"
+  """
+  closest_user_location(
+    """
+    input parameters for function "closest_user_location"
+    """
+    args: closest_user_location_args!
+
+    """distinct select on columns"""
+    distinct_on: [locations_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [locations_order_by!]
+
+    """filter the rows returned"""
+    where: locations_bool_exp
+  ): [locations!]!
+
+  """
+  execute function "closest_user_location" and query aggregates on result of table type "locations"
+  """
+  closest_user_location_aggregate(
+    """
+    input parameters for function "closest_user_location_aggregate"
+    """
+    args: closest_user_location_args!
+
+    """distinct select on columns"""
+    distinct_on: [locations_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [locations_order_by!]
+
+    """filter the rows returned"""
+    where: locations_bool_exp
+  ): locations_aggregate!
+
   """
   fetch data from the table: "event_tag"
   """
@@ -3201,6 +3763,45 @@ type query_root {
   """fetch data from the table: "interactions" using primary key columns"""
   interactions_by_pk(id: Int!): interactions
 
+  """An array relationship"""
+  locations(
+    """distinct select on columns"""
+    distinct_on: [locations_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [locations_order_by!]
+
+    """filter the rows returned"""
+    where: locations_bool_exp
+  ): [locations!]!
+
+  """An aggregate relationship"""
+  locations_aggregate(
+    """distinct select on columns"""
+    distinct_on: [locations_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [locations_order_by!]
+
+    """filter the rows returned"""
+    where: locations_bool_exp
+  ): locations_aggregate!
+
+  """fetch data from the table: "locations" using primary key columns"""
+  locations_by_pk(id: Int!): locations
+
   """
   execute function "match_interactions" which returns "interactions"
   """
@@ -3338,6 +3939,17 @@ type query_root {
   users_by_pk(id: Int!): users
 }
 
+input st_d_within_geography_input {
+  distance: Float!
+  from: geography!
+  use_spheroid: Boolean = true
+}
+
+input st_d_within_input {
+  distance: Float!
+  from: geometry!
+}
+
 """
 Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'.
 """
@@ -3392,6 +4004,56 @@ input String_comparison_exp {
 }
 
 type subscription_root {
+  """
+  execute function "closest_user_location" which returns "locations"
+  """
+  closest_user_location(
+    """
+    input parameters for function "closest_user_location"
+    """
+    args: closest_user_location_args!
+
+    """distinct select on columns"""
+    distinct_on: [locations_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [locations_order_by!]
+
+    """filter the rows returned"""
+    where: locations_bool_exp
+  ): [locations!]!
+
+  """
+  execute function "closest_user_location" and query aggregates on result of table type "locations"
+  """
+  closest_user_location_aggregate(
+    """
+    input parameters for function "closest_user_location_aggregate"
+    """
+    args: closest_user_location_args!
+
+    """distinct select on columns"""
+    distinct_on: [locations_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [locations_order_by!]
+
+    """filter the rows returned"""
+    where: locations_bool_exp
+  ): locations_aggregate!
+
   """
   fetch data from the table: "event_tag"
   """
@@ -3676,6 +4338,59 @@ type subscription_root {
     """filter the rows returned"""
     where: interactions_bool_exp
   ): [interactions!]!
+
+  """An array relationship"""
+  locations(
+    """distinct select on columns"""
+    distinct_on: [locations_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [locations_order_by!]
+
+    """filter the rows returned"""
+    where: locations_bool_exp
+  ): [locations!]!
+
+  """An aggregate relationship"""
+  locations_aggregate(
+    """distinct select on columns"""
+    distinct_on: [locations_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [locations_order_by!]
+
+    """filter the rows returned"""
+    where: locations_bool_exp
+  ): locations_aggregate!
+
+  """fetch data from the table: "locations" using primary key columns"""
+  locations_by_pk(id: Int!): locations
+
+  """
+  fetch data from the table in a streaming manner: "locations"
+  """
+  locations_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [locations_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: locations_bool_exp
+  ): [locations!]!
 
   """
   execute function "match_interactions" which returns "interactions"
@@ -4241,8 +4956,69 @@ columns and relationships of "users"
 """
 type users {
   apple_id: String
+
+  """
+  A computed field, executes function "closest_user_location"
+  """
+  closest_user_location(
+    """
+    input parameters for computed field "closest_user_location" defined on table "users"
+    """
+    args: closest_user_location_users_args!
+
+    """distinct select on columns"""
+    distinct_on: [locations_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [locations_order_by!]
+
+    """filter the rows returned"""
+    where: locations_bool_exp
+  ): [locations!]
   id: Int!
   language: String!
+
+  """An array relationship"""
+  locations(
+    """distinct select on columns"""
+    distinct_on: [locations_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [locations_order_by!]
+
+    """filter the rows returned"""
+    where: locations_bool_exp
+  ): [locations!]!
+
+  """An aggregate relationship"""
+  locations_aggregate(
+    """distinct select on columns"""
+    distinct_on: [locations_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [locations_order_by!]
+
+    """filter the rows returned"""
+    where: locations_bool_exp
+  ): locations_aggregate!
   name: String!
   timezone: String
 }
@@ -4287,6 +5063,8 @@ input users_bool_exp {
   apple_id: String_comparison_exp
   id: Int_comparison_exp
   language: String_comparison_exp
+  locations: locations_bool_exp
+  locations_aggregate: locations_aggregate_bool_exp
   name: String_comparison_exp
   timezone: String_comparison_exp
 }
@@ -4315,6 +5093,7 @@ input users_insert_input {
   apple_id: String
   id: Int
   language: String
+  locations: locations_arr_rel_insert_input
   name: String
   timezone: String
 }
@@ -4372,6 +5151,7 @@ input users_order_by {
   apple_id: order_by
   id: order_by
   language: order_by
+  locations_aggregate: locations_aggregate_order_by
   name: order_by
   timezone: order_by
 }
@@ -4380,6 +5160,8 @@ input users_order_by {
 input users_pk_columns_input {
   id: Int!
 }
+
+scalar users_scalar
 
 """
 select columns of table "users"

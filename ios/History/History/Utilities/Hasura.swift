@@ -141,7 +141,7 @@ class Hasura {
             setup()
         }
         
-        print("Hasura start listening id:\(subscriptionId)")
+        // print("Hasura start listening id:\(subscriptionId)")
         
         if(subscriptions[subscriptionId] != nil) {
             print("Hasura subscription already listening")

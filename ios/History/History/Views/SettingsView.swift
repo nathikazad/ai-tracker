@@ -5,6 +5,7 @@
 //  Created by Nathik Azad on 4/9/24.
 //
 import SwiftUI
+import CoreLocation
 
 struct SettingsView: View {
     private var locationManager = LocationManager.shared
@@ -20,10 +21,12 @@ struct SettingsView: View {
         NavigationView {
             List {
                 Section(header: Text("Settings")) {
-                    //                    NavigationLink(destination: PlacesView()) {
-                    //                        Label("Places", systemImage: "mappin.and.ellipse")
-                    //                            .foregroundColor(.black)
-                    //                    }
+                    if(Authentication.shared.isAdmin){
+                        NavigationLink(destination: LocationsView(viewModel: LocationViewModel())) {
+                            Label("Places", systemImage: "mappin.and.ellipse")
+                                .foregroundColor(.black)
+                        }
+                    }
                     //                    NavigationLink(destination: Text("People View")) { // Replace with actual view when ready
                     //                        Label("People", systemImage: "person.2.fill")
                     //                            .foregroundColor(.black)
@@ -32,27 +35,27 @@ struct SettingsView: View {
                     //                        Label("Recipes", systemImage: "book.fill")
                     //                            .foregroundColor(.black)
                     //                    }
-//                    if(Authentication.shared.isAdmin){
-                        Button(action: changeUserId) {
-                            Label("Change User \(currentUserName)", systemImage: "person.2.fill")
-                                .foregroundColor(.black)
+                    //                    if(Authentication.shared.isAdmin){
+                    Button(action: changeUserId) {
+                        Label("Change User \(currentUserName)", systemImage: "person.2.fill")
+                            .foregroundColor(.black)
+                    }
+                    
+                    Toggle(isOn: $isTrackingLocation) {
+                        Label("Track Location", systemImage: "location.fill")
+                    }
+                    .foregroundColor(.black)
+                    .onChange(of: isTrackingLocation) { value in
+                        print("onChange \(value)")
+                        if value {
+                            print("change to start")
+                            locationManager.startMonitoringLocation()
+                        } else {
+                            print("change to stop")
+                            locationManager.stopMonitoringLocation()
                         }
-                        
-                        Toggle(isOn: $isTrackingLocation) {
-                            Label("Track Location", systemImage: "location.fill")
-                        }
-                        .foregroundColor(.black)
-                        .onChange(of: isTrackingLocation) { value in
-                            print("onChange \(value)")
-                            if value {
-                                print("change to start")
-                                locationManager.startMonitoringLocation()
-                            } else {
-                                print("change to stop")
-                                locationManager.stopMonitoringLocation()
-                            }
-                        }
-//                    }
+                    }
+                    //                    }
                     Button(action: {
                         Authentication.shared.signOutCallback()
                         AppState.shared.hideSheet()
@@ -63,7 +66,7 @@ struct SettingsView: View {
                     }
                 }
             }
-            .navigationTitle("Settings")
+//            .navigationTitle("Settings")
         }
     }
     

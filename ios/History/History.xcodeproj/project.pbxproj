@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		FE129BE42BCB3CFB004058EA /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE129BE32BCB3CFB004058EA /* Authentication.swift */; };
-		FE129BE62BCB87B9004058EA /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE129BE52BCB87B9004058EA /* Location.swift */; };
+		FE129BE62BCB87B9004058EA /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE129BE52BCB87B9004058EA /* LocationManager.swift */; };
 		FE12C5E62BC4B2A5002CDC60 /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12C5E52BC4B2A4002CDC60 /* TimelineView.swift */; };
 		FE12C5E82BC4B30B002CDC60 /* TodosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12C5E72BC4B30B002CDC60 /* TodosView.swift */; };
 		FE12C5EA2BC4B330002CDC60 /* GoalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12C5E92BC4B330002CDC60 /* GoalsView.swift */; };
@@ -43,6 +43,7 @@
 		FE8965B02BC8606900E9D633 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8965AE2BC85FE000E9D633 /* Constants.swift */; };
 		FE9959542BC8B5B000F3187B /* RemindersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9959532BC8B5B000F3187B /* RemindersView.swift */; };
 		FE9EAE512BC042260082DE87 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9EAE502BC042260082DE87 /* ChatView.swift */; };
+		FEA34E6D2BD0B83300CE2A12 /* LocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA34E6C2BD0B83300CE2A12 /* LocationView.swift */; };
 		FEB8FD1F2BAA253100EE9B68 /* Intents.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB8FD1E2BAA253100EE9B68 /* Intents.swift */; };
 		FEB8FD202BAA253100EE9B68 /* Intents.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB8FD1E2BAA253100EE9B68 /* Intents.swift */; };
 		FEC5386E2BBDE4E5006BDBDA /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEC5386D2BBDE4E5006BDBDA /* WidgetKit.framework */; };
@@ -98,7 +99,7 @@
 
 /* Begin PBXFileReference section */
 		FE129BE32BCB3CFB004058EA /* Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
-		FE129BE52BCB87B9004058EA /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
+		FE129BE52BCB87B9004058EA /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		FE12C5E52BC4B2A4002CDC60 /* TimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
 		FE12C5E72BC4B30B002CDC60 /* TodosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosView.swift; sourceTree = "<group>"; };
 		FE12C5E92BC4B330002CDC60 /* GoalsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsView.swift; sourceTree = "<group>"; };
@@ -134,6 +135,7 @@
 		FE8965AE2BC85FE000E9D633 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		FE9959532BC8B5B000F3187B /* RemindersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemindersView.swift; sourceTree = "<group>"; };
 		FE9EAE502BC042260082DE87 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		FEA34E6C2BD0B83300CE2A12 /* LocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationView.swift; sourceTree = "<group>"; };
 		FEB8FD1E2BAA253100EE9B68 /* Intents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intents.swift; sourceTree = "<group>"; };
 		FEC5386C2BBDE4E5006BDBDA /* ShortcutExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ShortcutExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		FEC5386D2BBDE4E5006BDBDA /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
@@ -274,6 +276,7 @@
 		FE7EF1DA2BBE0ECB00279E18 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				FEA34E6B2BD0B81900CE2A12 /* HelperViews */,
 				FE12C5ED2BC4B822002CDC60 /* Components */,
 				FE12C5E42BC4B29C002CDC60 /* Tabs */,
 				FE4F7BD12BA8FC600041CB6A /* BottomBar.swift */,
@@ -305,9 +308,17 @@
 				FEB8FD1E2BAA253100EE9B68 /* Intents.swift */,
 				FE4F7BB02BA7D7C80041CB6A /* WatchCommunicator.swift */,
 				FE1C0EB02BC0A29300FF56AB /* Hasura.swift */,
-				FE129BE52BCB87B9004058EA /* Location.swift */,
+				FE129BE52BCB87B9004058EA /* LocationManager.swift */,
 			);
 			path = Utilities;
+			sourceTree = "<group>";
+		};
+		FEA34E6B2BD0B81900CE2A12 /* HelperViews */ = {
+			isa = PBXGroup;
+			children = (
+				FEA34E6C2BD0B83300CE2A12 /* LocationView.swift */,
+			);
+			path = HelperViews;
 			sourceTree = "<group>";
 		};
 		FEC538712BBDE4E5006BDBDA /* Shortcut */ = {
@@ -469,7 +480,7 @@
 				FE8811EB2BC799BF00B112A8 /* GoalsController.swift in Sources */,
 				FE12C5EA2BC4B330002CDC60 /* GoalsView.swift in Sources */,
 				FE71B3882BD07BCE008F7D1A /* AudioRecorder.swift in Sources */,
-				FE129BE62BCB87B9004058EA /* Location.swift in Sources */,
+				FE129BE62BCB87B9004058EA /* LocationManager.swift in Sources */,
 				FE4F7BB12BA7D7C80041CB6A /* WatchCommunicator.swift in Sources */,
 				FE4F7BA32BA7D79E0041CB6A /* HistoryApp.swift in Sources */,
 				FE20CA262BC5E4CD00863604 /* SettingsView.swift in Sources */,
@@ -484,6 +495,7 @@
 				FE8965AA2BC7B31D00E9D633 /* UserController.swift in Sources */,
 				FE5264812BA99AF700502521 /* ServerCommunicator.swift in Sources */,
 				FE8811EF2BC799BF00B112A8 /* TodosController.swift in Sources */,
+				FEA34E6D2BD0B83300CE2A12 /* LocationView.swift in Sources */,
 				FE3E9F662BC8ACAD008BD120 /* NavigationTitle.swift in Sources */,
 				FE12C5E82BC4B30B002CDC60 /* TodosView.swift in Sources */,
 			);

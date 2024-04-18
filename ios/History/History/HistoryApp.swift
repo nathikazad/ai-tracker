@@ -29,9 +29,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             if(Authentication.shared.areJwtSet) {
                 Task {
                     await Authentication.shared.checkAndReloadHasuraJwt()
-                    print("calling setup from foreground observer")
+                    // print("calling setup from foreground observer")
                     Hasura.shared.setup()
-                    LocationManager.shared.requestLocation()
                 }
             }
             
