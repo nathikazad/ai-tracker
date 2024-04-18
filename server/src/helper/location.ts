@@ -80,6 +80,8 @@ export async function startMovementEvent(userId: number, movementRequest: StartM
     if (resp2.events.length > 0) {
         let stayEvent = resp2.events[0]
         updateEvent(stayEvent.id, startedTime, {})
+        let interaction = `Left ${stayEvent.metadata.name ? stayEvent.metadata.name : "location"}`
+        insertInteraction(userId, interaction, "event", movementRequest as Record<string, any>)
     } else {    
         console.log("No recent stay event found. Creating a new one.")
         // TODO: Insert a new stay event
@@ -139,7 +141,7 @@ async function getIncompleteEvents(userId: number, event_type: string, date: Dat
     });
 }
 
-function insertStay(userId: number, locationId: number, startTime: Date) {
+function insertStay(userId: number, locationId: number, startTime: Date, locationName?: string) {
     let chain = getHasura();
     chain.mutation({
         insert_events: [{
@@ -156,7 +158,8 @@ function insertStay(userId: number, locationId: number, startTime: Date) {
         }]
     }, {
         "metadata": {
-            location_id: locationId
+            location_id: locationId,
+            location_name: locationName
         }
 
     })
@@ -206,6 +209,7 @@ async function finishCommute(userId: number, locations: Location[]) {
     const textPolyline = locations.map(loc => `${loc.lat},${loc.lon}`).join('|');
     let endTime = new Date(Date.parse(locations[locations.length - 1].timestamp))
     let commuteEvents = await getIncompleteEvents(userId, "commute", endTime, 8)
+    let timeDiff
     if (commuteEvents.events?.length == 0) {
         console.log("No recent commute event found. Creating a new one.")
         let startTime = new Date(Date.parse(locations[0].timestamp))
@@ -216,13 +220,16 @@ async function finishCommute(userId: number, locations: Location[]) {
         if (calculateDistance(locations[0], commuteEvent.metadata.start_location) < 0.5) {
             console.log("Commute event found for the same location. Updating the end time and polyline.")
             updateEvent(commuteEvent.id, endTime, { polyline: encodedPolyline, locations: textPolyline });
+            let startTime = new Date(Date.parse(commuteEvent.start_time))
+            timeDiff = endTime.getTime() - startTime.getTime()
         } else {
             console.log("Commute event found but for a different location. Creating a new one.")
             let startTime = new Date(Date.parse(locations[0].timestamp))
             insertNewCommute(userId, startTime, undefined, locations[0]);
         }
-
     }
+    let timeDiffText = timeDiff ? `Time taken: ${timeDiff / 1000} seconds` : ""
+    insertInteraction(userId, `Finished Commute distance distance:${calculateTotalDistance(locations)} ${timeDiffText}`, "event")
 }
 
 function insertNewCommute(userId: number, startTime?: Date, endTime?: Date, startLocation?: Location, locations?: Location[]) {

@@ -7,12 +7,15 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     let locationManager = CLLocationManager()
     
     private let locationUpdateDistanceFilter: CLLocationDistance = 40 // meters
-    private let movementDistanceThreshold: CLLocationDistance = 200 // meters
-    private let movementCheckInterval: TimeInterval = 300 // seconds
+    private let movementDistanceThreshold: CLLocationDistance = 150 // meters
+    private let timeToConsiderStationary: TimeInterval = 300 // seconds
     
-    var movementLocations: [(location: CLLocation, time: Date)] = []
+    var movementLocations: [CLLocation] = []
+    var rejectedLocations: [CLLocation] = []
     var lastStationaryLocation: CLLocation?
     var movementCheckTimer: Timer?
+    var waitingForImmediateLocation = false
+    
     
     enum UserState {
         case stationary
@@ -24,7 +27,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     
     override init() {
         super.init()
-        print("location init")
+        print("LocationManager: init")
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
         locationManager.distanceFilter = locationUpdateDistanceFilter
@@ -34,15 +37,14 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     }
     
     private func initializeTrackingState() {
-        print("initalize tracking")
         let status = locationManager.authorizationStatus
         switch status {
         case .authorizedAlways, .authorizedWhenInUse:
-            print("initalize tracking true")
+            print("LocationManager: initalize tracking: true")
             isTrackingLocation = true
             locationManager.startUpdatingLocation()
         default:
-            print("initalize tracking false")
+            print("LocationManager: initalize tracking: false")
             isTrackingLocation = false
         }
     }
@@ -56,7 +58,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     
     func startMonitoringLocation() {
         print("start monitoring")
-        DispatchQueue.main.async {
+        Task {
             if CLLocationManager.locationServicesEnabled() {
                 self.locationManager.requestAlwaysAuthorization()
             }
@@ -74,10 +76,8 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     private func checkLocationAuthorization(manager: CLLocationManager) {
         switch manager.authorizationStatus {
         case .authorizedWhenInUse, .authorizedAlways:
-            if CLLocationManager.locationServicesEnabled() {
-                manager.startUpdatingLocation()
-                isTrackingLocation = true
-            }
+            manager.startUpdatingLocation()
+            isTrackingLocation = true
         case .notDetermined, .restricted, .denied:
             print("Location authorization denied or restricted.")
             isTrackingLocation = false
@@ -87,67 +87,6 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         }
     }
     
-    func checkMovement(_ location: CLLocation) {
-        if(!movementLocations.isEmpty) {
-            print("Distance since last movement \(location.distance(from: movementLocations.last!.location))")
-        }
-        
-        if movementLocations.isEmpty {
-            print("Appending location because empty")
-            movementLocations.append((location: location, time: Date()))
-        } else if (location.distance(from: movementLocations.last!.location) > movementDistanceThreshold + location.horizontalAccuracy + movementLocations.last!.location.horizontalAccuracy) {
-            print("Appending location because past threshold")
-            movementLocations.append((location: location, time: Date()))
-        }
-        
-        
-        let timeSinceLastUpdate = Date().timeIntervalSince(movementLocations.last!.time)
-        if timeSinceLastUpdate > movementCheckInterval {
-            print("stopped moving because user hasn't moved far in \(movementCheckInterval) seconds")
-            stoppedMoving()
-        } else {
-            let remainingTimeInterval = movementCheckInterval - timeSinceLastUpdate
-            print("starting timer for remaining \(remainingTimeInterval) seconds in case another location update doesn't come due to user being in same location")
-            movementCheckTimer?.invalidate()  // Ensure no previous timer is running
-            movementCheckTimer = Timer.scheduledTimer(timeInterval: remainingTimeInterval, target: self, selector: #selector(requestLocation), userInfo: nil, repeats: false)
-        }
-    }
-    
-    func updateLocation(_ location: CLLocation) {
-        print("\(currentState), New location: \(location.coordinate.latitude), \(location.coordinate.longitude)")
-        if(lastStationaryLocation == nil) {
-            lastStationaryLocation = location
-        }
-        
-        movementCheckTimer?.invalidate()
-        switch currentState {
-        case .moving:
-            checkMovement(location)
-        case .stationary:
-            if let lastStationaryLocation = lastStationaryLocation {
-                let distance = location.distance(from: lastStationaryLocation)
-                print("Distance from last stationary location: \(distance)")
-                if distance > movementDistanceThreshold + location.horizontalAccuracy + lastStationaryLocation.horizontalAccuracy {
-                    startedMoving(debugInfo: [
-                        "distanceChange": distance,
-                        "threshold": movementDistanceThreshold,
-                        "oldLocation": [
-                            "lat": lastStationaryLocation.coordinate.latitude,
-                            "lng": lastStationaryLocation.coordinate.longitude,
-                            "accuracy": lastStationaryLocation.horizontalAccuracy
-                        ],
-                        "newLocation": [
-                            "lat": location.coordinate.latitude,
-                            "lng": location.coordinate.longitude,
-                            "accuracy": location.horizontalAccuracy
-                        ],
-                    ])
-                } else {
-                    print("Not enough distance to consider moving")
-                }
-            }
-        }
-    }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Location Manager Error: \(error)")
@@ -166,59 +105,135 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        print("LocationManager: LocationManager: receive new location")
         guard let location = locations.last else { return }
-        updateLocation(location)
+        if(waitingForImmediateLocation) {
+            print("LocationManager: LocationManager: Immediate location")
+            stoppedMoving(previousLocationTime: location.timestamp)
+            waitingForImmediateLocation = false
+        } else {
+            print("LocationManager: LocationManager: Regular OS location")
+            updateLocation(location)
+        }
     }
     
-    func startedMoving(debugInfo: [String: Any] = [:]) {
-        print("User started moving.")
+    func updateLocation(_ location: CLLocation) {
+        print("LocationManager: UpdateLocation: \(currentState), New location: \(location.coordinate.latitude), \(location.coordinate.longitude)")
+        if(lastStationaryLocation == nil) {
+            lastStationaryLocation = location
+        }
+        
+        movementCheckTimer?.invalidate()
+        switch currentState {
+        case .moving:
+            checkMovement(location)
+        case .stationary:
+            if let lastStationaryLocation = lastStationaryLocation {
+                let distance = location.distance(from: lastStationaryLocation)
+                print("LocationManager: UpdateLocation: Distance from last stationary location: \(distance)")
+                if distance > movementDistanceThreshold + location.horizontalAccuracy + lastStationaryLocation.horizontalAccuracy {
+                    startedMoving(distance: distance, lastLocation: lastStationaryLocation, newLocation: location )
+                } else {
+                    rejectedLocations.append(location)
+                    print("LocationManager: UpdateLocation: Not enough distance to consider moving")
+                }
+            }
+        }
+    }
+    
+    func checkMovement(_ location: CLLocation) {
+        print("LocationManager: Check Movement")
+        if(!movementLocations.isEmpty) {
+            print("LocationManager: Check Movement: Distance since last movement \(location.distance(from: movementLocations.last!))")
+            print("LocationManager: Check Movement: Distance since first movement \(location.distance(from: movementLocations.first!))")
+        }
+        movementCheckTimer?.invalidate()
+        var timeToCheckForNoMovement = timeToConsiderStationary
+        if movementLocations.isEmpty {
+            print("LocationManager: Check Movement: First movement check")
+            movementLocations.append(location)
+        } else if (location.distance(from: movementLocations.last!) > movementDistanceThreshold + location.horizontalAccuracy + movementLocations.last!.horizontalAccuracy) {
+            print("LocationManager: Check Movement: Appending location because past threshold")
+            movementLocations.append(location)
+        } else {
+            print("LocationManager: Check Movement: Did not append location because below threshold")
+            print("LocationManager: Check Movement: Checking if elapsed time since last movement is greater than timeToConsiderStationary")
+            // you got a new location but it wasn't above movement threshold
+            // then you check if elapsed time was greated than timeToConsiderStationary
+            // if yes then you call stop moving
+            // otherwise you start the timer for a reduced time
+            let elapsedTime = Date().timeIntervalSince(location.timestamp)
+            if elapsedTime > timeToConsiderStationary {
+                print("LocationManager: Check Movement: Stopped moving because the user hasn't moved far in \(timeToConsiderStationary) seconds")
+                stoppedMoving(previousLocationTime: location.timestamp)
+                return;
+            } else {
+                print("LocationManager: Check Movement: Not greater than stationary so going to reduce the timer time")
+                timeToCheckForNoMovement = timeToConsiderStationary - elapsedTime
+            }
+        }
+        
+        print("LocationManager: Check Movement: Starting timer for \(timeToConsiderStationary) seconds in case another location update doesn't come due to the user being in the same location")
+        movementCheckTimer = Timer.scheduledTimer(timeInterval: timeToConsiderStationary, target: self, selector: #selector(requestLocation), userInfo: nil, repeats: false)
+    }
+    
+    @objc private func requestLocation() {
+        lastStationaryLocation = movementLocations.last!
+        print("LocationManager: RequestLocation")
+        locationManager.stopUpdatingLocation()
+        locationManager.distanceFilter = kCLDistanceFilterNone
+        locationManager.startUpdatingLocation()
+        waitingForImmediateLocation = true
+    }
+    
+    
+    
+    func startedMoving(distance: Double, lastLocation: CLLocation, newLocation: CLLocation) {
+        print("LocationManager: StartedMoving")
         currentState = .moving
-        notifyServer(debugInfo: debugInfo)
+        sendToServer(body: [
+            "eventType": "startedMoving",
+            "distanceChange": distance,
+            "threshold": movementDistanceThreshold,
+            "oldLocation": lastLocation.toJSON(),
+            "newLocation": newLocation.toJSON()
+        ])
         movementLocations = []
     }
     
-    @objc func requestLocation() {
-        if(isTrackingLocation == true) {
-            locationManager.requestLocation()
-        }
-    }
+
     
-    func stoppedMoving() {
-        print("User has stopped moving for more than \(movementCheckInterval) seconds.")
+    func stoppedMoving(previousLocationTime: Date) {
+        print("LocationManager: StoppedMoving: User has stopped moving for more than \(timeToConsiderStationary) seconds.")
         currentState = .stationary
-        notifyServer(debugInfo: [
+        sendToServer(body: [
+            "eventType": "stoppedMoving",
+            "locations": movementLocations.map {
+                $0.toJSON()
+            },
             "numberOfPoints": movementLocations.count,
-            "timeSinceLastMovement": Date().timeIntervalSince(movementLocations.last!.time)
+            "rejectedLocations": rejectedLocations.map {
+                $0.toJSON()
+            },
+            "rejectedNumberOfPoints": rejectedLocations.count,
+            "timeSinceLastMovement": Date().timeIntervalSince(previousLocationTime),
+            "timeStopped": HasuraUtil.dateToUTCString(date:previousLocationTime)
         ])
         
-        // TODO: get current location instead of last location
-        lastStationaryLocation = movementLocations.last!.location
+        rejectedLocations = []
+        
+        locationManager.stopUpdatingLocation()
+        locationManager.distanceFilter = locationUpdateDistanceFilter
+        locationManager.startUpdatingLocation()
     }
     
     
-    func notifyServer(debugInfo: [String: Any] = [:]) {
-        let locationsData: [[String: Double]]
-        if currentState == .stationary {
-            locationsData = movementLocations.map {
-                ["lat": $0.location.coordinate.latitude, "lon": $0.location.coordinate.longitude]
-            }
-        } else {
-            if let firstLocation = movementLocations.last?.location {
-                locationsData = [["lat": firstLocation.coordinate.latitude, "lon": firstLocation.coordinate.longitude]]
-            } else {
-                locationsData = []
-            }
-        }
-        sendToServer(eventName: currentState == .stationary ? "stoppedMoving" : "startedMoving", locationsData: locationsData, debugInfo: debugInfo)
-        print("Notifying server...")
-    }
-    
-    private func sendToServer(eventName: String, locationsData: [[String: Double]], debugInfo: [String: Any] = [:]) {
-        var body: [String: Any] = ["eventName": eventName, "locations": locationsData, "debugInfo": debugInfo]
-        let bodyCopy = body // Make an immutable copy for the send to server task
+    private func sendToServer(body: [String: Any] = [:]) {
+        print("LocationManager: SendToServer")
+        print(body)
         Task {
             do {
-                guard let data = try await ServerCommunicator.sendPostRequest(to: updateMovementEndpoint, body: bodyCopy, token: Authentication.shared.hasuraJwt) else {
+                guard let data = try await ServerCommunicator.sendPostRequest(to: updateMovementEndpoint, body: body, token: Authentication.shared.hasuraJwt) else {
                     print("Failed to receive data or no data returned")
                     return
                 }
@@ -233,5 +248,17 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
                 print("Error sending data to server or parsing server response: \(error.localizedDescription)")
             }
         }
+    }
+}
+
+
+extension CLLocation {
+    func toJSON() -> [String: Any] {
+        return [
+            "lat": self.coordinate.latitude,
+            "lon": self.coordinate.longitude,
+            "accuracy": self.horizontalAccuracy,
+            "timestamp": HasuraUtil.dateToUTCString(date: self.timestamp)
+        ]
     }
 }

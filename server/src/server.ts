@@ -62,6 +62,7 @@ app.post('/parseUserRequestFromText', async (req: Request, res: Response) => {
 });
 
 app.post('/updateMovement', async (req: Request, res: Response) => {
+    
     try {
         const userId = authorize(req); 
         try {

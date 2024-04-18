@@ -21,9 +21,9 @@ class LocationViewModel: ObservableObject {
     
     init() {
         if(locationManager.currentState == .stationary) {
-            self.locations = locationManager.rejectedLocations.map { IdentifiableLocation(location: $0.location) }
+            self.locations = locationManager.rejectedLocations.map { IdentifiableLocation(location: $0) }
         } else {
-            self.locations = locationManager.movementLocations.map { IdentifiableLocation(location: $0.location) }
+            self.locations = locationManager.movementLocations.map { IdentifiableLocation(location: $0) }
         }
         if !locations.isEmpty {
             let lats = locations.map { $0.location.coordinate.latitude }
