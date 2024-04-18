@@ -7,29 +7,52 @@
 
 import SwiftUI
 
-enum RecordingState {
-    case ready
-    case waitingForRecordingToStart
-    case recording
-    case waitingForRecordingToStop
+class AppState: ObservableObject, MicrophoneDelegate {
+    @Published private(set) var isRecording: Bool = false
+    @Published var isProcessingRecording: Bool = false
+    var microphone = Microphone()
+
+    init() {
+        microphone.delegate = self
+    }
+
+    func didStartRecording() {
+        print("ViewController is aware: Recording has started")
+        isRecording = true
+        isProcessingRecording = false
+    }
+
+    func didStopRecording(response: String) {
+        print("ViewController is aware: Recording has stopped with response \(response)")
+        isRecording = false
+        isProcessingRecording = false
+    }
+    
+    func didStartProcessingRecording() {
+        isProcessingRecording = true
+    }
+    
+    func microphoneButtonClick() {
+        microphone.microphoneButtonClick()
+    }
 }
 
 struct ContentView: View {
     @StateObject var phoneCommunicator = PhoneCommunicator()
-    @State var recordingState: RecordingState = .ready
+    @ObservedObject var appState = AppState()
     @State private var responseText: String?
-    @StateObject var audioRecorder = AudioRecorder();
+
     var body: some View {
         VStack {
             if let responseText = responseText {
                 Text(responseText).padding()
             }
-            Button(action: clickButton) {
-                Image(systemName: systemImageNameForRecordingState())
+            Button(action: appState.microphoneButtonClick) {
+                Image(systemName: systemImageNameForRecordingState)
                     .font(.largeTitle)
                     .padding()
             }
-            .disabled(recordingState == .waitingForRecordingToStart || recordingState == .waitingForRecordingToStop)
+            .disabled(appState.isProcessingRecording)
         }
         .onAppear{
             phoneCommunicator.sendDataToiOS()
@@ -37,91 +60,18 @@ struct ContentView: View {
         .padding()
     }
     
-    func clickButton() {
-        print("current state \(recordingState)")
-        if recordingState == .recording {
-            DispatchQueue.main.async {
-                self.recordingState = .waitingForRecordingToStop
-            }
-            print("waitingForRecordingToStop")
-            Task.init {
-                await stopListening()
-                print("recording stopped")
-
-            }
-        } else if recordingState == .ready {
-            if(Authentication.shared.hasuraJwt != nil) {
-                DispatchQueue.main.async {
-                    self.recordingState = .waitingForRecordingToStart
-                }
-                print("waitingForRecordingToStart")
-                Task.init {
-                    await startListening()
-                    print("recording started")
-                }
-            } else {
-                phoneCommunicator.sendDataToiOS()
-                responseText = "You need to sign in on ios"
-            }
-        }
-    }
-    
-    
-    private func systemImageNameForRecordingState() -> String {
-            switch recordingState {
-            case .ready:
-                    return "mic.fill"
-            case .recording:
-                    return "stop.fill"
-            case .waitingForRecordingToStart:
-                return "heart.fill"
-            case .waitingForRecordingToStop:
-                return "heart.fill"
-            }
-        }
-    
 
     
-    private func startListening() async {
-        print("start listenting")
-        responseText = nil
-        
-        await audioRecorder.startRecording();
-        DispatchQueue.main.async {
-            self.recordingState = .recording
-        }
-    }
     
-    private func stopListening() async {
-        let fileUrl = await audioRecorder.stopRecording()
-        do {
-            // get token from received end point
-            let data = try ServerCommunicator.uploadAudioFile(at: fileUrl, to: parseAudioEndpoint, token: Authentication.shared.hasuraJwt)
-            if let data = data {
-                let decoder = JSONDecoder()
-                do {
-                    struct Response: Codable {
-                        var status: String
-                        var text: String
-                    }
-                    let jsonResponse = try decoder.decode(Response.self, from: data)
-                    DispatchQueue.main.async {
-                        self.responseText = jsonResponse.text
-                        self.recordingState = .ready
-                        print("Received text: \(responseText)")
-                    }
-                    
-                }
-            }
-        } catch {
-            DispatchQueue.main.async {
-                self.responseText = "Some uploading error"
-                self.recordingState = .ready
-            }
-            print("Some uploading error")
+    var systemImageNameForRecordingState: String {
+        if appState.isProcessingRecording {
+            return "heart.fill"
+        } else if appState.isRecording {
+            return "stop.fill"
+        } else {
+            return "mic.fill"
         }
     }
-        
 }
 
 #Preview {

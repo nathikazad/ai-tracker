@@ -9,6 +9,81 @@ import Foundation
 import AVFoundation
 import SwiftUI
 
+
+protocol MicrophoneDelegate: AnyObject {
+    func didStartRecording()
+    func didStopRecording(response: String)
+    func didStartProcessingRecording()
+}
+
+class Microphone {
+    var audioRecorder: AudioRecorder?
+    var recordingTimer: Timer?
+    var isRecording = false
+    
+    weak var delegate: MicrophoneDelegate?
+    
+    func microphoneButtonClick() {
+        DispatchQueue.main.async {
+            self.delegate?.didStartProcessingRecording()
+        }
+        recordingTimer?.invalidate()
+        recordingTimer = nil
+        if !isRecording {
+            Task.init {
+                self.audioRecorder = AudioRecorder()
+                await self.audioRecorder!.startRecording()
+                isRecording = true
+                DispatchQueue.main.async {
+                    self.delegate?.didStartRecording()
+                }
+                print("Recording started")
+            }
+            recordingTimer = Timer.scheduledTimer(withTimeInterval: microphoneTimeout, repeats: false) { [weak self] _ in
+                self?.microphoneButtonClick()
+                print("Recording timed out")
+            }
+        } else {
+            isRecording = false
+            Task.init {
+                let response = await self.stopRecording()
+                DispatchQueue.main.async {
+                    self.delegate?.didStopRecording(response: response)
+                }
+                self.audioRecorder = nil
+                print("Recording stopped")
+            }
+        }
+    }
+    
+    private func stopRecording() async -> String{
+        guard let recorder = audioRecorder else { return "Audio recorder not initialized"}
+        let fileUrl = await recorder.stopRecording()
+        do {
+            let data = try ServerCommunicator.uploadAudioFile(at: fileUrl, to: parseAudioEndpoint, token: Authentication.shared.hasuraJwt!)
+            if let data = data, let responseText = String(data: data, encoding: .utf8) {
+                let decoder = JSONDecoder()
+                do {
+                    struct Response: Codable {
+                        var status: String
+                        var text: String
+                    }
+                    let jsonResponse = try decoder.decode(Response.self, from: data)
+                    return jsonResponse.text
+                    
+                }
+            } else {
+                print("JSON decodong error")
+                return "JSON decoding error"
+            }
+        } catch {
+            print("Some uploading error")
+            return "Some uploading error"
+        }
+    }
+}
+
+
 /// A helper for transcribing speech to text using SFSpeechRecognizer and AVAudioEngine.
 actor AudioRecorder: NSObject, ObservableObject, AVAudioRecorderDelegate, AVAudioPlayerDelegate {
     var audioRecorder: AVAudioRecorder!
@@ -24,12 +99,12 @@ actor AudioRecorder: NSObject, ObservableObject, AVAudioRecorderDelegate, AVAudi
                 DispatchQueue.main.async {
                     if allowed {
                     } else {
-//                        throw AVError(AVError.applicationIsNotAuthorized)
+                        //                        throw AVError(AVError.applicationIsNotAuthorized)
                     }
                 }
             }
         } catch {
-//            throw AVError(AVError.applicationIsNotAuthorized)
+            //            throw AVError(AVError.applicationIsNotAuthorized)
             // failed to record
         }
     }
@@ -40,7 +115,7 @@ actor AudioRecorder: NSObject, ObservableObject, AVAudioRecorderDelegate, AVAudi
                 try await recordingSession.setActive(true, options: [])
                 await record()
             } catch {
-              print("activate recording error")
+                print("activate recording error")
             }
         }.value
         return;
@@ -55,13 +130,13 @@ actor AudioRecorder: NSObject, ObservableObject, AVAudioRecorderDelegate, AVAudi
                 print("deactivate recording error")
             }
         }.value
-
+        
         return await getFileName()
     }
     
     private func record() {
         let audioFilename = getFileName()
-                
+        
         let settings = [
             AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
             AVSampleRateKey: 12000,
@@ -83,7 +158,7 @@ actor AudioRecorder: NSObject, ObservableObject, AVAudioRecorderDelegate, AVAudi
     
     private func getFileName() -> URL {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-
+        
         return paths[0].appendingPathComponent("recording.m4a")
     }
     
@@ -91,7 +166,7 @@ actor AudioRecorder: NSObject, ObservableObject, AVAudioRecorderDelegate, AVAudi
         audioRecorder?.stop()
         audioRecorder = nil
         isRecording = false;
-//        playRecording()
+        //        playRecording()
     }
     
     private func playRecording() {
