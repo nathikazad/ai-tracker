@@ -7,7 +7,7 @@ import { convertAudioToText } from './helper/audio';
 import { authorize, convertAppleJWTtoHasuraJWT } from './resources/authorization';
 import { parseUserRequest } from './resources/logic';
 import { getUserLanguage } from './resources/user';
-// import { updateMovement } from './helper/location';
+import { processMovement } from './helper/location';
 const app: Express = express();
 
 app.use(express.static(path.join(__dirname, '../public')));
@@ -67,7 +67,7 @@ app.post('/updateMovement', async (req: Request, res: Response) => {
         try {
             console.log("🏃🏽🏃🏽🏃🏽🏃🏽🏃🏽🏃🏽🏃🏽 ", userId)
             console.log(req.body)
-            // updateMovement(req.body, userId); 
+            processMovement(userId, req.body); 
             console.log("success")
             res.status(200).json({
                 status: "success",

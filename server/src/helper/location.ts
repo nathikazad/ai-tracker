@@ -226,8 +226,8 @@ async function finishCommute(userId: number, locations: Location[]) {
 }
 
 function insertNewCommute(userId: number, startTime?: Date, endTime?: Date, startLocation?: Location, locations?: Location[]) {
-    let encodedPolyline = null
-    let textPolyline = null
+    let encodedPolyline: String | null = null
+    let textPolyline: String | null = null
     if (locations) {
         if(calculateTotalDistance(locations) < 0.5) {
             console.log("Commute distance is less than 0.5 km. Not creating a new event.")
