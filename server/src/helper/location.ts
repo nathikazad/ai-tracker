@@ -206,7 +206,7 @@ async function startCommute(userId: number, startLocation: Location, startTime: 
 }
 async function finishCommute(userId: number, locations: Location[]) {
     const encodedPolyline = polyline.encode(locations.map(loc => [loc.lat, loc.lon]))
-    const textPolyline = locations.map(loc => `${loc.lat},${loc.lon}`).join('|');
+    const textPolyline = locations.map(loc => `${loc.lat.toFixed(0)},${loc.lon.toFixed(0)}`).join('|');
     let endTime = new Date(Date.parse(locations[locations.length - 1].timestamp))
     let commuteEvents = await getIncompleteEvents(userId, "commute", endTime, 8)
     let timeDiff
@@ -230,9 +230,17 @@ async function finishCommute(userId: number, locations: Location[]) {
     }
     let totalDistance = calculateTotalDistance(locations)
     if(totalDistance > 0.5) {
-        let timeDiffText = timeDiff ? `Time taken: ${timeDiff / 1000} seconds` : ""
-        insertInteraction(userId, `Finished Commute distance distance:${totalDistance} ${timeDiffText}`, "event")
+        let timeDiffText = timeDiff ? `Time taken: ${secondsToMMSS(timeDiff)}` : ""
+        insertInteraction(userId, `Finished Commute. ${totalDistance.toFixed(0)}km ${timeDiffText}`, "event")
     }
+}
+
+function secondsToMMSS(seconds: number): string {
+    const minutes: number = Math.floor(seconds / 60000);
+    const remainingSeconds: number = seconds % 60;
+    const formattedMinutes: string = String(minutes).padStart(2, '0');
+    const formattedSeconds: string = String(remainingSeconds).padStart(2, '0');
+    return `${formattedMinutes}:${formattedSeconds}`;
 }
 
 function insertNewCommute(userId: number, startTime?: Date, endTime?: Date, startLocation?: Location, locations?: Location[]) {
