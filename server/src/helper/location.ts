@@ -60,12 +60,12 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
         } else {
             console.log("but it exists but for a different location. Creating a new stay event for this location.")
             insertStay(userId, dbLocation.id, stoppedTime, dbLocation.name)
-            finishCommute(userId, movementRequest.locations!)
+            await finishCommute(userId, movementRequest.locations!)
         }
     } else {
         console.log("No stay event found for this user. Creating a new one.");
         insertStay(userId, resp.users_by_pk!.closest_user_location![0].id, stoppedTime, dbLocation.name)
-        finishCommute(userId, movementRequest.locations!)
+        await finishCommute(userId, movementRequest.locations!)
     }
 
     console.log("Interaction: ", interaction);
@@ -231,7 +231,7 @@ async function finishCommute(userId: number, locations: Location[]) {
     let totalDistance = calculateTotalDistance(locations)
     if(totalDistance > 0.5) {
         let timeDiffText = timeDiff ? `Time taken: ${secondsToMMSS(timeDiff)}` : ""
-        insertInteraction(userId, `Finished Commute. ${totalDistance.toFixed(0)}km ${timeDiffText}`, "event")
+        await insertInteraction(userId, `Finished Commute. ${totalDistance.toFixed(0)}km ${timeDiffText}`, "event")
     }
 }
 
