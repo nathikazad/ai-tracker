@@ -757,6 +757,7 @@ type events {
 
   """seconds"""
   cost_time: Int
+  end_time: timestamp
 
   """An array relationship"""
   event_tags(
@@ -815,8 +816,8 @@ type events {
   """An object relationship"""
   parent: events
   parent_id: Int
+  start_time: timestamp
   status: String
-  time: timestamp
 
   """An object relationship"""
   user: users!
@@ -933,6 +934,7 @@ input events_bool_exp {
   children_aggregate: events_aggregate_bool_exp
   cost_money: Int_comparison_exp
   cost_time: Int_comparison_exp
+  end_time: timestamp_comparison_exp
   event_tags: event_tag_bool_exp
   event_tags_aggregate: event_tag_aggregate_bool_exp
   event_type: String_comparison_exp
@@ -945,8 +947,8 @@ input events_bool_exp {
   metadata: jsonb_comparison_exp
   parent: events_bool_exp
   parent_id: Int_comparison_exp
+  start_time: timestamp_comparison_exp
   status: String_comparison_exp
-  time: timestamp_comparison_exp
   user: users_bool_exp
   user_id: Int_comparison_exp
 }
@@ -1013,6 +1015,7 @@ input events_insert_input {
 
   """seconds"""
   cost_time: Int
+  end_time: timestamp
   event_tags: event_tag_arr_rel_insert_input
   event_type: String
   event_type_object: event_types_obj_rel_insert_input
@@ -1024,8 +1027,8 @@ input events_insert_input {
   metadata: jsonb
   parent: events_obj_rel_insert_input
   parent_id: Int
+  start_time: timestamp
   status: String
-  time: timestamp
   user: users_obj_rel_insert_input
   user_id: Int
 }
@@ -1037,13 +1040,14 @@ type events_max_fields {
 
   """seconds"""
   cost_time: Int
+  end_time: timestamp
   event_type: String
   goal_id: Int
   id: Int
   interaction_id: Int
   parent_id: Int
+  start_time: timestamp
   status: String
-  time: timestamp
   user_id: Int
 }
 
@@ -1056,13 +1060,14 @@ input events_max_order_by {
 
   """seconds"""
   cost_time: order_by
+  end_time: order_by
   event_type: order_by
   goal_id: order_by
   id: order_by
   interaction_id: order_by
   parent_id: order_by
+  start_time: order_by
   status: order_by
-  time: order_by
   user_id: order_by
 }
 
@@ -1073,13 +1078,14 @@ type events_min_fields {
 
   """seconds"""
   cost_time: Int
+  end_time: timestamp
   event_type: String
   goal_id: Int
   id: Int
   interaction_id: Int
   parent_id: Int
+  start_time: timestamp
   status: String
-  time: timestamp
   user_id: Int
 }
 
@@ -1092,13 +1098,14 @@ input events_min_order_by {
 
   """seconds"""
   cost_time: order_by
+  end_time: order_by
   event_type: order_by
   goal_id: order_by
   id: order_by
   interaction_id: order_by
   parent_id: order_by
+  start_time: order_by
   status: order_by
-  time: order_by
   user_id: order_by
 }
 
@@ -1137,6 +1144,7 @@ input events_order_by {
   children_aggregate: events_aggregate_order_by
   cost_money: order_by
   cost_time: order_by
+  end_time: order_by
   event_tags_aggregate: event_tag_aggregate_order_by
   event_type: order_by
   event_type_object: event_types_order_by
@@ -1148,8 +1156,8 @@ input events_order_by {
   metadata: order_by
   parent: events_order_by
   parent_id: order_by
+  start_time: order_by
   status: order_by
-  time: order_by
   user: users_order_by
   user_id: order_by
 }
@@ -1176,6 +1184,9 @@ enum events_select_column {
   cost_time
 
   """column name"""
+  end_time
+
+  """column name"""
   event_type
 
   """column name"""
@@ -1197,10 +1208,10 @@ enum events_select_column {
   parent_id
 
   """column name"""
-  status
+  start_time
 
   """column name"""
-  time
+  status
 
   """column name"""
   user_id
@@ -1215,6 +1226,7 @@ input events_set_input {
 
   """seconds"""
   cost_time: Int
+  end_time: timestamp
   event_type: String
   goal_id: Int
   id: Int
@@ -1222,8 +1234,8 @@ input events_set_input {
   logs: jsonb
   metadata: jsonb
   parent_id: Int
+  start_time: timestamp
   status: String
-  time: timestamp
   user_id: Int
 }
 
@@ -1335,6 +1347,7 @@ input events_stream_cursor_value_input {
 
   """seconds"""
   cost_time: Int
+  end_time: timestamp
   event_type: String
   goal_id: Int
   id: Int
@@ -1342,8 +1355,8 @@ input events_stream_cursor_value_input {
   logs: jsonb
   metadata: jsonb
   parent_id: Int
+  start_time: timestamp
   status: String
-  time: timestamp
   user_id: Int
 }
 
@@ -1388,6 +1401,9 @@ enum events_update_column {
   cost_time
 
   """column name"""
+  end_time
+
+  """column name"""
   event_type
 
   """column name"""
@@ -1409,10 +1425,10 @@ enum events_update_column {
   parent_id
 
   """column name"""
-  status
+  start_time
 
   """column name"""
-  time
+  status
 
   """column name"""
   user_id
@@ -2405,6 +2421,7 @@ columns and relationships of "locations"
 type locations {
   id: Int!
   location: geography!
+  name: String
   user_id: Int!
 }
 
@@ -2491,6 +2508,7 @@ input locations_bool_exp {
   _or: [locations_bool_exp!]
   id: Int_comparison_exp
   location: geography_comparison_exp
+  name: String_comparison_exp
   user_id: Int_comparison_exp
 }
 
@@ -2518,12 +2536,14 @@ input type for inserting data into table "locations"
 input locations_insert_input {
   id: Int
   location: geography
+  name: String
   user_id: Int
 }
 
 """aggregate max on columns"""
 type locations_max_fields {
   id: Int
+  name: String
   user_id: Int
 }
 
@@ -2532,12 +2552,14 @@ order by max() on columns of table "locations"
 """
 input locations_max_order_by {
   id: order_by
+  name: order_by
   user_id: order_by
 }
 
 """aggregate min on columns"""
 type locations_min_fields {
   id: Int
+  name: String
   user_id: Int
 }
 
@@ -2546,6 +2568,7 @@ order by min() on columns of table "locations"
 """
 input locations_min_order_by {
   id: order_by
+  name: order_by
   user_id: order_by
 }
 
@@ -2573,6 +2596,7 @@ input locations_on_conflict {
 input locations_order_by {
   id: order_by
   location: order_by
+  name: order_by
   user_id: order_by
 }
 
@@ -2592,6 +2616,9 @@ enum locations_select_column {
   location
 
   """column name"""
+  name
+
+  """column name"""
   user_id
 }
 
@@ -2601,6 +2628,7 @@ input type for updating data in table "locations"
 input locations_set_input {
   id: Int
   location: geography
+  name: String
   user_id: Int
 }
 
@@ -2661,6 +2689,7 @@ input locations_stream_cursor_input {
 input locations_stream_cursor_value_input {
   id: Int
   location: geography
+  name: String
   user_id: Int
 }
 
@@ -2687,6 +2716,9 @@ enum locations_update_column {
 
   """column name"""
   location
+
+  """column name"""
+  name
 
   """column name"""
   user_id
