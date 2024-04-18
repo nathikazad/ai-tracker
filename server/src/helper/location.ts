@@ -228,8 +228,11 @@ async function finishCommute(userId: number, locations: Location[]) {
             insertNewCommute(userId, startTime, undefined, locations[0]);
         }
     }
-    let timeDiffText = timeDiff ? `Time taken: ${timeDiff / 1000} seconds` : ""
-    insertInteraction(userId, `Finished Commute distance distance:${calculateTotalDistance(locations)} ${timeDiffText}`, "event")
+    let totalDistance = calculateTotalDistance(locations)
+    if(totalDistance > 0.5) {
+        let timeDiffText = timeDiff ? `Time taken: ${timeDiff / 1000} seconds` : ""
+        insertInteraction(userId, `Finished Commute distance distance:${totalDistance} ${timeDiffText}`, "event")
+    }
 }
 
 function insertNewCommute(userId: number, startTime?: Date, endTime?: Date, startLocation?: Location, locations?: Location[]) {
