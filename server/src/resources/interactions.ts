@@ -1,10 +1,9 @@
 import { getHasura } from "../config";
-import { $ } from "../generated/graphql-zeus";
 import { createEmbedding } from "../third/openai";
-import { order_by } from "../generated/graphql-zeus";
+import { $, order_by } from "../generated/graphql-zeus";
 
 
-export async function insertInteraction(user_id: number, content: string, interaction_type: string, debugInfo: Record<string, string> = {}) {
+export async function insertInteraction(user_id: number, content: string, interaction_type: string, debugInfo: Record<string, any> = {}) {
     const embedding = await createEmbedding(content)
     let chain = getHasura();
     let resp = await chain.mutation({

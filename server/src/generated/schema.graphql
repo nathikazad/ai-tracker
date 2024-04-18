@@ -2519,6 +2519,11 @@ enum locations_constraint {
   """
   unique or primary key constraint on columns "id"
   """
+  locations_id_key
+
+  """
+  unique or primary key constraint on columns "id"
+  """
   locations_pkey
 }
 

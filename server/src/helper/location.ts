@@ -1,172 +1,324 @@
-// import * as polyline from '@mapbox/polyline';
-// import { insertInteraction } from '../resources/interactions';
-// import { getHasura } from '../config';
-// import { order_by } from '../generated/graphql-zeus';
-// interface Location {
-//     lat: number;
-//     lon: number;
-// }
+import * as polyline from '@mapbox/polyline';
+import { insertInteraction } from '../resources/interactions';
+import { getHasura } from '../config';
+import { $, order_by } from '../generated/graphql-zeus';
+interface Location {
+    lat: number;
+    lon: number;
+    accuracy: number;
+    timestamp: string;
+}
 
-// interface StopMovementRequest {
-//     locations?: Location[];
-//     timeStopped?: Date;
-//     debugInfo: Record<string, string>
-// }
+export interface StopMovementRequest {
+    eventType: String,
+    locations: Location[],
+    numberOfPoints: number,
+    timeSinceLastMovement: number,
+}
 
-// interface StartMovementRequest {
-//     lastStoppedLocation?: Location;
-//     timeStarted?: Date;
-//     debugInfo: Record<string, string>
-// }
+interface StartMovementRequest {
+    eventType: String,
+    distanceChanged: number,
+    threshold: number,
+    oldLocation: Location,
+    newLocation: Location,
+}
 
-// export async function stopMovementEvent(movementRequest: StopMovementRequest, userId: number) {
-//     let interaction = "Stopped at unknown location"
-//     let stoppedLocation = movementRequest.locations![movementRequest.locations!.length - 1];
-//     let timeStopped = movementRequest.timeStopped!;
-//     let resp = await getClosestUserLocations(userId, stoppedLocation)
-//     if ((resp.users_by_pk?.closest_user_location?.length ?? 0) > 0) {
-//         console.log("Closest user location found.")
-//         let resp2 = await getStayEvents(userId)
-//         if ((resp2.events?.length ?? 0) > 0) {
-//             console.log("Stay event found.")
-//             let event = resp2.events![0]
-//             if (event.metadata?.location_id == resp.users_by_pk!.closest_user_location![0].id) {
-//                 console.log("Recent stay event already exists for this location. Not creating a new one.")
-//                 return;
-//             }
-//         } else {
-//             console.log("No stay event found for this user. Creating a new one.");
-//             insertStay(resp.users_by_pk!.closest_user_location![0].id, userId, timeStopped)
-//             // find commute event, update end time and polyline
-//             let locationName = resp.users_by_pk!.closest_user_location![0].name
-//             interaction = `stopped at ${locationName ? locationName : "unknown location"}`
-//         }
-//     } else {
-//         console.log("No closest user location found.")
-//         let locationId = await insertLocation(stoppedLocation)
-//         insertStay(locationId, userId, timeStopped)
-//         // find commute event, update end time and polyline
-//         interaction = "stopped at unknown location"
-//     }
-//     insertInteraction(userId, interaction, "event", movementRequest.debugInfo)
-// }
+export async function processMovement(userId: number, movementRequest: StopMovementRequest | StartMovementRequest) {
+    if (movementRequest.eventType === "stoppedMoving") {
+        await stopMovementEvent(userId, movementRequest as StopMovementRequest);
+    } else if (movementRequest.eventType === "startedMoving") {
+        await startMovementEvent(userId, movementRequest as StartMovementRequest);
+    } else {
+        console.log("Invalid movement event type.")
+    }
+}
 
-// // export async function startMovementEvent(movementRequest: StopMovementRequest, userId: number) {
-// //         if (movementRequest.locations && movementRequest.locations.length > 0) {
-// //             const encodedPolyline = polyline.encode(movementRequest.locations.map(loc => [loc.lat, loc.lon]));
-// //             const textPolyline = movementRequest.locations.map(loc => `${loc.lat},${loc.lon}`).join('|');
-// //             console.log(`Encoded Polyline: ${encodedPolyline}`);
-// //             movementRequest.debugInfo = {
-// //                 ...movementRequest.debugInfo,
-// //                 locations: textPolyline,
-// //                 polyline: encodedPolyline
-// //             }
-// //         } else {
-// //             console.log('No locations provided or locations array is empty.');
-// //         }
-// //     }
-// //     console.log(movementRequest.debugInfo)
-// //     insertInteraction(userId, interaction, "event", movementRequest.debugInfo)
-// // }
+async function stopMovementEvent(userId: number, movementRequest: StopMovementRequest) {
+
+    let stoppedLocation = movementRequest.locations![movementRequest.locations!.length - 1];
+    let stoppedTime = new Date(Date.parse(stoppedLocation.timestamp))
+    let resp = await getClosestUserLocations(userId, stoppedLocation)
+    let dbLocation
+    if ((resp.users_by_pk?.closest_user_location?.length ?? 0) > 0) {
+        console.log("This location is already registered by this user")
+        dbLocation = resp.users_by_pk!.closest_user_location![0]
+
+    } else {
+        console.log("This is a new location.")
+        dbLocation = await insertLocation(userId, stoppedLocation)
+    }
+    let interaction = `Entered ${dbLocation.name ? dbLocation.name : "unknown location"}`
+
+    let resp2 = await getIncompleteEvents(userId, "stay", stoppedTime, 8)
+    if ((resp2.events?.length ?? 0) > 0) {
+        console.log("There is a recent stay event already for this user already ")
+        let event = resp2.events![0]
+        if (event.metadata?.location_id == dbLocation.id) {
+            console.log("Recent stay event exists for the same location, not doing any db changes")
+            return;
+        } else {
+            console.log("but it exists but for a different location. Creating a new stay event for this location.")
+            insertStay(userId, dbLocation.id, stoppedTime)
+            finishCommute(userId, movementRequest.locations!)
+        }
+    } else {
+        console.log("No stay event found for this user. Creating a new one.");
+        insertStay(userId, resp.users_by_pk!.closest_user_location![0].id, stoppedTime)
+        finishCommute(userId, movementRequest.locations!)
+    }
+
+    console.log("Interaction: ", interaction);
+    insertInteraction(userId, interaction, "event", movementRequest as Record<string, any>)
+}
+
+export async function startMovementEvent(userId: number, movementRequest: StartMovementRequest) {
+    console.log("Started moving");
+    let startedTime = new Date(Date.parse(movementRequest.newLocation.timestamp))
+    startCommute(userId, movementRequest.newLocation, startedTime)
+    let resp2 = await getIncompleteEvents(userId, "stay", startedTime, 8)
+    if (resp2.events.length > 0) {
+        let stayEvent = resp2.events[0]
+        updateEvent(stayEvent.id, startedTime, {})
+    } else {    
+        console.log("No recent stay event found. Creating a new one.")
+        // TODO: Insert a new stay event
+    }
+}
 
 
-// async function getClosestUserLocations(userId: number, currentLocation: Location) {
-//     return await getHasura().query({
-//         users_by_pk: [{
-//             id: userId
-//         }, {
-//             closest_user_location: [{
-//                 args: {
-//                     radius: 200,
-//                     ref_point: `POINT(${currentLocation.lat} ${currentLocation.lon})`
-//                 }
-//             }, {
-//                 id: true,
-//                 location: true,
-//                 name: true
-//             }]
-//         }]
-//     });
-// }
+async function getClosestUserLocations(userId: number, currentLocation: Location) {
+    console.log(`POINT(${currentLocation.lat} ${currentLocation.lon})`);
+    return await getHasura().query({
+        users_by_pk: [{
+            id: userId
+        }, {
+            closest_user_location: [{
+                args: {
+                    radius: 200,
+                    ref_point: `SRID=4326;POINT(${currentLocation.lon} ${currentLocation.lat})`
+                }
+            }, {
+                id: true,
+                location: true,
+                name: true
+            }]
+        }]
+    });
+}
 
-// async function getStayEvents(userId: number) {
-//     return await getHasura().query({
-//         events: [{
-//             limit: 1,
-//             order_by: [{
-//                 end_time: order_by.desc
-//             }],
-//             where: {
-//                 _and: [{
-//                     user_id: {
-//                         _eq: userId
-//                     },
-//                     event_type: {
-//                         _eq: "stay"
-//                     },
-//                     end_time: {
-//                         _gt: new Date(Date.now() - 8 * 60 * 60 * 1000)
-//                     }
-//                 }]
-//             }
-//         }, {
-//             id: true,
-//             metadata: [{}, true]
-//         }]
-//     });
-// }
+async function getIncompleteEvents(userId: number, event_type: string, date: Date, hours: number = 0) {
+    let checkDate = new Date(date.getTime() - hours * 60 * 60 * 1000)
+    return await getHasura().query({
+        events: [{
+            limit: 1,
+            order_by: [{
+                end_time: order_by.desc
+            }],
+            where: {
+                _and: [{
+                    user_id: {
+                        _eq: userId
+                    },
+                    event_type: {
+                        _eq: event_type
+                    },
+                    start_time: {
+                        _gt: checkDate.toISOString()
+                    },
+                    end_time: {
+                        _is_null: true
+                    }
+                }]
+            }
+        }, {
+            id: true,
+            metadata: [{}, true],
+            start_time: true
+        }]
+    });
+}
 
-// function insertStay(locationId: number, userId: number, start_time: Date) {
-//     let chain = getHasura();
-//     chain.mutation({
-//         insert_events: [{
-//             objects: [{
-//                 event_type: "stay",
-//                 metadata: {
-//                     location_id: locationId
-//                 },
-//                 start_time: start_time,
-//                 user_id: userId
-//             }]
-//         }, {
-//             returning: {
-//                 id: true
-//             }
-//         }]
-//     })
-// }
+function insertStay(userId: number, locationId: number, startTime: Date) {
+    let chain = getHasura();
+    chain.mutation({
+        insert_events: [{
+            objects: [{
+                event_type: "stay",
+                start_time: startTime.toISOString(),
+                user_id: userId,
+                metadata: $`metadata`,
+            }]
+        }, {
+            returning: {
+                id: true
+            }
+        }]
+    }, {
+        "metadata": {
+            location_id: locationId
+        }
 
-// function insertCommute(polyline: number, userId: number) {
-//     let chain = getHasura();
-//     chain.mutation({
-//         insert_events: [{
-//             objects: [{
-//                 event_type: "stay",
-//                 metadata: {
-//                     polyline: polyline
-//                 },
-//                 user_id: userId
-//             }]
-//         }, {
-//             returning: {
-//                 id: true
-//             }
-//         }]
-//     })
-// }
+    })
+}
 
-// async function insertLocation(location: Location) {
-//     let chain = getHasura();
-//     let resp = await chain.mutation({
-//         insert_locations: [{
-//             objects: [{
-//                 location: `POINT(${location.lat} ${location.lon})`
-//             }]
-//         }, {
-//             returning: {
-//                 id: true
-//             }
-//         }]
-//     })
-//     return resp.insert_locations!.returning![0].id;
-// }
+
+
+function updateEvent(id: number, endTime: Date, metadata: any) {
+    let chain = getHasura();
+    chain.mutation({
+        update_events_by_pk: [{
+            pk_columns: {
+                id: id
+            },
+            _set: {
+                end_time: endTime.toISOString()
+            },
+            _append: {
+                metadata: $`metadata`
+            }
+        }, {
+            id: true
+        }]
+    }, {
+        "metadata": metadata
+    })
+}
+
+async function startCommute(userId: number, startLocation: Location, startTime: Date) {
+    let commuteEvents = await getIncompleteEvents(userId, "commute", startTime, 8)
+    if (commuteEvents.events?.length == 0) {
+        console.log("No recent commute event found. Creating a new one.")
+        insertNewCommute(userId, startTime, undefined, startLocation);
+    } else {
+        let commuteEvent = commuteEvents.events![0]
+        if (calculateDistance(startLocation, commuteEvent.metadata.start_location) < 0.5) {
+            console.log("Recent commute event found for the same location.")
+            return;
+        } else {
+            insertNewCommute(userId, startTime, undefined, startLocation);
+        }
+
+    }
+}
+async function finishCommute(userId: number, locations: Location[]) {
+    const encodedPolyline = polyline.encode(locations.map(loc => [loc.lat, loc.lon]))
+    const textPolyline = locations.map(loc => `${loc.lat},${loc.lon}`).join('|');
+    let endTime = new Date(Date.parse(locations[locations.length - 1].timestamp))
+    let commuteEvents = await getIncompleteEvents(userId, "commute", endTime, 8)
+    if (commuteEvents.events?.length == 0) {
+        console.log("No recent commute event found. Creating a new one.")
+        let startTime = new Date(Date.parse(locations[0].timestamp))
+        insertNewCommute(userId, startTime, endTime, locations[0], locations);
+    } else {
+        console.log("Recent commute event found.")
+        let commuteEvent = commuteEvents.events![0]
+        if (calculateDistance(locations[0], commuteEvent.metadata.start_location) < 0.5) {
+            console.log("Commute event found for the same location. Updating the end time and polyline.")
+            updateEvent(commuteEvent.id, endTime, { polyline: encodedPolyline, locations: textPolyline });
+        } else {
+            console.log("Commute event found but for a different location. Creating a new one.")
+            let startTime = new Date(Date.parse(locations[0].timestamp))
+            insertNewCommute(userId, startTime, undefined, locations[0]);
+        }
+
+    }
+}
+
+function insertNewCommute(userId: number, startTime?: Date, endTime?: Date, startLocation?: Location, locations?: Location[]) {
+    let encodedPolyline = null
+    let textPolyline = null
+    if (locations) {
+        if(calculateTotalDistance(locations) < 0.5) {
+            console.log("Commute distance is less than 0.5 km. Not creating a new event.")
+            return;
+        }
+        encodedPolyline = polyline.encode(locations.map(loc => [loc.lat, loc.lon]))
+        textPolyline = locations.map(loc => `${loc.lat},${loc.lon}`).join('|');
+        
+    }
+    let chain = getHasura();
+    chain.mutation({
+        insert_events: [{
+            objects: [{
+                event_type: "commute",
+                metadata: $`metadata`,
+                user_id: userId,
+                start_time: startTime?.toISOString(),
+                end_time: endTime?.toISOString(),
+            }]
+        }, {
+            returning: {
+                id: true
+            }
+        }]
+    }, {
+        "metadata": {
+            start_location: startLocation,
+            polyline: encodedPolyline,
+            locations: textPolyline
+        }
+    });
+}
+function calculateTotalDistance(locations: Location[]): number {
+    let totalDistance = 0;
+
+    for (let i = 0; i < locations.length - 1; i++) {
+        const firstLocation = locations[i];
+        const secondLocation = locations[i + 1];
+        const distance = calculateDistance(firstLocation, secondLocation);
+        totalDistance += distance;
+    }
+
+    return totalDistance;
+}
+
+function calculateDistance(firstLocation: Location, secondLocation: Location): number {
+    const earthRadius = 6371; // Radius of the Earth in kilometers
+
+    const dLat = toRadians(secondLocation.lat - firstLocation.lat);
+    const dLon = toRadians(secondLocation.lon - firstLocation.lon);
+
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRadians(firstLocation.lat)) * Math.cos(toRadians(secondLocation.lat)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    const distance = earthRadius * c;
+    return distance;
+}
+
+function toRadians(degrees: number): number {
+    return degrees * (Math.PI / 180);
+}
+
+async function insertLocation(userId: number, location: Location) {
+    let chain = getHasura();
+    let resp = await chain.mutation({
+        insert_locations: [{
+            objects: [{
+                location: $`location`,
+                user_id: userId,
+            }]
+        }, {
+            returning: {
+                id: true,
+                location: true,
+                name: true
+            }
+        }]
+    }, {
+        "location": convertLocationToPostGISPoint(location)
+    })
+    return resp.insert_locations!.returning![0];
+}
+
+
+function convertLocationToPostGISPoint(location: Location) {
+    return {
+        type: "Point",
+        coordinates: [location.lon, location.lat]
+    }
+}
+
