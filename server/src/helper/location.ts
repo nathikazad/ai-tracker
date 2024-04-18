@@ -59,12 +59,12 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
             return;
         } else {
             console.log("but it exists but for a different location. Creating a new stay event for this location.")
-            insertStay(userId, dbLocation.id, stoppedTime)
+            insertStay(userId, dbLocation.id, stoppedTime, dbLocation.name)
             finishCommute(userId, movementRequest.locations!)
         }
     } else {
         console.log("No stay event found for this user. Creating a new one.");
-        insertStay(userId, resp.users_by_pk!.closest_user_location![0].id, stoppedTime)
+        insertStay(userId, resp.users_by_pk!.closest_user_location![0].id, stoppedTime, dbLocation.name)
         finishCommute(userId, movementRequest.locations!)
     }
 
