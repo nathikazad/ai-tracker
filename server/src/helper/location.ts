@@ -207,6 +207,7 @@ async function startCommute(userId: number, startLocation: Location, startTime: 
 async function finishCommute(userId: number, locations: Location[]) {
     let totalDistance = calculateTotalDistance(locations)
     if(totalDistance < 0.3) {
+        console.log(`Not enough distance to create a commute event. ${totalDistance.toFixed(2)}`);
         return
     }
     const encodedPolyline = polyline.encode(locations.map(loc => [loc.lat, loc.lon]))
@@ -250,7 +251,7 @@ function insertNewCommute(userId: number, startTime?: Date, endTime?: Date, star
     let textPolyline: String | null = null
     if (locations) {
         if(calculateTotalDistance(locations) < 0.5) {
-            console.log(`Commute distance ${calculateTotalDistance(locations).toFixed(0)} is less than 0.5 km. Not creating a new event.`)
+            console.log(`Commute distance ${calculateTotalDistance(locations).toFixed(2)} is less than 0.5 km. Not creating a new event.`)
             return;
         }
         encodedPolyline = polyline.encode(locations.map(loc => [loc.lat, loc.lon]))
