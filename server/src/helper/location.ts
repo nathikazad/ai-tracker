@@ -248,7 +248,7 @@ function insertNewCommute(userId: number, startTime?: Date, endTime?: Date, star
     let textPolyline: String | null = null
     if (locations) {
         if(calculateTotalDistance(locations) < 0.5) {
-            console.log("Commute distance is less than 0.5 km. Not creating a new event.")
+            console.log(`Commute distance ${calculateTotalDistance(locations).toFixed(0)} is less than 0.5 km. Not creating a new event.`)
             return;
         }
         encodedPolyline = polyline.encode(locations.map(loc => [loc.lat, loc.lon]))
