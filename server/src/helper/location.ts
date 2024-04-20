@@ -92,7 +92,7 @@ export async function startMovementEvent(userId: number, movementRequest: StartM
     if (resp2.events.length > 0) {
         let stayEvent = resp2.events[0]
         updateEvent(stayEvent.id, startedTime, {})
-        let interaction = `Left ${stayEvent.metadata.location.name ? stayEvent.metadata.location.name : "location"}`
+        let interaction = `Left ${stayEvent?.metadata?.location?.name ? stayEvent.metadata.location.name : "location"}`
         insertInteraction(userId, interaction, "event", {location: stayEvent.metadata})
     } else {    
         console.log("No recent stay event found. Creating a new one.")
