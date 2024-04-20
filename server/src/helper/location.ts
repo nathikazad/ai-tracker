@@ -50,7 +50,7 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
     }
     let interaction = `Entered ${dbLocation.name ? dbLocation.name : "unknown location"}`
 
-    let resp2 = await getIncompleteEvents(userId, "stay", stoppedTime, 8)
+    let resp2 = await getIncompleteEvents(userId, "stay", stoppedTime, 24)
     if ((resp2.events?.length ?? 0) > 0) {
         console.log("There is a recent stay event already for this user already ")
         let event = resp2.events![0]
