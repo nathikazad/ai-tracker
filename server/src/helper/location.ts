@@ -195,7 +195,7 @@ async function startCommute(userId: number, startLocation: Location, startTime: 
         insertNewCommute(userId, startTime, undefined, startLocation);
     } else {
         let commuteEvent = commuteEvents.events![0]
-        if (calculateDistance(startLocation, commuteEvent.metadata.start_location) < 0.5) {
+        if (calculateDistance(startLocation, commuteEvent.metadata.start_location) < 0.2) {
             console.log("Recent commute event found for the same location.")
             return;
         } else {
