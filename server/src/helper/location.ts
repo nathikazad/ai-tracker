@@ -41,8 +41,8 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
     let resp = await getClosestUserLocations(userId, stoppedLocation)
     let dbLocation
     if ((resp.users_by_pk?.closest_user_location?.length ?? 0) > 0) {
-        console.log("This location is already registered by this user")
         dbLocation = resp.users_by_pk!.closest_user_location![0]
+        console.log(`This location ${dbLocation.name} is already registered by this user`)
 
     } else {
         console.log("This is a new location.")
