@@ -64,7 +64,7 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
         }
     } else {
         console.log("No stay event found for this user. Creating a new one.");
-        insertStay(userId, resp.users_by_pk!.closest_user_location![0].id, stoppedTime, dbLocation.name)
+        insertStay(userId, dbLocation.id, stoppedTime, dbLocation.name)
         await finishCommute(userId, movementRequest.locations!)
     }
 
@@ -80,7 +80,7 @@ export async function startMovementEvent(userId: number, movementRequest: StartM
     if (resp2.events.length > 0) {
         let stayEvent = resp2.events[0]
         updateEvent(stayEvent.id, startedTime, {})
-        let interaction = `Left ${stayEvent.metadata.name ? stayEvent.metadata.name : "location"}`
+        let interaction = `Left ${stayEvent.metadata.location_name ? stayEvent.metadata.location_name : "location"}`
         insertInteraction(userId, interaction, "event", movementRequest as Record<string, any>)
     } else {    
         console.log("No recent stay event found. Creating a new one.")
