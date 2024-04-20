@@ -10,7 +10,7 @@ interface Location {
 }
 
 interface DBLocation {
-    id: number,
+    id?: number,
     location: Record<string, any>
     name?: string
 }
@@ -50,7 +50,12 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
     if (dbLocation) {
         console.log(`This location ${dbLocation.name} is already registered by this user`)
 
-    } 
+    } else {
+        dbLocation = {
+            location: convertLocationToPostGISPoint(stoppedLocation),
+            name: "Unknown location"
+        }
+    }
     // else {
     //     console.log("This is a new location.")
     //     dbLocation = await insertLocation(userId, stoppedLocation)
@@ -76,7 +81,7 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
     }
 
     console.log("Interaction: ", interaction);
-    insertInteraction(userId, interaction, "event", movementRequest as Record<string, any>)
+    insertInteraction(userId, interaction, "event", {location: dbLocation})
 }
 
 export async function startMovementEvent(userId: number, movementRequest: StartMovementRequest) {
@@ -88,11 +93,11 @@ export async function startMovementEvent(userId: number, movementRequest: StartM
         let stayEvent = resp2.events[0]
         updateEvent(stayEvent.id, startedTime, {})
         let interaction = `Left ${stayEvent.metadata.location.name ? stayEvent.metadata.location.name : "location"}`
-        insertInteraction(userId, interaction, "event", movementRequest as Record<string, any>)
+        insertInteraction(userId, interaction, "event", {location: stayEvent.metadata})
     } else {    
         console.log("No recent stay event found. Creating a new one.")
         let interaction = `Left unknown location`
-        insertInteraction(userId, interaction, "event", movementRequest as Record<string, any>)
+        insertInteraction(userId, interaction, "event")
     }
 }
 
@@ -247,7 +252,9 @@ async function finishCommute(userId: number, locations: Location[]) {
     }
     
     let timeDiffText = timeDiff ? `Time taken: ${secondsToMMSS(timeDiff)}` : ""
-    await insertInteraction(userId, `Finished Commute. ${totalDistance.toFixed(0)}km ${timeDiffText}`, "event")
+    await insertInteraction(userId, `Finished Commute. ${totalDistance.toFixed(0)}km ${timeDiffText}`, "event", {
+        polyline: encodedPolyline
+    })
 }
 
 function secondsToMMSS(seconds: number): string {
