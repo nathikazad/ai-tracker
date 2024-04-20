@@ -97,7 +97,7 @@ async function getClosestUserLocations(userId: number, currentLocation: Location
         }, {
             closest_user_location: [{
                 args: {
-                    radius: 200,
+                    radius: 100,
                     ref_point: `SRID=4326;POINT(${currentLocation.lon} ${currentLocation.lat})`
                 }
             }, {
