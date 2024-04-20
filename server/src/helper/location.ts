@@ -9,6 +9,12 @@ interface Location {
     timestamp: string;
 }
 
+interface DBLocation {
+    id: number,
+    location: Record<string, any>
+    name?: string
+}
+
 export interface StopMovementRequest {
     eventType: String,
     locations: Location[],
@@ -40,23 +46,22 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
     
     let stoppedLocation = movementRequest.locations![movementRequest.locations!.length - 1];
     let stoppedTime = new Date(Date.parse(stoppedLocation.timestamp))
-    let resp = await getClosestUserLocations(userId, stoppedLocation)
-    let dbLocation
-    if ((resp.users_by_pk?.closest_user_location?.length ?? 0) > 0) {
-        dbLocation = resp.users_by_pk!.closest_user_location![0]
+    let dbLocation: DBLocation | undefined = await getClosestUserLocation(userId, stoppedLocation)
+    if (dbLocation) {
         console.log(`This location ${dbLocation.name} is already registered by this user`)
 
-    } else {
-        console.log("This is a new location.")
-        dbLocation = await insertLocation(userId, stoppedLocation)
-    }
-    let interaction = `Entered ${dbLocation.name ? dbLocation.name : "unknown location"}`
+    } 
+    // else {
+    //     console.log("This is a new location.")
+    //     dbLocation = await insertLocation(userId, stoppedLocation)
+    // }
+    let interaction = `Entered ${dbLocation?.name ?? "unknown location"}`
 
     let resp2 = await getIncompleteEvents(userId, "stay", stoppedTime, 24)
     if ((resp2.events?.length ?? 0) > 0) {
         console.log("There is a recent stay event already for this user already ")
         let event = resp2.events![0]
-        if (event.metadata?.location.id == dbLocation.id) {
+        if (event.metadata?.location.id == dbLocation?.id) {
             console.log("Recent stay event exists for the same location, not doing any db changes")
             return;
         } else {
@@ -92,9 +97,9 @@ export async function startMovementEvent(userId: number, movementRequest: StartM
 }
 
 
-async function getClosestUserLocations(userId: number, currentLocation: Location) {
+async function getClosestUserLocation(userId: number, currentLocation: Location): Promise<DBLocation | undefined> {
     console.log(`POINT(${currentLocation.lat} ${currentLocation.lon})`);
-    return await getHasura().query({
+    let locs = await getHasura().query({
         users_by_pk: [{
             id: userId
         }, {
@@ -110,6 +115,11 @@ async function getClosestUserLocations(userId: number, currentLocation: Location
             }]
         }]
     });
+    if (locs.users_by_pk?.closest_user_location?.length == 0) {
+        return;
+    } else {
+        return locs.users_by_pk!.closest_user_location![0];
+    }   
 }
 
 async function getIncompleteEvents(userId: number, event_type: string, date: Date, hours: number = 0) {
@@ -144,7 +154,7 @@ async function getIncompleteEvents(userId: number, event_type: string, date: Dat
     });
 }
 
-function insertStay(userId: number, startTime: Date, dbLocation?: any) {
+function insertStay(userId: number, startTime: Date, dbLocation?: DBLocation) {
     let chain = getHasura();
     chain.mutation({
         insert_events: [{
@@ -316,7 +326,7 @@ function toRadians(degrees: number): number {
     return degrees * (Math.PI / 180);
 }
 
-async function insertLocation(userId: number, location: Location) {
+export async function insertLocation(userId: number, location: Location) {
     let chain = getHasura();
     let resp = await chain.mutation({
         insert_locations: [{
