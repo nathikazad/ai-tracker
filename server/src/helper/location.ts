@@ -56,17 +56,17 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
     if ((resp2.events?.length ?? 0) > 0) {
         console.log("There is a recent stay event already for this user already ")
         let event = resp2.events![0]
-        if (event.metadata?.location_id == dbLocation.id) {
+        if (event.metadata?.location.id == dbLocation.id) {
             console.log("Recent stay event exists for the same location, not doing any db changes")
             return;
         } else {
             console.log("but it exists but for a different location. Creating a new stay event for this location.")
-            insertStay(userId, dbLocation.id, stoppedTime, dbLocation.name)
+            insertStay(userId, stoppedTime, dbLocation)
             await finishCommute(userId, movementRequest.locations!)
         }
     } else {
         console.log("No stay event found for this user. Creating a new one.");
-        insertStay(userId, dbLocation.id, stoppedTime, dbLocation.name)
+        insertStay(userId, stoppedTime, dbLocation)
         await finishCommute(userId, movementRequest.locations!)
     }
 
@@ -78,15 +78,16 @@ export async function startMovementEvent(userId: number, movementRequest: StartM
     console.log("Started moving");
     let startedTime = new Date(Date.parse(movementRequest.newLocation.timestamp))
     startCommute(userId, movementRequest.newLocation, startedTime)
-    let resp2 = await getIncompleteEvents(userId, "stay", startedTime, 8)
+    let resp2 = await getIncompleteEvents(userId, "stay", startedTime, 24)
     if (resp2.events.length > 0) {
         let stayEvent = resp2.events[0]
         updateEvent(stayEvent.id, startedTime, {})
-        let interaction = `Left ${stayEvent.metadata.location_name ? stayEvent.metadata.location_name : "location"}`
+        let interaction = `Left ${stayEvent.metadata.location.name ? stayEvent.metadata.location.name : "location"}`
         insertInteraction(userId, interaction, "event", movementRequest as Record<string, any>)
     } else {    
         console.log("No recent stay event found. Creating a new one.")
-        // TODO: Insert a new stay event
+        let interaction = `Left unknown location`
+        insertInteraction(userId, interaction, "event", movementRequest as Record<string, any>)
     }
 }
 
@@ -143,7 +144,7 @@ async function getIncompleteEvents(userId: number, event_type: string, date: Dat
     });
 }
 
-function insertStay(userId: number, locationId: number, startTime: Date, locationName?: string) {
+function insertStay(userId: number, startTime: Date, dbLocation?: any) {
     let chain = getHasura();
     chain.mutation({
         insert_events: [{
@@ -160,8 +161,7 @@ function insertStay(userId: number, locationId: number, startTime: Date, locatio
         }]
     }, {
         "metadata": {
-            location_id: locationId,
-            location_name: locationName
+            location: dbLocation
         }
 
     })
