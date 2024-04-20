@@ -35,7 +35,9 @@ export async function processMovement(userId: number, movementRequest: StopMovem
 }
 
 async function stopMovementEvent(userId: number, movementRequest: StopMovementRequest) {
-
+    const encodedPolyline = polyline.encode(movementRequest.locations.map(loc => [loc.lat, loc.lon]))
+    console.log(`Stopped moving. Total distance: ${encodedPolyline} ${calculateTotalDistance(movementRequest.locations).toFixed(2)} km`);
+    
     let stoppedLocation = movementRequest.locations![movementRequest.locations!.length - 1];
     let stoppedTime = new Date(Date.parse(stoppedLocation.timestamp))
     let resp = await getClosestUserLocations(userId, stoppedLocation)
