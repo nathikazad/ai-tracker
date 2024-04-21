@@ -9,9 +9,14 @@ interface Location {
     timestamp: string;
 }
 
+interface PostGISPoint {
+    type: "Point";
+    coordinates: number[];
+}
+
 interface DBLocation {
     id?: number,
-    location: Record<string, any>
+    location: PostGISPoint
     name?: string
 }
 
@@ -98,7 +103,12 @@ export async function startMovementEvent(userId: number, movementRequest: StartM
     } else {    
         console.log("No recent stay event found. Creating a new one.")
         let interaction = `Left unknown location`
-        insertInteraction(userId, interaction, "event")
+        let dbLocation: DBLocation = {
+            ...movementRequest.oldLocation,
+            name: "Unknown location",
+            location: convertLocationToPostGISPoint(movementRequest.oldLocation)
+        }
+        insertInteraction(userId, interaction, "event", {location: dbLocation})
     }
 }
 
@@ -356,7 +366,7 @@ export async function insertLocation(userId: number, location: Location) {
 }
 
 
-function convertLocationToPostGISPoint(location: Location) {
+function convertLocationToPostGISPoint(location: Location): PostGISPoint {
     return {
         type: "Point",
         coordinates: [location.lon, location.lat]
