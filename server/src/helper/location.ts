@@ -66,7 +66,7 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
     if ((resp2.events?.length ?? 0) > 0) {
         console.log("There is a recent stay event already for this user already ")
         let event = resp2.events![0]
-        if (event.metadata?.location.id == dbLocation?.id) {
+        if (event.metadata?.location?.id == dbLocation?.id) {
             console.log("Recent stay event exists for the same location, not doing any db changes")
             return;
         } else {
