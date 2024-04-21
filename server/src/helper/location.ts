@@ -91,6 +91,7 @@ export async function startMovementEvent(userId: number, movementRequest: StartM
     let resp2 = await getIncompleteEvents(userId, "stay", startedTime, 24)
     if (resp2.events.length > 0) {
         let stayEvent = resp2.events[0]
+        console.log(`Recent stay event found with id ${stayEvent} name ${stayEvent.metadata.location.name}. Updating the end time.`);
         updateEvent(stayEvent.id, startedTime, {})
         let interaction = `Left ${stayEvent?.metadata?.location?.name ? stayEvent.metadata.location.name : "location"}`
         insertInteraction(userId, interaction, "event", {location: stayEvent.metadata})
