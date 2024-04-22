@@ -96,7 +96,7 @@ class ChatViewModel: ObservableObject {
         
         
         
-        let normalMessage = ChatMessageRow(message: Message(id: 0, sender: .Maximus, content: "Hi, how can I help you?", timestamp: "Yesterday 8:30 PM"))
+        let normalMessage = ChatMessageRow(message: Message(id: 0, sender: .Maximus, content: "Hi, what would you like to record?", timestamp: "Yesterday 8:30 PM"))
         
         
 
@@ -234,7 +234,7 @@ struct SendBar: View {
                     Task {
                         do {
                             let response = try await ServerCommunicator.sendPostRequest(to: parseTextEndpoint, body: ["text": messageToSend], token: Authentication.shared.hasuraJwt!)
-                            chatViewModel.addMessage(content: "Your message has been registered", sender: .Maximus)
+                            chatViewModel.addMessage(content: "Your message has been recorded", sender: .Maximus)
                             chatViewModel.addOkButton()
                         } catch {
                             print("Server communication error")

@@ -1,63 +1,69 @@
-//
-//  LocationView.swift
-//  History
-//
-//  Created by Nathik Azad on 4/17/24.
-//
-
 import SwiftUI
 import MapKit
 
-struct IdentifiableLocation: Identifiable {
-    let id = UUID()  // Unique identifier for each location
-    var location: CLLocation
-}
-
-
-class LocationViewModel: ObservableObject {
-    @Published var mapRegion: MKCoordinateRegion
-    var locationManager = LocationManager.shared
-    var locations: [IdentifiableLocation]
+struct LocationDetailView: View {
+    @Environment(\.presentationMode) var presentationMode
+    @State private var locationName: String = "Unknown"
+    @State private var checkInOutTimes: [String] = []
+    @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05))
+    @State private var isEditing: Bool = false
     
-    init() {
-        if(locationManager.currentState == .stationary) {
-            self.locations = locationManager.rejectedLocations.map { IdentifiableLocation(location: $0) }
-        } else {
-            self.locations = locationManager.movementLocations.map { IdentifiableLocation(location: $0) }
-        }
-        if !locations.isEmpty {
-            let lats = locations.map { $0.location.coordinate.latitude }
-            let lons = locations.map { $0.location.coordinate.longitude }
-            let maxLat = lats.max()!
-            let minLat = lats.min()!
-            let maxLon = lons.max()!
-            let minLon = lons.min()!
-            
-            let center = CLLocationCoordinate2D(
-                latitude: (maxLat + minLat) / 2,
-                longitude: (maxLon + minLon) / 2
-            )
-            let span = MKCoordinateSpan(
-                latitudeDelta: (maxLat - minLat) * 1.4,  // 10% padding
-                longitudeDelta: (maxLon - minLon) * 1.4  // 10% padding
-            )
-            mapRegion = MKCoordinateRegion(center: center, span: span)
-        } else {
-            mapRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), latitudinalMeters: 1000, longitudinalMeters: 1000)
-        }
-    }
-}
-
-
-struct LocationsView: View {
-    @ObservedObject var viewModel: LocationViewModel
+    var location: LocationModel
     
     var body: some View {
-        VStack{
-            Text(LocationManager.shared.currentState == .moving ? "Moving" : "Stationary")
-            Map(coordinateRegion: $viewModel.mapRegion, annotationItems: viewModel.locations) { identifiableLocation in
-                MapPin(coordinate: identifiableLocation.location.coordinate, tint: .blue)
+        VStack {
+            TextField("Enter Location Name", text: $locationName, onEditingChanged: { editing in
+                            isEditing = editing
+                        })
+                .padding()
+            
+            Button(action: {
+                Task {
+                    await LocationsController.deleteLocation(id: location.id)
+                    presentationMode.wrappedValue.dismiss()
+                }
+            }, label: {
+                Text("Delete")
+            })
+            .padding()
+            
+            Map(coordinateRegion: $region, showsUserLocation: true, annotationItems: [location]) { l in
+                MapPin(coordinate: CLLocationCoordinate2D(latitude: l.latitude, longitude: l.longitude), tint: .red)
+            }
+            .frame(height: 200)
+            .onAppear {
+                fetchLocationDetails()
+            }
+            
+            List {
+                ForEach(checkInOutTimes, id: \.self) { time in
+                    Text(time)
+                }
+            }
+            if isEditing {
+                Button(action: {
+                    saveLocationName()
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                }, label: {
+                    Text("Save")
+                })
+                .padding()
             }
         }
+    }
+    
+    private func fetchLocationDetails() {
+        
+        
+        region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude), span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005))
+        locationName = location.name ?? "Unknown"
+        // Use the location data to populate checkInOutTimes if needed
+        checkInOutTimes = ["08:00 AM", "12:00 PM", "04:00 PM", "08:00 AM", "12:00 PM", "04:00 PM", "08:00 AM", "12:00 PM", "04:00 PM", "08:00 AM", "12:00 PM", "04:00 PM"]
+        
+    }
+    
+    private func saveLocationName() {
+        LocationsController.editLocationName(id: location.id, name: locationName)
+        print("Location name saved: \(locationName)")
     }
 }

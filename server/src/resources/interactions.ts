@@ -3,7 +3,7 @@ import { createEmbedding } from "../third/openai";
 import { $, order_by } from "../generated/graphql-zeus";
 
 
-export async function insertInteraction(user_id: number, content: string, interaction_type: string, debugInfo: Record<string, any> = {}) {
+export async function insertInteraction(user_id: number, content: string, interaction_type: string, debugInfo: Record<string, any> = {}, timestamp: string | undefined = undefined) {
     const embedding = await createEmbedding(content)
     let chain = getHasura();
     let resp = await chain.mutation({
@@ -13,7 +13,8 @@ export async function insertInteraction(user_id: number, content: string, intera
                 embedding: $`embedding`,
                 debug: $`debug`,
                 user_id: user_id,
-                content_type: interaction_type
+                content_type: interaction_type,
+                timestamp: timestamp ? timestamp : new Date().toISOString()
             }
         }, {
             id: true

@@ -21,9 +21,13 @@ struct SettingsView: View {
         NavigationView {
             List {
                 Section(header: Text("Settings")) {
-                    if(Authentication.shared.isAdmin){
-                        NavigationLink(destination: LocationsView(viewModel: LocationViewModel())) {
+                    NavigationLink(destination: LocationsListView()) {
                             Label("Places", systemImage: "mappin.and.ellipse")
+                                .foregroundColor(.black)
+                        };
+                    if(Authentication.shared.isAdmin){
+                        NavigationLink(destination: LocationsDebugView()) {
+                            Label("Debug Places", systemImage: "mappin.and.ellipse")
                                 .foregroundColor(.black)
                         }
                     }

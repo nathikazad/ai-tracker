@@ -21,14 +21,15 @@ interface DBLocation {
 }
 
 export interface StopMovementRequest {
-    eventType: String,
+    eventType: string,
     locations: Location[],
     numberOfPoints: number,
     timeSinceLastMovement: number,
+    timeStopped: string
 }
 
 interface StartMovementRequest {
-    eventType: String,
+    eventType: string,
     distanceChanged: number,
     threshold: number,
     oldLocation: Location,
@@ -86,7 +87,7 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
     }
 
     console.log("Interaction: ", interaction);
-    insertInteraction(userId, interaction, "event", {location: dbLocation})
+    insertInteraction(userId, interaction, "event", {location: dbLocation}, movementRequest.timeStopped)
 }
 
 export async function startMovementEvent(userId: number, movementRequest: StartMovementRequest) {
@@ -277,8 +278,8 @@ function secondsToMMSS(seconds: number): string {
 }
 
 function insertNewCommute(userId: number, startTime?: Date, endTime?: Date, startLocation?: Location, locations?: Location[]) {
-    let encodedPolyline: String | null = null
-    let textPolyline: String | null = null
+    let encodedPolyline: string | null = null
+    let textPolyline: string | null = null
     if (locations) {
         if(calculateTotalDistance(locations) < 0.5) {
             console.log(`Commute distance ${calculateTotalDistance(locations).toFixed(2)} is less than 0.5 km. Not creating a new event.`)

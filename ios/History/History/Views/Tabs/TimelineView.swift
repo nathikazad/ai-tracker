@@ -109,7 +109,6 @@ struct TimelineView: View {
                     interactionController.deleteInteraction(id: interactionId)
                 }
             }
-            
         }
     }
     
