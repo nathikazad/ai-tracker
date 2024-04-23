@@ -13,7 +13,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     }
     private let movementDistanceThresholdWhenStationary: CLLocationDistance = 100 // meters
     private let movementDistanceThresholdWhenMoving: CLLocationDistance = 10 // meters
-    private let timeToConsiderStationary: TimeInterval = 300 // seconds
+    private let timeToConsiderStationary: TimeInterval = 50 // seconds
     private let rejectedLocationsToAddToMovement: TimeInterval = -120 //seconds
     
     var movementLocations: [CLLocation] = []
