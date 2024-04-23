@@ -114,7 +114,7 @@ export async function startMovementEvent(userId: number, movementRequest: StartM
     startCommute(userId, movementRequest.newLocation, startedTime)
     let lastEvent = await getLastUnfinishedEvent(userId, "stay", startedTime, 24)
     if (lastEvent) {
-        console.log(`Recent stay event found with id ${lastEvent} name ${lastEvent.metadata.location.name}. Updating the end time.`);
+        console.log(`Recent stay event found with id ${lastEvent} name ${lastEvent.metadata?.location?.name}. Updating the end time.`);
         updateEvent(lastEvent.id, startedTime, {})
         let timeAtLocation = startedTime.getTime() - Date.parse(lastEvent.start_time)
         let interaction = `Left ${lastEvent?.metadata?.location?.name ? lastEvent.metadata.location.name : "location"} after ${secondsToMMSS(timeAtLocation)}`
