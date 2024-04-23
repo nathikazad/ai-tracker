@@ -74,7 +74,7 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
     if (startDbLocation) {
         console.log(`Start location ${startDbLocation.name} is already registered by this user`)
     } else {
-        endDbLocation = {
+        startDbLocation = {
             location: convertLocationToPostGISPoint(endLocation),
             name: "Unknown location"
         }
