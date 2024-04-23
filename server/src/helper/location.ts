@@ -92,9 +92,9 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
             // end location of polyline is same as the location of the last stay event, so assume user is still at the same location and didn't move
             console.log("End location same, so don't do anything")
         } else if (lastEvent.metadata?.location?.id == startDbLocation?.id) {
+            console.log("Start location of commute is same as the location of last stay event. Updating the end time.")
             updateEvent(lastEvent.id, stoppedTime, {})
         }else {
-            
             console.log("but it exists but for a different location. Creating a new stay event for this location.")
             insertStay(userId, stoppedTime, endDbLocation)
         }
