@@ -243,8 +243,8 @@ async function finishCommute(userId: number, locations: Location[]) {
     let lastCommuteEvent = await getLastEvent(userId, "commute", endTime, 8)
     let timeDiff
     if (lastCommuteEvent) {
-        console.log("Recent commute event found.")
-        if (calculateDistance(locations[0], lastCommuteEvent.metadata.start_location) < 0.5) {
+        console.log(`Recent commute event found with distance difference ${calculateDistance(locations[0], lastCommuteEvent.metadata.start_location).toFixed(2)}`)
+        if (calculateDistance(locations[0], lastCommuteEvent.metadata.start_location) < 5.0) {
             console.log("Commute event found for the same location. Updating the end time and polyline.")
             updateEvent(lastCommuteEvent.id, endTime, { polyline: encodedPolyline, locations: textPolyline });
             let startTime = new Date(Date.parse(lastCommuteEvent.start_time))
