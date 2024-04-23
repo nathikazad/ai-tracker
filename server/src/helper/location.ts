@@ -68,17 +68,17 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
     // }
     let interaction = `Entered ${dbLocation?.name ?? "unknown location"}`
 
-    let lastEvent = await getLastEvent(userId, "stay", stoppedTime, 24)
+    let lastEvent = await getLastUnfinishedEvent(userId, "stay", stoppedTime, 24)
     if (lastEvent) {
         console.log("There is a recent stay event already for this user already ")
         if (lastEvent.metadata?.location?.id == dbLocation?.id) {
             console.log("Recent stay event exists for the same location, not doing any db changes")
-            return;
+            updateEvent(lastEvent.id, stoppedTime, {})
         } else {
             console.log("but it exists but for a different location. Creating a new stay event for this location.")
             insertStay(userId, stoppedTime, dbLocation)
-            await finishCommute(userId, movementRequest.locations!)
         }
+        await finishCommute(userId, movementRequest.locations!)
     } else {
         console.log("No stay event found for this user. Creating a new one.");
         insertStay(userId, stoppedTime, dbLocation)
@@ -93,7 +93,7 @@ export async function startMovementEvent(userId: number, movementRequest: StartM
     console.log("Started moving");
     let startedTime = new Date(Date.parse(movementRequest.newLocation.timestamp))
     startCommute(userId, movementRequest.newLocation, startedTime)
-    let lastEvent = await getLastEvent(userId, "stay", startedTime, 24)
+    let lastEvent = await getLastUnfinishedEvent(userId, "stay", startedTime, 24)
     if (lastEvent) {
         console.log(`Recent stay event found with id ${lastEvent} name ${lastEvent.metadata.location.name}. Updating the end time.`);
         updateEvent(lastEvent.id, startedTime, {})
@@ -143,7 +143,7 @@ async function getClosestUserLocation(userId: number, currentLocation: Location)
 }
 
 // get only last event of same type within last n hours only if end_time is null
-async function getLastEvent(userId: number, event_type: string, date: Date, hours: number = 0) {
+async function getLastUnfinishedEvent(userId: number, event_type: string, date: Date, hours: number = 0) {
     let checkDate = new Date(date.getTime() - hours * 60 * 60 * 1000)
     let lastEvents = await getHasura().query({
         events: [{
@@ -240,10 +240,11 @@ async function finishCommute(userId: number, locations: Location[]) {
     const encodedPolyline = polyline.encode(locations.map(loc => [loc.lat, loc.lon]))
     const textPolyline = locations.map(loc => `${loc.lat.toFixed(0)},${loc.lon.toFixed(0)}`).join('|');
     let endTime = new Date(Date.parse(locations[locations.length - 1].timestamp))
-    let lastCommuteEvent = await getLastEvent(userId, "commute", endTime, 8)
+    let lastCommuteEvent = await getLastUnfinishedEvent(userId, "commute", endTime, 8)
     let timeDiff
     if (lastCommuteEvent) {
         console.log(`Recent commute event found with distance difference ${calculateDistance(locations[0], lastCommuteEvent.metadata.start_location).toFixed(2)}`)
+        // check if the last commute's start location is within 5 km of the first location of this commute
         if (calculateDistance(locations[0], lastCommuteEvent.metadata.start_location) < 5.0) {
             console.log("Commute event found for the same location. Updating the end time and polyline.")
             updateEvent(lastCommuteEvent.id, endTime, { polyline: encodedPolyline, locations: textPolyline });
