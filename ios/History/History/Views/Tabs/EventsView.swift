@@ -8,39 +8,31 @@
 import SwiftUI
 
 // Define your custom views for each tab
-struct TimelineView: View {
-    @StateObject var interactionController = InteractionsController()
+struct EventsView: View {
+    @StateObject var eventController = EventsController()
     @State private var showPopupForId: Int?
     @State private var draftContent = ""
-    @State private var isShowingDatePicker = false
     
-    func showCalendarPicker() {
-        isShowingDatePicker = true
-    }
+    
     
     var body: some View {
         VStack {
-            Button(action: {
-                showCalendarPicker()
-            }) {
-                Text(interactionController.formattedDate)
-                    .foregroundColor(.black)
-                    .padding(.top, 5)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .gesture(
-                        DragGesture().onEnded { gesture in
-                            if gesture.translation.width < 0 { // swipe left
-                                interactionController.goToNextDay()
-                            } else if gesture.translation.width > 0 { // swipe right
-                                interactionController.goToPreviousDay()
-                            }
+            Text(eventController.formattedDate)
+            //                    .font(.title)
+                .foregroundColor(.black)
+                .padding(.top, 5)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .gesture(
+                    DragGesture().onEnded { gesture in
+                        if gesture.translation.width < 0 { // swipe left
+                            eventController.goToNextDay()
+                        } else if gesture.translation.width > 0 { // swipe right
+                            eventController.goToPreviousDay()
                         }
-                    )
-            }
-            
-            
+                    }
+                )
             Group {
-                if interactionController.interactions.isEmpty {
+                if eventController.events.isEmpty {
                     VStack {
                         Spacer()
                         Text("No Events Yet")
@@ -58,24 +50,18 @@ struct TimelineView: View {
             }
             .onAppear {
                 if(Authentication.shared.areJwtSet) {
-                    interactionController.fetchInteractions(userId: Authentication.shared.userId!)
-                    interactionController.listenToInteractions(userId: Authentication.shared.userId!)
+                    eventController.fetchEvents(userId: Authentication.shared.userId!)
+                    eventController.listenToEvents(userId: Authentication.shared.userId!)
                 }
             }
             .onDisappear {
                 print("Timelineview has disappeared")
-                interactionController.cancelListener()
+                eventController.cancelListener()
             }
         }
         .overlay(
             popupView
         )
-        .sheet(isPresented: $isShowingDatePicker) {
-            CalendarPickerView { selectedDate in
-                interactionController.goToDay(newDay: selectedDate)
-                isShowingDatePicker = false
-            }
-        }
     }
     
     private var emptyStateView: some View {
@@ -94,31 +80,31 @@ struct TimelineView: View {
     
     private var listView: some View {
         List {
-            ForEach(interactionController.interactions, id: \.id) { interaction in
+            ForEach(eventController.events, id: \.id) { event in
                 HStack {
-                    Text(interaction.formattedTime)
+                    Text(event.formattedTime)
                         .font(.headline)
                         .frame(width: 100, alignment: .leading)
                     Divider()
-                    
-                    if let location = interaction.location {
+                    if let location = event.metadata?.location {
                         NavigationLink(destination: LocationDetailView(location: location)) {
-                            Text(interaction.content)
+                            Text(event.eventType)
+                                .font(.subheadline)
+                        }
+                    } else if let polyline = event.metadata?.polyline {
+                        NavigationLink(destination: PolylineView(encodedPolyline: polyline)) {
+                            Text(event.eventType)
                                 .font(.subheadline)
                         }
                     } else {
-                        Text(String(interaction.content))
+                        Text("\(event.eventType) \(event.id)")
                             .font(.subheadline)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .onTapGesture {
-                                draftContent = interaction.content
-                                showPopupForId = interaction.id
-                            }
                     }
                 }
                 .swipeActions(edge: .leading, allowsFullSwipe: true) {
                     Button(action: {
-                        print("Tapped right on \(interaction.id)")
+                        print("Tapped right on \(event.id)")
                         // TODO: start microphone with parameters
                     }) {
                         Image(systemName: "mic.fill")                                .foregroundColor(.green) // Setting the color of the icon
@@ -127,8 +113,8 @@ struct TimelineView: View {
             }
             .onDelete { indices in
                 indices.forEach { index in
-                    let interactionId = interactionController.interactions[index].id
-                    interactionController.deleteInteraction(id: interactionId)
+                    let eventId = eventController.events[index].id
+                    eventController.deleteEvent(id: eventId)
                 }
             }
         }
@@ -152,7 +138,7 @@ struct TimelineView: View {
                     
                     Button(action: {
                         DispatchQueue.main.async {
-                            interactionController.editInteraction(id: showPopupForId!, content: draftContent)
+                            eventController.editEvent(id: showPopupForId!, content: draftContent)
                             self.showPopupForId = nil
                         }
                     }) {
@@ -182,6 +168,6 @@ struct TimelineView: View {
 }
 
 
-#Preview {
-    TimelineView()
-}
+//#Preview {
+//    TimelineView()
+//}

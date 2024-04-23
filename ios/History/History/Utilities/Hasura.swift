@@ -348,4 +348,50 @@ class HasuraUtil {
         return "Invalid Time" // Return a default or error message if parsing fails
     }
     
+    static func formattedTimeWithoutTimeZone(timestamp: String?) -> String? {
+        if(timestamp == nil) {
+            return nil
+        }
+        var timeToFormat = timestamp!
+        if timeToFormat.contains(".") {
+            timeToFormat = String(timeToFormat.prefix(upTo: timeToFormat.range(of: ".")!.lowerBound))
+        }
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
+
+        if let utcDate = dateFormatter.date(from: timeToFormat) {
+            dateFormatter.timeZone = TimeZone.current
+            dateFormatter.dateFormat = "hh:mm a"
+            let localTimeString = dateFormatter.string(from: utcDate)
+                return localTimeString
+            } else {
+                print(timeToFormat)
+                return nil
+            }
+        }
+    
+    static func formattedDateWithoutTimeZone(timestamp: String?) -> String? {
+        if(timestamp == nil) {
+            return nil
+        }
+        var timeToFormat = timestamp!
+        if timeToFormat.contains(".") {
+            timeToFormat = String(timeToFormat.prefix(upTo: timeToFormat.range(of: ".")!.lowerBound))
+        }
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
+
+        if let utcDate = dateFormatter.date(from: timeToFormat) {
+            dateFormatter.timeZone = TimeZone.current
+            dateFormatter.dateFormat = "EEE MM/dd"
+            let localTimeString = dateFormatter.string(from: utcDate)
+                return localTimeString
+            } else {
+                print(timeToFormat)
+                return nil
+            }
+        }
+    
 }

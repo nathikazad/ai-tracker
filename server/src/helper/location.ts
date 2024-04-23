@@ -68,11 +68,10 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
     // }
     let interaction = `Entered ${dbLocation?.name ?? "unknown location"}`
 
-    let resp2 = await getIncompleteEvents(userId, "stay", stoppedTime, 24)
-    if ((resp2.events?.length ?? 0) > 0) {
+    let lastEvent = await getLastEvent(userId, "stay", stoppedTime, 24)
+    if (lastEvent) {
         console.log("There is a recent stay event already for this user already ")
-        let event = resp2.events![0]
-        if (event.metadata?.location?.id == dbLocation?.id) {
+        if (lastEvent.metadata?.location?.id == dbLocation?.id) {
             console.log("Recent stay event exists for the same location, not doing any db changes")
             return;
         } else {
@@ -94,22 +93,26 @@ export async function startMovementEvent(userId: number, movementRequest: StartM
     console.log("Started moving");
     let startedTime = new Date(Date.parse(movementRequest.newLocation.timestamp))
     startCommute(userId, movementRequest.newLocation, startedTime)
-    let resp2 = await getIncompleteEvents(userId, "stay", startedTime, 24)
-    if (resp2.events.length > 0) {
-        let stayEvent = resp2.events[0]
-        console.log(`Recent stay event found with id ${stayEvent} name ${stayEvent.metadata.location.name}. Updating the end time.`);
-        updateEvent(stayEvent.id, startedTime, {})
-        let interaction = `Left ${stayEvent?.metadata?.location?.name ? stayEvent.metadata.location.name : "location"}`
-        insertInteraction(userId, interaction, "event", {location: stayEvent.metadata})
+    let lastEvent = await getLastEvent(userId, "stay", startedTime, 24)
+    if (lastEvent) {
+        console.log(`Recent stay event found with id ${lastEvent} name ${lastEvent.metadata.location.name}. Updating the end time.`);
+        updateEvent(lastEvent.id, startedTime, {})
+        let timeAtLocation = startedTime.getTime() - Date.parse(lastEvent.start_time)
+        let interaction = `Left ${lastEvent?.metadata?.location?.name ? lastEvent.metadata.location.name : "location"} after ${secondsToMMSS(timeAtLocation)}`
+        insertInteraction(userId, interaction, "event", {location: lastEvent.metadata})
     } else {    
         console.log("No recent stay event found. Creating a new one.")
-        let interaction = `Left unknown location`
-        let dbLocation: DBLocation = {
-            ...movementRequest.oldLocation,
-            name: "Unknown location",
-            location: convertLocationToPostGISPoint(movementRequest.oldLocation)
+        let dbLocation: DBLocation | undefined = await getClosestUserLocation(userId, movementRequest.oldLocation)
+        if (dbLocation) {
+            console.log(`This location ${dbLocation.name} is already registered by this user`)
+            
+        } else {
+            dbLocation = {
+                location: convertLocationToPostGISPoint(movementRequest.oldLocation),
+                name: "Unknown location"
+            }
         }
-        insertInteraction(userId, interaction, "event", {location: dbLocation})
+        insertInteraction(userId, `Left ${dbLocation.name}`, "event", {location: dbLocation})
     }
 }
 
@@ -139,9 +142,10 @@ async function getClosestUserLocation(userId: number, currentLocation: Location)
     }   
 }
 
-async function getIncompleteEvents(userId: number, event_type: string, date: Date, hours: number = 0) {
+// get only last event of same type within last n hours only if end_time is null
+async function getLastEvent(userId: number, event_type: string, date: Date, hours: number = 0) {
     let checkDate = new Date(date.getTime() - hours * 60 * 60 * 1000)
-    return await getHasura().query({
+    let lastEvents = await getHasura().query({
         events: [{
             limit: 1,
             order_by: [{
@@ -157,18 +161,25 @@ async function getIncompleteEvents(userId: number, event_type: string, date: Dat
                     },
                     start_time: {
                         _gt: checkDate.toISOString()
-                    },
-                    end_time: {
-                        _is_null: true
                     }
+                    // ,
+                    // end_time: {
+                    //     _is_null: true
+                    // }
                 }]
             }
         }, {
             id: true,
             metadata: [{}, true],
-            start_time: true
+            start_time: true,
+            end_time: true
         }]
     });
+    if(lastEvents.events.length > 0 && lastEvents.events[0].end_time == null) {
+        return lastEvents.events[0]
+    } else {
+        return null;
+    }
 }
 
 function insertStay(userId: number, startTime: Date, dbLocation?: DBLocation) {
@@ -194,8 +205,6 @@ function insertStay(userId: number, startTime: Date, dbLocation?: DBLocation) {
     })
 }
 
-
-
 function updateEvent(id: number, endTime: Date, metadata: any) {
     let chain = getHasura();
     chain.mutation({
@@ -218,21 +227,10 @@ function updateEvent(id: number, endTime: Date, metadata: any) {
 }
 
 async function startCommute(userId: number, startLocation: Location, startTime: Date) {
-    let commuteEvents = await getIncompleteEvents(userId, "commute", startTime, 8)
-    if (commuteEvents.events?.length == 0) {
-        console.log("No recent commute event found. Creating a new one.")
-        insertNewCommute(userId, startTime, undefined, startLocation);
-    } else {
-        let commuteEvent = commuteEvents.events![0]
-        if (calculateDistance(startLocation, commuteEvent.metadata.start_location) < 0.2) {
-            console.log("Recent commute event found for the same location.")
-            return;
-        } else {
-            insertNewCommute(userId, startTime, undefined, startLocation);
-        }
-
-    }
+    console.log("Creating a new commute one.")
+    insertNewCommute(userId, startTime, undefined, startLocation);
 }
+
 async function finishCommute(userId: number, locations: Location[]) {
     let totalDistance = calculateTotalDistance(locations)
     if(totalDistance < 0.3) {
@@ -242,25 +240,24 @@ async function finishCommute(userId: number, locations: Location[]) {
     const encodedPolyline = polyline.encode(locations.map(loc => [loc.lat, loc.lon]))
     const textPolyline = locations.map(loc => `${loc.lat.toFixed(0)},${loc.lon.toFixed(0)}`).join('|');
     let endTime = new Date(Date.parse(locations[locations.length - 1].timestamp))
-    let commuteEvents = await getIncompleteEvents(userId, "commute", endTime, 8)
+    let lastCommuteEvent = await getLastEvent(userId, "commute", endTime, 8)
     let timeDiff
-    if (commuteEvents.events?.length == 0) {
-        console.log("No recent commute event found. Creating a new one.")
-        let startTime = new Date(Date.parse(locations[0].timestamp))
-        insertNewCommute(userId, startTime, endTime, locations[0], locations);
-    } else {
+    if (lastCommuteEvent) {
         console.log("Recent commute event found.")
-        let commuteEvent = commuteEvents.events![0]
-        if (calculateDistance(locations[0], commuteEvent.metadata.start_location) < 0.5) {
+        if (calculateDistance(locations[0], lastCommuteEvent.metadata.start_location) < 0.5) {
             console.log("Commute event found for the same location. Updating the end time and polyline.")
-            updateEvent(commuteEvent.id, endTime, { polyline: encodedPolyline, locations: textPolyline });
-            let startTime = new Date(Date.parse(commuteEvent.start_time))
+            updateEvent(lastCommuteEvent.id, endTime, { polyline: encodedPolyline, locations: textPolyline });
+            let startTime = new Date(Date.parse(lastCommuteEvent.start_time))
             timeDiff = endTime.getTime() - startTime.getTime()
         } else {
             console.log("Commute event found but for a different location. Creating a new one.")
             let startTime = new Date(Date.parse(locations[0].timestamp))
             insertNewCommute(userId, startTime, undefined, locations[0]);
         }
+    } else {
+        console.log("No recent commute event found. Creating a new one.")
+        let startTime = new Date(Date.parse(locations[0].timestamp))
+        insertNewCommute(userId, startTime, endTime, locations[0], locations);
     }
     
     let timeDiffText = timeDiff ? `Time taken: ${secondsToMMSS(timeDiff)}` : ""

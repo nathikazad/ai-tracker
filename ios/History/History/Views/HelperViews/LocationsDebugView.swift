@@ -26,7 +26,6 @@ class LocationViewModel: ObservableObject {
         self.locations = []
         self.locations = locationManager.rejectedLocations.map { IdentifiableLocation(location: $0, color: .red) }
         if(locationManager.currentState == .moving) {
-            print("adding movement locations ")
             self.locations += locationManager.movementLocations.map { IdentifiableLocation(location: $0, color: .green) }
         }
         self.timeLeft = locationManager.timerExpirationDate?.timeIntervalSince(Date()) ?? 0.0
@@ -34,11 +33,6 @@ class LocationViewModel: ObservableObject {
             self.timeAtLocation = Date().timeIntervalSince(lastStationaryLocation.timestamp)
             self.locations.append(IdentifiableLocation(location: lastStationaryLocation, color: .orange))
             self.lastDistance = locationManager.rejectedLocations.last?.distance(from: lastStationaryLocation) ?? 0.0
-        }
-        if(locationManager.currentState == .stationary) {
-            print("stationary")
-        } else {
-            print("moving")
         }
         if(recalculateCenter) {
             setCenterAndSpan()

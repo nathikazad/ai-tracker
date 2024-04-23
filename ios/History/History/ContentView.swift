@@ -101,7 +101,7 @@ struct ContentView: View {
 
 
 struct MainView: View {
-    @State private var selectedTab: Tab = .todos
+    @State private var selectedTab: Tab = .timeline
     @ObservedObject var appState = AppState.shared
     
     var sheetViewPresented: Binding<Bool> {
@@ -124,10 +124,7 @@ struct MainView: View {
                     TimelineView().tabItem { Label("Timeline", systemImage: "clock") }.tag(Tab.timeline)
                     Text("").tabItem { Image(systemName: "mic.fill") } // Placeholder
                     GoalsView().tabItem { Label("Goals", systemImage: "target") }.tag(Tab.goals)
-                    GraphsView().tabItem { Label("Graphs", systemImage: "chart.line.uptrend.xyaxis") }.tag(Tab.graphs)
-                }
-                .onAppear {
-                    self.selectedTab = .timeline
+                    EventsView().tabItem { Label("Graphs", systemImage: "chart.line.uptrend.xyaxis") }.tag(Tab.graphs)
                 }
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {

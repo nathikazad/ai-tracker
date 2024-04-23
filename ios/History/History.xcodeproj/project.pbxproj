@@ -18,6 +18,9 @@
 		FE1C0EB12BC0A29300FF56AB /* Hasura.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EB02BC0A29300FF56AB /* Hasura.swift */; };
 		FE20CA262BC5E4CD00863604 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE20CA252BC5E4CD00863604 /* SettingsView.swift */; };
 		FE3E9F662BC8ACAD008BD120 /* NavigationTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3E9F652BC8ACAD008BD120 /* NavigationTitle.swift */; };
+		FE477D8F2BD5E3C8001FC341 /* EventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE477D8E2BD5E3C8001FC341 /* EventsView.swift */; };
+		FE477D912BD5E3E2001FC341 /* EventsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE477D902BD5E3E2001FC341 /* EventsController.swift */; };
+		FE477D932BD8122B001FC341 /* CalendarPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE477D922BD8122B001FC341 /* CalendarPicker.swift */; };
 		FE4F7BA32BA7D79E0041CB6A /* HistoryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BA22BA7D79E0041CB6A /* HistoryApp.swift */; };
 		FE4F7BA52BA7D79E0041CB6A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BA42BA7D79E0041CB6A /* ContentView.swift */; };
 		FE4F7BA72BA7D79F0041CB6A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE4F7BA62BA7D79F0041CB6A /* Assets.xcassets */; };
@@ -35,6 +38,7 @@
 		FE5264812BA99AF700502521 /* ServerCommunicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5264802BA99AF700502521 /* ServerCommunicator.swift */; };
 		FE5264822BA99AF700502521 /* ServerCommunicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5264802BA99AF700502521 /* ServerCommunicator.swift */; };
 		FE71B3882BD07BCE008F7D1A /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */; };
+		FE8153722BD845B300D972C8 /* PolylineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8153712BD845B300D972C8 /* PolylineView.swift */; };
 		FE8811EB2BC799BF00B112A8 /* GoalsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8811E62BC799BE00B112A8 /* GoalsController.swift */; };
 		FE8811EC2BC799BF00B112A8 /* InteractionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8811E72BC799BE00B112A8 /* InteractionsController.swift */; };
 		FE8811EF2BC799BF00B112A8 /* TodosController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8811EA2BC799BF00B112A8 /* TodosController.swift */; };
@@ -113,6 +117,9 @@
 		FE1C0EB02BC0A29300FF56AB /* Hasura.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hasura.swift; sourceTree = "<group>"; };
 		FE20CA252BC5E4CD00863604 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		FE3E9F652BC8ACAD008BD120 /* NavigationTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationTitle.swift; sourceTree = "<group>"; };
+		FE477D8E2BD5E3C8001FC341 /* EventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsView.swift; sourceTree = "<group>"; };
+		FE477D902BD5E3E2001FC341 /* EventsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsController.swift; sourceTree = "<group>"; };
+		FE477D922BD8122B001FC341 /* CalendarPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPicker.swift; sourceTree = "<group>"; };
 		FE4F7B9F2BA7D79E0041CB6A /* History.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = History.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE4F7BA22BA7D79E0041CB6A /* HistoryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryApp.swift; sourceTree = "<group>"; };
 		FE4F7BA42BA7D79E0041CB6A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -131,6 +138,7 @@
 		FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
 		FE5264802BA99AF700502521 /* ServerCommunicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommunicator.swift; sourceTree = "<group>"; };
 		FE5264832BA9A1A400502521 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		FE8153712BD845B300D972C8 /* PolylineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolylineView.swift; sourceTree = "<group>"; };
 		FE8811E62BC799BE00B112A8 /* GoalsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoalsController.swift; sourceTree = "<group>"; };
 		FE8811E72BC799BE00B112A8 /* InteractionsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractionsController.swift; sourceTree = "<group>"; };
 		FE8811EA2BC799BF00B112A8 /* TodosController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodosController.swift; sourceTree = "<group>"; };
@@ -188,6 +196,7 @@
 				FE12C5E72BC4B30B002CDC60 /* TodosView.swift */,
 				FE12C5E92BC4B330002CDC60 /* GoalsView.swift */,
 				FE12C5EB2BC4B359002CDC60 /* GraphsView.swift */,
+				FE477D8E2BD5E3C8001FC341 /* EventsView.swift */,
 			);
 			path = Tabs;
 			sourceTree = "<group>";
@@ -197,6 +206,7 @@
 			children = (
 				FE12C5EE2BC4B832002CDC60 /* MicrophoneButton.swift */,
 				FE3E9F652BC8ACAD008BD120 /* NavigationTitle.swift */,
+				FE477D922BD8122B001FC341 /* CalendarPicker.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -300,6 +310,7 @@
 				FE8811E72BC799BE00B112A8 /* InteractionsController.swift */,
 				FE8811EA2BC799BF00B112A8 /* TodosController.swift */,
 				FE8965A92BC7B31D00E9D633 /* UserController.swift */,
+				FE477D902BD5E3E2001FC341 /* EventsController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -324,6 +335,7 @@
 			children = (
 				FE900C072BD363D200F97050 /* LocationListView.swift */,
 				FE900C092BD363ED00F97050 /* LocationController.swift */,
+				FE8153712BD845B300D972C8 /* PolylineView.swift */,
 			);
 			path = Location;
 			sourceTree = "<group>";
@@ -509,10 +521,14 @@
 				FEB8FD1F2BAA253100EE9B68 /* Intents.swift in Sources */,
 				FE1C0EAE2BC0713B00FF56AB /* Authentication.swift in Sources */,
 				FE900C082BD363D200F97050 /* LocationListView.swift in Sources */,
+				FE477D932BD8122B001FC341 /* CalendarPicker.swift in Sources */,
+				FE8153722BD845B300D972C8 /* PolylineView.swift in Sources */,
 				FE12C5E62BC4B2A5002CDC60 /* TimelineView.swift in Sources */,
+				FE477D8F2BD5E3C8001FC341 /* EventsView.swift in Sources */,
 				FE900C0A2BD363ED00F97050 /* LocationController.swift in Sources */,
 				FE1C0EB12BC0A29300FF56AB /* Hasura.swift in Sources */,
 				FE8965AA2BC7B31D00E9D633 /* UserController.swift in Sources */,
+				FE477D912BD5E3E2001FC341 /* EventsController.swift in Sources */,
 				FE5264812BA99AF700502521 /* ServerCommunicator.swift in Sources */,
 				FE8811EF2BC799BF00B112A8 /* TodosController.swift in Sources */,
 				FEA34E6D2BD0B83300CE2A12 /* LocationsDebugView.swift in Sources */,

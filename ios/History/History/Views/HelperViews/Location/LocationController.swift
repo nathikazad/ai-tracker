@@ -113,7 +113,7 @@ class LocationsController: ObservableObject {
 }
 
 struct LocationModel: Decodable, Identifiable {
-    var id: Int
+    var id: Int?
     var name: String?
     var location: LocationData
     
@@ -133,7 +133,7 @@ struct LocationModel: Decodable, Identifiable {
     
     struct LocationData: Decodable {
         var type: String
-        var crs: CRS
+        var crs: CRS?
         var coordinates: [Double]
     }
     

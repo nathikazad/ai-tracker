@@ -6,30 +6,34 @@
 //
 
 import Foundation
+import SwiftUI
 class InteractionsController: ObservableObject {
     
     @Published var interactions: [InteractionModel] = []
     @Published var currentDate = Calendar.current.startOfDay(for: Date())
     let subscriptionId: String = "interactions"
     
-
+    
     var formattedDate: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "EEEE MMMM dd" // Custom format for day, month, and date
         return formatter.string(from: currentDate)
     }
-
+    
+    func goToDay(newDay:Date) {
+        currentDate = Calendar.current.startOfDay(for:newDay)
+        listenToInteractions(userId: Authentication.shared.userId!)
+    }
+    
     func goToNextDay() {
         print("next day")
         currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
-        fetchInteractions(userId: Authentication.shared.userId!)
         listenToInteractions(userId: Authentication.shared.userId!)
     }
-
+    
     func goToPreviousDay() {
         print("previous day")
         currentDate = Calendar.current.date(byAdding: .day, value: -1, to: currentDate)!
-        fetchInteractions(userId: Authentication.shared.userId!)
         listenToInteractions(userId: Authentication.shared.userId!)
     }
     
@@ -65,7 +69,7 @@ class InteractionsController: ObservableObject {
         }
         """
         let variables: [String: Any] = ["id": id, "content": content]
-
+        
         struct EditInteractionResponse: Decodable {
             var data: EditInteractionWrapper
             struct EditInteractionWrapper: Decodable {
@@ -142,18 +146,18 @@ class InteractionsController: ObservableObject {
     static private func generateQuery(userId: Int,gte: Date? = nil, isSubscription: Bool = false) -> String {
         let limitClause = ""
         var whereClauses: [String] = ["{user_id: {_eq: \(userId)}", "content_type: {_eq: \"event\"}}"]
-
+        
         if let gteDate = gte {
             let startOfTodayUTCString = HasuraUtil.dateToUTCString(date: gteDate)
             let calendar = Calendar.current
             let dayAfterGteDate = calendar.date(byAdding: .day, value: +1, to: gteDate)!
             let dayAfterUTCString = HasuraUtil.dateToUTCString(date: dayAfterGteDate)
-
+            
             // Combining timestamp conditions using _and
             let timestampConditions = "{_and: [{timestamp: {_gte: \"\(startOfTodayUTCString)\"}}, {timestamp: {_lte: \"\(dayAfterUTCString)\"}}]}"
             whereClauses.append(timestampConditions)
         }
-
+        
         let whereClause = whereClauses.isEmpty ? "" : "where: {_and: [\(whereClauses.joined(separator: ", "))]}"
         let operationType = isSubscription ? "subscription" : "query"
         
@@ -163,21 +167,36 @@ class InteractionsController: ObservableObject {
                 timestamp
                 id
                 content
+                events {
+                    id
+                    event_type
+                    metadata
+                }
             }
         }
         """
     }
 }
 
-struct InteractionModel: Decodable, Equatable, Identifiable {
+struct InteractionModel: Decodable, Identifiable {
     var id: Int
     var content: String
     var timestamp: String
+    var events: [EventModel]
     
     enum CodingKeys: String, CodingKey {
         case id
         case content
-        case timestamp // if the key in your JSON is "timestamp" instead of "time"
+        case timestamp
+        case events
+    }
+    
+    var event : EventModel? {
+        return (!events.isEmpty) ? events[0] : nil
+    }
+    
+    var location : LocationModel? {
+        return event?.metadata?.location
     }
     
     var justDate: String {
@@ -188,3 +207,4 @@ struct InteractionModel: Decodable, Equatable, Identifiable {
         return HasuraUtil.formattedTime(timestamp: timestamp)
     }
 }
+

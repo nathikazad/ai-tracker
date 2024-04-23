@@ -67,7 +67,7 @@ app.post('/updateMovement', async (req: Request, res: Response) => {
         const userId = authorize(req); 
         try {
             console.log(`🏃🏽🏃🏽🏃🏽🏃🏽🏃🏽🏃🏽🏃🏽 ${userId} ${req.body?.eventType}`)
-            console.log(req.body)
+            // console.log(req.body)
             processMovement(userId, req.body); 
             // console.log("success")
             res.status(200).json({

@@ -8,7 +8,8 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     
     
     private var locationUpdateDistanceFilter: CLLocationDistance {
-        (currentState == .moving) ? 20 : 50
+//        20
+        (currentState == .moving) ? 35 : 50
     }
     private let movementDistanceThresholdWhenStationary: CLLocationDistance = 100 // meters
     private let movementDistanceThresholdWhenMoving: CLLocationDistance = 10 // meters
@@ -211,9 +212,9 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
             "threshold": movementDistanceThresholdWhenStationary,
             "oldLocation": lastLocation.toJSON(),
             "newLocation": newLocation.toJSON(),
-            "rejectedLocations": rejectedLocations.map {
-                $0.toJSON()
-            },
+            // "rejectedLocations": rejectedLocations.map {
+            //     $0.toJSON()
+            // },
             "rejectedNumberOfPoints": rejectedLocations.count,
         ])
         
