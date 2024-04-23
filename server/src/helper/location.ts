@@ -69,6 +69,7 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
     }
 
     let startLocation = movementRequest.locations![movementRequest.locations!.length - 1];
+    let startedTime = new Date(Date.parse(startLocation.timestamp))
     let startDbLocation: DBLocation | undefined = await getClosestUserLocation(userId, startLocation)
     if (startDbLocation) {
         console.log(`Start location ${startDbLocation.name} is already registered by this user`)
@@ -94,13 +95,13 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
             }
         } else {
             console.log("But stay event exists but for a different location. Creating a new stay event for this location.")
-            insertStayWithoutStartTime(userId, stoppedTime, startDbLocation)
-            await finishCommute(userId, movementRequest.locations!)
+            insertStay(userId, startedTime, undefined, startDbLocation)
+            // await finishCommute(userId, movementRequest.locations!)
         }
     } else {
-        console.log("No stay event found for this user. Creating a new one.");
-        insertStayWithoutStartTime(userId, stoppedTime, endDbLocation)
-        await finishCommute(userId, movementRequest.locations!)
+        console.log("No stay event found for this user. Creating a new event without end.");
+        insertStay(userId, startedTime, undefined, startDbLocation)
+        // await finishCommute(userId, movementRequest.locations!)
     }
 
     console.log("Interaction: ", interaction);
@@ -200,13 +201,14 @@ async function getLastUnfinishedEvent(userId: number, event_type: string, date: 
     }
 }
 
-function insertStayWithoutStartTime(userId: number, endTime: Date, dbLocation?: DBLocation) {
+function insertStay(userId: number, startTime:Date | undefined, endTime: Date | undefined, dbLocation?: DBLocation) {
     let chain = getHasura();
     chain.mutation({
         insert_events: [{
             objects: [{
                 event_type: "stay",
-                end_time: endTime.toISOString(),
+                end_time: endTime?.toISOString(),
+                start_time: startTime?.toISOString(),
                 user_id: userId,
                 metadata: $`metadata`,
             }]
