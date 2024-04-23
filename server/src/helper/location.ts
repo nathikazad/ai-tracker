@@ -46,19 +46,36 @@ export async function processMovement(userId: number, movementRequest: StopMovem
     }
 }
 
+
+// save commute polyline
+// mark stay event as finished
+// check if start location of commute is the same as the end location of the stay event
+// if yes, update the stay event with the end time
+// if no, create a new stay event
 async function stopMovementEvent(userId: number, movementRequest: StopMovementRequest) {
     const encodedPolyline = polyline.encode(movementRequest.locations.map(loc => [loc.lat, loc.lon]))
     console.log(`Stopped moving. Total distance: ${encodedPolyline} ${calculateTotalDistance(movementRequest.locations).toFixed(2)} km`);
     
-    let stoppedLocation = movementRequest.locations![movementRequest.locations!.length - 1];
-    let stoppedTime = new Date(Date.parse(stoppedLocation.timestamp))
-    let dbLocation: DBLocation | undefined = await getClosestUserLocation(userId, stoppedLocation)
-    if (dbLocation) {
-        console.log(`This location ${dbLocation.name} is already registered by this user`)
-
+    let endLocation = movementRequest.locations![movementRequest.locations!.length - 1];
+    let stoppedTime = new Date(Date.parse(endLocation.timestamp))
+    let endDbLocation: DBLocation | undefined = await getClosestUserLocation(userId, endLocation)
+    if (endDbLocation) {
+        console.log(`End location ${endDbLocation.name} is already registered by this user`)
     } else {
-        dbLocation = {
-            location: convertLocationToPostGISPoint(stoppedLocation),
+        endDbLocation = {
+            location: convertLocationToPostGISPoint(endLocation),
+            name: "Unknown location"
+        }
+    }
+
+    let startLocation = movementRequest.locations![movementRequest.locations!.length - 1];
+    // let startedTime = new Date(Date.parse(endLocation.timestamp))
+    let startDbLocation: DBLocation | undefined = await getClosestUserLocation(userId, startLocation)
+    if (startDbLocation) {
+        console.log(`Start location ${startDbLocation.name} is already registered by this user`)
+    } else {
+        endDbLocation = {
+            location: convertLocationToPostGISPoint(endLocation),
             name: "Unknown location"
         }
     }
@@ -66,27 +83,30 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
     //     console.log("This is a new location.")
     //     dbLocation = await insertLocation(userId, stoppedLocation)
     // }
-    let interaction = `Entered ${dbLocation?.name ?? "unknown location"}`
+    let interaction = `Entered ${endDbLocation?.name ?? "unknown location"}`
 
     let lastEvent = await getLastUnfinishedEvent(userId, "stay", stoppedTime, 24)
     if (lastEvent) {
         console.log("There is a recent stay event already for this user already ")
-        if (lastEvent.metadata?.location?.id == dbLocation?.id) {
-            console.log("Recent stay event exists for the same location, not doing any db changes")
+        if (lastEvent.metadata?.location?.id == endDbLocation?.id) {
+            // end location of polyline is same as the location of the last stay event, so assume user is still at the same location and didn't move
+            console.log("End location same, so don't do anything")
+        } else if (lastEvent.metadata?.location?.id == startDbLocation?.id) {
             updateEvent(lastEvent.id, stoppedTime, {})
-        } else {
+        }else {
+            
             console.log("but it exists but for a different location. Creating a new stay event for this location.")
-            insertStay(userId, stoppedTime, dbLocation)
+            insertStay(userId, stoppedTime, endDbLocation)
         }
         await finishCommute(userId, movementRequest.locations!)
     } else {
         console.log("No stay event found for this user. Creating a new one.");
-        insertStay(userId, stoppedTime, dbLocation)
+        insertStay(userId, stoppedTime, endDbLocation)
         await finishCommute(userId, movementRequest.locations!)
     }
 
     console.log("Interaction: ", interaction);
-    insertInteraction(userId, interaction, "event", {location: dbLocation}, movementRequest.timeStopped)
+    insertInteraction(userId, interaction, "event", {location: endDbLocation}, movementRequest.timeStopped)
 }
 
 export async function startMovementEvent(userId: number, movementRequest: StartMovementRequest) {
