@@ -69,7 +69,6 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
     }
 
     let startLocation = movementRequest.locations![movementRequest.locations!.length - 1];
-    // let startedTime = new Date(Date.parse(endLocation.timestamp))
     let startDbLocation: DBLocation | undefined = await getClosestUserLocation(userId, startLocation)
     if (startDbLocation) {
         console.log(`Start location ${startDbLocation.name} is already registered by this user`)
@@ -79,29 +78,28 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
             name: "Unknown location"
         }
     }
-    // else {
-    //     console.log("This is a new location.")
-    //     dbLocation = await insertLocation(userId, stoppedLocation)
-    // }
     let interaction = `Entered ${endDbLocation?.name ?? "unknown location"}`
 
     let lastEvent = await getLastUnfinishedEvent(userId, "stay", stoppedTime, 24)
     if (lastEvent) {
-        console.log("There is a recent stay event already for this user already ")
-        if (lastEvent.metadata?.location?.id == endDbLocation?.id) {
-            // end location of polyline is same as the location of the last stay event, so assume user is still at the same location and didn't move
-            console.log("End location same, so don't do anything")
-        } else if (lastEvent.metadata?.location?.id == startDbLocation?.id) {
-            console.log("Start location of commute is same as the location of last stay event. Updating the end time.")
-            updateEvent(lastEvent.id, stoppedTime, {})
-        }else {
-            console.log("but it exists but for a different location. Creating a new stay event for this location.")
-            insertStay(userId, stoppedTime, endDbLocation)
+        console.log("There is a recent stay event for this user")
+        if (lastEvent.metadata?.location?.id == startDbLocation?.id) {
+            console.log("Start location of commute is same as the location of last stay event, so stay event is correct.")
+            if (lastEvent.metadata?.location?.id == endDbLocation?.id) {
+                console.log("End location is also same, so don't do anything, means user didn't move. Dont do anything")
+            } else {
+                console.log("End location is different, means user moved, so updating the end time.")
+                updateEvent(lastEvent.id, stoppedTime, {})
+                await finishCommute(userId, movementRequest.locations!)
+            }
+        } else {
+            console.log("But stay event exists but for a different location. Creating a new stay event for this location.")
+            insertStayWithoutStartTime(userId, stoppedTime, startDbLocation)
+            await finishCommute(userId, movementRequest.locations!)
         }
-        await finishCommute(userId, movementRequest.locations!)
     } else {
         console.log("No stay event found for this user. Creating a new one.");
-        insertStay(userId, stoppedTime, endDbLocation)
+        insertStayWithoutStartTime(userId, stoppedTime, endDbLocation)
         await finishCommute(userId, movementRequest.locations!)
     }
 
@@ -202,13 +200,13 @@ async function getLastUnfinishedEvent(userId: number, event_type: string, date: 
     }
 }
 
-function insertStay(userId: number, startTime: Date, dbLocation?: DBLocation) {
+function insertStayWithoutStartTime(userId: number, endTime: Date, dbLocation?: DBLocation) {
     let chain = getHasura();
     chain.mutation({
         insert_events: [{
             objects: [{
                 event_type: "stay",
-                start_time: startTime.toISOString(),
+                end_time: endTime.toISOString(),
                 user_id: userId,
                 metadata: $`metadata`,
             }]
