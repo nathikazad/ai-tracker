@@ -333,6 +333,7 @@ async function finishCommute(userId: number, locations: Location[]) {
     const encodedPolyline = polyline.encode(locations.map(loc => [loc.lat, loc.lon]))
     let endTime = new Date(Date.parse(locations[locations.length - 1].timestamp))
     let lastCommuteEvent = await getLastUnfinishedEvent(userId, "commute", endTime, 8)
+    console.log("Last commute event", lastCommuteEvent)
     let timeDiff
     if (lastCommuteEvent) {
         console.log(`Recent commute event found with distance difference ${calculateDistance(locations[0], lastCommuteEvent.metadata.start_location).toFixed(2)}`)
