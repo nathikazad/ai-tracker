@@ -370,8 +370,10 @@ function secondsToMMSS(seconds: number): string {
 }
 
 function insertNewCommute(userId: number, locations: Location[]) {
-    if (calculateTotalDistance(locations) < 0.2) {
-        console.log(`Commute distance ${calculateTotalDistance(locations).toFixed(2)} is less than 0.5 km. Not creating a new event.`)
+    // if length is greater than 1, means it end commute and in that case if distance is less than 0.2km, don't create a new event
+    // if its 1, means it is start commute event, so create a new event
+    if (locations.length > 1 && calculateTotalDistance(locations) < 0.5) {
+        console.log(`End commute and Commute distance ${calculateTotalDistance(locations).toFixed(2)} is less than 0.5 km. Not creating a new event.`)
         return;
     }
     let startTime = new Date(Date.parse(locations[0].timestamp))
