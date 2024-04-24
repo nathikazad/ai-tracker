@@ -369,12 +369,18 @@ async function finishCommute(userId: number, locations: Location[]) {
 }
 
 function secondsToMMSS(seconds: number): string {
-    const minutes: number = Math.floor(seconds / 60000);
-    const remainingSeconds: number = seconds % 60;
+    const hours: number = Math.floor(seconds / 3600);
+    const remainingSecondsAfterHours: number = seconds % 3600;
+    const minutes: number = Math.floor(remainingSecondsAfterHours / 60);
+    const remainingSeconds: number = remainingSecondsAfterHours % 60;
+
+    const formattedHours: string = String(hours).padStart(2, '0');
     const formattedMinutes: string = String(minutes).padStart(2, '0');
     const formattedSeconds: string = String(remainingSeconds).padStart(2, '0');
-    return `${formattedMinutes}:${formattedSeconds}`;
+
+    return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 }
+
 
 function insertNewCommute(userId: number, locations: Location[]) {
     // if length is greater than 1, means it end commute and in that case if distance is less than 0.2km, don't create a new event
