@@ -59,7 +59,7 @@ class LocationsController: ObservableObject {
         }
         """
         let variables: [String: Any] = ["id": id, "name": name]
-
+        
         struct EditLocationResponse: Decodable {
             var data: EditLocationWrapper
             struct EditLocationWrapper: Decodable {
@@ -78,6 +78,31 @@ class LocationsController: ObservableObject {
         }
     }
     
+    static func createLocation(name:String, lat: Double, lon: Double) {
+        let body:[String:Any] =  [
+            "name": name,
+            "lon": lon,
+            "lat": lat
+        ]
+        Task {
+            do {
+                guard let data = try await ServerCommunicator.sendPostRequest(to: createLocationEndpoint, body: body, token: Authentication.shared.hasuraJwt) else {
+                    print("Failed to receive data or no data returned")
+                    return
+                }
+                if let json = try? JSONSerialization.jsonObject(with: data, options: []),
+                   let jsonData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted),
+                   let jsonString = String(data: jsonData, encoding: .utf8) {
+                    print("Received JSON: \(jsonString)")
+                } else {
+                    print("Failed to decode JSON data")
+                }
+            } catch {
+                print("Error sending data to server or parsing server response: \(error.localizedDescription)")
+            }
+        }
+    }
+    
     
     static func deleteLocation(id: Int, onSuccess: (() -> Void)? = nil) {
         let mutationQuery = """
@@ -88,7 +113,7 @@ class LocationsController: ObservableObject {
         }
         """
         let variables: [String: Any] = ["id": id]
-
+        
         struct DeleteLocationResponse: Decodable {
             var data: DeleteLocationWrapper
             struct DeleteLocationWrapper: Decodable {

@@ -9,11 +9,11 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     
     private var locationUpdateDistanceFilter: CLLocationDistance {
 //        20
-        (currentState == .moving) ? 35 : 50
+        (currentState == .moving) ? 35 : 100
     }
-    private let movementDistanceThresholdWhenStationary: CLLocationDistance = 100 // meters
+    private let movementDistanceThresholdWhenStationary: CLLocationDistance = 200 // meters
     private let movementDistanceThresholdWhenMoving: CLLocationDistance = 10 // meters
-    private let timeToConsiderStationary: TimeInterval = 50 // seconds
+    private let timeToConsiderStationary: TimeInterval = 150 // seconds TODO: change back
     private let rejectedLocationsToAddToMovement: TimeInterval = -120 //seconds
     
     var movementLocations: [CLLocation] = []
@@ -221,24 +221,57 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         movementLocations = [lastStationaryLocation!]
         movementLocations += rejectedLocations.filter { $0.timestamp > Date().addingTimeInterval(rejectedLocationsToAddToMovement) }
         rejectedLocations = []
+        locationManager.stopUpdatingLocation()
+        locationManager.distanceFilter = locationUpdateDistanceFilter
+        locationManager.startUpdatingLocation()
     }
     
 
+    func findLocationsOfInterest(location: CLLocation) async -> String? {
+        let geocoder = CLGeocoder()
+        
+        do {
+            return try await withCheckedThrowingContinuation { continuation in
+                geocoder.reverseGeocodeLocation(location) { placemarks, error in
+                    if let error = error {
+                        continuation.resume(throwing: error)
+                    } else if let placemark = placemarks?.first {
+                        if let areasOfInterest = placemark.areasOfInterest, let firstAreaOfInterest = areasOfInterest.first {
+                            continuation.resume(returning: firstAreaOfInterest)
+                        } else {
+                            continuation.resume(returning: nil)
+                        }
+                    }
+                }
+            }
+        } catch {
+            print("Error: \(error.localizedDescription)")
+            return nil
+        }
+    }
+
     
     func stoppedMoving(currentLocation: CLLocation) {
-        lastStationaryLocation = currentLocation
-        print("LocationManager: StoppedMoving: User has stopped moving for more than \(timeToConsiderStationary) seconds.")
-        movementLocations.append(currentLocation)
-        currentState = .stationary
-        sendToServer(body: [
-            "eventType": "stoppedMoving",
-            "locations": movementLocations.map {
-                $0.toJSON()
-            },
-            "numberOfPoints": movementLocations.count,
-//            "timeSinceLastMovement": Date().timeIntervalSince(previousLocationTime),
-            "timeStopped": HasuraUtil.dateToUTCString(date:Date().addingTimeInterval(-timeToConsiderStationary))
-        ])
+        Task {
+            
+            lastStationaryLocation = currentLocation
+            print("LocationManager: StoppedMoving: User has stopped moving for more than \(timeToConsiderStationary) seconds.")
+            movementLocations.append(currentLocation)
+            currentState = .stationary
+            var body = [
+                "eventType": "stoppedMoving",
+                "locations": movementLocations.map {
+                    $0.toJSON()
+                },
+                "numberOfPoints": movementLocations.count,
+                //            "timeSinceLastMovement": Date().timeIntervalSince(previousLocationTime),
+                "timeStopped": HasuraUtil.dateToUTCString(date:Date().addingTimeInterval(-timeToConsiderStationary))
+            ]
+            if let landmark = await findLocationsOfInterest(location: currentLocation) {
+                body["landmark"] = landmark
+            }
+            sendToServer(body: body)
+        }
 //        movementLocations = []
         rejectedLocations = []
         

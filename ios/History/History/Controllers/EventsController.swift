@@ -164,7 +164,9 @@ class EventsController: ObservableObject {
             let dayAfterUTCString = HasuraUtil.dateToUTCString(date: dayAfterGteDate)
             
             // Combining timestamp conditions using _and
-            let timestampConditions = "{start_time: {_gte: \"\(startOfTodayUTCString)\", _lte: \"\(dayAfterUTCString)\"}}"
+            // Modify the timestampConditions to use the provided condition
+            let timestampConditions = "{_or: [{_and: [{start_time: {_gt: \"\(startOfTodayUTCString)\"}}, {start_time: {_lt: \"\(dayAfterUTCString)\"}}]}, {_and: [{end_time: {_gt: \"\(startOfTodayUTCString)\"}}, {end_time: {_lt: \"\(dayAfterUTCString)\"}}]}]}"
+
             whereClauses.append(timestampConditions)
         }
         
@@ -176,7 +178,26 @@ class EventsController: ObservableObject {
             whereClauses.append("{metadata: {_contains: {location: {id: \(locationId)}}}}")
         }
         
-        var orderByClause = "order_by: {start_time: \(order!)}"
+        var orderByClause: String
+        if order == "asc" {
+            orderByClause = "order_by: {"
+            if whereClauses.contains("{start_time:") {
+                orderByClause += "start_time: asc}"
+            } else if whereClauses.contains("{end_time:") {
+                orderByClause += "end_time: asc}"
+            } else {
+                orderByClause += "start_time: asc}"
+            }
+        } else {
+            orderByClause = "order_by: {"
+            if whereClauses.contains("{start_time:") {
+                orderByClause += "start_time: desc}"
+            } else if whereClauses.contains("{end_time:") {
+                orderByClause += "end_time: desc}"
+            } else {
+                orderByClause += "start_time: desc}" // Default to start_time if neither is specified
+            }
+        }
         
         let whereClause = whereClauses.isEmpty ? "" : "where: {_and: [\(whereClauses.joined(separator: ", "))]}"
         let operationType = isSubscription ? "subscription" : "query"
@@ -194,7 +215,6 @@ class EventsController: ObservableObject {
         }
         """
     }
-
 }
 
 
@@ -228,6 +248,10 @@ struct EventModel: Decodable, Identifiable {
     
     var formattedTimeWithDate: String {
         return "\(HasuraUtil.formattedDateWithoutTimeZone(timestamp: startTime) ?? ""): \(formattedTime)"
+    }
+    
+    var locationName: String? {
+        return metadata?.location?.name
     }
 
 }

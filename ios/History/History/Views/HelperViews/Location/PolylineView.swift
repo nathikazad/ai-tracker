@@ -51,15 +51,6 @@ struct MapCoordinate: Identifiable {
     let coordinate: CLLocationCoordinate2D
 }
 
-func generateSamplePolyline() -> [MapCoordinate] {
-    // Generating a sample polyline for demonstration
-    let point1 = MapCoordinate(coordinate: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194))
-    let point2 = MapCoordinate(coordinate: CLLocationCoordinate2D(latitude: 37.8044, longitude: -122.2711))
-    let point3 = MapCoordinate(coordinate: CLLocationCoordinate2D(latitude: 37.8716, longitude: -122.2727))
-    let point4 = MapCoordinate(coordinate: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194))
-    return [point1, point2, point3, point4]
-}
-
 
 func decodePolyline(_ encodedPolyline: String) -> [MapCoordinate]? {
     var index = encodedPolyline.startIndex
@@ -106,3 +97,45 @@ func decodePolyline(_ encodedPolyline: String) -> [MapCoordinate]? {
     
     return decodedCoordinates
 }
+
+
+//struct PolylineView: UIViewRepresentable {
+//    var encodedPolyline: String
+//    
+//    func makeUIView(context: Context) -> MKMapView {
+//        let mapView = MKMapView()
+//        mapView.delegate = context.coordinator
+//        
+//        if let decodedPolyline = decodePolyline(encodedPolyline) {
+//            let polyline = MKPolyline(coordinates: decodedPolyline, count: decodedPolyline.count)
+//            mapView.addOverlay(polyline)
+//            
+//            // Adjust map region to fit polyline
+//            let polylineBoundingRect = polyline.boundingMapRect
+//            let edgeInsets = UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50)
+//            mapView.setVisibleMapRect(polylineBoundingRect, edgePadding: edgeInsets, animated: true)
+//        }
+//        
+//        return mapView
+//    }
+//    
+//    func updateUIView(_ mapView: MKMapView, context: Context) {
+//        // Update the view
+//    }
+//    
+//    func makeCoordinator() -> Coordinator {
+//        Coordinator()
+//    }
+//    
+//    class Coordinator: NSObject, MKMapViewDelegate {
+//        func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+//            if let polyline = overlay as? MKPolyline {
+//                let renderer = MKPolylineRenderer(polyline: polyline)
+//                renderer.strokeColor = .blue
+//                renderer.lineWidth = 3
+//                return renderer
+//            }
+//            return MKOverlayRenderer()
+//        }
+//    }
+//}

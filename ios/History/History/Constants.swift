@@ -17,6 +17,7 @@ let parseAudioEndpoint = fullURL(for: "parseUserRequestFromAudio")
 let parseTextEndpoint = fullURL(for: "parseUserRequestFromText")
 let getJwtEndpoint = fullURL(for: "hasuraJWT")
 let updateMovementEndpoint = fullURL(for: "updateMovement")
+let createLocationEndpoint = fullURL(for: "createLocation")
 
 
 // Constants

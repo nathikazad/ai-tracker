@@ -66,3 +66,6 @@ uploads/
 
 # dotenv environment variables file
 .env
+
+
+*.xcuserstate

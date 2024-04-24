@@ -88,18 +88,17 @@ struct EventsView: View {
                     Divider()
                     if let location = event.metadata?.location {
                         NavigationLink(destination: LocationDetailView(location: location)) {
-                            Text(event.eventType)
+                            Text("\(event.eventType) \(event.locationName ?? String(event.id))")
                                 .font(.subheadline)
                         }
                     } else if let polyline = event.metadata?.polyline {
                         NavigationLink(destination: PolylineView(encodedPolyline: polyline)) {
-                            Text(event.eventType)
+                            Text("\(event.eventType) \(event.locationName ?? String(event.id))")
                                 .font(.subheadline)
                         }
                     } else {
-                        Text("\(event.eventType) \(event.id)")
+                        Text("\(event.eventType) \(event.locationName ?? String(event.id))")
                             .font(.subheadline)
-                            .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
                 .swipeActions(edge: .leading, allowsFullSwipe: true) {
