@@ -145,6 +145,7 @@ export async function processMovement(userId: number, movementRequest: StopMovem
 // if yes, update the stay event with the end time
 // if no, create a new stay event
 async function stopMovementEvent(userId: number, movementRequest: StopMovementRequest) {
+    console.log(`landmark: ${movementRequest.landmark}`);
     const encodedPolyline = polyline.encode(movementRequest.locations.map(loc => [loc.lat, loc.lon]))
     console.log(`Stopped moving. Total distance: ${encodedPolyline} ${calculateTotalDistance(movementRequest.locations).toFixed(2)} km`);
 
@@ -183,7 +184,7 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
                 return
             } else {
                 console.log("End location is different, means user moved, so updating the end time.")
-                updateEvent(lastEvent.id, stoppedTime, {})
+                updateEvent(lastEvent.id, stoppedTime, undefined, {})
                 await finishCommute(userId, movementRequest.locations!)
             }
         } else {
@@ -211,9 +212,9 @@ export async function startMovementEvent(userId: number, movementRequest: StartM
     if (lastEvent) {
         console.log(`Recent stay event found with id ${lastEvent} name ${lastEvent.metadata?.location?.name}. Updating the end time.`);
 
-        let timeAtLocation = movementStartedTime.getTime() - Date.parse(lastEvent.start_time)
+        let timeAtLocation = (movementStartedTime.getTime() - new Date(Date.parse(lastEvent.start_time)).getTime())/1000
         let interaction = `Left ${lastEvent?.metadata?.location?.name ? lastEvent.metadata.location.name : "location"} after ${secondsToMMSS(timeAtLocation)}`
-        updateEvent(lastEvent.id, movementStartedTime, {
+        updateEvent(lastEvent.id, movementStartedTime, timeAtLocation,{
             total_time: secondsToMMSS(timeAtLocation)
         })
         insertInteraction(userId, interaction, "event", { location: lastEvent.metadata })
@@ -323,7 +324,7 @@ function insertStay(userId: number, startTime: Date | undefined, endTime: Date |
     })
 }
 
-function updateEvent(id: number, endTime: Date, metadata: any) {
+function updateEvent(id: number, endTime: Date, costTime: number | undefined, metadata: any) {
     let chain = getHasura();
     chain.mutation({
         update_events_by_pk: [{
@@ -362,8 +363,9 @@ async function finishCommute(userId: number, locations: Location[]) {
         if (calculateDistance(locations[0], lastCommuteEvent.metadata.start_location) < 0.7) {
             console.log("Commute event found for the same location. Updating the end time and polyline.")
             let startTime = new Date(Date.parse(locations[0].timestamp))
-            timeDiff = secondsToMMSS(endTime.getTime() - startTime.getTime())
-            updateEvent(lastCommuteEvent.id, endTime, { polyline: encodedPolyline, time_taken: timeDiff, distance: totalDistance.toFixed(2) });
+            let totalTime = (endTime.getTime() - startTime.getTime())/1000
+            timeDiff = secondsToMMSS(totalTime)
+            updateEvent(lastCommuteEvent.id, endTime, totalTime, { polyline: encodedPolyline, time_taken: timeDiff, distance: totalDistance.toFixed(2) });
         } else {
             console.log("Commute event found but for a different location. Creating a new one.")
             insertNewCommute(userId, locations);
@@ -371,7 +373,8 @@ async function finishCommute(userId: number, locations: Location[]) {
     } else {
         console.log("No recent commute event found. Creating a new one.")
         let startTime = new Date(Date.parse(locations[0].timestamp))
-        timeDiff = secondsToMMSS(endTime.getTime() - startTime.getTime())
+        let totalTime = (endTime.getTime() - startTime.getTime())/1000
+        timeDiff = secondsToMMSS(totalTime)
         insertNewCommute(userId, locations);
     }
 
@@ -386,7 +389,7 @@ async function finishCommute(userId: number, locations: Location[]) {
 
 }
 
-function secondsToMMSS(seconds: number): string {
+export function secondsToMMSS(seconds: number): string {
     const hours: number = Math.floor(seconds / 3600);
     const remainingSecondsAfterHours: number = seconds % 3600;
     const minutes: number = Math.floor(remainingSecondsAfterHours / 60);
@@ -408,11 +411,12 @@ function insertNewCommute(userId: number, locations: Location[]) {
         return;
     }
     let startTime = new Date(Date.parse(locations[0].timestamp))
-    let metadata, endTime
+    let metadata, endTime, costTime
     if (locations.length > 1) {
         let encodedPolyline = polyline.encode(locations.map(loc => [loc.lat, loc.lon]))
         endTime = new Date(Date.parse(locations[locations.length - 1].timestamp))
-        let timeDiff = secondsToMMSS(endTime.getTime() - startTime.getTime())
+        costTime = (endTime.getTime() - startTime.getTime())/1000
+        let timeDiff = secondsToMMSS(costTime)
         let totalDistance = calculateTotalDistance(locations)
         metadata = { polyline: encodedPolyline, time_taken: timeDiff, distance: totalDistance.toFixed(2) }
     } else {
@@ -429,7 +433,8 @@ function insertNewCommute(userId: number, locations: Location[]) {
                 metadata: $`metadata`,
                 user_id: userId,
                 start_time: startTime.toISOString(),
-                end_time: endTime?.toISOString()
+                end_time: endTime?.toISOString(),
+                cost_time: costTime
             }]
         }, {
             returning: {
