@@ -96,12 +96,12 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
         } else {
             console.log("But stay event exists but for a different location. Creating a new stay event for this location.")
             insertStay(userId, startedTime, undefined, startDbLocation)
-            // await finishCommute(userId, movementRequest.locations!)
+            await finishCommute(userId, movementRequest.locations!)
         }
     } else {
         console.log("No stay event found for this user. Creating a new event without end.");
         insertStay(userId, startedTime, undefined, startDbLocation)
-        // await finishCommute(userId, movementRequest.locations!)
+        await finishCommute(userId, movementRequest.locations!)
     }
 
     console.log("Interaction: ", interaction);
