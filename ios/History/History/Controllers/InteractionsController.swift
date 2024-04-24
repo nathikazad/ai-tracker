@@ -181,7 +181,7 @@ class InteractionsController: ObservableObject {
 struct InteractionModel: Decodable, Identifiable {
     var id: Int
     var content: String
-    var timestamp: String
+    var timestamp: Date
     var events: [EventModel]
     
     enum CodingKeys: String, CodingKey {
@@ -191,20 +191,30 @@ struct InteractionModel: Decodable, Identifiable {
         case events
     }
     
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(Int.self, forKey: .id)
+        content = try container.decode(String.self, forKey: .content)
+        
+        // Decode the timestamp as a Date
+        let timestampString = try container.decode(String.self, forKey: .timestamp)
+        guard let timestampDate = HasuraUtil.getTime(timestamp: timestampString) else {
+            throw DecodingError.dataCorruptedError(forKey: .timestamp,
+                                                  in: container,
+                                                  debugDescription: "Date string does not conform to expected format.")
+        }
+        timestamp = timestampDate
+
+        // Decode the array of EventModel objects
+        events = try container.decode([EventModel].self, forKey: .events)
+    }
+    
     var event : EventModel? {
         return (!events.isEmpty) ? events[0] : nil
     }
     
     var location : LocationModel? {
         return event?.metadata?.location
-    }
-    
-    var justDate: String {
-        return HasuraUtil.justDate(timestamp: timestamp)
-    }
-    
-    var formattedTime: String {
-        return HasuraUtil.formattedTime(timestamp: timestamp)
     }
 }
 

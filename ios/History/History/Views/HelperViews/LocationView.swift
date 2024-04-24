@@ -48,17 +48,6 @@ struct LocationDetailView: View {
                     })
                     .padding()
                 }
-                //                if(location.id != nil) {
-                //                    Button(action: {
-                //                        Task {
-                //                            await LocationsController.deleteLocation(id: location.id!)
-                //                            presentationMode.wrappedValue.dismiss()
-                //                        }
-                //                    }, label: {
-                //                        Text("Delete")
-                //                    })
-                //                    .padding()
-                //                }
             }
             
             Map(coordinateRegion: $region, showsUserLocation: true, annotationItems: [location]) { l in
@@ -87,3 +76,15 @@ struct LocationDetailView: View {
     }
 }
 
+
+//                if(location.id != nil) {
+//                    Button(action: {
+//                        Task {
+//                            await LocationsController.deleteLocation(id: location.id!)
+//                            presentationMode.wrappedValue.dismiss()
+//                        }
+//                    }, label: {
+//                        Text("Delete")
+//                    })
+//                    .padding()
+//                }

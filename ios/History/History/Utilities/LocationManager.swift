@@ -11,7 +11,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
 //        20
         (currentState == .moving) ? 35 : 100
     }
-    private let movementDistanceThresholdWhenStationary: CLLocationDistance = 200 // meters
+    private let movementDistanceThresholdWhenStationary: CLLocationDistance = 150 // meters
     private let movementDistanceThresholdWhenMoving: CLLocationDistance = 10 // meters
     private let timeToConsiderStationary: TimeInterval = 150 // seconds TODO: change back
     private let rejectedLocationsToAddToMovement: TimeInterval = -120 //seconds
@@ -140,6 +140,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
                 let distance = location.distance(from: lastStationaryLocation)
                 print("LocationManager: UpdateLocation: Distance from last stationary location: \(distance)")
                 if distance > movementDistanceThresholdWhenStationary + location.horizontalAccuracy + lastStationaryLocation.horizontalAccuracy {
+                    // TODO: wait for 3 more locations that are beyond threshold within last n minutes and modify movementDistanceThresholdWhenStationary to be lower
                     startedMoving(distance: distance, lastLocation: lastStationaryLocation, newLocation: location )
                 } else {
                     rejectedLocations.append(location)

@@ -223,8 +223,8 @@ struct EventModel: Decodable, Identifiable {
     var id: Int
     var parentId: Int?
     var eventType: String
-    var startTime: String?
-    var endTime: String?
+    var startTime: Date?
+    var endTime: Date?
     var metadata: Metadata?
     
     enum CodingKeys: String, CodingKey {
@@ -236,9 +236,24 @@ struct EventModel: Decodable, Identifiable {
         case metadata
     }
     
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(Int.self, forKey: .id)
+        parentId = try container.decodeIfPresent(Int.self, forKey: .parentId)
+        eventType = try container.decode(String.self, forKey: .eventType)
+        metadata = try container.decodeIfPresent(Metadata.self, forKey: .metadata)
+
+        // Decode the dates as Strings, then convert to Dates using getTime
+        let startTimeString = try container.decodeIfPresent(String.self, forKey: .startTime)
+        startTime = HasuraUtil.getTime(timestamp: startTimeString)
+
+        let endTimeString = try container.decodeIfPresent(String.self, forKey: .endTime)
+        endTime = HasuraUtil.getTime(timestamp: endTimeString)
+    }
+    
     var formattedTime: String {
-        let formattedStartTime = HasuraUtil.formattedTimeWithoutTimeZone(timestamp: startTime) ?? ""
-        let formattedEndTime = HasuraUtil.formattedTimeWithoutTimeZone(timestamp: endTime)
+        let formattedStartTime = startTime?.formattedTime ?? ""
+        let formattedEndTime = endTime?.formattedTime
         if let endTime = formattedEndTime {
             return "\(formattedStartTime) - \(endTime)"
         } else {
@@ -247,7 +262,7 @@ struct EventModel: Decodable, Identifiable {
     }
     
     var formattedTimeWithDate: String {
-        return "\(HasuraUtil.formattedDateWithoutTimeZone(timestamp: startTime) ?? ""): \(formattedTime)"
+        return "\(startTime?.formattedDate ?? ""): \(formattedTime)"
     }
     
     var locationName: String? {
@@ -259,9 +274,13 @@ struct EventModel: Decodable, Identifiable {
 struct Metadata: Decodable {
     var location: LocationModel?
     var polyline: String?
+    var timeTaken: String?
+    var distance: String?
     enum CodingKeys: String, CodingKey {
         case location
         case polyline
+        case timeTaken = "time_taken"
+        case distance
     }
 }
 

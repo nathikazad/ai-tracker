@@ -213,9 +213,9 @@ export async function startMovementEvent(userId: number, movementRequest: StartM
         console.log(`Recent stay event found with id ${lastEvent} name ${lastEvent.metadata?.location?.name}. Updating the end time.`);
 
         let timeAtLocation = (movementStartedTime.getTime() - new Date(Date.parse(lastEvent.start_time)).getTime())/1000
-        let interaction = `Left ${lastEvent?.metadata?.location?.name ? lastEvent.metadata.location.name : "location"} after ${secondsToMMSS(timeAtLocation)}`
+        let interaction = `Left ${lastEvent?.metadata?.location?.name ? lastEvent.metadata.location.name : "location"} after ${secondsToHHMM(timeAtLocation)}`
         updateEvent(lastEvent.id, movementStartedTime, timeAtLocation,{
-            total_time: secondsToMMSS(timeAtLocation)
+            total_time: secondsToHHMM(timeAtLocation)
         })
         insertInteraction(userId, interaction, "event", { location: lastEvent.metadata })
     } else {
@@ -364,7 +364,7 @@ async function finishCommute(userId: number, locations: Location[]) {
             console.log("Commute event found for the same location. Updating the end time and polyline.")
             let startTime = new Date(Date.parse(locations[0].timestamp))
             let totalTime = (endTime.getTime() - startTime.getTime())/1000
-            timeDiff = secondsToMMSS(totalTime)
+            timeDiff = secondsToHHMM(totalTime)
             updateEvent(lastCommuteEvent.id, endTime, totalTime, { polyline: encodedPolyline, time_taken: timeDiff, distance: totalDistance.toFixed(2) });
         } else {
             console.log("Commute event found but for a different location. Creating a new one.")
@@ -374,7 +374,7 @@ async function finishCommute(userId: number, locations: Location[]) {
         console.log("No recent commute event found. Creating a new one.")
         let startTime = new Date(Date.parse(locations[0].timestamp))
         let totalTime = (endTime.getTime() - startTime.getTime())/1000
-        timeDiff = secondsToMMSS(totalTime)
+        timeDiff = secondsToHHMM(totalTime)
         insertNewCommute(userId, locations);
     }
 
@@ -389,7 +389,7 @@ async function finishCommute(userId: number, locations: Location[]) {
 
 }
 
-export function secondsToMMSS(seconds: number): string {
+export function secondsToHHMM(seconds: number): string {
     const hours: number = Math.floor(seconds / 3600);
     const remainingSecondsAfterHours: number = seconds % 3600;
     const minutes: number = Math.floor(remainingSecondsAfterHours / 60);
@@ -416,7 +416,7 @@ function insertNewCommute(userId: number, locations: Location[]) {
         let encodedPolyline = polyline.encode(locations.map(loc => [loc.lat, loc.lon]))
         endTime = new Date(Date.parse(locations[locations.length - 1].timestamp))
         costTime = (endTime.getTime() - startTime.getTime())/1000
-        let timeDiff = secondsToMMSS(costTime)
+        let timeDiff = secondsToHHMM(costTime)
         let totalDistance = calculateTotalDistance(locations)
         metadata = { polyline: encodedPolyline, time_taken: timeDiff, distance: totalDistance.toFixed(2) }
     } else {

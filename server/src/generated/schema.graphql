@@ -413,6 +413,7 @@ type event_types {
     """filter the rows returned"""
     where: event_types_bool_exp
   ): event_types_aggregate!
+  embedding: vector
   metadata(
     """JSON select path"""
     path: String
@@ -487,6 +488,7 @@ input event_types_bool_exp {
   _or: [event_types_bool_exp!]
   children: event_types_bool_exp
   children_aggregate: event_types_aggregate_bool_exp
+  embedding: vector_comparison_exp
   metadata: jsonb_comparison_exp
   name: String_comparison_exp
   parent: String_comparison_exp
@@ -535,6 +537,7 @@ input type for inserting data into table "event_types"
 """
 input event_types_insert_input {
   children: event_types_arr_rel_insert_input
+  embedding: vector
   metadata: jsonb
   name: String
   parent: String
@@ -611,6 +614,7 @@ input event_types_on_conflict {
 """Ordering options when selecting data from "event_types"."""
 input event_types_order_by {
   children_aggregate: event_types_aggregate_order_by
+  embedding: order_by
   metadata: order_by
   name: order_by
   parent: order_by
@@ -632,6 +636,9 @@ select columns of table "event_types"
 """
 enum event_types_select_column {
   """column name"""
+  embedding
+
+  """column name"""
   metadata
 
   """column name"""
@@ -645,6 +652,7 @@ enum event_types_select_column {
 input type for updating data in table "event_types"
 """
 input event_types_set_input {
+  embedding: vector
   metadata: jsonb
   name: String
   parent: String
@@ -663,6 +671,7 @@ input event_types_stream_cursor_input {
 
 """Initial value of the column from where the streaming should start"""
 input event_types_stream_cursor_value_input {
+  embedding: vector
   metadata: jsonb
   name: String
   parent: String
@@ -672,6 +681,9 @@ input event_types_stream_cursor_value_input {
 update columns of table "event_types"
 """
 enum event_types_update_column {
+  """column name"""
+  embedding
+
   """column name"""
   metadata
 

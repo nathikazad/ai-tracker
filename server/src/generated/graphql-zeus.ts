@@ -266,6 +266,7 @@ children_aggregate?: [{	/** distinct select on columns */
 	offset?:number,	/** sort the rows by one or more columns */
 	order_by?:ValueTypes["event_types_order_by"][],	/** filter the rows returned */
 	where?:ValueTypes["event_types_bool_exp"]},ValueTypes["event_types_aggregate"]],
+	embedding?:true,
 metadata?: [{	/** JSON select path */
 	path?:string},true],
 	name?:true,
@@ -319,6 +320,7 @@ count?: [{	columns?:ValueTypes["event_types_select_column"][],	distinct?:boolean
 	_or?:ValueTypes["event_types_bool_exp"][],
 	children?:ValueTypes["event_types_bool_exp"],
 	children_aggregate?:ValueTypes["event_types_aggregate_bool_exp"],
+	embedding?:ValueTypes["vector_comparison_exp"],
 	metadata?:ValueTypes["jsonb_comparison_exp"],
 	name?:ValueTypes["String_comparison_exp"],
 	parent?:ValueTypes["String_comparison_exp"],
@@ -342,6 +344,7 @@ end). throws an error if top level container is not an array */
 	/** input type for inserting data into table "event_types" */
 ["event_types_insert_input"]: {
 	children?:ValueTypes["event_types_arr_rel_insert_input"],
+	embedding?:ValueTypes["vector"],
 	metadata?:ValueTypes["jsonb"],
 	name?:string,
 	parent?:string
@@ -395,6 +398,7 @@ end). throws an error if top level container is not an array */
 	/** Ordering options when selecting data from "event_types". */
 ["event_types_order_by"]: {
 	children_aggregate?:ValueTypes["event_types_aggregate_order_by"],
+	embedding?:ValueTypes["order_by"],
 	metadata?:ValueTypes["order_by"],
 	name?:ValueTypes["order_by"],
 	parent?:ValueTypes["order_by"],
@@ -412,6 +416,7 @@ end). throws an error if top level container is not an array */
 ["event_types_select_column"]:event_types_select_column;
 	/** input type for updating data in table "event_types" */
 ["event_types_set_input"]: {
+	embedding?:ValueTypes["vector"],
 	metadata?:ValueTypes["jsonb"],
 	name?:string,
 	parent?:string
@@ -425,6 +430,7 @@ end). throws an error if top level container is not an array */
 };
 	/** Initial value of the column from where the streaming should start */
 ["event_types_stream_cursor_value_input"]: {
+	embedding?:ValueTypes["vector"],
 	metadata?:ValueTypes["jsonb"],
 	name?:string,
 	parent?:string
@@ -3161,6 +3167,7 @@ export type PartialObjects = {
 	children?:PartialObjects["event_types"][],
 			/** An aggregate relationship */
 	children_aggregate?:PartialObjects["event_types_aggregate"],
+			embedding?:PartialObjects["vector"],
 			metadata?:PartialObjects["jsonb"],
 			name?:string,
 			parent?:string,
@@ -3212,6 +3219,7 @@ export type PartialObjects = {
 	_or?:PartialObjects["event_types_bool_exp"][],
 	children?:PartialObjects["event_types_bool_exp"],
 	children_aggregate?:PartialObjects["event_types_aggregate_bool_exp"],
+	embedding?:PartialObjects["vector_comparison_exp"],
 	metadata?:PartialObjects["jsonb_comparison_exp"],
 	name?:PartialObjects["String_comparison_exp"],
 	parent?:PartialObjects["String_comparison_exp"],
@@ -3235,6 +3243,7 @@ end). throws an error if top level container is not an array */
 	/** input type for inserting data into table "event_types" */
 ["event_types_insert_input"]: {
 	children?:PartialObjects["event_types_arr_rel_insert_input"],
+	embedding?:PartialObjects["vector"],
 	metadata?:PartialObjects["jsonb"],
 	name?:string,
 	parent?:string
@@ -3288,6 +3297,7 @@ end). throws an error if top level container is not an array */
 	/** Ordering options when selecting data from "event_types". */
 ["event_types_order_by"]: {
 	children_aggregate?:PartialObjects["event_types_aggregate_order_by"],
+	embedding?:PartialObjects["order_by"],
 	metadata?:PartialObjects["order_by"],
 	name?:PartialObjects["order_by"],
 	parent?:PartialObjects["order_by"],
@@ -3305,6 +3315,7 @@ end). throws an error if top level container is not an array */
 ["event_types_select_column"]:event_types_select_column,
 	/** input type for updating data in table "event_types" */
 ["event_types_set_input"]: {
+	embedding?:PartialObjects["vector"],
 	metadata?:PartialObjects["jsonb"],
 	name?:string,
 	parent?:string
@@ -3318,6 +3329,7 @@ end). throws an error if top level container is not an array */
 },
 	/** Initial value of the column from where the streaming should start */
 ["event_types_stream_cursor_value_input"]: {
+	embedding?:PartialObjects["vector"],
 	metadata?:PartialObjects["jsonb"],
 	name?:string,
 	parent?:string
@@ -5824,6 +5836,7 @@ export type event_types = {
 	children:event_types[],
 	/** An aggregate relationship */
 	children_aggregate:event_types_aggregate,
+	embedding?:vector,
 	metadata?:jsonb,
 	name:string,
 	parent?:string,
@@ -5883,6 +5896,7 @@ export type event_types_bool_exp = {
 	_or?:event_types_bool_exp[],
 	children?:event_types_bool_exp,
 	children_aggregate?:event_types_aggregate_bool_exp,
+	embedding?:vector_comparison_exp,
 	metadata?:jsonb_comparison_exp,
 	name?:String_comparison_exp,
 	parent?:String_comparison_exp,
@@ -5914,6 +5928,7 @@ export type event_types_delete_key_input = {
 /** input type for inserting data into table "event_types" */
 export type event_types_insert_input = {
 		children?:event_types_arr_rel_insert_input,
+	embedding?:vector,
 	metadata?:jsonb,
 	name?:string,
 	parent?:string
@@ -5975,6 +5990,7 @@ export type event_types_on_conflict = {
 /** Ordering options when selecting data from "event_types". */
 export type event_types_order_by = {
 		children_aggregate?:event_types_aggregate_order_by,
+	embedding?:order_by,
 	metadata?:order_by,
 	name?:order_by,
 	parent?:order_by,
@@ -5993,6 +6009,7 @@ export type event_types_prepend_input = {
 
 /** select columns of table "event_types" */
 export enum event_types_select_column {
+	embedding = "embedding",
 	metadata = "metadata",
 	name = "name",
 	parent = "parent"
@@ -6000,7 +6017,8 @@ export enum event_types_select_column {
 
 /** input type for updating data in table "event_types" */
 export type event_types_set_input = {
-		metadata?:jsonb,
+		embedding?:vector,
+	metadata?:jsonb,
 	name?:string,
 	parent?:string
 }
@@ -6015,13 +6033,15 @@ export type event_types_stream_cursor_input = {
 
 /** Initial value of the column from where the streaming should start */
 export type event_types_stream_cursor_value_input = {
-		metadata?:jsonb,
+		embedding?:vector,
+	metadata?:jsonb,
 	name?:string,
 	parent?:string
 }
 
 /** update columns of table "event_types" */
 export enum event_types_update_column {
+	embedding = "embedding",
 	metadata = "metadata",
 	name = "name",
 	parent = "parent"
@@ -9286,6 +9306,12 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
+		embedding:{
+			type:"vector_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		metadata:{
 			type:"jsonb_comparison_exp",
 			array:false,
@@ -9339,6 +9365,12 @@ export const AllTypesProps: Record<string,any> = {
 	event_types_insert_input:{
 		children:{
 			type:"event_types_arr_rel_insert_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		embedding:{
+			type:"vector",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -9431,6 +9463,12 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
+		embedding:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		metadata:{
 			type:"order_by",
 			array:false,
@@ -9474,6 +9512,12 @@ export const AllTypesProps: Record<string,any> = {
 	},
 	event_types_select_column: "enum",
 	event_types_set_input:{
+		embedding:{
+			type:"vector",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		metadata:{
 			type:"jsonb",
 			array:false,
@@ -9508,6 +9552,12 @@ export const AllTypesProps: Record<string,any> = {
 		}
 	},
 	event_types_stream_cursor_value_input:{
+		embedding:{
+			type:"vector",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		metadata:{
 			type:"jsonb",
 			array:false,
@@ -16835,6 +16885,7 @@ export const ReturnTypes: Record<string,any> = {
 	event_types:{
 		children:"event_types",
 		children_aggregate:"event_types_aggregate",
+		embedding:"vector",
 		metadata:"jsonb",
 		name:"String",
 		parent:"String",

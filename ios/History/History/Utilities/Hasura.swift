@@ -317,38 +317,8 @@ class HasuraUtil {
         return formatter.string(from: date)
     }
     
-    static func justDate(timestamp: String) -> String {
-        let isoFormatter = ISO8601DateFormatter()
-        isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        
-        // Attempt to parse the ISO 8601 date string into a Date object
-        guard let date = isoFormatter.date(from: timestamp) else {
-            return "Invalid Date"
-        }
-        
-        // Create a DateFormatter to output just the date part
-        let dateFormatter = DateFormatter()
-        dateFormatter.timeZone = TimeZone.current // Convert to the local time zone or specify if needed (e.g., PST)
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        
-        // Return the formatted date string adjusted to the local time zone
-        return dateFormatter.string(from: date)
-    }
     
-    static func formattedTime(timestamp: String) -> String {
-        let isoFormatter = ISO8601DateFormatter()
-        isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds] // Ensure fractional seconds are parsed
-        if let date = isoFormatter.date(from: timestamp) {
-            let localFormatter = DateFormatter()
-            localFormatter.timeZone = TimeZone.current // Convert to local time zone
-            localFormatter.dateFormat = "hh:mm a" // Specify your desired format
-            
-            return localFormatter.string(from: date)
-        }
-        return "Invalid Time" // Return a default or error message if parsing fails
-    }
-    
-    static func formattedTimeWithoutTimeZone(timestamp: String?) -> String? {
+    static func getTime(timestamp: String?) -> Date? {
         if(timestamp == nil) {
             return nil
         }
@@ -360,38 +330,29 @@ class HasuraUtil {
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
         dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
 
-        if let utcDate = dateFormatter.date(from: timeToFormat) {
-            dateFormatter.timeZone = TimeZone.current
-            dateFormatter.dateFormat = "hh:mm a"
-            let localTimeString = dateFormatter.string(from: utcDate)
-                return localTimeString
-            } else {
-                print(timeToFormat)
-                return nil
-            }
-        }
-    
-    static func formattedDateWithoutTimeZone(timestamp: String?) -> String? {
-        if(timestamp == nil) {
-            return nil
-        }
-        var timeToFormat = timestamp!
-        if timeToFormat.contains(".") {
-            timeToFormat = String(timeToFormat.prefix(upTo: timeToFormat.range(of: ".")!.lowerBound))
-        }
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-        dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
+        return dateFormatter.date(from: timeToFormat)
+    }
+}
 
-        if let utcDate = dateFormatter.date(from: timeToFormat) {
-            dateFormatter.timeZone = TimeZone.current
-            dateFormatter.dateFormat = "EEE MM/dd"
-            let localTimeString = dateFormatter.string(from: utcDate)
-                return localTimeString
-            } else {
-                print(timeToFormat)
-                return nil
-            }
-        }
+extension Date {
+    var formattedTime: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "hh:mm a" // 12-hour format with AM/PM
+        dateFormatter.timeZone = TimeZone.current // Local time zone
+        return dateFormatter.string(from: self) // Format date to string
+    }
+    var formattedDate: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "EEE MM/dd" // Day of the week and date
+        dateFormatter.timeZone = TimeZone.current // Local time zone
+        return dateFormatter.string(from: self) // Format date to string
+    }
     
+    var durationSinceInHHMM: String {
+        let currentDate = Date()
+        let duration = Int(currentDate.timeIntervalSince(self)) // duration in seconds
+        let hours = duration / 3600
+        let minutes = (duration % 3600) / 60
+        return String(format: "%02d:%02d", hours, minutes)
+    }
 }

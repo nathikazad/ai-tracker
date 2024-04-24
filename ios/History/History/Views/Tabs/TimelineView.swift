@@ -96,7 +96,7 @@ struct TimelineView: View {
         List {
             ForEach(interactionController.interactions, id: \.id) { interaction in
                 HStack {
-                    Text(interaction.formattedTime)
+                    Text(interaction.timestamp.formattedTime)
                         .font(.headline)
                         .frame(width: 100, alignment: .leading)
                     Divider()

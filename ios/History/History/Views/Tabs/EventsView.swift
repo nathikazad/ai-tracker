@@ -80,7 +80,7 @@ struct EventsView: View {
     
     private var listView: some View {
         List {
-            ForEach(eventController.events, id: \.id) { event in
+            ForEach(Array(eventController.events.enumerated()), id: \.element.id) { index, event in
                 HStack {
                     Text(event.formattedTime)
                         .font(.headline)
@@ -88,17 +88,14 @@ struct EventsView: View {
                     Divider()
                     if let location = event.metadata?.location {
                         NavigationLink(destination: LocationDetailView(location: location)) {
-                            Text("\(event.eventType) \(event.locationName ?? String(event.id))")
-                                .font(.subheadline)
+                            formatEventText(for: event, isLast: index == eventController.events.count - 1)
                         }
                     } else if let polyline = event.metadata?.polyline {
                         NavigationLink(destination: PolylineView(encodedPolyline: polyline)) {
-                            Text("\(event.eventType) \(event.locationName ?? String(event.id))")
-                                .font(.subheadline)
+                            formatEventText(for: event, isLast: index == eventController.events.count - 1)
                         }
                     } else {
-                        Text("\(event.eventType) \(event.locationName ?? String(event.id))")
-                            .font(.subheadline)
+                        formatEventText(for: event, isLast: index == eventController.events.count - 1)
                     }
                 }
                 .swipeActions(edge: .leading, allowsFullSwipe: true) {
@@ -118,6 +115,44 @@ struct EventsView: View {
             }
         }
     }
+    
+
+    func formatEventText(for event: EventModel, isLast: Bool) -> some View {
+        VStack(alignment: .leading, spacing: 5) {
+            Text("\(event.eventType.capitalized) (\(event.id))")
+                .font(.subheadline)
+            
+            // Use Group to handle multiple Text views within VStack
+            Group {
+                // Location Handling
+                if let location = event.metadata?.location?.name ?? event.locationName {
+                    Text("\(location)")
+                        .padding(.leading, 10)
+                        .font(.subheadline)
+                }
+                
+                // Time and Distance Handling
+                if let timeTaken = event.metadata?.timeTaken {
+                    Text("Time: \(timeTaken)")
+                        .padding(.leading, 10)
+                        .font(.subheadline)
+                }
+                if let distance = event.metadata?.distance {
+                    Text("Distance: \(distance)km")
+                        .padding(.leading, 10)
+                        .font(.subheadline)
+                }
+
+                // Special handling for "stay" event type
+                if isLast && event.endTime == nil && event.startTime != nil {
+                    Text("Time: \(event.startTime!.durationSinceInHHMM)")
+                        .padding(.leading, 10)
+                        .font(.subheadline)
+                }
+            }
+        }
+    }
+
     
     private var popupView: some View {
         Group {
