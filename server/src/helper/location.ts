@@ -357,10 +357,15 @@ async function finishCommute(userId: number, locations: Location[]) {
         insertNewCommute(userId, locations);
     }
 
-    let timeDiffText = timeDiff ? `Time taken: ${timeDiff}` : ""
-    await insertInteraction(userId, `Finished Commute. ${totalDistance.toFixed(0)}km ${timeDiffText}`, "event", {
-        polyline: encodedPolyline
-    })
+    
+    if (locations.length > 1 && calculateTotalDistance(locations) < 0.5) {
+        return;
+    } else {
+        console.log(`End commute and Commute distance ${calculateTotalDistance(locations).toFixed(2)} is less than 0.5 km. Not creating a new event.`)
+        let timeDiffText = timeDiff ? `Time taken: ${timeDiff}` : ""
+        await insertInteraction(userId, `Finished Commute. ${totalDistance.toFixed(0)}km ${timeDiffText}`, "event")
+    }
+    
 }
 
 function secondsToMMSS(seconds: number): string {
