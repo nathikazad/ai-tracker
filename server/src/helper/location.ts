@@ -245,7 +245,7 @@ async function getLastUnfinishedEvent(userId: number, event_type: string, date: 
         events: [{
             limit: 1,
             order_by: [{
-                end_time: order_by.desc
+                start_time: order_by.desc
             }],
             where: {
                 _and: [{
