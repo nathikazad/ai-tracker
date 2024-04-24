@@ -2037,6 +2037,42 @@ type interactions {
     path: String
   ): jsonb
   embedding: vector!
+
+  """An array relationship"""
+  events(
+    """distinct select on columns"""
+    distinct_on: [events_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [events_order_by!]
+
+    """filter the rows returned"""
+    where: events_bool_exp
+  ): [events!]!
+
+  """An aggregate relationship"""
+  events_aggregate(
+    """distinct select on columns"""
+    distinct_on: [events_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [events_order_by!]
+
+    """filter the rows returned"""
+    where: events_bool_exp
+  ): events_aggregate!
   id: Int!
   timestamp: timestamptz
   user_id: Int!
@@ -2089,6 +2125,8 @@ input interactions_bool_exp {
   content_type: String_comparison_exp
   debug: jsonb_comparison_exp
   embedding: vector_comparison_exp
+  events: events_bool_exp
+  events_aggregate: events_aggregate_bool_exp
   id: Int_comparison_exp
   timestamp: timestamptz_comparison_exp
   user_id: Int_comparison_exp
@@ -2142,6 +2180,7 @@ input interactions_insert_input {
   content_type: String
   debug: jsonb
   embedding: vector
+  events: events_arr_rel_insert_input
   id: Int
   timestamp: timestamptz
   user_id: Int
@@ -2201,6 +2240,7 @@ input interactions_order_by {
   content_type: order_by
   debug: order_by
   embedding: order_by
+  events_aggregate: events_aggregate_order_by
   id: order_by
   timestamp: order_by
   user_id: order_by
@@ -3671,9 +3711,7 @@ type query_root {
   """fetch data from the table: "event_types" using primary key columns"""
   event_types_by_pk(name: String!): event_types
 
-  """
-  fetch data from the table: "events"
-  """
+  """An array relationship"""
   events(
     """distinct select on columns"""
     distinct_on: [events_select_column!]
@@ -3691,9 +3729,7 @@ type query_root {
     where: events_bool_exp
   ): [events!]!
 
-  """
-  fetch aggregated fields from the table: "events"
-  """
+  """An aggregate relationship"""
   events_aggregate(
     """distinct select on columns"""
     distinct_on: [events_select_column!]
@@ -4205,9 +4241,7 @@ type subscription_root {
     where: event_types_bool_exp
   ): [event_types!]!
 
-  """
-  fetch data from the table: "events"
-  """
+  """An array relationship"""
   events(
     """distinct select on columns"""
     distinct_on: [events_select_column!]
@@ -4225,9 +4259,7 @@ type subscription_root {
     where: events_bool_exp
   ): [events!]!
 
-  """
-  fetch aggregated fields from the table: "events"
-  """
+  """An aggregate relationship"""
   events_aggregate(
     """distinct select on columns"""
     distinct_on: [events_select_column!]
