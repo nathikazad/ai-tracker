@@ -176,6 +176,8 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
     } else {
         console.log("No stay event found for this user. Creating a new event without end.");
         insertStay(userId, startedTime, undefined, startDbLocation)
+        console.log();
+        
         await finishCommute(userId, movementRequest.locations!)
     }
 
@@ -328,10 +330,6 @@ async function startCommute(userId: number, startLocation: Location, startTime: 
 
 async function finishCommute(userId: number, locations: Location[]) {
     let totalDistance = calculateTotalDistance(locations)
-    if (totalDistance < 0.3) {
-        console.log(`Not enough distance to create a commute event. ${totalDistance.toFixed(2)}`);
-        return
-    }
     const encodedPolyline = polyline.encode(locations.map(loc => [loc.lat, loc.lon]))
     let endTime = new Date(Date.parse(locations[locations.length - 1].timestamp))
     let lastCommuteEvent = await getLastUnfinishedEvent(userId, "commute", endTime, 8)
@@ -385,7 +383,7 @@ function insertNewCommute(userId: number, locations: Location[]) {
         let totalDistance = calculateTotalDistance(locations)
         metadata = { polyline: encodedPolyline, time_taken: timeDiff, distance: totalDistance.toFixed(2) }
     } else {
-        metadata = { }
+        metadata = { start_location: convertLocationToPostGISPoint(locations[0])}
         endTime = undefined
     }
     
