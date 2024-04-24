@@ -387,6 +387,7 @@ function insertNewCommute(userId: number, locations: Location[]) {
         metadata = { start_location: convertLocationToPostGISPoint(locations[0])}
         endTime = undefined
     }
+    console.log("Creating a new commute event. ", metadata);
     
     let chain = getHasura();
     chain.mutation({
