@@ -372,13 +372,13 @@ function secondsToMMSS(seconds: number): string {
     const hours: number = Math.floor(seconds / 3600);
     const remainingSecondsAfterHours: number = seconds % 3600;
     const minutes: number = Math.floor(remainingSecondsAfterHours / 60);
-    const remainingSeconds: number = remainingSecondsAfterHours % 60;
+    // const remainingSeconds: number = remainingSecondsAfterHours % 60;
 
     const formattedHours: string = String(hours).padStart(2, '0');
     const formattedMinutes: string = String(minutes).padStart(2, '0');
-    const formattedSeconds: string = String(remainingSeconds).padStart(2, '0');
+    // const formattedSeconds: string = String(remainingSeconds).padStart(2, '0');
 
-    return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+    return `${formattedHours}:${formattedMinutes}`;
 }
 
 
