@@ -37,11 +37,11 @@ interface StartMovementRequest {
 }
 
 export async function setNameForLocation(userId: number, lon: number, lat: number, name: string) {
-    let closestLocation = await getClosestUserLocation(userId, {lat: lat, lon: lon, accuracy: 0, timestamp: ""}, 200)
-    if(!closestLocation) {
+    let closestLocation = await getClosestUserLocation(userId, { lat: lat, lon: lon, accuracy: 0, timestamp: "" }, 200)
+    if (!closestLocation) {
         console.log("No location found for this user. Creating a new one.");
-        
-        let newLocation = await insertLocation(userId, {lat: lat, lon: lon, accuracy: 0, timestamp: ""}, name)
+
+        let newLocation = await insertLocation(userId, { lat: lat, lon: lon, accuracy: 0, timestamp: "" }, name)
         closestLocation = newLocation
     } else {
         // update the name of the location
@@ -57,9 +57,9 @@ export async function setNameForLocation(userId: number, lon: number, lat: numbe
                     _eq: "stay"
                 }
             }
-        },{
-           id: true,
-           metadata: [{}, true] 
+        }, {
+            id: true,
+            metadata: [{}, true]
         }]
     })
     // filter all locations that are less than 0.2km from lat and lon
@@ -70,8 +70,8 @@ export async function setNameForLocation(userId: number, lon: number, lat: numbe
         try {
             let location = event.metadata.location.location
             let distance = calculateDistance(
-                {lat: location.coordinates[1],lon: location.coordinates[0],accuracy: 0,timestamp: ""},
-                {lat: lat,lon: lon,accuracy: 0,timestamp: ""}
+                { lat: location.coordinates[1], lon: location.coordinates[0], accuracy: 0, timestamp: "" },
+                { lat: lat, lon: lon, accuracy: 0, timestamp: "" }
             )
             return distance < 0.2
         } catch (e) {
@@ -84,7 +84,7 @@ export async function setNameForLocation(userId: number, lon: number, lat: numbe
             console.log(`Event ${loc.id} ${JSON.stringify(loc.metadata.location.location)} is close to ${name}`)
         } catch (e) {
             console.log("Error");
-            
+
         }
         await getHasura().mutation({
             update_events_by_pk: [{
@@ -129,7 +129,7 @@ export async function processMovement(userId: number, movementRequest: StopMovem
 async function stopMovementEvent(userId: number, movementRequest: StopMovementRequest) {
     const encodedPolyline = polyline.encode(movementRequest.locations.map(loc => [loc.lat, loc.lon]))
     console.log(`Stopped moving. Total distance: ${encodedPolyline} ${calculateTotalDistance(movementRequest.locations).toFixed(2)} km`);
-    
+
     let endLocation = movementRequest.locations![movementRequest.locations!.length - 1];
     let stoppedTime = new Date(Date.parse(endLocation.timestamp))
     let endDbLocation: DBLocation | undefined = await getClosestUserLocation(userId, endLocation)
@@ -180,7 +180,7 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
     }
 
     console.log("Interaction: ", interaction);
-    insertInteraction(userId, interaction, "event", {location: endDbLocation}, movementRequest.timeStopped)
+    insertInteraction(userId, interaction, "event", { location: endDbLocation }, movementRequest.timeStopped)
 }
 
 export async function startMovementEvent(userId: number, movementRequest: StartMovementRequest) {
@@ -193,20 +193,20 @@ export async function startMovementEvent(userId: number, movementRequest: StartM
         updateEvent(lastEvent.id, startedTime, {})
         let timeAtLocation = startedTime.getTime() - Date.parse(lastEvent.start_time)
         let interaction = `Left ${lastEvent?.metadata?.location?.name ? lastEvent.metadata.location.name : "location"} after ${secondsToMMSS(timeAtLocation)}`
-        insertInteraction(userId, interaction, "event", {location: lastEvent.metadata})
-    } else {    
+        insertInteraction(userId, interaction, "event", { location: lastEvent.metadata })
+    } else {
         console.log("No recent stay event found. Creating a new one.")
         let dbLocation: DBLocation | undefined = await getClosestUserLocation(userId, movementRequest.oldLocation)
         if (dbLocation) {
             console.log(`This location ${dbLocation.name} is already registered by this user`)
-            
+
         } else {
             dbLocation = {
                 location: convertLocationToPostGISPoint(movementRequest.oldLocation),
                 name: "Unknown location"
             }
         }
-        insertInteraction(userId, `Left ${dbLocation.name}`, "event", {location: dbLocation})
+        insertInteraction(userId, `Left ${dbLocation.name}`, "event", { location: dbLocation })
     }
 }
 
@@ -233,7 +233,7 @@ async function getClosestUserLocation(userId: number, currentLocation: Location,
         return;
     } else {
         return locs.users_by_pk!.closest_user_location![0];
-    }   
+    }
 }
 
 // get only last event of same type within last n hours only if end_time is null
@@ -269,14 +269,14 @@ async function getLastUnfinishedEvent(userId: number, event_type: string, date: 
             end_time: true
         }]
     });
-    if(lastEvents.events.length > 0 && lastEvents.events[0].end_time == null) {
+    if (lastEvents.events.length > 0 && lastEvents.events[0].end_time == null) {
         return lastEvents.events[0]
     } else {
         return null;
     }
 }
 
-function insertStay(userId: number, startTime:Date | undefined, endTime: Date | undefined, dbLocation?: DBLocation) {
+function insertStay(userId: number, startTime: Date | undefined, endTime: Date | undefined, dbLocation?: DBLocation) {
     let chain = getHasura();
     chain.mutation({
         insert_events: [{
@@ -323,17 +323,16 @@ function updateEvent(id: number, endTime: Date, metadata: any) {
 
 async function startCommute(userId: number, startLocation: Location, startTime: Date) {
     console.log("Creating a new commute one.")
-    insertNewCommute(userId, startTime, undefined, startLocation);
+    insertNewCommute(userId, [startLocation]);
 }
 
 async function finishCommute(userId: number, locations: Location[]) {
     let totalDistance = calculateTotalDistance(locations)
-    if(totalDistance < 0.3) {
+    if (totalDistance < 0.3) {
         console.log(`Not enough distance to create a commute event. ${totalDistance.toFixed(2)}`);
         return
     }
     const encodedPolyline = polyline.encode(locations.map(loc => [loc.lat, loc.lon]))
-    const textPolyline = locations.map(loc => `${loc.lat.toFixed(0)},${loc.lon.toFixed(0)}`).join('|');
     let endTime = new Date(Date.parse(locations[locations.length - 1].timestamp))
     let lastCommuteEvent = await getLastUnfinishedEvent(userId, "commute", endTime, 8)
     let timeDiff
@@ -342,21 +341,21 @@ async function finishCommute(userId: number, locations: Location[]) {
         // check if the last commute's start location is within 5 km of the first location of this commute
         if (calculateDistance(locations[0], lastCommuteEvent.metadata.start_location) < 5.0) {
             console.log("Commute event found for the same location. Updating the end time and polyline.")
-            updateEvent(lastCommuteEvent.id, endTime, { polyline: encodedPolyline, locations: textPolyline });
-            let startTime = new Date(Date.parse(lastCommuteEvent.start_time))
-            timeDiff = endTime.getTime() - startTime.getTime()
+            let startTime = new Date(Date.parse(locations[0].timestamp))
+            timeDiff = secondsToMMSS(endTime.getTime() - startTime.getTime())
+            updateEvent(lastCommuteEvent.id, endTime, { polyline: encodedPolyline, time_taken: timeDiff, distance: totalDistance.toFixed(0) });
         } else {
             console.log("Commute event found but for a different location. Creating a new one.")
-            let startTime = new Date(Date.parse(locations[0].timestamp))
-            insertNewCommute(userId, startTime, undefined, locations[0]);
+            insertNewCommute(userId, locations);
         }
     } else {
         console.log("No recent commute event found. Creating a new one.")
         let startTime = new Date(Date.parse(locations[0].timestamp))
-        insertNewCommute(userId, startTime, endTime, locations[0], locations);
+        timeDiff = secondsToMMSS(endTime.getTime() - startTime.getTime())
+        insertNewCommute(userId, locations);
     }
-    
-    let timeDiffText = timeDiff ? `Time taken: ${secondsToMMSS(timeDiff)}` : ""
+
+    let timeDiffText = timeDiff ? `Time taken: ${timeDiff}` : ""
     await insertInteraction(userId, `Finished Commute. ${totalDistance.toFixed(0)}km ${timeDiffText}`, "event", {
         polyline: encodedPolyline
     })
@@ -370,18 +369,24 @@ function secondsToMMSS(seconds: number): string {
     return `${formattedMinutes}:${formattedSeconds}`;
 }
 
-function insertNewCommute(userId: number, startTime?: Date, endTime?: Date, startLocation?: Location, locations?: Location[]) {
-    let encodedPolyline: string | null = null
-    let textPolyline: string | null = null
-    if (locations) {
-        if(calculateTotalDistance(locations) < 0.5) {
-            console.log(`Commute distance ${calculateTotalDistance(locations).toFixed(2)} is less than 0.5 km. Not creating a new event.`)
-            return;
-        }
-        encodedPolyline = polyline.encode(locations.map(loc => [loc.lat, loc.lon]))
-        textPolyline = locations.map(loc => `${loc.lat},${loc.lon}`).join('|');
-        
+function insertNewCommute(userId: number, locations: Location[]) {
+    if (calculateTotalDistance(locations) < 0.2) {
+        console.log(`Commute distance ${calculateTotalDistance(locations).toFixed(2)} is less than 0.5 km. Not creating a new event.`)
+        return;
     }
+    let startTime = new Date(Date.parse(locations[0].timestamp))
+    let metadata, endTime
+    if(locations.length > 1) {
+        let encodedPolyline = polyline.encode(locations.map(loc => [loc.lat, loc.lon]))
+        endTime = new Date(Date.parse(locations[locations.length - 1].timestamp))
+        let timeDiff = secondsToMMSS(endTime.getTime() - startTime.getTime())
+        let totalDistance = calculateTotalDistance(locations)
+        metadata = { polyline: encodedPolyline, time_taken: timeDiff, distance: totalDistance.toFixed(0) }
+    } else {
+        metadata = { }
+        endTime = undefined
+    }
+    
     let chain = getHasura();
     chain.mutation({
         insert_events: [{
@@ -389,8 +394,8 @@ function insertNewCommute(userId: number, startTime?: Date, endTime?: Date, star
                 event_type: "commute",
                 metadata: $`metadata`,
                 user_id: userId,
-                start_time: startTime?.toISOString(),
-                end_time: endTime?.toISOString(),
+                start_time: startTime.toISOString(),
+                end_time:  endTime?.toISOString()
             }]
         }, {
             returning: {
@@ -398,11 +403,7 @@ function insertNewCommute(userId: number, startTime?: Date, endTime?: Date, star
             }
         }]
     }, {
-        "metadata": {
-            start_location: startLocation,
-            polyline: encodedPolyline,
-            locations: textPolyline
-        }
+        "metadata": metadata
     });
 }
 function calculateTotalDistance(locations: Location[]): number {
