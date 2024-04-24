@@ -338,7 +338,7 @@ async function finishCommute(userId: number, locations: Location[]) {
     if (lastCommuteEvent) {
         console.log(`Recent commute event found with distance difference ${calculateDistance(locations[0], lastCommuteEvent.metadata.start_location).toFixed(2)}`)
         // check if the last commute's start location is within 5 km of the first location of this commute
-        if (calculateDistance(locations[0], lastCommuteEvent.metadata.start_location) < 5.0) {
+        if (calculateDistance(locations[0], lastCommuteEvent.metadata.start_location) < 0.7) {
             console.log("Commute event found for the same location. Updating the end time and polyline.")
             let startTime = new Date(Date.parse(locations[0].timestamp))
             timeDiff = secondsToMMSS(endTime.getTime() - startTime.getTime())
