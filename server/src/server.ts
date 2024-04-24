@@ -88,7 +88,7 @@ app.post('/createLocation', async (req: Request, res: Response) => {
         try {
             console.log(`Set location ${userId} ${req.body?.eventType}`)
             console.log(req.body)
-            setNameForLocation(userId, req.body?.lon, req.body?.lat, req.body?.name);
+            setNameForLocation(userId, req.body!.lon, req.body!.lat, req.body!.name);
             // console.log("success")
             res.status(200).json({
                 status: "success",

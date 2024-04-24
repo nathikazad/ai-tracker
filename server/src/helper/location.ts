@@ -162,6 +162,7 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
             console.log("Start location of commute is same as the location of last stay event, so stay event is correct.")
             if (lastEvent.metadata?.location?.id == endDbLocation?.id) {
                 console.log("End location is also same, so don't do anything, means user didn't move. Dont do anything")
+                return
             } else {
                 console.log("End location is different, means user moved, so updating the end time.")
                 updateEvent(lastEvent.id, stoppedTime, {})
