@@ -7,7 +7,7 @@ import { convertAudioToText } from './helper/audio';
 import { authorize, convertAppleJWTtoHasuraJWT } from './resources/authorization';
 import { parseUserRequest } from './resources/logic';
 import { getUserLanguage } from './resources/user';
-import { processMovement } from './helper/location';
+import { processMovement, setNameForLocation } from './helper/location';
 const app: Express = express();
 
 app.use(express.static(path.join(__dirname, '../public')));
@@ -62,13 +62,33 @@ app.post('/parseUserRequestFromText', async (req: Request, res: Response) => {
 });
 
 app.post('/updateMovement', async (req: Request, res: Response) => {
-    
     try {
         const userId = authorize(req); 
         try {
             console.log(`🏃🏽🏃🏽🏃🏽🏃🏽🏃🏽🏃🏽🏃🏽 ${userId} ${req.body?.eventType}`)
             // console.log(req.body)
             processMovement(userId, req.body); 
+            // console.log("success")
+            res.status(200).json({
+                status: "success",
+            });
+        } catch (parseError) {
+            console.error('Parsing error:', parseError);
+            res.status(500).json({ error: 'Error processing text' });
+        }
+    } catch (authError) {
+        console.error('Authentication error:', authError);
+        res.status(401).json({ error: 'Unauthorized: ' + authError });
+    }
+});
+
+app.post('/createLocation', async (req: Request, res: Response) => {
+    try {
+        const userId = authorize(req); 
+        try {
+            console.log(`Set location ${userId} ${req.body?.eventType}`)
+            console.log(req.body)
+            setNameForLocation(userId, req.body?.lon, req.body?.lat, req.body?.name);
             // console.log("success")
             res.status(200).json({
                 status: "success",

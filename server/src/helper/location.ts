@@ -36,6 +36,80 @@ interface StartMovementRequest {
     newLocation: Location,
 }
 
+export async function setNameForLocation(userId: number, lon: number, lat: number, name: string) {
+    let closestLocation = await getClosestUserLocation(userId, {lat: lat, lon: lon, accuracy: 0, timestamp: ""}, 200)
+    if(!closestLocation) {
+        console.log("No location found for this user. Creating a new one.");
+        
+        let newLocation = await insertLocation(userId, {lat: lat, lon: lon, accuracy: 0, timestamp: ""}, name)
+        closestLocation = newLocation
+    } else {
+        // update the name of the location
+    }
+    // update all locations that fall into this location
+    let resp = await getHasura().query({
+        events: [{
+            where: {
+                user_id: {
+                    _eq: userId
+                },
+                event_type: {
+                    _eq: "stay"
+                }
+            }
+        },{
+           id: true,
+           metadata: [{}, true] 
+        }]
+    })
+    // filter all locations that are less than 0.2km from lat and lon
+    let eventsWithCloseLocations = resp.events.filter((event) => {
+        // if(event.metadata?.location?.name != "Unknown location") {
+        //     return false
+        // }
+        try {
+            let location = event.metadata.location.location
+            let distance = calculateDistance(
+                {lat: location.coordinates[1],lon: location.coordinates[0],accuracy: 0,timestamp: ""},
+                {lat: lat,lon: lon,accuracy: 0,timestamp: ""}
+            )
+            return distance < 0.2
+        } catch (e) {
+            console.log("Error");
+            return false
+        }
+    })
+    eventsWithCloseLocations.forEach(async (loc) => {
+        try {
+            console.log(`Event ${loc.id} ${JSON.stringify(loc.metadata.location.location)} is close to ${name}`)
+        } catch (e) {
+            console.log("Error");
+            
+        }
+        await getHasura().mutation({
+            update_events_by_pk: [{
+                pk_columns: {
+                    id: loc.id
+                },
+                _append: {
+                    metadata: $`metadata`
+                }
+            }, {
+                id: true
+            }]
+        }, {
+            "metadata": {
+                location: {
+                    ...loc.metadata.location,
+                    name: name,
+                    id: closestLocation!.id
+                }
+            }
+        })
+
+    })
+}
+
 export async function processMovement(userId: number, movementRequest: StopMovementRequest | StartMovementRequest) {
     if (movementRequest.eventType === "stoppedMoving") {
         await stopMovementEvent(userId, movementRequest as StopMovementRequest);
@@ -136,7 +210,7 @@ export async function startMovementEvent(userId: number, movementRequest: StartM
 }
 
 
-async function getClosestUserLocation(userId: number, currentLocation: Location): Promise<DBLocation | undefined> {
+async function getClosestUserLocation(userId: number, currentLocation: Location, radius: number = 100): Promise<DBLocation | undefined> {
     console.log(`POINT(${currentLocation.lat} ${currentLocation.lon})`);
     let locs = await getHasura().query({
         users_by_pk: [{
@@ -144,7 +218,7 @@ async function getClosestUserLocation(userId: number, currentLocation: Location)
         }, {
             closest_user_location: [{
                 args: {
-                    radius: 100,
+                    radius: radius,
                     ref_point: `SRID=4326;POINT(${currentLocation.lon} ${currentLocation.lat})`
                 }
             }, {
@@ -363,13 +437,14 @@ function toRadians(degrees: number): number {
     return degrees * (Math.PI / 180);
 }
 
-export async function insertLocation(userId: number, location: Location) {
+export async function insertLocation(userId: number, location: Location, name: string): Promise<DBLocation> {
     let chain = getHasura();
     let resp = await chain.mutation({
         insert_locations: [{
             objects: [{
                 location: $`location`,
                 user_id: userId,
+                name: name
             }]
         }, {
             returning: {
