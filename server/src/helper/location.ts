@@ -42,6 +42,8 @@ export async function setNameForLocation(userId: number, lon: number, lat: numbe
         console.log("No location found for this user. Creating a new one.");
 
         let newLocation = await insertLocation(userId, { lat: lat, lon: lon, accuracy: 0, timestamp: "" }, name)
+        console.log("New location created ", newLocation);
+        
         closestLocation = newLocation
     } else {
         // update the name of the location
