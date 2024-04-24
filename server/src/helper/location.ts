@@ -42,10 +42,23 @@ export async function setNameForLocation(userId: number, lon: number, lat: numbe
         console.log("No location found for this user. Creating a new one.");
 
         let newLocation = await insertLocation(userId, { lat: lat, lon: lon, accuracy: 0, timestamp: "" }, name)
-        console.log("New location created ", newLocation);
+        console.log("New location created", newLocation);
         
         closestLocation = newLocation
     } else {
+        console.log("Location found for this user. Updating the name. ", closestLocation);
+        await getHasura().mutation({
+            update_locations_by_pk: [{
+                pk_columns: {
+                    id: closestLocation.id!
+                },
+                _set: {
+                    name: name
+                }
+            }, {
+                id: true
+            }]
+        })
         // update the name of the location
     }
     // update all locations that fall into this location
