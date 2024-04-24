@@ -187,14 +187,17 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
 
 export async function startMovementEvent(userId: number, movementRequest: StartMovementRequest) {
     console.log("Started moving");
-    let startedTime = new Date(Date.parse(movementRequest.newLocation.timestamp))
-    startCommute(userId, movementRequest.newLocation, startedTime)
-    let lastEvent = await getLastUnfinishedEvent(userId, "stay", startedTime, 24)
+    let movementStartedTime = new Date(Date.parse(movementRequest.newLocation.timestamp))
+    startCommute(userId, movementRequest.newLocation, movementStartedTime)
+    let lastEvent = await getLastUnfinishedEvent(userId, "stay", movementStartedTime, 24)
     if (lastEvent) {
         console.log(`Recent stay event found with id ${lastEvent} name ${lastEvent.metadata?.location?.name}. Updating the end time.`);
-        updateEvent(lastEvent.id, startedTime, {})
-        let timeAtLocation = startedTime.getTime() - Date.parse(lastEvent.start_time)
+        
+        let timeAtLocation = movementStartedTime.getTime() - Date.parse(lastEvent.start_time)
         let interaction = `Left ${lastEvent?.metadata?.location?.name ? lastEvent.metadata.location.name : "location"} after ${secondsToMMSS(timeAtLocation)}`
+        updateEvent(lastEvent.id, movementStartedTime, {
+            total_time: timeAtLocation
+        })
         insertInteraction(userId, interaction, "event", { location: lastEvent.metadata })
     } else {
         console.log("No recent stay event found. Creating a new one.")
