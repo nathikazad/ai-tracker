@@ -196,7 +196,7 @@ export async function startMovementEvent(userId: number, movementRequest: StartM
         let timeAtLocation = movementStartedTime.getTime() - Date.parse(lastEvent.start_time)
         let interaction = `Left ${lastEvent?.metadata?.location?.name ? lastEvent.metadata.location.name : "location"} after ${secondsToMMSS(timeAtLocation)}`
         updateEvent(lastEvent.id, movementStartedTime, {
-            total_time: timeAtLocation
+            total_time: secondsToMMSS(timeAtLocation)
         })
         insertInteraction(userId, interaction, "event", { location: lastEvent.metadata })
     } else {
