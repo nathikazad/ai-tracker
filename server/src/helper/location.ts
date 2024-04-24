@@ -343,7 +343,7 @@ async function finishCommute(userId: number, locations: Location[]) {
             console.log("Commute event found for the same location. Updating the end time and polyline.")
             let startTime = new Date(Date.parse(locations[0].timestamp))
             timeDiff = secondsToMMSS(endTime.getTime() - startTime.getTime())
-            updateEvent(lastCommuteEvent.id, endTime, { polyline: encodedPolyline, time_taken: timeDiff, distance: totalDistance.toFixed(0) });
+            updateEvent(lastCommuteEvent.id, endTime, { polyline: encodedPolyline, time_taken: timeDiff, distance: totalDistance.toFixed(2) });
         } else {
             console.log("Commute event found but for a different location. Creating a new one.")
             insertNewCommute(userId, locations);
@@ -383,7 +383,7 @@ function insertNewCommute(userId: number, locations: Location[]) {
         endTime = new Date(Date.parse(locations[locations.length - 1].timestamp))
         let timeDiff = secondsToMMSS(endTime.getTime() - startTime.getTime())
         let totalDistance = calculateTotalDistance(locations)
-        metadata = { polyline: encodedPolyline, time_taken: timeDiff, distance: totalDistance.toFixed(0) }
+        metadata = { polyline: encodedPolyline, time_taken: timeDiff, distance: totalDistance.toFixed(2) }
     } else {
         metadata = { }
         endTime = undefined
