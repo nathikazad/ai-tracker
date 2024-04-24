@@ -384,7 +384,7 @@ function insertNewCommute(userId: number, locations: Location[]) {
         let totalDistance = calculateTotalDistance(locations)
         metadata = { polyline: encodedPolyline, time_taken: timeDiff, distance: totalDistance.toFixed(2) }
     } else {
-        metadata = { start_location: convertLocationToPostGISPoint(locations[0])}
+        metadata = { start_location: locations[0]}
         endTime = undefined
     }
     console.log("Creating a new commute event. ", metadata);
