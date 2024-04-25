@@ -13,6 +13,7 @@ let HasuraAddress = "ai-tracker-hasura-a1071aad7764.herokuapp.com"
 func fullURL(for path: String) -> String {
     return "\(ServerAddress)/\(path)"
 }
+let pingEndpoint = fullURL(for: "ping")
 let parseAudioEndpoint = fullURL(for: "parseUserRequestFromAudio")
 let parseTextEndpoint = fullURL(for: "parseUserRequestFromText")
 let getJwtEndpoint = fullURL(for: "hasuraJWT")

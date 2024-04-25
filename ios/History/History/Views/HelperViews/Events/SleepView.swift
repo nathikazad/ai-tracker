@@ -41,7 +41,7 @@ struct SleepView: View {
                     Chart {
                         ForEach(dailyTotals, id: \.0) { day, hours in
                             BarMark(
-                                x: .value("Day", "day"),
+                                x: .value("Day", day),
                                 y: .value("Hours", hours)
                             )
                             .foregroundStyle(Color.gray)

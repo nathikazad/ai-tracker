@@ -69,3 +69,5 @@ uploads/
 
 
 *.xcuserstate
+
+server/data

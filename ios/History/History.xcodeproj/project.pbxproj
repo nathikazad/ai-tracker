@@ -18,6 +18,7 @@
 		FE1C0EB12BC0A29300FF56AB /* Hasura.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EB02BC0A29300FF56AB /* Hasura.swift */; };
 		FE20CA262BC5E4CD00863604 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE20CA252BC5E4CD00863604 /* SettingsView.swift */; };
 		FE3E9F662BC8ACAD008BD120 /* NavigationTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3E9F652BC8ACAD008BD120 /* NavigationTitle.swift */; };
+		FE4594272BD9E713002B163E /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4594262BD9E713002B163E /* HealthKitManager.swift */; };
 		FE477D8F2BD5E3C8001FC341 /* EventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE477D8E2BD5E3C8001FC341 /* EventsView.swift */; };
 		FE477D912BD5E3E2001FC341 /* EventsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE477D902BD5E3E2001FC341 /* EventsController.swift */; };
 		FE477D932BD8122B001FC341 /* CalendarPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE477D922BD8122B001FC341 /* CalendarPicker.swift */; };
@@ -118,6 +119,7 @@
 		FE1C0EB02BC0A29300FF56AB /* Hasura.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hasura.swift; sourceTree = "<group>"; };
 		FE20CA252BC5E4CD00863604 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		FE3E9F652BC8ACAD008BD120 /* NavigationTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationTitle.swift; sourceTree = "<group>"; };
+		FE4594262BD9E713002B163E /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
 		FE477D8E2BD5E3C8001FC341 /* EventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsView.swift; sourceTree = "<group>"; };
 		FE477D902BD5E3E2001FC341 /* EventsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsController.swift; sourceTree = "<group>"; };
 		FE477D922BD8122B001FC341 /* CalendarPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPicker.swift; sourceTree = "<group>"; };
@@ -328,6 +330,7 @@
 				FE4F7BB02BA7D7C80041CB6A /* WatchCommunicator.swift */,
 				FE1C0EB02BC0A29300FF56AB /* Hasura.swift */,
 				FE129BE52BCB87B9004058EA /* LocationManager.swift */,
+				FE4594262BD9E713002B163E /* HealthKitManager.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -529,6 +532,7 @@
 				FE12C5EC2BC4B359002CDC60 /* GraphsView.swift in Sources */,
 				FEA549A52BD34D290058E7D8 /* LocationView.swift in Sources */,
 				FE9EAE512BC042260082DE87 /* ChatView.swift in Sources */,
+				FE4594272BD9E713002B163E /* HealthKitManager.swift in Sources */,
 				FE8811EC2BC799BF00B112A8 /* InteractionsController.swift in Sources */,
 				FEB8FD1F2BAA253100EE9B68 /* Intents.swift in Sources */,
 				FE1C0EAE2BC0713B00FF56AB /* Authentication.swift in Sources */,
@@ -726,6 +730,9 @@
 				INFOPLIST_FILE = History/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Aspire;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "To keep track of sleep information";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "To keep track of sleep information";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "To keep track of sleep information";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "For a user to trackk their movement";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "For a user to track their movements";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "To get audio to log an event";
@@ -770,6 +777,9 @@
 				INFOPLIST_FILE = History/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Aspire;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "To keep track of sleep information";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "To keep track of sleep information";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "To keep track of sleep information";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "For a user to trackk their movement";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "For a user to track their movements";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "To get audio to log an event";

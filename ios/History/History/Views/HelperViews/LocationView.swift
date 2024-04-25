@@ -25,9 +25,9 @@ struct LocationDetailView: View {
                 let userId: Int? = Authentication.shared.userId
                 let resp = await EventsController.fetchEvents(userId: userId!, eventType: "stay", locationId: location.id!, order: "desc")
                 DispatchQueue.main.async {
+                    events = resp
                     maxDays = EventsController.maxDays(events: resp)
                     selectedDays = min(maxDays, 7)
-                    events = resp
                 }
             }
         }
@@ -73,25 +73,26 @@ struct LocationDetailView: View {
                         .font(.subheadline)
                 }
             }
-            
-            Section(header: Text("Graph")) {
-                HStack {
-                    Slider(value: $selectedDays, in: 1...max(maxDays, 1), step: 1)
-                        .accentColor(.gray)
-                    Text("\(Int(selectedDays))")
-                        .foregroundColor(.gray)
-                }
-                .padding()
-                Chart {
-                    ForEach(dailyTotals, id: \.0) { day, hours in
-                        BarMark(
-                            x: .value("Day", day),
-                            y: .value("Hours", hours)
-                        )
-                        .foregroundStyle(Color.gray)
+            if(events.count > 1) {
+                Section(header: Text("Graph")) {
+                    HStack {
+                        Slider(value: $selectedDays, in: 1...max(maxDays, 1), step: 1)
+                            .accentColor(.gray)
+                        Text("\(Int(selectedDays))")
+                            .foregroundColor(.gray)
                     }
+                    .padding()
+                    Chart {
+                        ForEach(dailyTotals, id: \.0) { day, hours in
+                            BarMark(
+                                x: .value("Day", day),
+                                y: .value("Hours", hours)
+                            )
+                            .foregroundStyle(Color.gray)
+                        }
+                    }
+                    .frame(height: 200)
                 }
-                .frame(height: 200)
             }
         }
     }

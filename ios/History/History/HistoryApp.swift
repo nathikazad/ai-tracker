@@ -31,6 +31,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                     await Authentication.shared.checkAndReloadHasuraJwt()
                     // print("calling setup from foreground observer")
                     Hasura.shared.setup()
+                    await ServerCommunicator.processPendingRequests()
                 }
             }
             

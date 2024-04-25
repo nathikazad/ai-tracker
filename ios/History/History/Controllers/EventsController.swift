@@ -227,7 +227,7 @@ class EventsController: ObservableObject {
         
 
         return Dictionary(grouping: filteredEvents) { event in
-            event.startTime?.formattedShortDate ?? "Unknown"
+            event.startTime?.formattedDate ?? "Unknown"
         }
         .mapValues { eventsForDay in
             eventsForDay.reduce(0) { total, event in
