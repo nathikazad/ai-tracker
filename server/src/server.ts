@@ -82,7 +82,7 @@ app.post('/updateMovement', async (req: Request, res: Response) => {
     }
 });
 
-app.post('//uploadSleep', async (req: Request, res: Response) => {
+app.post('/uploadSleep', async (req: Request, res: Response) => {
     try {
         const userId = authorize(req); 
         try {
