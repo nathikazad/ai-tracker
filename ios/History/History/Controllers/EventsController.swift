@@ -55,13 +55,13 @@ class EventsController: ObservableObject {
         }
     }
     
-    static func fetchEvents(userId: Int, eventType: String, locationId: Int, order: String?) async -> [EventModel] {
+    static func fetchEvents(userId: Int, eventType: String, locationId: Int? = nil, order: String?) async -> [EventModel] {
         
         let graphqlQuery = EventsController.generateEventQuery(userId: userId, eventType: eventType, locationId: locationId, order: order)
             do {
                 // Directly get the decoded ResponseData object from sendGraphQL
                 let responseData: EventsResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, responseType: EventsResponseData.self)
-                return responseData.data.events
+                return sortEvents(events: responseData.data.events)
             } catch {
                 print("Error: \(error.localizedDescription)")
                 return []
@@ -215,8 +215,57 @@ class EventsController: ObservableObject {
         }
         """
     }
-}
+    
+    static func dailyTotals(events: [EventModel], days: Int) -> [(String, Double)] {
+        let now = Date()  // Capture the current date and time
+        let calendar = Calendar.current
 
+        let filteredEvents = events.filter { event in
+            guard let eventDate = event.startTime else { return false }
+            return calendar.isDate(eventDate, inSameDayAs: now) || eventDate >= calendar.date(byAdding: .day, value: -days, to: now)!
+        }
+        
+
+        return Dictionary(grouping: filteredEvents) { event in
+            event.startTime?.formattedShortDate ?? "Unknown"
+        }
+        .mapValues { eventsForDay in
+            eventsForDay.reduce(0) { total, event in
+                if let startTime = event.startTime, calendar.isDate(startTime, inSameDayAs: now) {
+                    // If the event is from today and ongoing, calculate time until now
+                    if event.endTime != nil {
+                        return total + (event.totalHoursPerDay ?? 0) / 3600
+                    } else {
+                        // Event is ongoing; calculate duration until now
+                        let duration = now.timeIntervalSince(startTime)
+                        return total + duration / 3600
+                    }
+                } else {
+                    // For past events, use the stored total hours
+                    return total + (event.totalHoursPerDay ?? 0) / 3600
+                }
+            }
+        }
+        .sorted { $0.key < $1.key }
+        .map { (key, value) in (key, value) }
+    }
+    
+    static func maxDays(events: [EventModel]) -> Double {
+        guard let earliestDate = events.min(by: { $0.startTime ?? Date() < $1.startTime ?? Date() })?.startTime else {
+            return 7 // or some default minimum
+        }
+        let daysDifference = Calendar.current.dateComponents([.day], from: earliestDate, to: Date()).day ?? 0
+        return Double(daysDifference + 1)
+    }
+    
+    static func sortEvents(events: [EventModel]) -> [EventModel] {
+        return events.sorted { (event1, event2) -> Bool in
+            let date1 = event1.startTime ?? event1.endTime
+            let date2 = event2.startTime ?? event2.endTime
+            return date1 ?? Date.distantFuture > date2 ?? Date.distantFuture
+        }
+    }
+}
 
 
 struct EventModel: Decodable, Identifiable {
@@ -251,24 +300,40 @@ struct EventModel: Decodable, Identifiable {
         endTime = HasuraUtil.getTime(timestamp: endTimeString)
     }
     
-    var formattedTime: String {
-        let formattedStartTime = startTime?.formattedTime ?? ""
-        let formattedEndTime = endTime?.formattedTime
-        if let endTime = formattedEndTime {
-            return "\(formattedStartTime) - \(endTime)"
-        } else {
-            return "\(formattedStartTime)"
-        }
+    private func _formattedTime(fillWithX: Bool = false) -> String {
+        let filler = fillWithX ? "XX:XX" : ""
+        let formattedStartTime = startTime?.formattedTime ?? filler
+        let formattedEndTime = endTime?.formattedTime ?? filler
+        return "\(formattedStartTime) - \(formattedEndTime)"
     }
     
+    var formattedTime: String {
+        return _formattedTime(fillWithX: false)
+    }
+    
+    var formattedTimeWithX: String {
+        return _formattedTime(fillWithX: true)
+    }
+
+    
     var formattedTimeWithDate: String {
-        return "\(startTime?.formattedDate ?? ""): \(formattedTime)"
+        return "\(startTime?.formattedDate ?? endTime?.formattedDate ?? ""): \(formattedTime)"
+    }
+    
+    var formattedTimeWithDateAndX: String {
+        return "\(startTime?.formattedDate ?? endTime?.formattedDate ?? ""): \(formattedTimeWithX)"
     }
     
     var locationName: String? {
         return metadata?.location?.name
     }
-
+    
+    var totalHoursPerDay: TimeInterval? {
+        if(startTime == nil || endTime == nil){
+            return nil
+        }
+        return endTime!.timeIntervalSince(startTime!)
+    }
 }
 
 struct Metadata: Decodable {

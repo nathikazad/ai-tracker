@@ -347,6 +347,12 @@ extension Date {
         dateFormatter.timeZone = TimeZone.current // Local time zone
         return dateFormatter.string(from: self) // Format date to string
     }
+    var formattedShortDate: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM/dd" // Day of the week and date
+        dateFormatter.timeZone = TimeZone.current // Local time zone
+        return dateFormatter.string(from: self) // Format date to string
+    }
     
     var durationSinceInHHMM: String {
         let currentDate = Date()

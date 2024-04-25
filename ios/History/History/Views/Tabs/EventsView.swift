@@ -18,7 +18,6 @@ struct EventsView: View {
     var body: some View {
         VStack {
             Text(eventController.formattedDate)
-            //                    .font(.title)
                 .foregroundColor(.black)
                 .padding(.top, 5)
                 .frame(maxWidth: .infinity, alignment: .center)
@@ -92,6 +91,10 @@ struct EventsView: View {
                         }
                     } else if let polyline = event.metadata?.polyline {
                         NavigationLink(destination: PolylineView(encodedPolyline: polyline)) {
+                            formatEventText(for: event, isLast: index == eventController.events.count - 1)
+                        }
+                    } else if event.eventType == "sleep" {
+                        NavigationLink(destination: SleepView()) {
                             formatEventText(for: event, isLast: index == eventController.events.count - 1)
                         }
                     } else {

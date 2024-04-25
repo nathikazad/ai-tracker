@@ -47,6 +47,7 @@
 		FE8965B02BC8606900E9D633 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8965AE2BC85FE000E9D633 /* Constants.swift */; };
 		FE900C082BD363D200F97050 /* LocationListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE900C072BD363D200F97050 /* LocationListView.swift */; };
 		FE900C0A2BD363ED00F97050 /* LocationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE900C092BD363ED00F97050 /* LocationController.swift */; };
+		FE977B0F2BD9C2A6008E743C /* SleepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE977B0E2BD9C2A6008E743C /* SleepView.swift */; };
 		FE9959542BC8B5B000F3187B /* RemindersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9959532BC8B5B000F3187B /* RemindersView.swift */; };
 		FE9EAE512BC042260082DE87 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9EAE502BC042260082DE87 /* ChatView.swift */; };
 		FEA34E6D2BD0B83300CE2A12 /* LocationsDebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA34E6C2BD0B83300CE2A12 /* LocationsDebugView.swift */; };
@@ -146,6 +147,7 @@
 		FE8965AE2BC85FE000E9D633 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		FE900C072BD363D200F97050 /* LocationListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationListView.swift; sourceTree = "<group>"; };
 		FE900C092BD363ED00F97050 /* LocationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationController.swift; sourceTree = "<group>"; };
+		FE977B0E2BD9C2A6008E743C /* SleepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepView.swift; sourceTree = "<group>"; };
 		FE9959532BC8B5B000F3187B /* RemindersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemindersView.swift; sourceTree = "<group>"; };
 		FE9EAE502BC042260082DE87 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		FEA34E6C2BD0B83300CE2A12 /* LocationsDebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsDebugView.swift; sourceTree = "<group>"; };
@@ -340,9 +342,18 @@
 			path = Location;
 			sourceTree = "<group>";
 		};
+		FE977B0D2BD9C298008E743C /* Events */ = {
+			isa = PBXGroup;
+			children = (
+				FE977B0E2BD9C2A6008E743C /* SleepView.swift */,
+			);
+			path = Events;
+			sourceTree = "<group>";
+		};
 		FEA34E6B2BD0B81900CE2A12 /* HelperViews */ = {
 			isa = PBXGroup;
 			children = (
+				FE977B0D2BD9C298008E743C /* Events */,
 				FE900C062BD363C700F97050 /* Location */,
 				FEA34E6C2BD0B83300CE2A12 /* LocationsDebugView.swift */,
 				FEA549A42BD34D290058E7D8 /* LocationView.swift */,
@@ -513,6 +524,7 @@
 				FE4F7BB12BA7D7C80041CB6A /* WatchCommunicator.swift in Sources */,
 				FE4F7BA32BA7D79E0041CB6A /* HistoryApp.swift in Sources */,
 				FE20CA262BC5E4CD00863604 /* SettingsView.swift in Sources */,
+				FE977B0F2BD9C2A6008E743C /* SleepView.swift in Sources */,
 				FE12C5EF2BC4B832002CDC60 /* MicrophoneButton.swift in Sources */,
 				FE12C5EC2BC4B359002CDC60 /* GraphsView.swift in Sources */,
 				FEA549A52BD34D290058E7D8 /* LocationView.swift in Sources */,
