@@ -1,6 +1,6 @@
 // import { parseGoal } from "./resources/logic/goalLogic";
 
-import { secondsToMMSS } from "./helper/location";
+import { secondsToHHMM } from "./helper/location";
 
 
 
@@ -30,7 +30,7 @@ async function main() {
     let end = new Date(Date.parse("2024-04-24T05:15:52")).getTime() 
     let start = new Date(Date.parse("2024-04-24T05:06:59")).getTime()
     console.log(end - start);
-    let timeDiff = secondsToMMSS((end - start)/1000)
+    let timeDiff = secondsToHHMM((end - start)/1000)
     console.log(timeDiff)
 }
 main()
