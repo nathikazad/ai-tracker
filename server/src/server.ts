@@ -82,6 +82,26 @@ app.post('/updateMovement', async (req: Request, res: Response) => {
     }
 });
 
+app.post('//uploadSleep', async (req: Request, res: Response) => {
+    try {
+        const userId = authorize(req); 
+        try {
+            console.log(`Sleep ${userId}`)
+            console.log(JSON.stringify(req.body))
+            
+            res.status(200).json({
+                status: "success",
+            });
+        } catch (parseError) {
+            console.error('Parsing error:', parseError);
+            res.status(500).json({ error: 'Error processing text' });
+        }
+    } catch (authError) {
+        console.error('Authentication error:', authError);
+        res.status(401).json({ error: 'Unauthorized: ' + authError });
+    }
+});
+
 app.post('/createLocation', async (req: Request, res: Response) => {
     try {
         const userId = authorize(req); 
