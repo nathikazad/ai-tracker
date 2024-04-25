@@ -117,6 +117,10 @@ app.post('/hasuraJWT', async (req, res) => {
     
 });
 
+app.get('/ping', (req, res) => {
+    res.send('pong');
+});
+
 app.listen(config.server.port, () => {
     return console.log(`[server]: Server is running on ${config.server.port}`);
 });
