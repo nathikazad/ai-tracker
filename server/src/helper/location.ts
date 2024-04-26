@@ -78,9 +78,9 @@ export async function setNameForLocation(userId: number, lon: number, lat: numbe
         }]
     })
     // filter all locations that are less than 0.1km from lat and lon
-    let eventsWithCloseLocations = resp.events.filter((event) => {
-        if(event.metadata?.location?.location) {
-            return false
+    resp.events.forEach(async (event) => {
+        if(event.metadata?.location?.location == null) {
+            return
         }
         try {
             let location = event.metadata?.location?.location
@@ -88,42 +88,35 @@ export async function setNameForLocation(userId: number, lon: number, lat: numbe
                 { lat: location.coordinates[1], lon: location.coordinates[0], accuracy: 0, timestamp: "" },
                 { lat: lat, lon: lon, accuracy: 0, timestamp: "" }
             )
-            return distance < 0.1
+            if(distance > 0.1)
+                return
+            console.log(`Event ${event.id} ${distance} ${JSON.stringify(event.metadata?.location?.id)} is close to ${name}`)
+
+            await getHasura().mutation({
+                update_events_by_pk: [{
+                    pk_columns: {
+                        id: event.id
+                    },
+                    _append: {
+                        metadata: $`metadata`
+                    }
+                }, {
+                    id: true
+                }]
+            }, {
+                "metadata": {
+                    location: {
+                        ...event.metadata.location,
+                        name: name,
+                        id: closestLocation!.id
+                    }
+                }
+            })
         } catch (e) {
             console.log("Error");
-            console.log(event.metadata);
-            console.log(e)
-            return false
+            console.log(event);
+            
         }
-    })
-    eventsWithCloseLocations.forEach(async (event) => {
-        try {
-            console.log(`Event ${event.id} ${JSON.stringify(event.metadata.location.location)} is close to ${name}`)
-        } catch (e) {
-            console.log("Error");
-
-        }
-        // await getHasura().mutation({
-        //     update_events_by_pk: [{
-        //         pk_columns: {
-        //             id: event.id
-        //         },
-        //         _append: {
-        //             metadata: $`metadata`
-        //         }
-        //     }, {
-        //         id: true
-        //     }]
-        // }, {
-        //     "metadata": {
-        //         location: {
-        //             ...event.metadata.location,
-        //             name: name,
-        //             id: closestLocation!.id
-        //         }
-        //     }
-        // })
-
     })
     return closestLocation
 }
