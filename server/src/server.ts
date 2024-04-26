@@ -8,6 +8,7 @@ import { authorize, convertAppleJWTtoHasuraJWT } from './resources/authorization
 import { parseUserRequest } from './resources/logic';
 import { getUserLanguage } from './resources/user';
 import { processMovement, setNameForLocation } from './helper/location';
+import { uploadSleep } from './helper/sleep';
 const app: Express = express();
 
 app.use(express.static(path.join(__dirname, '../public')));
@@ -88,7 +89,7 @@ app.post('/uploadSleep', async (req: Request, res: Response) => {
         try {
             console.log(`Sleep ${userId}`)
             console.log(JSON.stringify(req.body))
-            
+            uploadSleep(userId, req.body.sleepData);
             res.status(200).json({
                 status: "success",
             });
