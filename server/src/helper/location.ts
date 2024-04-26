@@ -38,7 +38,7 @@ interface StartMovementRequest {
 }
 
 export async function setNameForLocation(userId: number, lon: number, lat: number, name: string): Promise<DBLocation> {
-    let closestLocation = await getClosestUserLocation(userId, { lat: lat, lon: lon, accuracy: 0, timestamp: "" }, 500)
+    let closestLocation = await getClosestUserLocation(userId, { lat: lat, lon: lon, accuracy: 0, timestamp: "" }, 100)
     if (!closestLocation) {
         console.log("No location found for this user. Creating a new one.");
 
