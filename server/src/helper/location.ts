@@ -61,7 +61,7 @@ export async function setNameForLocation(userId: number, lon: number, lat: numbe
         })
         // update the name of the location
     }
-    // update all locations that fall into this location
+    // update all events that fall into this location
     let resp = await getHasura().query({
         events: [{
             where: {
@@ -77,18 +77,18 @@ export async function setNameForLocation(userId: number, lon: number, lat: numbe
             metadata: [{}, true]
         }]
     })
-    // filter all locations that are less than 0.2km from lat and lon
+    // filter all locations that are less than 0.1km from lat and lon
     let eventsWithCloseLocations = resp.events.filter((event) => {
-        // if(event.metadata?.location?.name != "Unknown location") {
-        //     return false
-        // }
+        if(event.metadata?.location?.location) {
+            return false
+        }
         try {
-            let location = event.metadata.location.location
+            let location = event.metadata?.location?.location
             let distance = calculateDistance(
                 { lat: location.coordinates[1], lon: location.coordinates[0], accuracy: 0, timestamp: "" },
                 { lat: lat, lon: lon, accuracy: 0, timestamp: "" }
             )
-            return distance < 0.2
+            return distance < 0.1
         } catch (e) {
             console.log("Error");
             console.log(event.metadata);
@@ -96,33 +96,33 @@ export async function setNameForLocation(userId: number, lon: number, lat: numbe
             return false
         }
     })
-    eventsWithCloseLocations.forEach(async (loc) => {
+    eventsWithCloseLocations.forEach(async (event) => {
         try {
-            console.log(`Event ${loc.id} ${JSON.stringify(loc.metadata.location.location)} is close to ${name}`)
+            console.log(`Event ${event.id} ${JSON.stringify(event.metadata.location.location)} is close to ${name}`)
         } catch (e) {
             console.log("Error");
 
         }
-        await getHasura().mutation({
-            update_events_by_pk: [{
-                pk_columns: {
-                    id: loc.id
-                },
-                _append: {
-                    metadata: $`metadata`
-                }
-            }, {
-                id: true
-            }]
-        }, {
-            "metadata": {
-                location: {
-                    ...loc.metadata.location,
-                    name: name,
-                    id: closestLocation!.id
-                }
-            }
-        })
+        // await getHasura().mutation({
+        //     update_events_by_pk: [{
+        //         pk_columns: {
+        //             id: event.id
+        //         },
+        //         _append: {
+        //             metadata: $`metadata`
+        //         }
+        //     }, {
+        //         id: true
+        //     }]
+        // }, {
+        //     "metadata": {
+        //         location: {
+        //             ...event.metadata.location,
+        //             name: name,
+        //             id: closestLocation!.id
+        //         }
+        //     }
+        // })
 
     })
     return closestLocation
