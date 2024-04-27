@@ -20,7 +20,7 @@ struct NavigationTitle: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 10, height: 6)
-                        .foregroundColor(.black) 
+                        .foregroundColor(.primary) 
                 }
                 Spacer()
             }

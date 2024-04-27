@@ -59,17 +59,24 @@ class InteractionsController: ObservableObject {
         }
     }
     
-    func editInteraction(id: Int, content: String, onSuccess: (() -> Void)? = nil) {
-        print("editing interaction")
-        let mutationQuery = """
-        mutation MyMutation($id: Int!, $content: String!) {
-          update_interactions_by_pk(pk_columns: {id: $id}, _set: {content: $content}) {
-            id
-          }
-        }
-        """
-        let variables: [String: Any] = ["id": id, "content": content]
+    func editInteraction(
+        id: Int,
+        fieldName: String,
+        fieldValue: String,
+        onSuccess: (() -> Void)? = nil
+    ) {
+        print("Editing interaction")
         
+        // Build the mutation query using the field name
+        let mutationQuery = """
+                mutation MyMutation($id: Int!) {
+                  update_interactions_by_pk(pk_columns: {id: $id}, _set: {\(fieldName): "\(fieldValue)"}) {
+                    id
+                  }
+                }
+        """
+        // Use a dictionary to dynamically build the variables
+        let variables: [String: Any] = ["id": id]
         struct EditInteractionResponse: Decodable {
             var data: EditInteractionWrapper
             struct EditInteractionWrapper: Decodable {
@@ -79,11 +86,20 @@ class InteractionsController: ObservableObject {
                 }
             }
         }
+
         Task {
-            let response: EditInteractionResponse = try await Hasura.shared.sendGraphQL(query: mutationQuery, variables: variables, responseType: EditInteractionResponse.self)
-            DispatchQueue.main.async {
-                print("Interaction edited: \(response.data.update_interactions_by_pk.id)")
-                onSuccess?()
+            do {
+                let response: EditInteractionResponse = try await Hasura.shared.sendGraphQL(
+                    query: mutationQuery,
+                    variables: variables,
+                    responseType: EditInteractionResponse.self
+                )
+                DispatchQueue.main.async {
+                    print("Interaction edited: \(response.data.update_interactions_by_pk.id)")
+                    onSuccess?()
+                }
+            } catch {
+                print("Failed to edit interaction: \(error)")
             }
         }
     }
@@ -148,10 +164,10 @@ class InteractionsController: ObservableObject {
         var whereClauses: [String] = ["{user_id: {_eq: \(userId)}", "content_type: {_eq: \"event\"}}"]
         
         if let gteDate = gte {
-            let startOfTodayUTCString = HasuraUtil.dateToUTCString(date: gteDate)
+            let startOfTodayUTCString = gteDate.toUTCString
             let calendar = Calendar.current
             let dayAfterGteDate = calendar.date(byAdding: .day, value: +1, to: gteDate)!
-            let dayAfterUTCString = HasuraUtil.dateToUTCString(date: dayAfterGteDate)
+            let dayAfterUTCString = dayAfterGteDate.toUTCString
             
             // Combining timestamp conditions using _and
             let timestampConditions = "{_and: [{timestamp: {_gte: \"\(startOfTodayUTCString)\"}}, {timestamp: {_lte: \"\(dayAfterUTCString)\"}}]}"

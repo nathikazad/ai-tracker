@@ -7,6 +7,7 @@
 
 import Foundation
 class UserController: ObservableObject {
+    static var user:UserModel?
     struct ResponseData: Decodable {
         var data: UsersWrapper
     }
@@ -33,6 +34,7 @@ class UserController: ObservableObject {
         
         do {
             let responseData: ResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, responseType: ResponseData.self)
+            user = responseData.data.users_by_pk
             return responseData.data.users_by_pk
         } catch {
             // Log error details for debugging purposes
@@ -65,7 +67,6 @@ class UserController: ObservableObject {
             }
         }
         
-        
         do {
             let response: UserMutationResponseData = try await Hasura.shared.sendGraphQL(query: mutationQuery, responseType: UserMutationResponseData.self)
             
@@ -90,10 +91,35 @@ class UserController: ObservableObject {
     
 }
 
-struct UserModel: Decodable, Equatable {
+struct UserModel: Decodable {
     var timezone: String?
+//    var config: UserConfig?
     
     enum CodingKeys: String, CodingKey {
         case timezone
+//        case config
     }
 }
+
+//struct UserConfig: Decodable {
+//    var healthKit: HealthKitConfig?
+//    enum CodingKeys: String, CodingKey {
+//        case healthKit
+//    }
+//}
+//
+//struct HealthKitConfig: Decodable {
+//    var trackSleep: Bool?
+//    var lastSleepEventStartTime: Date?
+//    enum CodingKeys: String, CodingKey {
+//        case trackSleep
+//        case lastSleepEventStartTime = "last_sleep_event_start_time"
+//    }
+//    
+//    init(from decoder: Decoder) throws {
+//        let container = try decoder.container(keyedBy: CodingKeys.self)
+//        trackSleep = try container.decode(Bool.self, forKey: .trackSleep)
+//        let timeString = try container.decodeIfPresent(String.self, forKey: .lastSleepEventStartTime)
+//        lastSleepEventStartTime = HasuraUtil.getTime(timestamp: timeString)
+//    }
+//}

@@ -136,7 +136,7 @@ struct MainView: View {
                         Button(action: {
                             appState.showSheet(newSheetToShow: .settings)
                         }) {
-                            Image(systemName: "line.horizontal.3").foregroundColor(.black)
+                            Image(systemName: "line.horizontal.3").foregroundColor(.primary)
                         }
                     }
                 }

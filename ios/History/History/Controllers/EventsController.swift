@@ -158,10 +158,10 @@ class EventsController: ObservableObject {
         var whereClauses: [String] = ["{user_id: {_eq: \(userId)}}"] // Fix syntax for where clause
         
         if let gteDate = gte {
-            let startOfTodayUTCString = HasuraUtil.dateToUTCString(date: gteDate)
+            let startOfTodayUTCString = gteDate.toUTCString
             let calendar = Calendar.current
             let dayAfterGteDate = calendar.date(byAdding: .day, value: +1, to: gteDate)!
-            let dayAfterUTCString = HasuraUtil.dateToUTCString(date: dayAfterGteDate)
+            let dayAfterUTCString = dayAfterGteDate.toUTCString
             
             // Combining timestamp conditions using _and
             // Modify the timestampConditions to use the provided condition
@@ -227,7 +227,7 @@ class EventsController: ObservableObject {
         
 
         return Dictionary(grouping: filteredEvents) { event in
-            event.startTime?.formattedDate ?? "Unknown"
+            event.startTime?.formattedSuperShortDate ?? "Unknown"
         }
         .mapValues { eventsForDay in
             eventsForDay.reduce(0) { total, event in
@@ -322,10 +322,6 @@ struct EventModel: Decodable, Identifiable {
     
     var formattedTimeWithDateAndX: String {
         return "\(startTime?.formattedDate ?? endTime?.formattedDate ?? ""): \(formattedTimeWithX)"
-    }
-    
-    var locationName: String? {
-        return metadata?.location?.name
     }
     
     var totalHoursPerDay: TimeInterval? {

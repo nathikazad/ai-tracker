@@ -18,8 +18,9 @@ let parseAudioEndpoint = fullURL(for: "parseUserRequestFromAudio")
 let parseTextEndpoint = fullURL(for: "parseUserRequestFromText")
 let getJwtEndpoint = fullURL(for: "hasuraJWT")
 let updateMovementEndpoint = fullURL(for: "updateMovement")
+let uploadSleepEndpoint = fullURL(for: "uploadSleep")
 let createLocationEndpoint = fullURL(for: "createLocation")
 
 
 // Constants
-let microphoneTimeout = 60.0 // seconds
+let microphoneTimeout = 300.0 // seconds

@@ -266,7 +266,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
                 },
                 "numberOfPoints": movementLocations.count,
                 //            "timeSinceLastMovement": Date().timeIntervalSince(previousLocationTime),
-                "timeStopped": HasuraUtil.dateToUTCString(date:Date().addingTimeInterval(-timeToConsiderStationary))
+                "timeStopped": Date().addingTimeInterval(-timeToConsiderStationary).toUTCString
             ]
             if let landmark = await findLocationsOfInterest(location: currentLocation) {
                 body["landmark"] = landmark
@@ -312,7 +312,7 @@ extension CLLocation {
             "lat": self.coordinate.latitude,
             "lon": self.coordinate.longitude,
             "accuracy": self.horizontalAccuracy,
-            "timestamp": HasuraUtil.dateToUTCString(date: self.timestamp)
+            "timestamp": self.timestamp.toUTCString
         ]
     }
 }

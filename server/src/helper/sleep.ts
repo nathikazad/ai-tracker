@@ -50,7 +50,7 @@ export async function uploadSleep(userId: number, matches: { sleep?: string, wak
             }]
         })
         if (resp.events.length > 0) {
-            console.log(`Event already exists for ID ${resp.events[0].id}`);
+            // console.log(`Event already exists for ID ${resp.events[0].id}`);
             if(end_time != `${resp.events[0].end_time}Z`) { // add Z because watch UTC encode adds Z
                 client.mutation({
                     update_events_by_pk: [{

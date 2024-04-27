@@ -23,7 +23,7 @@ struct GoalsView: View {
                     VStack {
                         Spacer()
                         Text("No Goals Yet")
-                            .foregroundColor(.black)
+                            .foregroundColor(.primary)
                             .font(.title2)
                         Text("Create a goal by clicking the microphone below")
                             .foregroundColor(.gray)

@@ -87,8 +87,7 @@ app.post('/uploadSleep', async (req: Request, res: Response) => {
     try {
         const userId = authorize(req); 
         try {
-            console.log(`Sleep ${userId}`)
-            console.log(JSON.stringify(req.body))
+            console.log(`uploadSleep ${userId}`)
             uploadSleep(userId, req.body.sleepData);
             res.status(200).json({
                 status: "success",

@@ -1,5 +1,5 @@
 import * as polyline from '@mapbox/polyline';
-import { insertInteraction } from '../resources/interactions';
+// import { insertInteraction } from '../resources/interactions';
 import { getHasura } from '../config';
 import { $, order_by } from '../generated/graphql-zeus';
 interface Location {
@@ -88,9 +88,8 @@ export async function setNameForLocation(userId: number, lon: number, lat: numbe
                 { lat: location.coordinates[1], lon: location.coordinates[0], accuracy: 0, timestamp: "" },
                 { lat: lat, lon: lon, accuracy: 0, timestamp: "" }
             )
-            if(distance > 0.1)
+            if(distance > 0.21)
                 return
-            console.log(`Event ${event.id} ${distance} ${JSON.stringify(event.metadata?.location?.id)} is close to ${name}`)
 
             await getHasura().mutation({
                 update_events_by_pk: [{
@@ -165,7 +164,7 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
             name: "Unknown location"
         }
     }
-    let interaction = `Entered ${endDbLocation?.name ?? "unknown location"}`
+    // let interaction = `Entered ${endDbLocation?.name ?? "unknown location"}`
 
     let lastEvent = await getLastUnfinishedEvent(userId, "stay", stoppedTime, 24)
     if (lastEvent) {
@@ -193,8 +192,8 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
         await finishCommute(userId, movementRequest.locations!)
     }
 
-    console.log("Interaction: ", interaction);
-    insertInteraction(userId, interaction, "event", { location: endDbLocation }, movementRequest.timeStopped)
+    // console.log("Interaction: ", interaction);
+    // insertInteraction(userId, interaction, "event", { location: endDbLocation }, movementRequest.timeStopped)
 }
 
 export async function startMovementEvent(userId: number, movementRequest: StartMovementRequest) {
@@ -206,11 +205,11 @@ export async function startMovementEvent(userId: number, movementRequest: StartM
         console.log(`Recent stay event found with id ${lastEvent} name ${lastEvent.metadata?.location?.name}. Updating the end time.`);
 
         let timeAtLocation = (movementStartedTime.getTime() - new Date(Date.parse(lastEvent.start_time)).getTime())/1000
-        let interaction = `Left ${lastEvent?.metadata?.location?.name ? lastEvent.metadata.location.name : "location"} after ${secondsToHHMM(timeAtLocation)}`
+        // let interaction = `Left ${lastEvent?.metadata?.location?.name ? lastEvent.metadata.location.name : "location"} after ${secondsToHHMM(timeAtLocation)}`
         updateEvent(lastEvent.id, movementStartedTime, timeAtLocation,{
             time_taken: secondsToHHMM(timeAtLocation)
         })
-        insertInteraction(userId, interaction, "event", { location: lastEvent.metadata })
+        // insertInteraction(userId, interaction, "event", { location: lastEvent.metadata })
     } else {
         console.log("No recent stay event found. Creating a new one.")
         let dbLocation: DBLocation | undefined = await getClosestUserLocation(userId, movementRequest.oldLocation)
@@ -223,7 +222,7 @@ export async function startMovementEvent(userId: number, movementRequest: StartM
                 name: "Unknown location"
             }
         }
-        insertInteraction(userId, `Left ${dbLocation.name}`, "event", { location: dbLocation })
+        // insertInteraction(userId, `Left ${dbLocation.name}`, "event", { location: dbLocation })
     }
 }
 
@@ -376,8 +375,8 @@ async function finishCommute(userId: number, locations: Location[]) {
         return;
     } else {
         console.log(`End commute and Commute distance ${calculateTotalDistance(locations).toFixed(2)} is less than 0.5 km. Not creating a new event.`)
-        let timeDiffText = timeDiff ? `Time taken: ${timeDiff}` : ""
-        await insertInteraction(userId, `Finished Commute. ${totalDistance.toFixed(0)}km ${timeDiffText}`, "event")
+        // let timeDiffText = timeDiff ? `Time taken: ${timeDiff}` : ""
+        // await insertInteraction(userId, `Finished Commute. ${totalDistance.toFixed(0)}km ${timeDiffText}`, "event")
     }
 
 }

@@ -26,7 +26,7 @@ struct TodosView: View {
                     VStack {
                         Spacer()
                         Text("No Todos Yet")
-                            .foregroundColor(.black)
+                            .foregroundColor(.primary)
                             .font(.title2)
                         Text("Create a todo by defining a goal or a task by clicking the microphone below")
                             .foregroundColor(.gray)

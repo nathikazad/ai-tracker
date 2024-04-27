@@ -310,13 +310,6 @@ class Hasura {
 }
 
 class HasuraUtil {
-    static func dateToUTCString(date: Date) -> String {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        formatter.timeZone = TimeZone(secondsFromGMT: 0) // Set formatter timezone to UTC
-        return formatter.string(from: date)
-    }
-    
     
     static func getTime(timestamp: String?) -> Date? {
         if(timestamp == nil) {
@@ -325,6 +318,8 @@ class HasuraUtil {
         var timeToFormat = timestamp!
         if timeToFormat.contains(".") {
             timeToFormat = String(timeToFormat.prefix(upTo: timeToFormat.range(of: ".")!.lowerBound))
+        } else {
+            timeToFormat = String(timeToFormat.prefix(upTo: timeToFormat.range(of: "+")!.lowerBound))
         }
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
@@ -347,6 +342,7 @@ extension Date {
         dateFormatter.timeZone = TimeZone.current // Local time zone
         return dateFormatter.string(from: self) // Format date to string
     }
+    
     var formattedShortDate: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd" // Day of the week and date
@@ -354,11 +350,28 @@ extension Date {
         return dateFormatter.string(from: self) // Format date to string
     }
     
-    var durationSinceInHHMM: String {
-        let currentDate = Date()
-        let duration = Int(currentDate.timeIntervalSince(self)) // duration in seconds
+    var formattedSuperShortDate: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd" // Day of the week and date
+        dateFormatter.timeZone = TimeZone.current // Local time zone
+        return dateFormatter.string(from: self) // Format date to string
+    }
+    
+    func durationInHHMM(to: Date) -> String {
+        let duration = Int(to.timeIntervalSince(self)) // duration in seconds
         let hours = duration / 3600
         let minutes = (duration % 3600) / 60
         return String(format: "%02d:%02d", hours, minutes)
+    }
+    
+    var durationSinceInHHMM: String {
+        durationInHHMM(to: Date())
+    }
+    
+    var toUTCString: String {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        return formatter.string(from: self)
     }
 }

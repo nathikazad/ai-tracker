@@ -1,12 +1,9 @@
-// import { getHasura } from "./config"
-// import { createEmbedding } from "./third/openai"
-import { $, order_by } from "../generated/graphql-zeus"
+
+import { $, order_by, timestamp_comparison_exp } from "../generated/graphql-zeus"
 import fs from 'fs'
 import { createEmbedding } from '../third/openai';
 import { getHasura } from '../config';
-import { secondsToHHMM } from "../helper/location";
-// import { getHasura } from './config';
-// import { secondsToMMSS } from './helper/location';
+import { secondsToHHMM } from '../helper/location';
 
 interface Event {
     id: number;
@@ -18,10 +15,11 @@ async function main() {
     // getEvents(1, "wake up", 'wake.json')
     // getEvents(1, "going to sleep", 'sleep.json')
     // findMatches()
-    writeToDatabase(1)
+    // writeToDatabase(1)
+    // readWatchData(1)
+    // readWatchData2(1)
 }
 main()
-
 
 export function getCostTimeInSeconds(start: string, end: string): number {
     const startTime = new Date(start);
@@ -36,8 +34,8 @@ export function findMatches() {
     fs.writeFileSync('matchedEvents.json', JSON.stringify(matchedEvents, null, 2), 'utf-8');
 }
 
-function matchEvents(sleepEvents: Event[], wakeEvents: Event[]): { wake?: Event | null, sleep?: Event | null}[] {
-    const matchedData: { wake?: Event | null, sleep?: Event | null}[] = [];
+function matchEvents(sleepEvents: Event[], wakeEvents: Event[]): { wake?: Event | null, sleep?: Event | null }[] {
+    const matchedData: { wake?: Event | null, sleep?: Event | null }[] = [];
     const sleepEventsUsed: Set<number> = new Set();
 
     wakeEvents.forEach(wake => {
@@ -46,17 +44,18 @@ function matchEvents(sleepEvents: Event[], wakeEvents: Event[]): { wake?: Event 
             const sleepTime = new Date(sleep.timestamp);
             // Ensure the sleep time is before the wake time and within 14 hours prior
             return sleepTime.getTime() < wakeTime.getTime() &&
-                   (wakeTime.getTime() - sleepTime.getTime()) <= 50400000 && 
-                   !sleepEventsUsed.has(sleep.id);
+                (wakeTime.getTime() - sleepTime.getTime()) <= 50400000 &&
+                !sleepEventsUsed.has(sleep.id);
         });
 
         if (matchedSleep) {
             sleepEventsUsed.add(matchedSleep.id);
             matchedData.push({ wake, sleep: matchedSleep });
-        } else {
-            // No appropriate sleep event found; push wake event with no matching sleep
-            matchedData.push({ wake, sleep: null });
-        }
+        } 
+        // else {
+        //     // No appropriate sleep event found; push wake event with no matching sleep
+        //     matchedData.push({ wake, sleep: null });
+        // }
     });
 
     // Add sleep events that were not matched to any wake event
@@ -69,7 +68,7 @@ function matchEvents(sleepEvents: Event[], wakeEvents: Event[]): { wake?: Event 
     return matchedData;
 }
 
-export async function getEvents(userId:number, phrase: string, filename: string) {
+export async function getEvents(userId: number, phrase: string, filename: string) {
     let embedding = await createEmbedding(phrase)
     // get interactions for user id 1 only after 2024-04-24T13:13:48.215+00:00
     let matches = await getHasura().query({
@@ -83,18 +82,128 @@ export async function getEvents(userId:number, phrase: string, filename: string)
                 timestamp: order_by.desc
             }]
         }, {
-                content: true,
-                timestamp: true,
-                id: true
-            }]
-        }, {
-            "embedding": JSON.stringify(embedding)
-        });
+            content: true,
+            timestamp: true,
+            id: true
+        }]
+    }, {
+        "embedding": JSON.stringify(embedding)
+    });
     matches.match_interactions.forEach((match) => {
         console.log(match.content)
     })
     fs.writeFileSync(filename, JSON.stringify(matches));
 }
+
+function addHoursToTimestamp(timestamp: string, hours: number): string {
+    if (!timestamp) {
+        undefined
+    }
+    const date = new Date(timestamp!);
+    date.setHours(date.getHours() + hours);
+    return date.toISOString();
+}
+
+function differnceInMinutes(timestampone: string, timestamptwo: string): string {
+    let difference_start = Math.abs(new Date(timestampone).getTime() - new Date(timestamptwo).getTime()) / 1000
+    return secondsToHHMM(difference_start)
+}
+
+function toPST(dateString: string | undefined): string {
+    if (!dateString) {
+        return 'N/A';
+    }
+    // dateString += 'Z'
+    // Create a new Date object from the UTC timestamp
+    const date = new Date(dateString);
+
+    // Convert the date to PST by specifying the timeZone in toLocaleString options
+    const pstDate = date.toLocaleString('en-US', {
+        timeZone: 'America/Los_Angeles',
+        hour12: true, // Use 12-hour format
+        month: '2-digit',
+        day: '2-digit',
+        hour: 'numeric',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+
+    // Replace commas with spaces and adjust AM/PM casing
+    // return pstDate.replace(',', '').replace('AM', 'a.m.').replace('PM', 'p.m.');
+    return pstDate
+}
+
+export async function readWatchData(userId: number) {
+    const matches: { sleep?: Event, wake?: Event }[] = JSON.parse(fs.readFileSync('data/watchSleep.json', 'utf-8'));
+    // const objectsToInsert = [];  // Array to hold all objects for a single mutation
+
+    for (const match of matches) {
+
+        let start_time
+        let end_time
+
+        if (match.sleep) {
+            start_time = match.sleep.timestamp;
+        }
+        if (match.wake) {
+            end_time = match.wake.timestamp;
+        }
+
+        let startConditions: timestamp_comparison_exp = {}
+        if (start_time) {
+            startConditions = {
+                _gt: addHoursToTimestamp(start_time!, -4),
+                _lt: addHoursToTimestamp(start_time!, 4)
+            }
+        }
+        let endConditions: timestamp_comparison_exp = {}
+        if (start_time) {
+            endConditions = {
+                _gt: addHoursToTimestamp(end_time!, -4),
+                _lt: addHoursToTimestamp(end_time!, 4)
+            }
+        }
+        const client = getHasura();
+        let resp = await client.query({
+            events: [{
+                where: {
+                    user_id: {
+                        _eq: userId
+                    },
+                    _or: [
+                        { start_time: startConditions },
+                        { end_time: endConditions },
+                    ],
+                    event_type: {
+                        _eq: 'sleep'
+                    }
+                }
+            }, {
+                id: true,
+                start_time: true,
+                end_time: true
+            }]
+        })
+        if (resp.events.length > 0) {
+            console.log(`Event already exists for ID ${resp.events[0].id}`);
+            let actual_start_time = resp.events[0].start_time
+            let actual_end_time = resp.events[0].end_time
+            let str = ``
+            if (actual_start_time && start_time) {
+                str = `\tsleep time: \n\t\tw:${toPST(start_time)}\n\t\td:${toPST(actual_start_time)}`
+                str += `\n\tstart diff: ${differnceInMinutes(actual_start_time, start_time)}`
+            }
+
+            if (actual_end_time && end_time) {
+                str += `\n\twake time: \n\t\tw:${toPST(end_time)}\n\t\td:${toPST(actual_end_time)}`
+                str += `\n\tend diff: ${differnceInMinutes(actual_end_time, end_time)}\n`
+            }
+            console.log(str)
+            // continue;
+        }
+    }
+}
+
 
 export async function writeToDatabase(userId:number) {
     const matches: { sleep?: Event, wake?: Event }[] = JSON.parse(fs.readFileSync('matchedEvents.json', 'utf-8'));
@@ -108,11 +217,15 @@ export async function writeToDatabase(userId:number) {
         if (match.sleep) {
             start_time = match.sleep.timestamp;
         }
+
         if (match.wake) {
             end_time = match.wake.timestamp;
         }
+
         if (match.sleep && match.wake) {
             cost_time = getCostTimeInSeconds(start_time!, end_time!);
+        } else {
+            continue
         }
         let metadata = {}
         if(cost_time != 0) {
@@ -155,25 +268,3 @@ export async function writeToDatabase(userId:number) {
         });
     }    
 }
-
-
-// export async function writeToDatabase() {
-//     const matches: { sleep: Event, wake?: Event }[] = JSON.parse(fs.readFileSync('matchedEvents.json', 'utf-8'));
-//     
-
-//     for (const match of matches) {
-//         const start_time = match.sleep.timestamp;
-//         let end_time = match.sleep.timestamp; // Default to the same if no wake event
-//         let cost_time = 0;
-
-//         // If there is a matching wake event, calculate the actual cost_time
-//         if (match.wake) {
-//             end_time = match.wake.timestamp;
-//             cost_time = getCostTimeInSeconds(start_time, end_time);
-//         }
-
-
-
-
-//     }
-// }

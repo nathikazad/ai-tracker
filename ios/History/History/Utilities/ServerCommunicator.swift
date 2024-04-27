@@ -126,7 +126,7 @@ class ServerCommunicator: ObservableObject {
         return false
     }
     
-    static func sendToServer(to uploadUrlString: String, body: [String: Any]? = [:], token: String?) async throws -> Data? {
+    private static func sendToServer(to uploadUrlString: String, body: [String: Any]? = [:], token: String?) async throws -> Data? {
         guard let uploadUrl = URL(string: uploadUrlString) else {
             throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Invalid upload URL."])
         }

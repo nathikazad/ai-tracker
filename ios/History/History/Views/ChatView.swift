@@ -40,8 +40,8 @@ struct ChatMessageRow: View {
                 VStack(alignment: .trailing) {
                     Text(message.content)
                         .padding()
-                        .background(Color.black)
-                        .foregroundColor(Color.white)
+                        .background(Color.primary)
+                        .foregroundColor(Color("OppositeColor"))
                         .cornerRadius(15)
                 }
             } else {
@@ -49,7 +49,7 @@ struct ChatMessageRow: View {
                     Text(message.content)
                         .padding()
                         .background(Color.gray.opacity(0.2))
-                        .foregroundColor(Color.black)
+                        .foregroundColor(Color.primary)
                         .cornerRadius(15)
                 }
                 Spacer()
@@ -137,13 +137,26 @@ class ChatViewModel: ObservableObject {
                 AppState.shared.showChat(newChatViewToShow:.none)
             }) {
                 Text("Ok")
-                    .foregroundColor(.white)
+                    .foregroundColor(Color("OppositeColor"))
                     .padding(.horizontal, 16)
                     .padding(.vertical, 8)
-                    .background(Color.black)
+                    .background(Color.primary)
                     .cornerRadius(8)
             }
         addChatContent(view: okButton)
+    }
+    
+    func sendMessage(_ message: String) {
+        addMessage(content: message, sender: .User)
+        Task {
+            do {
+                let response = try await ServerCommunicator.sendPostRequest(to: parseTextEndpoint, body: ["text": message], token: Authentication.shared.hasuraJwt!)
+                addMessage(content: "Your message has been recorded", sender: .Maximus)
+                addOkButton()
+            } catch {
+                print("Server communication error")
+            }
+        }
     }
     
     func addChatContent<V: View>(view: V) {
@@ -179,7 +192,7 @@ struct ChatView: View {
                     self.appState.showChat(newChatViewToShow:.none)
                 }) {
                     Image(systemName: "chevron.left")
-                        .foregroundColor(.black)
+                        .foregroundColor(.primary)
                 } : nil  // No button when not in normal chat view
             )
         }
@@ -191,10 +204,10 @@ struct SendButton: View {
     var body: some View {
         Button(action: action) {
             Text("Send")
-                .foregroundColor(.white)
+                .foregroundColor(Color("OppositeColor"))
                 .padding(.horizontal, 16)
                 .padding(.vertical, 8)
-                .background(Color.black)
+                .background(Color.primary)
                 .cornerRadius(8)
         }
     }
@@ -206,11 +219,18 @@ struct SendBar: View {
     @State var isRecording: Bool = false
     @FocusState private var isTextFieldFocused: Bool
     
+    private func getLineLimit(for text: String) -> Int {
+        let lineCount = text.components(separatedBy: "\n").count
+        let newLength = (text.count / 28) + lineCount
+        return max(1, min(5, newLength))
+    }
+    
     var body: some View {
         HStack {
-            TextField("Message", text: $currentMessage)
+            TextField("Message", text: $currentMessage, axis: .vertical)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .focused($isTextFieldFocused)
+                .lineLimit(getLineLimit(for: currentMessage), reservesSpace: true)
             Button(action: {
                 // Toggle recording state
                 self.isRecording.toggle()
@@ -218,10 +238,10 @@ struct SendBar: View {
                 // Here, add the functionality to start/stop recording
             }) {
                 Image(systemName: isRecording ? "stop.fill" : "mic.fill") // Change icon based on recording state
-                    .foregroundColor(.white)
+                    .foregroundColor(Color("OppositeColor"))
                     .padding(.horizontal, 8)
                     .padding(.vertical, 8)
-                    .background(Color.black)
+                    .background(Color.primary)
                     .cornerRadius(8)
             }
             .padding(.trailing, 0)
@@ -229,17 +249,7 @@ struct SendBar: View {
             
             SendButton {
                 if !currentMessage.isEmpty {
-                    chatViewModel.addMessage(content: currentMessage, sender: .User)
-                    var messageToSend = currentMessage
-                    Task {
-                        do {
-                            let response = try await ServerCommunicator.sendPostRequest(to: parseTextEndpoint, body: ["text": messageToSend], token: Authentication.shared.hasuraJwt!)
-                            chatViewModel.addMessage(content: "Your message has been recorded", sender: .Maximus)
-                            chatViewModel.addOkButton()
-                        } catch {
-                            print("Server communication error")
-                        }
-                    }
+                    chatViewModel.sendMessage(currentMessage)
                     currentMessage = ""
                 }
             }
@@ -248,6 +258,7 @@ struct SendBar: View {
         .padding(.bottom, 10)
         .padding(.horizontal, 20)
     }
+    
 }
 
 
@@ -299,7 +310,7 @@ struct SendBar: View {
 //                                }
 //                            }
 //                            // black button
-////                            .signInWithAppleButtonStyle(.black)
+////                            .signInWithAppleButtonStyle(.primary)
 ////                            // white button
 ////                            .signInWithAppleButtonStyle(.white)
 //                            // white with border

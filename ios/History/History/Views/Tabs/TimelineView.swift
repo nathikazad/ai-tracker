@@ -7,11 +7,19 @@
 
 import SwiftUI
 
+enum ShowInPopup {
+    case text
+    case date
+    case none
+}
+
 // Define your custom views for each tab
 struct TimelineView: View {
     @StateObject var interactionController = InteractionsController()
     @State private var showPopupForId: Int?
+    @State private var showInPopup: ShowInPopup = .none
     @State private var draftContent = ""
+    @State private var selectedTime: Date = Date()
     @State private var isShowingDatePicker = false
     
     func showCalendarPicker() {
@@ -24,7 +32,7 @@ struct TimelineView: View {
                 showCalendarPicker()
             }) {
                 Text(interactionController.formattedDate)
-                    .foregroundColor(.black)
+                    .foregroundColor(.primary)
                     .padding(.top, 5)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .gesture(
@@ -44,7 +52,7 @@ struct TimelineView: View {
                     VStack {
                         Spacer()
                         Text("No Events Yet")
-                            .foregroundColor(.black)
+                            .foregroundColor(.primary)
                             .font(.title2)
                         Text("Create an event by clicking the microphone below")
                             .foregroundColor(.gray)
@@ -82,7 +90,7 @@ struct TimelineView: View {
         VStack {
             Spacer()
             Text("No Events Yet")
-                .foregroundColor(.black)
+                .foregroundColor(.primary)
                 .font(.title2)
             Text("Record your first event by clicking the microphone below and saying what you did.")
                 .foregroundColor(.gray)
@@ -99,6 +107,11 @@ struct TimelineView: View {
                     Text(interaction.timestamp.formattedTime)
                         .font(.headline)
                         .frame(width: 100, alignment: .leading)
+                        .onTapGesture {
+                            selectedTime = interaction.timestamp
+                            showPopupForId = interaction.id
+                            showInPopup = .date
+                        }
                     Divider()
                     
                     if let location = interaction.location {
@@ -113,6 +126,7 @@ struct TimelineView: View {
                             .onTapGesture {
                                 draftContent = interaction.content
                                 showPopupForId = interaction.id
+                                showInPopup = .text
                             }
                     }
                 }
@@ -138,37 +152,49 @@ struct TimelineView: View {
         Group {
             if showPopupForId != nil {
                 VStack {
-                    Text("Edit Content")
-                        .font(.headline) // Optional: Sets the font for the title
-                        .padding(.bottom, 5) // Reduces the space below the title
-                    
-                    TextEditor(text: $draftContent)
-                        .frame(minHeight: 50, maxHeight: 200) // Reduces the minimum height and sets a max height
-                        .padding(4) // Reduces padding around the TextEditor
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 5)
-                                .stroke(Color.gray, lineWidth: 1) // Border for TextEditor
-                        )
+                    if(showInPopup == .text) {
+                        Text("Edit Content")
+                            .font(.headline) // Optional: Sets the font for the title
+                            .padding(.bottom, 5) // Reduces the space below the title
+                        
+                        TextEditor(text: $draftContent)
+                            .frame(minHeight: 50, maxHeight: 200) // Reduces the minimum height and sets a max height
+                            .padding(4) // Reduces padding around the TextEditor
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 5)
+                                    .stroke(Color.gray, lineWidth: 1) // Border for TextEditor
+                            )
+                    } else if (showInPopup == .date) {
+                        DatePicker("Select Time", selection: $selectedTime, displayedComponents: .hourAndMinute)
+                            .datePickerStyle(WheelDatePickerStyle())
+                            .frame(maxHeight: 150)
+                    }
                     
                     Button(action: {
                         DispatchQueue.main.async {
-                            interactionController.editInteraction(id: showPopupForId!, content: draftContent)
+                            if(showInPopup == .text) {
+                                interactionController.editInteraction(id: showPopupForId!, fieldName: "content", fieldValue: draftContent)
+                            } else if (showInPopup == .date) {
+                                interactionController.editInteraction(id: showPopupForId!, fieldName: "timestamp", fieldValue: selectedTime.toUTCString)
+                            }
+                            self.showInPopup = .none
                             self.showPopupForId = nil
                         }
                     }) {
                         Text("Save")
-                            .foregroundColor(.black)
+                            .foregroundColor(.primary)
                     }
                     .padding(.top, 5)
                 }
                 .padding()
-                .background(Color.white)
+                .background(Color("OppositeColor"))
                 .cornerRadius(10)
                 .shadow(radius: 5)
                 .frame(width: 300)
                 .overlay(
                     Button(action: {
                         showPopupForId = nil
+                        showInPopup = .none
                     }) {
                         Image(systemName: "xmark.circle.fill")
                             .font(.largeTitle)
