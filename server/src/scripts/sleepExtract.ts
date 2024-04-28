@@ -4,7 +4,7 @@ import fs from 'fs'
 import { createEmbedding } from '../third/openai';
 import { getHasura } from '../config';
 import { toPST } from "../scratch";
-import { secondsToHHMM } from "../helper/time";
+import { addHoursToTimestamp, getCostTimeInSeconds, secondsToHHMM } from "../helper/time";
 
 interface Event {
     id: number;
@@ -20,15 +20,10 @@ async function main() {
     // readWatchData(1)
     // readWatchData2(1)
 }
-main()
+// main()
 
-export function getCostTimeInSeconds(start: string, end: string): number {
-    const startTime = new Date(start);
-    const endTime = new Date(end);
-    return Math.floor((endTime.getTime() - startTime.getTime()) / 1000);
-}
 
-export function findMatches() {
+function findMatches() {
     const wakeData = JSON.parse(fs.readFileSync('wake.json', 'utf-8'));
     const sleepData = JSON.parse(fs.readFileSync('sleep.json', 'utf-8'));
     const matchedEvents = matchEvents(sleepData.match_interactions, wakeData.match_interactions);
@@ -69,7 +64,7 @@ function matchEvents(sleepEvents: Event[], wakeEvents: Event[]): { wake?: Event 
     return matchedData;
 }
 
-export async function getEvents(userId: number, phrase: string, filename: string, threshold: number) {
+async function getEvents(userId: number, phrase: string, filename: string, threshold: number) {
     let embedding = await createEmbedding(phrase)
     // get interactions for user id 1 only after 2024-04-24T13:13:48.215+00:00
     let matches = await getHasura().query({
@@ -96,21 +91,9 @@ export async function getEvents(userId: number, phrase: string, filename: string
     fs.writeFileSync("data/"+filename, JSON.stringify(matches));
 }
 
-function addHoursToTimestamp(timestamp: string, hours: number): string {
-    if (!timestamp) {
-        undefined
-    }
-    const date = new Date(timestamp!);
-    date.setHours(date.getHours() + hours);
-    return date.toISOString().replace('Z', '');
-}
 
-export function differnceInMinutes(timestampone: string, timestamptwo: string): string {
-    let difference_start = Math.abs(new Date(timestampone).getTime() - new Date(timestamptwo).getTime()) / 1000
-    return secondsToHHMM(difference_start)
-}
 
-export async function readWatchData(userId: number) {
+async function readWatchData(userId: number) {
     const matches: { sleep?: Event, wake?: Event }[] = JSON.parse(fs.readFileSync('data/matchedEvents.json', 'utf-8'));
     // const objectsToInsert = [];  // Array to hold all objects for a single mutation
 

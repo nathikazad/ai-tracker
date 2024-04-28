@@ -26,6 +26,11 @@ export function getCostTimeInSeconds(start: string, end: string): number {
     return Math.floor((endTime.getTime() - startTime.getTime()) / 1000);
 }
 
+export function differnceInMinutes(timestampone: string, timestamptwo: string): string {
+    let difference_start = Math.abs(new Date(timestampone).getTime() - new Date(timestamptwo).getTime()) / 1000
+    return secondsToHHMM(difference_start)
+}
+
 export function addHoursToTimestamp(timestamp: string, hours: number): string {
     if (!timestamp) {
         undefined

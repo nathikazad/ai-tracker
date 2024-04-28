@@ -1,8 +1,7 @@
 import { getHasura } from "../config";
 import { $, timestamp_comparison_exp } from "../generated/graphql-zeus";
 import { toPST } from "../scratch";
-import { getCostTimeInSeconds } from "../scripts/sleepExtract";
-import { addHoursToTimestamp, secondsToHHMM, toDate } from "./time";
+import { addHoursToTimestamp, secondsToHHMM, toDate, getCostTimeInSeconds } from "./time";
 
 export async function uploadSleep(userId: number, matches: { sleep?: string, wake?: string }[]) {
     for (const match of matches) {
