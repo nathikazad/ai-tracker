@@ -1,5 +1,4 @@
 import SwiftUI
-import Charts
 
 struct SleepView: View {
     @Environment(\.presentationMode) var presentationMode
@@ -114,7 +113,7 @@ struct SleepGraphsView: View {
         ScrollView {
             VStack {
                 SliderView(selectedDays: $selectedDays, maxDays: $maxDays)
-                BarView(title: "Hours slept per day", ydata: dailyTotals)
+                BarView(title: "Hours slept per day", data: dailyTotals)
                     .padding(.bottom)
                 ScatterViewString(title: "Wake up time", xdata:dates, ydata: wakeTimes)
                     .padding(.bottom)
@@ -140,74 +139,4 @@ struct SliderView: View {
         }
         .padding(.horizontal)
     }
-}
-
-struct BarView: View {
-    var title: String
-    var ydata: [(String, Double)]
-
-    var body: some View {
-        Section(header: Text(title)) {
-            Chart {
-                ForEach(ydata, id: \.0) { key, value in
-                    BarMark(
-                        x: .value("Key", key),
-                        y: .value("Value", value)
-                    )
-                    .foregroundStyle(Color.gray)
-                }
-            }
-            .frame(height: 200)
-            .padding(.horizontal)
-        }
-    }
-}
-
-struct ScatterViewDoubles: View {
-    var title: String
-    var xdata: [Double]
-    var ydata: [Double]
-    var body: some View {
-        Section(header: Text(title)) {
-            Chart {
-                ForEach(Array(zip(xdata, ydata)), id: \.0) { sleepTime, wakeTime in
-                    PointMark(
-                        x: .value("Sleep Time", sleepTime),
-                        y: .value("Wake Time", wakeTime)
-                            
-                    ).foregroundStyle(Color.gray)
-                }
-            }
-            .chartXScale(domain: getDomain(data: xdata))
-            .chartYScale(domain: getDomain(data: ydata))
-            .frame(height: 200)
-            .padding(.horizontal)
-        }
-    }
-}
-
-struct ScatterViewString: View {
-    var title: String
-    var xdata: [String]
-    var ydata: [Double]
-    var body: some View {
-        Section(header: Text(title)) {
-            Chart {
-                ForEach(Array(zip(xdata, ydata)), id: \.0) { sleepTime, wakeTime in
-                    PointMark(
-                        x: .value("Sleep Time", sleepTime),
-                        y: .value("Wake Time", wakeTime)
-                            
-                    ).foregroundStyle(Color.gray)
-                }
-            }
-            .chartYScale(domain: getDomain(data: ydata))
-            .frame(height: 200)
-            .padding(.horizontal)
-        }
-    }
-}
-
-func getDomain(data:[Double]) -> ClosedRange<Double>{
-    return { ((data.min() ?? 0) - 2)...((data.max() ?? 24) + 2) }()
 }

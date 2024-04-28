@@ -101,51 +101,58 @@ struct TimelineView: View {
     }
     
     private var listView: some View {
-        List {
-            ForEach(interactionController.interactions, id: \.id) { interaction in
-                HStack {
-                    Text(interaction.timestamp.formattedTime)
-                        .font(.headline)
-                        .frame(width: 100, alignment: .leading)
-                        .onTapGesture {
-                            selectedTime = interaction.timestamp
-                            showPopupForId = interaction.id
-                            showInPopup = .date
-                        }
+        VStack {
+            ScrollView(showsIndicators: false) {
+                ForEach(interactionController.interactions, id: \.id) { interaction in
                     Divider()
-                    
-                    if let location = interaction.location {
-                        NavigationLink(destination: LocationDetailView(location: location)) {
-                            Text(interaction.content)
-                                .font(.subheadline)
-                        }
-                    } else {
-                        Text(String(interaction.content))
-                            .font(.subheadline)
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                    HStack {
+                        Text(interaction.timestamp.formattedTime)
+                            .font(.headline)
+                            .frame(width: 100, alignment: .leading)
                             .onTapGesture {
-                                draftContent = interaction.content
+                                selectedTime = interaction.timestamp
                                 showPopupForId = interaction.id
-                                showInPopup = .text
+                                showInPopup = .date
                             }
+                        Divider()
+                        
+                        if let location = interaction.location {
+                            NavigationLink(destination: LocationDetailView(location: location)) {
+                                Text(interaction.content)
+                                    .font(.subheadline)
+                            }
+                        } else {
+                            Text(String(interaction.content))
+                                .font(.subheadline)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .onTapGesture {
+                                    draftContent = interaction.content
+                                    showPopupForId = interaction.id
+                                    showInPopup = .text
+                                }
+                        }
+                    }
+                    .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                        Button(action: {
+                            print("Tapped right on \(interaction.id)")
+                            // TODO: start microphone with parameters
+                        }) {
+                            Image(systemName: "mic.fill")                                .foregroundColor(.green) // Setting the color of the icon
+                        }
                     }
                 }
-                .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                    Button(action: {
-                        print("Tapped right on \(interaction.id)")
-                        // TODO: start microphone with parameters
-                    }) {
-                        Image(systemName: "mic.fill")                                .foregroundColor(.green) // Setting the color of the icon
+                .onDelete { indices in
+                    indices.forEach { index in
+                        let interactionId = interactionController.interactions[index].id
+                        interactionController.deleteInteraction(id: interactionId)
                     }
                 }
             }
-            .onDelete { indices in
-                indices.forEach { index in
-                    let interactionId = interactionController.interactions[index].id
-                    interactionController.deleteInteraction(id: interactionId)
-                }
-            }
+            .padding()
+            .defaultScrollAnchor(.bottom)
         }
+        
+
     }
     
     private var popupView: some View {

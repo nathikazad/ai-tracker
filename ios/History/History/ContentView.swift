@@ -58,7 +58,7 @@ class AppState: ObservableObject, MicrophoneDelegate {
 }
 
 enum ChatViewToShow {
-    case none, onBoard, normal
+    case none, onBoard, normal, investor
 }
 
 enum SheetViewToShow {
