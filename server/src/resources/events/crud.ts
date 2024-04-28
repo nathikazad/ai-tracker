@@ -1,5 +1,5 @@
-import { config, getFullHasuraUrl, getHasura } from "../config";
-import { order_by } from "../generated/graphql-zeus";
+import { config, getFullHasuraUrl, getHasura } from "../../config";
+import { order_by } from "../../generated/graphql-zeus";
 
 
 export async function getEvents({ user_id, limit = 10 }: { user_id: number; limit?: number; }) {

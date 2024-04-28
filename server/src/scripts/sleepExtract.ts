@@ -3,7 +3,8 @@ import { $, order_by, timestamp_comparison_exp } from "../generated/graphql-zeus
 import fs from 'fs'
 import { createEmbedding } from '../third/openai';
 import { getHasura } from '../config';
-import { secondsToHHMM } from '../helper/location';
+import { toPST } from "../scratch";
+import { secondsToHHMM } from "../helper/time";
 
 interface Event {
     id: number;
@@ -12,7 +13,7 @@ interface Event {
 }
 
 async function main() {
-    // getEvents(1, "wake up", 'wake.json')
+    getEvents(1, "trader joes", 'office.json', 0.2)
     // getEvents(1, "going to sleep", 'sleep.json')
     // findMatches()
     // writeToDatabase(1)
@@ -68,7 +69,7 @@ function matchEvents(sleepEvents: Event[], wakeEvents: Event[]): { wake?: Event 
     return matchedData;
 }
 
-export async function getEvents(userId: number, phrase: string, filename: string) {
+export async function getEvents(userId: number, phrase: string, filename: string, threshold: number) {
     let embedding = await createEmbedding(phrase)
     // get interactions for user id 1 only after 2024-04-24T13:13:48.215+00:00
     let matches = await getHasura().query({
@@ -76,7 +77,7 @@ export async function getEvents(userId: number, phrase: string, filename: string
             args: {
                 target_user_id: userId,
                 query_embedding: $`embedding`,
-                match_threshold: 0.35,
+                match_threshold: threshold,
             },
             order_by: [{
                 timestamp: order_by.desc
@@ -92,7 +93,7 @@ export async function getEvents(userId: number, phrase: string, filename: string
     matches.match_interactions.forEach((match) => {
         console.log(match.content)
     })
-    fs.writeFileSync(filename, JSON.stringify(matches));
+    fs.writeFileSync("data/"+filename, JSON.stringify(matches));
 }
 
 function addHoursToTimestamp(timestamp: string, hours: number): string {
@@ -101,40 +102,16 @@ function addHoursToTimestamp(timestamp: string, hours: number): string {
     }
     const date = new Date(timestamp!);
     date.setHours(date.getHours() + hours);
-    return date.toISOString();
+    return date.toISOString().replace('Z', '');
 }
 
-function differnceInMinutes(timestampone: string, timestamptwo: string): string {
+export function differnceInMinutes(timestampone: string, timestamptwo: string): string {
     let difference_start = Math.abs(new Date(timestampone).getTime() - new Date(timestamptwo).getTime()) / 1000
     return secondsToHHMM(difference_start)
 }
 
-function toPST(dateString: string | undefined): string {
-    if (!dateString) {
-        return 'N/A';
-    }
-    // dateString += 'Z'
-    // Create a new Date object from the UTC timestamp
-    const date = new Date(dateString);
-
-    // Convert the date to PST by specifying the timeZone in toLocaleString options
-    const pstDate = date.toLocaleString('en-US', {
-        timeZone: 'America/Los_Angeles',
-        hour12: true, // Use 12-hour format
-        month: '2-digit',
-        day: '2-digit',
-        hour: 'numeric',
-        minute: '2-digit',
-        second: '2-digit'
-    });
-
-    // Replace commas with spaces and adjust AM/PM casing
-    // return pstDate.replace(',', '').replace('AM', 'a.m.').replace('PM', 'p.m.');
-    return pstDate
-}
-
 export async function readWatchData(userId: number) {
-    const matches: { sleep?: Event, wake?: Event }[] = JSON.parse(fs.readFileSync('data/watchSleep.json', 'utf-8'));
+    const matches: { sleep?: Event, wake?: Event }[] = JSON.parse(fs.readFileSync('data/matchedEvents.json', 'utf-8'));
     // const objectsToInsert = [];  // Array to hold all objects for a single mutation
 
     for (const match of matches) {
@@ -156,13 +133,15 @@ export async function readWatchData(userId: number) {
                 _lt: addHoursToTimestamp(start_time!, 4)
             }
         }
-        let endConditions: timestamp_comparison_exp = {}
-        if (start_time) {
-            endConditions = {
-                _gt: addHoursToTimestamp(end_time!, -4),
-                _lt: addHoursToTimestamp(end_time!, 4)
-            }
-        }
+        // let endConditions: timestamp_comparison_exp = {}
+        // if (start_time) {
+        //     endConditions = {
+        //         _gt: addHoursToTimestamp(end_time!, -4),
+        //         _lt: addHoursToTimestamp(end_time!, 4)
+        //     }
+        // }
+       
+        
         const client = getHasura();
         let resp = await client.query({
             events: [{
@@ -172,7 +151,7 @@ export async function readWatchData(userId: number) {
                     },
                     _or: [
                         { start_time: startConditions },
-                        { end_time: endConditions },
+                        // { end_time: endConditions },
                     ],
                     event_type: {
                         _eq: 'sleep'
@@ -190,15 +169,28 @@ export async function readWatchData(userId: number) {
             let actual_end_time = resp.events[0].end_time
             let str = ``
             if (actual_start_time && start_time) {
-                str = `\tsleep time: \n\t\tw:${toPST(start_time)}\n\t\td:${toPST(actual_start_time)}`
-                str += `\n\tstart diff: ${differnceInMinutes(actual_start_time, start_time)}`
+                str = `\tsleep time: \n\t\tme:${toPST(start_time)}\n\t\twatch:${toPST(actual_start_time)}`
+                // str += `\n\tstart diff: ${differnceInMinutes(actual_start_time, start_time)}`
             }
 
             if (actual_end_time && end_time) {
-                str += `\n\twake time: \n\t\tw:${toPST(end_time)}\n\t\td:${toPST(actual_end_time)}`
-                str += `\n\tend diff: ${differnceInMinutes(actual_end_time, end_time)}\n`
+                str += `\n\twake time: \n\t\tme:${toPST(end_time)}\n\t\twatch:${toPST(actual_end_time)}`
+            //     str += `\n\tend diff: ${differnceInMinutes(actual_end_time, end_time)}\n`
             }
             console.log(str)
+            await getHasura().mutation({
+                update_events_by_pk: [{
+                    pk_columns: {
+                        id: resp.events[0].id
+                    },
+                    _set: {
+                        end_time: end_time,
+                        start_time: start_time
+                    }
+                }, {
+                    id: true
+                }]
+            })
             // continue;
         }
     }
@@ -207,7 +199,7 @@ export async function readWatchData(userId: number) {
 
 export async function writeToDatabase(userId:number) {
     const matches: { sleep?: Event, wake?: Event }[] = JSON.parse(fs.readFileSync('matchedEvents.json', 'utf-8'));
-    const objectsToInsert = [];  // Array to hold all objects for a single mutation
+    // const objectsToInsert = [];  // Array to hold all objects for a single mutation
 
     for (const match of matches) {
         let start_time
@@ -258,13 +250,13 @@ export async function writeToDatabase(userId:number) {
             console.error('Error inserting event', error);
         }
 
-        objectsToInsert.push({
-            user_id: userId,
-            event_type: 'sleep',
-            start_time: start_time,
-            end_time: end_time,
-            cost_time: cost_time,
-            metadata: metadata
-        });
+        // objectsToInsert.push({
+        //     user_id: userId,
+        //     event_type: 'sleep',
+        //     start_time: start_time,
+        //     end_time: end_time,
+        //     cost_time: cost_time,
+        //     metadata: metadata
+        // });
     }    
 }

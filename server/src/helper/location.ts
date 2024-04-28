@@ -2,6 +2,7 @@ import * as polyline from '@mapbox/polyline';
 // import { insertInteraction } from '../resources/interactions';
 import { getHasura } from '../config';
 import { $, order_by } from '../generated/graphql-zeus';
+import { secondsToHHMM } from './time';
 interface Location {
     lat: number;
     lon: number;
@@ -381,19 +382,6 @@ async function finishCommute(userId: number, locations: Location[]) {
 
 }
 
-export function secondsToHHMM(seconds: number): string {
-    const hours: number = Math.floor(seconds / 3600);
-    const remainingSecondsAfterHours: number = seconds % 3600;
-    const minutes: number = Math.floor(remainingSecondsAfterHours / 60);
-    // const remainingSeconds: number = remainingSecondsAfterHours % 60;
-
-    const formattedHours: string = String(hours).padStart(2, '0');
-    const formattedMinutes: string = String(minutes).padStart(2, '0');
-    // const formattedSeconds: string = String(remainingSeconds).padStart(2, '0');
-
-    return `${formattedHours}:${formattedMinutes}`;
-}
-
 
 function insertNewCommute(userId: number, locations: Location[]) {
     // if length is greater than 1, means it end commute and in that case if distance is less than 0.2km, don't create a new event
@@ -437,6 +425,7 @@ function insertNewCommute(userId: number, locations: Location[]) {
         "metadata": metadata
     });
 }
+
 function calculateTotalDistance(locations: Location[]): number {
     let totalDistance = 0;
 
@@ -491,7 +480,6 @@ export async function insertLocation(userId: number, location: Location, name: s
     })
     return resp.insert_locations!.returning![0];
 }
-
 
 function convertLocationToPostGISPoint(location: Location): PostGISPoint {
     return {

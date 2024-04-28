@@ -1,16 +1,25 @@
 import { getHasura } from "../config";
 import { $, timestamp_comparison_exp } from "../generated/graphql-zeus";
-import { secondsToHHMM } from "./location";
+import { toPST } from "../scratch";
+import { getCostTimeInSeconds } from "../scripts/sleepExtract";
+import { addHoursToTimestamp, secondsToHHMM, toDate } from "./time";
 
 export async function uploadSleep(userId: number, matches: { sleep?: string, wake?: string }[]) {
     for (const match of matches) {
+
         let start_time
         let end_time
         let cost_time = 0;
 
         if (match.sleep) {
             start_time = match.sleep;
+            // skip if start time is before yesterday
+            if(toDate(start_time) < new Date(new Date().setDate(new Date().getDate() - 2))) {
+                console.log(`Skipping event with start time ${toPST(start_time)}`);
+                continue;
+            }
         }
+
         if (match.wake) {
             end_time = match.wake;
         }
@@ -89,41 +98,3 @@ export async function uploadSleep(userId: number, matches: { sleep?: string, wak
     }
 }
 
-function toPST(dateString: string | undefined): string {
-    if (!dateString) {
-        return 'N/A';
-    }
-    // dateString += 'Z'
-    // Create a new Date object from the UTC timestamp
-    const date = new Date(dateString);
-
-    // Convert the date to PST by specifying the timeZone in toLocaleString options
-    const pstDate = date.toLocaleString('en-US', {
-        timeZone: 'America/Los_Angeles',
-        hour12: true, // Use 12-hour format
-        month: '2-digit',
-        day: '2-digit',
-        hour: 'numeric',
-        minute: '2-digit',
-        second: '2-digit'
-    });
-
-    // Replace commas with spaces and adjust AM/PM casing
-    // return pstDate.replace(',', '').replace('AM', 'a.m.').replace('PM', 'p.m.');
-    return pstDate
-}
-
-function getCostTimeInSeconds(start: string, end: string): number {
-    const startTime = new Date(start);
-    const endTime = new Date(end);
-    return Math.floor((endTime.getTime() - startTime.getTime()) / 1000);
-}
-
-function addHoursToTimestamp(timestamp: string, hours: number): string {
-    if (!timestamp) {
-        undefined
-    }
-    const date = new Date(timestamp!);
-    date.setHours(date.getHours() + hours);
-    return date.toISOString();
-}

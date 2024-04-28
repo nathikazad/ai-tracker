@@ -468,6 +468,8 @@ children_aggregate?: [{	/** distinct select on columns */
 	offset?:number,	/** sort the rows by one or more columns */
 	order_by?:ValueTypes["events_order_by"][],	/** filter the rows returned */
 	where?:ValueTypes["events_bool_exp"]},ValueTypes["events_aggregate"]],
+	/** A computed field, executes function "event_duration" */
+	computed_cost_time?:true,
 	/** cents */
 	cost_money?:true,
 	/** seconds */
@@ -564,6 +566,8 @@ count?: [{	columns?:ValueTypes["events_select_column"][],	distinct?:boolean},tru
 };
 	/** aggregate avg on columns */
 ["events_avg_fields"]: AliasType<{
+	/** A computed field, executes function "event_duration" */
+	computed_cost_time?:true,
 	/** cents */
 	cost_money?:true,
 	/** seconds */
@@ -594,6 +598,7 @@ count?: [{	columns?:ValueTypes["events_select_column"][],	distinct?:boolean},tru
 	_or?:ValueTypes["events_bool_exp"][],
 	children?:ValueTypes["events_bool_exp"],
 	children_aggregate?:ValueTypes["events_aggregate_bool_exp"],
+	computed_cost_time?:ValueTypes["Int_comparison_exp"],
 	cost_money?:ValueTypes["Int_comparison_exp"],
 	cost_time?:ValueTypes["Int_comparison_exp"],
 	end_time?:ValueTypes["timestamp_comparison_exp"],
@@ -670,6 +675,8 @@ end). throws an error if top level container is not an array */
 };
 	/** aggregate max on columns */
 ["events_max_fields"]: AliasType<{
+	/** A computed field, executes function "event_duration" */
+	computed_cost_time?:true,
 	/** cents */
 	cost_money?:true,
 	/** seconds */
@@ -703,6 +710,8 @@ end). throws an error if top level container is not an array */
 };
 	/** aggregate min on columns */
 ["events_min_fields"]: AliasType<{
+	/** A computed field, executes function "event_duration" */
+	computed_cost_time?:true,
 	/** cents */
 	cost_money?:true,
 	/** seconds */
@@ -757,6 +766,7 @@ end). throws an error if top level container is not an array */
 	/** Ordering options when selecting data from "events". */
 ["events_order_by"]: {
 	children_aggregate?:ValueTypes["events_aggregate_order_by"],
+	computed_cost_time?:ValueTypes["order_by"],
 	cost_money?:ValueTypes["order_by"],
 	cost_time?:ValueTypes["order_by"],
 	end_time?:ValueTypes["order_by"],
@@ -807,6 +817,8 @@ end). throws an error if top level container is not an array */
 };
 	/** aggregate stddev on columns */
 ["events_stddev_fields"]: AliasType<{
+	/** A computed field, executes function "event_duration" */
+	computed_cost_time?:true,
 	/** cents */
 	cost_money?:true,
 	/** seconds */
@@ -832,6 +844,8 @@ end). throws an error if top level container is not an array */
 };
 	/** aggregate stddev_pop on columns */
 ["events_stddev_pop_fields"]: AliasType<{
+	/** A computed field, executes function "event_duration" */
+	computed_cost_time?:true,
 	/** cents */
 	cost_money?:true,
 	/** seconds */
@@ -857,6 +871,8 @@ end). throws an error if top level container is not an array */
 };
 	/** aggregate stddev_samp on columns */
 ["events_stddev_samp_fields"]: AliasType<{
+	/** A computed field, executes function "event_duration" */
+	computed_cost_time?:true,
 	/** cents */
 	cost_money?:true,
 	/** seconds */
@@ -907,6 +923,8 @@ end). throws an error if top level container is not an array */
 };
 	/** aggregate sum on columns */
 ["events_sum_fields"]: AliasType<{
+	/** A computed field, executes function "event_duration" */
+	computed_cost_time?:true,
 	/** cents */
 	cost_money?:true,
 	/** seconds */
@@ -953,6 +971,8 @@ the end). throws an error if top level container is not an array */
 };
 	/** aggregate var_pop on columns */
 ["events_var_pop_fields"]: AliasType<{
+	/** A computed field, executes function "event_duration" */
+	computed_cost_time?:true,
 	/** cents */
 	cost_money?:true,
 	/** seconds */
@@ -978,6 +998,8 @@ the end). throws an error if top level container is not an array */
 };
 	/** aggregate var_samp on columns */
 ["events_var_samp_fields"]: AliasType<{
+	/** A computed field, executes function "event_duration" */
+	computed_cost_time?:true,
 	/** cents */
 	cost_money?:true,
 	/** seconds */
@@ -1003,6 +1025,8 @@ the end). throws an error if top level container is not an array */
 };
 	/** aggregate variance on columns */
 ["events_variance_fields"]: AliasType<{
+	/** A computed field, executes function "event_duration" */
+	computed_cost_time?:true,
 	/** cents */
 	cost_money?:true,
 	/** seconds */
@@ -2061,12 +2085,24 @@ update_todos_by_pk?: [{	/** increments the numeric columns with given value of t
 	_set?:ValueTypes["todos_set_input"],	pk_columns:ValueTypes["todos_pk_columns_input"]},ValueTypes["todos"]],
 update_todos_many?: [{	/** updates to execute, in order */
 	updates:ValueTypes["todos_updates"][]},ValueTypes["todos_mutation_response"]],
-update_users?: [{	/** increments the numeric columns with given value of the filtered values */
-	_inc?:ValueTypes["users_inc_input"],	/** sets the columns of the filtered rows to the given values */
+update_users?: [{	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:ValueTypes["users_append_input"],	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:ValueTypes["users_delete_at_path_input"],	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:ValueTypes["users_delete_elem_input"],	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:ValueTypes["users_delete_key_input"],	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["users_inc_input"],	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:ValueTypes["users_prepend_input"],	/** sets the columns of the filtered rows to the given values */
 	_set?:ValueTypes["users_set_input"],	/** filter the rows which have to be updated */
 	where:ValueTypes["users_bool_exp"]},ValueTypes["users_mutation_response"]],
-update_users_by_pk?: [{	/** increments the numeric columns with given value of the filtered values */
-	_inc?:ValueTypes["users_inc_input"],	/** sets the columns of the filtered rows to the given values */
+update_users_by_pk?: [{	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:ValueTypes["users_append_input"],	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:ValueTypes["users_delete_at_path_input"],	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:ValueTypes["users_delete_elem_input"],	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:ValueTypes["users_delete_key_input"],	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["users_inc_input"],	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:ValueTypes["users_prepend_input"],	/** sets the columns of the filtered rows to the given values */
 	_set?:ValueTypes["users_set_input"],	pk_columns:ValueTypes["users_pk_columns_input"]},ValueTypes["users"]],
 update_users_many?: [{	/** updates to execute, in order */
 	updates:ValueTypes["users_updates"][]},ValueTypes["users_mutation_response"]],
@@ -2700,6 +2736,8 @@ closest_user_location?: [{	/** input parameters for computed field "closest_user
 	offset?:number,	/** sort the rows by one or more columns */
 	order_by?:ValueTypes["locations_order_by"][],	/** filter the rows returned */
 	where?:ValueTypes["locations_bool_exp"]},ValueTypes["locations"]],
+config?: [{	/** JSON select path */
+	path?:string},true],
 	id?:true,
 	language?:true,
 locations?: [{	/** distinct select on columns */
@@ -2739,6 +2777,10 @@ count?: [{	columns?:ValueTypes["users_select_column"][],	distinct?:boolean},true
 	variance?:ValueTypes["users_variance_fields"],
 		__typename?: true
 }>;
+	/** append existing jsonb value of filtered columns with new jsonb value */
+["users_append_input"]: {
+	config?:ValueTypes["jsonb"]
+};
 	/** aggregate avg on columns */
 ["users_avg_fields"]: AliasType<{
 	id?:true,
@@ -2750,6 +2792,7 @@ count?: [{	columns?:ValueTypes["users_select_column"][],	distinct?:boolean},true
 	_not?:ValueTypes["users_bool_exp"],
 	_or?:ValueTypes["users_bool_exp"][],
 	apple_id?:ValueTypes["String_comparison_exp"],
+	config?:ValueTypes["jsonb_comparison_exp"],
 	id?:ValueTypes["Int_comparison_exp"],
 	language?:ValueTypes["String_comparison_exp"],
 	locations?:ValueTypes["locations_bool_exp"],
@@ -2759,6 +2802,19 @@ count?: [{	columns?:ValueTypes["users_select_column"][],	distinct?:boolean},true
 };
 	/** unique or primary key constraints on table "users" */
 ["users_constraint"]:users_constraint;
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+["users_delete_at_path_input"]: {
+	config?:string[]
+};
+	/** delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array */
+["users_delete_elem_input"]: {
+	config?:number
+};
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+["users_delete_key_input"]: {
+	config?:string
+};
 	/** input type for incrementing numeric columns in table "users" */
 ["users_inc_input"]: {
 	id?:number
@@ -2766,6 +2822,7 @@ count?: [{	columns?:ValueTypes["users_select_column"][],	distinct?:boolean},true
 	/** input type for inserting data into table "users" */
 ["users_insert_input"]: {
 	apple_id?:string,
+	config?:ValueTypes["jsonb"],
 	id?:number,
 	language?:string,
 	locations?:ValueTypes["locations_arr_rel_insert_input"],
@@ -2813,6 +2870,7 @@ count?: [{	columns?:ValueTypes["users_select_column"][],	distinct?:boolean},true
 	/** Ordering options when selecting data from "users". */
 ["users_order_by"]: {
 	apple_id?:ValueTypes["order_by"],
+	config?:ValueTypes["order_by"],
 	id?:ValueTypes["order_by"],
 	language?:ValueTypes["order_by"],
 	locations_aggregate?:ValueTypes["locations_aggregate_order_by"],
@@ -2823,12 +2881,17 @@ count?: [{	columns?:ValueTypes["users_select_column"][],	distinct?:boolean},true
 ["users_pk_columns_input"]: {
 	id:number
 };
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+["users_prepend_input"]: {
+	config?:ValueTypes["jsonb"]
+};
 	["users_scalar"]:unknown;
 	/** select columns of table "users" */
 ["users_select_column"]:users_select_column;
 	/** input type for updating data in table "users" */
 ["users_set_input"]: {
 	apple_id?:string,
+	config?:ValueTypes["jsonb"],
 	id?:number,
 	language?:string,
 	name?:string,
@@ -2859,6 +2922,7 @@ count?: [{	columns?:ValueTypes["users_select_column"][],	distinct?:boolean},true
 	/** Initial value of the column from where the streaming should start */
 ["users_stream_cursor_value_input"]: {
 	apple_id?:string,
+	config?:ValueTypes["jsonb"],
 	id?:number,
 	language?:string,
 	name?:string,
@@ -2872,8 +2936,19 @@ count?: [{	columns?:ValueTypes["users_select_column"][],	distinct?:boolean},true
 	/** update columns of table "users" */
 ["users_update_column"]:users_update_column;
 	["users_updates"]: {
+	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:ValueTypes["users_append_input"],
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:ValueTypes["users_delete_at_path_input"],
+	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:ValueTypes["users_delete_elem_input"],
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:ValueTypes["users_delete_key_input"],
 	/** increments the numeric columns with given value of the filtered values */
 	_inc?:ValueTypes["users_inc_input"],
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:ValueTypes["users_prepend_input"],
 	/** sets the columns of the filtered rows to the given values */
 	_set?:ValueTypes["users_set_input"],
 	/** filter the rows which have to be updated */
@@ -3360,6 +3435,8 @@ the end). throws an error if top level container is not an array */
 	children?:PartialObjects["events"][],
 			/** An aggregate relationship */
 	children_aggregate?:PartialObjects["events_aggregate"],
+			/** A computed field, executes function "event_duration" */
+	computed_cost_time?:number,
 			/** cents */
 	cost_money?:number,
 			/** seconds */
@@ -3446,6 +3523,8 @@ the end). throws an error if top level container is not an array */
 	/** aggregate avg on columns */
 ["events_avg_fields"]: {
 		__typename?: "events_avg_fields";
+			/** A computed field, executes function "event_duration" */
+	computed_cost_time?:number,
 			/** cents */
 	cost_money?:number,
 			/** seconds */
@@ -3475,6 +3554,7 @@ the end). throws an error if top level container is not an array */
 	_or?:PartialObjects["events_bool_exp"][],
 	children?:PartialObjects["events_bool_exp"],
 	children_aggregate?:PartialObjects["events_aggregate_bool_exp"],
+	computed_cost_time?:PartialObjects["Int_comparison_exp"],
 	cost_money?:PartialObjects["Int_comparison_exp"],
 	cost_time?:PartialObjects["Int_comparison_exp"],
 	end_time?:PartialObjects["timestamp_comparison_exp"],
@@ -3552,6 +3632,8 @@ end). throws an error if top level container is not an array */
 	/** aggregate max on columns */
 ["events_max_fields"]: {
 		__typename?: "events_max_fields";
+			/** A computed field, executes function "event_duration" */
+	computed_cost_time?:number,
 			/** cents */
 	cost_money?:number,
 			/** seconds */
@@ -3585,6 +3667,8 @@ end). throws an error if top level container is not an array */
 	/** aggregate min on columns */
 ["events_min_fields"]: {
 		__typename?: "events_min_fields";
+			/** A computed field, executes function "event_duration" */
+	computed_cost_time?:number,
 			/** cents */
 	cost_money?:number,
 			/** seconds */
@@ -3638,6 +3722,7 @@ end). throws an error if top level container is not an array */
 	/** Ordering options when selecting data from "events". */
 ["events_order_by"]: {
 	children_aggregate?:PartialObjects["events_aggregate_order_by"],
+	computed_cost_time?:PartialObjects["order_by"],
 	cost_money?:PartialObjects["order_by"],
 	cost_time?:PartialObjects["order_by"],
 	end_time?:PartialObjects["order_by"],
@@ -3689,6 +3774,8 @@ end). throws an error if top level container is not an array */
 	/** aggregate stddev on columns */
 ["events_stddev_fields"]: {
 		__typename?: "events_stddev_fields";
+			/** A computed field, executes function "event_duration" */
+	computed_cost_time?:number,
 			/** cents */
 	cost_money?:number,
 			/** seconds */
@@ -3714,6 +3801,8 @@ end). throws an error if top level container is not an array */
 	/** aggregate stddev_pop on columns */
 ["events_stddev_pop_fields"]: {
 		__typename?: "events_stddev_pop_fields";
+			/** A computed field, executes function "event_duration" */
+	computed_cost_time?:number,
 			/** cents */
 	cost_money?:number,
 			/** seconds */
@@ -3739,6 +3828,8 @@ end). throws an error if top level container is not an array */
 	/** aggregate stddev_samp on columns */
 ["events_stddev_samp_fields"]: {
 		__typename?: "events_stddev_samp_fields";
+			/** A computed field, executes function "event_duration" */
+	computed_cost_time?:number,
 			/** cents */
 	cost_money?:number,
 			/** seconds */
@@ -3789,6 +3880,8 @@ end). throws an error if top level container is not an array */
 	/** aggregate sum on columns */
 ["events_sum_fields"]: {
 		__typename?: "events_sum_fields";
+			/** A computed field, executes function "event_duration" */
+	computed_cost_time?:number,
 			/** cents */
 	cost_money?:number,
 			/** seconds */
@@ -3835,6 +3928,8 @@ the end). throws an error if top level container is not an array */
 	/** aggregate var_pop on columns */
 ["events_var_pop_fields"]: {
 		__typename?: "events_var_pop_fields";
+			/** A computed field, executes function "event_duration" */
+	computed_cost_time?:number,
 			/** cents */
 	cost_money?:number,
 			/** seconds */
@@ -3860,6 +3955,8 @@ the end). throws an error if top level container is not an array */
 	/** aggregate var_samp on columns */
 ["events_var_samp_fields"]: {
 		__typename?: "events_var_samp_fields";
+			/** A computed field, executes function "event_duration" */
+	computed_cost_time?:number,
 			/** cents */
 	cost_money?:number,
 			/** seconds */
@@ -3885,6 +3982,8 @@ the end). throws an error if top level container is not an array */
 	/** aggregate variance on columns */
 ["events_variance_fields"]: {
 		__typename?: "events_variance_fields";
+			/** A computed field, executes function "event_duration" */
+	computed_cost_time?:number,
 			/** cents */
 	cost_money?:number,
 			/** seconds */
@@ -5321,6 +5420,7 @@ the end). throws an error if top level container is not an array */
 			apple_id?:string,
 			/** A computed field, executes function "closest_user_location" */
 	closest_user_location?:PartialObjects["locations"][],
+			config?:PartialObjects["jsonb"],
 			id?:number,
 			language?:string,
 			/** An array relationship */
@@ -5351,6 +5451,10 @@ the end). throws an error if top level container is not an array */
 			var_samp?:PartialObjects["users_var_samp_fields"],
 			variance?:PartialObjects["users_variance_fields"]
 	},
+	/** append existing jsonb value of filtered columns with new jsonb value */
+["users_append_input"]: {
+	config?:PartialObjects["jsonb"]
+},
 	/** aggregate avg on columns */
 ["users_avg_fields"]: {
 		__typename?: "users_avg_fields";
@@ -5362,6 +5466,7 @@ the end). throws an error if top level container is not an array */
 	_not?:PartialObjects["users_bool_exp"],
 	_or?:PartialObjects["users_bool_exp"][],
 	apple_id?:PartialObjects["String_comparison_exp"],
+	config?:PartialObjects["jsonb_comparison_exp"],
 	id?:PartialObjects["Int_comparison_exp"],
 	language?:PartialObjects["String_comparison_exp"],
 	locations?:PartialObjects["locations_bool_exp"],
@@ -5371,6 +5476,19 @@ the end). throws an error if top level container is not an array */
 },
 	/** unique or primary key constraints on table "users" */
 ["users_constraint"]:users_constraint,
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+["users_delete_at_path_input"]: {
+	config?:string[]
+},
+	/** delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array */
+["users_delete_elem_input"]: {
+	config?:number
+},
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+["users_delete_key_input"]: {
+	config?:string
+},
 	/** input type for incrementing numeric columns in table "users" */
 ["users_inc_input"]: {
 	id?:number
@@ -5378,6 +5496,7 @@ the end). throws an error if top level container is not an array */
 	/** input type for inserting data into table "users" */
 ["users_insert_input"]: {
 	apple_id?:string,
+	config?:PartialObjects["jsonb"],
 	id?:number,
 	language?:string,
 	locations?:PartialObjects["locations_arr_rel_insert_input"],
@@ -5425,6 +5544,7 @@ the end). throws an error if top level container is not an array */
 	/** Ordering options when selecting data from "users". */
 ["users_order_by"]: {
 	apple_id?:PartialObjects["order_by"],
+	config?:PartialObjects["order_by"],
 	id?:PartialObjects["order_by"],
 	language?:PartialObjects["order_by"],
 	locations_aggregate?:PartialObjects["locations_aggregate_order_by"],
@@ -5435,12 +5555,17 @@ the end). throws an error if top level container is not an array */
 ["users_pk_columns_input"]: {
 	id:number
 },
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+["users_prepend_input"]: {
+	config?:PartialObjects["jsonb"]
+},
 	["users_scalar"]:any,
 	/** select columns of table "users" */
 ["users_select_column"]:users_select_column,
 	/** input type for updating data in table "users" */
 ["users_set_input"]: {
 	apple_id?:string,
+	config?:PartialObjects["jsonb"],
 	id?:number,
 	language?:string,
 	name?:string,
@@ -5471,6 +5596,7 @@ the end). throws an error if top level container is not an array */
 	/** Initial value of the column from where the streaming should start */
 ["users_stream_cursor_value_input"]: {
 	apple_id?:string,
+	config?:PartialObjects["jsonb"],
 	id?:number,
 	language?:string,
 	name?:string,
@@ -5484,8 +5610,19 @@ the end). throws an error if top level container is not an array */
 	/** update columns of table "users" */
 ["users_update_column"]:users_update_column,
 	["users_updates"]: {
+	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:PartialObjects["users_append_input"],
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:PartialObjects["users_delete_at_path_input"],
+	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:PartialObjects["users_delete_elem_input"],
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:PartialObjects["users_delete_key_input"],
 	/** increments the numeric columns with given value of the filtered values */
 	_inc?:PartialObjects["users_inc_input"],
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:PartialObjects["users_prepend_input"],
 	/** sets the columns of the filtered rows to the given values */
 	_set?:PartialObjects["users_set_input"],
 	/** filter the rows which have to be updated */
@@ -6072,6 +6209,8 @@ export type events = {
 	children:events[],
 	/** An aggregate relationship */
 	children_aggregate:events_aggregate,
+	/** A computed field, executes function "event_duration" */
+	computed_cost_time?:number,
 	/** cents */
 	cost_money?:number,
 	/** seconds */
@@ -6166,6 +6305,8 @@ export type events_arr_rel_insert_input = {
 /** aggregate avg on columns */
 export type events_avg_fields = {
 	__typename?: "events_avg_fields",
+	/** A computed field, executes function "event_duration" */
+	computed_cost_time?:number,
 	/** cents */
 	cost_money?:number,
 	/** seconds */
@@ -6197,6 +6338,7 @@ export type events_bool_exp = {
 	_or?:events_bool_exp[],
 	children?:events_bool_exp,
 	children_aggregate?:events_aggregate_bool_exp,
+	computed_cost_time?:Int_comparison_exp,
 	cost_money?:Int_comparison_exp,
 	cost_time?:Int_comparison_exp,
 	end_time?:timestamp_comparison_exp,
@@ -6283,6 +6425,8 @@ export type events_insert_input = {
 /** aggregate max on columns */
 export type events_max_fields = {
 	__typename?: "events_max_fields",
+	/** A computed field, executes function "event_duration" */
+	computed_cost_time?:number,
 	/** cents */
 	cost_money?:number,
 	/** seconds */
@@ -6318,6 +6462,8 @@ export type events_max_order_by = {
 /** aggregate min on columns */
 export type events_min_fields = {
 	__typename?: "events_min_fields",
+	/** A computed field, executes function "event_duration" */
+	computed_cost_time?:number,
 	/** cents */
 	cost_money?:number,
 	/** seconds */
@@ -6376,6 +6522,7 @@ export type events_on_conflict = {
 /** Ordering options when selecting data from "events". */
 export type events_order_by = {
 		children_aggregate?:events_aggregate_order_by,
+	computed_cost_time?:order_by,
 	cost_money?:order_by,
 	cost_time?:order_by,
 	end_time?:order_by,
@@ -6446,6 +6593,8 @@ export type events_set_input = {
 /** aggregate stddev on columns */
 export type events_stddev_fields = {
 	__typename?: "events_stddev_fields",
+	/** A computed field, executes function "event_duration" */
+	computed_cost_time?:number,
 	/** cents */
 	cost_money?:number,
 	/** seconds */
@@ -6473,6 +6622,8 @@ export type events_stddev_order_by = {
 /** aggregate stddev_pop on columns */
 export type events_stddev_pop_fields = {
 	__typename?: "events_stddev_pop_fields",
+	/** A computed field, executes function "event_duration" */
+	computed_cost_time?:number,
 	/** cents */
 	cost_money?:number,
 	/** seconds */
@@ -6500,6 +6651,8 @@ export type events_stddev_pop_order_by = {
 /** aggregate stddev_samp on columns */
 export type events_stddev_samp_fields = {
 	__typename?: "events_stddev_samp_fields",
+	/** A computed field, executes function "event_duration" */
+	computed_cost_time?:number,
 	/** cents */
 	cost_money?:number,
 	/** seconds */
@@ -6554,6 +6707,8 @@ export type events_stream_cursor_value_input = {
 /** aggregate sum on columns */
 export type events_sum_fields = {
 	__typename?: "events_sum_fields",
+	/** A computed field, executes function "event_duration" */
+	computed_cost_time?:number,
 	/** cents */
 	cost_money?:number,
 	/** seconds */
@@ -6618,6 +6773,8 @@ the end). throws an error if top level container is not an array */
 /** aggregate var_pop on columns */
 export type events_var_pop_fields = {
 	__typename?: "events_var_pop_fields",
+	/** A computed field, executes function "event_duration" */
+	computed_cost_time?:number,
 	/** cents */
 	cost_money?:number,
 	/** seconds */
@@ -6645,6 +6802,8 @@ export type events_var_pop_order_by = {
 /** aggregate var_samp on columns */
 export type events_var_samp_fields = {
 	__typename?: "events_var_samp_fields",
+	/** A computed field, executes function "event_duration" */
+	computed_cost_time?:number,
 	/** cents */
 	cost_money?:number,
 	/** seconds */
@@ -6672,6 +6831,8 @@ export type events_var_samp_order_by = {
 /** aggregate variance on columns */
 export type events_variance_fields = {
 	__typename?: "events_variance_fields",
+	/** A computed field, executes function "event_duration" */
+	computed_cost_time?:number,
 	/** cents */
 	cost_money?:number,
 	/** seconds */
@@ -8347,6 +8508,7 @@ export type users = {
 	apple_id?:string,
 	/** A computed field, executes function "closest_user_location" */
 	closest_user_location?:locations[],
+	config:jsonb,
 	id:number,
 	language:string,
 	/** An array relationship */
@@ -8380,6 +8542,11 @@ export type users_aggregate_fields = {
 	variance?:users_variance_fields
 }
 
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type users_append_input = {
+		config?:jsonb
+}
+
 /** aggregate avg on columns */
 export type users_avg_fields = {
 	__typename?: "users_avg_fields",
@@ -8392,6 +8559,7 @@ export type users_bool_exp = {
 	_not?:users_bool_exp,
 	_or?:users_bool_exp[],
 	apple_id?:String_comparison_exp,
+	config?:jsonb_comparison_exp,
 	id?:Int_comparison_exp,
 	language?:String_comparison_exp,
 	locations?:locations_bool_exp,
@@ -8405,6 +8573,22 @@ export enum users_constraint {
 	user_pkey = "user_pkey"
 }
 
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type users_delete_at_path_input = {
+		config?:string[]
+}
+
+/** delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array */
+export type users_delete_elem_input = {
+		config?:number
+}
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type users_delete_key_input = {
+		config?:string
+}
+
 /** input type for incrementing numeric columns in table "users" */
 export type users_inc_input = {
 		id?:number
@@ -8413,6 +8597,7 @@ export type users_inc_input = {
 /** input type for inserting data into table "users" */
 export type users_insert_input = {
 		apple_id?:string,
+	config?:jsonb,
 	id?:number,
 	language?:string,
 	locations?:locations_arr_rel_insert_input,
@@ -8466,6 +8651,7 @@ export type users_on_conflict = {
 /** Ordering options when selecting data from "users". */
 export type users_order_by = {
 		apple_id?:order_by,
+	config?:order_by,
 	id?:order_by,
 	language?:order_by,
 	locations_aggregate?:locations_aggregate_order_by,
@@ -8478,11 +8664,17 @@ export type users_pk_columns_input = {
 		id:number
 }
 
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type users_prepend_input = {
+		config?:jsonb
+}
+
 export type users_scalar = any
 
 /** select columns of table "users" */
 export enum users_select_column {
 	apple_id = "apple_id",
+	config = "config",
 	id = "id",
 	language = "language",
 	name = "name",
@@ -8492,6 +8684,7 @@ export enum users_select_column {
 /** input type for updating data in table "users" */
 export type users_set_input = {
 		apple_id?:string,
+	config?:jsonb,
 	id?:number,
 	language?:string,
 	name?:string,
@@ -8527,6 +8720,7 @@ export type users_stream_cursor_input = {
 /** Initial value of the column from where the streaming should start */
 export type users_stream_cursor_value_input = {
 		apple_id?:string,
+	config?:jsonb,
 	id?:number,
 	language?:string,
 	name?:string,
@@ -8542,6 +8736,7 @@ export type users_sum_fields = {
 /** update columns of table "users" */
 export enum users_update_column {
 	apple_id = "apple_id",
+	config = "config",
 	id = "id",
 	language = "language",
 	name = "name",
@@ -8549,8 +8744,19 @@ export enum users_update_column {
 }
 
 export type users_updates = {
-		/** increments the numeric columns with given value of the filtered values */
+		/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:users_append_input,
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:users_delete_at_path_input,
+	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:users_delete_elem_input,
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:users_delete_key_input,
+	/** increments the numeric columns with given value of the filtered values */
 	_inc?:users_inc_input,
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:users_prepend_input,
 	/** sets the columns of the filtered rows to the given values */
 	_set?:users_set_input,
 	/** filter the rows which have to be updated */
@@ -9989,6 +10195,12 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
+		computed_cost_time:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		cost_money:{
 			type:"Int_comparison_exp",
 			array:false,
@@ -10480,6 +10692,12 @@ export const AllTypesProps: Record<string,any> = {
 	events_order_by:{
 		children_aggregate:{
 			type:"events_aggregate_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		computed_cost_time:{
+			type:"order_by",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -13954,8 +14172,38 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		},
 		update_users:{
+			_append:{
+				type:"users_append_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_at_path:{
+				type:"users_delete_at_path_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_elem:{
+				type:"users_delete_elem_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_key:{
+				type:"users_delete_key_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
 			_inc:{
 				type:"users_inc_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_prepend:{
+				type:"users_prepend_input",
 				array:false,
 				arrayRequired:false,
 				required:false
@@ -13974,8 +14222,38 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		},
 		update_users_by_pk:{
+			_append:{
+				type:"users_append_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_at_path:{
+				type:"users_delete_at_path_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_elem:{
+				type:"users_delete_elem_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_key:{
+				type:"users_delete_key_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
 			_inc:{
 				type:"users_inc_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_prepend:{
+				type:"users_prepend_input",
 				array:false,
 				arrayRequired:false,
 				required:false
@@ -16393,6 +16671,14 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
+		config:{
+			path:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
 		locations:{
 			distinct_on:{
 				type:"locations_select_column",
@@ -16474,6 +16760,14 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
+	users_append_input:{
+		config:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
 	users_bool_exp:{
 		_and:{
 			type:"users_bool_exp",
@@ -16495,6 +16789,12 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		apple_id:{
 			type:"String_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		config:{
+			type:"jsonb_comparison_exp",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -16537,6 +16837,30 @@ export const AllTypesProps: Record<string,any> = {
 		}
 	},
 	users_constraint: "enum",
+	users_delete_at_path_input:{
+		config:{
+			type:"String",
+			array:true,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	users_delete_elem_input:{
+		config:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	users_delete_key_input:{
+		config:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
 	users_inc_input:{
 		id:{
 			type:"Int",
@@ -16548,6 +16872,12 @@ export const AllTypesProps: Record<string,any> = {
 	users_insert_input:{
 		apple_id:{
 			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		config:{
+			type:"jsonb",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -16624,6 +16954,12 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
+		config:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		id:{
 			type:"order_by",
 			array:false,
@@ -16663,11 +16999,25 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
+	users_prepend_input:{
+		config:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
 	users_scalar: "String",
 	users_select_column: "enum",
 	users_set_input:{
 		apple_id:{
 			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		config:{
+			type:"jsonb",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -16718,6 +17068,12 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
+		config:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		id:{
 			type:"Int",
 			array:false,
@@ -16745,8 +17101,38 @@ export const AllTypesProps: Record<string,any> = {
 	},
 	users_update_column: "enum",
 	users_updates:{
+		_append:{
+			type:"users_append_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_delete_at_path:{
+			type:"users_delete_at_path_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_delete_elem:{
+			type:"users_delete_elem_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_delete_key:{
+			type:"users_delete_key_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		_inc:{
 			type:"users_inc_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_prepend:{
+			type:"users_prepend_input",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -16917,6 +17303,7 @@ export const ReturnTypes: Record<string,any> = {
 	events:{
 		children:"events",
 		children_aggregate:"events_aggregate",
+		computed_cost_time:"Int",
 		cost_money:"Int",
 		cost_time:"Int",
 		end_time:"timestamp",
@@ -16955,6 +17342,7 @@ export const ReturnTypes: Record<string,any> = {
 		variance:"events_variance_fields"
 	},
 	events_avg_fields:{
+		computed_cost_time:"Int",
 		cost_money:"Float",
 		cost_time:"Float",
 		goal_id:"Float",
@@ -16964,6 +17352,7 @@ export const ReturnTypes: Record<string,any> = {
 		user_id:"Float"
 	},
 	events_max_fields:{
+		computed_cost_time:"Int",
 		cost_money:"Int",
 		cost_time:"Int",
 		end_time:"timestamp",
@@ -16977,6 +17366,7 @@ export const ReturnTypes: Record<string,any> = {
 		user_id:"Int"
 	},
 	events_min_fields:{
+		computed_cost_time:"Int",
 		cost_money:"Int",
 		cost_time:"Int",
 		end_time:"timestamp",
@@ -16994,6 +17384,7 @@ export const ReturnTypes: Record<string,any> = {
 		returning:"events"
 	},
 	events_stddev_fields:{
+		computed_cost_time:"Int",
 		cost_money:"Float",
 		cost_time:"Float",
 		goal_id:"Float",
@@ -17003,6 +17394,7 @@ export const ReturnTypes: Record<string,any> = {
 		user_id:"Float"
 	},
 	events_stddev_pop_fields:{
+		computed_cost_time:"Int",
 		cost_money:"Float",
 		cost_time:"Float",
 		goal_id:"Float",
@@ -17012,6 +17404,7 @@ export const ReturnTypes: Record<string,any> = {
 		user_id:"Float"
 	},
 	events_stddev_samp_fields:{
+		computed_cost_time:"Int",
 		cost_money:"Float",
 		cost_time:"Float",
 		goal_id:"Float",
@@ -17021,6 +17414,7 @@ export const ReturnTypes: Record<string,any> = {
 		user_id:"Float"
 	},
 	events_sum_fields:{
+		computed_cost_time:"Int",
 		cost_money:"Int",
 		cost_time:"Int",
 		goal_id:"Int",
@@ -17030,6 +17424,7 @@ export const ReturnTypes: Record<string,any> = {
 		user_id:"Int"
 	},
 	events_var_pop_fields:{
+		computed_cost_time:"Int",
 		cost_money:"Float",
 		cost_time:"Float",
 		goal_id:"Float",
@@ -17039,6 +17434,7 @@ export const ReturnTypes: Record<string,any> = {
 		user_id:"Float"
 	},
 	events_var_samp_fields:{
+		computed_cost_time:"Int",
 		cost_money:"Float",
 		cost_time:"Float",
 		goal_id:"Float",
@@ -17048,6 +17444,7 @@ export const ReturnTypes: Record<string,any> = {
 		user_id:"Float"
 	},
 	events_variance_fields:{
+		computed_cost_time:"Int",
 		cost_money:"Float",
 		cost_time:"Float",
 		goal_id:"Float",
@@ -17514,6 +17911,7 @@ export const ReturnTypes: Record<string,any> = {
 	users:{
 		apple_id:"String",
 		closest_user_location:"locations",
+		config:"jsonb",
 		id:"Int",
 		language:"String",
 		locations:"locations",

@@ -1,4 +1,4 @@
-import { getHasura } from "../config";
+import { getHasura } from "../../config";
 
 export async function getEventTypes() {
     const chain = getHasura();
