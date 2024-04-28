@@ -318,7 +318,8 @@ class HasuraUtil {
         var timeToFormat = timestamp!
         if timeToFormat.contains(".") {
             timeToFormat = String(timeToFormat.prefix(upTo: timeToFormat.range(of: ".")!.lowerBound))
-        } else {
+        }
+        if timeToFormat.contains("+") {
             timeToFormat = String(timeToFormat.prefix(upTo: timeToFormat.range(of: "+")!.lowerBound))
         }
         let dateFormatter = DateFormatter()

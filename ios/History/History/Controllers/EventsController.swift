@@ -70,16 +70,16 @@ class EventsController: ObservableObject {
         
     }
     
-    func editEvent(id: Int, content: String, onSuccess: (() -> Void)? = nil) {
+    func editEvent(id: Int, startTime: String, endTime:String, onSuccess: (() -> Void)? = nil) {
         print("editing event")
         let mutationQuery = """
-        mutation MyMutation($id: Int!, $content: String!) {
-          update_events_by_pk(pk_columns: {id: $id}, _set: {content: $content}) {
+        mutation MyMutation($id: Int!, $start_time: timestamp!, $end_time: timestamp!) {
+          update_events_by_pk(pk_columns: {id: $id}, _set: {start_time: $start_time, end_time: $end_time}) {
             id
           }
         }
         """
-        let variables: [String: Any] = ["id": id, "content": content]
+        let variables: [String: Any] = ["id": id, "start_time": startTime, "end_time": endTime]
         
         struct EditEventResponse: Decodable {
             var data: EditEventWrapper
@@ -219,36 +219,49 @@ class EventsController: ObservableObject {
     static func dailyTotals(events: [EventModel], days: Int) -> [(String, Double)] {
         let now = Date()  // Capture the current date and time
         let calendar = Calendar.current
+        
+        // Create a dictionary for each day initialized to 0
+        var dailyTotals = [String: Double]()
+        for day in 0...days {
+            if let date = calendar.date(byAdding: .day, value: -day, to: now) {
+                let dateString = date.formattedSuperShortDate
+                dailyTotals[dateString] = 0.0
+            }
+        }
 
+        // Filter events and calculate totals for days with events
         let filteredEvents = events.filter { event in
             guard let eventDate = event.startTime else { return false }
-            return calendar.isDate(eventDate, inSameDayAs: now) || eventDate >= calendar.date(byAdding: .day, value: -days, to: now)!
+            return eventDate >= calendar.date(byAdding: .day, value: -days, to: now)!
         }
-        
 
-        return Dictionary(grouping: filteredEvents) { event in
+        let eventTotals = Dictionary(grouping: filteredEvents) { event in
             event.startTime?.formattedSuperShortDate ?? "Unknown"
         }
         .mapValues { eventsForDay in
             eventsForDay.reduce(0) { total, event in
                 if let startTime = event.startTime, calendar.isDate(startTime, inSameDayAs: now) {
-                    // If the event is from today and ongoing, calculate time until now
-                    if event.endTime != nil {
+                    if let endTime = event.endTime {
                         return total + (event.totalHoursPerDay ?? 0) / 3600
                     } else {
-                        // Event is ongoing; calculate duration until now
                         let duration = now.timeIntervalSince(startTime)
                         return total + duration / 3600
                     }
                 } else {
-                    // For past events, use the stored total hours
                     return total + (event.totalHoursPerDay ?? 0) / 3600
                 }
             }
         }
-        .sorted { $0.key < $1.key }
-        .map { (key, value) in (key, value) }
+
+        // Update the dailyTotals dictionary with actual totals from events
+        for (date, total) in eventTotals {
+            dailyTotals[date] = total
+        }
+
+        // Convert dictionary to sorted array of tuples
+        return dailyTotals.sorted { $0.key < $1.key }
     }
+
     
     static func maxDays(events: [EventModel]) -> Double {
         guard let earliestDate = events.min(by: { $0.startTime ?? Date() < $1.startTime ?? Date() })?.startTime else {

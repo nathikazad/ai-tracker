@@ -126,6 +126,15 @@ class HealthKitManager {
     }
     
     func uploadSleepData() {
+        let lastUploadTime = UserDefaults.standard.object(forKey: "lastUploadTime") as? Date ?? Date.distantPast
+        print("HealthKitManager: uploadSleepData: \(lastUploadTime) \(Date().timeIntervalSince(lastUploadTime))")
+            // Check if the time difference is more than 4 hours
+        if Date().timeIntervalSince(lastUploadTime) < (4*3600) {
+            print("HealthKitManager: uploadSleepData: Skipping sleep upload")
+            return
+        } else {
+            print("HealthKitManager: uploadSleepData: Uploading sleepdata")
+        }
         let startDate = Calendar.current.date(byAdding: .day, value: -30, to: Date())! // 1 week ago
         let endDate = Calendar.current.date(byAdding: .day, value: 0, to: Date())! // 1 week ago
         
@@ -146,6 +155,7 @@ class HealthKitManager {
                 do {
                     print("Send sleep data")
                     try await ServerCommunicator.sendPostRequest(to: uploadSleepEndpoint, body: body, token: Authentication.shared.hasuraJwt)
+                    UserDefaults.standard.set(Date(), forKey: "lastUploadTime")
                 } catch {
                     print("Error sending sleep data: \(error.localizedDescription)")
                     return

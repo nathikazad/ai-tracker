@@ -10,8 +10,11 @@ import SwiftUI
 // Define your custom views for each tab
 struct EventsView: View {
     @StateObject var eventController = EventsController()
-    
-    
+    @State private var showPopupForId: Int?
+    @State private var startTime: Date = Date()
+    @State private var endTime: Date = Date()
+    @State private var isShowingDatePicker = false
+    @State private var popupScreenFirst: Bool = true
     var body: some View {
         VStack {
             Text(eventController.formattedDate)
@@ -55,6 +58,9 @@ struct EventsView: View {
                 eventController.cancelListener()
             }
         }
+        .overlay(
+            popupView
+        )
     }
     
     private var emptyStateView: some View {
@@ -78,6 +84,12 @@ struct EventsView: View {
                     Text(event.formattedTime)
                         .font(.headline)
                         .frame(width: 100, alignment: .leading)
+                        .onTapGesture {
+                            startTime = event.startTime ?? Date()
+                            endTime = event.endTime ?? Date()
+                            showPopupForId = event.id
+                            popupScreenFirst = true
+                        }
                     Divider()
                     destinationView(for: event, isCurrent: index == eventController.events.count - 1)
                 }
@@ -103,9 +115,9 @@ struct EventsView: View {
     
     func destinationView(for event: EventModel, isCurrent: Bool) -> some View {
         let text = Text(formatEventText(for: event, isCurrent: isCurrent))
-                    .padding(.leading, 10)
-                    .font(.subheadline)
-
+            .padding(.leading, 10)
+            .font(.subheadline)
+        
         switch event.eventType {
         case "stay":
             if let location = event.metadata?.location {
@@ -113,27 +125,27 @@ struct EventsView: View {
                     text
                 })
             }
-
+            
         case "commute":
             if let polyline = event.metadata?.polyline {
                 return AnyView(NavigationLink(destination: PolylineView(encodedPolyline: polyline)) {
                     text
                 })
             }
-
+            
         case "sleep":
             return AnyView(NavigationLink(destination: SleepView()) {
                 text
             })
-
+            
         default:
             break
         }
-
+        
         // If none of the cases apply, return just the text without a NavigationLink
         return AnyView(text)
     }
-
+    
     
     func formatEventText(for event: EventModel, isCurrent: Bool) -> String {
         var result: String = ""
@@ -150,7 +162,7 @@ struct EventsView: View {
         default:
             result = "\(event.eventType.capitalized) (\(event.id))"
         }
-
+        
         return result
     }
     
@@ -162,6 +174,59 @@ struct EventsView: View {
             timeTaken = event.startTime!.durationInHHMM(to: event.endTime!)
         }
         return timeTaken != nil ? "Time:\(timeTaken!)"  : ""
+    }
+    
+    private var popupView: some View {
+        Group {
+            if showPopupForId != nil {
+                VStack {
+                    if(popupScreenFirst) {
+                        Text("Start Time")
+                        DatePicker("Start Time", selection: $startTime, displayedComponents: .hourAndMinute)
+                            .datePickerStyle(WheelDatePickerStyle())
+                            .frame(maxHeight: 150)
+                    } else {
+                        Text("End Time")
+                        DatePicker("End Time", selection: $endTime, displayedComponents: .hourAndMinute)
+                            .datePickerStyle(WheelDatePickerStyle())
+                            .frame(maxHeight: 150)
+                    }
+                    
+                    Button(action: {
+                        if(popupScreenFirst) {
+                            popupScreenFirst = false
+                        } else {
+                            DispatchQueue.main.async {
+                                eventController.editEvent(id: showPopupForId!, startTime: startTime.toUTCString, endTime: endTime.toUTCString)
+                                self.showPopupForId = nil
+                                self.popupScreenFirst = true
+                            }
+                            
+                        }
+                    }) {
+                        Text("Save")
+                            .foregroundColor(.primary)
+                    }
+                    .padding(.top, 5)
+                }
+                .padding()
+                .background(Color("OppositeColor"))
+                .cornerRadius(10)
+                .shadow(radius: 5)
+                .frame(width: 300)
+                .overlay(
+                    Button(action: {
+                        showPopupForId = nil
+                        popupScreenFirst = true
+                    }) {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.largeTitle)
+                            .foregroundColor(.gray)
+                    },
+                    alignment: .topTrailing
+                )
+            }
+        }
     }
 }
 
