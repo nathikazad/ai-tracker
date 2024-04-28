@@ -3,8 +3,7 @@ import { $, order_by, timestamp_comparison_exp } from "../generated/graphql-zeus
 import fs from 'fs'
 import { createEmbedding } from '../third/openai';
 import { getHasura } from '../config';
-import { toPST } from "../scratch";
-import { addHoursToTimestamp, getCostTimeInSeconds, secondsToHHMM } from "../helper/time";
+import { addHoursToTimestamp, getCostTimeInSeconds, secondsToHHMM, toPST } from "../helper/time";
 
 interface Event {
     id: number;
@@ -13,14 +12,14 @@ interface Event {
 }
 
 async function main() {
-    getEvents(1, "trader joes", 'office.json', 0.2)
+    // getEvents(1, "trader joes", 'office.json', 0.2)
     // getEvents(1, "going to sleep", 'sleep.json')
     // findMatches()
     // writeToDatabase(1)
-    // readWatchData(1)
+    readWatchData(1)
     // readWatchData2(1)
 }
-// main()
+main()
 
 
 function findMatches() {
@@ -94,6 +93,8 @@ async function getEvents(userId: number, phrase: string, filename: string, thres
 
 
 async function readWatchData(userId: number) {
+    console.log('Reading watch data');
+    
     const matches: { sleep?: Event, wake?: Event }[] = JSON.parse(fs.readFileSync('data/matchedEvents.json', 'utf-8'));
     // const objectsToInsert = [];  // Array to hold all objects for a single mutation
 
@@ -175,6 +176,8 @@ async function readWatchData(userId: number) {
                 }]
             })
             // continue;
+        } else {
+            console.log(`Event does not exist`)
         }
     }
 }

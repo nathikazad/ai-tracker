@@ -1,6 +1,7 @@
 
 import { getHasura } from "./config";
 import { $, events_bool_exp } from "./generated/graphql-zeus";
+import { toPST } from "./helper/time";
 // import { $ } from "./generated/graphql-zeus";
 
 interface SleepData {
@@ -17,7 +18,7 @@ async function main() {
     await getStayEvents()
     // get correlation between wake time and office arrival
 }
-export async function getProbDistr() {
+async function getProbDistr() {
     let data = await getWakeAndSleepTimes();
     data.sleep = data.sleep.map(time => {
         const [hour, minute] = time.split(':');
@@ -93,30 +94,6 @@ async function getWakeAndSleepTimes() {
         data.wake.push(waketime);
     });
     return data;
-}
-
-export function toPST(dateString: string | undefined): string {
-    if (!dateString) {
-        return 'N/A';
-    }
-    dateString += 'Z'
-    // Create a new Date object from the UTC timestamp
-    const date = new Date(dateString);
-
-    // Convert the date to PST by specifying the timeZone in toLocaleString options
-    const pstDate = date.toLocaleString('en-US', {
-        timeZone: 'America/Los_Angeles',
-        hour12: true, // Use 12-hour format
-        month: '2-digit',
-        day: '2-digit',
-        hour: 'numeric',
-        minute: '2-digit',
-        second: '2-digit'
-    });
-
-    // Replace commas with spaces and adjust AM/PM casing
-    // return pstDate.replace(',', '').replace('AM', 'a.m.').replace('PM', 'p.m.');
-    return pstDate
 }
 
 
