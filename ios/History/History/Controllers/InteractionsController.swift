@@ -86,7 +86,7 @@ class InteractionsController: ObservableObject {
                 }
             }
         }
-
+        
         Task {
             do {
                 let response: EditInteractionResponse = try await Hasura.shared.sendGraphQL(
@@ -194,7 +194,7 @@ class InteractionsController: ObservableObject {
     }
 }
 
-struct InteractionModel: Decodable, Identifiable {
+struct InteractionModel: Decodable, Identifiable, Hashable, Equatable {
     var id: Int
     var content: String
     var timestamp: Date
@@ -207,6 +207,14 @@ struct InteractionModel: Decodable, Identifiable {
         case events
     }
     
+    static func == (lhs: InteractionModel, rhs: InteractionModel) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(Int.self, forKey: .id)
@@ -216,11 +224,11 @@ struct InteractionModel: Decodable, Identifiable {
         let timestampString = try container.decode(String.self, forKey: .timestamp)
         guard let timestampDate = HasuraUtil.getTime(timestamp: timestampString) else {
             throw DecodingError.dataCorruptedError(forKey: .timestamp,
-                                                  in: container,
-                                                  debugDescription: "Date string does not conform to expected format.")
+                                                   in: container,
+                                                   debugDescription: "Date string does not conform to expected format.")
         }
         timestamp = timestampDate
-
+        
         // Decode the array of EventModel objects
         events = try container.decode([EventModel].self, forKey: .events)
     }

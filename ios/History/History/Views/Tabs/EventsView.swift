@@ -15,6 +15,7 @@ struct EventsView: View {
     @State private var endTime: Date = Date()
     @State private var isShowingDatePicker = false
     @State private var popupScreenFirst: Bool = true
+    @State private var scrollProxy: ScrollViewProxy?
     var body: some View {
         VStack {
             Text(eventController.formattedDate)
@@ -78,34 +79,56 @@ struct EventsView: View {
     }
     
     private var listView: some View {
-        List {
-            ForEach(Array(eventController.events.enumerated()), id: \.element.id) { index, event in
-                HStack {
-                    Text(event.formattedTime)
-                        .font(.headline)
-                        .frame(width: 100, alignment: .leading)
-                        .onTapGesture {
-                            startTime = event.startTime ?? Date()
-                            endTime = event.endTime ?? Date()
-                            showPopupForId = event.id
-                            popupScreenFirst = true
+        ScrollViewReader { proxy in
+            VStack {
+                List {
+                    ForEach(Array(eventController.events.enumerated()), id: \.element.id) { index, event in
+                        HStack {
+                            Text(event.formattedTime)
+                                .font(.headline)
+                                .frame(width: 100, alignment: .leading)
+                                .onTapGesture {
+                                    startTime = event.startTime ?? Date()
+                                    endTime = event.endTime ?? Date()
+                                    showPopupForId = event.id
+                                    popupScreenFirst = true
+                                }
+                            Divider()
+                            destinationView(for: event, isCurrent: index == eventController.events.count - 1)
                         }
-                    Divider()
-                    destinationView(for: event, isCurrent: index == eventController.events.count - 1)
-                }
-                .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                    Button(action: {
-                        print("Tapped right on \(event.id)")
-                        // TODO: start microphone with parameters
-                    }) {
-                        Image(systemName: "mic.fill")                                .foregroundColor(.green) // Setting the color of the icon
+                        .id(event.id)
+                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                            Button(action: {
+                                print("Tapped right on \(event.id)")
+                                // TODO: start microphone with parameters
+                            }) {
+                                Image(systemName: "mic.fill")                                .foregroundColor(.green) // Setting the color of the icon
+                            }
+                        }
+                    }
+                    .onDelete { indices in
+                        indices.forEach { index in
+                            let eventId = eventController.events[index].id
+                            eventController.deleteEvent(id: eventId)
+                        }
                     }
                 }
-            }
-            .onDelete { indices in
-                indices.forEach { index in
-                    let eventId = eventController.events[index].id
-                    eventController.deleteEvent(id: eventId)
+                .padding(.vertical, 0)
+                .onAppear {
+                    scrollProxy = proxy
+                }
+                .onChange(of: eventController.events) { _ in
+                    if eventController.currentDate == Calendar.current.startOfDay(for: Date())
+                       {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                            if let lastId = eventController.events.last?.id {
+                                withAnimation(.easeInOut(duration: 0.5)) { // Customize the animation style and duration here
+                                    print("changed \(lastId) \(scrollProxy == nil)")
+                                    scrollProxy?.scrollTo(lastId, anchor: .top)
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

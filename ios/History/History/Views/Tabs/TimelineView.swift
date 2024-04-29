@@ -21,7 +21,7 @@ struct TimelineView: View {
     @State private var draftContent = ""
     @State private var selectedTime: Date = Date()
     @State private var isShowingDatePicker = false
-    
+    @State private var scrollProxy: ScrollViewProxy?
     func showCalendarPicker() {
         isShowingDatePicker = true
     }
@@ -62,6 +62,7 @@ struct TimelineView: View {
                     }
                 } else {
                     listView
+                    
                 }
             }
             .onAppear {
@@ -101,59 +102,77 @@ struct TimelineView: View {
     }
     
     private var listView: some View {
-        VStack {
-            ScrollView(showsIndicators: false) {
-                ForEach(interactionController.interactions, id: \.id) { interaction in
-                    Divider()
-                    HStack {
-                        Text(interaction.timestamp.formattedTime)
-                            .font(.headline)
-                            .frame(width: 100, alignment: .leading)
-                            .onTapGesture {
-                                selectedTime = interaction.timestamp
-                                showPopupForId = interaction.id
-                                showInPopup = .date
-                            }
-                        Divider()
-                        
-                        if let location = interaction.location {
-                            NavigationLink(destination: LocationDetailView(location: location)) {
+        ScrollViewReader { proxy in
+            VStack {
+                List {
+                    ForEach(interactionController.interactions.indices, id: \.self) { index in
+                        let interaction = interactionController.interactions[index]
+                        HStack {
+                            Text(interaction.timestamp.formattedTime)
+                                .font(.headline)
+                                .frame(width: 100, alignment: .leading)
+                                .onTapGesture {
+                                    selectedTime = interaction.timestamp
+                                    showPopupForId = interaction.id
+                                    showInPopup = .date
+                                }
+                            Divider()
+                            
+                            if let location = interaction.location {
+                                NavigationLink(destination: LocationDetailView(location: location)) {
+                                    Text(interaction.content)
+                                        .font(.subheadline)
+                                }
+                            } else {
                                 Text(interaction.content)
                                     .font(.subheadline)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .onTapGesture {
+                                        draftContent = interaction.content
+                                        showPopupForId = interaction.id
+                                        showInPopup = .text
+                                    }
                             }
-                        } else {
-                            Text(String(interaction.content))
-                                .font(.subheadline)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .onTapGesture {
-                                    draftContent = interaction.content
-                                    showPopupForId = interaction.id
-                                    showInPopup = .text
-                                }
+                        }
+                        .id(interaction.id)
+                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                            Button(action: {
+                                print("Tapped right on \(interaction.id)")
+                                // TODO: start microphone with parameters
+                            }) {
+                                Image(systemName: "mic.fill")
+                                    .foregroundColor(.green)
+                            }
                         }
                     }
-                    .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                        Button(action: {
-                            print("Tapped right on \(interaction.id)")
-                            // TODO: start microphone with parameters
-                        }) {
-                            Image(systemName: "mic.fill")                                .foregroundColor(.green) // Setting the color of the icon
+                    .onDelete { indices in
+                        indices.forEach { index in
+                            let interactionId = interactionController.interactions[index].id
+                            interactionController.deleteInteraction(id: interactionId)
                         }
                     }
                 }
-                .onDelete { indices in
-                    indices.forEach { index in
-                        let interactionId = interactionController.interactions[index].id
-                        interactionController.deleteInteraction(id: interactionId)
+                .padding(.vertical, 0)
+                .onAppear {
+                    scrollProxy = proxy
+                }
+                .onChange(of: interactionController.interactions) { _ in
+                    if interactionController.currentDate == Calendar.current.startOfDay(for: Date())
+                    {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                            if let lastId = interactionController.interactions.last?.id {
+                                withAnimation(.easeInOut(duration: 0.5)) { // Customize the animation style and duration here
+                                    print("changed \(lastId) \(scrollProxy == nil)")
+                                    scrollProxy?.scrollTo(lastId, anchor: .top)
+                                }
+                            }
+                        }
                     }
                 }
             }
-            .padding()
-            .defaultScrollAnchor(.bottom)
         }
-        
-
     }
+    
     
     private var popupView: some View {
         Group {

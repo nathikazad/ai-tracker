@@ -281,7 +281,7 @@ class EventsController: ObservableObject {
 }
 
 
-struct EventModel: Decodable, Identifiable {
+struct EventModel: Decodable, Identifiable, Hashable, Equatable {
     var id: Int
     var parentId: Int?
     var eventType: String
@@ -311,6 +311,14 @@ struct EventModel: Decodable, Identifiable {
 
         let endTimeString = try container.decodeIfPresent(String.self, forKey: .endTime)
         endTime = HasuraUtil.getTime(timestamp: endTimeString)
+    }
+    
+    static func == (lhs: EventModel, rhs: EventModel) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
     
     private func _formattedTime(fillWithX: Bool = false) -> String {
