@@ -12,10 +12,10 @@ export async function uploadSleep(userId: number, matches: { sleep?: string, wak
         if (match.sleep) {
             start_time = match.sleep;
             // skip if start time is before yesterday
-            if(toDate(start_time) < new Date(new Date().setDate(new Date().getDate() - 2))) {
-                console.log(`Skipping event with start time ${toPST(start_time)}`);
-                continue;
-            }
+            // if(toDate(start_time) < new Date(new Date().setDate(new Date().getDate() - 2))) {
+            //     console.log(`Skipping event with start time ${toPST(start_time)}`);
+            //     continue;
+            // }
         }
 
         if (match.wake) {
