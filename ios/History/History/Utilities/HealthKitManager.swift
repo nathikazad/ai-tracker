@@ -125,11 +125,11 @@ class HealthKitManager {
         return consolidatedPeriods
     }
     
-    func uploadSleepData() {
+    func uploadSleepData(force:Bool = false) {
         let lastUploadTime = UserDefaults.standard.object(forKey: "lastUploadTime") as? Date ?? Date.distantPast
         print("HealthKitManager: uploadSleepData: \(lastUploadTime) \(Date().timeIntervalSince(lastUploadTime))")
             // Check if the time difference is more than 4 hours
-        if Date().timeIntervalSince(lastUploadTime) < (4*3600) {
+        if !force && Date().timeIntervalSince(lastUploadTime) < (4*3600) {
             print("HealthKitManager: uploadSleepData: Skipping sleep upload")
             return
         } else {

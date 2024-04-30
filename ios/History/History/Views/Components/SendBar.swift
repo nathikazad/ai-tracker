@@ -9,10 +9,12 @@ import SwiftUI
 
 struct SendBar: View {
     @Binding var currentMessage: String
-    // Add a new property to hold a closure that will be called with string when the user taps the send button
+    @Binding var showKeyboard: Bool
     var sendUserMessage: (String) -> Void
     @State var isRecording: Bool = false
     @FocusState private var isTextFieldFocused: Bool
+    
+
     
     private func getLineLimit(for text: String) -> Int {
         let lineCount = text.components(separatedBy: "\n").count
@@ -41,7 +43,16 @@ struct SendBar: View {
             }
             .padding(.trailing, 0)
             .padding(.leading, 0)
-            
+            .onChange(of: showKeyboard) { newValue in // hacked code to make keyboard disappear
+                print("on changed showKeyboard")
+                isTextFieldFocused = showKeyboard
+            }
+            .onChange(of: isTextFieldFocused) { newValue in // hacked code to make keyboard disappear
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    print("on changed isTextFieldFocused")
+                    showKeyboard = isTextFieldFocused
+                }
+            }
             SendButton {
                 if !currentMessage.isEmpty {
                     sendUserMessage(currentMessage)

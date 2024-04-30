@@ -34,6 +34,7 @@ struct SettingsView: View {
                 }
                 if authorized {
                     print("HealthKit authorization granted.")
+                    healthManager.uploadSleepData(force: true)
                 } else {
                     print("HealthKit authorization denied.")
                 }
@@ -58,14 +59,6 @@ struct SettingsView: View {
                                 .foregroundColor(.primary)
                         }
                     }
-                    //                    NavigationLink(destination: Text("People View")) { // Replace with actual view when ready
-                    //                        Label("People", systemImage: "person.2.fill")
-                    //                            .foregroundColor(.primary)
-                    //                    }
-                    //                    NavigationLink(destination: Text("Recipes View")) { // Replace with actual view when ready
-                    //                        Label("Recipes", systemImage: "book.fill")
-                    //                            .foregroundColor(.primary)
-                    //                    }
                     Button(action: changeUserId) {
                         Label("Change User \(currentUserName)", systemImage: "person.2.fill")
                             .foregroundColor(.primary)
@@ -86,23 +79,14 @@ struct SettingsView: View {
                         }
                     }
                     
-//                    NavigationLink(destination: SleepView()) {
-                        Toggle(isOn: $isTrackingSleep) {
-                            Label("Track Sleep", systemImage: "moon.zzz.fill")
-                        }
-                        .foregroundColor(.primary)
-                        .onChange(of: isTrackingSleep) { value in
-                            print("onChange \(value)")
-                            changeSleeptracking(value)
-                        }
-//                    }
-                    
-                    Button(action: {
-                        healthManager.uploadSleepData()
-                    }) {
-                        Text("Upload Sleep Data")
+                    Toggle(isOn: $isTrackingSleep) {
+                        Label("Track Sleep", systemImage: "moon.zzz.fill")
                     }
-                    //                    }
+                    .foregroundColor(.primary)
+                    .onChange(of: isTrackingSleep) { value in
+                        print("onChange \(value)")
+                        changeSleeptracking(value)
+                    }
                     Button(action: {
                         Authentication.shared.signOutCallback()
                         AppState.shared.hideSheet()
@@ -148,14 +132,6 @@ func getName() -> String {
         return "Tito"
     default:
         return "Unknown"
-    }
-}
-
-
-struct PlacesView: View {
-    var body: some View {
-        Text("This is the Places View")
-        // Build your Places View content here
     }
 }
 

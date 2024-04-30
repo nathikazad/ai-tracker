@@ -9,14 +9,14 @@ import SwiftUI
 import AuthenticationServices
 import Combine
 
-struct Message: Identifiable {
-    let id: Int
-    let sender: Sender
-    let content: String
-    let timestamp: String
-    
-    var isUser: Bool {
-        return sender == .User
+enum Sender {
+    case Maximus, User
+}
+
+struct ViewOffsetKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }
 
@@ -38,43 +38,15 @@ struct IdentifiableView: Identifiable, Hashable, Equatable {
     }
 }
 
-// Create a view for a single chat message
-struct ChatMessageRow: View {
-    var message: Message
-    var body: some View {
-        HStack(alignment: .bottom, spacing: 10) {
-            if message.isUser {
-                Spacer()
-                VStack(alignment: .trailing) {
-                    Text(message.content)
-                        .padding()
-                        .background(Color.primary)
-                        .foregroundColor(Color("OppositeColor"))
-                        .cornerRadius(15)
-                }
-            } else {
-                VStack(alignment: .leading) {
-                    Text(message.content)
-                        .padding()
-                        .background(Color.gray.opacity(0.2))
-                        .foregroundColor(Color.primary)
-                        .cornerRadius(15)
-                }
-                Spacer()
-            }
-        }
-        //        .padding(.top)
-        .padding(.horizontal)
-        //        .padding(.bottom)
+struct Message: Identifiable {
+    let id: Int
+    let sender: Sender
+    let content: String
+    let timestamp: String
+    
+    var isUser: Bool {
+        return sender == .User
     }
-}
-
-
-
-
-
-enum Sender {
-    case Maximus, User
 }
 
 class ChatViewModel: ObservableObject {
@@ -82,6 +54,7 @@ class ChatViewModel: ObservableObject {
     @Published var isSignedIn: Bool = false
     @ObservedObject var appState = AppState.shared
     @Published var currentMessage: String = ""
+    @Published var investorMessageCount: Int = 0
     
     init() {
         setupInitialChatContents()
@@ -155,9 +128,11 @@ class ChatViewModel: ObservableObject {
         addChatContent(view: okButton)
     }
     
-    func sendUserMessage(_ message: String) {
-        addMessage(message: message, sender: .User)
+    func sendUserMessage(_ message: String, scrollToUserMessage: (Int) -> Void) {
+        
+        
         if(appState.chatViewToShow == .normal) {
+            addMessage(message: message, sender: .User)
             Task {
                 do {
                     let response = try await ServerCommunicator.sendPostRequest(to: parseTextEndpoint, body: ["text": message], token: Authentication.shared.hasuraJwt!)
@@ -168,18 +143,9 @@ class ChatViewModel: ObservableObject {
                 }
             }
         } else if (appState.chatViewToShow == .investor) {
+            let scrollTo = chatContents.last!.id
             addInvestorMessage()
-        }
-    }
-    
-    func addInvestorMessage() {
-        switch chatContents.count {
-        case 4:
-            addMessage(message: "33", sender: .Maximus)
-            addChatContent(view: BarView(title: "Bar Chart", data: [("A", 1), ("B", 2), ("C", 3), ("D", 4), ("E", 5)]));
-        default:
-            addChatContent(view: CandleView())
-            addMessage(message: "\(chatContents.count)", sender: .Maximus)
+            scrollToUserMessage(scrollTo + 2)
         }
     }
     
@@ -189,27 +155,53 @@ class ChatViewModel: ObservableObject {
     }
 }
 
-
 struct ChatView: View {
     @StateObject var chatViewModel = ChatViewModel()
     @ObservedObject var appState = AppState.shared
-    
+    @State private var showKeyboard: Bool = false
+    @State private var lastContentOffset: CGFloat = 0
+    @State private var lastUpdateTime = Date()
+    @State private var scrollToId: Int?  // State to determine which item to scroll to
+
     var body: some View {
         NavigationView {
             VStack {
-                ScrollView {
-                
-                    ForEach(chatViewModel.chatContents) { content in
-                        content.view
+                ScrollViewReader { scrollView in
+                    ScrollView(showsIndicators: false) {
+                        ForEach(chatViewModel.chatContents) { content in
+                            content.view
+                                .id(content.id)
+                        }
+                        GeometryReader { innerGeometry in
+                            Color.clear
+                                .preference(key: ViewOffsetKey.self, value: innerGeometry.frame(in: .global).minY)
+                        }
                     }
-                  
+                    .onPreferenceChange(ViewOffsetKey.self) { value in
+                        if abs(lastContentOffset - value) > 5 && Date().timeIntervalSince(lastUpdateTime) > 0.5 {
+                            if(showKeyboard) {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                    showKeyboard = false
+                                }
+                            }
+                        }
+                        lastContentOffset = value
+                    }
+                    .onChange(of: scrollToId) { id in
+                        withAnimation {
+                            scrollView.scrollTo(id, anchor: .bottom)
+                        }
+                    }
                 }
                 .padding()
-                .defaultScrollAnchor(.bottom)
-                SendBar(currentMessage: $chatViewModel.currentMessage) {
-                    message in
-                    chatViewModel.sendUserMessage(message)
-                    
+                // .defaultScrollAnchor(.bottom)
+                SendBar(currentMessage: $chatViewModel.currentMessage, showKeyboard: $showKeyboard) { message in
+                    chatViewModel.sendUserMessage(message) {
+                        id in
+                        scrollToId = id
+                        showKeyboard = false
+                    }
+                    lastUpdateTime = Date()
                 }
             }
             .navigationBarTitle("Maximus", displayMode: .inline)
@@ -225,9 +217,32 @@ struct ChatView: View {
     }
 }
 
-
-
-
-#Preview {
-    ChatView()
+struct ChatMessageRow: View {
+    var message: Message
+    var body: some View {
+        HStack(alignment: .bottom, spacing: 10) {
+            if message.isUser {
+                Spacer()
+                VStack(alignment: .trailing) {
+                    Text(message.content)
+                        .padding()
+                        .background(Color.primary)
+                        .foregroundColor(Color("OppositeColor"))
+                        .cornerRadius(15)
+                }
+            } else {
+                VStack(alignment: .leading) {
+                    Text(message.content)
+                        .padding()
+                        .background(Color.gray.opacity(0.2))
+                        .foregroundColor(Color.primary)
+                        .cornerRadius(15)
+                }
+                Spacer()
+            }
+        }
+        //        .padding(.top)
+        .padding(.horizontal)
+        //        .padding(.bottom)
+    }
 }

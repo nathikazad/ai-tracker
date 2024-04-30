@@ -115,11 +115,11 @@ struct SleepGraphsView: View {
                 SliderView(selectedDays: $selectedDays, maxDays: $maxDays)
                 BarView(title: "Hours slept per day", data: dailyTotals)
                     .padding(.bottom)
-                ScatterViewString(title: "Wake up time", xdata:dates, ydata: wakeTimes)
+                ScatterViewString(title: "Wake up time", data: Array(zip(dates, wakeTimes)))
                     .padding(.bottom)
-                ScatterViewString(title: "Sleep time", xdata:dates, ydata: sleepTimes)
+                ScatterViewString(title: "Sleep time",  data: Array(zip(dates, sleepTimes)))
                     .padding(.bottom)
-                ScatterViewDoubles(title: "Correlation", xdata:sleepTimes, ydata: wakeTimes)
+                ScatterViewDoubles(title: "Correlation", data: Array(zip(sleepTimes, wakeTimes)))
                     .padding(.bottom)
             }
         }
