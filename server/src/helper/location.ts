@@ -164,7 +164,7 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
     } else {
         startDbLocation = {
             location: convertLocationToPostGISPoint(endLocation),
-            name: "Unknown location"
+            name: movementRequest.landmark ?? "Unknown location"
         }
     }
     // let interaction = `Entered ${endDbLocation?.name ?? "unknown location"}`
