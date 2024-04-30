@@ -138,7 +138,7 @@ export async function processMovement(userId: number, movementRequest: StopMovem
 // if yes, update the stay event with the end time
 // if no, create a new stay event
 async function stopMovementEvent(userId: number, movementRequest: StopMovementRequest) {
-    console.log(`landmark: ${movementRequest.landmark}`);
+    console.log(`landmark: ${JSON.stringify(movementRequest)}`);
     const encodedPolyline = polyline.encode(movementRequest.locations.map(loc => [loc.lat, loc.lon]))
     console.log(`Stopped moving. Total distance: ${encodedPolyline} ${calculateTotalDistance(movementRequest.locations).toFixed(2)} km`);
 
