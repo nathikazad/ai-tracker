@@ -139,6 +139,7 @@ export async function processMovement(userId: number, movementRequest: StopMovem
 // if no, create a new stay event
 async function stopMovementEvent(userId: number, movementRequest: StopMovementRequest) {
     console.log(`landmark: ${JSON.stringify(movementRequest)} ${movementRequest.landmark}`);
+    console.log(movementRequest.landmark);
     const encodedPolyline = polyline.encode(movementRequest.locations.map(loc => [loc.lat, loc.lon]))
     console.log(`Stopped moving. Total distance: ${encodedPolyline} ${calculateTotalDistance(movementRequest.locations).toFixed(2)} km`);
 
@@ -150,8 +151,9 @@ async function stopMovementEvent(userId: number, movementRequest: StopMovementRe
     } else {
         endDbLocation = {
             location: convertLocationToPostGISPoint(endLocation),
-            name: movementRequest.landmark ??"Unknown location"
+            name: movementRequest.landmark ?? "Unknown location"
         }
+        console.log("New temp location created", endDbLocation);
     }
 
     let startLocation = movementRequest.locations![movementRequest.locations!.length - 1];
