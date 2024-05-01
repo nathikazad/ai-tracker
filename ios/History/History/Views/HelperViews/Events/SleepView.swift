@@ -25,9 +25,6 @@ struct SleepView: View {
         return hours + (minutes / 60.0)
     }
 
-    var dailyTotals: [(String, Double)] {
-        EventsController.dailyTotals(events: events, days: Int(selectedDays))
-    }
 
     var filteredEvents: [EventModel] {
         let startDate = Calendar.current.date(byAdding: .day, value: -Int(selectedDays), to: Date())!
@@ -69,7 +66,8 @@ struct SleepView: View {
                     wakeTimes: wakeTimes,
                     sleepTimes: sleepTimes,
                     dates: datesChartData,
-                    dailyTotals: dailyTotals,
+                    dailyTotals: EventsController.dailyTotals(events: events, days: Int(selectedDays)), 
+                    dailyTimes: EventsController.dailyTimes(events: events, days: Int(selectedDays)).map { Candle(date: $0, start: $1, end: $2 ) },
                     selectedDays: $selectedDays,
                     maxDays: $maxDays
                 )
@@ -106,6 +104,7 @@ struct SleepGraphsView: View {
     var sleepTimes: [Double]
     var dates: [String]
     var dailyTotals: [(String, Double)]
+    var dailyTimes: [Candle]
     @Binding var selectedDays: Double
     @Binding var maxDays: Double
 
@@ -113,6 +112,8 @@ struct SleepGraphsView: View {
         ScrollView {
             VStack {
                 SliderView(selectedDays: $selectedDays, maxDays: $maxDays)
+                CandleView(title: "Sleep time", candles: dailyTimes)
+                    .padding(.bottom)
                 BarView(title: "Hours slept per day", data: dailyTotals)
                     .padding(.bottom)
                 ScatterViewString(title: "Wake up time", data: Array(zip(dates, wakeTimes)))

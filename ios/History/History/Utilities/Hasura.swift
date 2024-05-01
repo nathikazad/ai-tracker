@@ -375,4 +375,24 @@ extension Date {
         formatter.timeZone = TimeZone(secondsFromGMT: 0)
         return formatter.string(from: self)
     }
+    
+    var getInDecimal: Double {
+        Double(Calendar.current.component(.hour, from: self)) + Double(Calendar.current.component(.minute, from: self)) / 60
+    }
+    
+    var dateWithHourAndMinute: Date {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.hour, .minute], from: self)
+        var newComponents = DateComponents()
+        newComponents.timeZone = TimeZone.current
+        newComponents.hour = components.hour
+        newComponents.minute = components.minute
+        // Optionally set the year, month, and day to specific values
+        newComponents.year = calendar.component(.year, from: Date())  // Using current year
+        newComponents.month = 1  // January
+        newComponents.day = 1    // First day of the month
+
+        // Return the new date, assuming system's current timezone, change if needed
+        return calendar.date(from: newComponents) ?? Date()  // Fallback to current date if nil
+    }
 }

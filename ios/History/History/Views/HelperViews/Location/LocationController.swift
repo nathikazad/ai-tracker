@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreLocation
 class LocationsController: ObservableObject {
     
     @Published var locations: [LocationModel] = []
@@ -154,6 +155,10 @@ struct LocationModel: Decodable, Identifiable {
     
     var longitude: Double {
         location.coordinates[0]
+    }
+    
+    var toCLLocation: CLLocation {
+        return CLLocation(latitude: latitude, longitude: longitude)
     }
     
     struct LocationData: Decodable {

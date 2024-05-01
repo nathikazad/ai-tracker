@@ -28,41 +28,37 @@ struct BarView: View {
         }
     }
 }
+struct Candle: Hashable {
+    let date: String
+    let start: Date
+    let end: Date
+}
+
+
 
 struct CandleView: View {
-    struct Candle: Hashable {
-        let open: Double
-        let close: Double
-        let low: Double
-        let high: Double
-    }
-    let candles: [Candle] = [
-        .init(open: 3, close: 6, low: 1, high: 8),
-        .init(open: 4, close: 7, low: 2, high: 9),
-        .init(open: 5, close: 8, low: 3, high: 10)
-    ]
+    var title: String
+    var candles: [Candle]
     
     var body: some View {
-        Chart {
-            ForEach(Array(zip(candles.indices, candles)), id: \.1) { index, candle in
+        return Section(header: Text(title)) {
+            Chart(candles, id:\.date) {
+                
                 RectangleMark(
-                    x: .value("index", index),
-                    yStart: .value("low", candle.low),
-                    yEnd: .value("high", candle.high),
+                    x: .value("date", $0.date),
+                    yStart: .value("start", $0.start.dateWithHourAndMinute),
+                    yEnd: .value("end", $0.end.dateWithHourAndMinute),
                     width: 4
                 )
-//                
-//                RectangleMark(
-//                    x: .value("index", index),
-//                    yStart: .value("open", candle.open),
-//                    yEnd: .value("close", candle.close),
-//                    width: 16
-//                )
-//                .foregroundStyle(.red)
+            }
+            .onAppear {
+                print(candles.map {$0.start.formattedTime })
+                print(candles.map {$0.start.dateWithHourAndMinute.formattedTime })
             }
         }
     }
 }
+
 
 
 struct ScatterViewDoubles: View {

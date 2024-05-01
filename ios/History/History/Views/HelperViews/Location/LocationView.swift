@@ -15,11 +15,6 @@ struct LocationDetailView: View {
     
     var location: LocationModel
     
-    
-    var dailyTotals: [(String, Double)] {
-        EventsController.dailyTotals(events: events, days: Int(selectedDays))
-    }
-    
     private func fetchLocationDetails() {
         if(location.id != nil) {
             Task {
@@ -100,7 +95,10 @@ struct LocationDetailView: View {
                     if selectedTab == 0 {
                         CheckInsView(events: events)
                     } else {
-                        GraphView(selectedDays: $selectedDays, dailyTotals: dailyTotals, maxDays: maxDays)
+                        GraphView(
+                            selectedDays: $selectedDays,
+                            events: events,
+                            maxDays: maxDays)
                     }
                 }
             }
@@ -131,7 +129,7 @@ struct LocationDetailView: View {
     
     struct GraphView: View {
         @Binding var selectedDays: Double
-        var dailyTotals: [(day: String, hours: Double)] // Assume this is the type of the dailyTotals array
+        var events: [EventModel]
         var maxDays: Double
         
         var body: some View {
@@ -143,16 +141,12 @@ struct LocationDetailView: View {
                         .foregroundColor(.gray)
                 }
                 .padding()
-                Chart {
-                    ForEach(dailyTotals, id: \.0) { day, hours in
-                        BarMark(
-                            x: .value("Day", day),
-                            y: .value("Hours", hours)
-                        )
-                        .foregroundStyle(Color.gray)
-                    }
-                }
-                .frame(height: 200)
+                CandleView(title: "Times at location", candles: EventsController.dailyTimes(events: events, days: Int(selectedDays)).map { Candle(date: $0, start: $1, end: $2 ) })
+                .padding(.bottom, 50)
+//                .frame(height: 200)
+                BarView(title: "Hours slept per day", data: EventsController.dailyTotals(events: events, days: Int(selectedDays)))
+                .padding(.bottom)
+//                .frame(height: 200)
             }
         }
     }

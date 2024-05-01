@@ -161,8 +161,7 @@ struct TimelineView: View {
                     {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                             if let lastId = interactionController.interactions.last?.id {
-                                withAnimation(.easeInOut(duration: 0.5)) { // Customize the animation style and duration here
-                                    print("changed \(lastId) \(scrollProxy == nil)")
+                                withAnimation(.easeInOut(duration: 0.5)) { 
                                     scrollProxy?.scrollTo(lastId, anchor: .top)
                                 }
                             }

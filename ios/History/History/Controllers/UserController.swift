@@ -79,11 +79,18 @@ class UserController: ObservableObject {
     
     static func generateQuery(userId: Int, isSubscription: Bool = false) -> String {
         let operationType = isSubscription ? "subscription" : "query"
-        
+        let calendar = Calendar.current
+        let yesterday = calendar.date(byAdding: .day, value: -1, to: Date())!
         return """
         \(operationType) {
             users_by_pk(id: \(userId)) {
                 timezone
+                events(where: {event_type: {_eq: "stay"}, end_time: {_is_null: true}, start_time: {_gt: "\(yesterday.toUTCString)"}}, order_by: {start_time: desc}, limit: 1) {
+                      id
+                      event_type
+                      metadata
+                      start_time
+                }
             }
         }
         """
@@ -93,11 +100,11 @@ class UserController: ObservableObject {
 
 struct UserModel: Decodable {
     var timezone: String?
-//    var config: UserConfig?
+    var events: [EventModel]
     
     enum CodingKeys: String, CodingKey {
         case timezone
-//        case config
+        case events
     }
 }
 

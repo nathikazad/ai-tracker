@@ -64,11 +64,35 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         isTrackingLocation = false
     }
     
+    fileprivate func checkIfLastStaySameAsCurrentLocation() {
+        if let lastStayEvent = Authentication.shared.user?.events.first,
+           let lastLocation = lastStayEvent.metadata?.location?.toCLLocation,
+           !self.movementLocations.isEmpty {
+            
+            print("LocationManager: checkIfLastStaySameAsCurrentLocation: \(lastStayEvent.formattedTimeWithDate)")
+            print(lastLocation)
+            
+            let firstMovementLocation = self.movementLocations[0]
+            let distance = firstMovementLocation.distance(from: lastLocation)
+            if (distance < movementDistanceThresholdWhenStationary)
+            {
+                print("LocationManager: checkIfLastStaySameAsCurrentLocation: same location \(distance)")
+                let currentLocation = CLLocation(coordinate: CLLocationCoordinate2D(latitude: lastLocation.coordinate.latitude, longitude: lastLocation.coordinate.longitude), altitude: 0, horizontalAccuracy: 35, verticalAccuracy: 0, timestamp: lastStayEvent.startTime!)
+                movementCheckTimer?.invalidate()
+                stoppedMoving(currentLocation: currentLocation, notifyServer: false)
+            } else {
+                print("LocationManager: checkIfLastStaySameAsCurrentLocation: diff location, update db")
+                EventsController.editEvent(id: lastStayEvent.id, startTime: lastStayEvent.startTime!, endTime: Date())
+            }
+        }
+    }
+    
     func startMonitoringLocation() {
         print("start monitoring")
         Task {
             if CLLocationManager.locationServicesEnabled() {
                 self.locationManager.requestAlwaysAuthorization()
+                checkIfLastStaySameAsCurrentLocation()
             }
         }
     }
@@ -166,7 +190,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         movementCheckTimer?.invalidate()
         var timeToCheckForNoMovement = timeToConsiderStationary
         if movementLocations.isEmpty {
-            print("LocationManager: Check Movement: First movement check")
+            print("LocationManager: checkIfStopped: First movement check")
             movementLocations.append(location)
             startTimer(timeToConsiderStationary)
         } else if (location.distance(from: movementLocations.last!) > movementDistanceThresholdWhenMoving + location.horizontalAccuracy + movementLocations.last!.horizontalAccuracy) {
@@ -229,6 +253,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     
 
     func findLocationsOfInterest(location: CLLocation) async -> String? {
+        print("LocationManager: findLocationsOfInterest: \(location)")
         let geocoder = CLGeocoder()
         
         do {
@@ -252,29 +277,31 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     }
 
     
-    func stoppedMoving(currentLocation: CLLocation) {
+    func stoppedMoving(currentLocation: CLLocation, notifyServer:Bool = true) {
         Task {
-            
             lastStationaryLocation = currentLocation
-            print("LocationManager: StoppedMoving: User has stopped moving for more than \(timeToConsiderStationary) seconds.")
+            print("LocationManager: StoppedMoving: User has stopped moving. Notify server \(notifyServer)")
             movementLocations.append(currentLocation)
             currentState = .stationary
-            var body = [
-                "eventType": "stoppedMoving",
-                "locations": movementLocations.map {
-                    $0.toJSON()
-                },
-                "numberOfPoints": movementLocations.count,
-                //            "timeSinceLastMovement": Date().timeIntervalSince(previousLocationTime),
-                "timeStopped": Date().addingTimeInterval(-timeToConsiderStationary).toUTCString
-            ]
-            if let landmark = await findLocationsOfInterest(location: currentLocation) {
-                body["landmark"] = landmark
+            if notifyServer {
+                var body = [
+                    "eventType": "stoppedMoving",
+                    "locations": movementLocations.map {
+                        $0.toJSON()
+                    },
+                    "numberOfPoints": movementLocations.count,
+                    //            "timeSinceLastMovement": Date().timeIntervalSince(previousLocationTime),
+                    "timeStopped": Date().addingTimeInterval(-timeToConsiderStationary).toUTCString
+                ]
+                if let landmark = await findLocationsOfInterest(location: currentLocation) {
+                    print("LocationManager: StoppedMoving: landmark \(landmark)")
+                    body["landmark"] = landmark
+                } else {
+                    print("LocationManager: StoppedMoving: no landmark")
+                }
+                sendToServer(body: body)
             }
-            sendToServer(body: body)
         }
-//        movementLocations = []
-        rejectedLocations = []
         
         locationManager.stopUpdatingLocation()
         locationManager.distanceFilter = locationUpdateDistanceFilter

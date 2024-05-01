@@ -81,8 +81,10 @@ class ServerCommunicator: ObservableObject {
     
     static func sendPostRequest(to uploadUrlString: String, body: [String: Any]? = [:], token: String?) async throws -> Data? {
         if await isServerReachable() {
+            print("ServerCommunicator: Server reachable:")
             return try await sendToServer(to: uploadUrlString, body: body, token: token)
         } else {
+            print("ServerCommunicator: Server not reachable: appending(\(pendingRequests.count+1))")
             pendingRequests.append((urlString: uploadUrlString, body: body, token: token))
             return nil
         }

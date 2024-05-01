@@ -74,9 +74,14 @@ class Authentication {
         WatchCommunicator.shared.sendToWatch()
         Task {
             user = try await UserController.fetchUser()
+            if LocationManager.shared.isTrackingLocation {
+                print("Authentication: signInCallback: Tracking location enabled")
+                LocationManager.shared.startMonitoringLocation()
+            }
             await UserController.ensureUserTimezone()
+            
         }
-        LocationManager.shared.startMonitoringLocation()
+        
     }
     
     func signOutCallback() {

@@ -220,7 +220,7 @@ struct EventsView: View {
                             popupScreenFirst = false
                         } else {
                             DispatchQueue.main.async {
-                                eventController.editEvent(id: showPopupForId!, startTime: startTime.toUTCString, endTime: endTime.toUTCString)
+                                EventsController.editEvent(id: showPopupForId!, startTime: startTime, endTime: endTime)
                                 self.showPopupForId = nil
                                 self.popupScreenFirst = true
                             }
