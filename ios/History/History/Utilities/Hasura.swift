@@ -32,20 +32,20 @@ class Hasura {
     struct GraphQLRequest: Codable {
         let query: String
     }
-
+    
     private func decodeData<T: Decodable>(_ responseType: T.Type, _ data: Data) throws -> T {
         // Decode the data to the specified responseType and return it.
         do {
             let decodedResponse = try JSONDecoder().decode(responseType, from: data)
             return decodedResponse
-//        } catch let DecodingError.dataCorrupted(context) {
-//            print("Data corrupted: \(context)")
-//        } catch let DecodingError.keyNotFound(key, context) {
-//            print("Key '\(key)' not found: \(context.debugDescription), codingPath: \(context.codingPath)")
-//        } catch let DecodingError.typeMismatch(type, context) {
-//            print("Type '\(type)' mismatch: \(context.debugDescription), codingPath: \(context.codingPath)")
-//        } catch let DecodingError.valueNotFound(value, context) {
-//            print("Value '\(value)' not found: \(context.debugDescription), codingPath: \(context.codingPath)")
+            //        } catch let DecodingError.dataCorrupted(context) {
+            //            print("Data corrupted: \(context)")
+            //        } catch let DecodingError.keyNotFound(key, context) {
+            //            print("Key '\(key)' not found: \(context.debugDescription), codingPath: \(context.codingPath)")
+            //        } catch let DecodingError.typeMismatch(type, context) {
+            //            print("Type '\(type)' mismatch: \(context.debugDescription), codingPath: \(context.codingPath)")
+            //        } catch let DecodingError.valueNotFound(value, context) {
+            //            print("Value '\(value)' not found: \(context.debugDescription), codingPath: \(context.codingPath)")
         } catch let error {
             // If decoding fails, print the raw data as a string for debugging.
             print("Error decoding data: \(error.localizedDescription)")
@@ -83,11 +83,11 @@ class Hasura {
             throw URLError(.badServerResponse)
         }
         if let httpResponse = response as? HTTPURLResponse {
-//            print("HTTP Status Code: \(httpResponse.statusCode)")
-//                    if let responseBody = String(data: data, encoding: .utf8) {
-//                        print("Server Response:\n\(responseBody)")
-//                    }
-
+            //            print("HTTP Status Code: \(httpResponse.statusCode)")
+            //                    if let responseBody = String(data: data, encoding: .utf8) {
+            //                        print("Server Response:\n\(responseBody)")
+            //                    }
+            
             if httpResponse.statusCode != 200, let responseBody = String(data: data, encoding: .utf8) {
                 print("Response body: \(responseBody)")
             }
@@ -95,27 +95,27 @@ class Hasura {
         
         return try decodeData(responseType, data)
     }
-
     
-     func setup() {
-         print("setting up hasura socket")
-         socketStatus = .handshaking
-         Task {
-             await Authentication.shared.checkAndReloadHasuraJwt()
-             let url = URL(string: "wss://\(HasuraAddress)/v1/graphql")!
-             var request = URLRequest(url: url)
-             if(Authentication.shared.hasuraJwt == nil) { //sometimes socket tries to connect after logout, this is to catch that edge case, so don't remove
-                 return
-             }
-             let token = Authentication.shared.hasuraJwt!
-             request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-             request.addValue("graphql-ws", forHTTPHeaderField: "Sec-WebSocket-Protocol")
-             
-             session = URLSession(configuration: .default)
-             webSocketTask = session?.webSocketTask(with: request)
-             webSocketTask?.resume()
-             sendInitializationMessage()
-         }
+    
+    func setup() {
+        print("setting up hasura socket")
+        socketStatus = .handshaking
+        Task {
+            await Authentication.shared.checkAndReloadHasuraJwt()
+            let url = URL(string: "wss://\(HasuraAddress)/v1/graphql")!
+            var request = URLRequest(url: url)
+            if(Authentication.shared.hasuraJwt == nil) { //sometimes socket tries to connect after logout, this is to catch that edge case, so don't remove
+                return
+            }
+            let token = Authentication.shared.hasuraJwt!
+            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            request.addValue("graphql-ws", forHTTPHeaderField: "Sec-WebSocket-Protocol")
+            
+            session = URLSession(configuration: .default)
+            webSocketTask = session?.webSocketTask(with: request)
+            webSocketTask?.resume()
+            sendInitializationMessage()
+        }
         
     }
     
@@ -177,11 +177,11 @@ class Hasura {
         let id: String
         let payload: GraphQLRequestPayload
     }
-
+    
     struct GraphQLRequestPayload: Codable {
         let query: String
     }
-     
+    
     private func startSubscription(uniqueID: String, subscriptionQuery: String) {
         let queryPayload = GraphQLRequestPayload(query: subscriptionQuery.replacingOccurrences(of: "\n", with: " "))
         
@@ -197,32 +197,32 @@ class Hasura {
             }
             sendMessage(text: jsonString)
             subscriptions[uniqueID]?.status = .active
-//            print("Subscription message sent for \(uniqueID), status updated to active.")
+            //            print("Subscription message sent for \(uniqueID), status updated to active.")
         } catch {
             print("Error encoding subscription message: \(error)")
         }
     }
-
-
+    
+    
     
     func stopListening(uniqueID: String) {
         print("Hasura stop listening id:\(uniqueID)")
-         guard subscriptions[uniqueID] != nil else {
-             print("Subscription ID \(uniqueID) not found.")
-             return
-         }
-         
-         let stopMessage = """
+        guard subscriptions[uniqueID] != nil else {
+            print("Subscription ID \(uniqueID) not found.")
+            return
+        }
+        
+        let stopMessage = """
          {
            "type": "stop",
            "id": "\(uniqueID)"
          }
          """
-         sendMessage(text: stopMessage)
-         subscriptions.removeValue(forKey: uniqueID)
-     }
-
-
+        sendMessage(text: stopMessage)
+        subscriptions.removeValue(forKey: uniqueID)
+    }
+    
+    
     
     private func receiveMessage() {
         webSocketTask?.receive { result in
@@ -246,14 +246,14 @@ class Hasura {
             print("Failed to parse message as JSON: \(text)")
             return
         }
-
+        
         // Handle different types of messages
         if let type = json["type"] as? String {
             switch type {
             case "data":
                 // Handle data messages
                 if let idValue = json["id"] {
-//                    print("Received subscription id \(idValue)")
+                    //                    print("Received subscription id \(idValue)")
                     if let id = idValue as? String {
                         if let callback = subscriptions[id]?.callback {
                             callback(json["payload"]) // Pass the 'data' to the callback
@@ -269,19 +269,19 @@ class Hasura {
                 }
             case "ka":
                 // Handle keep-alive messages; simply ignore or log as needed
-//                print("Received keep-alive message.")
+                //                print("Received keep-alive message.")
                 break
             case "connection_ack":
                 // Handle keep-alive messages; simply ignore or log as needed
                 socketStatus = .ready;
-//                print("Received connection_ack message. Activating registered subscriptions.")
-
+                //                print("Received connection_ack message. Activating registered subscriptions.")
+                
                 subscriptions.forEach { uniqueID, details in
                     if details.status == .registered {
                         startSubscription(uniqueID: uniqueID, subscriptionQuery: details.query)
                     }
                 }
-//                print("Received connection_ack message.")
+                //                print("Received connection_ack message.")
             default:
                 print("Received unhandled message type: \(type)")
             }
@@ -289,16 +289,16 @@ class Hasura {
             print("Received message without a type: \(text)")
         }
     }
-
-     func pause() {
-         print("pausing subscriptions")
-         subscriptions.keys.forEach { id in
-             subscriptions[id]?.status = .registered
-         }
-         socketStatus = .initialized
-         closeConnection()
-     }
-
+    
+    func pause() {
+        print("pausing subscriptions")
+        subscriptions.keys.forEach { id in
+            subscriptions[id]?.status = .registered
+        }
+        socketStatus = .initialized
+        closeConnection()
+    }
+    
     func closeConnection() {
         let reason = "Closing connection".data(using: .utf8)
         socketStatus = .initialized
@@ -325,7 +325,7 @@ class HasuraUtil {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
         dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
-
+        
         return dateFormatter.date(from: timeToFormat)
     }
 }
@@ -379,6 +379,24 @@ extension Date {
     var getInDecimal: Double {
         Double(Calendar.current.component(.hour, from: self)) + Double(Calendar.current.component(.minute, from: self)) / 60
     }
+    // Helper function to convert time string to decimal
+    var timeToDecimal: Double {
+        let timeString = self.formattedTime
+        let components = timeString.split(separator: ":")
+        let hourComponent = components.first!
+        let amPmComponent = components.last!.split(separator: " ")
+        var hours = Double(hourComponent)!
+        let minutes = Double(amPmComponent.first ?? "0") ?? 0
+        let amPm = amPmComponent.last ?? ""
+
+        if amPm == "PM" && hours != 12 { // Convert PM time to 24-hour format except for 12 PM
+            hours += 12
+        }
+        if amPm == "AM" && hours == 12 { // Midnight edge case
+            hours = 0
+        }
+        return hours + (minutes / 60.0)
+    }
     
     var dateWithHourAndMinute: Date {
         let calendar = Calendar.current
@@ -391,8 +409,31 @@ extension Date {
         newComponents.year = calendar.component(.year, from: Date())  // Using current year
         newComponents.month = 1  // January
         newComponents.day = 1    // First day of the month
-
+        
         // Return the new date, assuming system's current timezone, change if needed
         return calendar.date(from: newComponents) ?? Date()  // Fallback to current date if nil
+    }
+    
+    var startOfDay: Date {
+        var calendar = Calendar.current
+        calendar.timeZone = TimeZone.current
+        return calendar.startOfDay(for: self)
+    }
+    
+    var endOfDay: Date {
+        var calendar = Calendar.current
+        calendar.timeZone = TimeZone.current
+        return calendar.date(byAdding: .day, value: 1, to: self.startOfDay)!
+    }
+    
+    var toLocal: Date {
+        let utcTimeZone = TimeZone(secondsFromGMT: 0)!
+        let delta = TimeInterval(TimeZone.current.secondsFromGMT(for: self) - utcTimeZone.secondsFromGMT(for: self))
+        return addingTimeInterval(delta)
+    }
+    
+    func addMinute(_ minute: Int) -> Date {
+        var calendar = Calendar.current
+        return calendar.date(byAdding: .minute, value: minute, to: self)!
     }
 }

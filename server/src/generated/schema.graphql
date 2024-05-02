@@ -14,6 +14,456 @@ directive @cached(
 ) on QUERY
 
 """
+columns and relationships of "associations"
+"""
+type associations {
+  id: Int!
+  metadata(
+    """JSON select path"""
+    path: String
+  ): jsonb!
+  ref_one_id: Int!
+  ref_one_table: String!
+  ref_two_id: Int!
+  ref_two_table: String!
+}
+
+"""
+aggregated selection of "associations"
+"""
+type associations_aggregate {
+  aggregate: associations_aggregate_fields
+  nodes: [associations!]!
+}
+
+"""
+aggregate fields of "associations"
+"""
+type associations_aggregate_fields {
+  avg: associations_avg_fields
+  count(columns: [associations_select_column!], distinct: Boolean): Int!
+  max: associations_max_fields
+  min: associations_min_fields
+  stddev: associations_stddev_fields
+  stddev_pop: associations_stddev_pop_fields
+  stddev_samp: associations_stddev_samp_fields
+  sum: associations_sum_fields
+  var_pop: associations_var_pop_fields
+  var_samp: associations_var_samp_fields
+  variance: associations_variance_fields
+}
+
+"""
+order by aggregate values of table "associations"
+"""
+input associations_aggregate_order_by {
+  avg: associations_avg_order_by
+  count: order_by
+  max: associations_max_order_by
+  min: associations_min_order_by
+  stddev: associations_stddev_order_by
+  stddev_pop: associations_stddev_pop_order_by
+  stddev_samp: associations_stddev_samp_order_by
+  sum: associations_sum_order_by
+  var_pop: associations_var_pop_order_by
+  var_samp: associations_var_samp_order_by
+  variance: associations_variance_order_by
+}
+
+"""append existing jsonb value of filtered columns with new jsonb value"""
+input associations_append_input {
+  metadata: jsonb
+}
+
+"""aggregate avg on columns"""
+type associations_avg_fields {
+  id: Float
+  ref_one_id: Float
+  ref_two_id: Float
+}
+
+"""
+order by avg() on columns of table "associations"
+"""
+input associations_avg_order_by {
+  id: order_by
+  ref_one_id: order_by
+  ref_two_id: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "associations". All fields are combined with a logical 'AND'.
+"""
+input associations_bool_exp {
+  _and: [associations_bool_exp!]
+  _not: associations_bool_exp
+  _or: [associations_bool_exp!]
+  id: Int_comparison_exp
+  metadata: jsonb_comparison_exp
+  ref_one_id: Int_comparison_exp
+  ref_one_table: String_comparison_exp
+  ref_two_id: Int_comparison_exp
+  ref_two_table: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "associations"
+"""
+enum associations_constraint {
+  """
+  unique or primary key constraint on columns "id"
+  """
+  associations_pkey
+}
+
+"""
+delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+"""
+input associations_delete_at_path_input {
+  metadata: [String!]
+}
+
+"""
+delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array
+"""
+input associations_delete_elem_input {
+  metadata: Int
+}
+
+"""
+delete key/value pair or string element. key/value pairs are matched based on their key value
+"""
+input associations_delete_key_input {
+  metadata: String
+}
+
+"""
+input type for incrementing numeric columns in table "associations"
+"""
+input associations_inc_input {
+  id: Int
+  ref_one_id: Int
+  ref_two_id: Int
+}
+
+"""
+input type for inserting data into table "associations"
+"""
+input associations_insert_input {
+  id: Int
+  metadata: jsonb
+  ref_one_id: Int
+  ref_one_table: String
+  ref_two_id: Int
+  ref_two_table: String
+}
+
+"""aggregate max on columns"""
+type associations_max_fields {
+  id: Int
+  ref_one_id: Int
+  ref_one_table: String
+  ref_two_id: Int
+  ref_two_table: String
+}
+
+"""
+order by max() on columns of table "associations"
+"""
+input associations_max_order_by {
+  id: order_by
+  ref_one_id: order_by
+  ref_one_table: order_by
+  ref_two_id: order_by
+  ref_two_table: order_by
+}
+
+"""aggregate min on columns"""
+type associations_min_fields {
+  id: Int
+  ref_one_id: Int
+  ref_one_table: String
+  ref_two_id: Int
+  ref_two_table: String
+}
+
+"""
+order by min() on columns of table "associations"
+"""
+input associations_min_order_by {
+  id: order_by
+  ref_one_id: order_by
+  ref_one_table: order_by
+  ref_two_id: order_by
+  ref_two_table: order_by
+}
+
+"""
+response of any mutation on the table "associations"
+"""
+type associations_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [associations!]!
+}
+
+"""
+on_conflict condition type for table "associations"
+"""
+input associations_on_conflict {
+  constraint: associations_constraint!
+  update_columns: [associations_update_column!]! = []
+  where: associations_bool_exp
+}
+
+"""Ordering options when selecting data from "associations"."""
+input associations_order_by {
+  id: order_by
+  metadata: order_by
+  ref_one_id: order_by
+  ref_one_table: order_by
+  ref_two_id: order_by
+  ref_two_table: order_by
+}
+
+"""primary key columns input for table: associations"""
+input associations_pk_columns_input {
+  id: Int!
+}
+
+"""prepend existing jsonb value of filtered columns with new jsonb value"""
+input associations_prepend_input {
+  metadata: jsonb
+}
+
+"""
+select columns of table "associations"
+"""
+enum associations_select_column {
+  """column name"""
+  id
+
+  """column name"""
+  metadata
+
+  """column name"""
+  ref_one_id
+
+  """column name"""
+  ref_one_table
+
+  """column name"""
+  ref_two_id
+
+  """column name"""
+  ref_two_table
+}
+
+"""
+input type for updating data in table "associations"
+"""
+input associations_set_input {
+  id: Int
+  metadata: jsonb
+  ref_one_id: Int
+  ref_one_table: String
+  ref_two_id: Int
+  ref_two_table: String
+}
+
+"""aggregate stddev on columns"""
+type associations_stddev_fields {
+  id: Float
+  ref_one_id: Float
+  ref_two_id: Float
+}
+
+"""
+order by stddev() on columns of table "associations"
+"""
+input associations_stddev_order_by {
+  id: order_by
+  ref_one_id: order_by
+  ref_two_id: order_by
+}
+
+"""aggregate stddev_pop on columns"""
+type associations_stddev_pop_fields {
+  id: Float
+  ref_one_id: Float
+  ref_two_id: Float
+}
+
+"""
+order by stddev_pop() on columns of table "associations"
+"""
+input associations_stddev_pop_order_by {
+  id: order_by
+  ref_one_id: order_by
+  ref_two_id: order_by
+}
+
+"""aggregate stddev_samp on columns"""
+type associations_stddev_samp_fields {
+  id: Float
+  ref_one_id: Float
+  ref_two_id: Float
+}
+
+"""
+order by stddev_samp() on columns of table "associations"
+"""
+input associations_stddev_samp_order_by {
+  id: order_by
+  ref_one_id: order_by
+  ref_two_id: order_by
+}
+
+"""
+Streaming cursor of the table "associations"
+"""
+input associations_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: associations_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input associations_stream_cursor_value_input {
+  id: Int
+  metadata: jsonb
+  ref_one_id: Int
+  ref_one_table: String
+  ref_two_id: Int
+  ref_two_table: String
+}
+
+"""aggregate sum on columns"""
+type associations_sum_fields {
+  id: Int
+  ref_one_id: Int
+  ref_two_id: Int
+}
+
+"""
+order by sum() on columns of table "associations"
+"""
+input associations_sum_order_by {
+  id: order_by
+  ref_one_id: order_by
+  ref_two_id: order_by
+}
+
+"""
+update columns of table "associations"
+"""
+enum associations_update_column {
+  """column name"""
+  id
+
+  """column name"""
+  metadata
+
+  """column name"""
+  ref_one_id
+
+  """column name"""
+  ref_one_table
+
+  """column name"""
+  ref_two_id
+
+  """column name"""
+  ref_two_table
+}
+
+input associations_updates {
+  """append existing jsonb value of filtered columns with new jsonb value"""
+  _append: associations_append_input
+
+  """
+  delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+  """
+  _delete_at_path: associations_delete_at_path_input
+
+  """
+  delete the array element with specified index (negative integers count from
+  the end). throws an error if top level container is not an array
+  """
+  _delete_elem: associations_delete_elem_input
+
+  """
+  delete key/value pair or string element. key/value pairs are matched based on their key value
+  """
+  _delete_key: associations_delete_key_input
+
+  """increments the numeric columns with given value of the filtered values"""
+  _inc: associations_inc_input
+
+  """prepend existing jsonb value of filtered columns with new jsonb value"""
+  _prepend: associations_prepend_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: associations_set_input
+
+  """filter the rows which have to be updated"""
+  where: associations_bool_exp!
+}
+
+"""aggregate var_pop on columns"""
+type associations_var_pop_fields {
+  id: Float
+  ref_one_id: Float
+  ref_two_id: Float
+}
+
+"""
+order by var_pop() on columns of table "associations"
+"""
+input associations_var_pop_order_by {
+  id: order_by
+  ref_one_id: order_by
+  ref_two_id: order_by
+}
+
+"""aggregate var_samp on columns"""
+type associations_var_samp_fields {
+  id: Float
+  ref_one_id: Float
+  ref_two_id: Float
+}
+
+"""
+order by var_samp() on columns of table "associations"
+"""
+input associations_var_samp_order_by {
+  id: order_by
+  ref_one_id: order_by
+  ref_two_id: order_by
+}
+
+"""aggregate variance on columns"""
+type associations_variance_fields {
+  id: Float
+  ref_one_id: Float
+  ref_two_id: Float
+}
+
+"""
+order by variance() on columns of table "associations"
+"""
+input associations_variance_order_by {
+  id: order_by
+  ref_one_id: order_by
+  ref_two_id: order_by
+}
+
+"""
 Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'.
 """
 input Boolean_comparison_exp {
@@ -728,6 +1178,26 @@ input event_types_updates {
 columns and relationships of "events"
 """
 type events {
+  """
+  A computed field, executes function "event_associations"
+  """
+  associations(
+    """distinct select on columns"""
+    distinct_on: [associations_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [associations_order_by!]
+
+    """filter the rows returned"""
+    where: associations_bool_exp
+  ): [associations!]
+
   """An array relationship"""
   children(
     """distinct select on columns"""
@@ -952,6 +1422,7 @@ input events_bool_exp {
   _and: [events_bool_exp!]
   _not: events_bool_exp
   _or: [events_bool_exp!]
+  associations: associations_bool_exp
   children: events_bool_exp
   children_aggregate: events_aggregate_bool_exp
   computed_cost_time: Int_comparison_exp
@@ -1174,6 +1645,7 @@ input events_on_conflict {
 
 """Ordering options when selecting data from "events"."""
 input events_order_by {
+  associations_aggregate: associations_aggregate_order_by
   children_aggregate: events_aggregate_order_by
   computed_cost_time: order_by
   cost_money: order_by
@@ -1626,7 +2098,27 @@ input events_variance_order_by {
   user_id: order_by
 }
 
+input fetch_associations_args {
+  from_row_id: Int
+  from_row_type: String
+}
+
 scalar float8
+
+"""
+Boolean expression to compare columns of type "float8". All fields are combined with logical 'AND'.
+"""
+input float8_comparison_exp {
+  _eq: float8
+  _gt: float8
+  _gte: float8
+  _in: [float8!]
+  _is_null: Boolean
+  _lt: float8
+  _lte: float8
+  _neq: float8
+  _nin: [float8!]
+}
 
 scalar geography
 
@@ -2143,6 +2635,7 @@ type interactions {
     where: events_bool_exp
   ): events_aggregate!
   id: Int!
+  match_score: float8!
   timestamp: timestamptz
   user_id: Int!
 }
@@ -2180,6 +2673,7 @@ input interactions_append_input {
 """aggregate avg on columns"""
 type interactions_avg_fields {
   id: Float
+  match_score: Float
   user_id: Float
 }
 
@@ -2197,6 +2691,7 @@ input interactions_bool_exp {
   events: events_bool_exp
   events_aggregate: events_aggregate_bool_exp
   id: Int_comparison_exp
+  match_score: float8_comparison_exp
   timestamp: timestamptz_comparison_exp
   user_id: Int_comparison_exp
 }
@@ -2238,6 +2733,7 @@ input type for incrementing numeric columns in table "interactions"
 """
 input interactions_inc_input {
   id: Int
+  match_score: float8
   user_id: Int
 }
 
@@ -2251,6 +2747,7 @@ input interactions_insert_input {
   embedding: vector
   events: events_arr_rel_insert_input
   id: Int
+  match_score: float8
   timestamp: timestamptz
   user_id: Int
 }
@@ -2260,6 +2757,7 @@ type interactions_max_fields {
   content: String
   content_type: String
   id: Int
+  match_score: float8
   timestamp: timestamptz
   user_id: Int
 }
@@ -2269,6 +2767,7 @@ type interactions_min_fields {
   content: String
   content_type: String
   id: Int
+  match_score: float8
   timestamp: timestamptz
   user_id: Int
 }
@@ -2311,6 +2810,7 @@ input interactions_order_by {
   embedding: order_by
   events_aggregate: events_aggregate_order_by
   id: order_by
+  match_score: order_by
   timestamp: order_by
   user_id: order_by
 }
@@ -2345,6 +2845,9 @@ enum interactions_select_column {
   id
 
   """column name"""
+  match_score
+
+  """column name"""
   timestamp
 
   """column name"""
@@ -2360,6 +2863,7 @@ input interactions_set_input {
   debug: jsonb
   embedding: vector
   id: Int
+  match_score: float8
   timestamp: timestamptz
   user_id: Int
 }
@@ -2367,18 +2871,21 @@ input interactions_set_input {
 """aggregate stddev on columns"""
 type interactions_stddev_fields {
   id: Float
+  match_score: Float
   user_id: Float
 }
 
 """aggregate stddev_pop on columns"""
 type interactions_stddev_pop_fields {
   id: Float
+  match_score: Float
   user_id: Float
 }
 
 """aggregate stddev_samp on columns"""
 type interactions_stddev_samp_fields {
   id: Float
+  match_score: Float
   user_id: Float
 }
 
@@ -2400,6 +2907,7 @@ input interactions_stream_cursor_value_input {
   debug: jsonb
   embedding: vector
   id: Int
+  match_score: float8
   timestamp: timestamptz
   user_id: Int
 }
@@ -2407,6 +2915,7 @@ input interactions_stream_cursor_value_input {
 """aggregate sum on columns"""
 type interactions_sum_fields {
   id: Int
+  match_score: float8
   user_id: Int
 }
 
@@ -2428,6 +2937,9 @@ enum interactions_update_column {
 
   """column name"""
   id
+
+  """column name"""
+  match_score
 
   """column name"""
   timestamp
@@ -2472,18 +2984,21 @@ input interactions_updates {
 """aggregate var_pop on columns"""
 type interactions_var_pop_fields {
   id: Float
+  match_score: Float
   user_id: Float
 }
 
 """aggregate var_samp on columns"""
 type interactions_var_samp_fields {
   id: Float
+  match_score: Float
   user_id: Float
 }
 
 """aggregate variance on columns"""
 type interactions_variance_fields {
   id: Float
+  match_score: Float
   user_id: Float
 }
 
@@ -2900,6 +3415,19 @@ input match_interactions_args {
 """mutation root"""
 type mutation_root {
   """
+  delete data from the table: "associations"
+  """
+  delete_associations(
+    """filter the rows which have to be deleted"""
+    where: associations_bool_exp!
+  ): associations_mutation_response
+
+  """
+  delete single row from the table: "associations"
+  """
+  delete_associations_by_pk(id: Int!): associations
+
+  """
   delete data from the table: "event_tag"
   """
   delete_event_tag(
@@ -2978,6 +3506,32 @@ type mutation_root {
   delete_locations_by_pk(id: Int!): locations
 
   """
+  delete data from the table: "object_types"
+  """
+  delete_object_types(
+    """filter the rows which have to be deleted"""
+    where: object_types_bool_exp!
+  ): object_types_mutation_response
+
+  """
+  delete single row from the table: "object_types"
+  """
+  delete_object_types_by_pk(id: String!): object_types
+
+  """
+  delete data from the table: "objects"
+  """
+  delete_objects(
+    """filter the rows which have to be deleted"""
+    where: objects_bool_exp!
+  ): objects_mutation_response
+
+  """
+  delete single row from the table: "objects"
+  """
+  delete_objects_by_pk(id: Int!): objects
+
+  """
   delete data from the table: "todos"
   """
   delete_todos(
@@ -3002,6 +3556,28 @@ type mutation_root {
   delete single row from the table: "users"
   """
   delete_users_by_pk(id: Int!): users
+
+  """
+  insert data into the table: "associations"
+  """
+  insert_associations(
+    """the rows to be inserted"""
+    objects: [associations_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: associations_on_conflict
+  ): associations_mutation_response
+
+  """
+  insert a single row into the table: "associations"
+  """
+  insert_associations_one(
+    """the row to be inserted"""
+    object: associations_insert_input!
+
+    """upsert condition"""
+    on_conflict: associations_on_conflict
+  ): associations
 
   """
   insert data into the table: "event_tag"
@@ -3136,6 +3712,50 @@ type mutation_root {
   ): locations
 
   """
+  insert data into the table: "object_types"
+  """
+  insert_object_types(
+    """the rows to be inserted"""
+    objects: [object_types_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: object_types_on_conflict
+  ): object_types_mutation_response
+
+  """
+  insert a single row into the table: "object_types"
+  """
+  insert_object_types_one(
+    """the row to be inserted"""
+    object: object_types_insert_input!
+
+    """upsert condition"""
+    on_conflict: object_types_on_conflict
+  ): object_types
+
+  """
+  insert data into the table: "objects"
+  """
+  insert_objects(
+    """the rows to be inserted"""
+    objects: [objects_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: objects_on_conflict
+  ): objects_mutation_response
+
+  """
+  insert a single row into the table: "objects"
+  """
+  insert_objects_one(
+    """the row to be inserted"""
+    object: objects_insert_input!
+
+    """upsert condition"""
+    on_conflict: objects_on_conflict
+  ): objects
+
+  """
   insert data into the table: "todos"
   """
   insert_todos(
@@ -3178,6 +3798,84 @@ type mutation_root {
     """upsert condition"""
     on_conflict: users_on_conflict
   ): users
+
+  """
+  update data of the table: "associations"
+  """
+  update_associations(
+    """append existing jsonb value of filtered columns with new jsonb value"""
+    _append: associations_append_input
+
+    """
+    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    """
+    _delete_at_path: associations_delete_at_path_input
+
+    """
+    delete the array element with specified index (negative integers count from
+    the end). throws an error if top level container is not an array
+    """
+    _delete_elem: associations_delete_elem_input
+
+    """
+    delete key/value pair or string element. key/value pairs are matched based on their key value
+    """
+    _delete_key: associations_delete_key_input
+
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: associations_inc_input
+
+    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    _prepend: associations_prepend_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: associations_set_input
+
+    """filter the rows which have to be updated"""
+    where: associations_bool_exp!
+  ): associations_mutation_response
+
+  """
+  update single row of the table: "associations"
+  """
+  update_associations_by_pk(
+    """append existing jsonb value of filtered columns with new jsonb value"""
+    _append: associations_append_input
+
+    """
+    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    """
+    _delete_at_path: associations_delete_at_path_input
+
+    """
+    delete the array element with specified index (negative integers count from
+    the end). throws an error if top level container is not an array
+    """
+    _delete_elem: associations_delete_elem_input
+
+    """
+    delete key/value pair or string element. key/value pairs are matched based on their key value
+    """
+    _delete_key: associations_delete_key_input
+
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: associations_inc_input
+
+    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    _prepend: associations_prepend_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: associations_set_input
+    pk_columns: associations_pk_columns_input!
+  ): associations
+
+  """
+  update multiples rows of table: "associations"
+  """
+  update_associations_many(
+    """updates to execute, in order"""
+    updates: [associations_updates!]!
+  ): [associations_mutation_response]
 
   """
   update data of the table: "event_tag"
@@ -3554,6 +4252,112 @@ type mutation_root {
   ): [locations_mutation_response]
 
   """
+  update data of the table: "object_types"
+  """
+  update_object_types(
+    """append existing jsonb value of filtered columns with new jsonb value"""
+    _append: object_types_append_input
+
+    """
+    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    """
+    _delete_at_path: object_types_delete_at_path_input
+
+    """
+    delete the array element with specified index (negative integers count from
+    the end). throws an error if top level container is not an array
+    """
+    _delete_elem: object_types_delete_elem_input
+
+    """
+    delete key/value pair or string element. key/value pairs are matched based on their key value
+    """
+    _delete_key: object_types_delete_key_input
+
+    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    _prepend: object_types_prepend_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: object_types_set_input
+
+    """filter the rows which have to be updated"""
+    where: object_types_bool_exp!
+  ): object_types_mutation_response
+
+  """
+  update single row of the table: "object_types"
+  """
+  update_object_types_by_pk(
+    """append existing jsonb value of filtered columns with new jsonb value"""
+    _append: object_types_append_input
+
+    """
+    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    """
+    _delete_at_path: object_types_delete_at_path_input
+
+    """
+    delete the array element with specified index (negative integers count from
+    the end). throws an error if top level container is not an array
+    """
+    _delete_elem: object_types_delete_elem_input
+
+    """
+    delete key/value pair or string element. key/value pairs are matched based on their key value
+    """
+    _delete_key: object_types_delete_key_input
+
+    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    _prepend: object_types_prepend_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: object_types_set_input
+    pk_columns: object_types_pk_columns_input!
+  ): object_types
+
+  """
+  update multiples rows of table: "object_types"
+  """
+  update_object_types_many(
+    """updates to execute, in order"""
+    updates: [object_types_updates!]!
+  ): [object_types_mutation_response]
+
+  """
+  update data of the table: "objects"
+  """
+  update_objects(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: objects_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: objects_set_input
+
+    """filter the rows which have to be updated"""
+    where: objects_bool_exp!
+  ): objects_mutation_response
+
+  """
+  update single row of the table: "objects"
+  """
+  update_objects_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: objects_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: objects_set_input
+    pk_columns: objects_pk_columns_input!
+  ): objects
+
+  """
+  update multiples rows of table: "objects"
+  """
+  update_objects_many(
+    """updates to execute, in order"""
+    updates: [objects_updates!]!
+  ): [objects_mutation_response]
+
+  """
   update data of the table: "todos"
   """
   update_todos(
@@ -3666,6 +4470,437 @@ type mutation_root {
   ): [users_mutation_response]
 }
 
+"""
+columns and relationships of "object_types"
+"""
+type object_types {
+  id: String!
+  metadata(
+    """JSON select path"""
+    path: String
+  ): jsonb!
+}
+
+"""
+aggregated selection of "object_types"
+"""
+type object_types_aggregate {
+  aggregate: object_types_aggregate_fields
+  nodes: [object_types!]!
+}
+
+"""
+aggregate fields of "object_types"
+"""
+type object_types_aggregate_fields {
+  count(columns: [object_types_select_column!], distinct: Boolean): Int!
+  max: object_types_max_fields
+  min: object_types_min_fields
+}
+
+"""append existing jsonb value of filtered columns with new jsonb value"""
+input object_types_append_input {
+  metadata: jsonb
+}
+
+"""
+Boolean expression to filter rows from the table "object_types". All fields are combined with a logical 'AND'.
+"""
+input object_types_bool_exp {
+  _and: [object_types_bool_exp!]
+  _not: object_types_bool_exp
+  _or: [object_types_bool_exp!]
+  id: String_comparison_exp
+  metadata: jsonb_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "object_types"
+"""
+enum object_types_constraint {
+  """
+  unique or primary key constraint on columns "id"
+  """
+  object_types_pkey
+}
+
+"""
+delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+"""
+input object_types_delete_at_path_input {
+  metadata: [String!]
+}
+
+"""
+delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array
+"""
+input object_types_delete_elem_input {
+  metadata: Int
+}
+
+"""
+delete key/value pair or string element. key/value pairs are matched based on their key value
+"""
+input object_types_delete_key_input {
+  metadata: String
+}
+
+"""
+input type for inserting data into table "object_types"
+"""
+input object_types_insert_input {
+  id: String
+  metadata: jsonb
+}
+
+"""aggregate max on columns"""
+type object_types_max_fields {
+  id: String
+}
+
+"""aggregate min on columns"""
+type object_types_min_fields {
+  id: String
+}
+
+"""
+response of any mutation on the table "object_types"
+"""
+type object_types_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [object_types!]!
+}
+
+"""
+on_conflict condition type for table "object_types"
+"""
+input object_types_on_conflict {
+  constraint: object_types_constraint!
+  update_columns: [object_types_update_column!]! = []
+  where: object_types_bool_exp
+}
+
+"""Ordering options when selecting data from "object_types"."""
+input object_types_order_by {
+  id: order_by
+  metadata: order_by
+}
+
+"""primary key columns input for table: object_types"""
+input object_types_pk_columns_input {
+  id: String!
+}
+
+"""prepend existing jsonb value of filtered columns with new jsonb value"""
+input object_types_prepend_input {
+  metadata: jsonb
+}
+
+"""
+select columns of table "object_types"
+"""
+enum object_types_select_column {
+  """column name"""
+  id
+
+  """column name"""
+  metadata
+}
+
+"""
+input type for updating data in table "object_types"
+"""
+input object_types_set_input {
+  id: String
+  metadata: jsonb
+}
+
+"""
+Streaming cursor of the table "object_types"
+"""
+input object_types_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: object_types_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input object_types_stream_cursor_value_input {
+  id: String
+  metadata: jsonb
+}
+
+"""
+update columns of table "object_types"
+"""
+enum object_types_update_column {
+  """column name"""
+  id
+
+  """column name"""
+  metadata
+}
+
+input object_types_updates {
+  """append existing jsonb value of filtered columns with new jsonb value"""
+  _append: object_types_append_input
+
+  """
+  delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+  """
+  _delete_at_path: object_types_delete_at_path_input
+
+  """
+  delete the array element with specified index (negative integers count from
+  the end). throws an error if top level container is not an array
+  """
+  _delete_elem: object_types_delete_elem_input
+
+  """
+  delete key/value pair or string element. key/value pairs are matched based on their key value
+  """
+  _delete_key: object_types_delete_key_input
+
+  """prepend existing jsonb value of filtered columns with new jsonb value"""
+  _prepend: object_types_prepend_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: object_types_set_input
+
+  """filter the rows which have to be updated"""
+  where: object_types_bool_exp!
+}
+
+"""
+columns and relationships of "objects"
+"""
+type objects {
+  id: Int!
+  name: String!
+  object_type: String!
+}
+
+"""
+aggregated selection of "objects"
+"""
+type objects_aggregate {
+  aggregate: objects_aggregate_fields
+  nodes: [objects!]!
+}
+
+"""
+aggregate fields of "objects"
+"""
+type objects_aggregate_fields {
+  avg: objects_avg_fields
+  count(columns: [objects_select_column!], distinct: Boolean): Int!
+  max: objects_max_fields
+  min: objects_min_fields
+  stddev: objects_stddev_fields
+  stddev_pop: objects_stddev_pop_fields
+  stddev_samp: objects_stddev_samp_fields
+  sum: objects_sum_fields
+  var_pop: objects_var_pop_fields
+  var_samp: objects_var_samp_fields
+  variance: objects_variance_fields
+}
+
+"""aggregate avg on columns"""
+type objects_avg_fields {
+  id: Float
+}
+
+"""
+Boolean expression to filter rows from the table "objects". All fields are combined with a logical 'AND'.
+"""
+input objects_bool_exp {
+  _and: [objects_bool_exp!]
+  _not: objects_bool_exp
+  _or: [objects_bool_exp!]
+  id: Int_comparison_exp
+  name: String_comparison_exp
+  object_type: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "objects"
+"""
+enum objects_constraint {
+  """
+  unique or primary key constraint on columns "id"
+  """
+  objects_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "objects"
+"""
+input objects_inc_input {
+  id: Int
+}
+
+"""
+input type for inserting data into table "objects"
+"""
+input objects_insert_input {
+  id: Int
+  name: String
+  object_type: String
+}
+
+"""aggregate max on columns"""
+type objects_max_fields {
+  id: Int
+  name: String
+  object_type: String
+}
+
+"""aggregate min on columns"""
+type objects_min_fields {
+  id: Int
+  name: String
+  object_type: String
+}
+
+"""
+response of any mutation on the table "objects"
+"""
+type objects_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [objects!]!
+}
+
+"""
+on_conflict condition type for table "objects"
+"""
+input objects_on_conflict {
+  constraint: objects_constraint!
+  update_columns: [objects_update_column!]! = []
+  where: objects_bool_exp
+}
+
+"""Ordering options when selecting data from "objects"."""
+input objects_order_by {
+  id: order_by
+  name: order_by
+  object_type: order_by
+}
+
+"""primary key columns input for table: objects"""
+input objects_pk_columns_input {
+  id: Int!
+}
+
+"""
+select columns of table "objects"
+"""
+enum objects_select_column {
+  """column name"""
+  id
+
+  """column name"""
+  name
+
+  """column name"""
+  object_type
+}
+
+"""
+input type for updating data in table "objects"
+"""
+input objects_set_input {
+  id: Int
+  name: String
+  object_type: String
+}
+
+"""aggregate stddev on columns"""
+type objects_stddev_fields {
+  id: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type objects_stddev_pop_fields {
+  id: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type objects_stddev_samp_fields {
+  id: Float
+}
+
+"""
+Streaming cursor of the table "objects"
+"""
+input objects_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: objects_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input objects_stream_cursor_value_input {
+  id: Int
+  name: String
+  object_type: String
+}
+
+"""aggregate sum on columns"""
+type objects_sum_fields {
+  id: Int
+}
+
+"""
+update columns of table "objects"
+"""
+enum objects_update_column {
+  """column name"""
+  id
+
+  """column name"""
+  name
+
+  """column name"""
+  object_type
+}
+
+input objects_updates {
+  """increments the numeric columns with given value of the filtered values"""
+  _inc: objects_inc_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: objects_set_input
+
+  """filter the rows which have to be updated"""
+  where: objects_bool_exp!
+}
+
+"""aggregate var_pop on columns"""
+type objects_var_pop_fields {
+  id: Float
+}
+
+"""aggregate var_samp on columns"""
+type objects_var_samp_fields {
+  id: Float
+}
+
+"""aggregate variance on columns"""
+type objects_variance_fields {
+  id: Float
+}
+
 """column ordering options"""
 enum order_by {
   """in ascending order, nulls last"""
@@ -3688,6 +4923,49 @@ enum order_by {
 }
 
 type query_root {
+  """
+  fetch data from the table: "associations"
+  """
+  associations(
+    """distinct select on columns"""
+    distinct_on: [associations_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [associations_order_by!]
+
+    """filter the rows returned"""
+    where: associations_bool_exp
+  ): [associations!]!
+
+  """
+  fetch aggregated fields from the table: "associations"
+  """
+  associations_aggregate(
+    """distinct select on columns"""
+    distinct_on: [associations_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [associations_order_by!]
+
+    """filter the rows returned"""
+    where: associations_bool_exp
+  ): associations_aggregate!
+
+  """fetch data from the table: "associations" using primary key columns"""
+  associations_by_pk(id: Int!): associations
+
   """
   execute function "closest_user_location" which returns "locations"
   """
@@ -3862,6 +5140,56 @@ type query_root {
 
   """fetch data from the table: "events" using primary key columns"""
   events_by_pk(id: Int!): events
+
+  """
+  execute function "fetch_associations" which returns "associations"
+  """
+  fetch_associations(
+    """
+    input parameters for function "fetch_associations"
+    """
+    args: fetch_associations_args!
+
+    """distinct select on columns"""
+    distinct_on: [associations_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [associations_order_by!]
+
+    """filter the rows returned"""
+    where: associations_bool_exp
+  ): [associations!]!
+
+  """
+  execute function "fetch_associations" and query aggregates on result of table type "associations"
+  """
+  fetch_associations_aggregate(
+    """
+    input parameters for function "fetch_associations_aggregate"
+    """
+    args: fetch_associations_args!
+
+    """distinct select on columns"""
+    distinct_on: [associations_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [associations_order_by!]
+
+    """filter the rows returned"""
+    where: associations_bool_exp
+  ): associations_aggregate!
 
   """
   fetch data from the table: "goals"
@@ -4039,6 +5367,92 @@ type query_root {
   ): interactions_aggregate!
 
   """
+  fetch data from the table: "object_types"
+  """
+  object_types(
+    """distinct select on columns"""
+    distinct_on: [object_types_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [object_types_order_by!]
+
+    """filter the rows returned"""
+    where: object_types_bool_exp
+  ): [object_types!]!
+
+  """
+  fetch aggregated fields from the table: "object_types"
+  """
+  object_types_aggregate(
+    """distinct select on columns"""
+    distinct_on: [object_types_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [object_types_order_by!]
+
+    """filter the rows returned"""
+    where: object_types_bool_exp
+  ): object_types_aggregate!
+
+  """fetch data from the table: "object_types" using primary key columns"""
+  object_types_by_pk(id: String!): object_types
+
+  """
+  fetch data from the table: "objects"
+  """
+  objects(
+    """distinct select on columns"""
+    distinct_on: [objects_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [objects_order_by!]
+
+    """filter the rows returned"""
+    where: objects_bool_exp
+  ): [objects!]!
+
+  """
+  fetch aggregated fields from the table: "objects"
+  """
+  objects_aggregate(
+    """distinct select on columns"""
+    distinct_on: [objects_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [objects_order_by!]
+
+    """filter the rows returned"""
+    where: objects_bool_exp
+  ): objects_aggregate!
+
+  """fetch data from the table: "objects" using primary key columns"""
+  objects_by_pk(id: Int!): objects
+
+  """
   fetch data from the table: "todos"
   """
   todos(
@@ -4190,6 +5604,63 @@ input String_comparison_exp {
 }
 
 type subscription_root {
+  """
+  fetch data from the table: "associations"
+  """
+  associations(
+    """distinct select on columns"""
+    distinct_on: [associations_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [associations_order_by!]
+
+    """filter the rows returned"""
+    where: associations_bool_exp
+  ): [associations!]!
+
+  """
+  fetch aggregated fields from the table: "associations"
+  """
+  associations_aggregate(
+    """distinct select on columns"""
+    distinct_on: [associations_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [associations_order_by!]
+
+    """filter the rows returned"""
+    where: associations_bool_exp
+  ): associations_aggregate!
+
+  """fetch data from the table: "associations" using primary key columns"""
+  associations_by_pk(id: Int!): associations
+
+  """
+  fetch data from the table in a streaming manner: "associations"
+  """
+  associations_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [associations_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: associations_bool_exp
+  ): [associations!]!
+
   """
   execute function "closest_user_location" which returns "locations"
   """
@@ -4408,6 +5879,56 @@ type subscription_root {
   ): [events!]!
 
   """
+  execute function "fetch_associations" which returns "associations"
+  """
+  fetch_associations(
+    """
+    input parameters for function "fetch_associations"
+    """
+    args: fetch_associations_args!
+
+    """distinct select on columns"""
+    distinct_on: [associations_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [associations_order_by!]
+
+    """filter the rows returned"""
+    where: associations_bool_exp
+  ): [associations!]!
+
+  """
+  execute function "fetch_associations" and query aggregates on result of table type "associations"
+  """
+  fetch_associations_aggregate(
+    """
+    input parameters for function "fetch_associations_aggregate"
+    """
+    args: fetch_associations_args!
+
+    """distinct select on columns"""
+    distinct_on: [associations_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [associations_order_by!]
+
+    """filter the rows returned"""
+    where: associations_bool_exp
+  ): associations_aggregate!
+
+  """
   fetch data from the table: "goals"
   """
   goals(
@@ -4623,6 +6144,120 @@ type subscription_root {
     """filter the rows returned"""
     where: interactions_bool_exp
   ): interactions_aggregate!
+
+  """
+  fetch data from the table: "object_types"
+  """
+  object_types(
+    """distinct select on columns"""
+    distinct_on: [object_types_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [object_types_order_by!]
+
+    """filter the rows returned"""
+    where: object_types_bool_exp
+  ): [object_types!]!
+
+  """
+  fetch aggregated fields from the table: "object_types"
+  """
+  object_types_aggregate(
+    """distinct select on columns"""
+    distinct_on: [object_types_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [object_types_order_by!]
+
+    """filter the rows returned"""
+    where: object_types_bool_exp
+  ): object_types_aggregate!
+
+  """fetch data from the table: "object_types" using primary key columns"""
+  object_types_by_pk(id: String!): object_types
+
+  """
+  fetch data from the table in a streaming manner: "object_types"
+  """
+  object_types_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [object_types_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: object_types_bool_exp
+  ): [object_types!]!
+
+  """
+  fetch data from the table: "objects"
+  """
+  objects(
+    """distinct select on columns"""
+    distinct_on: [objects_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [objects_order_by!]
+
+    """filter the rows returned"""
+    where: objects_bool_exp
+  ): [objects!]!
+
+  """
+  fetch aggregated fields from the table: "objects"
+  """
+  objects_aggregate(
+    """distinct select on columns"""
+    distinct_on: [objects_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [objects_order_by!]
+
+    """filter the rows returned"""
+    where: objects_bool_exp
+  ): objects_aggregate!
+
+  """fetch data from the table: "objects" using primary key columns"""
+  objects_by_pk(id: Int!): objects
+
+  """
+  fetch data from the table in a streaming manner: "objects"
+  """
+  objects_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [objects_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: objects_bool_exp
+  ): [objects!]!
 
   """
   fetch data from the table: "todos"
@@ -5167,6 +6802,42 @@ type users {
     """JSON select path"""
     path: String
   ): jsonb!
+
+  """An array relationship"""
+  events(
+    """distinct select on columns"""
+    distinct_on: [events_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [events_order_by!]
+
+    """filter the rows returned"""
+    where: events_bool_exp
+  ): [events!]!
+
+  """An aggregate relationship"""
+  events_aggregate(
+    """distinct select on columns"""
+    distinct_on: [events_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [events_order_by!]
+
+    """filter the rows returned"""
+    where: events_bool_exp
+  ): events_aggregate!
   id: Int!
   language: String!
 
@@ -5253,6 +6924,8 @@ input users_bool_exp {
   _or: [users_bool_exp!]
   apple_id: String_comparison_exp
   config: jsonb_comparison_exp
+  events: events_bool_exp
+  events_aggregate: events_aggregate_bool_exp
   id: Int_comparison_exp
   language: String_comparison_exp
   locations: locations_bool_exp
@@ -5306,6 +6979,7 @@ input type for inserting data into table "users"
 input users_insert_input {
   apple_id: String
   config: jsonb
+  events: events_arr_rel_insert_input
   id: Int
   language: String
   locations: locations_arr_rel_insert_input
@@ -5365,6 +7039,7 @@ input users_on_conflict {
 input users_order_by {
   apple_id: order_by
   config: order_by
+  events_aggregate: events_aggregate_order_by
   id: order_by
   language: order_by
   locations_aggregate: locations_aggregate_order_by

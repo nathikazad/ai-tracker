@@ -10,7 +10,7 @@ import Charts
 
 struct BarView: View {
     var title: String
-    var data: [(String, Double)]
+    var data: [(Date, Double)]
 
     var body: some View {
         Section(header: Text(title)) {
@@ -45,12 +45,14 @@ struct CandleView: View {
             Chart(candles, id:\.date) {
                 
                 RectangleMark(
-                    x: .value("date", $0.date),
+                    x: .value("date", Calendar.current.startOfDay(for:$0.start)),
                     yStart: .value("start", $0.start.dateWithHourAndMinute),
                     yEnd: .value("end", $0.end.dateWithHourAndMinute),
                     width: 4
                 )
             }
+            .frame(height: 200)
+            .padding(.horizontal)
             .onAppear {
                 print(candles.map {$0.start.formattedTime })
                 print(candles.map {$0.start.dateWithHourAndMinute.formattedTime })
@@ -61,32 +63,21 @@ struct CandleView: View {
 
 
 
-struct ScatterViewDoubles: View {
+struct ScatterView: View {
     var title: String
-    var data: [(Double, Double)]
+    var data: [Date]
     var showLine: Bool = false
     var body: some View {
         
         return Section(header: Text(title)) {
-            Chart {
-                // Plotting the points
-                ForEach(data, id: \.0) { (x, y) in
+            Chart(data, id:\.self) {
+
                     PointMark(
-                        x: .value("x data", x),
-                        y: .value("y data", y)
+                        x: .value("x data", Calendar.current.startOfDay(for:$0)),
+                        y: .value("y data",  $0.dateWithHourAndMinute)
                     ).foregroundStyle(Color.gray)
-                }
-                if showLine, let regressionLine = linearRegression(data: data) {
-                    ForEach(data.indices, id: \.self) { index in
-                        LineMark(
-                            x: .value("x data", data[index].0),
-                            y: .value("y data", regressionLine[index])
-                        ).foregroundStyle(Color.red)
-                    }
-                }
+
             }
-            .chartXScale(domain: getDomain(data: data.map { $0.0 }))
-            .chartYScale(domain: getDomain(data: data.map { $0.1 }))
             .frame(height: 200)
             .padding(.horizontal)
         }
@@ -118,26 +109,26 @@ func linearRegression(data: [(Double, Double)]) -> [Double]? {
 }
 
 
-struct ScatterViewString: View {
-    var title: String
-    var data: [(String, Double)]
-    var body: some View {
-        Section(header: Text(title)) {
-            Chart {
-                ForEach(data, id: \.0) { x, y in
-                    PointMark(
-                        x: .value("x data", x),
-                        y: .value("y data", y)
-                            
-                    ).foregroundStyle(Color.gray)
-                }
-            }
-            .chartYScale(domain: getDomain(data: data.map{ $0.1 }))
-            .frame(height: 200)
-            .padding(.horizontal)
-        }
-    }
-}
+//struct ScatterViewString: View {
+//    var title: String
+//    var data: [(String, Double)]
+//    var body: some View {
+//        Section(header: Text(title)) {
+//            Chart {
+//                ForEach(data, id: \.0) { x, y in
+//                    PointMark(
+//                        x: .value("x data", x),
+//                        y: .value("y data", y)
+//                            
+//                    ).foregroundStyle(Color.gray)
+//                }
+//            }
+//            .chartYScale(domain: getDomain(data: data.map{ $0.1 }))
+//            .frame(height: 200)
+//            .padding(.horizontal)
+//        }
+//    }
+//}
 
 func getDomain(data:[Double]) -> ClosedRange<Double>{
     return { ((data.min() ?? 0) - 2)...((data.max() ?? 24) + 2) }()

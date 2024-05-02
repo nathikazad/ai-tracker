@@ -58,15 +58,15 @@ class EventsController: ObservableObject {
     static func fetchEvents(userId: Int, eventType: String, locationId: Int? = nil, order: String?) async -> [EventModel] {
         
         let graphqlQuery = EventsController.generateEventQuery(userId: userId, eventType: eventType, locationId: locationId, order: order)
-            do {
-                // Directly get the decoded ResponseData object from sendGraphQL
-                let responseData: EventsResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, responseType: EventsResponseData.self)
-                return sortEvents(events: responseData.data.events)
-            } catch {
-                print("Error: \(error.localizedDescription)")
-                return []
-            }
-//        }
+        do {
+            // Directly get the decoded ResponseData object from sendGraphQL
+            let responseData: EventsResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, responseType: EventsResponseData.self)
+            return  responseData.data.events.sortEvents
+        } catch {
+            print("Error: \(error.localizedDescription)")
+            return []
+        }
+        //        }
         
     }
     
@@ -166,7 +166,7 @@ class EventsController: ObservableObject {
             // Combining timestamp conditions using _and
             // Modify the timestampConditions to use the provided condition
             let timestampConditions = "{_or: [{_and: [{start_time: {_gt: \"\(startOfTodayUTCString)\"}}, {start_time: {_lt: \"\(dayAfterUTCString)\"}}]}, {_and: [{end_time: {_gt: \"\(startOfTodayUTCString)\"}}, {end_time: {_lt: \"\(dayAfterUTCString)\"}}]}]}"
-
+            
             whereClauses.append(timestampConditions)
         }
         
@@ -215,62 +215,7 @@ class EventsController: ObservableObject {
         }
         """
     }
-    
-    static func dailyTimes(events: [EventModel], days: Int) -> [(String, Date, Date)] {
-        var dailyTimes = [(String, Date, Date)]()
-        let now = Date()
-        let calendar = Calendar.current
-
-        let filteredEvents = events.filter { event in
-            guard let eventDate = event.startTime else { return false }
-            return eventDate >= calendar.date(byAdding: .day, value: -days, to: now)!
-        }
-
-        for event in filteredEvents {
-            if let startTime = event.startTime, let endTime = event.endTime {
-                let day = startTime.formattedSuperShortDate
-                dailyTimes.append((day, startTime, endTime))
-            }
-        }
-
-        return dailyTimes.sorted { $0.0 < $1.0 }
-    }
-    
-    static func dailyTotals(events: [EventModel], days: Int) -> [(String, Double)] {
-        let dailyTimes = dailyTimes(events: events, days: days)
-        var dailyTotals = [String: Double]()
-        
-        for (day, startTime, endTime) in dailyTimes {
-            let duration = endTime.timeIntervalSince(startTime) / 3600
-            if var total = dailyTotals[day] {
-                dailyTotals[day] = total + duration
-            } else {
-                dailyTotals[day] = duration
-            }
-        }
-        
-        
-//        let sortedTotals = dailyTotals.sorted { $0.key < $1.key }
-        return dailyTotals.map { ($0.key, $0.value) }
-    }
-    
-    static func maxDays(events: [EventModel]) -> Double {
-        guard let earliestDate = events.min(by: { $0.startTime ?? Date() < $1.startTime ?? Date() })?.startTime else {
-            return 7 // or some default minimum
-        }
-        let daysDifference = Calendar.current.dateComponents([.day], from: earliestDate, to: Date()).day ?? 0
-        return Double(daysDifference + 1)
-    }
-    
-    static func sortEvents(events: [EventModel]) -> [EventModel] {
-        return events.sorted { (event1, event2) -> Bool in
-            let date1 = event1.startTime ?? event1.endTime
-            let date2 = event2.startTime ?? event2.endTime
-            return date1 ?? Date.distantFuture > date2 ?? Date.distantFuture
-        }
-    }
 }
-
 
 struct EventModel: Decodable, Identifiable, Hashable, Equatable {
     var id: Int
@@ -295,11 +240,11 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
         parentId = try container.decodeIfPresent(Int.self, forKey: .parentId)
         eventType = try container.decode(String.self, forKey: .eventType)
         metadata = try container.decodeIfPresent(Metadata.self, forKey: .metadata)
-
+        
         // Decode the dates as Strings, then convert to Dates using getTime
         let startTimeString = try container.decodeIfPresent(String.self, forKey: .startTime)
         startTime = HasuraUtil.getTime(timestamp: startTimeString)
-
+        
         let endTimeString = try container.decodeIfPresent(String.self, forKey: .endTime)
         endTime = HasuraUtil.getTime(timestamp: endTimeString)
     }
@@ -326,7 +271,7 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
     var formattedTimeWithX: String {
         return _formattedTime(fillWithX: true)
     }
-
+    
     
     var formattedTimeWithDate: String {
         return "\(startTime?.formattedDate ?? endTime?.formattedDate ?? ""): \(formattedTime)"
@@ -356,6 +301,146 @@ struct Metadata: Decodable {
         case distance
     }
 }
+
+
+extension Array where Element == EventModel {
+    
+    func filteredEvents(days: Int) -> [EventModel] {
+        let startDate = Calendar.current.date(byAdding: .day, value: -Int(days), to: Date())!
+        return self.filter { event in
+            event.startTime != nil && event.endTime != nil &&
+            event.startTime! >= startDate // Filter to include only events from the last 'selectedDays' days
+        }.reversed()
+    }
+
+    func datesChartData(days: Int) ->  [String] {
+        return self.filteredEvents(days: Int(days)).map(\.endTime!.formattedSuperShortDate)
+    }
+
+    func startTimes(days: Int, unique: Bool) -> [Date] {
+        let events = self.filteredEvents(days: days)
+        let startTimes = events.compactMap { $0.startTime } // Safely unwrap the start times
+
+        if unique {
+            // Group start times by day using the calendar to normalize dates to the start of each day
+            let calendar = Calendar.current
+            let groupedByDay = Dictionary(grouping: startTimes, by: { calendar.startOfDay(for: $0) })
+
+            // For each group, find the minimum start time
+            return groupedByDay.map { day, times in
+                times.min() ?? day // Return the minimum time or the day itself if no times are available
+            }
+        } else {
+            // If not unique, return all start times
+            return startTimes
+        }
+    }
+
+
+    func endTimes(days: Int, unique: Bool) -> [Date] {
+        let events = self.filteredEvents(days: days)
+        let endTimes = events.compactMap { $0.endTime }
+
+        if unique {
+            // Group end times by day
+            let calendar = Calendar.current
+            let groupedByDay = Dictionary(grouping: endTimes, by: { calendar.startOfDay(for: $0) })
+
+            // For each group, find the maximum end time
+            return groupedByDay.map { day, times in
+                times.max() ?? day // Return the maximum time or the day itself if no times are available
+            }
+        } else {
+            // If not unique, return all end times
+            return endTimes
+        }
+    }
+    
+    func dailyTimes(days: Int) -> [(String, Date, Date)] {
+            var dailyTimes = [(String, Date, Date)]()
+            let now = Date()
+            var calendar = Calendar.current
+            var localTimeZone: TimeZone = TimeZone.current
+            calendar.timeZone = localTimeZone
+            
+            let filteredEvents = self.filter { event in
+                guard let eventDate = event.startTime else { return false }
+                let localEventDate = eventDate.toLocal
+                return localEventDate >= calendar.date(byAdding: .day, value: -days, to: now)!
+            }
+            
+            for event in filteredEvents {
+                guard let utcStartTime = event.startTime, let utcEndTime = event.endTime else {
+                    if let utcStartTime = event.startTime {
+                        if(calendar.isDateInToday(utcStartTime) && event.endTime == nil){
+                            dailyTimes.append((utcStartTime.formattedSuperShortDate, utcStartTime, now))
+                        }
+                    }
+                    continue
+                }
+                
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy-MM-dd"
+                dateFormatter.timeZone = localTimeZone
+
+                let startDateString = dateFormatter.string(from: utcStartTime)
+                let endDateString = dateFormatter.string(from: utcEndTime)
+                
+                print("Local start date \(utcStartTime) end date \(utcEndTime)")
+
+                // Split events spanning multiple days
+                if startDateString != endDateString {
+                    print("Event spans multiple days")
+                    let midnight = utcStartTime.endOfDay
+                    print("\(utcStartTime.formattedSuperShortDate) start date \(utcStartTime.toLocal) end date \(midnight.addMinute(-1).toLocal)")
+                    print("\(utcEndTime.formattedSuperShortDate) start date \(midnight.toLocal) end date \(utcEndTime.toLocal)")
+                    dailyTimes.append((utcStartTime.formattedSuperShortDate, utcStartTime, midnight.addMinute(-1)))
+                    dailyTimes.append((utcEndTime.formattedSuperShortDate, midnight, utcEndTime))
+                } else {
+                    print("Event within the same day")
+                    dailyTimes.append((utcStartTime.formattedSuperShortDate, utcStartTime, utcEndTime))
+                }
+            }
+            
+            return dailyTimes.sorted { $0.1 < $1.1 }
+        }
+    
+    func dailyTotals(days: Int) -> [(Date, Double)] {
+        let dailyTimes = self.dailyTimes(days: days)
+        var dailyTotals = [Date: Double]()
+        
+        for (sday, startTime, endTime) in dailyTimes {
+            let day = Calendar.current.startOfDay(for:startTime)
+            let duration = endTime.timeIntervalSince(startTime) / 3600
+            if var total = dailyTotals[day] {
+                dailyTotals[day] = total + duration
+            } else {
+                dailyTotals[day] = duration
+            }
+        }
+        
+        
+        let sortedTotals = dailyTotals.sorted { $0.key < $1.key }
+        return sortedTotals.map { ($0.key, $0.value) }
+    }
+    
+    var maxDays: Double {
+        guard let earliestDate = self.min(by: { $0.startTime ?? Date() < $1.startTime ?? Date() })?.startTime else {
+            return 7 // or some default minimum
+        }
+        let daysDifference = Calendar.current.dateComponents([.day], from: earliestDate, to: Date()).day ?? 0
+        return Double(daysDifference + 1)
+    }
+    
+    var sortEvents: [EventModel] {
+        return self.sorted { (event1, event2) -> Bool in
+            let date1 = event1.startTime ?? event1.endTime
+            let date2 = event2.startTime ?? event2.endTime
+            return date1 ?? Date.distantFuture > date2 ?? Date.distantFuture
+        }
+    }
+}
+
 
 
 

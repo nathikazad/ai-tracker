@@ -9,6 +9,8 @@ export const config = {
         port: PORT,
     },
     openApiKey: process.env.OPENAI_API_KEY,
+    replicateApiKey: process.env.REPLICATE_API_KEY,
+    groqApiKey: process.env.GROQ_API_KEY,
     graphqlUrl: process.env.GRAPHQL_URL,
     hasuraAdminSecret: process.env.HASURA_ADMIN_SECRET,
     hasuraPrivateKey: process.env.HASURA_PRIVATE_KEY?.replace(/\\n/g, '\n'),

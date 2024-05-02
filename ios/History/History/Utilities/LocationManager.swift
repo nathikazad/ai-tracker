@@ -69,7 +69,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
            let lastLocation = lastStayEvent.metadata?.location?.toCLLocation,
            !self.movementLocations.isEmpty {
             
-            print("LocationManager: checkIfLastStaySameAsCurrentLocation: \(lastStayEvent.formattedTimeWithDate)")
+            print("LocationManager: checkIfLastStaySameAsCurrentLocation: \(lastStayEvent.id) \(lastStayEvent.formattedTimeWithDate)")
             print(lastLocation)
             
             let firstMovementLocation = self.movementLocations[0]
@@ -81,7 +81,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
                 movementCheckTimer?.invalidate()
                 stoppedMoving(currentLocation: currentLocation, notifyServer: false)
             } else {
-                print("LocationManager: checkIfLastStaySameAsCurrentLocation: diff location, update db")
+                print("LocationManager: checkIfLastStaySameAsCurrentLocation: diff location, \(distance) update db")
                 EventsController.editEvent(id: lastStayEvent.id, startTime: lastStayEvent.startTime!, endTime: Date())
             }
         }

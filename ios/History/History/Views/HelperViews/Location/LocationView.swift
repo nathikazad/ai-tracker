@@ -22,7 +22,7 @@ struct LocationDetailView: View {
                 let resp = await EventsController.fetchEvents(userId: userId!, eventType: "stay", locationId: location.id!, order: "desc")
                 DispatchQueue.main.async {
                     events = resp
-                    maxDays = EventsController.maxDays(events: resp)
+                    maxDays = resp.maxDays
                     selectedDays = min(maxDays, 7)
                     selectedTab = (events.count > 1) ? 1 :0
                 }
@@ -95,10 +95,22 @@ struct LocationDetailView: View {
                     if selectedTab == 0 {
                         CheckInsView(events: events)
                     } else {
-                        GraphView(
-                            selectedDays: $selectedDays,
-                            events: events,
-                            maxDays: maxDays)
+                        ScrollView {
+                            VStack {
+                                SliderView(selectedDays: $selectedDays, maxDays: $maxDays)
+                                CandleView(title: "Time", candles: events.dailyTimes(days: Int(selectedDays)).map { Candle(date: $0, start: $1, end: $2 ) })
+                                    .padding(.bottom)
+                                BarView(title: "Total Hours per day", data: events.dailyTotals( days: Int(selectedDays)))
+                                    .padding(.bottom)
+                                ScatterView(title: "Start time",  data: events.startTimes(days: Int(selectedDays), unique: true))
+                                ScatterView(title: "End time", data: events.endTimes(days: Int(selectedDays), unique: true))
+                                    .padding(.bottom)
+                                
+                                
+        //                        ScatterViewDoubles(title: "Correlation", data: Array(zip(sleepTimes, wakeTimes)))
+        //                            .padding(.bottom)
+                            }
+                        }
                     }
                 }
             }
@@ -131,7 +143,7 @@ struct LocationDetailView: View {
         @Binding var selectedDays: Double
         var events: [EventModel]
         var maxDays: Double
-        
+        var locationName: String
         var body: some View {
             Section(header: Text("Graph")) {
                 HStack {
@@ -141,10 +153,10 @@ struct LocationDetailView: View {
                         .foregroundColor(.gray)
                 }
                 .padding()
-                CandleView(title: "Times at location", candles: EventsController.dailyTimes(events: events, days: Int(selectedDays)).map { Candle(date: $0, start: $1, end: $2 ) })
+                CandleView(title: "Times at \(locationName)", candles: events.dailyTimes(days: Int(selectedDays)).map { Candle(date: $0, start: $1, end: $2 ) })
                 .padding(.bottom, 50)
 //                .frame(height: 200)
-                BarView(title: "Hours slept per day", data: EventsController.dailyTotals(events: events, days: Int(selectedDays)))
+                BarView(title: "Hours at \(locationName) per day", data: events.dailyTotals(days: Int(selectedDays)))
                 .padding(.bottom)
 //                .frame(height: 200)
             }
