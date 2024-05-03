@@ -222,7 +222,7 @@ struct InteractionModel: Decodable, Identifiable, Hashable, Equatable {
         
         // Decode the timestamp as a Date
         let timestampString = try container.decode(String.self, forKey: .timestamp)
-        guard let timestampDate = HasuraUtil.getTime(timestamp: timestampString) else {
+        guard let timestampDate = timestampString.getDate else {
             throw DecodingError.dataCorruptedError(forKey: .timestamp,
                                                    in: container,
                                                    debugDescription: "Date string does not conform to expected format.")

@@ -8,23 +8,48 @@
 import SwiftUI
 import Charts
 
+
+fileprivate func setLabels(count: Int) -> AxisMarks<BuilderConditional<AxisValueLabel<Never>, BuilderConditional<AxisValueLabel<Never>, AxisValueLabel<Never>??>>> {
+    return AxisMarks(values: .stride(by: .day)) { value in
+        if(count < 7) {
+            AxisValueLabel(format: .dateTime.weekday(.abbreviated))
+        } else {
+            if(count < 10) {
+                AxisValueLabel(format: .dateTime.day())
+            } else {
+                if let date = value.as(Date.self) {
+                    let day = Calendar.current.component(.day, from: date)
+                    if (day % 2 == 0) {
+                        AxisValueLabel(format: .dateTime.day())
+                    }
+                }
+            }
+        }
+    }
+}
+
 struct BarView: View {
     var title: String
     var data: [(Date, Double)]
-
+    
     var body: some View {
         Section(header: Text(title)) {
-            Chart {
-                ForEach(data, id: \.0) { x, y in
+            Chart(data, id:\.0) {
                     BarMark(
-                        x: .value("Key", x),
-                        y: .value("Value", y)
+                        x: .value("Key", $0.0),
+                        y: .value("Value", $0.1)
                     )
                     .foregroundStyle(Color.gray)
-                }
+            }
+            .chartXAxis {
+                setLabels(count: data.count)
+            }
+            .chartYAxis {
+                AxisMarks(values: .automatic(desiredCount: 6))
             }
             .frame(height: 200)
-            .padding(.horizontal)
+            .padding()
+            
         }
     }
 }
@@ -35,6 +60,14 @@ struct Candle: Hashable {
 }
 
 
+extension [Candle] {
+    var countOfUniqueDays: Int {
+        var dateFormatter = DateFormatter()
+        dateFormatter.timeZone = TimeZone.current
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        return Set(self.map { dateFormatter.string(from: $0.start) }).count
+    }
+}
 
 struct CandleView: View {
     var title: String
@@ -51,8 +84,11 @@ struct CandleView: View {
                     width: 4
                 )
             }
+            .chartXAxis {
+                setLabels(count: candles.countOfUniqueDays)
+            }
             .frame(height: 200)
-            .padding(.horizontal)
+            .padding()
             .onAppear {
                 print(candles.map {$0.start.formattedTime })
                 print(candles.map {$0.start.dateWithHourAndMinute.formattedTime })
@@ -78,8 +114,11 @@ struct ScatterView: View {
                     ).foregroundStyle(Color.gray)
 
             }
+            .chartXAxis {
+                setLabels(count: data.count)
+            }
             .frame(height: 200)
-            .padding(.horizontal)
+            .padding()
         }
     }
 }

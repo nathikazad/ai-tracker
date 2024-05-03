@@ -243,10 +243,10 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
         
         // Decode the dates as Strings, then convert to Dates using getTime
         let startTimeString = try container.decodeIfPresent(String.self, forKey: .startTime)
-        startTime = HasuraUtil.getTime(timestamp: startTimeString)
+        startTime = startTimeString?.getDate
         
         let endTimeString = try container.decodeIfPresent(String.self, forKey: .endTime)
-        endTime = HasuraUtil.getTime(timestamp: endTimeString)
+        endTime = endTimeString?.getDate
     }
     
     static func == (lhs: EventModel, rhs: EventModel) -> Bool {
@@ -303,22 +303,23 @@ struct Metadata: Decodable {
 }
 
 
-extension Array where Element == EventModel {
+extension [EventModel] {
     
-    func filteredEvents(days: Int) -> [EventModel] {
-        let startDate = Calendar.current.date(byAdding: .day, value: -Int(days), to: Date())!
+    func filterEventsForTheLastNdays(days: Int) -> [EventModel] {
+        let startDate = Calendar.currentInLocal.date(byAdding: .day, value: -Int(days), to: Date())!
         return self.filter { event in
-            event.startTime != nil && event.endTime != nil &&
-            event.startTime! >= startDate // Filter to include only events from the last 'selectedDays' days
+            return (event.startTime != nil && event.startTime! >= startDate) || (event.endTime != nil && event.endTime! >= startDate)
         }.reversed()
     }
 
-    func datesChartData(days: Int) ->  [String] {
-        return self.filteredEvents(days: Int(days)).map(\.endTime!.formattedSuperShortDate)
-    }
+//    func datesChartData(days: Int) ->  [String] {
+//        return self.filterEventsForTheLastNdays(days: Int(days)).map(\.endTime!.formattedSuperShortDate)
+//    }
 
     func startTimes(days: Int, unique: Bool) -> [Date] {
-        let events = self.filteredEvents(days: days)
+        let events = self.filterEventsForTheLastNdays(days: days).filter { event in
+            return event.startTime != nil
+        }
         let startTimes = events.compactMap { $0.startTime } // Safely unwrap the start times
 
         if unique {
@@ -338,7 +339,9 @@ extension Array where Element == EventModel {
 
 
     func endTimes(days: Int, unique: Bool) -> [Date] {
-        let events = self.filteredEvents(days: days)
+        let events = self.filterEventsForTheLastNdays(days: days).filter { event in
+            return event.endTime != nil
+        }
         let endTimes = events.compactMap { $0.endTime }
 
         if unique {
@@ -360,7 +363,7 @@ extension Array where Element == EventModel {
             var dailyTimes = [(String, Date, Date)]()
             let now = Date()
             var calendar = Calendar.current
-            var localTimeZone: TimeZone = TimeZone.current
+            let localTimeZone: TimeZone = TimeZone.current
             calendar.timeZone = localTimeZone
             
             let filteredEvents = self.filter { event in
@@ -410,7 +413,7 @@ extension Array where Element == EventModel {
         var dailyTotals = [Date: Double]()
         
         for (sday, startTime, endTime) in dailyTimes {
-            let day = Calendar.current.startOfDay(for:startTime)
+            let day = Calendar.currentInLocal.startOfDay(for:startTime)
             let duration = endTime.timeIntervalSince(startTime) / 3600
             if var total = dailyTotals[day] {
                 dailyTotals[day] = total + duration
@@ -422,6 +425,21 @@ extension Array where Element == EventModel {
         
         let sortedTotals = dailyTotals.sorted { $0.key < $1.key }
         return sortedTotals.map { ($0.key, $0.value) }
+    }
+    
+    func totalHours(days: Int) -> Int {
+        let dailyTimes = self.dailyTimes(days: days)
+        var total = 0.0
+        for (sday, startTime, endTime) in dailyTimes {
+            let day = Calendar.currentInLocal.startOfDay(for:startTime)
+            let duration = endTime.timeIntervalSince(startTime) / 3600
+            total = total + duration
+        }
+        return Int(total)
+    }
+    
+    func totalDays(days: Int) -> Int {
+        return dailyTotals(days: days).count
     }
     
     var maxDays: Double {

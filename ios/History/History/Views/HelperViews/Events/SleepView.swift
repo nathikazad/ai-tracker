@@ -25,16 +25,8 @@ struct SleepView: View {
                 ScrollView {
                     VStack {
                         SliderView(selectedDays: $selectedDays, maxDays: $maxDays)
-                        CandleView(title: "Time", candles: events.dailyTimes(days: Int(selectedDays)).map { Candle(date: $0, start: $1, end: $2 ) })
-                            .padding(.bottom)
-                        BarView(title: "Total Hours per day", data: events.dailyTotals( days: Int(selectedDays)))
-                            .padding(.bottom)
-                        ScatterView(title: "Start time",  data: events.startTimes(days: Int(selectedDays), unique: true))
-                        ScatterView(title: "End time", data: events.endTimes(days: Int(selectedDays), unique: true))
-                            .padding(.bottom)
-//                            .padding(.bottom)
-//                        ScatterViewDoubles(title: "Correlation", data: Array(zip(sleepTimes, wakeTimes)))
-//                            .padding(.bottom)
+                        CountView(selectedDays: $selectedDays, maxDays: $maxDays, events:$events)
+                        GraphView(selectedDays: $selectedDays, events:$events)
                     }
                 }
                 .tabItem {
@@ -62,22 +54,5 @@ struct SleepEventsListView: View {
                 }
             }
         }
-    }
-}
-
-
-
-struct SliderView: View {
-    @Binding var selectedDays: Double
-    @Binding var maxDays: Double
-
-    var body: some View {
-        HStack {
-            Slider(value: $selectedDays, in: 1...max(maxDays, 1), step: 1)
-                .accentColor(.gray)
-            Text("\(Int(selectedDays))")
-                .foregroundColor(.gray)
-        }
-        .padding(.horizontal)
     }
 }

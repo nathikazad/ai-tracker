@@ -30,90 +30,79 @@ struct LocationDetailView: View {
         }
     }
     
-    private func saveLocationName() {
-        print("Saving location \(locationName)")
-        LocationsController.createLocation(name: locationName, lat: location.latitude, lon: location.longitude)
-        //        LocationsController.editLocationName(id: location.id!, name: locationName)
-        
+    fileprivate func TabBar() -> HStack<TupleView<(some View, some View)>> {
+        return HStack {
+            Button(action: {
+                selectedTab = 0
+            }) {
+                Text("Graph")
+                    .foregroundColor(selectedTab == 0 ? .gray : .white)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(selectedTab == 0 ? Color.white : Color.gray)
+                    .cornerRadius(5)
+            }
+            .disabled(selectedTab == 0)
+            
+            Button(action: {
+                selectedTab = 1
+            }) {
+                Text("Check ins")
+                    .foregroundColor(selectedTab == 1 ? .gray : .white)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(selectedTab == 1 ? Color.white : Color.gray)
+                    .cornerRadius(5)
+            }
+            .disabled(selectedTab == 1)
+        }
     }
     
+    fileprivate func LocationName() -> Section<Text, HStack<TupleView<(TextField<Text>, Button<Text>?)>>, EmptyView> {
+        return Section(header: Text("Location Name")) {
+            HStack {
+                TextField("Enter Location Name", text: $locationName, onEditingChanged: { editing in
+                    isEditing = editing
+                })
+                if isEditing {
+                    Button(action: {
+                        print("Saving location \(locationName)")
+                        LocationsController.createLocation(name: locationName, lat: location.latitude, lon: location.longitude)
+                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    }, label: {
+                        Text("Save")
+                    })
+                }
+            }
+        }
+    }
+    
+    
     var body: some View {
-        VStack {
+        List {
             Map(coordinateRegion: $region, showsUserLocation: true, annotationItems: [location]) { l in
                 MapPin(coordinate: CLLocationCoordinate2D(latitude: l.latitude, longitude: l.longitude), tint: .red)
             }
             .frame(height: 200)
-            .onAppear {
-                updateRegionFromLocation()
-            }
-            
-            List {
-                Section(header: Text("Location Name")) {
-                    HStack {
-                        TextField("Enter Location Name", text: $locationName, onEditingChanged: { editing in
-                            isEditing = editing
-                        })
-                        if isEditing {
-                            Button(action: {
-                                saveLocationName()
-                                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                            }, label: {
-                                Text("Save")
-                            })
+            LocationName()
+            if selectedTab == 0 {
+                TabBar()
+                CheckInsView(events: events)
+            } else {
+                VStack {
+                    if(location.id != nil) {
+                        if(events.count > 2) {
+                            TabBar()
                         }
-                    }
-                }
-                if(location.id != nil) {
-                    if(events.count > 2) {
-                        HStack {
-                            Button(action: {
-                                selectedTab = 0
-                            }) {
-                                Text("Graph")
-                                    .foregroundColor(selectedTab == 0 ? .gray : .white)
-                                    .padding()
-                                    .frame(maxWidth: .infinity)
-                                    .background(selectedTab == 0 ? Color.white : Color.gray)
-                                    .cornerRadius(5)
-                            }
-                            .disabled(selectedTab == 0)
-                            
-                            Button(action: {
-                                selectedTab = 1
-                            }) {
-                                Text("Check ins")
-                                    .foregroundColor(selectedTab == 1 ? .gray : .white)
-                                    .padding()
-                                    .frame(maxWidth: .infinity)
-                                    .background(selectedTab == 1 ? Color.white : Color.gray)
-                                    .cornerRadius(5)
-                            }
-                            .disabled(selectedTab == 1)
-                        }
-                    }
-                    
-                    if selectedTab == 0 {
-                        CheckInsView(events: events)
-                    } else {
-                        ScrollView {
-                            VStack {
-                                SliderView(selectedDays: $selectedDays, maxDays: $maxDays)
-                                CandleView(title: "Time", candles: events.dailyTimes(days: Int(selectedDays)).map { Candle(date: $0, start: $1, end: $2 ) })
-                                    .padding(.bottom)
-                                BarView(title: "Total Hours per day", data: events.dailyTotals( days: Int(selectedDays)))
-                                    .padding(.bottom)
-                                ScatterView(title: "Start time",  data: events.startTimes(days: Int(selectedDays), unique: true))
-                                ScatterView(title: "End time", data: events.endTimes(days: Int(selectedDays), unique: true))
-                                    .padding(.bottom)
-                                
-                                
-        //                        ScatterViewDoubles(title: "Correlation", data: Array(zip(sleepTimes, wakeTimes)))
-        //                            .padding(.bottom)
-                            }
-                        }
+                        SliderView(selectedDays: $selectedDays, maxDays: $maxDays)
+                        CountView(selectedDays: $selectedDays, maxDays: $maxDays, events:$events)
+                        GraphView(selectedDays: $selectedDays, events:$events)
                     }
                 }
             }
+        }
+        .onAppear {
+            updateRegionFromLocation()
         }
     }
     
@@ -128,37 +117,12 @@ struct LocationDetailView: View {
     
     struct CheckInsView: View {
         var events: [EventModel] // Assume Event is the type of the events array
-        
         var body: some View {
             Section(header: Text("Check-ins")) {
                 ForEach(events, id: \.id) { event in
                     Text(event.formattedTimeWithDate)
                         .font(.subheadline)
                 }
-            }
-        }
-    }
-    
-    struct GraphView: View {
-        @Binding var selectedDays: Double
-        var events: [EventModel]
-        var maxDays: Double
-        var locationName: String
-        var body: some View {
-            Section(header: Text("Graph")) {
-                HStack {
-                    Slider(value: $selectedDays, in: 1...max(maxDays, 1), step: 1)
-                        .accentColor(.gray)
-                    Text("\(Int(selectedDays))")
-                        .foregroundColor(.gray)
-                }
-                .padding()
-                CandleView(title: "Times at \(locationName)", candles: events.dailyTimes(days: Int(selectedDays)).map { Candle(date: $0, start: $1, end: $2 ) })
-                .padding(.bottom, 50)
-//                .frame(height: 200)
-                BarView(title: "Hours at \(locationName) per day", data: events.dailyTotals(days: Int(selectedDays)))
-                .padding(.bottom)
-//                .frame(height: 200)
             }
         }
     }

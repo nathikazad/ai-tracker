@@ -64,6 +64,8 @@
 		FEC538772BBDE4E6006BDBDA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FEC538762BBDE4E6006BDBDA /* Assets.xcassets */; };
 		FEC5387B2BBDE4E6006BDBDA /* ShortcutExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FEC5386C2BBDE4E5006BDBDA /* ShortcutExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		FEC538812BBDF8C7006BDBDA /* WidgetIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEC538802BBDF8C7006BDBDA /* WidgetIntent.swift */; };
+		FECA5EEC2BE56970007ADE17 /* EventsComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = FECA5EEB2BE56970007ADE17 /* EventsComponents.swift */; };
+		FECA5EEE2BE569F6007ADE17 /* Time.swift in Sources */ = {isa = PBXBuildFile; fileRef = FECA5EED2BE569F6007ADE17 /* Time.swift */; };
 		FED942102BE0767900F0B24C /* Investor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FED9420F2BE0767900F0B24C /* Investor.swift */; };
 /* End PBXBuildFile section */
 
@@ -168,6 +170,8 @@
 		FEC538762BBDE4E6006BDBDA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FEC538782BBDE4E6006BDBDA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FEC538802BBDF8C7006BDBDA /* WidgetIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetIntent.swift; sourceTree = "<group>"; };
+		FECA5EEB2BE56970007ADE17 /* EventsComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsComponents.swift; sourceTree = "<group>"; };
+		FECA5EED2BE569F6007ADE17 /* Time.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Time.swift; sourceTree = "<group>"; };
 		FED9420F2BE0767900F0B24C /* Investor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Investor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -339,6 +343,7 @@
 				FE1C0EB02BC0A29300FF56AB /* Hasura.swift */,
 				FE129BE52BCB87B9004058EA /* LocationManager.swift */,
 				FE4594262BD9E713002B163E /* HealthKitManager.swift */,
+				FECA5EED2BE569F6007ADE17 /* Time.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -359,6 +364,7 @@
 			isa = PBXGroup;
 			children = (
 				FE977B0E2BD9C2A6008E743C /* SleepView.swift */,
+				FECA5EEB2BE56970007ADE17 /* EventsComponents.swift */,
 			);
 			path = Events;
 			sourceTree = "<group>";
@@ -529,7 +535,9 @@
 				FE9959542BC8B5B000F3187B /* RemindersView.swift in Sources */,
 				FE4F7BD22BA8FC600041CB6A /* BottomBar.swift in Sources */,
 				FE4F7BA52BA7D79E0041CB6A /* ContentView.swift in Sources */,
+				FECA5EEC2BE56970007ADE17 /* EventsComponents.swift in Sources */,
 				FE8811EB2BC799BF00B112A8 /* GoalsController.swift in Sources */,
+				FECA5EEE2BE569F6007ADE17 /* Time.swift in Sources */,
 				FEB366E62BDDF8F9000A48C0 /* Chart.swift in Sources */,
 				FE12C5EA2BC4B330002CDC60 /* GoalsView.swift in Sources */,
 				FE71B3882BD07BCE008F7D1A /* AudioRecorder.swift in Sources */,
