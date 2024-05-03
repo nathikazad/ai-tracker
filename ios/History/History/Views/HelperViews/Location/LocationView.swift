@@ -10,7 +10,7 @@ struct LocationDetailView: View {
     @State var events: [EventModel] = []
     @State private var selectedDays: Double = 7
     @State private var maxDays: Double = 7
-    @State private var selectedTab: Int = 1
+    @State private var selectedTab: SelectedTab = .graphs
     
     
     var location: LocationModel
@@ -24,37 +24,9 @@ struct LocationDetailView: View {
                     events = resp
                     maxDays = resp.maxDays
                     selectedDays = min(maxDays, 7)
-                    selectedTab = (events.count > 1) ? 1 :0
+                    selectedTab = (events.count > 1) ? SelectedTab.graphs : SelectedTab.events
                 }
             }
-        }
-    }
-    
-    fileprivate func TabBar() -> HStack<TupleView<(some View, some View)>> {
-        return HStack {
-            Button(action: {
-                selectedTab = 0
-            }) {
-                Text("Graph")
-                    .foregroundColor(selectedTab == 0 ? .gray : .white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(selectedTab == 0 ? Color.white : Color.gray)
-                    .cornerRadius(5)
-            }
-            .disabled(selectedTab == 0)
-            
-            Button(action: {
-                selectedTab = 1
-            }) {
-                Text("Check ins")
-                    .foregroundColor(selectedTab == 1 ? .gray : .white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(selectedTab == 1 ? Color.white : Color.gray)
-                    .cornerRadius(5)
-            }
-            .disabled(selectedTab == 1)
         }
     }
     
@@ -85,18 +57,18 @@ struct LocationDetailView: View {
             }
             .frame(height: 200)
             LocationName()
-            if selectedTab == 0 {
-                TabBar()
-                CheckInsView(events: events)
+            if selectedTab == .events {
+                TabBar(selectedTab: $selectedTab)
+                EventsListView(events: $events)
             } else {
                 VStack {
                     if(location.id != nil) {
                         if(events.count > 2) {
-                            TabBar()
+                            TabBar(selectedTab: $selectedTab)
                         }
                         SliderView(selectedDays: $selectedDays, maxDays: $maxDays)
                         CountView(selectedDays: $selectedDays, maxDays: $maxDays, events:$events)
-                        GraphView(selectedDays: $selectedDays, events:$events)
+                        GraphView(selectedDays: $selectedDays, events:$events, offsetHours: locationName == "Home" ? 5 : 0)
                     }
                 }
             }
@@ -113,17 +85,5 @@ struct LocationDetailView: View {
             locationName = ""
         }
         fetchLocationDetails()
-    }
-    
-    struct CheckInsView: View {
-        var events: [EventModel] // Assume Event is the type of the events array
-        var body: some View {
-            Section(header: Text("Check-ins")) {
-                ForEach(events, id: \.id) { event in
-                    Text(event.formattedTimeWithDate)
-                        .font(.subheadline)
-                }
-            }
-        }
     }
 }

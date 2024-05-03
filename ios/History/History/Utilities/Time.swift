@@ -98,6 +98,16 @@ extension Date {
         return hours + (minutes / 60.0)
     }
     
+    func addHours(_ hoursToAdd: Int) -> Date {
+        return Calendar.currentInLocal.date(byAdding: .hour, value: hoursToAdd, to: self)!
+    }
+    var hourInAmPm: String {
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone.current
+        formatter.dateFormat = "h a"
+        return formatter.string(from: self)
+    }
+    
     var dateWithHourAndMinute: Date {
         let calendar = Calendar.currentInLocal
         let components = calendar.dateComponents([.hour, .minute], from: self)

@@ -389,18 +389,18 @@ extension [EventModel] {
                 let startDateString = dateFormatter.string(from: utcStartTime)
                 let endDateString = dateFormatter.string(from: utcEndTime)
                 
-                print("Local start date \(utcStartTime) end date \(utcEndTime)")
+//                print("Local start date \(utcStartTime) end date \(utcEndTime)")
 
                 // Split events spanning multiple days
                 if startDateString != endDateString {
                     print("Event spans multiple days")
                     let midnight = utcStartTime.endOfDay
-                    print("\(utcStartTime.formattedSuperShortDate) start date \(utcStartTime.toLocal) end date \(midnight.addMinute(-1).toLocal)")
-                    print("\(utcEndTime.formattedSuperShortDate) start date \(midnight.toLocal) end date \(utcEndTime.toLocal)")
+//                    print("\(utcStartTime.formattedSuperShortDate) start date \(utcStartTime.toLocal) end date \(midnight.addMinute(-1).toLocal)")
+//                    print("\(utcEndTime.formattedSuperShortDate) start date \(midnight.toLocal) end date \(utcEndTime.toLocal)")
                     dailyTimes.append((utcStartTime.formattedSuperShortDate, utcStartTime, midnight.addMinute(-1)))
                     dailyTimes.append((utcEndTime.formattedSuperShortDate, midnight, utcEndTime))
                 } else {
-                    print("Event within the same day")
+//                    print("Event within the same day")
                     dailyTimes.append((utcStartTime.formattedSuperShortDate, utcStartTime, utcEndTime))
                 }
             }

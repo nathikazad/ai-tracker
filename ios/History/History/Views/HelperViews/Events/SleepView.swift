@@ -5,6 +5,7 @@ struct SleepView: View {
     @State var events: [EventModel] = []
     @State private var selectedDays: Double = 7
     @State private var maxDays: Double = 7
+    @State private var selectedTab: SelectedTab = .graphs
 
 
     private func fetchSleepDetails() {
@@ -20,39 +21,22 @@ struct SleepView: View {
     }
 
     var body: some View {
-        TabView {
-            if(events.count > 1) {
-                ScrollView {
-                    VStack {
-                        SliderView(selectedDays: $selectedDays, maxDays: $maxDays)
-                        CountView(selectedDays: $selectedDays, maxDays: $maxDays, events:$events)
-                        GraphView(selectedDays: $selectedDays, events:$events)
-                    }
-                }
-                .tabItem {
-                    Label("Graphs", systemImage: "chart.bar.xaxis")
-                }
-            }
-            SleepEventsListView(events: $events)
-                .tabItem {
-                    Label("Events", systemImage: "list.bullet")
-                }
-                .onAppear(perform: fetchSleepDetails)
-        }
-    }
-}
-
-struct SleepEventsListView: View {
-    @Binding var events: [EventModel]
-
-    var body: some View {
         List {
-            Section(header: Text("Events")) {
-                ForEach(events, id: \.id) { event in
-                    Text(event.formattedTimeWithDateAndX)
-                        .font(.subheadline)
+            if selectedTab == .events {
+                TabBar(selectedTab: $selectedTab)
+                EventsListView(events: $events)
+            } else {
+                VStack {
+                    if(events.count > 2) {
+                        TabBar(selectedTab: $selectedTab)
+                    }
+                    SliderView(selectedDays: $selectedDays, maxDays: $maxDays)
+                    CountView(selectedDays: $selectedDays, maxDays: $maxDays, events:$events)
+                    GraphView(selectedDays: $selectedDays, events:$events, offsetHours: 5)
                 }
             }
         }
+        .onAppear(perform: fetchSleepDetails)
     }
 }
+

@@ -72,27 +72,35 @@ extension [Candle] {
 struct CandleView: View {
     var title: String
     var candles: [Candle]
-    
+    var offsetHours: Int = 0
     var body: some View {
         return Section(header: Text(title)) {
             Chart(candles, id:\.date) {
                 
                 RectangleMark(
-                    x: .value("date", Calendar.current.startOfDay(for:$0.start)),
-                    yStart: .value("start", $0.start.dateWithHourAndMinute),
-                    yEnd: .value("end", $0.end.dateWithHourAndMinute),
+                    x: .value("date", Calendar.current.startOfDay(for:$0.start.addHours(offsetHours))),
+                    yStart: .value("start", $0.start.addHours(offsetHours).dateWithHourAndMinute),
+                    yEnd: .value("end", $0.end.addHours(offsetHours).dateWithHourAndMinute),
                     width: 4
                 )
             }
             .chartXAxis {
                 setLabels(count: candles.countOfUniqueDays)
             }
+            .chartYAxis {
+                AxisMarks(values: .stride(by: .hour, count: 1)) { value in
+                    if let date = value.as(Date.self) {
+                        let hour = Calendar.current.component(.hour, from: date)
+                        if hour % 2 == 0 {
+                            AxisValueLabel(date.addHours(-offsetHours).hourInAmPm)
+                        }
+                    }
+                    AxisGridLine()
+                    AxisTick()
+                }
+            }
             .frame(height: 200)
             .padding()
-            .onAppear {
-                print(candles.map {$0.start.formattedTime })
-                print(candles.map {$0.start.dateWithHourAndMinute.formattedTime })
-            }
         }
     }
 }
