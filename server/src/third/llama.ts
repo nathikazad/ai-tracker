@@ -12,8 +12,13 @@ const groq = new Groq(
 
     }
 )
-
-export async function llamaComplete(prompt: string, temperature: number | undefined = undefined, max_tokens: number = 100, toLowerCase : boolean = true) {
+interface CompleteOptions {
+    temperature?: number,
+    max_tokens?: number,
+    toLowerCase?: boolean
+    model?: "8b" | "70b"
+}
+export async function llamaComplete(prompt: string, completeOptions?: CompleteOptions): Promise<string> {
     let startTime = Date.now();
     let r = await groq.chat.completions.create({
         messages: [
@@ -22,60 +27,19 @@ export async function llamaComplete(prompt: string, temperature: number | undefi
                 content: prompt
             }
         ],
-        model: "llama3-8b-8192",
+        model: completeOptions?.model == "70b" ? "llama3-70b-8192" : "llama3-8b-8192",
       
-      max_tokens: max_tokens,
-      temperature: temperature
+      max_tokens: completeOptions?.max_tokens,
+      temperature: completeOptions?.temperature
     });
     let endTime = Date.now();
-    console.log(`Time taken: ${endTime - startTime}ms`);
+    // console.log(`Time taken: ${endTime - startTime}ms`);
     // console.log(r.usage)
     let message =  r.choices[0].message.content
-    return toLowerCase ? message.replace(/\n/g, "").replace(/"/g, '').trim().toLocaleLowerCase() : message
+    return completeOptions?.toLowerCase ? message.replace(/\n/g, "").replace(/"/g, '').trim().toLocaleLowerCase() : message
 }
 
-export function oldExtractJsonAndNote(input: string): { json: any | null, note: string | undefined } {
-    // Regular expression to extract JSON between triple backticks
-    const jsonRegex = /```([\s\S]*?)```/;
-    const jsonMatch = input.match(jsonRegex);
-
-    // Extract the JSON data
-    let jsonData = jsonMatch ? jsonMatch[1].trim() : null;
-
-    // Remove comments from JSON (simple way to handle end-of-line comments)
-    if (jsonData) {
-        jsonData = jsonData.replace(/\/\/.*$/gm, '').trim();
-        // Replace curly double quotes (“ ”) with straight double quotes (")
-        jsonData = jsonData.replace(/[\u201C\u201D]/g, '"');
-        // Replace curly single quotes (‘ ’) with straight single quotes (')
-        jsonData = jsonData.replace(/[\u2018\u2019]/g, "'");
-    }
-
-    // Parse JSON if valid JSON data is extracted
-    let parsedJson = null;
-    if (jsonData) {
-        try {
-            parsedJson = JSON.parse(jsonData);
-        } catch (error) {
-            console.error('Failed to parse JSON:', error);
-            console.error('JSON:', jsonData);
-            parsedJson = null;
-        }
-    }
-
-    // Remove the JSON block from the input to isolate the note
-    let remainingText = input.replace(jsonRegex, "").trim();
-
-    // Extract the note, if any, that comes after the JSON block
-    let noteData = remainingText.length > 0 ? remainingText : null;
-
-    return {
-        json: parsedJson,
-        note: noteData?.split('\n').map(line => line.trim()).join(' ')
-    };
-}
-
-export function extractJsonAndNote(jsonString: string): any {
+export function extractJson(jsonString: string): any {
     let jsonData = jsonString.slice(jsonString.indexOf('{'), jsonString.lastIndexOf('}') + 1);
     // console.log(jsonSubString);
     if (jsonData) {

@@ -3,20 +3,82 @@ import { getHasura } from "./config";
 import { $, events_bool_exp } from "./generated/graphql-zeus";
 import { toPST } from "./helper/time";
 // import { $ } from "./generated/graphql-zeus";
+import fs from 'fs'
+import { extractJson, llamaComplete } from "./third/llama";
+
+
+async function main() {
+    // getEvents(1, "I am feeling something", 'feeling.json', 0.2)
+    await classify("Going to sleep now.", "11:00pm")
+    // await classify("I'm feeling pretty exhausted and have had a headache for the last hour. I think its because I skipped dinner yesterday, I have to investigate to see if it is a repeating pattern", "8:00am")
+    // await classify2("I woke up 7am, went running for an hour, then had breakfast and went to work. I had a meeting at 10am and then I just finished lunch at 12pm", "12:10pm")
+    // await classify2("I’m leaving office. I couldn’t get anything done. I feel so irritated.", "6pm")
+    // await classify("I did the normal routine and also I added some pull-ups. I did 15 minutes on the treadmill at very low speed and also tried a balancing exercise with the left glute activated. It seemed pretty good. I'm going to keep doing both of these.", "2:00pm")
+    // await classify2("Just got back from dancing, it wasn't so great, people were a bit too snobbish. I might have injured my knee, it hurts.", "11pm")
+    // await classifyCategoryAndStatus("I just lost an hour trying to fix a stupid charts bug", "3:00pm")
+    // await classifyCategoryAndStatus("I am going to swim for 20 minutes", "12:10pm")
+    // await classifyCategoryAndStatus("I plan to swim at 1pm, for 40 minutes", "12:10pm")
+    // await classifyCategoryAndStatus("I went to trader joe's and spent $100", "7:00pm")
+    // await classifyCategoryAndStatus("I swam for 20 minutes, felt amazing", "12:40pm")
+    // await classifyCategoryAndStatus("I will be with my dentist between 1pm to 2pm", "12:40pm")
+    // await classifyCategoryAndStatus("I was be with my dentist between 10am to 11am", "12:40pm")
+    // getDuration("I am going to swim for 20 minutes starting at 12:10pm");
+    // let output = await llamaComplete(`Tell me something interesting`)
+}
+main()
+
+interface Event {
+    original: string;
+    recordedAt: string;
+    event: string;
+    status: 'planning' | 'ongoing' | 'completed';
+    category: 'sleeping' | 'feeling' | 'meeting' | 'reading' | 'consuming' | 'praying' | 'shopping' | 'dancing' | 'working' | 'working out' | 'other';
+    start_time: string;
+    duration: string;
+}
+
+async function classify(sentence: string, recordedTime:string) {
+    console.log(`${sentence} at ${recordedTime}`);
+    let prompt = `Convert the above sentence from user into a structured event.
+    Give me output as json object, prefixed and suffixed by triple backticks, with only the fields status and category
+    status: as one of following.
+        completed: events that are completed signified with use of past tense.
+        ongoing: event that are happening now or about to happen,
+        planning: events that are planned
+    category: as one of sleeping, dreaming, feeling, meeting, reading, dreaming, eating, praying, shopping, dancing, working, working out or other.`
+    let output = await llamaComplete(`User said:'${sentence}' at time: ${recordedTime}.\n ${prompt}`)
+    let event = {
+        ...extractJson(output),
+        original: sentence
+    }
+    // console.log(event);
+    
+    await getTemporalInformation(event, recordedTime);
+    console.log("====================================");
+}
+
+async function getTemporalInformation(event: Event, recordedTime: string) {
+    // console.log(`Event: ${event.category} status:${event.status}, ${event.description}`);
+    let prompt = `Convert the above sentence from user into a structured event 
+        Give me output as json object, prefixed and suffixed by triple backticks, with only the fields start_time and duration.
+        start_time: the time event was started or will start, in 'hh:mm am/pm or null if not specified',
+        duration: specify the time take for the event in 'hh:mm' or null if not specified,
+        Give me output as json object(prefixed by triple backticks) with fields:
+        `
+    let fullPrompt = `User said '${event.original} at time ${recordedTime}'\n ${prompt}`
+    // console.log(fullPrompt);
+    let output = await llamaComplete(fullPrompt)
+    let newEvent = {
+        ...event,
+        ...extractJson(output)
+    };
+    console.log(newEvent);
+    
+}
 
 interface SleepData {
     sleep: string[];
     wake: string[];
-}
-
-// const data: SleepData = {
-//     sleep: ["22:30", "23:00", "21:45", "22:15", "23:30", "00:00", "21:00", "22:45"],
-//     wake: ["6:30", "6:45", "6:15", "6:50", "7:00", "6:40", "6:45", "6:35"]
-// };
-// find the probablity of distribution of waking up before 6:30 given the sleep time
-async function main() {
-    await getStayEvents()
-    // get correlation between wake time and office arrival
 }
 async function getProbDistr() {
     let data = await getWakeAndSleepTimes();
@@ -56,7 +118,6 @@ async function getProbDistr() {
         console.log(`${sleepHours[index]} - ${probability}%`);
     })
 }
-main()
 
 async function getWakeAndSleepTimes() {
     let resp = await getHasura().query({

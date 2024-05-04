@@ -4,6 +4,7 @@ import fs from 'fs'
 import { createEmbedding } from '../third/openai';
 import { getHasura } from '../config';
 import { addHoursToTimestamp, getCostTimeInSeconds, secondsToHHMM, toPST } from "../helper/time";
+import { llamaComplete } from "../third/llama";
 
 interface Event {
     id: number;
@@ -11,12 +12,16 @@ interface Event {
     content?: string;
 }
 
+
 async function main() {
-    // getEvents(1, "trader joes", 'office.json', 0.2)
-    // getEvents(1, "going to sleep", 'sleep.json')
+    getEvents(1, "trader joes", 'office.json', 0.2)
+    //   for await (const event of replicate.stream("meta/meta-llama-3-70b-instruct", { input })) {
+    //     process.stdout.write(event.toString());
+    //   };
+    // getEvents(1, "I am going to sleep or I slept", 'sleep.json', 0.3)
     // findMatches()
     // writeToDatabase(1)
-    readWatchData(1)
+    // readWatchData(1)
     // readWatchData2(1)
 }
 main()
@@ -46,7 +51,7 @@ function matchEvents(sleepEvents: Event[], wakeEvents: Event[]): { wake?: Event 
         if (matchedSleep) {
             sleepEventsUsed.add(matchedSleep.id);
             matchedData.push({ wake, sleep: matchedSleep });
-        } 
+        }
         // else {
         //     // No appropriate sleep event found; push wake event with no matching sleep
         //     matchedData.push({ wake, sleep: null });
@@ -63,8 +68,10 @@ function matchEvents(sleepEvents: Event[], wakeEvents: Event[]): { wake?: Event 
     return matchedData;
 }
 
-async function getEvents(userId: number, phrase: string, filename: string, threshold: number) {
+export async function getEvents(userId: number, phrase: string, filename: string, threshold: number) {
     let embedding = await createEmbedding(phrase)
+    // console.log(JSON.stringify(embedding));
+
     // get interactions for user id 1 only after 2024-04-24T13:13:48.215+00:00
     let matches = await getHasura().query({
         match_interactions: [{
@@ -79,22 +86,23 @@ async function getEvents(userId: number, phrase: string, filename: string, thres
         }, {
             content: true,
             timestamp: true,
-            id: true
+            id: true,
+            match_score: true
         }]
     }, {
         "embedding": JSON.stringify(embedding)
     });
-    matches.match_interactions.forEach((match) => {
-        console.log(match.content)
-    })
-    fs.writeFileSync("data/"+filename, JSON.stringify(matches));
+    // matches.match_interactions.forEach((match) => {
+    //     console.log(match.content)
+    // })
+    fs.writeFileSync("data/" + filename, JSON.stringify(matches));
 }
 
 
 
 async function readWatchData(userId: number) {
     console.log('Reading watch data');
-    
+
     const matches: { sleep?: Event, wake?: Event }[] = JSON.parse(fs.readFileSync('data/matchedEvents.json', 'utf-8'));
     // const objectsToInsert = [];  // Array to hold all objects for a single mutation
 
@@ -124,8 +132,8 @@ async function readWatchData(userId: number) {
         //         _lt: addHoursToTimestamp(end_time!, 4)
         //     }
         // }
-       
-        
+
+
         const client = getHasura();
         let resp = await client.query({
             events: [{
@@ -148,7 +156,7 @@ async function readWatchData(userId: number) {
             }]
         })
         if (resp.events.length > 0) {
-            console.log(`Event already exists for ID ${resp.events[0].id}`);
+
             let actual_start_time = resp.events[0].start_time
             let actual_end_time = resp.events[0].end_time
             let str = ``
@@ -159,9 +167,12 @@ async function readWatchData(userId: number) {
 
             if (actual_end_time && end_time) {
                 str += `\n\twake time: \n\t\tme:${toPST(end_time)}\n\t\twatch:${toPST(actual_end_time)}`
-            //     str += `\n\tend diff: ${differnceInMinutes(actual_end_time, end_time)}\n`
+                //     str += `\n\tend diff: ${differnceInMinutes(actual_end_time, end_time)}\n`
             }
-            console.log(str)
+            if (toPST(end_time) != toPST(actual_end_time)) {
+                console.log(`Event already exists for ID ${resp.events[0].id}`);
+                console.log(str)
+            }
             await getHasura().mutation({
                 update_events_by_pk: [{
                     pk_columns: {
@@ -175,21 +186,26 @@ async function readWatchData(userId: number) {
                     id: true
                 }]
             })
+            // if (toPST(end_time) != toPST(actual_end_time)) {
+            // console.log(`Event already exists for ID ${resp.events[0].id}`);
+            // console.log(str)
+
+            // }
             // continue;
         } else {
-            console.log(`Event does not exist`)
+            console.log(`Event does not exist ${toPST(start_time)} - ${toPST(end_time)}`)
         }
     }
 }
 
 
-export async function writeToDatabase(userId:number) {
+export async function writeToDatabase(userId: number) {
     const matches: { sleep?: Event, wake?: Event }[] = JSON.parse(fs.readFileSync('matchedEvents.json', 'utf-8'));
     // const objectsToInsert = [];  // Array to hold all objects for a single mutation
 
     for (const match of matches) {
         let start_time
-        let end_time  
+        let end_time
         let cost_time = 0;
 
         if (match.sleep) {
@@ -206,7 +222,7 @@ export async function writeToDatabase(userId:number) {
             continue
         }
         let metadata = {}
-        if(cost_time != 0) {
+        if (cost_time != 0) {
             metadata = {
                 time_taken: secondsToHHMM(cost_time)
             };
@@ -244,5 +260,5 @@ export async function writeToDatabase(userId:number) {
         //     cost_time: cost_time,
         //     metadata: metadata
         // });
-    }    
+    }
 }
