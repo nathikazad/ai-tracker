@@ -36,7 +36,7 @@ export async function llamaComplete(prompt: string, completeOptions?: CompleteOp
     // console.log(`Time taken: ${endTime - startTime}ms`);
     // console.log(r.usage)
     let message =  r.choices[0].message.content
-    return completeOptions?.toLowerCase ? message.replace(/\n/g, "").replace(/"/g, '').trim().toLocaleLowerCase() : message
+    return completeOptions?.toLowerCase ? message.toLocaleLowerCase() : message
 }
 
 export function extractJson(jsonString: string): any {

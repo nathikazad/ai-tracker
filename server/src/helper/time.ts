@@ -1,5 +1,6 @@
 export function toDate(dateString: string): Date {
     dateString = dateString.split('.')[0];  
+    dateString = dateString.split('+')[0];  
     dateString += dateString.endsWith('Z') ? '' : 'Z';
     return new Date(dateString);
 }

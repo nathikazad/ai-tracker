@@ -1,5 +1,7 @@
 
-import { Classification, classifyText } from "../resources/logic"
+// import { Classification, classifyText } from "../../resources/logic"
+
+import { Classification, classifyText } from "../../resources/logic";
 
 async function main() {
     // check("I am working on anki now", Classification.Present)

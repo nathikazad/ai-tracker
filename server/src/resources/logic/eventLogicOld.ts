@@ -1,6 +1,6 @@
 import { log } from "console";
 import { extractJson, llamaComplete } from "../../third/llama";
-import { complete4, createEmbedding } from "../../third/openai";
+import { createEmbedding } from "../../third/openai";
 import fs from 'fs'
 
 export enum Category {
@@ -8,16 +8,15 @@ export enum Category {
     Meeting = "Meeting",
     Feeling = "Feeling",
     Reading = "Reading",
-    Learning = "Learning",
     Eating = "Eating",
     Cooking = "Cooking",
     Praying = "Praying",
     Shopping = "Shopping",
-    Chores = "Chores",
     Dancing = "Dancing",
     Working = "Working",
     Exercising = "Exercising",
-    Distraction = "Distraction"
+    Distraction = "Distraction",
+    Laundry = "Laundry",
 }
 
 export const categoryDescriptions: { [key in Category]: string } =
@@ -26,12 +25,11 @@ export const categoryDescriptions: { [key in Category]: string } =
     [Category.Meeting]: "If a user is with someone, meeting or speaking to someone, going to a party, get together or or an event",
     [Category.Feeling]: "If a user is feeling a certain way, emotionally or physically",
     [Category.Reading]: "If a user is reading or listening to a book.",
-    [Category.Learning]: "If a user is learning or practicing something",
     [Category.Eating]: "If a user is eating or drinking something",
     [Category.Cooking]: "If a user is cooking or making something to eat",
+    [Category.Laundry]: "If a user is doing laundry like washing clothes",
     [Category.Praying]: "If a user is praying",
     [Category.Shopping]: "If a user is shopping or buying something",
-    [Category.Chores]: "If a user is doing chores or cleaning or something similar",
     [Category.Dancing]: "If a user is talking about dancing",
     [Category.Working]: "If a user is working or doing something related to work",
     [Category.Exercising]: "If a user is exercising or working out, including gym and cardio",
@@ -49,7 +47,6 @@ export interface Interaction {
     recordedAt: string;
 }
 export interface ASEvent {
-    sentence?: string;
     tense: Tense
     categories: Category[];
     startTime?: string | null;
@@ -57,22 +54,26 @@ export interface ASEvent {
     cost?: string | null;
 }
 
-export async function extractEvents(interaction: Interaction): Promise<ASEvent> {
-    // let events: ASEvent[] = [];
-    let sentence = interaction.statement;
-    let categories = await extractCategories(sentence);
-    // console.log(`${sentence}: ${categories}`);
-    let tense = await extractTense(sentence);
-    let temporal = await extractTemporalInformation(sentence, interaction.recordedAt, categories, tense);
-    let event: ASEvent = {
-        sentence: sentence,
-        categories: categories,
-        tense: tense,
-        startTime: convertTimeFormat(temporal.start_time),
-        endTime: convertTimeFormat(temporal.end_time),
+export async function extractEvents(interaction: Interaction): Promise<ASEvent[]> {
+    let events: ASEvent[] = [];
+    // let sentence = interaction.statement;
+    let sentences = await extractMultipleEvents(interaction.statement);
+    log(sentences);
+    for (let sentence of sentences) {
+        console.log(sentence);
+        let categories = await extractCategories(sentence);
+        // console.log(`${sentence}: ${categories}`);
+        let tense = await extractTense(sentence);
+        let temporal = await extractTemporalInformation(sentence, interaction.recordedAt, categories, tense);
+        let event: ASEvent = {
+            categories: categories,
+            tense: tense,
+            startTime: convertTimeFormat(temporal.start_time),
+            endTime: convertTimeFormat(temporal.end_time),
+        }
+        events.push(event);
     }
-    return event
-
+    return events;
 
     function convertTimeFormat(timeStr: string | null): string | null {
         if (!timeStr) {
@@ -108,46 +109,39 @@ export async function extractMultipleEvents(sentence: string): Promise<string[]>
     }
 
     return results;
-}
 
-export async function breakdown(sentence: string): Promise<string> {
-    log(sentence)
-    let prompt = `
-    Given a sentence: "${sentence}"
-    How many main actions is the user doing?
-    Adverbs modifying the action should be considered as part of the action.
-    Don't count verbs like have, going, is, am, got and need as main actions.
-    If there is a gerund, count it as a verb but not the verb preceding it.
-    
-    Output specs:
-    Give me output as json prefixed and suffixed by triple backticks,
-    With fields
-        count: number
-        actions: string[]
-    '\n`
-    log(prompt)
-    let output = await complete4(prompt, 0.1)
-    // let output = await llamaComplete(prompt, {
-    //     model: "70b",
-    //     temperature: 0.1
-    // })
+    async function breakdown(sentence: string): Promise<string> {
+        let prompt = `
+        Given a sentence: "${sentence}"
+        How many sentences are there in this statement
+        Give me output as a single number
+        '\n`
+        let output = await llamaComplete(prompt, {
+            model: "70b",
+            temperature: 0.1
+        })
 
-    // let json = extractJson(output);
-    // let prompt2 = `
-    // Given a sentence: "${sentence}"
-    
+        let totalSentences = parseInt(output);
+        if (totalSentences > 5) {
+            return `1. ${sentence}`
+            // need a better check to see if user is recounting a story or dream or something
+        }
+        else if (totalSentences > 1) {
+            let prompt2 = `
+            Given a sentence: "${sentence}"
+            Break down the statement into ${totalSentences} events, print them as numbered list of events separated by newlines.
+            Say each one in first person
+            Include time information only if given`
+            let output = await llamaComplete(prompt2, {
+                model: "70b",
+                temperature: 0.1
+            })
+            return output;
+        } else {
+            return `1. ${sentence}`
 
-    // '\n`
-    // let output2 = await llamaComplete(prompt, {
-    //     model: "70b",
-    //     temperature: 0.1
-    // })
-
-    // Include time information only if given otherwise don't say anything about time
-
-    // let totalSentences = parseInt(output);
-    // console.log(json); 
-    return output
+        }
+    }
 }
 
 export async function createEmbeddings() {
@@ -216,19 +210,18 @@ export async function extractCategories(sentence: string): Promise<Category[]> {
         }
         let prompt = `
         "${sentence}"\n
-        Based on the sentence above, classify the event into one or more of the following categories:`
+        Based on the sentence above and what the user is doing at the moment, classify the event into one or more of the following categories:`
         for (let category of filteredCategories) {
             prompt += `\n\t- ${category}: (${categoryDescriptions[category]})`
         }
-        prompt += `\n\t- None of the above`
         prompt += `\n\tGive me the name of the categories as an array of strings and nothing else`
         // console.log(prompt);
         let output = await llamaComplete(prompt, {
             toLowerCase: true,
-            model: "70b",
+            model: "8b",
             temperature: 0.1
         })
-        // console.log(output);
+        console.log(output);
 
         let categories = output.replace(/[\[\]]/g, '').split(',').map((s: string) => s.trim())
         // captitalize the first letter of each category
