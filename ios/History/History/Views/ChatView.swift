@@ -135,7 +135,7 @@ class ChatViewModel: ObservableObject {
             addMessage(message: message, sender: .User)
             Task {
                 do {
-                    let response = try await ServerCommunicator.sendPostRequest(to: parseTextEndpoint, body: ["text": message], token: Authentication.shared.hasuraJwt!)
+                    let response = try await ServerCommunicator.sendPostRequestAsync(to: parseTextEndpoint, body: ["text": message], token: Authentication.shared.hasuraJwt!, stackOnUnreachable: false)
                     addComputerMessage(message: "Your message has been recorded")
                     addOkButton()
                 } catch {

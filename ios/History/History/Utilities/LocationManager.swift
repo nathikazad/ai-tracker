@@ -7,10 +7,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     let locationManager = CLLocationManager()
     
     
-    private var locationUpdateDistanceFilter: CLLocationDistance {
-//        20
-        (currentState == .moving) ? 35 : 100
-    }
+    private let locationUpdateDistanceFilter: CLLocationDistance = 50 // meters
     private let movementDistanceThresholdWhenStationary: CLLocationDistance = 150 // meters
     private let movementDistanceThresholdWhenMoving: CLLocationDistance = 10 // meters
     private let timeToConsiderStationary: TimeInterval = 150 // seconds TODO: change back
@@ -137,8 +134,10 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
         print("LocationManager: LocationManager: receive new location")
         guard let location = locations.last else { return }
+        uploadLocationToServer(location)
         if(waitingForImmediateLocation) {
             print("LocationManager: LocationManager: Immediate location")
             stoppedMoving(currentLocation: location)
@@ -148,6 +147,22 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
             updateLocation(location)
         }
     }
+    
+    func uploadLocationToServer(_ location: CLLocation) {
+        guard let token = Authentication.shared.hasuraJwt else {
+            print("No token available")
+            return
+        }
+        Task {
+            print("sending location")
+            let body = [
+                "location": location.toJSON()
+            ]
+            ServerCommunicator.sendPostRequest(to: updateLocationEndpoint, body: body, token: token, stackOnUnreachable: true)
+        }
+    }
+    
+
     
     func updateLocation(_ location: CLLocation) {
         print("LocationManager: UpdateLocation: \(currentState), New location: \(location.coordinate.latitude), \(location.coordinate.longitude)")
@@ -251,7 +266,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         locationManager.startUpdatingLocation()
     }
     
-
+    
     func findLocationsOfInterest(location: CLLocation) async -> String? {
         print("LocationManager: findLocationsOfInterest: \(location)")
         let geocoder = CLGeocoder()
@@ -275,7 +290,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
             return nil
         }
     }
-
+    
     
     func stoppedMoving(currentLocation: CLLocation, notifyServer:Bool = true) {
         Task {
@@ -313,20 +328,22 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         print("LocationManager: SendToServer")
         print(body)
         Task {
-            do {
-                guard let data = try await ServerCommunicator.sendPostRequest(to: updateMovementEndpoint, body: body, token: Authentication.shared.hasuraJwt) else {
-                    print("Failed to receive data or no data returned")
-                    return
+            guard let token = Authentication.shared.hasuraJwt else {
+                print("No token available")
+                return
+            }
+            
+            ServerCommunicator.sendPostRequest(to: updateMovementEndpoint, body: body, token: token, stackOnUnreachable: true) { result in
+                switch result {
+                case .success(let data):
+                    guard let data = data else {
+                        print("No data returned")
+                        return
+                    }
+                    ServerCommunicator.printJson(data: data)
+                case .failure(let error):
+                    print("Error sending data to server or parsing server response: \(error.localizedDescription)")
                 }
-                if let json = try? JSONSerialization.jsonObject(with: data, options: []),
-                   let jsonData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted),
-                   let jsonString = String(data: jsonData, encoding: .utf8) {
-                    print("Received JSON: \(jsonString)")
-                } else {
-                    print("Failed to decode JSON data")
-                }
-            } catch {
-                print("Error sending data to server or parsing server response: \(error.localizedDescription)")
             }
         }
     }

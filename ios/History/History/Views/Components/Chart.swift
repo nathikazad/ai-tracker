@@ -73,6 +73,11 @@ struct CandleView: View {
     var title: String
     var candles: [Candle]
     var offsetHours: Int = 0
+    // let gradient = LinearGradient(
+    //         gradient: Gradient(colors: [Color.blue, Color.purple]),
+    //         startPoint: .top,
+    //         endPoint: .bottom
+    //     )
     var body: some View {
         return Section(header: Text(title)) {
             Chart(candles, id:\.date) {

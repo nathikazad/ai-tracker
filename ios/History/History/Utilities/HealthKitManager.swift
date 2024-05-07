@@ -152,14 +152,17 @@ class HealthKitManager {
                     ]
                 }
                 let body: [String: Any] = ["sleepData": sleepDataDicts]
-                do {
                     print("Send sleep data")
-                    try await ServerCommunicator.sendPostRequest(to: uploadSleepEndpoint, body: body, token: Authentication.shared.hasuraJwt)
-                    UserDefaults.standard.set(Date(), forKey: "lastUploadTime")
-                } catch {
-                    print("Error sending sleep data: \(error.localizedDescription)")
-                    return
-                }
+                    ServerCommunicator.sendPostRequest(to: uploadSleepEndpoint, body: body, token: Authentication.shared.hasuraJwt, stackOnUnreachable: true) { result in
+                        switch result {
+                        case .success:
+                            UserDefaults.standard.set(Date(), forKey: "lastUploadTime")
+                        case .failure(let error):
+                            print("Error sending sleep data: \(error.localizedDescription)")
+                        }
+                    }
+                    
+                
             }
             
         }

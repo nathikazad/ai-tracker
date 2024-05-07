@@ -87,7 +87,7 @@ class LocationsController: ObservableObject {
         ]
         Task {
             do {
-                guard let data = try await ServerCommunicator.sendPostRequest(to: createLocationEndpoint, body: body, token: Authentication.shared.hasuraJwt) else {
+                guard let data = try await ServerCommunicator.sendPostRequestAsync(to: createLocationEndpoint, body: body, token: Authentication.shared.hasuraJwt, stackOnUnreachable: false) else {
                     print("Failed to receive data or no data returned")
                     return
                 }

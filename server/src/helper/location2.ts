@@ -88,14 +88,14 @@ export async function addLocation(userId: number, location: Location) {
             }
         }
     }
-
-    function getStartOfDay(timestamp: string): string {
-        let date = new Date(timestamp);
-        date.setHours(0, 0, 0, 0);
-        return date.toISOString();
-    }
 }
 
+
+function getStartOfDay(timestamp: string): string {
+    let date = new Date(timestamp);
+    date.setUTCHours(0, 0, 0, 0);
+    return date.toISOString();
+}
 
 interface Cluster {
     points: Location[];
@@ -103,6 +103,43 @@ interface Cluster {
     centroidLong: number;
     startTime: string;
     endTime: string;
+}
+
+export async function updateMovements(userId: number) {
+    let client = getHasura();
+    let resp = await client.query({
+        user_movements: [
+            {
+                where: {
+                    user_id: {
+                        _eq: userId
+                    },
+                    date: {
+                        _eq: getStartOfDay(new Date().toISOString())
+                    }
+                }
+            },
+            {
+                id: true,
+                moves: [{}, true]
+            }
+        ]
+    });
+    let locations: Location[] = []
+    let moves = resp.user_movements[0].moves as any;
+    
+
+
+    for (let key in moves) {
+        locations.push({
+            lat: moves[key].lat,
+            lon: moves[key].lon,
+            timestamp: moves[key].timestamp,
+            accuracy: moves[key].accuracy
+        });
+    }
+    let centroids = calculateCentroids(locations, 100);
+    console.log(centroids);
 }
 
 export function calculateCentroids(data: Location[], minDistance: number): Cluster[] {

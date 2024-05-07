@@ -140,7 +140,7 @@ private func fetchHasuraJwt(appleKey: String, username: String? = nil, userLangu
         body["language"] = userLanguage
     }
     do {
-        guard let data = try await ServerCommunicator.sendPostRequest(to: jwtEndpoint, body: body, token: nil) else {
+        guard let data = try await ServerCommunicator.sendPostRequestAsync(to: jwtEndpoint, body: body, token: nil, stackOnUnreachable: false) else {
             print("Failed to receive data")
             return nil
         }
