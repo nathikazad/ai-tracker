@@ -1968,6 +1968,22 @@ the end). throws an error if top level container is not an array */
 		__typename?: true
 }>;
 	["jsonb"]:unknown;
+	/** Boolean expression to compare columns of type "jsonb". All fields are combined with logical 'AND'. */
+["jsonb_array_comparison_exp"]: {
+	/** is the array contained in the given array value */
+	_contained_in?:ValueTypes["jsonb"][],
+	/** does the array contain the given value */
+	_contains?:ValueTypes["jsonb"][],
+	_eq?:ValueTypes["jsonb"][],
+	_gt?:ValueTypes["jsonb"][],
+	_gte?:ValueTypes["jsonb"][],
+	_in:ValueTypes["jsonb"][],
+	_is_null?:boolean,
+	_lt?:ValueTypes["jsonb"][],
+	_lte?:ValueTypes["jsonb"][],
+	_neq?:ValueTypes["jsonb"][],
+	_nin:ValueTypes["jsonb"][]
+};
 	["jsonb_cast_exp"]: {
 	String?:ValueTypes["String_comparison_exp"]
 };
@@ -2284,6 +2300,9 @@ delete_objects_by_pk?: [{	id:number},ValueTypes["objects"]],
 delete_todos?: [{	/** filter the rows which have to be deleted */
 	where:ValueTypes["todos_bool_exp"]},ValueTypes["todos_mutation_response"]],
 delete_todos_by_pk?: [{	id:number},ValueTypes["todos"]],
+delete_user_movements?: [{	/** filter the rows which have to be deleted */
+	where:ValueTypes["user_movements_bool_exp"]},ValueTypes["user_movements_mutation_response"]],
+delete_user_movements_by_pk?: [{	id:number},ValueTypes["user_movements"]],
 delete_users?: [{	/** filter the rows which have to be deleted */
 	where:ValueTypes["users_bool_exp"]},ValueTypes["users_mutation_response"]],
 delete_users_by_pk?: [{	id:number},ValueTypes["users"]],
@@ -2347,6 +2366,12 @@ insert_todos?: [{	/** the rows to be inserted */
 insert_todos_one?: [{	/** the row to be inserted */
 	object:ValueTypes["todos_insert_input"],	/** upsert condition */
 	on_conflict?:ValueTypes["todos_on_conflict"]},ValueTypes["todos"]],
+insert_user_movements?: [{	/** the rows to be inserted */
+	objects:ValueTypes["user_movements_insert_input"][],	/** upsert condition */
+	on_conflict?:ValueTypes["user_movements_on_conflict"]},ValueTypes["user_movements_mutation_response"]],
+insert_user_movements_one?: [{	/** the row to be inserted */
+	object:ValueTypes["user_movements_insert_input"],	/** upsert condition */
+	on_conflict?:ValueTypes["user_movements_on_conflict"]},ValueTypes["user_movements"]],
 insert_users?: [{	/** the rows to be inserted */
 	objects:ValueTypes["users_insert_input"][],	/** upsert condition */
 	on_conflict?:ValueTypes["users_on_conflict"]},ValueTypes["users_mutation_response"]],
@@ -2511,6 +2536,27 @@ update_todos_by_pk?: [{	/** increments the numeric columns with given value of t
 	_set?:ValueTypes["todos_set_input"],	pk_columns:ValueTypes["todos_pk_columns_input"]},ValueTypes["todos"]],
 update_todos_many?: [{	/** updates to execute, in order */
 	updates:ValueTypes["todos_updates"][]},ValueTypes["todos_mutation_response"]],
+update_user_movements?: [{	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:ValueTypes["user_movements_append_input"],	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:ValueTypes["user_movements_delete_at_path_input"],	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:ValueTypes["user_movements_delete_elem_input"],	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:ValueTypes["user_movements_delete_key_input"],	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["user_movements_inc_input"],	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:ValueTypes["user_movements_prepend_input"],	/** sets the columns of the filtered rows to the given values */
+	_set?:ValueTypes["user_movements_set_input"],	/** filter the rows which have to be updated */
+	where:ValueTypes["user_movements_bool_exp"]},ValueTypes["user_movements_mutation_response"]],
+update_user_movements_by_pk?: [{	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:ValueTypes["user_movements_append_input"],	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:ValueTypes["user_movements_delete_at_path_input"],	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:ValueTypes["user_movements_delete_elem_input"],	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:ValueTypes["user_movements_delete_key_input"],	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["user_movements_inc_input"],	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:ValueTypes["user_movements_prepend_input"],	/** sets the columns of the filtered rows to the given values */
+	_set?:ValueTypes["user_movements_set_input"],	pk_columns:ValueTypes["user_movements_pk_columns_input"]},ValueTypes["user_movements"]],
+update_user_movements_many?: [{	/** updates to execute, in order */
+	updates:ValueTypes["user_movements_updates"][]},ValueTypes["user_movements_mutation_response"]],
 update_users?: [{	/** append existing jsonb value of filtered columns with new jsonb value */
 	_append?:ValueTypes["users_append_input"],	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
 	_delete_at_path?:ValueTypes["users_delete_at_path_input"],	/** delete the array element with specified index (negative integers count from
@@ -2994,6 +3040,19 @@ todos_aggregate?: [{	/** distinct select on columns */
 	order_by?:ValueTypes["todos_order_by"][],	/** filter the rows returned */
 	where?:ValueTypes["todos_bool_exp"]},ValueTypes["todos_aggregate"]],
 todos_by_pk?: [{	id:number},ValueTypes["todos"]],
+user_movements?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["user_movements_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["user_movements_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["user_movements_bool_exp"]},ValueTypes["user_movements"]],
+user_movements_aggregate?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["user_movements_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["user_movements_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["user_movements_bool_exp"]},ValueTypes["user_movements_aggregate"]],
+user_movements_by_pk?: [{	id:number},ValueTypes["user_movements"]],
 users?: [{	/** distinct select on columns */
 	distinct_on?:ValueTypes["users_select_column"][],	/** limit the number of rows returned */
 	limit?:number,	/** skip the first n rows. Use only with order_by */
@@ -3263,6 +3322,23 @@ todos_stream?: [{	/** maximum number of rows returned in a single batch */
 	batch_size:number,	/** cursor to stream the results returned by the query */
 	cursor?:ValueTypes["todos_stream_cursor_input"][],	/** filter the rows returned */
 	where?:ValueTypes["todos_bool_exp"]},ValueTypes["todos"]],
+user_movements?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["user_movements_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["user_movements_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["user_movements_bool_exp"]},ValueTypes["user_movements"]],
+user_movements_aggregate?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["user_movements_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["user_movements_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["user_movements_bool_exp"]},ValueTypes["user_movements_aggregate"]],
+user_movements_by_pk?: [{	id:number},ValueTypes["user_movements"]],
+user_movements_stream?: [{	/** maximum number of rows returned in a single batch */
+	batch_size:number,	/** cursor to stream the results returned by the query */
+	cursor?:ValueTypes["user_movements_stream_cursor_input"][],	/** filter the rows returned */
+	where?:ValueTypes["user_movements_bool_exp"]},ValueTypes["user_movements"]],
 users?: [{	/** distinct select on columns */
 	distinct_on?:ValueTypes["users_select_column"][],	/** limit the number of rows returned */
 	limit?:number,	/** skip the first n rows. Use only with order_by */
@@ -3551,6 +3627,220 @@ count?: [{	columns?:ValueTypes["todos_select_column"][],	distinct?:boolean},true
 ["todos_variance_fields"]: AliasType<{
 	current_count?:true,
 	goal_id?:true,
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** columns and relationships of "user_movements" */
+["user_movements"]: AliasType<{
+	date?:true,
+	id?:true,
+	movements?:true,
+moves?: [{	/** JSON select path */
+	path?:string},true],
+	user_id?:true,
+		__typename?: true
+}>;
+	/** aggregated selection of "user_movements" */
+["user_movements_aggregate"]: AliasType<{
+	aggregate?:ValueTypes["user_movements_aggregate_fields"],
+	nodes?:ValueTypes["user_movements"],
+		__typename?: true
+}>;
+	/** aggregate fields of "user_movements" */
+["user_movements_aggregate_fields"]: AliasType<{
+	avg?:ValueTypes["user_movements_avg_fields"],
+count?: [{	columns?:ValueTypes["user_movements_select_column"][],	distinct?:boolean},true],
+	max?:ValueTypes["user_movements_max_fields"],
+	min?:ValueTypes["user_movements_min_fields"],
+	stddev?:ValueTypes["user_movements_stddev_fields"],
+	stddev_pop?:ValueTypes["user_movements_stddev_pop_fields"],
+	stddev_samp?:ValueTypes["user_movements_stddev_samp_fields"],
+	sum?:ValueTypes["user_movements_sum_fields"],
+	var_pop?:ValueTypes["user_movements_var_pop_fields"],
+	var_samp?:ValueTypes["user_movements_var_samp_fields"],
+	variance?:ValueTypes["user_movements_variance_fields"],
+		__typename?: true
+}>;
+	/** append existing jsonb value of filtered columns with new jsonb value */
+["user_movements_append_input"]: {
+	moves?:ValueTypes["jsonb"]
+};
+	/** aggregate avg on columns */
+["user_movements_avg_fields"]: AliasType<{
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** Boolean expression to filter rows from the table "user_movements". All fields are combined with a logical 'AND'. */
+["user_movements_bool_exp"]: {
+	_and?:ValueTypes["user_movements_bool_exp"][],
+	_not?:ValueTypes["user_movements_bool_exp"],
+	_or?:ValueTypes["user_movements_bool_exp"][],
+	date?:ValueTypes["timestamptz_comparison_exp"],
+	id?:ValueTypes["Int_comparison_exp"],
+	movements?:ValueTypes["jsonb_array_comparison_exp"],
+	moves?:ValueTypes["jsonb_comparison_exp"],
+	user_id?:ValueTypes["Int_comparison_exp"]
+};
+	/** unique or primary key constraints on table "user_movements" */
+["user_movements_constraint"]:user_movements_constraint;
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+["user_movements_delete_at_path_input"]: {
+	moves?:string[]
+};
+	/** delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array */
+["user_movements_delete_elem_input"]: {
+	moves?:number
+};
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+["user_movements_delete_key_input"]: {
+	moves?:string
+};
+	/** input type for incrementing numeric columns in table "user_movements" */
+["user_movements_inc_input"]: {
+	id?:number,
+	user_id?:number
+};
+	/** input type for inserting data into table "user_movements" */
+["user_movements_insert_input"]: {
+	date?:ValueTypes["timestamptz"],
+	id?:number,
+	movements?:ValueTypes["jsonb"][],
+	moves?:ValueTypes["jsonb"],
+	user_id?:number
+};
+	/** aggregate max on columns */
+["user_movements_max_fields"]: AliasType<{
+	date?:true,
+	id?:true,
+	movements?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** aggregate min on columns */
+["user_movements_min_fields"]: AliasType<{
+	date?:true,
+	id?:true,
+	movements?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** response of any mutation on the table "user_movements" */
+["user_movements_mutation_response"]: AliasType<{
+	/** number of rows affected by the mutation */
+	affected_rows?:true,
+	/** data from the rows affected by the mutation */
+	returning?:ValueTypes["user_movements"],
+		__typename?: true
+}>;
+	/** on_conflict condition type for table "user_movements" */
+["user_movements_on_conflict"]: {
+	constraint:ValueTypes["user_movements_constraint"],
+	update_columns:ValueTypes["user_movements_update_column"][],
+	where?:ValueTypes["user_movements_bool_exp"]
+};
+	/** Ordering options when selecting data from "user_movements". */
+["user_movements_order_by"]: {
+	date?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	movements?:ValueTypes["order_by"],
+	moves?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** primary key columns input for table: user_movements */
+["user_movements_pk_columns_input"]: {
+	id:number
+};
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+["user_movements_prepend_input"]: {
+	moves?:ValueTypes["jsonb"]
+};
+	/** select columns of table "user_movements" */
+["user_movements_select_column"]:user_movements_select_column;
+	/** input type for updating data in table "user_movements" */
+["user_movements_set_input"]: {
+	date?:ValueTypes["timestamptz"],
+	id?:number,
+	movements?:ValueTypes["jsonb"][],
+	moves?:ValueTypes["jsonb"],
+	user_id?:number
+};
+	/** aggregate stddev on columns */
+["user_movements_stddev_fields"]: AliasType<{
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** aggregate stddev_pop on columns */
+["user_movements_stddev_pop_fields"]: AliasType<{
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** aggregate stddev_samp on columns */
+["user_movements_stddev_samp_fields"]: AliasType<{
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** Streaming cursor of the table "user_movements" */
+["user_movements_stream_cursor_input"]: {
+	/** Stream column input with initial value */
+	initial_value:ValueTypes["user_movements_stream_cursor_value_input"],
+	/** cursor ordering */
+	ordering?:ValueTypes["cursor_ordering"]
+};
+	/** Initial value of the column from where the streaming should start */
+["user_movements_stream_cursor_value_input"]: {
+	date?:ValueTypes["timestamptz"],
+	id?:number,
+	movements?:ValueTypes["jsonb"][],
+	moves?:ValueTypes["jsonb"],
+	user_id?:number
+};
+	/** aggregate sum on columns */
+["user_movements_sum_fields"]: AliasType<{
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** update columns of table "user_movements" */
+["user_movements_update_column"]:user_movements_update_column;
+	["user_movements_updates"]: {
+	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:ValueTypes["user_movements_append_input"],
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:ValueTypes["user_movements_delete_at_path_input"],
+	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:ValueTypes["user_movements_delete_elem_input"],
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:ValueTypes["user_movements_delete_key_input"],
+	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["user_movements_inc_input"],
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:ValueTypes["user_movements_prepend_input"],
+	/** sets the columns of the filtered rows to the given values */
+	_set?:ValueTypes["user_movements_set_input"],
+	/** filter the rows which have to be updated */
+	where:ValueTypes["user_movements_bool_exp"]
+};
+	/** aggregate var_pop on columns */
+["user_movements_var_pop_fields"]: AliasType<{
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** aggregate var_samp on columns */
+["user_movements_var_samp_fields"]: AliasType<{
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** aggregate variance on columns */
+["user_movements_variance_fields"]: AliasType<{
 	id?:true,
 	user_id?:true,
 		__typename?: true
@@ -5754,6 +6044,22 @@ the end). throws an error if top level container is not an array */
 			user_id?:number
 	},
 	["jsonb"]:any,
+	/** Boolean expression to compare columns of type "jsonb". All fields are combined with logical 'AND'. */
+["jsonb_array_comparison_exp"]: {
+	/** is the array contained in the given array value */
+	_contained_in?:PartialObjects["jsonb"][],
+	/** does the array contain the given value */
+	_contains?:PartialObjects["jsonb"][],
+	_eq?:PartialObjects["jsonb"][],
+	_gt?:PartialObjects["jsonb"][],
+	_gte?:PartialObjects["jsonb"][],
+	_in:PartialObjects["jsonb"][],
+	_is_null?:boolean,
+	_lt?:PartialObjects["jsonb"][],
+	_lte?:PartialObjects["jsonb"][],
+	_neq?:PartialObjects["jsonb"][],
+	_nin:PartialObjects["jsonb"][]
+},
 	["jsonb_cast_exp"]: {
 	String?:PartialObjects["String_comparison_exp"]
 },
@@ -6081,6 +6387,10 @@ the end). throws an error if top level container is not an array */
 	delete_todos?:PartialObjects["todos_mutation_response"],
 			/** delete single row from the table: "todos" */
 	delete_todos_by_pk?:PartialObjects["todos"],
+			/** delete data from the table: "user_movements" */
+	delete_user_movements?:PartialObjects["user_movements_mutation_response"],
+			/** delete single row from the table: "user_movements" */
+	delete_user_movements_by_pk?:PartialObjects["user_movements"],
 			/** delete data from the table: "users" */
 	delete_users?:PartialObjects["users_mutation_response"],
 			/** delete single row from the table: "users" */
@@ -6125,6 +6435,10 @@ the end). throws an error if top level container is not an array */
 	insert_todos?:PartialObjects["todos_mutation_response"],
 			/** insert a single row into the table: "todos" */
 	insert_todos_one?:PartialObjects["todos"],
+			/** insert data into the table: "user_movements" */
+	insert_user_movements?:PartialObjects["user_movements_mutation_response"],
+			/** insert a single row into the table: "user_movements" */
+	insert_user_movements_one?:PartialObjects["user_movements"],
 			/** insert data into the table: "users" */
 	insert_users?:PartialObjects["users_mutation_response"],
 			/** insert a single row into the table: "users" */
@@ -6189,6 +6503,12 @@ the end). throws an error if top level container is not an array */
 	update_todos_by_pk?:PartialObjects["todos"],
 			/** update multiples rows of table: "todos" */
 	update_todos_many?:(PartialObjects["todos_mutation_response"] | undefined)[],
+			/** update data of the table: "user_movements" */
+	update_user_movements?:PartialObjects["user_movements_mutation_response"],
+			/** update single row of the table: "user_movements" */
+	update_user_movements_by_pk?:PartialObjects["user_movements"],
+			/** update multiples rows of table: "user_movements" */
+	update_user_movements_many?:(PartialObjects["user_movements_mutation_response"] | undefined)[],
 			/** update data of the table: "users" */
 	update_users?:PartialObjects["users_mutation_response"],
 			/** update single row of the table: "users" */
@@ -6556,6 +6876,12 @@ the end). throws an error if top level container is not an array */
 	todos_aggregate?:PartialObjects["todos_aggregate"],
 			/** fetch data from the table: "todos" using primary key columns */
 	todos_by_pk?:PartialObjects["todos"],
+			/** fetch data from the table: "user_movements" */
+	user_movements?:PartialObjects["user_movements"][],
+			/** fetch aggregated fields from the table: "user_movements" */
+	user_movements_aggregate?:PartialObjects["user_movements_aggregate"],
+			/** fetch data from the table: "user_movements" using primary key columns */
+	user_movements_by_pk?:PartialObjects["user_movements"],
 			/** fetch data from the table: "users" */
 	users?:PartialObjects["users"][],
 			/** fetch aggregated fields from the table: "users" */
@@ -6698,6 +7024,14 @@ the end). throws an error if top level container is not an array */
 	todos_by_pk?:PartialObjects["todos"],
 			/** fetch data from the table in a streaming manner: "todos" */
 	todos_stream?:PartialObjects["todos"][],
+			/** fetch data from the table: "user_movements" */
+	user_movements?:PartialObjects["user_movements"][],
+			/** fetch aggregated fields from the table: "user_movements" */
+	user_movements_aggregate?:PartialObjects["user_movements_aggregate"],
+			/** fetch data from the table: "user_movements" using primary key columns */
+	user_movements_by_pk?:PartialObjects["user_movements"],
+			/** fetch data from the table in a streaming manner: "user_movements" */
+	user_movements_stream?:PartialObjects["user_movements"][],
 			/** fetch data from the table: "users" */
 	users?:PartialObjects["users"][],
 			/** fetch aggregated fields from the table: "users" */
@@ -6977,6 +7311,219 @@ the end). throws an error if top level container is not an array */
 		__typename?: "todos_variance_fields";
 			current_count?:number,
 			goal_id?:number,
+			id?:number,
+			user_id?:number
+	},
+	/** columns and relationships of "user_movements" */
+["user_movements"]: {
+		__typename?: "user_movements";
+			date?:PartialObjects["timestamptz"],
+			id?:number,
+			movements?:PartialObjects["jsonb"][],
+			moves?:PartialObjects["jsonb"],
+			user_id?:number
+	},
+	/** aggregated selection of "user_movements" */
+["user_movements_aggregate"]: {
+		__typename?: "user_movements_aggregate";
+			aggregate?:PartialObjects["user_movements_aggregate_fields"],
+			nodes?:PartialObjects["user_movements"][]
+	},
+	/** aggregate fields of "user_movements" */
+["user_movements_aggregate_fields"]: {
+		__typename?: "user_movements_aggregate_fields";
+			avg?:PartialObjects["user_movements_avg_fields"],
+			count?:number,
+			max?:PartialObjects["user_movements_max_fields"],
+			min?:PartialObjects["user_movements_min_fields"],
+			stddev?:PartialObjects["user_movements_stddev_fields"],
+			stddev_pop?:PartialObjects["user_movements_stddev_pop_fields"],
+			stddev_samp?:PartialObjects["user_movements_stddev_samp_fields"],
+			sum?:PartialObjects["user_movements_sum_fields"],
+			var_pop?:PartialObjects["user_movements_var_pop_fields"],
+			var_samp?:PartialObjects["user_movements_var_samp_fields"],
+			variance?:PartialObjects["user_movements_variance_fields"]
+	},
+	/** append existing jsonb value of filtered columns with new jsonb value */
+["user_movements_append_input"]: {
+	moves?:PartialObjects["jsonb"]
+},
+	/** aggregate avg on columns */
+["user_movements_avg_fields"]: {
+		__typename?: "user_movements_avg_fields";
+			id?:number,
+			user_id?:number
+	},
+	/** Boolean expression to filter rows from the table "user_movements". All fields are combined with a logical 'AND'. */
+["user_movements_bool_exp"]: {
+	_and?:PartialObjects["user_movements_bool_exp"][],
+	_not?:PartialObjects["user_movements_bool_exp"],
+	_or?:PartialObjects["user_movements_bool_exp"][],
+	date?:PartialObjects["timestamptz_comparison_exp"],
+	id?:PartialObjects["Int_comparison_exp"],
+	movements?:PartialObjects["jsonb_array_comparison_exp"],
+	moves?:PartialObjects["jsonb_comparison_exp"],
+	user_id?:PartialObjects["Int_comparison_exp"]
+},
+	/** unique or primary key constraints on table "user_movements" */
+["user_movements_constraint"]:user_movements_constraint,
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+["user_movements_delete_at_path_input"]: {
+	moves?:string[]
+},
+	/** delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array */
+["user_movements_delete_elem_input"]: {
+	moves?:number
+},
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+["user_movements_delete_key_input"]: {
+	moves?:string
+},
+	/** input type for incrementing numeric columns in table "user_movements" */
+["user_movements_inc_input"]: {
+	id?:number,
+	user_id?:number
+},
+	/** input type for inserting data into table "user_movements" */
+["user_movements_insert_input"]: {
+	date?:PartialObjects["timestamptz"],
+	id?:number,
+	movements?:PartialObjects["jsonb"][],
+	moves?:PartialObjects["jsonb"],
+	user_id?:number
+},
+	/** aggregate max on columns */
+["user_movements_max_fields"]: {
+		__typename?: "user_movements_max_fields";
+			date?:PartialObjects["timestamptz"],
+			id?:number,
+			movements?:PartialObjects["jsonb"][],
+			user_id?:number
+	},
+	/** aggregate min on columns */
+["user_movements_min_fields"]: {
+		__typename?: "user_movements_min_fields";
+			date?:PartialObjects["timestamptz"],
+			id?:number,
+			movements?:PartialObjects["jsonb"][],
+			user_id?:number
+	},
+	/** response of any mutation on the table "user_movements" */
+["user_movements_mutation_response"]: {
+		__typename?: "user_movements_mutation_response";
+			/** number of rows affected by the mutation */
+	affected_rows?:number,
+			/** data from the rows affected by the mutation */
+	returning?:PartialObjects["user_movements"][]
+	},
+	/** on_conflict condition type for table "user_movements" */
+["user_movements_on_conflict"]: {
+	constraint:PartialObjects["user_movements_constraint"],
+	update_columns:PartialObjects["user_movements_update_column"][],
+	where?:PartialObjects["user_movements_bool_exp"]
+},
+	/** Ordering options when selecting data from "user_movements". */
+["user_movements_order_by"]: {
+	date?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	movements?:PartialObjects["order_by"],
+	moves?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** primary key columns input for table: user_movements */
+["user_movements_pk_columns_input"]: {
+	id:number
+},
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+["user_movements_prepend_input"]: {
+	moves?:PartialObjects["jsonb"]
+},
+	/** select columns of table "user_movements" */
+["user_movements_select_column"]:user_movements_select_column,
+	/** input type for updating data in table "user_movements" */
+["user_movements_set_input"]: {
+	date?:PartialObjects["timestamptz"],
+	id?:number,
+	movements?:PartialObjects["jsonb"][],
+	moves?:PartialObjects["jsonb"],
+	user_id?:number
+},
+	/** aggregate stddev on columns */
+["user_movements_stddev_fields"]: {
+		__typename?: "user_movements_stddev_fields";
+			id?:number,
+			user_id?:number
+	},
+	/** aggregate stddev_pop on columns */
+["user_movements_stddev_pop_fields"]: {
+		__typename?: "user_movements_stddev_pop_fields";
+			id?:number,
+			user_id?:number
+	},
+	/** aggregate stddev_samp on columns */
+["user_movements_stddev_samp_fields"]: {
+		__typename?: "user_movements_stddev_samp_fields";
+			id?:number,
+			user_id?:number
+	},
+	/** Streaming cursor of the table "user_movements" */
+["user_movements_stream_cursor_input"]: {
+	/** Stream column input with initial value */
+	initial_value:PartialObjects["user_movements_stream_cursor_value_input"],
+	/** cursor ordering */
+	ordering?:PartialObjects["cursor_ordering"]
+},
+	/** Initial value of the column from where the streaming should start */
+["user_movements_stream_cursor_value_input"]: {
+	date?:PartialObjects["timestamptz"],
+	id?:number,
+	movements?:PartialObjects["jsonb"][],
+	moves?:PartialObjects["jsonb"],
+	user_id?:number
+},
+	/** aggregate sum on columns */
+["user_movements_sum_fields"]: {
+		__typename?: "user_movements_sum_fields";
+			id?:number,
+			user_id?:number
+	},
+	/** update columns of table "user_movements" */
+["user_movements_update_column"]:user_movements_update_column,
+	["user_movements_updates"]: {
+	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:PartialObjects["user_movements_append_input"],
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:PartialObjects["user_movements_delete_at_path_input"],
+	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:PartialObjects["user_movements_delete_elem_input"],
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:PartialObjects["user_movements_delete_key_input"],
+	/** increments the numeric columns with given value of the filtered values */
+	_inc?:PartialObjects["user_movements_inc_input"],
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:PartialObjects["user_movements_prepend_input"],
+	/** sets the columns of the filtered rows to the given values */
+	_set?:PartialObjects["user_movements_set_input"],
+	/** filter the rows which have to be updated */
+	where:PartialObjects["user_movements_bool_exp"]
+},
+	/** aggregate var_pop on columns */
+["user_movements_var_pop_fields"]: {
+		__typename?: "user_movements_var_pop_fields";
+			id?:number,
+			user_id?:number
+	},
+	/** aggregate var_samp on columns */
+["user_movements_var_samp_fields"]: {
+		__typename?: "user_movements_var_samp_fields";
+			id?:number,
+			user_id?:number
+	},
+	/** aggregate variance on columns */
+["user_movements_variance_fields"]: {
+		__typename?: "user_movements_variance_fields";
 			id?:number,
 			user_id?:number
 	},
@@ -9508,6 +10055,23 @@ export type interactions_variance_fields = {
 
 export type jsonb = any
 
+/** Boolean expression to compare columns of type "jsonb". All fields are combined with logical 'AND'. */
+export type jsonb_array_comparison_exp = {
+		/** is the array contained in the given array value */
+	_contained_in?:jsonb[],
+	/** does the array contain the given value */
+	_contains?:jsonb[],
+	_eq?:jsonb[],
+	_gt?:jsonb[],
+	_gte?:jsonb[],
+	_in:jsonb[],
+	_is_null?:boolean,
+	_lt?:jsonb[],
+	_lte?:jsonb[],
+	_neq?:jsonb[],
+	_nin:jsonb[]
+}
+
 export type jsonb_cast_exp = {
 		String?:String_comparison_exp
 }
@@ -9892,6 +10456,10 @@ export type mutation_root = {
 	delete_todos?:todos_mutation_response,
 	/** delete single row from the table: "todos" */
 	delete_todos_by_pk?:todos,
+	/** delete data from the table: "user_movements" */
+	delete_user_movements?:user_movements_mutation_response,
+	/** delete single row from the table: "user_movements" */
+	delete_user_movements_by_pk?:user_movements,
 	/** delete data from the table: "users" */
 	delete_users?:users_mutation_response,
 	/** delete single row from the table: "users" */
@@ -9936,6 +10504,10 @@ export type mutation_root = {
 	insert_todos?:todos_mutation_response,
 	/** insert a single row into the table: "todos" */
 	insert_todos_one?:todos,
+	/** insert data into the table: "user_movements" */
+	insert_user_movements?:user_movements_mutation_response,
+	/** insert a single row into the table: "user_movements" */
+	insert_user_movements_one?:user_movements,
 	/** insert data into the table: "users" */
 	insert_users?:users_mutation_response,
 	/** insert a single row into the table: "users" */
@@ -10000,6 +10572,12 @@ export type mutation_root = {
 	update_todos_by_pk?:todos,
 	/** update multiples rows of table: "todos" */
 	update_todos_many?:(todos_mutation_response | undefined)[],
+	/** update data of the table: "user_movements" */
+	update_user_movements?:user_movements_mutation_response,
+	/** update single row of the table: "user_movements" */
+	update_user_movements_by_pk?:user_movements,
+	/** update multiples rows of table: "user_movements" */
+	update_user_movements_many?:(user_movements_mutation_response | undefined)[],
 	/** update data of the table: "users" */
 	update_users?:users_mutation_response,
 	/** update single row of the table: "users" */
@@ -10444,6 +11022,12 @@ export type query_root = {
 	todos_aggregate:todos_aggregate,
 	/** fetch data from the table: "todos" using primary key columns */
 	todos_by_pk?:todos,
+	/** fetch data from the table: "user_movements" */
+	user_movements:user_movements[],
+	/** fetch aggregated fields from the table: "user_movements" */
+	user_movements_aggregate:user_movements_aggregate,
+	/** fetch data from the table: "user_movements" using primary key columns */
+	user_movements_by_pk?:user_movements,
 	/** fetch data from the table: "users" */
 	users:users[],
 	/** fetch aggregated fields from the table: "users" */
@@ -10590,6 +11174,14 @@ export type subscription_root = {
 	todos_by_pk?:todos,
 	/** fetch data from the table in a streaming manner: "todos" */
 	todos_stream:todos[],
+	/** fetch data from the table: "user_movements" */
+	user_movements:user_movements[],
+	/** fetch aggregated fields from the table: "user_movements" */
+	user_movements_aggregate:user_movements_aggregate,
+	/** fetch data from the table: "user_movements" using primary key columns */
+	user_movements_by_pk?:user_movements,
+	/** fetch data from the table in a streaming manner: "user_movements" */
+	user_movements_stream:user_movements[],
 	/** fetch data from the table: "users" */
 	users:users[],
 	/** fetch aggregated fields from the table: "users" */
@@ -10924,6 +11516,266 @@ export type todos_variance_fields = {
 	__typename?: "todos_variance_fields",
 	current_count?:number,
 	goal_id?:number,
+	id?:number,
+	user_id?:number
+}
+
+/** columns and relationships of "user_movements" */
+export type user_movements = {
+	__typename?: "user_movements",
+	date:timestamptz,
+	id:number,
+	movements?:jsonb[],
+	moves:jsonb,
+	user_id:number
+}
+
+/** aggregated selection of "user_movements" */
+export type user_movements_aggregate = {
+	__typename?: "user_movements_aggregate",
+	aggregate?:user_movements_aggregate_fields,
+	nodes:user_movements[]
+}
+
+/** aggregate fields of "user_movements" */
+export type user_movements_aggregate_fields = {
+	__typename?: "user_movements_aggregate_fields",
+	avg?:user_movements_avg_fields,
+	count:number,
+	max?:user_movements_max_fields,
+	min?:user_movements_min_fields,
+	stddev?:user_movements_stddev_fields,
+	stddev_pop?:user_movements_stddev_pop_fields,
+	stddev_samp?:user_movements_stddev_samp_fields,
+	sum?:user_movements_sum_fields,
+	var_pop?:user_movements_var_pop_fields,
+	var_samp?:user_movements_var_samp_fields,
+	variance?:user_movements_variance_fields
+}
+
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type user_movements_append_input = {
+		moves?:jsonb
+}
+
+/** aggregate avg on columns */
+export type user_movements_avg_fields = {
+	__typename?: "user_movements_avg_fields",
+	id?:number,
+	user_id?:number
+}
+
+/** Boolean expression to filter rows from the table "user_movements". All fields are combined with a logical 'AND'. */
+export type user_movements_bool_exp = {
+		_and?:user_movements_bool_exp[],
+	_not?:user_movements_bool_exp,
+	_or?:user_movements_bool_exp[],
+	date?:timestamptz_comparison_exp,
+	id?:Int_comparison_exp,
+	movements?:jsonb_array_comparison_exp,
+	moves?:jsonb_comparison_exp,
+	user_id?:Int_comparison_exp
+}
+
+/** unique or primary key constraints on table "user_movements" */
+export enum user_movements_constraint {
+	user_movements_pkey = "user_movements_pkey",
+	user_movements_user_id_date_key = "user_movements_user_id_date_key"
+}
+
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type user_movements_delete_at_path_input = {
+		moves?:string[]
+}
+
+/** delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array */
+export type user_movements_delete_elem_input = {
+		moves?:number
+}
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type user_movements_delete_key_input = {
+		moves?:string
+}
+
+/** input type for incrementing numeric columns in table "user_movements" */
+export type user_movements_inc_input = {
+		id?:number,
+	user_id?:number
+}
+
+/** input type for inserting data into table "user_movements" */
+export type user_movements_insert_input = {
+		date?:timestamptz,
+	id?:number,
+	movements?:jsonb[],
+	moves?:jsonb,
+	user_id?:number
+}
+
+/** aggregate max on columns */
+export type user_movements_max_fields = {
+	__typename?: "user_movements_max_fields",
+	date?:timestamptz,
+	id?:number,
+	movements?:jsonb[],
+	user_id?:number
+}
+
+/** aggregate min on columns */
+export type user_movements_min_fields = {
+	__typename?: "user_movements_min_fields",
+	date?:timestamptz,
+	id?:number,
+	movements?:jsonb[],
+	user_id?:number
+}
+
+/** response of any mutation on the table "user_movements" */
+export type user_movements_mutation_response = {
+	__typename?: "user_movements_mutation_response",
+	/** number of rows affected by the mutation */
+	affected_rows:number,
+	/** data from the rows affected by the mutation */
+	returning:user_movements[]
+}
+
+/** on_conflict condition type for table "user_movements" */
+export type user_movements_on_conflict = {
+		constraint:user_movements_constraint,
+	update_columns:user_movements_update_column[],
+	where?:user_movements_bool_exp
+}
+
+/** Ordering options when selecting data from "user_movements". */
+export type user_movements_order_by = {
+		date?:order_by,
+	id?:order_by,
+	movements?:order_by,
+	moves?:order_by,
+	user_id?:order_by
+}
+
+/** primary key columns input for table: user_movements */
+export type user_movements_pk_columns_input = {
+		id:number
+}
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type user_movements_prepend_input = {
+		moves?:jsonb
+}
+
+/** select columns of table "user_movements" */
+export enum user_movements_select_column {
+	date = "date",
+	id = "id",
+	movements = "movements",
+	moves = "moves",
+	user_id = "user_id"
+}
+
+/** input type for updating data in table "user_movements" */
+export type user_movements_set_input = {
+		date?:timestamptz,
+	id?:number,
+	movements?:jsonb[],
+	moves?:jsonb,
+	user_id?:number
+}
+
+/** aggregate stddev on columns */
+export type user_movements_stddev_fields = {
+	__typename?: "user_movements_stddev_fields",
+	id?:number,
+	user_id?:number
+}
+
+/** aggregate stddev_pop on columns */
+export type user_movements_stddev_pop_fields = {
+	__typename?: "user_movements_stddev_pop_fields",
+	id?:number,
+	user_id?:number
+}
+
+/** aggregate stddev_samp on columns */
+export type user_movements_stddev_samp_fields = {
+	__typename?: "user_movements_stddev_samp_fields",
+	id?:number,
+	user_id?:number
+}
+
+/** Streaming cursor of the table "user_movements" */
+export type user_movements_stream_cursor_input = {
+		/** Stream column input with initial value */
+	initial_value:user_movements_stream_cursor_value_input,
+	/** cursor ordering */
+	ordering?:cursor_ordering
+}
+
+/** Initial value of the column from where the streaming should start */
+export type user_movements_stream_cursor_value_input = {
+		date?:timestamptz,
+	id?:number,
+	movements?:jsonb[],
+	moves?:jsonb,
+	user_id?:number
+}
+
+/** aggregate sum on columns */
+export type user_movements_sum_fields = {
+	__typename?: "user_movements_sum_fields",
+	id?:number,
+	user_id?:number
+}
+
+/** update columns of table "user_movements" */
+export enum user_movements_update_column {
+	date = "date",
+	id = "id",
+	movements = "movements",
+	moves = "moves",
+	user_id = "user_id"
+}
+
+export type user_movements_updates = {
+		/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:user_movements_append_input,
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:user_movements_delete_at_path_input,
+	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:user_movements_delete_elem_input,
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:user_movements_delete_key_input,
+	/** increments the numeric columns with given value of the filtered values */
+	_inc?:user_movements_inc_input,
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:user_movements_prepend_input,
+	/** sets the columns of the filtered rows to the given values */
+	_set?:user_movements_set_input,
+	/** filter the rows which have to be updated */
+	where:user_movements_bool_exp
+}
+
+/** aggregate var_pop on columns */
+export type user_movements_var_pop_fields = {
+	__typename?: "user_movements_var_pop_fields",
+	id?:number,
+	user_id?:number
+}
+
+/** aggregate var_samp on columns */
+export type user_movements_var_samp_fields = {
+	__typename?: "user_movements_var_samp_fields",
+	id?:number,
+	user_id?:number
+}
+
+/** aggregate variance on columns */
+export type user_movements_variance_fields = {
+	__typename?: "user_movements_variance_fields",
 	id?:number,
 	user_id?:number
 }
@@ -15882,6 +16734,74 @@ export const AllTypesProps: Record<string,any> = {
 		}
 	},
 	jsonb: "String",
+	jsonb_array_comparison_exp:{
+		_contained_in:{
+			type:"jsonb",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		_contains:{
+			type:"jsonb",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		_eq:{
+			type:"jsonb",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		_gt:{
+			type:"jsonb",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		_gte:{
+			type:"jsonb",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		_in:{
+			type:"jsonb",
+			array:true,
+			arrayRequired:true,
+			required:true
+		},
+		_is_null:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_lt:{
+			type:"jsonb",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		_lte:{
+			type:"jsonb",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		_neq:{
+			type:"jsonb",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		_nin:{
+			type:"jsonb",
+			array:true,
+			arrayRequired:true,
+			required:true
+		}
+	},
 	jsonb_cast_exp:{
 		String:{
 			type:"String_comparison_exp",
@@ -16680,6 +17600,22 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
+		delete_user_movements:{
+			where:{
+				type:"user_movements_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		delete_user_movements_by_pk:{
+			id:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
 		delete_users:{
 			where:{
 				type:"users_bool_exp",
@@ -16971,6 +17907,34 @@ export const AllTypesProps: Record<string,any> = {
 			},
 			on_conflict:{
 				type:"todos_on_conflict",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		insert_user_movements:{
+			objects:{
+				type:"user_movements_insert_input",
+				array:true,
+				arrayRequired:true,
+				required:true
+			},
+			on_conflict:{
+				type:"user_movements_on_conflict",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		insert_user_movements_one:{
+			object:{
+				type:"user_movements_insert_input",
+				array:false,
+				arrayRequired:false,
+				required:true
+			},
+			on_conflict:{
+				type:"user_movements_on_conflict",
 				array:false,
 				arrayRequired:false,
 				required:false
@@ -17815,6 +18779,114 @@ export const AllTypesProps: Record<string,any> = {
 		update_todos_many:{
 			updates:{
 				type:"todos_updates",
+				array:true,
+				arrayRequired:true,
+				required:true
+			}
+		},
+		update_user_movements:{
+			_append:{
+				type:"user_movements_append_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_at_path:{
+				type:"user_movements_delete_at_path_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_elem:{
+				type:"user_movements_delete_elem_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_key:{
+				type:"user_movements_delete_key_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_inc:{
+				type:"user_movements_inc_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_prepend:{
+				type:"user_movements_prepend_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_set:{
+				type:"user_movements_set_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			where:{
+				type:"user_movements_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		update_user_movements_by_pk:{
+			_append:{
+				type:"user_movements_append_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_at_path:{
+				type:"user_movements_delete_at_path_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_elem:{
+				type:"user_movements_delete_elem_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_key:{
+				type:"user_movements_delete_key_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_inc:{
+				type:"user_movements_inc_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_prepend:{
+				type:"user_movements_prepend_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_set:{
+				type:"user_movements_set_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			pk_columns:{
+				type:"user_movements_pk_columns_input",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		update_user_movements_many:{
+			updates:{
+				type:"user_movements_updates",
 				array:true,
 				arrayRequired:true,
 				required:true
@@ -19335,6 +20407,78 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
+		user_movements:{
+			distinct_on:{
+				type:"user_movements_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"user_movements_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"user_movements_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		user_movements_aggregate:{
+			distinct_on:{
+				type:"user_movements_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"user_movements_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"user_movements_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		user_movements_by_pk:{
+			id:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
 		users:{
 			distinct_on:{
 				type:"users_select_column",
@@ -20713,6 +21857,98 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
+		user_movements:{
+			distinct_on:{
+				type:"user_movements_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"user_movements_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"user_movements_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		user_movements_aggregate:{
+			distinct_on:{
+				type:"user_movements_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"user_movements_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"user_movements_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		user_movements_by_pk:{
+			id:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		user_movements_stream:{
+			batch_size:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			},
+			cursor:{
+				type:"user_movements_stream_cursor_input",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"user_movements_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
 		users:{
 			distinct_on:{
 				type:"users_select_column",
@@ -21370,6 +22606,359 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		where:{
 			type:"todos_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	user_movements:{
+		moves:{
+			path:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		}
+	},
+	user_movements_aggregate_fields:{
+		count:{
+			columns:{
+				type:"user_movements_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			distinct:{
+				type:"Boolean",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		}
+	},
+	user_movements_append_input:{
+		moves:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	user_movements_bool_exp:{
+		_and:{
+			type:"user_movements_bool_exp",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		_not:{
+			type:"user_movements_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_or:{
+			type:"user_movements_bool_exp",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		date:{
+			type:"timestamptz_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		movements:{
+			type:"jsonb_array_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		moves:{
+			type:"jsonb_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	user_movements_constraint: "enum",
+	user_movements_delete_at_path_input:{
+		moves:{
+			type:"String",
+			array:true,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	user_movements_delete_elem_input:{
+		moves:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	user_movements_delete_key_input:{
+		moves:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	user_movements_inc_input:{
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	user_movements_insert_input:{
+		date:{
+			type:"timestamptz",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		movements:{
+			type:"jsonb",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		moves:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	user_movements_on_conflict:{
+		constraint:{
+			type:"user_movements_constraint",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		update_columns:{
+			type:"user_movements_update_column",
+			array:true,
+			arrayRequired:true,
+			required:true
+		},
+		where:{
+			type:"user_movements_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	user_movements_order_by:{
+		date:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		movements:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		moves:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	user_movements_pk_columns_input:{
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	user_movements_prepend_input:{
+		moves:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	user_movements_select_column: "enum",
+	user_movements_set_input:{
+		date:{
+			type:"timestamptz",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		movements:{
+			type:"jsonb",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		moves:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	user_movements_stream_cursor_input:{
+		initial_value:{
+			type:"user_movements_stream_cursor_value_input",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		ordering:{
+			type:"cursor_ordering",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	user_movements_stream_cursor_value_input:{
+		date:{
+			type:"timestamptz",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		movements:{
+			type:"jsonb",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		moves:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	user_movements_update_column: "enum",
+	user_movements_updates:{
+		_append:{
+			type:"user_movements_append_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_delete_at_path:{
+			type:"user_movements_delete_at_path_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_delete_elem:{
+			type:"user_movements_delete_elem_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_delete_key:{
+			type:"user_movements_delete_key_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_inc:{
+			type:"user_movements_inc_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_prepend:{
+			type:"user_movements_prepend_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_set:{
+			type:"user_movements_set_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		where:{
+			type:"user_movements_bool_exp",
 			array:false,
 			arrayRequired:false,
 			required:true
@@ -22627,6 +24216,8 @@ export const ReturnTypes: Record<string,any> = {
 		delete_objects_by_pk:"objects",
 		delete_todos:"todos_mutation_response",
 		delete_todos_by_pk:"todos",
+		delete_user_movements:"user_movements_mutation_response",
+		delete_user_movements_by_pk:"user_movements",
 		delete_users:"users_mutation_response",
 		delete_users_by_pk:"users",
 		insert_associations:"associations_mutation_response",
@@ -22649,6 +24240,8 @@ export const ReturnTypes: Record<string,any> = {
 		insert_objects_one:"objects",
 		insert_todos:"todos_mutation_response",
 		insert_todos_one:"todos",
+		insert_user_movements:"user_movements_mutation_response",
+		insert_user_movements_one:"user_movements",
 		insert_users:"users_mutation_response",
 		insert_users_one:"users",
 		update_associations:"associations_mutation_response",
@@ -22681,6 +24274,9 @@ export const ReturnTypes: Record<string,any> = {
 		update_todos:"todos_mutation_response",
 		update_todos_by_pk:"todos",
 		update_todos_many:"todos_mutation_response",
+		update_user_movements:"user_movements_mutation_response",
+		update_user_movements_by_pk:"user_movements",
+		update_user_movements_many:"user_movements_mutation_response",
 		update_users:"users_mutation_response",
 		update_users_by_pk:"users",
 		update_users_many:"users_mutation_response"
@@ -22805,6 +24401,9 @@ export const ReturnTypes: Record<string,any> = {
 		todos:"todos",
 		todos_aggregate:"todos_aggregate",
 		todos_by_pk:"todos",
+		user_movements:"user_movements",
+		user_movements_aggregate:"user_movements_aggregate",
+		user_movements_by_pk:"user_movements",
 		users:"users",
 		users_aggregate:"users_aggregate",
 		users_by_pk:"users"
@@ -22856,6 +24455,10 @@ export const ReturnTypes: Record<string,any> = {
 		todos_aggregate:"todos_aggregate",
 		todos_by_pk:"todos",
 		todos_stream:"todos",
+		user_movements:"user_movements",
+		user_movements_aggregate:"user_movements_aggregate",
+		user_movements_by_pk:"user_movements",
+		user_movements_stream:"user_movements",
 		users:"users",
 		users_aggregate:"users_aggregate",
 		users_by_pk:"users",
@@ -22960,6 +24563,78 @@ export const ReturnTypes: Record<string,any> = {
 	todos_variance_fields:{
 		current_count:"Float",
 		goal_id:"Float",
+		id:"Float",
+		user_id:"Float"
+	},
+	user_movements:{
+		date:"timestamptz",
+		id:"Int",
+		movements:"jsonb",
+		moves:"jsonb",
+		user_id:"Int"
+	},
+	user_movements_aggregate:{
+		aggregate:"user_movements_aggregate_fields",
+		nodes:"user_movements"
+	},
+	user_movements_aggregate_fields:{
+		avg:"user_movements_avg_fields",
+		count:"Int",
+		max:"user_movements_max_fields",
+		min:"user_movements_min_fields",
+		stddev:"user_movements_stddev_fields",
+		stddev_pop:"user_movements_stddev_pop_fields",
+		stddev_samp:"user_movements_stddev_samp_fields",
+		sum:"user_movements_sum_fields",
+		var_pop:"user_movements_var_pop_fields",
+		var_samp:"user_movements_var_samp_fields",
+		variance:"user_movements_variance_fields"
+	},
+	user_movements_avg_fields:{
+		id:"Float",
+		user_id:"Float"
+	},
+	user_movements_max_fields:{
+		date:"timestamptz",
+		id:"Int",
+		movements:"jsonb",
+		user_id:"Int"
+	},
+	user_movements_min_fields:{
+		date:"timestamptz",
+		id:"Int",
+		movements:"jsonb",
+		user_id:"Int"
+	},
+	user_movements_mutation_response:{
+		affected_rows:"Int",
+		returning:"user_movements"
+	},
+	user_movements_stddev_fields:{
+		id:"Float",
+		user_id:"Float"
+	},
+	user_movements_stddev_pop_fields:{
+		id:"Float",
+		user_id:"Float"
+	},
+	user_movements_stddev_samp_fields:{
+		id:"Float",
+		user_id:"Float"
+	},
+	user_movements_sum_fields:{
+		id:"Int",
+		user_id:"Int"
+	},
+	user_movements_var_pop_fields:{
+		id:"Float",
+		user_id:"Float"
+	},
+	user_movements_var_samp_fields:{
+		id:"Float",
+		user_id:"Float"
+	},
+	user_movements_variance_fields:{
 		id:"Float",
 		user_id:"Float"
 	},

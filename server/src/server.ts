@@ -9,6 +9,7 @@ import { parseUserRequest } from './resources/logic';
 import { getUserLanguage } from './resources/user';
 import { processMovement, setNameForLocation } from './helper/location';
 import { uploadSleep } from './helper/sleep';
+import { addLocation } from './helper/location2';
 const app: Express = express();
 
 app.use(express.static(path.join(__dirname, '../public')));
@@ -69,6 +70,27 @@ app.post('/updateMovement', async (req: Request, res: Response) => {
             console.log(`🏃🏽🏃🏽🏃🏽🏃🏽🏃🏽🏃🏽🏃🏽 ${userId} ${req.body?.eventType}`)
             // console.log(req.body)
             processMovement(userId, req.body); 
+            // console.log("success")
+            res.status(200).json({
+                status: "success",
+            });
+        } catch (parseError) {
+            console.error('Parsing error:', parseError);
+            res.status(500).json({ error: 'Error processing text' });
+        }
+    } catch (authError) {
+        console.error('Authentication error:', authError);
+        res.status(401).json({ error: 'Unauthorized: ' + authError });
+    }
+});
+
+app.post('/updateLocation', async (req: Request, res: Response) => {
+    try {
+        const userId = authorize(req); 
+        try {
+            console.log(`🦵🏻🦵🏻🦵🏻🦵🏻 ${userId} ${req.body?.eventType}`)
+            console.log(req.body)
+            addLocation(userId, req.body);
             // console.log("success")
             res.status(200).json({
                 status: "success",

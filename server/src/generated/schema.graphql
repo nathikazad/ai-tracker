@@ -3004,6 +3004,26 @@ type interactions_variance_fields {
 
 scalar jsonb
 
+"""
+Boolean expression to compare columns of type "jsonb". All fields are combined with logical 'AND'.
+"""
+input jsonb_array_comparison_exp {
+  """is the array contained in the given array value"""
+  _contained_in: [jsonb!]
+
+  """does the array contain the given value"""
+  _contains: [jsonb!]
+  _eq: [jsonb!]
+  _gt: [jsonb!]
+  _gte: [jsonb!]
+  _in: [[jsonb!]!]
+  _is_null: Boolean
+  _lt: [jsonb!]
+  _lte: [jsonb!]
+  _neq: [jsonb!]
+  _nin: [[jsonb!]!]
+}
+
 input jsonb_cast_exp {
   String: String_comparison_exp
 }
@@ -3545,6 +3565,19 @@ type mutation_root {
   delete_todos_by_pk(id: Int!): todos
 
   """
+  delete data from the table: "user_movements"
+  """
+  delete_user_movements(
+    """filter the rows which have to be deleted"""
+    where: user_movements_bool_exp!
+  ): user_movements_mutation_response
+
+  """
+  delete single row from the table: "user_movements"
+  """
+  delete_user_movements_by_pk(id: Int!): user_movements
+
+  """
   delete data from the table: "users"
   """
   delete_users(
@@ -3776,6 +3809,28 @@ type mutation_root {
     """upsert condition"""
     on_conflict: todos_on_conflict
   ): todos
+
+  """
+  insert data into the table: "user_movements"
+  """
+  insert_user_movements(
+    """the rows to be inserted"""
+    objects: [user_movements_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: user_movements_on_conflict
+  ): user_movements_mutation_response
+
+  """
+  insert a single row into the table: "user_movements"
+  """
+  insert_user_movements_one(
+    """the row to be inserted"""
+    object: user_movements_insert_input!
+
+    """upsert condition"""
+    on_conflict: user_movements_on_conflict
+  ): user_movements
 
   """
   insert data into the table: "users"
@@ -4390,6 +4445,84 @@ type mutation_root {
     """updates to execute, in order"""
     updates: [todos_updates!]!
   ): [todos_mutation_response]
+
+  """
+  update data of the table: "user_movements"
+  """
+  update_user_movements(
+    """append existing jsonb value of filtered columns with new jsonb value"""
+    _append: user_movements_append_input
+
+    """
+    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    """
+    _delete_at_path: user_movements_delete_at_path_input
+
+    """
+    delete the array element with specified index (negative integers count from
+    the end). throws an error if top level container is not an array
+    """
+    _delete_elem: user_movements_delete_elem_input
+
+    """
+    delete key/value pair or string element. key/value pairs are matched based on their key value
+    """
+    _delete_key: user_movements_delete_key_input
+
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: user_movements_inc_input
+
+    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    _prepend: user_movements_prepend_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: user_movements_set_input
+
+    """filter the rows which have to be updated"""
+    where: user_movements_bool_exp!
+  ): user_movements_mutation_response
+
+  """
+  update single row of the table: "user_movements"
+  """
+  update_user_movements_by_pk(
+    """append existing jsonb value of filtered columns with new jsonb value"""
+    _append: user_movements_append_input
+
+    """
+    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    """
+    _delete_at_path: user_movements_delete_at_path_input
+
+    """
+    delete the array element with specified index (negative integers count from
+    the end). throws an error if top level container is not an array
+    """
+    _delete_elem: user_movements_delete_elem_input
+
+    """
+    delete key/value pair or string element. key/value pairs are matched based on their key value
+    """
+    _delete_key: user_movements_delete_key_input
+
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: user_movements_inc_input
+
+    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    _prepend: user_movements_prepend_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: user_movements_set_input
+    pk_columns: user_movements_pk_columns_input!
+  ): user_movements
+
+  """
+  update multiples rows of table: "user_movements"
+  """
+  update_user_movements_many(
+    """updates to execute, in order"""
+    updates: [user_movements_updates!]!
+  ): [user_movements_mutation_response]
 
   """
   update data of the table: "users"
@@ -5496,6 +5629,49 @@ type query_root {
   todos_by_pk(id: Int!): todos
 
   """
+  fetch data from the table: "user_movements"
+  """
+  user_movements(
+    """distinct select on columns"""
+    distinct_on: [user_movements_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [user_movements_order_by!]
+
+    """filter the rows returned"""
+    where: user_movements_bool_exp
+  ): [user_movements!]!
+
+  """
+  fetch aggregated fields from the table: "user_movements"
+  """
+  user_movements_aggregate(
+    """distinct select on columns"""
+    distinct_on: [user_movements_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [user_movements_order_by!]
+
+    """filter the rows returned"""
+    where: user_movements_bool_exp
+  ): user_movements_aggregate!
+
+  """fetch data from the table: "user_movements" using primary key columns"""
+  user_movements_by_pk(id: Int!): user_movements
+
+  """
   fetch data from the table: "users"
   """
   users(
@@ -6317,6 +6493,63 @@ type subscription_root {
   ): [todos!]!
 
   """
+  fetch data from the table: "user_movements"
+  """
+  user_movements(
+    """distinct select on columns"""
+    distinct_on: [user_movements_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [user_movements_order_by!]
+
+    """filter the rows returned"""
+    where: user_movements_bool_exp
+  ): [user_movements!]!
+
+  """
+  fetch aggregated fields from the table: "user_movements"
+  """
+  user_movements_aggregate(
+    """distinct select on columns"""
+    distinct_on: [user_movements_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [user_movements_order_by!]
+
+    """filter the rows returned"""
+    where: user_movements_bool_exp
+  ): user_movements_aggregate!
+
+  """fetch data from the table: "user_movements" using primary key columns"""
+  user_movements_by_pk(id: Int!): user_movements
+
+  """
+  fetch data from the table in a streaming manner: "user_movements"
+  """
+  user_movements_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [user_movements_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: user_movements_bool_exp
+  ): [user_movements!]!
+
+  """
   fetch data from the table: "users"
   """
   users(
@@ -6764,6 +6997,327 @@ type todos_var_samp_fields {
 type todos_variance_fields {
   current_count: Float
   goal_id: Float
+  id: Float
+  user_id: Float
+}
+
+"""
+columns and relationships of "user_movements"
+"""
+type user_movements {
+  date: timestamptz!
+  id: Int!
+  movements: [jsonb!]
+  moves(
+    """JSON select path"""
+    path: String
+  ): jsonb!
+  user_id: Int!
+}
+
+"""
+aggregated selection of "user_movements"
+"""
+type user_movements_aggregate {
+  aggregate: user_movements_aggregate_fields
+  nodes: [user_movements!]!
+}
+
+"""
+aggregate fields of "user_movements"
+"""
+type user_movements_aggregate_fields {
+  avg: user_movements_avg_fields
+  count(columns: [user_movements_select_column!], distinct: Boolean): Int!
+  max: user_movements_max_fields
+  min: user_movements_min_fields
+  stddev: user_movements_stddev_fields
+  stddev_pop: user_movements_stddev_pop_fields
+  stddev_samp: user_movements_stddev_samp_fields
+  sum: user_movements_sum_fields
+  var_pop: user_movements_var_pop_fields
+  var_samp: user_movements_var_samp_fields
+  variance: user_movements_variance_fields
+}
+
+"""append existing jsonb value of filtered columns with new jsonb value"""
+input user_movements_append_input {
+  moves: jsonb
+}
+
+"""aggregate avg on columns"""
+type user_movements_avg_fields {
+  id: Float
+  user_id: Float
+}
+
+"""
+Boolean expression to filter rows from the table "user_movements". All fields are combined with a logical 'AND'.
+"""
+input user_movements_bool_exp {
+  _and: [user_movements_bool_exp!]
+  _not: user_movements_bool_exp
+  _or: [user_movements_bool_exp!]
+  date: timestamptz_comparison_exp
+  id: Int_comparison_exp
+  movements: jsonb_array_comparison_exp
+  moves: jsonb_comparison_exp
+  user_id: Int_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "user_movements"
+"""
+enum user_movements_constraint {
+  """
+  unique or primary key constraint on columns "id"
+  """
+  user_movements_pkey
+
+  """
+  unique or primary key constraint on columns "user_id", "date"
+  """
+  user_movements_user_id_date_key
+}
+
+"""
+delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+"""
+input user_movements_delete_at_path_input {
+  moves: [String!]
+}
+
+"""
+delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array
+"""
+input user_movements_delete_elem_input {
+  moves: Int
+}
+
+"""
+delete key/value pair or string element. key/value pairs are matched based on their key value
+"""
+input user_movements_delete_key_input {
+  moves: String
+}
+
+"""
+input type for incrementing numeric columns in table "user_movements"
+"""
+input user_movements_inc_input {
+  id: Int
+  user_id: Int
+}
+
+"""
+input type for inserting data into table "user_movements"
+"""
+input user_movements_insert_input {
+  date: timestamptz
+  id: Int
+  movements: [jsonb!]
+  moves: jsonb
+  user_id: Int
+}
+
+"""aggregate max on columns"""
+type user_movements_max_fields {
+  date: timestamptz
+  id: Int
+  movements: [jsonb!]
+  user_id: Int
+}
+
+"""aggregate min on columns"""
+type user_movements_min_fields {
+  date: timestamptz
+  id: Int
+  movements: [jsonb!]
+  user_id: Int
+}
+
+"""
+response of any mutation on the table "user_movements"
+"""
+type user_movements_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [user_movements!]!
+}
+
+"""
+on_conflict condition type for table "user_movements"
+"""
+input user_movements_on_conflict {
+  constraint: user_movements_constraint!
+  update_columns: [user_movements_update_column!]! = []
+  where: user_movements_bool_exp
+}
+
+"""Ordering options when selecting data from "user_movements"."""
+input user_movements_order_by {
+  date: order_by
+  id: order_by
+  movements: order_by
+  moves: order_by
+  user_id: order_by
+}
+
+"""primary key columns input for table: user_movements"""
+input user_movements_pk_columns_input {
+  id: Int!
+}
+
+"""prepend existing jsonb value of filtered columns with new jsonb value"""
+input user_movements_prepend_input {
+  moves: jsonb
+}
+
+"""
+select columns of table "user_movements"
+"""
+enum user_movements_select_column {
+  """column name"""
+  date
+
+  """column name"""
+  id
+
+  """column name"""
+  movements
+
+  """column name"""
+  moves
+
+  """column name"""
+  user_id
+}
+
+"""
+input type for updating data in table "user_movements"
+"""
+input user_movements_set_input {
+  date: timestamptz
+  id: Int
+  movements: [jsonb!]
+  moves: jsonb
+  user_id: Int
+}
+
+"""aggregate stddev on columns"""
+type user_movements_stddev_fields {
+  id: Float
+  user_id: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type user_movements_stddev_pop_fields {
+  id: Float
+  user_id: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type user_movements_stddev_samp_fields {
+  id: Float
+  user_id: Float
+}
+
+"""
+Streaming cursor of the table "user_movements"
+"""
+input user_movements_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: user_movements_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input user_movements_stream_cursor_value_input {
+  date: timestamptz
+  id: Int
+  movements: [jsonb!]
+  moves: jsonb
+  user_id: Int
+}
+
+"""aggregate sum on columns"""
+type user_movements_sum_fields {
+  id: Int
+  user_id: Int
+}
+
+"""
+update columns of table "user_movements"
+"""
+enum user_movements_update_column {
+  """column name"""
+  date
+
+  """column name"""
+  id
+
+  """column name"""
+  movements
+
+  """column name"""
+  moves
+
+  """column name"""
+  user_id
+}
+
+input user_movements_updates {
+  """append existing jsonb value of filtered columns with new jsonb value"""
+  _append: user_movements_append_input
+
+  """
+  delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+  """
+  _delete_at_path: user_movements_delete_at_path_input
+
+  """
+  delete the array element with specified index (negative integers count from
+  the end). throws an error if top level container is not an array
+  """
+  _delete_elem: user_movements_delete_elem_input
+
+  """
+  delete key/value pair or string element. key/value pairs are matched based on their key value
+  """
+  _delete_key: user_movements_delete_key_input
+
+  """increments the numeric columns with given value of the filtered values"""
+  _inc: user_movements_inc_input
+
+  """prepend existing jsonb value of filtered columns with new jsonb value"""
+  _prepend: user_movements_prepend_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: user_movements_set_input
+
+  """filter the rows which have to be updated"""
+  where: user_movements_bool_exp!
+}
+
+"""aggregate var_pop on columns"""
+type user_movements_var_pop_fields {
+  id: Float
+  user_id: Float
+}
+
+"""aggregate var_samp on columns"""
+type user_movements_var_samp_fields {
+  id: Float
+  user_id: Float
+}
+
+"""aggregate variance on columns"""
+type user_movements_variance_fields {
   id: Float
   user_id: Float
 }

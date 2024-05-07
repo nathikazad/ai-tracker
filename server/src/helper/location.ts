@@ -3,7 +3,7 @@ import * as polyline from '@mapbox/polyline';
 import { getHasura } from '../config';
 import { $, order_by } from '../generated/graphql-zeus';
 import { secondsToHHMM } from './time';
-interface Location {
+export interface Location {
     lat: number;
     lon: number;
     accuracy: number;
