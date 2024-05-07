@@ -2,9 +2,11 @@ import { log } from "console";
 import { extractJson, llamaComplete } from "../../third/llama";
 import { complete4, createEmbedding } from "../../third/openai";
 import fs from 'fs'
+import { extractMetadata } from "./metadataLogic";
 
 export enum Category {
     Sleeping = "Sleeping",
+    WakingUp = "Wakingup",
     Meeting = "Meeting",
     Feeling = "Feeling",
     Reading = "Reading",
@@ -22,9 +24,10 @@ export enum Category {
 
 export const categoryDescriptions: { [key in Category]: string } =
 {
-    [Category.Sleeping]: "If a user is going to sleep or waking up",
+    [Category.Sleeping]: "If a user explicitly says he is going to sleep or slept",
+    [Category.WakingUp]: "If a user explicitly says, he woke or has woken up.",
     [Category.Meeting]: "If a user is with someone, meeting or speaking to someone, going to a party, get together or or an event",
-    [Category.Feeling]: "If a user is feeling a certain way, emotionally or physically",
+    [Category.Feeling]: "If the user say how they feel or felt, emotionally or physically. Do not include if the user does not say how he felt.",
     [Category.Reading]: "If a user is reading or listening to a book.",
     [Category.Learning]: "If a user is learning or practicing something",
     [Category.Eating]: "If a user is eating or drinking something",
@@ -55,6 +58,7 @@ export interface ASEvent {
     startTime?: string | null;
     endTime?: string | null;
     cost?: string | null;
+    metadata?: any;
 }
 
 export async function extractEvents(interaction: Interaction): Promise<ASEvent> {
@@ -71,6 +75,10 @@ export async function extractEvents(interaction: Interaction): Promise<ASEvent> 
         startTime: convertTimeFormat(temporal.start_time),
         endTime: convertTimeFormat(temporal.end_time),
     }
+    
+    event = await extractMetadata(event);
+    
+
     return event
 
 
@@ -127,26 +135,6 @@ export async function breakdown(sentence: string): Promise<string> {
     '\n`
     log(prompt)
     let output = await complete4(prompt, 0.1)
-    // let output = await llamaComplete(prompt, {
-    //     model: "70b",
-    //     temperature: 0.1
-    // })
-
-    // let json = extractJson(output);
-    // let prompt2 = `
-    // Given a sentence: "${sentence}"
-    
-
-    // '\n`
-    // let output2 = await llamaComplete(prompt, {
-    //     model: "70b",
-    //     temperature: 0.1
-    // })
-
-    // Include time information only if given otherwise don't say anything about time
-
-    // let totalSentences = parseInt(output);
-    // console.log(json); 
     return output
 }
 
@@ -189,9 +177,6 @@ export async function extractCategories(sentence: string): Promise<Category[]> {
         // }
         // only include excersing or dancing, whichever is higher
         switch (categories[0]) {
-            case Category.Exercising:
-                categories = categories.filter(c => c != Category.Dancing);
-                break;
             case Category.Dancing:
                 categories = categories.filter(c => c != Category.Exercising);
                 break;
@@ -329,8 +314,9 @@ export async function extractTemporalInformation(sentence: string, recordedTime:
             if (category.includes(Category.Sleeping)) {
                 return "The time user slept is considered start_time and the time he woke up is considered end_time. If start_time is not mentioned, say null. If end_time is not mentioned, assume end_time is recorded time"
             } else {
-                return `If start is not specified but the user says how long he did the event for, calculate the start time. Otherwise say it is null
-            If end time is not specified, make it null`
+                return `
+                If start_time is not specified, make it null
+                If end_time is not specified, make it the time of the statement`
             }
         else
             return "If start time is not given, assume it is the time of the statement. If end time is not given, say null";
@@ -342,8 +328,13 @@ export async function extractTemporalInformation(sentence: string, recordedTime:
     let prompt = `Given that user said: "${sentence}" at ${recordedTime}\n
         Given that the user ${verb} ${category}, if mentioned, give me the start time and/or end time of the user
         ${addition}
-        Give me output as only a json object, prefixed and suffixed by triple backticks, with only the fields start_time and/or end_time in format 'hh:mm am/pm'`
+        Give me output as a json object, prefixed and suffixed by triple backticks, 
+        with the fields 
+            start_time?: string //in format 'hh:mm am/pm'
+            end_time?: string //in format 'hh:mm am/pm'
+            is_duration_given?: boolean //true if user explicitly mentioned how long they did the activity for`
 
+    // console.log(prompt);
     let output = await llamaComplete(prompt, {
         model: "70b",
         temperature: 0.1,
@@ -351,7 +342,31 @@ export async function extractTemporalInformation(sentence: string, recordedTime:
     })
     // console.log(output);
 
-    return extractJson(output);
+    let json = extractJson(output);
+    if(!json.start_time && json.is_duration_given){
+        console.log(json)
+        console.log("Finding duration");
+        let prompt = `Given that user said: "${sentence}" at ${recordedTime}\n
+        Calculate the start_time by subtracting the duration from the end_time.
+        Give me output as a json object, prefixed and suffixed by triple backticks, 
+        with the field
+            start_time: string //in format 'hh:mm am/pm'`
+
+        console.log(prompt);
+        let output = await llamaComplete(prompt, {
+            model: "70b",
+            temperature: 0.1,
+            toLowerCase: true
+        })
+        console.log(output);
+        let secondJson = extractJson(output);
+        return {
+            ...json,
+            ...secondJson
+        }
+    } else {
+        return json;
+    }
 }
 
 

@@ -40,9 +40,16 @@ export async function llamaComplete(prompt: string, completeOptions?: CompleteOp
 }
 
 export function extractJson(jsonString: string): any {
-    let jsonData = jsonString.slice(jsonString.indexOf('{'), jsonString.lastIndexOf('}') + 1);
-    // console.log(jsonSubString);
+    let firstCurlyIndex = jsonString.indexOf('{');
+    let firstSquareIndex = jsonString.indexOf('[');
+
+    // Determine which bracket comes first (if any) and set appropriate start and end characters
+    let startChar = (firstSquareIndex !== -1 && (firstSquareIndex < firstCurlyIndex || firstCurlyIndex === -1)) ? '[' : '{';
+    let endChar = startChar === '{' ? '}' : ']';
+
+    let jsonData = jsonString.slice(jsonString.indexOf(startChar), jsonString.lastIndexOf(endChar) + 1);
     if (jsonData) {
+        // Remove single line comments
         jsonData = jsonData.replace(/\/\/.*$/gm, '').trim();
         // Replace curly double quotes (“ ”) with straight double quotes (")
         jsonData = jsonData.replace(/[\u201C\u201D]/g, '"');
@@ -57,6 +64,8 @@ export function extractJson(jsonString: string): any {
         console.error('JSON:', jsonData);
     }
 }
+
+
 
     // const input = {
     //     top_k: 50,
