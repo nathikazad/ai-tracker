@@ -88,9 +88,9 @@ app.post('/updateLocation', async (req: Request, res: Response) => {
     try {
         const userId = authorize(req); 
         try {
-            console.log(`🦵🏻🦵🏻🦵🏻🦵🏻 ${userId} ${req.body?.eventType}`)
+            console.log(`🦵🏻🦵🏻🦵🏻🦵🏻 ${userId} ${req.body}`)
             console.log(req.body)
-            addLocation(userId, req.body);
+            addLocation(userId, req.body.location);
             // console.log("success")
             res.status(200).json({
                 status: "success",
