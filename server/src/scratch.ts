@@ -1,11 +1,13 @@
 import { getHasura } from "./config"
-import { addLocation, calculateCentroids, updateMovements } from "./helper/location2";
+import { addLocation, updateMovements } from "./helper/location2";
 import { toPST } from "./helper/time";
 import { breakdown, createEmbeddings, extractCategories, extractEvents } from "./resources/logic/eventLogic";
 
 
 
 async function main() {
+    // Example usage:
+
     await updateMovements(1)
     // Example usage
 // const gpsData: GPSPoint[] = [

@@ -7,7 +7,7 @@ import { convertAudioToText } from './helper/audio';
 import { authorize, convertAppleJWTtoHasuraJWT } from './resources/authorization';
 import { parseUserRequest } from './resources/logic';
 import { getUserLanguage } from './resources/user';
-import { processMovement, setNameForLocation } from './helper/location';
+// import { processMovement, setNameForLocation } from './helper/location';
 import { uploadSleep } from './helper/sleep';
 import { addLocation } from './helper/location2';
 const app: Express = express();
@@ -69,7 +69,7 @@ app.post('/updateMovement', async (req: Request, res: Response) => {
         try {
             console.log(`🏃🏽🏃🏽🏃🏽🏃🏽🏃🏽🏃🏽🏃🏽 ${userId} ${req.body?.eventType}`)
             // console.log(req.body)
-            processMovement(userId, req.body); 
+            // processMovement(userId, req.body); 
             // console.log("success")
             res.status(200).json({
                 status: "success",
@@ -130,7 +130,7 @@ app.post('/createLocation', async (req: Request, res: Response) => {
         const userId = authorize(req); 
         try {
             console.log(`Set location ${userId} ${req.body}`)
-            setNameForLocation(userId, req.body!.lon, req.body!.lat, req.body!.name);
+            // setNameForLocation(userId, req.body!.lon, req.body!.lat, req.body!.name);
             // console.log("success")
             res.status(200).json({
                 status: "success",
