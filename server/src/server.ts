@@ -9,7 +9,7 @@ import { parseUserRequest } from './resources/logic';
 import { getUserLanguage } from './resources/user';
 // import { processMovement, setNameForLocation } from './helper/location';
 import { uploadSleep } from './helper/sleep';
-import { addLocation } from './helper/location2';
+import { addLocation, updateMovements } from './helper/location2';
 const app: Express = express();
 
 app.use(express.static(path.join(__dirname, '../public')));
@@ -90,7 +90,8 @@ app.post('/updateLocation', async (req: Request, res: Response) => {
         try {
             console.log(`🦵🏻🦵🏻🦵🏻🦵🏻 ${userId} ${req.body}`)
             console.log(req.body)
-            addLocation(userId, req.body.location);
+            await addLocation(userId, req.body.location);
+            await updateMovements(userId)
             // console.log("success")
             res.status(200).json({
                 status: "success",
