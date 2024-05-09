@@ -98,9 +98,6 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         guard let location = locations.last else { return }
         if(waitingForImmediateLocation) {
             print("LocationManager: LocationManager: Immediate location")
-            locationManager.stopUpdatingLocation()
-            locationManager.distanceFilter = locationUpdateDistanceFilter
-            locationManager.startUpdatingLocation()
             waitingForImmediateLocation = false
             uploadLocationToServer([location])
         } else {
@@ -122,7 +119,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     func forceUpdateLocation() {
         print("LocationManager: forceUpdateLocation")
         locationManager.stopUpdatingLocation()
-        locationManager.distanceFilter = kCLDistanceFilterNone
+        locationManager.distanceFilter = locationUpdateDistanceFilter
         locationManager.startUpdatingLocation()
         waitingForImmediateLocation = true
     }

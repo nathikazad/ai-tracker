@@ -225,7 +225,7 @@ export async function updateMovements(userId: number) {
     // console.log(closestLocations)
     // find the closest point for each stationary point
     for (let stationaryPeriod of stationaryPeriods) {
-        let minDistance = 1000000000
+        let minDistance = 500
         for (let location of closestLocations) {
             let distance = geolib.getDistance({ latitude: stationaryPeriod.latitude, longitude: stationaryPeriod.longitude }, { latitude: location.location.coordinates[1], longitude: location.location.coordinates[0] })
             if(distance < minDistance) {
@@ -261,7 +261,14 @@ export async function updateMovements(userId: number) {
     // insert into database
     for(let period of periodsToWrite) {
         console.log(`insert ${toPST(period.startTime)} - ${toPST(period.endTime)} ${period.closestLocation?.name}`)
-        await insertStay(userId, new Date(period.startTime), new Date(period.endTime), period.closestLocation)
+        let closestLocation = period.closestLocation ?? {
+            location: convertLocationToPostGISPoint({
+                lat: period.latitude, 
+                lon: period.longitude,
+                timestamp: period.startTime}),
+            name: "Unknown location"
+        }
+        await insertStay(userId, new Date(period.startTime), new Date(period.endTime), closestLocation)
     }
 
     for(let [id, period] of periodsToUpdate) {
@@ -274,6 +281,12 @@ export async function updateMovements(userId: number) {
     // insert or update stay event
 }
 
+function convertLocationToPostGISPoint(location: Location): PostGISPoint {
+    return {
+        type: "Point",
+        coordinates: [location.lon, location.lat]
+    }
+}
 interface StationaryPeriod {
     startTime: string;
     endTime: string;

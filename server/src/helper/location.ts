@@ -486,10 +486,4 @@
 //     return resp.insert_locations!.returning![0];
 // }
 
-// function convertLocationToPostGISPoint(location: Location): PostGISPoint {
-//     return {
-//         type: "Point",
-//         coordinates: [location.lon, location.lat]
-//     }
-// }
 
