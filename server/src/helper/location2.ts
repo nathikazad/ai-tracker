@@ -186,9 +186,6 @@ export async function updateMovements(userId: number) {
     console.log(`locations ${locations.length}`)
     console.log(`new locations ${newLocations.length}`)
     let stationaryPeriods = findStationaryPeriods(newLocations, 3, 20, 60, 60 * 1000)
-    for(let stationaryPeriod of stationaryPeriods) {
-        console.log(`STATIONARY 1: ${toPST(stationaryPeriod.startTime)} - ${toPST(stationaryPeriod.endTime)} ${stationaryPeriod.closestLocation?.name} ${stationaryPeriod.closestDistance}`)
-    }
     console.log(`stationary periods ${stationaryPeriods.length}`)
     if(events.length == 2) {
         for(let i = 0; i < stationaryPeriods.length; i++) {
@@ -202,9 +199,9 @@ export async function updateMovements(userId: number) {
             
         }
     }
-    // if(stationaryPeriods.length == 1) {
-    //     return
-    // }
+    if(stationaryPeriods.length == 0) {
+        return
+    }
     // find max distance between points
     let maxDistance = 0
     for (let i = 0; i < stationaryPeriods.length - 1; i++) {
@@ -338,7 +335,12 @@ function findStationaryPeriods(data: Location[], windowSize: number, thresholdDi
         }
         if(stationary) {
             stationaryPeriods[stationaryPeriods.length - 1] = constructStationary(points, `${i - points.length + 1} - ${i-1}`)
-            if(velocity[i] > 0.5) {
+            let distance = 0
+            if(i < data.length - 1) {
+                distance = geolib.getDistance({ latitude: data[i].lat, longitude: data[i].lon }, { latitude: data[i+1].lat, longitude: data[i+1].lon })
+            }
+            if(velocity[i] > 0.5 || 
+                (distance > 200 && data[i].accuracy !== undefined && data[i].accuracy! < 40)) {
                 stationary = false
                 points = []
             }
@@ -365,12 +367,6 @@ function findStationaryPeriods(data: Location[], windowSize: number, thresholdDi
             mergedPoints.push(stationaryPeriods[i])
         }
     }
-    // console.log(`change ${stationaryPeriods.length} -> ${mergedPoints.length}`)
-    // mergedPoints = stationaryPeriods
-    // for(let i = 0; i < mergedPoints.length; i++) {
-    //     console.log(`${i} ${toPST(mergedPoints[i].startTime)} - ${toPST(mergedPoints[i].endTime)} ${mergedPoints[i].duration} ${mergedPoints[i].polyline} ||  ${mergedPoints[i].fullPolyline} ${mergedPoints[i].range}`)
-    // }
-    // console.log(velocity)
     return mergedPoints;
 }
 
