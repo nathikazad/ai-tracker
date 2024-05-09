@@ -127,6 +127,7 @@ export async function updateMovements(userId: number) {
     let tzComp: timestamptz_comparison_exp = {}
     if(events.length == 2) {
         tzComp._gte = getStartOfDay(addHours(toDate(events[0].end_time), -24).toISOString())
+        deleteStay(events[1].id)
     }
 
     let client = getHasura();
@@ -243,15 +244,6 @@ export async function updateMovements(userId: number) {
     let periodsToUpdate: [number, StationaryPeriod][] = []
     let periodsToWrite: StationaryPeriod[] = stationaryPeriods
 
-    if(events.length == 2) {
-        if(toDate(stationaryPeriods[0].startTime).getTime() == toDate(events[1].start_time).getTime()) {
-            periodsToWrite = periodsToWrite.slice(1)
-            if(toDate(stationaryPeriods[0].endTime).getTime() != toDate(events[1].end_time).getTime()) {
-                periodsToUpdate.push([events[1].id, stationaryPeriods[0]])
-                await updateStay(events[1].id, toDate(stationaryPeriods[0].endTime))
-            }
-        }
-    }
     
     // lengths of each
     console.log(`To update: ${periodsToUpdate.length} \nTo write: ${periodsToWrite.length}`)
@@ -426,16 +418,12 @@ function insertStay(userId: number, startTime: Date | undefined, endTime: Date |
     })
 }
 
-function updateStay(eventId: number, endTime: Date | undefined) {
+
+function deleteStay(eventId: number) {
     let chain = getHasura();
     return chain.mutation({
-        update_events_by_pk: [{
-            pk_columns: {
-                id: eventId
-            },
-            _set: {
-                end_time: endTime?.toISOString()
-            }
+        delete_events_by_pk: [{
+            id: eventId
         }, {
             id: true
         }]
