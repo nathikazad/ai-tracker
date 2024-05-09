@@ -90,7 +90,7 @@ app.post('/updateLocation', async (req: Request, res: Response) => {
         try {
             console.log(`🦵🏻🦵🏻🦵🏻🦵🏻 ${userId} ${req.body}`)
             console.log(req.body)
-            await addLocation(userId, req.body.location);
+            await addLocation(userId, req.body.locations);
             await updateMovements(userId)
             // console.log("success")
             res.status(200).json({

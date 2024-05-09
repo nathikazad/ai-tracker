@@ -26,9 +26,9 @@ export interface DBLocation {
     name?: string
 }
 
-export async function addLocation(userId: number, location: Location) {
+export async function addLocation(userId: number, locations: Location[]) {
     // make time equal start of day
-    let timestamp = getStartOfDay(location.timestamp);
+    let timestamp = getStartOfDay(locations[0].timestamp);
     let client = getHasura();
     try {
         let resp = await client.mutation({
@@ -44,7 +44,7 @@ export async function addLocation(userId: number, location: Location) {
                 }
             ]
         }, {
-            location: convertLocationToJSON(location)
+            location: convertLocationToJSON(locations)
         });
     } catch (error) {
         let gqlError = error as GraphQLError;
@@ -68,14 +68,14 @@ export async function addLocation(userId: number, location: Location) {
                 ]
             });
             console.log(resp);
-            updateLocation(resp.user_movements[0].id, location);
+            updateLocation(resp.user_movements[0].id, locations);
         } else {
             throw error;
         }
 
     }
 
-    async function updateLocation(movementId: number, location: Location) {
+    async function updateLocation(movementId: number, locations: Location[]) {
         let resp = await getHasura().mutation({
             update_user_movements_by_pk: [
                 {
@@ -90,21 +90,30 @@ export async function addLocation(userId: number, location: Location) {
                     id: true
                 }]
         }, {
-            location: convertLocationToJSON(location)
+            location: convertLocationToJSON(locations)
         })
 
         console.log(resp);
     }
 
-    function convertLocationToJSON(location: Location) {
-        return {
-            [location.timestamp]: {
+    function convertLocationToJSON(locations: Location[]) {
+        return locations.map(location => {
+            return {
                 lat: location.lat,
                 lon: location.lon,
                 timestamp: location.timestamp,
                 accuracy: location.accuracy
             }
-        }
+        })
+        
+        // {
+        //     [location.timestamp]: {
+        //         lat: location.lat,
+        //         lon: location.lon,
+        //         timestamp: location.timestamp,
+        //         accuracy: location.accuracy
+        //     }
+        // }
     }
 }
 

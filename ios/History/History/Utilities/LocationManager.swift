@@ -8,6 +8,9 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     var waitingForImmediateLocation: Bool = false
     
     private let locationUpdateDistanceFilter: CLLocationDistance = 50
+    var waitAndSendLocationTimer: Timer?
+    let timeToWaitBeforeSending = 60.0 //seconds
+    var locationsToSend: [CLLocation] = []
     
     @Published var isTrackingLocation = false
     
@@ -99,11 +102,21 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
             locationManager.distanceFilter = locationUpdateDistanceFilter
             locationManager.startUpdatingLocation()
             waitingForImmediateLocation = false
+            uploadLocationToServer([location])
         } else {
-            print("LocationManager: LocationManager: Regular OS location")
-            
+            print("LocationManager: LocationManager: Regular OS location, Adding to be sent in 60 seconds")
+            waitAndSendLocationTimer?.invalidate()
+            waitAndSendLocationTimer = nil
+            locationsToSend.append(location)
+            waitAndSendLocationTimer = Timer.scheduledTimer(timeInterval: timeToWaitBeforeSending, target: self, selector: #selector(sendRemainingLocations), userInfo: nil, repeats: false)
         }
-        uploadLocationToServer(location)
+    }
+    
+    @objc private func sendRemainingLocations() {
+        print("LocationManager: sendRemainingLocations: sending remaining locations")
+        uploadLocationToServer(locationsToSend)
+        locationsToSend = []
+        waitAndSendLocationTimer = nil
     }
     
     func forceUpdateLocation() {
@@ -114,15 +127,15 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         waitingForImmediateLocation = true
     }
     
-    func uploadLocationToServer(_ location: CLLocation) {
+    func uploadLocationToServer(_ locations: [CLLocation]) {
         guard let token = Authentication.shared.hasuraJwt else {
             print("No token available")
             return
         }
         Task {
-            print("sending location")
+            print("sending location \(locations.count)")
             let body = [
-                "location": location.toJSON()
+                "locations": locations.map { $0.toJSON() }
             ]
             ServerCommunicator.sendPostRequest(to: updateLocationEndpoint, body: body, token: token, stackOnUnreachable: true)
         }
