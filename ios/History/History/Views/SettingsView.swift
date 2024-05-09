@@ -53,12 +53,6 @@ struct SettingsView: View {
                         Label("Places", systemImage: "mappin.and.ellipse")
                             .foregroundColor(.primary)
                     };
-                    if(Authentication.shared.isAdmin){
-                        NavigationLink(destination: LocationsDebugView()) {
-                            Label("Debug Places", systemImage: "mappin.and.ellipse")
-                                .foregroundColor(.primary)
-                        }
-                    }
                     Button(action: changeUserId) {
                         Label("Change User \(currentUserName)", systemImage: "person.2.fill")
                             .foregroundColor(.primary)

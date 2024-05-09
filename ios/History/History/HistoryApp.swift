@@ -32,6 +32,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                     // print("calling setup from foreground observer")
                     Hasura.shared.setup()
                     await ServerCommunicator.processPendingRequests()
+                    LocationManager.shared.forceUpdateLocation()
                     print("Health kit enabled: \(HealthKitManager.shared.authorized)")
                 }
             }

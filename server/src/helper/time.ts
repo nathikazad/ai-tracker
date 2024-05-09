@@ -53,3 +53,14 @@ export function secondsToHHMM(seconds: number): string {
 
     return `${formattedHours}:${formattedMinutes}`;
 }
+
+
+export function getStartOfDay(timestamp: string): string {
+    let date = new Date(timestamp);
+    date.setUTCHours(0, 0, 0, 0);
+    return date.toISOString();
+}
+
+export function addHours(date: Date, hours: number): Date {
+    return new Date(date.getTime() + hours * 60 * 60 * 1000)
+}

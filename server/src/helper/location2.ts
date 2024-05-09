@@ -2,9 +2,11 @@
 import * as geolib from 'geolib';
 import * as polyline from '@mapbox/polyline';
 import { getHasura } from '../config';
-import { GraphQLError, $, order_by } from '../generated/graphql-zeus';
-import { toPST } from './time';
+import { GraphQLError, $, order_by, timestamptz_comparison_exp } from '../generated/graphql-zeus';
+import { addHours, getStartOfDay, toDate, toPST } from './time';
+import { get } from 'http';
 import { stat } from 'fs';
+import e from 'express';
 
 export interface Location {
     lat: number;
@@ -106,19 +108,18 @@ export async function addLocation(userId: number, location: Location) {
     }
 }
 
-
-function getStartOfDay(timestamp: string): string {
-    let date = new Date(timestamp);
-    date.setUTCHours(0, 0, 0, 0);
-    return date.toISOString();
-}
-
-function addHours(date: Date, hours: number): Date {
-    return new Date(date.getTime() + hours * 60 * 60 * 1000)
-}
-
 export async function updateMovements(userId: number) {
     console.log(`start of day ${getStartOfDay(new Date().toISOString())}`)
+
+    let events = await getLastEvents(userId, "stay", 2)
+    for(let event of events) {
+        console.log(`EVENT: ${event.id} ${toPST(event.start_time)} - ${toPST(event.end_time)} ${event.metadata?.location?.name}`)
+    }
+    let tzComp: timestamptz_comparison_exp = {}
+    if(events.length == 2) {
+        tzComp._gte = getStartOfDay(addHours(toDate(events[0].end_time), -24).toISOString())
+    }
+
     let client = getHasura();
     let resp = await client.query({
         user_movements: [
@@ -127,9 +128,7 @@ export async function updateMovements(userId: number) {
                     user_id: {
                         _eq: userId
                     },
-                    // date: {
-                    //     _eq: getStartOfDay(new Date().toISOString())
-                    // }
+                    date: tzComp
                 }
             },
             {
@@ -139,7 +138,7 @@ export async function updateMovements(userId: number) {
         ]
     });
     
-    console.log(resp);
+    // console.log(resp);
     // make a single array of all locations by combining all moves
     let moves: { [key: string]: Location } = {};
     for (let key in resp.user_movements) {
@@ -148,6 +147,8 @@ export async function updateMovements(userId: number) {
             ...resp.user_movements[key].moves
         }
     }
+    
+    console.log(`moves ${Object.keys(moves).length}`)
     let locations: Location[] = []
     for (let key in moves) {
         locations.push({
@@ -157,7 +158,44 @@ export async function updateMovements(userId: number) {
             accuracy: moves[key].accuracy
         });
     }
-    let stationaryPeriods = findStationaryPeriods(locations, 3, 20, 60, 60 * 1000)
+    locations.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+    let newLocations: Location[] = []
+    if(events.length == 2) {
+        let startDate = toDate(events[0].end_time)
+        console.log(`start date ${toPST(startDate.toISOString())}`)
+        startDate = addHours(startDate, -1)
+        console.log(`start date ${toPST(startDate.toISOString())}`)
+        for(let location of locations) {
+            if(new Date(location.timestamp) > startDate) {
+                newLocations.push(location)
+            }
+        }
+    }
+    if(locations.length == 0) {
+        return;
+    }
+    console.log(`locations ${locations.length}`)
+    console.log(`new locations ${newLocations.length}`)
+    let stationaryPeriods = findStationaryPeriods(newLocations, 3, 20, 60, 60 * 1000)
+    for(let stationaryPeriod of stationaryPeriods) {
+        console.log(`STATIONARY 1: ${toPST(stationaryPeriod.startTime)} - ${toPST(stationaryPeriod.endTime)} ${stationaryPeriod.closestLocation?.name} ${stationaryPeriod.closestDistance}`)
+    }
+    console.log(`stationary periods ${stationaryPeriods.length}`)
+    if(events.length == 2) {
+        for(let i = 0; i < stationaryPeriods.length; i++) {
+            let sp = stationaryPeriods[i]
+            console.log(toDate(sp.endTime).getTime(), toDate(events[0].end_time).getTime())
+            if(toDate(sp.endTime).getTime() == toDate(events[0].end_time).getTime()) {
+                console.log(`removing ${i}`)
+                stationaryPeriods = stationaryPeriods.slice(i+1)
+                break
+            }
+            
+        }
+    }
+    // if(stationaryPeriods.length == 1) {
+    //     return
+    // }
     // find max distance between points
     let maxDistance = 0
     for (let i = 0; i < stationaryPeriods.length - 1; i++) {
@@ -169,6 +207,7 @@ export async function updateMovements(userId: number) {
         }
     }
     console.log(`Max distance: ${maxDistance}`)
+    maxDistance = maxDistance == 0 ? 1000 : maxDistance
     let closestLocations = await getClosestUserLocation(userId, {
         lat: stationaryPeriods[0].latitude,
         lon: stationaryPeriods[0].longitude,
@@ -183,40 +222,42 @@ export async function updateMovements(userId: number) {
             if(distance < minDistance) {
                 minDistance = distance
                 stationaryPeriod.closestLocation = location
+                stationaryPeriod.closestDistance = distance
             }
         }
     }
     // print closest location for each point and the distance
     for(let stationaryPeriod of stationaryPeriods) {
-        let distance = geolib.getDistance({ latitude: stationaryPeriod.latitude, longitude: stationaryPeriod.longitude }, { latitude: stationaryPeriod.closestLocation!.location.coordinates[1], longitude: stationaryPeriod.closestLocation!.location.coordinates[0] })
-        console.log(`Stationary: ${toPST(stationaryPeriod.startTime)} - ${toPST(stationaryPeriod.endTime)} ${stationaryPeriod.closestLocation?.name} ${distance}`)
+        console.log(`STATIONARY 2: ${toPST(stationaryPeriod.startTime)} - ${toPST(stationaryPeriod.endTime)} ${stationaryPeriod.closestLocation?.name} ${stationaryPeriod.closestDistance}`)
     }
     // hash start and end timestamp into a single string
-    let startDate = new Date();
-    startDate = addHours(startDate, -48)
-    let events = await getLastEvents(userId, "stay", startDate)
 
     console.log(stationaryPeriods.length)
-    let periodsAlreadyWritten: StationaryPeriod[] = []
-    for(let event of events) {
-        console.log(`event ${event.id} ${event.start_time}`)
-        for(let stationaryPeriod of stationaryPeriods) {
-            let t1 = new Date(event.start_time+'Z').getTime()
-            let t2 = new Date(stationaryPeriod.startTime).getTime()
-            if( Math.abs(t1 - t2) < 1000) {
-                console.log(`hit $${event.id} ${event.start_time+'Z'} ${stationaryPeriod.startTime} ${Math.abs(t1 - t2)}`)
-                periodsAlreadyWritten.push(stationaryPeriod)
+    
+    let periodsToUpdate: [number, StationaryPeriod][] = []
+    let periodsToWrite: StationaryPeriod[] = stationaryPeriods
+
+    if(events.length == 2) {
+        if(toDate(stationaryPeriods[0].startTime).getTime() == toDate(events[1].start_time).getTime()) {
+            periodsToWrite = periodsToWrite.slice(1)
+            if(toDate(stationaryPeriods[0].endTime).getTime() != toDate(events[1].end_time).getTime()) {
+                periodsToUpdate.push([events[1].id, stationaryPeriods[0]])
+                await updateStay(events[1].id, toDate(stationaryPeriods[0].endTime))
             }
         }
-        for(let period of periodsAlreadyWritten) {
-            stationaryPeriods = stationaryPeriods.filter(p => p.startTime !== period.startTime)
-        }
     }
-    console.log(stationaryPeriods.length)
+    
+    // lengths of each
+    console.log(`To update: ${periodsToUpdate.length} \nTo write: ${periodsToWrite.length}`)
     // insert into database
-    for(let period of stationaryPeriods) {
-        console.log(period.startTime)
-        // await insertStay(userId, new Date(period.startTime), new Date(period.endTime), period.closestLocation)
+    for(let period of periodsToWrite) {
+        console.log(`insert ${toPST(period.startTime)} - ${toPST(period.endTime)} ${period.closestLocation?.name}`)
+        await insertStay(userId, new Date(period.startTime), new Date(period.endTime), period.closestLocation)
+    }
+
+    for(let [id, period] of periodsToUpdate) {
+        console.log(`update ${id} ${period.startTime}`)
+        
     }
     // console.log(JSON.stringify(stay, null, 4))
     // fetch last event
@@ -235,10 +276,12 @@ interface StationaryPeriod {
     fullPolyline: string;
     range: string;
     closestLocation?: DBLocation;
+    closestDistance?: number;
 
 }
 
 function findStationaryPeriods(data: Location[], windowSize: number, thresholdDistance: number, thresholdTime: number, minDuration: number): StationaryPeriod[] {
+    console.log(`data ${data.length}`)
     data.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
     
     let velocity: number[] = []
@@ -252,6 +295,7 @@ function findStationaryPeriods(data: Location[], windowSize: number, thresholdDi
         timeSpan = Math.ceil(timeSpan / 1000); 
         velocity.push(distTotal/timeSpan)
     }
+    console.log(`velocity ${velocity.length}`)
     let stationary = false
     let points: Location[] = []
     let stationaryPeriods: StationaryPeriod[] = []
@@ -284,7 +328,6 @@ function findStationaryPeriods(data: Location[], windowSize: number, thresholdDi
             }
         }
     }
-    console.log(stationaryPeriods.length)
     // merge points that are less than 100m from each other
     let mergedPoints: StationaryPeriod[] = [stationaryPeriods[0]]
     for(let i = 1; i < stationaryPeriods.length; i++) {
@@ -300,11 +343,11 @@ function findStationaryPeriods(data: Location[], windowSize: number, thresholdDi
             mergedPoints.push(stationaryPeriods[i])
         }
     }
-    console.log(`change ${stationaryPeriods.length} -> ${mergedPoints.length}`)
+    // console.log(`change ${stationaryPeriods.length} -> ${mergedPoints.length}`)
     // mergedPoints = stationaryPeriods
-    for(let i = 0; i < mergedPoints.length; i++) {
-        console.log(`${i} ${toPST(mergedPoints[i].startTime)} - ${toPST(mergedPoints[i].endTime)} ${mergedPoints[i].duration} ${mergedPoints[i].polyline} ||  ${mergedPoints[i].fullPolyline} ${mergedPoints[i].range}`)
-    }
+    // for(let i = 0; i < mergedPoints.length; i++) {
+    //     console.log(`${i} ${toPST(mergedPoints[i].startTime)} - ${toPST(mergedPoints[i].endTime)} ${mergedPoints[i].duration} ${mergedPoints[i].polyline} ||  ${mergedPoints[i].fullPolyline} ${mergedPoints[i].range}`)
+    // }
     // console.log(velocity)
     return mergedPoints;
 }
@@ -365,6 +408,22 @@ function insertStay(userId: number, startTime: Date | undefined, endTime: Date |
     })
 }
 
+function updateStay(eventId: number, endTime: Date | undefined) {
+    let chain = getHasura();
+    return chain.mutation({
+        update_events_by_pk: [{
+            pk_columns: {
+                id: eventId
+            },
+            _set: {
+                end_time: endTime?.toISOString()
+            }
+        }, {
+            id: true
+        }]
+    })
+}
+
 async function getClosestUserLocation(userId: number, currentLocation: Location, radius: number = 100): Promise<DBLocation[]> {
     console.log(`POINT(${currentLocation.lat} ${currentLocation.lon})`);
     let locs = await getHasura().query({
@@ -387,11 +446,12 @@ async function getClosestUserLocation(userId: number, currentLocation: Location,
     return locs.users_by_pk!.closest_user_location!;
 }
 
-async function getLastEvents(userId: number, event_type: string, date: Date) {
+async function getLastEvents(userId: number, event_type: string, limit: number) {
     let lastEvents = await getHasura().query({
         events: [{
+            limit: limit,
             order_by: [{
-                start_time: order_by.asc
+                start_time: order_by.desc
             }],
             where: {
                 _and: [{
@@ -401,9 +461,9 @@ async function getLastEvents(userId: number, event_type: string, date: Date) {
                     event_type: {
                         _eq: event_type
                     },
-                    start_time: {
-                        _gt: date.toISOString()
-                    }
+                    // start_time: {
+                    //     _gte: date.toISOString()
+                    // }
                     // ,
                     // end_time: {
                     //     _is_null: true
@@ -417,8 +477,10 @@ async function getLastEvents(userId: number, event_type: string, date: Date) {
             end_time: true
         }]
     });
-    for(let event of lastEvents.events) {
-        console.log(`event ${event.id} ${event.start_time}`)
-    }
+    // for(let event of lastEvents.events) {
+    //     console.log(`event ${event.id} ${event.start_time}`)
+    // }
+    // reverse the order
+    lastEvents.events.reverse();
     return lastEvents.events
 }
