@@ -257,7 +257,9 @@ export async function updateMovements(userId: number) {
                 timestamp: period.startTime}),
             name: "Unknown location"
         }
-        await insertStay(userId, new Date(period.startTime), new Date(period.endTime), closestLocation)
+        if(new Date(period.endTime).getTime() - new Date(period.startTime).getTime() > 15 * 60 * 1000) {
+            await insertStay(userId, new Date(period.startTime), new Date(period.endTime), closestLocation) 
+        }
     }
 
     for(let [id, period] of periodsToUpdate) {
