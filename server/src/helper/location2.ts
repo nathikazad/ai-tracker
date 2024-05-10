@@ -134,6 +134,9 @@ export async function updateMovements(userId: number) {
     let resp = await client.query({
         user_movements: [
             {
+                order_by: [{
+                    date: order_by.asc
+                }],
                 where: {
                     user_id: {
                         _eq: userId
@@ -148,26 +151,27 @@ export async function updateMovements(userId: number) {
         ]
     });
     
-    // console.log(resp);
+    console.log(resp);
     // make a single array of all locations by combining all moves
-    let moves: { [key: string]: Location } = {};
+    
+    let locations: Location[] = []
     for (let key in resp.user_movements) {
-        moves = {
-            ...moves,
-            ...resp.user_movements[key].moves
+        console.log(`key ${key} ${resp.user_movements[key].moves.length}`)
+        // length of moves
+        for(let i in resp.user_movements[key].moves) {
+            let move = resp.user_movements[key].moves[i]
+            console.log(`moves ${toPST(resp.user_movements[key].moves[i].timestamp)}`)
+            locations.push({
+                lat: move.lat,
+                lon: move.lon,
+                timestamp: move.timestamp,
+                accuracy: move.accuracy
+            });
         }
     }
     
-    console.log(`moves ${Object.keys(moves).length}`)
-    let locations: Location[] = []
-    for (let key in moves) {
-        locations.push({
-            lat: moves[key].lat,
-            lon: moves[key].lon,
-            timestamp: moves[key].timestamp,
-            accuracy: moves[key].accuracy
-        });
-    }
+    // console.log(`moves ${Object.keys(moves).length}`)
+    console.log(`locations ${locations.length}`)
     locations.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
     let newLocations: Location[] = []
     if(events.length == 2) {
