@@ -3,23 +3,24 @@ import { extractJson, llamaComplete } from "../../third/llama";
 import { complete4, createEmbedding } from "../../third/openai";
 import fs from 'fs'
 import { extractMetadata } from "./metadataLogic";
+import { convertToUtc, extractTime } from "../../helper/time";
 
 export enum Category {
-    Sleeping = "Sleeping",
-    WakingUp = "Wakingup",
-    Meeting = "Meeting",
-    Feeling = "Feeling",
-    Reading = "Reading",
-    Learning = "Learning",
-    Eating = "Eating",
-    Cooking = "Cooking",
-    Praying = "Praying",
-    Shopping = "Shopping",
-    Chores = "Chores",
-    Dancing = "Dancing",
-    Working = "Working",
-    Exercising = "Exercising",
-    Distraction = "Distraction"
+    Sleeping = "sleeping",
+    WakingUp = "wakingup",
+    Meeting = "meeting",
+    Feeling = "feeling",
+    Reading = "reading",
+    Learning = "learning",
+    Eating = "eating",
+    Cooking = "cooking",
+    Praying = "praying",
+    Shopping = "shopping",
+    Chores = "chores",
+    Dancing = "dancing",
+    Working = "working",
+    Exercising = "exercising",
+    Distraction = "distraction"
 }
 
 export const categoryDescriptions: { [key in Category]: string } =
@@ -50,24 +51,26 @@ export enum Tense {
 export interface Interaction {
     statement: string;
     recordedAt: string;
+    timezone: string;
 }
 export interface ASEvent {
     sentence?: string;
     tense: Tense
     categories: Category[];
-    startTime?: string | null;
-    endTime?: string | null;
+    startTime: string | null;
+    endTime: string | null;
     cost?: string | null;
     metadata?: any;
 }
 
 export async function extractEvents(interaction: Interaction): Promise<ASEvent> {
     // let events: ASEvent[] = [];
+    let timeInTimezone = extractTime(interaction.recordedAt, interaction.timezone);
     let sentence = interaction.statement;
     let categories = await extractCategories(sentence);
     // console.log(`${sentence}: ${categories}`);
     let tense = await extractTense(sentence);
-    let temporal = await extractTemporalInformation(sentence, interaction.recordedAt, categories, tense);
+    let temporal = await extractTemporalInformation(sentence, timeInTimezone!, categories, tense);
     let event: ASEvent = {
         sentence: sentence,
         categories: categories,
@@ -75,23 +78,28 @@ export async function extractEvents(interaction: Interaction): Promise<ASEvent> 
         startTime: convertTimeFormat(temporal.start_time),
         endTime: convertTimeFormat(temporal.end_time),
     }
-    
+    event.startTime = convertToUtc(event.startTime, interaction.recordedAt, interaction.timezone)!;
+    event.endTime = convertToUtc(event.endTime, interaction.recordedAt, interaction.timezone)!;
     event = await extractMetadata(event);
-    
-
     return event
 
 
-    function convertTimeFormat(timeStr: string | null): string | null {
-        if (!timeStr) {
+    function convertTimeFormat(time: string | null): string | null {
+        if (!time) {
             return null;
+        }
+        let parts = time.split(' ');
+        let date = time.split(' ')[0];
+        let timeStr = time.split(' ')[1];
+        if(parts.length > 2){
+            timeStr += " "+parts[2];
         }
 
         // check if time is in 12 hour format
         if (!timeStr.match(/^(\d{1,2}):(\d{2})\s?([ap]m)?$/)) {
             return null;
         }
-        return timeStr.replace(/^(\d{1,2}):(\d{2})\s?([ap]m)?$/, (match, hour, minute, amPm) => {
+        return date+" "+timeStr.replace(/^(\d{1,2}):(\d{2})\s?([ap]m)?$/, (match, hour, minute, amPm) => {
             return `${hour.padStart(2, '0')}:${minute} ${amPm || ''}`;
         }).toLowerCase();
     }
@@ -219,7 +227,7 @@ export async function extractCategories(sentence: string): Promise<Category[]> {
         // captitalize the first letter of each category
         categories = categories.map((c: string) => {
             c = c.replace(/['"]+/g, '');
-            return c.trim().charAt(0).toUpperCase() + c.trim().slice(1);
+            return c.trim();
         });
         return categories as Category[];
         // // remove all categories that are not in the enum
@@ -330,19 +338,18 @@ export async function extractTemporalInformation(sentence: string, recordedTime:
         ${addition}
         Give me output as a json object, prefixed and suffixed by triple backticks, 
         with the fields 
-            start_time?: string //in format 'hh:mm am/pm'
-            end_time?: string //in format 'hh:mm am/pm'
+            start_time?: string //in format 'mm/dd hh:mm am/pm'
+            end_time?: string //in format 'mm/dd hh:mm am/pm'
             is_duration_given?: boolean //true if user explicitly mentioned how long they did the activity for`
 
-    // console.log(prompt);
-    let output = await llamaComplete(prompt, {
-        model: "70b",
-        temperature: 0.1,
-        toLowerCase: true
-    })
-    // console.log(output);
+    console.log(prompt);
+    let output = await complete4(prompt, 0.1, 100, true);
+    console.log(output);
 
     let json = extractJson(output);
+    // if(json.end_time == null) {
+    //     json.end_time = recordedTime;
+    // }
     if(!json.start_time && json.is_duration_given){
         console.log(json)
         console.log("Finding duration");
@@ -350,15 +357,11 @@ export async function extractTemporalInformation(sentence: string, recordedTime:
         Calculate the start_time by subtracting the duration from the end_time.
         Give me output as a json object, prefixed and suffixed by triple backticks, 
         with the field
-            start_time: string //in format 'hh:mm am/pm'`
+            start_time: string //in format 'mm/dd hh:mm am/pm'`
 
-        console.log(prompt);
-        let output = await llamaComplete(prompt, {
-            model: "70b",
-            temperature: 0.1,
-            toLowerCase: true
-        })
-        console.log(output);
+        // console.log(prompt);
+        let output = await complete4(prompt, 0.1, 100, true);
+        // console.log(output);
         let secondJson = extractJson(output);
         return {
             ...json,

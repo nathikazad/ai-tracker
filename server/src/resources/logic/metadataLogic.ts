@@ -11,13 +11,9 @@ export async function extractMetadata(event: ASEvent): Promise<ASEvent> {
                 break;
             case Category.WakingUp:
                 event.categories = event.categories.filter(c => c !== Category.WakingUp)
-                if(event.tense == Tense.Past && event.endTime == null){
-                    event.endTime = event.startTime
-                    if(!event.categories.includes(Category.Sleeping)){
-                        event.startTime = null
-                    }
-                }
+                event.endTime = event.endTime ?? event.startTime;
                 if(!event.categories.includes(Category.Sleeping)){
+                    event.startTime = null
                     event.categories.push(Category.Sleeping)
                 }
                 break;

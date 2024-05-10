@@ -69,10 +69,18 @@ export async function uploadSleep(userId: number, matches: { sleep?: string, wak
                         },
                         _set: {
                             end_time: end_time
+                        },
+                        _append: {
+                            logs: $`logs`
                         }
+                        
                     }, {
                         id: true
                     }]
+                },{
+                    logs: {
+                        [toPST(new Date().toISOString())]: "Sensor updated end time of sleep event"
+                    }
                 })
             } else {
                 console.log(`End time is same`)
@@ -87,13 +95,17 @@ export async function uploadSleep(userId: number, matches: { sleep?: string, wak
                         start_time: start_time,
                         end_time: end_time,
                         cost_time: cost_time,
-                        metadata: $`metadata`
+                        metadata: $`metadata`,
+                        logs: $`logs`
                     }
                 }, {
                     id: true
                 }]
             }, {
-                "metadata": metadata
+                "metadata": metadata,
+                "logs": {
+                    [toPST(new Date().toISOString())]: "Sensor created new sleep event"
+                }
             });
         }
     }

@@ -1,8 +1,8 @@
-import Replicate from "replicate";
+// import Replicate from "replicate";
 import { config } from "../config";
-const replicate = new Replicate({
-    auth: config.replicateApiKey
-});
+// const replicate = new Replicate({
+//     auth: config.replicateApiKey
+// });
 
 import Groq from "groq-sdk";
 
@@ -46,7 +46,6 @@ export function extractJson(jsonString: string): any {
     // Determine which bracket comes first (if any) and set appropriate start and end characters
     let startChar = (firstSquareIndex !== -1 && (firstSquareIndex < firstCurlyIndex || firstCurlyIndex === -1)) ? '[' : '{';
     let endChar = startChar === '{' ? '}' : ']';
-
     let jsonData = jsonString.slice(jsonString.indexOf(startChar), jsonString.lastIndexOf(endChar) + 1);
     if (jsonData) {
         // Remove single line comments
@@ -64,20 +63,3 @@ export function extractJson(jsonString: string): any {
         console.error('JSON:', jsonData);
     }
 }
-
-
-
-    // const input = {
-    //     top_k: 50,
-    //     top_p: 0.9,
-    //     prompt: prompt,
-    //     max_tokens: 512,
-    //     min_tokens: 0,
-    //     temperature: 0.6,
-    //     prompt_template: "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are an assistant helping to interpret human language into logs.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n{prompt}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
-    //     presence_penalty: 1.15,
-    //     frequency_penalty: 0.2
-    // };
-        // const output = await replicate.run("meta/meta-llama-3-70b-instruct", { input });
-    // console.log(`prompt: ${prompt}`)
-    // return (output as Array<string>).join("")

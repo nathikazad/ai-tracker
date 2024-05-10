@@ -30,7 +30,7 @@ export async function complete4(prompt: string, temperature: number | null = nul
     // }
   });
   let message = result.choices[0].message.content!
-  return toLowerCase ? message.replace(/\n/g, "").replace(/"/g, '').trim().toLocaleLowerCase() : message
+  return toLowerCase ? message.trim().toLocaleLowerCase() : message
 }
 
 export async function complete3(prompt: string, temperature: number | null = null, max_tokens: number = 100, toLowerCase : boolean = true) {

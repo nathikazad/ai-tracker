@@ -159,7 +159,7 @@ export async function updateMovements(userId: number) {
         // length of moves
         for(let i in resp.user_movements[key].moves) {
             let move = resp.user_movements[key].moves[i]
-            console.log(`moves ${toPST(resp.user_movements[key].moves[i].timestamp)}`)
+            // console.log(`moves ${toPST(resp.user_movements[key].moves[i].timestamp)}`)
             locations.push({
                 lat: move.lat,
                 lon: move.lon,
