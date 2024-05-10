@@ -127,7 +127,6 @@ export async function updateMovements(userId: number) {
     let tzComp: timestamptz_comparison_exp = {}
     if(events.length == 2) {
         tzComp._gte = getStartOfDay(addHours(toDate(events[0].end_time), -24).toISOString())
-        deleteStay(events[1].id)
     }
 
     let client = getHasura();
@@ -245,12 +244,25 @@ export async function updateMovements(userId: number) {
 
     console.log(stationaryPeriods.length)
     
-    let periodsToUpdate: [number, StationaryPeriod][] = []
     let periodsToWrite: StationaryPeriod[] = stationaryPeriods
+
+    if(events.length == 2) {
+        periodsToWrite = stationaryPeriods.slice(1)
+        let period = stationaryPeriods[0]
+        let closestLocation = period.closestLocation ?? {
+            location: convertLocationToPostGISPoint({
+                lat: period.latitude, 
+                lon: period.longitude,
+                timestamp: period.startTime}),
+            name: "Unknown location"
+        }
+        console.log(`update ${events[1].id} ${toPST(period.startTime)} ${toPST(period.endTime)} ${closestLocation.name}`)
+        updateStay(events[1].id, new Date(period.startTime), new Date(period.endTime), closestLocation)
+    }
 
     
     // lengths of each
-    console.log(`To update: ${periodsToUpdate.length} \nTo write: ${periodsToWrite.length}`)
+    console.log(`To write: ${periodsToWrite.length}`)
     // insert into database
     for(let period of periodsToWrite) {
         console.log(`insert ${toPST(period.startTime)} - ${toPST(period.endTime)} ${period.closestLocation?.name}`)
@@ -265,15 +277,6 @@ export async function updateMovements(userId: number) {
             await insertStay(userId, new Date(period.startTime), new Date(period.endTime), closestLocation) 
         }
     }
-
-    for(let [id, period] of periodsToUpdate) {
-        console.log(`update ${id} ${period.startTime}`)
-        
-    }
-    // console.log(JSON.stringify(stay, null, 4))
-    // fetch last event
-    // skip all stationary that have same time before last event
-    // insert or update stay event
 }
 
 function convertLocationToPostGISPoint(location: Location): PostGISPoint {
@@ -415,6 +418,29 @@ function insertStay(userId: number, startTime: Date | undefined, endTime: Date |
             returning: {
                 id: true
             }
+        }]
+    }, {
+        "metadata": {
+            location: dbLocation
+        }
+
+    })
+}
+
+function updateStay(id: number, startTime: Date | undefined, endTime: Date | undefined, dbLocation?: DBLocation) {
+    let chain = getHasura();
+    return chain.mutation({
+        update_events_by_pk: [{
+            pk_columns: {
+                id: id
+            },
+            _set: {
+                start_time: startTime?.toISOString(),
+                end_time: endTime?.toISOString(),
+                metadata: $`metadata`
+            }
+        }, {
+            id: true
         }]
     }, {
         "metadata": {
