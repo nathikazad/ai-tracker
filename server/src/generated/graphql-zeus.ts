@@ -1722,6 +1722,7 @@ events_aggregate?: [{	/** distinct select on columns */
 	id?:true,
 	match_score?:true,
 	timestamp?:true,
+	transcode_version?:true,
 	user_id?:true,
 		__typename?: true
 }>;
@@ -1754,6 +1755,7 @@ count?: [{	columns?:ValueTypes["interactions_select_column"][],	distinct?:boolea
 ["interactions_avg_fields"]: AliasType<{
 	id?:true,
 	match_score?:true,
+	transcode_version?:true,
 	user_id?:true,
 		__typename?: true
 }>;
@@ -1771,6 +1773,7 @@ count?: [{	columns?:ValueTypes["interactions_select_column"][],	distinct?:boolea
 	id?:ValueTypes["Int_comparison_exp"],
 	match_score?:ValueTypes["float8_comparison_exp"],
 	timestamp?:ValueTypes["timestamptz_comparison_exp"],
+	transcode_version?:ValueTypes["Int_comparison_exp"],
 	user_id?:ValueTypes["Int_comparison_exp"]
 };
 	/** unique or primary key constraints on table "interactions" */
@@ -1792,6 +1795,7 @@ end). throws an error if top level container is not an array */
 ["interactions_inc_input"]: {
 	id?:number,
 	match_score?:ValueTypes["float8"],
+	transcode_version?:number,
 	user_id?:number
 };
 	/** input type for inserting data into table "interactions" */
@@ -1804,6 +1808,7 @@ end). throws an error if top level container is not an array */
 	id?:number,
 	match_score?:ValueTypes["float8"],
 	timestamp?:ValueTypes["timestamptz"],
+	transcode_version?:number,
 	user_id?:number
 };
 	/** aggregate max on columns */
@@ -1813,6 +1818,7 @@ end). throws an error if top level container is not an array */
 	id?:true,
 	match_score?:true,
 	timestamp?:true,
+	transcode_version?:true,
 	user_id?:true,
 		__typename?: true
 }>;
@@ -1823,6 +1829,7 @@ end). throws an error if top level container is not an array */
 	id?:true,
 	match_score?:true,
 	timestamp?:true,
+	transcode_version?:true,
 	user_id?:true,
 		__typename?: true
 }>;
@@ -1856,6 +1863,7 @@ end). throws an error if top level container is not an array */
 	id?:ValueTypes["order_by"],
 	match_score?:ValueTypes["order_by"],
 	timestamp?:ValueTypes["order_by"],
+	transcode_version?:ValueTypes["order_by"],
 	user_id?:ValueTypes["order_by"]
 };
 	/** primary key columns input for table: interactions */
@@ -1877,12 +1885,14 @@ end). throws an error if top level container is not an array */
 	id?:number,
 	match_score?:ValueTypes["float8"],
 	timestamp?:ValueTypes["timestamptz"],
+	transcode_version?:number,
 	user_id?:number
 };
 	/** aggregate stddev on columns */
 ["interactions_stddev_fields"]: AliasType<{
 	id?:true,
 	match_score?:true,
+	transcode_version?:true,
 	user_id?:true,
 		__typename?: true
 }>;
@@ -1890,6 +1900,7 @@ end). throws an error if top level container is not an array */
 ["interactions_stddev_pop_fields"]: AliasType<{
 	id?:true,
 	match_score?:true,
+	transcode_version?:true,
 	user_id?:true,
 		__typename?: true
 }>;
@@ -1897,6 +1908,7 @@ end). throws an error if top level container is not an array */
 ["interactions_stddev_samp_fields"]: AliasType<{
 	id?:true,
 	match_score?:true,
+	transcode_version?:true,
 	user_id?:true,
 		__typename?: true
 }>;
@@ -1916,12 +1928,14 @@ end). throws an error if top level container is not an array */
 	id?:number,
 	match_score?:ValueTypes["float8"],
 	timestamp?:ValueTypes["timestamptz"],
+	transcode_version?:number,
 	user_id?:number
 };
 	/** aggregate sum on columns */
 ["interactions_sum_fields"]: AliasType<{
 	id?:true,
 	match_score?:true,
+	transcode_version?:true,
 	user_id?:true,
 		__typename?: true
 }>;
@@ -1950,6 +1964,7 @@ the end). throws an error if top level container is not an array */
 ["interactions_var_pop_fields"]: AliasType<{
 	id?:true,
 	match_score?:true,
+	transcode_version?:true,
 	user_id?:true,
 		__typename?: true
 }>;
@@ -1957,6 +1972,7 @@ the end). throws an error if top level container is not an array */
 ["interactions_var_samp_fields"]: AliasType<{
 	id?:true,
 	match_score?:true,
+	transcode_version?:true,
 	user_id?:true,
 		__typename?: true
 }>;
@@ -1964,6 +1980,7 @@ the end). throws an error if top level container is not an array */
 ["interactions_variance_fields"]: AliasType<{
 	id?:true,
 	match_score?:true,
+	transcode_version?:true,
 	user_id?:true,
 		__typename?: true
 }>;
@@ -5799,6 +5816,7 @@ the end). throws an error if top level container is not an array */
 			id?:number,
 			match_score?:PartialObjects["float8"],
 			timestamp?:PartialObjects["timestamptz"],
+			transcode_version?:number,
 			user_id?:number
 	},
 	/** aggregated selection of "interactions" */
@@ -5831,6 +5849,7 @@ the end). throws an error if top level container is not an array */
 		__typename?: "interactions_avg_fields";
 			id?:number,
 			match_score?:number,
+			transcode_version?:number,
 			user_id?:number
 	},
 	/** Boolean expression to filter rows from the table "interactions". All fields are combined with a logical 'AND'. */
@@ -5847,6 +5866,7 @@ the end). throws an error if top level container is not an array */
 	id?:PartialObjects["Int_comparison_exp"],
 	match_score?:PartialObjects["float8_comparison_exp"],
 	timestamp?:PartialObjects["timestamptz_comparison_exp"],
+	transcode_version?:PartialObjects["Int_comparison_exp"],
 	user_id?:PartialObjects["Int_comparison_exp"]
 },
 	/** unique or primary key constraints on table "interactions" */
@@ -5868,6 +5888,7 @@ end). throws an error if top level container is not an array */
 ["interactions_inc_input"]: {
 	id?:number,
 	match_score?:PartialObjects["float8"],
+	transcode_version?:number,
 	user_id?:number
 },
 	/** input type for inserting data into table "interactions" */
@@ -5880,6 +5901,7 @@ end). throws an error if top level container is not an array */
 	id?:number,
 	match_score?:PartialObjects["float8"],
 	timestamp?:PartialObjects["timestamptz"],
+	transcode_version?:number,
 	user_id?:number
 },
 	/** aggregate max on columns */
@@ -5890,6 +5912,7 @@ end). throws an error if top level container is not an array */
 			id?:number,
 			match_score?:PartialObjects["float8"],
 			timestamp?:PartialObjects["timestamptz"],
+			transcode_version?:number,
 			user_id?:number
 	},
 	/** aggregate min on columns */
@@ -5900,6 +5923,7 @@ end). throws an error if top level container is not an array */
 			id?:number,
 			match_score?:PartialObjects["float8"],
 			timestamp?:PartialObjects["timestamptz"],
+			transcode_version?:number,
 			user_id?:number
 	},
 	/** response of any mutation on the table "interactions" */
@@ -5932,6 +5956,7 @@ end). throws an error if top level container is not an array */
 	id?:PartialObjects["order_by"],
 	match_score?:PartialObjects["order_by"],
 	timestamp?:PartialObjects["order_by"],
+	transcode_version?:PartialObjects["order_by"],
 	user_id?:PartialObjects["order_by"]
 },
 	/** primary key columns input for table: interactions */
@@ -5953,6 +5978,7 @@ end). throws an error if top level container is not an array */
 	id?:number,
 	match_score?:PartialObjects["float8"],
 	timestamp?:PartialObjects["timestamptz"],
+	transcode_version?:number,
 	user_id?:number
 },
 	/** aggregate stddev on columns */
@@ -5960,6 +5986,7 @@ end). throws an error if top level container is not an array */
 		__typename?: "interactions_stddev_fields";
 			id?:number,
 			match_score?:number,
+			transcode_version?:number,
 			user_id?:number
 	},
 	/** aggregate stddev_pop on columns */
@@ -5967,6 +5994,7 @@ end). throws an error if top level container is not an array */
 		__typename?: "interactions_stddev_pop_fields";
 			id?:number,
 			match_score?:number,
+			transcode_version?:number,
 			user_id?:number
 	},
 	/** aggregate stddev_samp on columns */
@@ -5974,6 +6002,7 @@ end). throws an error if top level container is not an array */
 		__typename?: "interactions_stddev_samp_fields";
 			id?:number,
 			match_score?:number,
+			transcode_version?:number,
 			user_id?:number
 	},
 	/** Streaming cursor of the table "interactions" */
@@ -5992,6 +6021,7 @@ end). throws an error if top level container is not an array */
 	id?:number,
 	match_score?:PartialObjects["float8"],
 	timestamp?:PartialObjects["timestamptz"],
+	transcode_version?:number,
 	user_id?:number
 },
 	/** aggregate sum on columns */
@@ -5999,6 +6029,7 @@ end). throws an error if top level container is not an array */
 		__typename?: "interactions_sum_fields";
 			id?:number,
 			match_score?:PartialObjects["float8"],
+			transcode_version?:number,
 			user_id?:number
 	},
 	/** update columns of table "interactions" */
@@ -6027,6 +6058,7 @@ the end). throws an error if top level container is not an array */
 		__typename?: "interactions_var_pop_fields";
 			id?:number,
 			match_score?:number,
+			transcode_version?:number,
 			user_id?:number
 	},
 	/** aggregate var_samp on columns */
@@ -6034,6 +6066,7 @@ the end). throws an error if top level container is not an array */
 		__typename?: "interactions_var_samp_fields";
 			id?:number,
 			match_score?:number,
+			transcode_version?:number,
 			user_id?:number
 	},
 	/** aggregate variance on columns */
@@ -6041,6 +6074,7 @@ the end). throws an error if top level container is not an array */
 		__typename?: "interactions_variance_fields";
 			id?:number,
 			match_score?:number,
+			transcode_version?:number,
 			user_id?:number
 	},
 	["jsonb"]:any,
@@ -9756,6 +9790,7 @@ export type interactions = {
 	id:number,
 	match_score:float8,
 	timestamp?:timestamptz,
+	transcode_version?:number,
 	user_id:number
 }
 
@@ -9792,6 +9827,7 @@ export type interactions_avg_fields = {
 	__typename?: "interactions_avg_fields",
 	id?:number,
 	match_score?:number,
+	transcode_version?:number,
 	user_id?:number
 }
 
@@ -9809,6 +9845,7 @@ export type interactions_bool_exp = {
 	id?:Int_comparison_exp,
 	match_score?:float8_comparison_exp,
 	timestamp?:timestamptz_comparison_exp,
+	transcode_version?:Int_comparison_exp,
 	user_id?:Int_comparison_exp
 }
 
@@ -9837,6 +9874,7 @@ export type interactions_delete_key_input = {
 export type interactions_inc_input = {
 		id?:number,
 	match_score?:float8,
+	transcode_version?:number,
 	user_id?:number
 }
 
@@ -9850,6 +9888,7 @@ export type interactions_insert_input = {
 	id?:number,
 	match_score?:float8,
 	timestamp?:timestamptz,
+	transcode_version?:number,
 	user_id?:number
 }
 
@@ -9861,6 +9900,7 @@ export type interactions_max_fields = {
 	id?:number,
 	match_score?:float8,
 	timestamp?:timestamptz,
+	transcode_version?:number,
 	user_id?:number
 }
 
@@ -9872,6 +9912,7 @@ export type interactions_min_fields = {
 	id?:number,
 	match_score?:float8,
 	timestamp?:timestamptz,
+	transcode_version?:number,
 	user_id?:number
 }
 
@@ -9908,6 +9949,7 @@ export type interactions_order_by = {
 	id?:order_by,
 	match_score?:order_by,
 	timestamp?:order_by,
+	transcode_version?:order_by,
 	user_id?:order_by
 }
 
@@ -9930,6 +9972,7 @@ export enum interactions_select_column {
 	id = "id",
 	match_score = "match_score",
 	timestamp = "timestamp",
+	transcode_version = "transcode_version",
 	user_id = "user_id"
 }
 
@@ -9942,6 +9985,7 @@ export type interactions_set_input = {
 	id?:number,
 	match_score?:float8,
 	timestamp?:timestamptz,
+	transcode_version?:number,
 	user_id?:number
 }
 
@@ -9950,6 +9994,7 @@ export type interactions_stddev_fields = {
 	__typename?: "interactions_stddev_fields",
 	id?:number,
 	match_score?:number,
+	transcode_version?:number,
 	user_id?:number
 }
 
@@ -9958,6 +10003,7 @@ export type interactions_stddev_pop_fields = {
 	__typename?: "interactions_stddev_pop_fields",
 	id?:number,
 	match_score?:number,
+	transcode_version?:number,
 	user_id?:number
 }
 
@@ -9966,6 +10012,7 @@ export type interactions_stddev_samp_fields = {
 	__typename?: "interactions_stddev_samp_fields",
 	id?:number,
 	match_score?:number,
+	transcode_version?:number,
 	user_id?:number
 }
 
@@ -9986,6 +10033,7 @@ export type interactions_stream_cursor_value_input = {
 	id?:number,
 	match_score?:float8,
 	timestamp?:timestamptz,
+	transcode_version?:number,
 	user_id?:number
 }
 
@@ -9994,6 +10042,7 @@ export type interactions_sum_fields = {
 	__typename?: "interactions_sum_fields",
 	id?:number,
 	match_score?:float8,
+	transcode_version?:number,
 	user_id?:number
 }
 
@@ -10006,6 +10055,7 @@ export enum interactions_update_column {
 	id = "id",
 	match_score = "match_score",
 	timestamp = "timestamp",
+	transcode_version = "transcode_version",
 	user_id = "user_id"
 }
 
@@ -10034,6 +10084,7 @@ export type interactions_var_pop_fields = {
 	__typename?: "interactions_var_pop_fields",
 	id?:number,
 	match_score?:number,
+	transcode_version?:number,
 	user_id?:number
 }
 
@@ -10042,6 +10093,7 @@ export type interactions_var_samp_fields = {
 	__typename?: "interactions_var_samp_fields",
 	id?:number,
 	match_score?:number,
+	transcode_version?:number,
 	user_id?:number
 }
 
@@ -10050,6 +10102,7 @@ export type interactions_variance_fields = {
 	__typename?: "interactions_variance_fields",
 	id?:number,
 	match_score?:number,
+	transcode_version?:number,
 	user_id?:number
 }
 
@@ -16353,6 +16406,12 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
+		transcode_version:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		user_id:{
 			type:"Int_comparison_exp",
 			array:false,
@@ -16394,6 +16453,12 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		match_score:{
 			type:"float8",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		transcode_version:{
+			type:"Int",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -16450,6 +16515,12 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		timestamp:{
 			type:"timestamptz",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		transcode_version:{
+			type:"Int",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -16544,6 +16615,12 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
+		transcode_version:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		user_id:{
 			type:"order_by",
 			array:false,
@@ -16611,6 +16688,12 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
+		transcode_version:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		user_id:{
 			type:"Int",
 			array:false,
@@ -16671,6 +16754,12 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		timestamp:{
 			type:"timestamptz",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		transcode_version:{
+			type:"Int",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -24047,6 +24136,7 @@ export const ReturnTypes: Record<string,any> = {
 		id:"Int",
 		match_score:"float8",
 		timestamp:"timestamptz",
+		transcode_version:"Int",
 		user_id:"Int"
 	},
 	interactions_aggregate:{
@@ -24069,6 +24159,7 @@ export const ReturnTypes: Record<string,any> = {
 	interactions_avg_fields:{
 		id:"Float",
 		match_score:"Float",
+		transcode_version:"Float",
 		user_id:"Float"
 	},
 	interactions_max_fields:{
@@ -24077,6 +24168,7 @@ export const ReturnTypes: Record<string,any> = {
 		id:"Int",
 		match_score:"float8",
 		timestamp:"timestamptz",
+		transcode_version:"Int",
 		user_id:"Int"
 	},
 	interactions_min_fields:{
@@ -24085,6 +24177,7 @@ export const ReturnTypes: Record<string,any> = {
 		id:"Int",
 		match_score:"float8",
 		timestamp:"timestamptz",
+		transcode_version:"Int",
 		user_id:"Int"
 	},
 	interactions_mutation_response:{
@@ -24094,36 +24187,43 @@ export const ReturnTypes: Record<string,any> = {
 	interactions_stddev_fields:{
 		id:"Float",
 		match_score:"Float",
+		transcode_version:"Float",
 		user_id:"Float"
 	},
 	interactions_stddev_pop_fields:{
 		id:"Float",
 		match_score:"Float",
+		transcode_version:"Float",
 		user_id:"Float"
 	},
 	interactions_stddev_samp_fields:{
 		id:"Float",
 		match_score:"Float",
+		transcode_version:"Float",
 		user_id:"Float"
 	},
 	interactions_sum_fields:{
 		id:"Int",
 		match_score:"float8",
+		transcode_version:"Int",
 		user_id:"Int"
 	},
 	interactions_var_pop_fields:{
 		id:"Float",
 		match_score:"Float",
+		transcode_version:"Float",
 		user_id:"Float"
 	},
 	interactions_var_samp_fields:{
 		id:"Float",
 		match_score:"Float",
+		transcode_version:"Float",
 		user_id:"Float"
 	},
 	interactions_variance_fields:{
 		id:"Float",
 		match_score:"Float",
+		transcode_version:"Float",
 		user_id:"Float"
 	},
 	locations:{

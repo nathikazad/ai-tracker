@@ -2637,6 +2637,7 @@ type interactions {
   id: Int!
   match_score: float8!
   timestamp: timestamptz
+  transcode_version: Int
   user_id: Int!
 }
 
@@ -2674,6 +2675,7 @@ input interactions_append_input {
 type interactions_avg_fields {
   id: Float
   match_score: Float
+  transcode_version: Float
   user_id: Float
 }
 
@@ -2693,6 +2695,7 @@ input interactions_bool_exp {
   id: Int_comparison_exp
   match_score: float8_comparison_exp
   timestamp: timestamptz_comparison_exp
+  transcode_version: Int_comparison_exp
   user_id: Int_comparison_exp
 }
 
@@ -2734,6 +2737,7 @@ input type for incrementing numeric columns in table "interactions"
 input interactions_inc_input {
   id: Int
   match_score: float8
+  transcode_version: Int
   user_id: Int
 }
 
@@ -2749,6 +2753,7 @@ input interactions_insert_input {
   id: Int
   match_score: float8
   timestamp: timestamptz
+  transcode_version: Int
   user_id: Int
 }
 
@@ -2759,6 +2764,7 @@ type interactions_max_fields {
   id: Int
   match_score: float8
   timestamp: timestamptz
+  transcode_version: Int
   user_id: Int
 }
 
@@ -2769,6 +2775,7 @@ type interactions_min_fields {
   id: Int
   match_score: float8
   timestamp: timestamptz
+  transcode_version: Int
   user_id: Int
 }
 
@@ -2812,6 +2819,7 @@ input interactions_order_by {
   id: order_by
   match_score: order_by
   timestamp: order_by
+  transcode_version: order_by
   user_id: order_by
 }
 
@@ -2851,6 +2859,9 @@ enum interactions_select_column {
   timestamp
 
   """column name"""
+  transcode_version
+
+  """column name"""
   user_id
 }
 
@@ -2865,6 +2876,7 @@ input interactions_set_input {
   id: Int
   match_score: float8
   timestamp: timestamptz
+  transcode_version: Int
   user_id: Int
 }
 
@@ -2872,6 +2884,7 @@ input interactions_set_input {
 type interactions_stddev_fields {
   id: Float
   match_score: Float
+  transcode_version: Float
   user_id: Float
 }
 
@@ -2879,6 +2892,7 @@ type interactions_stddev_fields {
 type interactions_stddev_pop_fields {
   id: Float
   match_score: Float
+  transcode_version: Float
   user_id: Float
 }
 
@@ -2886,6 +2900,7 @@ type interactions_stddev_pop_fields {
 type interactions_stddev_samp_fields {
   id: Float
   match_score: Float
+  transcode_version: Float
   user_id: Float
 }
 
@@ -2909,6 +2924,7 @@ input interactions_stream_cursor_value_input {
   id: Int
   match_score: float8
   timestamp: timestamptz
+  transcode_version: Int
   user_id: Int
 }
 
@@ -2916,6 +2932,7 @@ input interactions_stream_cursor_value_input {
 type interactions_sum_fields {
   id: Int
   match_score: float8
+  transcode_version: Int
   user_id: Int
 }
 
@@ -2943,6 +2960,9 @@ enum interactions_update_column {
 
   """column name"""
   timestamp
+
+  """column name"""
+  transcode_version
 
   """column name"""
   user_id
@@ -2985,6 +3005,7 @@ input interactions_updates {
 type interactions_var_pop_fields {
   id: Float
   match_score: Float
+  transcode_version: Float
   user_id: Float
 }
 
@@ -2992,6 +3013,7 @@ type interactions_var_pop_fields {
 type interactions_var_samp_fields {
   id: Float
   match_score: Float
+  transcode_version: Float
   user_id: Float
 }
 
@@ -2999,6 +3021,7 @@ type interactions_var_samp_fields {
 type interactions_variance_fields {
   id: Float
   match_score: Float
+  transcode_version: Float
   user_id: Float
 }
 
