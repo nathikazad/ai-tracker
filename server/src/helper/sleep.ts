@@ -53,12 +53,15 @@ export async function uploadSleep(userId: number, matches: { sleep?: string, wak
             }, {
                 id: true,
                 start_time: true,
-                end_time: true
+                end_time: true,
+                metadata: [{}, true]
             }]
         })
         if (resp.events.length > 0) {
-            // console.log(`Event already exists for ID ${resp.events[0].id}`);
-            if(end_time != `${resp.events[0].end_time}Z`) { // add Z because watch UTC encode adds Z
+            let metadata: any = resp.events[0].metadata;
+            let isLocked = metadata?.locks?.end_time;
+            console.log(`Event already exists for ID ${resp.events[0].id} and isLocked: ${isLocked}`);
+            if(end_time != `${resp.events[0].end_time}Z` && !isLocked) { // add Z because watch UTC encode adds Z
                 client.mutation({
                     update_events_by_pk: [{
                         pk_columns: {
