@@ -4,11 +4,12 @@ import { getUserTimeZone } from "./resources/user";
 import { getInteractions, writeDescriptionToDb } from "./resources/events/eventLogicDb";
 import { toPST } from "./helper/time";
 
-
-
+async function main() {
+    await updateMovements(1)
+}
+main()
 async function convertInteractions() {
     let userId = 1
-    // await updateMovements(userId)
     let interactions = (await getInteractions(userId, "2024-05-06")).slice(0, 5)
     console.log(`Interactions: ${interactions.length}`)
     let timezone = await getUserTimeZone(userId)
@@ -28,6 +29,6 @@ async function convertInteractions() {
     }
 }
 
-convertInteractions()
+// convertInteractions()
 
 

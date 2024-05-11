@@ -4,9 +4,6 @@ import * as polyline from '@mapbox/polyline';
 import { getHasura } from '../config';
 import { GraphQLError, $, order_by, timestamptz_comparison_exp } from '../generated/graphql-zeus';
 import { addHours, getStartOfDay, toDate, toPST } from './time';
-import { get } from 'http';
-import { stat } from 'fs';
-import e from 'express';
 
 export interface Location {
     lat: number;
@@ -304,7 +301,7 @@ interface StationaryPeriod {
 function findStationaryPeriods(data: Location[], windowSize: number, thresholdDistance: number, thresholdTime: number, minDuration: number): StationaryPeriod[] {
     console.log(`data ${data.length}`)
     data.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
-    
+    data = data.filter(p => p.accuracy && p.accuracy < 40)
     let velocity: number[] = []
     for (let i = 0; i < data.length; i++) {
         const currWindowSize = (windowSize > data.length - i) ? data.length - i : windowSize;
@@ -327,22 +324,23 @@ function findStationaryPeriods(data: Location[], windowSize: number, thresholdDi
     console.log(`initial stationary: ${stationary} ${velocity[0].toFixed(2)}`)
     
     for (let i = 0; i < data.length; i++) {
+        let distance = 0
+        if(i < data.length - 1) {
+            distance = geolib.getDistance({ latitude: data[i].lat, longitude: data[i].lon }, { latitude: data[i+1].lat, longitude: data[i+1].lon })
+        }
+        console.log(`i: ${i} ${toPST(data[i].timestamp)} ${velocity[i].toFixed(2)} ${data[i].accuracy?.toFixed(2)} ${distance}`)
         points.push(data[i])
         let totalPointsTime = 0
         if(points.length > 1)
            totalPointsTime = getDuration(points[0], points[points.length - 1]);
 
-        if(totalPointsTime < 60) {
-            continue
-        }
+        // if(totalPointsTime < 60) {
+        //     continue
+        // }
         if(stationary) {
             stationaryPeriods[stationaryPeriods.length - 1] = constructStationary(points, `${i - points.length + 1} - ${i-1}`)
-            let distance = 0
-            if(i < data.length - 1) {
-                distance = geolib.getDistance({ latitude: data[i].lat, longitude: data[i].lon }, { latitude: data[i+1].lat, longitude: data[i+1].lon })
-            }
             if(velocity[i] > 0.5 || 
-                (distance > 200 && data[i].accuracy !== undefined && data[i].accuracy! < 40)) {
+                (distance > 200)) {
                 stationary = false
                 points = []
             }

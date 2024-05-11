@@ -22,7 +22,7 @@ struct LocationsDebugView: View {
     
     var body: some View {
         List {
-            let list = LocationManager.shared.sentLocations
+            let list = LocationManager.shared.receivedLocations
             ForEach(list, id: \.0) { location in
                 let loc: LocationModel = LocationModel.fromCLLocation(
                     name: location.1 ? "Foreground" : "Background",
