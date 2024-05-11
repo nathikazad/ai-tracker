@@ -342,11 +342,13 @@ function findStationaryPeriods(data: Location[], windowSize: number, thresholdDi
             if(velocity[i] > 0.5 || 
                 (distance > 200)) {
                 stationary = false
+                // console.log(`START ${i} ${toPST(data[i].timestamp)} ${velocity[i].toFixed(2)}`)
                 points = []
             }
         } else {
             if(velocity[i] < 0.5) {
                 stationary = true
+                // console.log(`STOP ${i} ${toPST(data[i].timestamp)} ${velocity[i].toFixed(2)}`)
                 stationaryPeriods.push(constructStationary(data.slice(i, i+2), `${i} - ${i+1}`))
                 points = []
             }
