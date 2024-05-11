@@ -13,6 +13,7 @@ class AppState: ObservableObject, MicrophoneDelegate {
     @Published private(set) var sheetViewToShow: SheetViewToShow = .none
     @Published private(set) var isRecording: Bool = false
     @Published private(set) var isProcessingRecording: Bool = false
+    @Published var inForeground = true
     private var microphone = Microphone()
     
     init() {

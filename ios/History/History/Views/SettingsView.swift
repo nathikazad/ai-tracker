@@ -58,6 +58,13 @@ struct SettingsView: View {
                             .foregroundColor(.primary)
                     }
                     
+                    NavigationLink(destination: LocationsDebugView()) {
+                        Label("Debug Locations", systemImage: "mappin.and.ellipse")
+                            .foregroundColor(.primary)
+                    };
+                    
+                    
+                    
                     Toggle(isOn: $isTrackingLocation) {
                         Label("Track Location", systemImage: "location.fill")
                     }

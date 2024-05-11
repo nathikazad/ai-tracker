@@ -33,6 +33,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                     Hasura.shared.setup()
                     await ServerCommunicator.processPendingRequests()
                     LocationManager.shared.forceUpdateLocation()
+                    AppState.shared.inForeground = true
                     print("Health kit enabled: \(HealthKitManager.shared.authorized)")
                 }
             }
@@ -40,6 +41,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         }
         backgroundObserver = NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: .main) { _ in
             print("entered background")
+            AppState.shared.inForeground = false
             Hasura.shared.pause()
         }
         return true

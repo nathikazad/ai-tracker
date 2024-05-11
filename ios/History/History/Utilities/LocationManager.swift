@@ -1,17 +1,19 @@
 import Foundation
 import CoreLocation
+import Combine
 
 class LocationManager: NSObject, CLLocationManagerDelegate {
     static let shared = LocationManager()
     
     let locationManager = CLLocationManager()
-    var waitingForImmediateLocation: Bool = false
+//    var waitingForImmediateLocation: Bool = false
     
     private let locationUpdateDistanceFilter: CLLocationDistance = 50
     var waitAndSendLocationTimer: Timer?
-    let timeToWaitBeforeSending = 60.0 //seconds
-    var locationsToSend: [CLLocation] = []
+//    let timeToWaitBeforeSending = 60.0 //seconds
     
+
+    var sentLocations: [(CLLocation, Bool)] = []
     @Published var isTrackingLocation = false
     
     override init() {
@@ -96,35 +98,43 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         print("LocationManager: LocationManager: receive new location")
         guard let location = locations.last else { return }
-        if(waitingForImmediateLocation) {
-            print("LocationManager: LocationManager: Immediate location")
-            waitingForImmediateLocation = false
-            uploadLocationToServer([location])
-        } else {
-            print("LocationManager: LocationManager: Regular OS location, Adding to be sent in 60 seconds")
-            waitAndSendLocationTimer?.invalidate()
-            waitAndSendLocationTimer = nil
-            locationsToSend.append(location)
-            waitAndSendLocationTimer = Timer.scheduledTimer(timeInterval: timeToWaitBeforeSending, target: self, selector: #selector(sendRemainingLocations), userInfo: nil, repeats: false)
-        }
+        uploadLocationToServer([location])
+//        if(waitingForImmediateLocation) {
+//            print("LocationManager: LocationManager: Immediate location")
+//            waitingForImmediateLocation = false
+            
+//        } else {
+//            print("LocationManager: LocationManager: Regular OS location, Adding to be sent in 60 seconds")
+//            waitAndSendLocationTimer?.invalidate()
+//            waitAndSendLocationTimer = nil
+//            locationsToSend.append(location)
+//
     }
     
     @objc private func sendRemainingLocations() {
-        print("LocationManager: sendRemainingLocations: sending remaining locations")
-        uploadLocationToServer(locationsToSend, fromBackground: true)
-        locationsToSend = []
+//        print("LocationManager: sendRemainingLocations: sending remaining locations")
+//        uploadLocationToServer(locationsToSend, fromBackground: true)
+//        locationsToSend = []
+//        waitAndSendLocationTimer = nil
+        
+        //        }
+        print("LocationManager: start updating")
+        locationManager.startUpdatingLocation()
+        waitAndSendLocationTimer?.invalidate()
         waitAndSendLocationTimer = nil
     }
     
     func forceUpdateLocation() {
         print("LocationManager: forceUpdateLocation")
         locationManager.stopUpdatingLocation()
-        locationManager.distanceFilter = locationUpdateDistanceFilter
-        locationManager.startUpdatingLocation()
-        waitingForImmediateLocation = true
+        waitAndSendLocationTimer?.invalidate()
+        waitAndSendLocationTimer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(sendRemainingLocations), userInfo: nil, repeats: false)
+        
+//        waitingForImmediateLocation = true
     }
     
-    func uploadLocationToServer(_ locations: [CLLocation], fromBackground:Bool = false) {
+    func uploadLocationToServer(_ locations: [CLLocation]) {
+        print("LocationManager: UploadLocationToServer:sending location \(locations.count)")
         guard let token = Authentication.shared.hasuraJwt else {
             print("No token available")
             return
@@ -133,8 +143,9 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
             print("sending location \(locations.count)")
             let body = [
                 "locations": locations.map { $0.toJSON() },
-                "fromBackground": fromBackground
+                "fromBackground": !AppState.shared.inForeground
             ]
+            sentLocations.append(contentsOf: locations.map { ($0, AppState.shared.inForeground) })
             ServerCommunicator.sendPostRequest(to: updateLocationEndpoint, body: body, token: token, stackOnUnreachable: true)
         }
     }

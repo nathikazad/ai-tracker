@@ -160,6 +160,10 @@ struct LocationModel: Decodable, Identifiable {
     var toCLLocation: CLLocation {
         return CLLocation(latitude: latitude, longitude: longitude)
     }
+
+    static func fromCLLocation(name: String, location: CLLocation) -> LocationModel {
+        return LocationModel(id: nil, name: name, location: LocationData(type: "Point", crs: CRS(type: "name", properties: CRS.Properties(name: "EPSG:4326")), coordinates: [location.coordinate.longitude, location.coordinate.latitude]))
+    }
     
     struct LocationData: Decodable {
         var type: String
