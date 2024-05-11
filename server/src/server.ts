@@ -63,26 +63,6 @@ app.post('/parseUserRequestFromText', async (req: Request, res: Response) => {
     }
 });
 
-app.post('/updateMovement', async (req: Request, res: Response) => {
-    try {
-        const userId = authorize(req); 
-        try {
-            console.log(`🏃🏽🏃🏽🏃🏽🏃🏽🏃🏽🏃🏽🏃🏽 ${userId} ${req.body?.eventType}`)
-            // console.log(req.body)
-            // processMovement(userId, req.body); 
-            // console.log("success")
-            res.status(200).json({
-                status: "success",
-            });
-        } catch (parseError) {
-            console.error('Parsing error:', parseError);
-            res.status(500).json({ error: 'Error processing text' });
-        }
-    } catch (authError) {
-        console.error('Authentication error:', authError);
-        res.status(401).json({ error: 'Unauthorized: ' + authError });
-    }
-});
 
 app.post('/updateLocation', async (req: Request, res: Response) => {
     try {
@@ -90,7 +70,7 @@ app.post('/updateLocation', async (req: Request, res: Response) => {
         try {
             console.log(`🦵🏻🦵🏻🦵🏻🦵🏻 ${userId} ${req.body}`)
             console.log(req.body)
-            await addLocation(userId, req.body.locations);
+            await addLocation(userId, req.body.locations, req.body.fromBackground || false);
             await updateMovements(userId)
             // console.log("success")
             res.status(200).json({

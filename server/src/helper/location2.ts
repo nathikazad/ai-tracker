@@ -26,7 +26,7 @@ export interface DBLocation {
     name?: string
 }
 
-export async function addLocation(userId: number, locations: Location[]) {
+export async function addLocation(userId: number, locations: Location[], fromBackground: boolean = false) {
     // make time equal start of day
     let timestamp = getStartOfDay(locations[0].timestamp);
     let client = getHasura();
@@ -44,7 +44,7 @@ export async function addLocation(userId: number, locations: Location[]) {
                 }
             ]
         }, {
-            location: convertLocationToJSON(locations)
+            location: convertLocationToJSON(locations, fromBackground)
         });
     } catch (error) {
         let gqlError = error as GraphQLError;
@@ -68,14 +68,14 @@ export async function addLocation(userId: number, locations: Location[]) {
                 ]
             });
             console.log(resp);
-            updateLocation(resp.user_movements[0].id, locations);
+            updateLocation(resp.user_movements[0].id, locations, fromBackground);
         } else {
             throw error;
         }
 
     }
 
-    async function updateLocation(movementId: number, locations: Location[]) {
+    async function updateLocation(movementId: number, locations: Location[], fromBackground: boolean = false) {
         let resp = await getHasura().mutation({
             update_user_movements_by_pk: [
                 {
@@ -90,19 +90,20 @@ export async function addLocation(userId: number, locations: Location[]) {
                     id: true
                 }]
         }, {
-            location: convertLocationToJSON(locations)
+            location: convertLocationToJSON(locations, fromBackground)
         })
 
         console.log(resp);
     }
 
-    function convertLocationToJSON(locations: Location[]) {
+    function convertLocationToJSON(locations: Location[], fromBackground: boolean = false) {
         return locations.map(location => {
             return {
                 lat: location.lat,
                 lon: location.lon,
                 timestamp: location.timestamp,
-                accuracy: location.accuracy
+                accuracy: location.accuracy,
+                fromBackground: fromBackground
             }
         })
         

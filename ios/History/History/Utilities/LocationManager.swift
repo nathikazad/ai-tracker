@@ -111,7 +111,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     
     @objc private func sendRemainingLocations() {
         print("LocationManager: sendRemainingLocations: sending remaining locations")
-        uploadLocationToServer(locationsToSend)
+        uploadLocationToServer(locationsToSend, fromBackground: true)
         locationsToSend = []
         waitAndSendLocationTimer = nil
     }
@@ -124,7 +124,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         waitingForImmediateLocation = true
     }
     
-    func uploadLocationToServer(_ locations: [CLLocation]) {
+    func uploadLocationToServer(_ locations: [CLLocation], fromBackground:Bool = false) {
         guard let token = Authentication.shared.hasuraJwt else {
             print("No token available")
             return
@@ -132,7 +132,8 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         Task {
             print("sending location \(locations.count)")
             let body = [
-                "locations": locations.map { $0.toJSON() }
+                "locations": locations.map { $0.toJSON() },
+                "fromBackground": fromBackground
             ]
             ServerCommunicator.sendPostRequest(to: updateLocationEndpoint, body: body, token: token, stackOnUnreachable: true)
         }
