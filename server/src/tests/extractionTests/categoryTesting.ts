@@ -1,7 +1,7 @@
 import { log } from "console"
 import { createEmbedding } from "../../third/openai"
 import fs from 'fs'
-import { Category, extractCategories, categoryDescriptions } from "../../resources/logic/eventLogic";
+import { Category, extractCategories } from "../../resources/logic/eventLogic";
 // import { Category } from "./extractionTests"
 
 

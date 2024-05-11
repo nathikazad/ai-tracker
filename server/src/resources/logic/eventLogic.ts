@@ -1,9 +1,12 @@
 import { log } from "console";
 import { extractJson, llamaComplete } from "../../third/llama";
 import { complete4, createEmbedding } from "../../third/openai";
-import fs from 'fs'
 import { extractMetadata } from "./metadataLogic";
-import { convertToUtc, extractTime } from "../../helper/time";
+import { convertToUtc, extractTime, toPST } from "../../helper/time";
+import { createEvent, getCategories, getClosestSleepEvent, getLastEvent, updateEvent } from "../events/eventLogicDb";
+import { getHasura } from "../../config";
+import { get } from "http";
+import { $ } from "../../generated/graphql-zeus";
 
 export enum Category {
     Sleeping = "sleeping",
@@ -23,24 +26,6 @@ export enum Category {
     Distraction = "distraction"
 }
 
-export const categoryDescriptions: { [key in Category]: string } =
-{
-    [Category.Sleeping]: "If a user explicitly says he is going to sleep or slept",
-    [Category.WakingUp]: "If a user explicitly says, he woke or has woken up.",
-    [Category.Meeting]: "If a user is with someone, meeting or speaking to someone, going to a party, get together or or an event",
-    [Category.Feeling]: "If the user say how they feel or felt, emotionally or physically. Do not include if the user does not say how he felt.",
-    [Category.Reading]: "If a user is reading or listening to a book.",
-    [Category.Learning]: "If a user is learning or practicing something",
-    [Category.Eating]: "If a user is eating or drinking something",
-    [Category.Cooking]: "If a user is cooking or making something to eat",
-    [Category.Praying]: "If a user is praying",
-    [Category.Shopping]: "If a user is shopping or buying something",
-    [Category.Chores]: "If a user is doing chores or cleaning or something similar",
-    [Category.Dancing]: "If a user is talking about dancing",
-    [Category.Working]: "If a user is working or doing something related to work",
-    [Category.Exercising]: "If a user is exercising or working out, including gym and cardio",
-    [Category.Distraction]: "If a user is getting distracted with youtube, netflix, social media, instagram or something very similar",
-}
 
 export enum Tense {
     Past = 'past',
@@ -49,6 +34,8 @@ export enum Tense {
 }
 
 export interface Interaction {
+    id: number;
+    userId: number;
     statement: string;
     recordedAt: string;
     timezone: string;
@@ -63,7 +50,52 @@ export interface ASEvent {
     metadata?: any;
 }
 
-export async function extractEvents(interaction: Interaction): Promise<ASEvent> {
+export async function interactionToEvent(interaction: Interaction): Promise<void> {
+    let event = await extractEventInfo(interaction)
+    console.log(`Event: \n ${JSON.stringify(event, null, 4)}`)
+    console.log(`\t start_time: ${toPST(event.startTime)} \n\t end_time: ${toPST(event.endTime)}`);
+    for (let category of event.categories) {
+        if (category == Category.Sleeping) {
+            let closestSleepingEvent = await getClosestSleepEvent(interaction.userId, event.startTime, event.endTime)
+            if (closestSleepingEvent != null) {
+                console.log(`Closest Sleeping Event: \n ${closestSleepingEvent.id} ${toPST(closestSleepingEvent.start_time)}  ${toPST(closestSleepingEvent.end_time)}`)
+                event.metadata.locks = closestSleepingEvent?.metadata?.locks || {}
+                if (event.startTime != null) {
+                    event.metadata.locks.start_time = true
+                }
+                if (event.endTime != null) {
+                    event.metadata.locks.end_time = true
+                }
+                await updateEvent(closestSleepingEvent.id, event.startTime ?? closestSleepingEvent.start_time, event.endTime ?? closestSleepingEvent.end_time, event.metadata, interaction.id)
+                continue
+            } else {
+                console.log(`Creating new sleep event`)
+                await createEvent(event, category, interaction.userId, interaction.id)
+            }
+        }
+        // For possibly long events like learning, shopping, cooking, if the end time is mentioned without start time, update the end time of the last event
+        else if ([Category.Learning, Category.Shopping, Category.Cooking].includes(category)
+            && event.startTime == null && event.endTime != null) {
+            let lastEvent = await getLastEvent(interaction.userId, category, event.endTime)
+            if (lastEvent != null && lastEvent.end_time == null) {
+                console.log(`Last Event: \n ${JSON.stringify(lastEvent, null, 4)}`)
+                console.log(`Updating end time of last event`)
+                await updateEvent(lastEvent.id, lastEvent.start_time, event.endTime, {
+                    ...lastEvent.metadata,
+                    ...event.metadata
+                }, interaction.id)
+            } else {
+                console.log(`Creating new event 1`)
+                await createEvent(event, category, interaction.userId, interaction.id)
+            }
+        } else {
+            console.log(`Creating new event 2`)
+            await createEvent(event, category, interaction.userId, interaction.id)
+        }
+    }
+}
+
+export async function extractEventInfo(interaction: Interaction): Promise<ASEvent> {
     // let events: ASEvent[] = [];
     let timeInTimezone = extractTime(interaction.recordedAt, interaction.timezone);
     let sentence = interaction.statement;
@@ -91,15 +123,15 @@ export async function extractEvents(interaction: Interaction): Promise<ASEvent> 
         let parts = time.split(' ');
         let date = time.split(' ')[0];
         let timeStr = time.split(' ')[1];
-        if(parts.length > 2){
-            timeStr += " "+parts[2];
+        if (parts.length > 2) {
+            timeStr += " " + parts[2];
         }
 
         // check if time is in 12 hour format
         if (!timeStr.match(/^(\d{1,2}):(\d{2})\s?([ap]m)?$/)) {
             return null;
         }
-        return date+" "+timeStr.replace(/^(\d{1,2}):(\d{2})\s?([ap]m)?$/, (match, hour, minute, amPm) => {
+        return date + " " + timeStr.replace(/^(\d{1,2}):(\d{2})\s?([ap]m)?$/, (match, hour, minute, amPm) => {
             return `${hour.padStart(2, '0')}:${minute} ${amPm || ''}`;
         }).toLowerCase();
     }
@@ -146,16 +178,9 @@ export async function breakdown(sentence: string): Promise<string> {
     return output
 }
 
-export async function createEmbeddings() {
-    let categoryEmbeddings: { [key in Category]: Number[] } = {} as any;
-    for (let [category, description] of Object.entries(categoryDescriptions)) {
-        categoryEmbeddings[category as unknown as Category] = await createEmbedding(description);
-    }
-    // open and write to json file
-    fs.writeFileSync("data/categoryEmbeddings.json", JSON.stringify(categoryEmbeddings));
-}
 
 export async function extractCategories(sentence: string): Promise<Category[]> {
+    let dbCategories = await getCategories();
     let closestCategories = await findClosestCategories(sentence);
     // console.log("Closest categories: ", closestCategories)
     let categories = await askGptForCategories(sentence, closestCategories);
@@ -165,10 +190,9 @@ export async function extractCategories(sentence: string): Promise<Category[]> {
     return categories;
 
     async function findClosestCategories(phrase: string): Promise<Category[]> {
-        let categoryEmbeddings = readEmbeddings();
-        let embedding = await getEmbedding(phrase);
+        let embedding = await createEmbedding(phrase);
         let cosineSimilarityDictionary: { [key in Category]: Number } = {} as any;
-        for (let [category, categoryEmbedding] of Object.entries(categoryEmbeddings)) {
+        for (let [category, categoryEmbedding] of Object.entries(dbCategories.categoryEmbeddings)) {
             cosineSimilarityDictionary[category as Category] = getCosineSimilarity(embedding, categoryEmbedding);
         }
         // sort the dictionary by value
@@ -193,12 +217,6 @@ export async function extractCategories(sentence: string): Promise<Category[]> {
         return categories.slice(0, 4);
     }
 
-    function readEmbeddings() {
-        // get from database
-        let categoryEmbeddings: { [key in Category]: Number[] } = JSON.parse(fs.readFileSync("data/categoryEmbeddings.json", 'utf-8'));
-        return categoryEmbeddings;
-    }
-
     async function askGptForCategories(sentence: string, filteredCategories: Category[]): Promise<Category[]> {
         // push procrastinating if it is not already in the list
         if (!filteredCategories.includes(Category.Distraction)) {
@@ -210,8 +228,9 @@ export async function extractCategories(sentence: string): Promise<Category[]> {
         let prompt = `
         "${sentence}"\n
         Based on the sentence above, classify the event into one or more of the following categories:`
+
         for (let category of filteredCategories) {
-            prompt += `\n\t- ${category}: (${categoryDescriptions[category]})`
+            prompt += `\n\t- ${category}: (${dbCategories.categoryDescriptions[category]})`
         }
         prompt += `\n\t- None of the above`
         prompt += `\n\tGive me the name of the categories as an array of strings and nothing else`
@@ -264,21 +283,6 @@ export async function extractCategories(sentence: string): Promise<Category[]> {
             return 0;
         } else {
             return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
-        }
-    }
-
-    async function getEmbedding(phrase: string) {
-        // check if embedding already exists in file
-
-        let embeddings: { [key: string]: Number[] } = JSON.parse(fs.readFileSync("data/savedEmbeddings.json", 'utf-8'));
-        if (embeddings[phrase]) {
-            return embeddings[phrase];
-        } else {
-            console.log("Creating new embedding");
-            let embedding = await createEmbedding(phrase);
-            embeddings[phrase] = embedding;
-            fs.writeFileSync("data/savedEmbeddings.json", JSON.stringify(embeddings));
-            return embedding;
         }
     }
 }
@@ -342,15 +346,15 @@ export async function extractTemporalInformation(sentence: string, recordedTime:
             end_time?: string //in format 'mm/dd hh:mm am/pm'
             is_duration_given?: boolean //true if user explicitly mentioned how long they did the activity for`
 
-    console.log(prompt);
+    // console.log(prompt);
     let output = await complete4(prompt, 0.1, 100, true);
-    console.log(output);
+    // console.log(output);
 
     let json = extractJson(output);
     // if(json.end_time == null) {
     //     json.end_time = recordedTime;
     // }
-    if(!json.start_time && json.is_duration_given){
+    if (!json.start_time && json.is_duration_given) {
         console.log(json)
         console.log("Finding duration");
         let prompt = `Given that user said: "${sentence}" at ${recordedTime}\n

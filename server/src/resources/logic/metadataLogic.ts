@@ -38,7 +38,7 @@ export async function extractMetadata(event: ASEvent): Promise<ASEvent> {
                 break;
             case Category.Eating:
                 let foodInfo = await extractFoodInfo(event)
-                addData(category, foodInfo)
+                addData(category, [foodInfo])
                 break;
             case Category.Cooking:
                 let cookingInfo = await extractCookingInfo(event)
@@ -183,38 +183,48 @@ async function extractFeelingInfo(event: ASEvent): Promise<any> {
 }
 
 async function extractFoodInfo(event: ASEvent): Promise<any> {
-    let prompt = `
-    Given a sentence: "${event.sentence}"
-    Tell me what food was mentioned in the sentence. 
-    And give the food a health score between -2 to 2. 
-    High artificial sugar content, high fat content, high salt content, high calorie content, high processed content, high cholesterol content, high saturated fat should reduce the health score.
-    Vegetables, fruits, whole grains, lean protein, low fat, low sugar, low salt, low calorie, low processed, low cholesterol, low saturated fat should increase the health score.
-
-    Output specs:
-    Give me output as a json array, prefixed and suffixed by triple backticks and square brackets, 
-    with each object in array having the fields 
-        name: string; name of the food
-        score: integer; health score of the food between -2 to 2
-    If there is not information to determine the values, then do not include the fields
-    '\n`
-
-    let output = await llamaComplete(prompt, {
-        toLowerCase: true,
-        model: "70b",
-        temperature: 0.1
-    })
-
-    let foodInfo = extractJson(output)
-    return foodInfo
+    let description = `Tell me what food the user is eating or drinking and give it a health score between -2 to 2.
+        High artificial sugar content, high fat content, high salt content, high calorie content, high processed content, high cholesterol content, high saturated fat should reduce the health score.
+        Vegetables, fruits, whole grains, lean protein, low fat, low sugar, low salt, low calorie, low processed, low cholesterol, low saturated fat should increase the health score.
+`
+    let fields = `name?: string; //name of the dish"
+                score?: number; //health score of the food between -2 to 2`
+    return extractInfo(event, description, fields)
 }
+
+
+// async function extractFoodInfo(event: ASEvent): Promise<any> {
+//     let prompt = `
+//     Given a sentence: "${event.sentence}"
+//     Tell me what food was mentioned in the sentence. 
+//     And give the food a health score between -2 to 2. 
+
+//     Output specs:
+//     Give me output as a json object, prefixed and suffixed by triple backticks and square brackets, 
+//     with the fields 
+//         name: string; name of the food
+//         score: integer; health score of the food between -2 to 2
+//     If there is not information to determine the values, then do not include the fields
+//     '\n`
+//     console.log(prompt);
+//     let output = await llamaComplete(prompt, {
+//         toLowerCase: true,
+//         model: "70b",
+//         temperature: 0.1
+//     })
+//     console.log(`food output: ${output}`);
+//     let foodInfo = extractJson(output)
+//     return foodInfo
+// }
 
 async function findPeople(event: ASEvent): Promise<any> {
     let prompt = `
     Given a sentence: "${event.sentence}"
-    Give me names of all the people mentioned in the sentence. Only the ones whose names are mentioned explicitly.
+    And given it was a meeting
+    Give me names or relations of the people whom the speaker met.
     
     Output specs:
-    Give me the names of the people as an array of strings and nothing else. 
+    Give me the names or relations of the people as an array of strings and nothing else. 
     It is input to another program and it expects an array of strings
     '\n`
 
@@ -254,8 +264,9 @@ async function extractMeetingInfo(event: ASEvent): Promise<any> {
     Tell me what kind of meeting it was.
     inperson/phone/online
 
+    If users says doesn't clearly mention where the meeting took place, then assume it is a phone meeting.
     If it was inperson, tell me the location if is mentioned in the sentence.
-    If users says speak or talk, then it is a phone meeting.
+    
     Output specs:
     Give me output as only a json object, prefixed and suffixed by triple backticks, 
     with only the fields 

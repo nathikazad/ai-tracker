@@ -1,31 +1,28 @@
 import { getHasura } from "../config";
+import { toPST } from "../helper/time";
 import { complete3 } from "../third/openai";
 import { insertInteraction } from "./interactions";
+import { Interaction, interactionToEvent } from "./logic/eventLogic";
+import { getUserTimeZone } from "./user";
 // import { parseGoal } from "./logic/goalLogic";
 
 
 
 
-export async function parseUserRequest(text: string, user_id: number) {
-    let classification = await classifyText(text)
-    // console.log(`${text} \nClassification: ${classification}`)
-    await insertInteraction(user_id, text, "event", {"classification": Classification[classification]});
-    // let interaction_id = 
-    // switch (classification) {
-    //     case "todo":
-    //         return "todo"
-    //     case "goal":
-    //         return parseGoal(text, user_id)
-        // case Classification.Past:
-            // return parseEvent(text, user_id, interaction_id)
-    //     case "query":
-    //         return "query"
-    //     case "command":
-    //         return "command"
-        // default:
-        //     console.log(classification)
-        //     throw new Error("Invalid classification")
-    // }
+export async function parseUserRequest(text: string, userId: number) {
+    let interactionId = await insertInteraction(userId, text, "event", {});
+    if(userId == 1 || userId == 2) {
+        let timezone = await getUserTimeZone(userId)
+        let i:Interaction = {
+            id: interactionId,
+            userId,
+            statement: text,
+            recordedAt: new Date().toISOString(),
+            timezone,
+        }
+        console.log(`Interaction(${i.id}) at  ${toPST(i.recordedAt)}: \n ${JSON.stringify(i, null, 4)}`)
+        await interactionToEvent(i)
+    }
 }
 
 export async function parseEvent(event: string, user_id: number, interaction_id: number) {
