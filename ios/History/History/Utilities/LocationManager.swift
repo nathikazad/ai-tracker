@@ -20,11 +20,15 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         super.init()
         print("LocationManager: init")
         locationManager.delegate = self
+        setConfig()
+        initializeTrackingState()
+    }
+    
+    private func setConfig() {
         locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
         locationManager.distanceFilter = locationUpdateDistanceFilter
         locationManager.allowsBackgroundLocationUpdates = true
         locationManager.pausesLocationUpdatesAutomatically = false
-        initializeTrackingState()
     }
     
     
@@ -116,6 +120,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     func forceUpdateLocation() {
         print("LocationManager: forceUpdateLocation")
         locationManager.stopUpdatingLocation()
+        setConfig()
         locationManager.startUpdatingLocation()
     }
     
