@@ -1,16 +1,17 @@
 import { getHasura } from "../config";
 import { $, timestamp_comparison_exp } from "../generated/graphql-zeus";
+import { Category } from "../resources/logic/eventLogic";
 import { addHoursToTimestamp, secondsToHHMM, toDate, getCostTimeInSeconds, toPST } from "./time";
 
-export async function uploadSleep(userId: number, matches: { sleep?: string, wake?: string }[]) {
-    for (const match of matches) {
+export async function uploadSleep(userId: number, stream: { sleep?: string, wake?: string }[]) {
+    for (const event of stream) {
 
         let start_time
         let end_time
         let cost_time = 0;
 
-        if (match.sleep) {
-            start_time = match.sleep;
+        if (event.sleep) {
+            start_time = event.sleep;
             // skip if start time is before yesterday
             if(toDate(start_time) < new Date(new Date().setDate(new Date().getDate() - 1))) {
                 console.log(`Skipping event with start time ${toPST(start_time)}`);
@@ -18,11 +19,11 @@ export async function uploadSleep(userId: number, matches: { sleep?: string, wak
             }
         }
 
-        if (match.wake) {
-            end_time = match.wake;
+        if (event.wake) {
+            end_time = event.wake;
         }
         console.log(`${toPST(start_time)} ${toPST(end_time)}`)
-        if (match.sleep && match.wake) {
+        if (event.sleep && event.wake) {
             cost_time = getCostTimeInSeconds(start_time!, end_time!);
         }
         let metadata = {}
@@ -47,7 +48,7 @@ export async function uploadSleep(userId: number, matches: { sleep?: string, wak
                     },
                     start_time: startConditions,
                     event_type: {
-                        _eq: 'sleep'
+                        _eq: Category.Sleeping
                     }
                 }
             }, {
@@ -91,7 +92,7 @@ export async function uploadSleep(userId: number, matches: { sleep?: string, wak
                 insert_events_one: [{
                     object: {
                         user_id: userId,
-                        event_type: 'sleep',
+                        event_type: Category.Sleeping,
                         start_time: start_time,
                         end_time: end_time,
                         cost_time: cost_time,
