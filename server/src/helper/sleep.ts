@@ -35,8 +35,8 @@ export async function uploadSleep(userId: number, stream: { sleep?: string, wake
         let startConditions: timestamp_comparison_exp = {}
         if (start_time) {
             startConditions = {
-                _gt: addHoursToTimestamp(start_time!, -1),
-                _lt: addHoursToTimestamp(start_time!, 1)
+                _gt: addHoursToTimestamp(start_time!, -3),
+                _lt: addHoursToTimestamp(start_time!, 3)
             }
         }
         const client = getHasura();
