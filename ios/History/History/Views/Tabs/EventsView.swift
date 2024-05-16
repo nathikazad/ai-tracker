@@ -7,14 +7,13 @@
 
 import SwiftUI
 
+
+
 // Define your custom views for each tab
 struct EventsView: View {
     @StateObject var eventController = EventsController()
-    @State private var showPopupForId: Int?
-    @State private var startTime: Date = Date()
-    @State private var endTime: Date = Date()
-    @State private var isShowingDatePicker = false
-    @State private var popupScreenFirst: Bool = true
+    @StateObject private var datePickerModel: DatePickerModel = DatePickerModel()
+
     @State private var scrollProxy: ScrollViewProxy?
     var body: some View {
         VStack {
@@ -82,16 +81,13 @@ struct EventsView: View {
         ScrollViewReader { proxy in
             VStack {
                 List {
-                    ForEach(Array(eventController.events.enumerated()), id: \.element.id) { index, event in
+                    ForEach(Array(eventController.events.sortEvents.enumerated()), id: \.element.id) { index, event in
                         HStack {
                             Text(event.formattedTime)
                                 .font(.headline)
                                 .frame(width: 100, alignment: .leading)
                                 .onTapGesture {
-                                    startTime = event.startTime ?? Date()
-                                    endTime = event.endTime ?? Date()
-                                    showPopupForId = event.id
-                                    popupScreenFirst = true
+                                    datePickerModel.showPopupForEvent(event: event)
                                 }
                             Divider()
                             destinationView(for: event, isCurrent: index == eventController.events.count - 1)
@@ -137,9 +133,22 @@ struct EventsView: View {
     
     
     func destinationView(for event: EventModel, isCurrent: Bool) -> some View {
-        let text = Text(formatEventText(for: event, isCurrent: isCurrent))
-            .padding(.leading, 10)
-            .font(.subheadline)
+        let text = 
+        VStack {
+            Text(formatEventText(for: event, isCurrent: isCurrent))
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .font(.subheadline)
+            //            HStack {
+            
+//            Text(event.eventType.trimmingCharacters(in: .whitespaces).capitalized)
+//                .font(.subheadline)
+//                .padding(5)
+//                .background(Color.black)
+//                .foregroundColor(.white)
+//                .cornerRadius(5)
+            //            }
+//                .frame(maxWidth: .infinity, alignment: .leading)
+        }
         
         switch event.eventType {
         case "stay":
@@ -156,7 +165,7 @@ struct EventsView: View {
                 })
             }
             
-        case "sleep":
+        case "sleeping":
             return AnyView(NavigationLink(destination: SleepView()) {
                 text
             })
@@ -180,10 +189,10 @@ struct EventsView: View {
         case "commute":
             let distance = event.metadata?.distance != nil ? "\(event.metadata!.distance!)km" : ""
             result = "Commute(\(event.id)) \(timeTaken) \(distance)"
-        case "sleep":
+        case "sleeping":
             result = "Sleep(\(event.id)) \(timeTaken)"
         default:
-            result = "\(event.eventType.capitalized) (\(event.id))"
+            result = "\(event.toString) (\(event.id))"
         }
         
         return result
@@ -199,35 +208,87 @@ struct EventsView: View {
         return timeTaken != nil ? "Time:\(timeTaken!)"  : ""
     }
     
+    class DatePickerModel: ObservableObject {
+        @Published var startTime: Date = Date()
+        @Published var startTimeIsNull: Bool = false
+        @Published var endTime: Date =  Date()
+        @Published var endTimeIsNull: Bool = false
+        @Published private(set) var isShowingDatePicker = false
+        @Published private(set) var popupScreenFirst: Bool = true
+        @Published private(set) var showPopupForId: Int?
+
+        var getStartTime: Date? {
+            return startTimeIsNull ? nil : startTime
+        }
+
+        var getEndTime: Date? {
+            return endTimeIsNull ? nil : endTime
+        }
+        
+        func showPopupForEvent(event: EventModel) {
+            startTime = event.startTime ?? Date()
+            endTime = event.endTime ?? Date()
+            startTimeIsNull = event.startTime == nil
+            endTimeIsNull = event.endTime == nil
+            showPopupForId = event.id
+            popupScreenFirst = true
+        }
+        
+        func showNextScreen() {
+            popupScreenFirst = false
+        }
+        
+        func dismissPopup() {
+            showPopupForId = nil
+            print("dismissing popup")
+        }
+    }
+    
+    
     private var popupView: some View {
         Group {
-            if showPopupForId != nil {
+            if datePickerModel.showPopupForId != nil {
                 VStack {
-                    if(popupScreenFirst) {
+                    if(datePickerModel.popupScreenFirst) {
                         Text("Start Time")
-                        DatePicker("Start Time", selection: $startTime, displayedComponents: .hourAndMinute)
-                            .datePickerStyle(WheelDatePickerStyle())
-                            .frame(maxHeight: 150)
+                        Toggle("Null", isOn: $datePickerModel.startTimeIsNull)
+                            .padding()
+                        if !datePickerModel.startTimeIsNull {
+                            DatePicker("Start Time", selection: $datePickerModel.startTime, displayedComponents:  [.date, .hourAndMinute])
+                                .datePickerStyle(WheelDatePickerStyle())
+                                .frame(maxHeight: 150)
+                                .padding()
+                        }
+                        
+
+                        
                     } else {
                         Text("End Time")
-                        DatePicker("End Time", selection: $endTime, displayedComponents: .hourAndMinute)
-                            .datePickerStyle(WheelDatePickerStyle())
-                            .frame(maxHeight: 150)
+                        Toggle("Null", isOn: $datePickerModel.endTimeIsNull)
+                            .padding()
+                        if !datePickerModel.endTimeIsNull {
+                            DatePicker("End Time", selection: $datePickerModel.endTime, displayedComponents:  [.date, .hourAndMinute])
+                                .datePickerStyle(WheelDatePickerStyle())
+                                .frame(maxHeight: 150)
+                                .padding()
+                        }
+                        
                     }
                     
                     Button(action: {
-                        if(popupScreenFirst) {
-                            popupScreenFirst = false
+                        if(datePickerModel.popupScreenFirst) {
+                            datePickerModel.showNextScreen()
                         } else {
                             DispatchQueue.main.async {
-                                EventsController.editEvent(id: showPopupForId!, startTime: startTime, endTime: endTime)
-                                self.showPopupForId = nil
-                                self.popupScreenFirst = true
+                                let startTime = datePickerModel.getStartTime
+                                let endTime = datePickerModel.getEndTime
+                                EventsController.editEvent(id: datePickerModel.showPopupForId!, startTime: startTime, endTime: endTime)
+                                self.datePickerModel.dismissPopup()
                             }
                             
                         }
                     }) {
-                        Text("Save")
+                        Text(datePickerModel.popupScreenFirst ? "Next" : "Save")
                             .foregroundColor(.primary)
                     }
                     .padding(.top, 5)
@@ -239,8 +300,7 @@ struct EventsView: View {
                 .frame(width: 300)
                 .overlay(
                     Button(action: {
-                        showPopupForId = nil
-                        popupScreenFirst = true
+                        datePickerModel.dismissPopup()
                     }) {
                         Image(systemName: "xmark.circle.fill")
                             .font(.largeTitle)

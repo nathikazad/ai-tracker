@@ -11,7 +11,7 @@ struct SleepView: View {
     private func fetchSleepDetails() {
         Task {
             let userId: Int? = Authentication.shared.userId
-            let resp = await EventsController.fetchEvents(userId: userId!, eventType: "sleep", order: "desc")
+            let resp = await EventsController.fetchEvents(userId: userId!, eventType: "sleeping", order: "desc")
             DispatchQueue.main.async {
                 maxDays = max(events.maxDays, 30)
                 selectedDays = min(maxDays, 7)

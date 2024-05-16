@@ -137,7 +137,7 @@ class InteractionsController: ObservableObject {
     
     
     
-    func listenToInteractions(userId: Int) {
+    func listenToInteractions(userId: Int, completion: (() -> Void)? = nil) {
         cancelListener()
         // print("listening for interactions")
         let subscriptionQuery = InteractionsController.generateQuery(userId: userId, gte: currentDate, isSubscription: true)
@@ -147,6 +147,7 @@ class InteractionsController: ObservableObject {
             case .success(let responseData):
                 DispatchQueue.main.async {
                     self.interactions = responseData.data.interactions
+                    completion?()
                 }
             case .failure(let error):
                 print("Error processing message: \(error.localizedDescription)")
@@ -230,7 +231,7 @@ struct InteractionModel: Decodable, Identifiable, Hashable, Equatable {
         timestamp = timestampDate
         
         // Decode the array of EventModel objects
-        events = try container.decode([EventModel].self, forKey: .events)
+        events = try container.decodeIfPresent([EventModel].self, forKey: .events) ?? []
     }
     
     var event : EventModel? {
@@ -239,6 +240,10 @@ struct InteractionModel: Decodable, Identifiable, Hashable, Equatable {
     
     var location : LocationModel? {
         return event?.metadata?.location
+    }
+    
+    var eventTypes: [String] {
+        Array(Set(events)).compactMap { $0.eventType } // or $0.name, depending on the property name
     }
 }
 

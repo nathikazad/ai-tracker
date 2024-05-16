@@ -14,11 +14,52 @@ class HealthKitManager {
     
     private init() {
         self.checkAuthorization()
-        self.setupSleepDataObserver()
+        print("HealthKitManager: init: authorized: \(self.authorized), isTracking: \(self.isTracking)")
+        if self.authorized && self.isTracking {
+            self.setupSleepDataObserver()
+        }
+    }
+    
+    var isTracking: Bool {
+        get {
+            print("HealthKitManager: isTracking: get: \(UserDefaults.standard.bool(forKey: "isTrackingSleep"))")
+            return UserDefaults.standard.bool(forKey: "isTrackingSleep")
+        }
+        set {
+            print("HealthKitManager: isTracking: set: \(newValue)")
+            UserDefaults.standard.set(newValue, forKey: "isTrackingSleep")
+        }
+    }
+    
+    func startTracking() {
+        print("HealthKitManager: startTracking")
+        requestAuthorization {  authorized, error in
+            
+            if let error = error {
+                print("Authorization failed with error: \(error.localizedDescription)")
+                return
+            }
+            if authorized {
+                print("HealthKit authorization granted.")
+                self.authorized = true
+                self.isTracking = true
+                self.setupSleepDataObserver()
+            } else {
+                print("HealthKit authorization denied.")
+                self.authorized = false
+                self.isTracking = false
+                
+            }
+        }
+    }
+
+    func stopTracking() {
+        isTracking = false
+        stopHealthKitObserver()
     }
     
     // Method to check current authorization status
-    func checkAuthorization() {
+    private func checkAuthorization() {
         guard HKHealthStore.isHealthDataAvailable() else {
             print("HealthKit is not available on this device.")
             self.authorized = false
@@ -39,7 +80,7 @@ class HealthKitManager {
     }
     
     // Request authorization to access HealthKit data
-    func requestAuthorization(completion: @escaping (Bool, Error?) -> Void) {
+    private func requestAuthorization(completion: @escaping (Bool, Error?) -> Void) {
         guard HKHealthStore.isHealthDataAvailable() else {
             completion(false, NSError(domain: "com.example.healthkit", code: 2, userInfo: [NSLocalizedDescriptionKey: "HealthKit is not available on this device."]))
             return
@@ -49,14 +90,25 @@ class HealthKitManager {
         let allTypes = Set([sleepType])
         
         healthStore.requestAuthorization(toShare: allTypes, read: allTypes) { success, error in
-            print("\(success) \(error)")
+            print("\(success) \(String(describing: error))")
             self.authorized = success
             completion(success, error)
         }
     }
+
+    private func stopHealthKitObserver() {
+        let sleepType = HKObjectType.categoryType(forIdentifier: .sleepAnalysis)!
+        healthStore.disableBackgroundDelivery(for: sleepType) { success, error in
+            if success {
+                print("HealthKitManager: stopHealthKitObserver: Background delivery disabled")
+            } else if let error = error {
+                print("HealthKitManager: stopHealthKitObserver: Failed to disable background delivery: \(error.localizedDescription)")
+            }
+        }
+    }
     
     // Retrieve sleep data from HealthKit
-    func retrieveSleepData(startDate: Date, endDate: Date, completion: @escaping ([SleepData]) -> Void) {
+    private func retrieveSleepData(startDate: Date, endDate: Date, completion: @escaping ([SleepData]) -> Void) {
         let sleepType = HKObjectType.categoryType(forIdentifier: .sleepAnalysis)!
         let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: .strictStartDate)
         let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
@@ -87,7 +139,7 @@ class HealthKitManager {
             }
             
             print("HealthKitManager: setupSleepDataObserver:Health data changed, processing updates...")
-            self.uploadSleepData()
+            self.uploadSleepData(force: true)
             // You must call the completion handler when you're done.
             completionHandler()
         }
@@ -125,7 +177,7 @@ class HealthKitManager {
         return consolidatedPeriods
     }
     
-    func uploadSleepData(force:Bool = false) {
+    private func uploadSleepData(force:Bool = false) {
         let lastUploadTime = UserDefaults.standard.object(forKey: "lastUploadTime") as? Date ?? Date.distantPast
         print("HealthKitManager: uploadSleepData: \(lastUploadTime) \(Date().timeIntervalSince(lastUploadTime))")
             // Check if the time difference is more than 4 hours

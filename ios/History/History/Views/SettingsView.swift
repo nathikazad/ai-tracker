@@ -12,7 +12,7 @@ struct SettingsView: View {
     private var locationManager = LocationManager.shared
     private var healthManager = HealthKitManager.shared
     @State private var isTrackingLocation = LocationManager.shared.isTrackingLocation
-    @State private var isTrackingSleep = HealthKitManager.shared.authorized
+    @State private var isTrackingSleep = HealthKitManager.shared.isTracking
     @State private var currentUserName: String
     
     init() {
@@ -20,30 +20,6 @@ struct SettingsView: View {
         _currentUserName = State(initialValue: getName())
     }
     
-    fileprivate func changeSleeptracking(_ value: Bool) {
-        if value {
-            print("change sleep to start")
-            healthManager.requestAuthorization {  authorized, error in
-                
-                if let error = error {
-                    print("Authorization failed with error: \(error.localizedDescription)")
-                    return
-                }
-                DispatchQueue.main.async {
-                    self.isTrackingSleep = authorized
-                }
-                if authorized {
-                    print("HealthKit authorization granted.")
-                    healthManager.uploadSleepData(force: true)
-                } else {
-                    print("HealthKit authorization denied.")
-                }
-            }
-        } else {
-            print("change to stop")
-            locationManager.stopMonitoringLocation()
-        }
-    }
     
     var body: some View {
         NavigationView {
@@ -59,7 +35,7 @@ struct SettingsView: View {
                     }
                     
                     NavigationLink(destination: LocationsDebugView()) {
-                        Label("Debug Locations", systemImage: "mappin.and.ellipse")
+                        Label("Debug Locations \(LocationManager.shared.timeSentToServer)", systemImage: "mappin.and.ellipse")
                             .foregroundColor(.primary)
                     };
                     
@@ -86,7 +62,13 @@ struct SettingsView: View {
                     .foregroundColor(.primary)
                     .onChange(of: isTrackingSleep) { value in
                         print("onChange \(value)")
-                        changeSleeptracking(value)
+                        if value {
+                            print("change sleep to start")
+                            healthManager.startTracking()
+                        } else {
+                            print("Stop Sleep Tracking")
+                            healthManager.stopTracking()
+                        }
                     }
                     Button(action: {
                         Authentication.shared.signOutCallback()

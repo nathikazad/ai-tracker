@@ -47,7 +47,11 @@ class EventsController: ObservableObject {
                 // Directly get the decoded ResponseData object from sendGraphQL
                 let responseData: EventsResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, responseType: EventsResponseData.self)
                 DispatchQueue.main.async {
-                    self.events = responseData.data.events
+                    self.events = responseData.data.events.sortEvents
+//                    for event in self.events {
+//                        print("Event: \(event.id) \(event.eventType) \(event.startTime?.formattedSuperShortDate ?? "") - \(event.endTime?.formattedSuperShortDate ?? "")")
+//                        print(event.metadata?.meetingData)
+//                    }
                 }
             } catch {
                 print("Error: \(error.localizedDescription)")
@@ -70,17 +74,16 @@ class EventsController: ObservableObject {
         
     }
     
-    static func editEvent(id: Int, startTime: Date, endTime:Date, onSuccess: (() -> Void)? = nil) {
+    static func editEvent(id: Int, startTime: Date?, endTime:Date?, onSuccess: (() -> Void)? = nil) {
         print("editing event")
         let mutationQuery = """
-        mutation MyMutation($id: Int!, $start_time: timestamp!, $end_time: timestamp!) {
+        mutation MyMutation($id: Int!, $start_time: timestamp, $end_time: timestamp) {
           update_events_by_pk(pk_columns: {id: $id}, _set: {start_time: $start_time, end_time: $end_time}) {
             id
           }
         }
         """
-        let variables: [String: Any] = ["id": id, "start_time": startTime.toUTCString, "end_time": endTime.toUTCString]
-        
+        let variables: [String: Any] = ["id": id, "start_time": startTime?.toUTCString ?? nil, "end_time": endTime?.toUTCString ?? nil]
         struct EditEventResponse: Decodable {
             var data: EditEventWrapper
             struct EditEventWrapper: Decodable {
@@ -132,7 +135,7 @@ class EventsController: ObservableObject {
     
     
     
-    func listenToEvents(userId: Int) {
+    func listenToEvents(userId: Int, completion: (() -> Void)? = nil) {
         cancelListener()
         // print("listening for events")
         let subscriptionQuery = EventsController.generateEventQuery(userId: userId, gte: currentDate, isSubscription: true)
@@ -142,6 +145,7 @@ class EventsController: ObservableObject {
             case .success(let responseData):
                 DispatchQueue.main.async {
                     self.events = responseData.data.events
+                    completion?()
                 }
             case .failure(let error):
                 print("Error processing message: \(error.localizedDescription)")
@@ -211,6 +215,11 @@ class EventsController: ObservableObject {
                 event_type
                 parent_id
                 metadata
+                interaction {
+                  timestamp
+                  id
+                  content
+                }
             }
         }
         """
@@ -224,6 +233,7 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
     var startTime: Date?
     var endTime: Date?
     var metadata: Metadata?
+    var interaction: InteractionModel?
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -232,6 +242,7 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
         case parentId
         case eventType = "event_type"
         case metadata
+        case interaction
     }
     
     init(from decoder: Decoder) throws {
@@ -240,6 +251,7 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
         parentId = try container.decodeIfPresent(Int.self, forKey: .parentId)
         eventType = try container.decode(String.self, forKey: .eventType)
         metadata = try container.decodeIfPresent(Metadata.self, forKey: .metadata)
+        interaction = try container.decodeIfPresent(InteractionModel.self, forKey: .interaction)
         
         // Decode the dates as Strings, then convert to Dates using getTime
         let startTimeString = try container.decodeIfPresent(String.self, forKey: .startTime)
@@ -248,6 +260,52 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
         let endTimeString = try container.decodeIfPresent(String.self, forKey: .endTime)
         endTime = endTimeString?.getDate
     }
+    
+    fileprivate func joinWords(_ names: [String]) -> String? {
+        if names.count > 1 {
+            let allButLast = names.dropLast().joined(separator: ", ")
+            let last = names.last!
+            return "\(allButLast) and \(last)"
+        } else if let first = names.first {
+            return first
+        } else {
+            return nil
+        }
+    }
+    
+    var toString: String {
+        switch eventType {
+        case "reading":
+            let name = metadata?.readingData?.name?.capitalized
+            return name != nil ? "Read \(name!)" : "Read Something"
+        case "learning":
+            let skill = metadata?.learningData?.skill?.capitalized
+            return skill != nil ? "Learnt \(skill!)" : "Learned Something"
+        case "shopping":
+            return metadata?.shoppingData?.name ?? "Shopping"
+        case "praying":
+            if let names = metadata?.prayerData?.name?.map({ $0.capitalized }) {
+                let formattedNames: String? = joinWords(names)
+                return formattedNames != nil ? "Prayed \(formattedNames!)" : "Prayed"
+            } else {
+                return "Prayed"
+            }
+        case "cooking":
+            return metadata?.cookingData?.name != nil ? "Cooked \(metadata!.cookingData!.name!.capitalized)" : "Cooked Something"
+        case "feeling":
+            let name = metadata?.feelingData?.name?.capitalized
+            return name != nil ? "Felt \(name!)" : "Felt Something"
+        case "meeting":
+            let people = metadata?.meetingData?.people?.map({ $0.capitalized }) ?? []
+            let action = metadata?.meetingData?.meetingType == "inperson" ? "Met" : "Spoke to"
+            let formattedPeople: String? = joinWords(people)
+            let location = metadata?.meetingData?.location != nil ? " at \(metadata!.meetingData!.location!)" : ""
+            return formattedPeople != nil ? "\(action) \(formattedPeople!)\(location)" : "\(action) Someone"
+        default:
+            return eventType.capitalized
+        }
+    }
+    
     
     static func == (lhs: EventModel, rhs: EventModel) -> Bool {
         return lhs.id == rhs.id
@@ -261,7 +319,14 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
         let filler = fillWithX ? "XX:XX" : ""
         let formattedStartTime = startTime?.formattedTime ?? filler
         let formattedEndTime = endTime?.formattedTime ?? filler
-        return "\(formattedStartTime) - \(formattedEndTime)"
+        if (startTime != nil && endTime != nil) {
+            return "\(formattedStartTime) - \(formattedEndTime)"
+        } else if (startTime != nil) {
+            return "\(formattedStartTime)"
+        } else if (endTime != nil) {
+            return  "\(formattedEndTime)"
+        }
+        return ""
     }
     
     var formattedTime: String {
@@ -287,10 +352,21 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
         }
         return endTime!.timeIntervalSince(startTime!)
     }
+    
 }
 
 struct Metadata: Decodable {
     var location: LocationModel?
+    
+    var readingData: ReadingData?
+    var learningData: LearningData?
+    var shoppingData: ShoppingData?
+    var prayerData: PrayerData?
+    var cookingData: CookingData?
+    var feelingData: FeelingData?
+    var meetingData: MeetingData?
+    var eatingData: EatingData?
+    
     var polyline: String?
     var timeTaken: String?
     var distance: String?
@@ -298,8 +374,94 @@ struct Metadata: Decodable {
         case location
         case polyline
         case timeTaken = "time_taken"
+        case readingData = "reading"
+        case learningData = "learning"
+        case cookingData = "cooking"
+        case prayerData = "praying"
+        case eatingData = "eating"
+        case meetingData = "meeting"
+        case feelingData = "feeling"
         case distance
     }
+}
+
+struct FeelingData: Decodable {
+    var name: String?
+    var score: Int? = 0
+    enum CodingKeys: String, CodingKey {
+        case name
+        case score
+    }
+}
+
+struct MeetingData: Decodable {
+    var people: [String]?
+    var meetingType: String?
+    var location: String?
+    enum CodingKeys: String, CodingKey {
+        case people
+        case meetingType
+        case location
+    }
+}
+
+
+struct EatingData: Decodable {
+    var name: String?
+    var score: Int? = 0
+    enum CodingKeys: String, CodingKey {
+        case name
+        case score
+    }
+}
+
+struct CookingData: Decodable {
+    var name: String?
+    enum CodingKeys: String, CodingKey {
+        case name
+    }
+}
+
+struct LearningData: Decodable {
+    var skill: String?
+    enum CodingKeys: String, CodingKey {
+        case skill
+    }
+}
+
+struct ShoppingData: Decodable {
+    var name: String?
+    var amount: Int?
+    enum CodingKeys: String, CodingKey {
+        case name
+        case amount
+    }
+}
+
+struct PrayerData: Decodable {
+    var name: [String]?
+    var count: Int?
+    enum CodingKeys: String, CodingKey {
+        case name
+        case count
+    }
+}
+
+
+struct ReadingData: Decodable {
+    var name: String?
+    var pagesCount: Int?
+    var currentPage: Int?
+    var currentChapter: String?
+    
+    
+    enum CodingKeys: String, CodingKey {
+        case name
+        case pagesCount = "pagescount"
+        case currentPage = "currentpage"
+        case currentChapter = "currentchapter"
+    }
+    
 }
 
 
@@ -393,7 +555,7 @@ extension [EventModel] {
 
                 // Split events spanning multiple days
                 if startDateString != endDateString {
-                    print("Event spans multiple days")
+//                    print("Event spans multiple days")
                     let midnight = utcStartTime.endOfDay
 //                    print("\(utcStartTime.formattedSuperShortDate) start date \(utcStartTime.toLocal) end date \(midnight.addMinute(-1).toLocal)")
 //                    print("\(utcEndTime.formattedSuperShortDate) start date \(midnight.toLocal) end date \(utcEndTime.toLocal)")
@@ -454,7 +616,7 @@ extension [EventModel] {
         return self.sorted { (event1, event2) -> Bool in
             let date1 = event1.startTime ?? event1.endTime
             let date2 = event2.startTime ?? event2.endTime
-            return date1 ?? Date.distantFuture > date2 ?? Date.distantFuture
+            return date1 ?? Date.distantFuture < date2 ?? Date.distantFuture
         }
     }
 }

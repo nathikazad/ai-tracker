@@ -8,24 +8,21 @@
 import SwiftUI
 import Charts
 
-
-fileprivate func setLabels(count: Int) -> AxisMarks<BuilderConditional<AxisValueLabel<Never>, BuilderConditional<AxisValueLabel<Never>, AxisValueLabel<Never>??>>> {
-    return AxisMarks(values: .stride(by: .day)) { value in
-        if(count < 7) {
-            AxisValueLabel(format: .dateTime.weekday(.abbreviated))
-        } else {
-            if(count < 10) {
-                AxisValueLabel(format: .dateTime.day())
-            } else {
-                if let date = value.as(Date.self) {
-                    let day = Calendar.current.component(.day, from: date)
-                    if (day % 2 == 0) {
-                        AxisValueLabel(format: .dateTime.day())
-                    }
-                }
+func configureAxisLabel(for value: Any, dataCount: Int) -> some AxisMark {
+    if dataCount <= 7 {
+        return AxisValueLabel(format: .dateTime.weekday(.abbreviated)).offset(x: -10)
+    } else if dataCount < 10 {
+        return AxisValueLabel(format: .dateTime.day()).offset(x: -10)
+    } else {
+        if let date = value as? Date {
+            let day = Calendar.current.component(.day, from: date)
+            if day % 2 == 0 {
+                return AxisValueLabel(format: .dateTime.day()).offset(x: -10)
             }
         }
     }
+    // Fallback view in case none of the conditions are met
+    return AxisValueLabel(format: .dateTime.day()).offset(x: -10) // A default configuration; adjust as needed
 }
 
 struct BarView: View {
@@ -42,7 +39,9 @@ struct BarView: View {
                     .foregroundStyle(Color.gray)
             }
             .chartXAxis {
-                setLabels(count: data.count)
+                AxisMarks(values: .stride(by: .day)) { value in
+                    configureAxisLabel(for: value, dataCount: data.count)
+                }
             }
             .chartYAxis {
                 AxisMarks(values: .automatic(desiredCount: 6))
@@ -90,7 +89,9 @@ struct CandleView: View {
                 )
             }
             .chartXAxis {
-                setLabels(count: candles.countOfUniqueDays)
+                AxisMarks(values: .stride(by: .day)) { value in
+                    configureAxisLabel(for: value, dataCount: candles.countOfUniqueDays)
+                }
             }
             .chartYAxis {
                 AxisMarks(values: .stride(by: .hour, count: 1)) { value in
@@ -120,7 +121,6 @@ struct ScatterView: View {
         
         return Section(header: Text(title)) {
             Chart(data, id:\.self) {
-
                     PointMark(
                         x: .value("x data", Calendar.current.startOfDay(for:$0)),
                         y: .value("y data",  $0.dateWithHourAndMinute)
@@ -128,7 +128,9 @@ struct ScatterView: View {
 
             }
             .chartXAxis {
-                setLabels(count: data.count)
+                AxisMarks(values: .stride(by: .day)) { value in
+                    configureAxisLabel(for: value, dataCount: data.count)
+                }
             }
             .frame(height: 200)
             .padding()

@@ -48,6 +48,7 @@
 		FE8965B02BC8606900E9D633 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8965AE2BC85FE000E9D633 /* Constants.swift */; };
 		FE900C082BD363D200F97050 /* LocationListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE900C072BD363D200F97050 /* LocationListView.swift */; };
 		FE900C0A2BD363ED00F97050 /* LocationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE900C092BD363ED00F97050 /* LocationController.swift */; };
+		FE9452F22BF2CC0900B28918 /* InteractionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9452F12BF2CC0900B28918 /* InteractionView.swift */; };
 		FE977B0F2BD9C2A6008E743C /* SleepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE977B0E2BD9C2A6008E743C /* SleepView.swift */; };
 		FE9959542BC8B5B000F3187B /* RemindersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9959532BC8B5B000F3187B /* RemindersView.swift */; };
 		FE9EAE512BC042260082DE87 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9EAE502BC042260082DE87 /* ChatView.swift */; };
@@ -154,6 +155,7 @@
 		FE8965AE2BC85FE000E9D633 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		FE900C072BD363D200F97050 /* LocationListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationListView.swift; sourceTree = "<group>"; };
 		FE900C092BD363ED00F97050 /* LocationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationController.swift; sourceTree = "<group>"; };
+		FE9452F12BF2CC0900B28918 /* InteractionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionView.swift; sourceTree = "<group>"; };
 		FE977B0E2BD9C2A6008E743C /* SleepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepView.swift; sourceTree = "<group>"; };
 		FE9959532BC8B5B000F3187B /* RemindersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemindersView.swift; sourceTree = "<group>"; };
 		FE9EAE502BC042260082DE87 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
@@ -365,6 +367,7 @@
 			children = (
 				FE977B0E2BD9C2A6008E743C /* SleepView.swift */,
 				FECA5EEB2BE56970007ADE17 /* EventsComponents.swift */,
+				FE9452F12BF2CC0900B28918 /* InteractionView.swift */,
 			);
 			path = Events;
 			sourceTree = "<group>";
@@ -558,6 +561,7 @@
 				FE900C082BD363D200F97050 /* LocationListView.swift in Sources */,
 				FE477D932BD8122B001FC341 /* CalendarPicker.swift in Sources */,
 				FE8153722BD845B300D972C8 /* PolylineView.swift in Sources */,
+				FE9452F22BF2CC0900B28918 /* InteractionView.swift in Sources */,
 				FE12C5E62BC4B2A5002CDC60 /* TimelineView.swift in Sources */,
 				FE477D8F2BD5E3C8001FC341 /* EventsView.swift in Sources */,
 				FE900C0A2BD363ED00F97050 /* LocationController.swift in Sources */,

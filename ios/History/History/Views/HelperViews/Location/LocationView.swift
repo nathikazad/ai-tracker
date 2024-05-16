@@ -3,7 +3,7 @@ import MapKit
 import Charts
 
 struct LocationDetailView: View {
-    @Environment(\.presentationMode) var presentationMode
+
     @State private var locationName: String = ""
     @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05))
     @State private var isEditing: Bool = false
