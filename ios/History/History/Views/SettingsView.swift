@@ -35,7 +35,7 @@ struct SettingsView: View {
                     }
                     
                     NavigationLink(destination: LocationsDebugView()) {
-                        Label("Debug Locations \(LocationManager.shared.timeSentToServer)", systemImage: "mappin.and.ellipse")
+                        Label("Debug Locations \(LocationManager.shared.locationsReceivedCount) \(LocationManager.shared.locationsSentCount)  [\(LocationManager.shared.sentToServerCount)]", systemImage: "mappin.and.ellipse")
                             .foregroundColor(.primary)
                     };
                     

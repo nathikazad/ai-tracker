@@ -14,7 +14,9 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
 
     var receivedLocations: [(CLLocation, Bool)] = []
     var locationsQueue: [CLLocation] = []
-    var timeSentToServer = 0
+    var sentToServerCount = 0
+    var locationsReceivedCount = 0
+    var locationsSentCount = 0
     @Published var isTrackingLocation = false
     
     override init() {
@@ -116,6 +118,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         print("LocationManager: LocationManager: receive new location")
         guard let location = locations.last else { return }
+        locationsReceivedCount += 1
         waitAndSendLocationTimer?.invalidate()
         locationsQueue.append(location)
 
@@ -152,7 +155,8 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
 
         }
         print("LocationManager: sendRemainingLocations: sending \(locationsQueue.count) -> \(locationsToSend.count) locations")
-        locationsToSend.forEach { 
+        locationsSentCount += locationsToSend.count
+        locationsToSend.forEach {
             receivedLocations.append(($0, AppState.shared.inForeground)) 
         }
         
@@ -183,7 +187,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
                 "fromBackground": !AppState.shared.inForeground
             ]
             ServerCommunicator.sendPostRequest(to: updateLocationEndpoint, body: body, token: token, stackOnUnreachable: true)
-            timeSentToServer += 1
+            sentToServerCount += 1
         }
     }
 }

@@ -169,6 +169,10 @@ struct EventsView: View {
             return AnyView(NavigationLink(destination: SleepView()) {
                 text
             })
+        case "praying":
+            return AnyView(NavigationLink(destination: PrayerView()) {
+                text
+            })
             
         default:
             break

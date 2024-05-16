@@ -337,13 +337,20 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
         return _formattedTime(fillWithX: true)
     }
     
+    var formattedDate: String {
+        return "\(startTime?.formattedDate ?? endTime?.formattedDate ?? "")"
+    }
+    
+    var date: Date {
+        return startTime?.startOfDay ?? endTime!.startOfDay
+    }
     
     var formattedTimeWithDate: String {
-        return "\(startTime?.formattedDate ?? endTime?.formattedDate ?? ""): \(formattedTime)"
+        return "\(formattedDate): \(formattedTime)"
     }
     
     var formattedTimeWithDateAndX: String {
-        return "\(startTime?.formattedDate ?? endTime?.formattedDate ?? ""): \(formattedTimeWithX)"
+        return "\(formattedDate): \(formattedTimeWithX)"
     }
     
     var totalHoursPerDay: TimeInterval? {
@@ -524,9 +531,7 @@ extension [EventModel] {
     func dailyTimes(days: Int) -> [(String, Date, Date)] {
             var dailyTimes = [(String, Date, Date)]()
             let now = Date()
-            var calendar = Calendar.current
-            let localTimeZone: TimeZone = TimeZone.current
-            calendar.timeZone = localTimeZone
+            var calendar = Calendar.currentInLocal
             
             let filteredEvents = self.filter { event in
                 guard let eventDate = event.startTime else { return false }
@@ -546,7 +551,7 @@ extension [EventModel] {
                 
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "yyyy-MM-dd"
-                dateFormatter.timeZone = localTimeZone
+                dateFormatter.timeZone = TimeZone.current
 
                 let startDateString = dateFormatter.string(from: utcStartTime)
                 let endDateString = dateFormatter.string(from: utcEndTime)
