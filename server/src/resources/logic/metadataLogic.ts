@@ -11,7 +11,7 @@ export async function extractMetadata(event: ASEvent): Promise<ASEvent> {
                 break;
             case Category.WakingUp:
                 event.categories = event.categories.filter(c => c !== Category.WakingUp)
-                event.endTime = event.endTime ?? event.startTime;
+                event.endTime = event.startTime ?? event.endTime; // should it be event.endTime ?? event.startTime, putting it as start time, because it counts wake up start as
                 if(!event.categories.includes(Category.Sleeping)){
                     event.startTime = null
                     event.categories.push(Category.Sleeping)

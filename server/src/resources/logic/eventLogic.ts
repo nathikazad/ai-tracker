@@ -23,7 +23,8 @@ export enum Category {
     Dancing = "dancing",
     Working = "working",
     Exercising = "exercising",
-    Distraction = "distraction"
+    Distraction = "distraction",
+    Unknown = "unknown"
 }
 
 
@@ -54,43 +55,48 @@ export async function interactionToEvent(interaction: Interaction): Promise<void
     let event = await extractEventInfo(interaction)
     console.log(`Event: \n ${JSON.stringify(event, null, 4)}`)
     console.log(`\t start_time: ${toPST(event.startTime)} \n\t end_time: ${toPST(event.endTime)}`);
-    for (let category of event.categories) {
-        if (category == Category.Sleeping) {
-            let closestSleepingEvent = await getClosestSleepEvent(interaction.userId, event.startTime, event.endTime)
-            if (closestSleepingEvent != null) {
-                console.log(`Closest Sleeping Event: \n ${closestSleepingEvent.id} ${toPST(closestSleepingEvent.start_time)}  ${toPST(closestSleepingEvent.end_time)}`)
-                event.metadata.locks = closestSleepingEvent?.metadata?.locks || {}
-                if (event.startTime != null) {
-                    event.metadata.locks.start_time = true
+    if (event.categories.length == 0) {
+        createEvent(event, Category.Unknown, interaction.userId, interaction.id)
+    }
+    else {
+        for (let category of event.categories) {
+            if (category == Category.Sleeping) {
+                let closestSleepingEvent = await getClosestSleepEvent(interaction.userId, event.startTime, event.endTime)
+                if (closestSleepingEvent != null) {
+                    console.log(`Closest Sleeping Event: \n ${closestSleepingEvent.id} ${toPST(closestSleepingEvent.start_time)}  ${toPST(closestSleepingEvent.end_time)}`)
+                    event.metadata.locks = closestSleepingEvent?.metadata?.locks || {}
+                    if (event.startTime != null) {
+                        event.metadata.locks.start_time = true
+                    }
+                    if (event.endTime != null) {
+                        event.metadata.locks.end_time = true
+                    }
+                    await updateEvent(closestSleepingEvent.id, event.startTime ?? closestSleepingEvent.start_time, event.endTime ?? closestSleepingEvent.end_time, event.metadata, interaction.id)
+                    continue
+                } else {
+                    console.log(`Creating new sleep event`)
+                    await createEvent(event, category, interaction.userId, interaction.id)
                 }
-                if (event.endTime != null) {
-                    event.metadata.locks.end_time = true
+            }
+            // For possibly long events like learning, shopping, cooking, if the end time is mentioned without start time, update the end time of the last event
+            else if ([Category.Learning, Category.Shopping, Category.Cooking].includes(category)
+                && event.startTime == null && event.endTime != null) {
+                let lastEvent = await getLastEvent(interaction.userId, category, event.endTime)
+                if (lastEvent != null && lastEvent.end_time == null) {
+                    console.log(`Last Event: \n ${JSON.stringify(lastEvent, null, 4)}`)
+                    console.log(`Updating end time of last event`)
+                    await updateEvent(lastEvent.id, lastEvent.start_time, event.endTime, {
+                        ...lastEvent.metadata,
+                        ...event.metadata
+                    }, interaction.id)
+                } else {
+                    console.log(`Creating new event 1`)
+                    await createEvent(event, category, interaction.userId, interaction.id)
                 }
-                await updateEvent(closestSleepingEvent.id, event.startTime ?? closestSleepingEvent.start_time, event.endTime ?? closestSleepingEvent.end_time, event.metadata, interaction.id)
-                continue
             } else {
-                console.log(`Creating new sleep event`)
+                console.log(`Creating new event 2`)
                 await createEvent(event, category, interaction.userId, interaction.id)
             }
-        }
-        // For possibly long events like learning, shopping, cooking, if the end time is mentioned without start time, update the end time of the last event
-        else if ([Category.Learning, Category.Shopping, Category.Cooking].includes(category)
-            && event.startTime == null && event.endTime != null) {
-            let lastEvent = await getLastEvent(interaction.userId, category, event.endTime)
-            if (lastEvent != null && lastEvent.end_time == null) {
-                console.log(`Last Event: \n ${JSON.stringify(lastEvent, null, 4)}`)
-                console.log(`Updating end time of last event`)
-                await updateEvent(lastEvent.id, lastEvent.start_time, event.endTime, {
-                    ...lastEvent.metadata,
-                    ...event.metadata
-                }, interaction.id)
-            } else {
-                console.log(`Creating new event 1`)
-                await createEvent(event, category, interaction.userId, interaction.id)
-            }
-        } else {
-            console.log(`Creating new event 2`)
-            await createEvent(event, category, interaction.userId, interaction.id)
         }
     }
 }
@@ -103,6 +109,7 @@ export async function extractEventInfo(interaction: Interaction): Promise<ASEven
     // console.log(`${sentence}: ${categories}`);
     let tense = await extractTense(sentence);
     let temporal = await extractTemporalInformation(sentence, timeInTimezone!, categories, tense);
+    console.log(`temporal: ${JSON.stringify(temporal, null, 4)}`);
     let event: ASEvent = {
         sentence: sentence,
         categories: categories,
@@ -110,6 +117,7 @@ export async function extractEventInfo(interaction: Interaction): Promise<ASEven
         startTime: convertTimeFormat(temporal.start_time),
         endTime: convertTimeFormat(temporal.end_time),
     }
+    
     event.startTime = convertToUtc(event.startTime, interaction.recordedAt, interaction.timezone)!;
     event.endTime = convertToUtc(event.endTime, interaction.recordedAt, interaction.timezone)!;
     event = await extractMetadata(event);
