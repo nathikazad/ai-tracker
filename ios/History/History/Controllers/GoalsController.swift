@@ -99,7 +99,7 @@ class GoalsController: ObservableObject {
     
     
     func cancelListener() {
-        Hasura.shared.stopListening(uniqueID: subscriptionId)
+        Hasura.shared.stopListening(subscriptionId: subscriptionId)
     }
     
     static private func generateQuery(userId: Int, limit: Int? = 20, isSubscription: Bool = false) -> String {

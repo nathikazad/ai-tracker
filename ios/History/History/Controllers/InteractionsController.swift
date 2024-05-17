@@ -157,7 +157,7 @@ class InteractionsController: ObservableObject {
     
     
     func cancelListener() {
-        Hasura.shared.stopListening(uniqueID: subscriptionId)
+        Hasura.shared.stopListening(subscriptionId: subscriptionId)
     }
     
     static private func generateQuery(userId: Int,gte: Date? = nil, isSubscription: Bool = false) -> String {

@@ -46,6 +46,7 @@ export async function extractMetadata(event: ASEvent): Promise<ASEvent> {
                 break;
             case Category.Praying:
                 let prayerInfo = await extractPrayerInfo(event)
+                prayerInfo.name = prayerInfo.name.map((n: string) => n.replace("magrib", "maghrib"))
                 addData(category, prayerInfo)
                 break;
             case Category.Shopping:

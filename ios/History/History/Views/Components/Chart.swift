@@ -8,40 +8,48 @@
 import SwiftUI
 import Charts
 
-func configureAxisLabel(for value: Any, dataCount: Int) -> some AxisMark {
-    if dataCount <= 7 {
-        return AxisValueLabel(format: .dateTime.weekday(.abbreviated)).offset(x: -10)
-    } else if dataCount < 10 {
-        return AxisValueLabel(format: .dateTime.day()).offset(x: -10)
-    } else {
-        if let date = value as? Date {
-            let day = Calendar.current.component(.day, from: date)
-            if day % 2 == 0 {
-                return AxisValueLabel(format: .dateTime.day()).offset(x: -10)
+func configureXAxis(count: Int) -> AxisMarks<BuilderConditional<BuilderConditional<some AxisMark, some AxisMark>, (some AxisMark)??>> {
+    return AxisMarks(values: .stride(by: .day)) { value in
+        if count <= 8 {
+            AxisValueLabel(format: .dateTime.weekday(.abbreviated))
+                .offset(x: -10)
+        } else if count < 12 {
+            AxisValueLabel(format: .dateTime.day())
+                .offset(x: -10)
+        } else {
+            if let date = value.as(Date.self) {
+                let day = Calendar.current.component(.day, from: date)
+                if day % 2 == 0 {
+                    AxisValueLabel(format: .dateTime.day())
+                        .offset(x: -10)
+                }
             }
         }
     }
-    // Fallback view in case none of the conditions are met
-    return AxisValueLabel(format: .dateTime.day()).offset(x: -10) // A default configuration; adjust as needed
 }
 
 struct BarView: View {
     var title: String
     var data: [(Date, Double)]
     
+    var numDays: Int {
+        // get minimum date, maximum date, and then get the difference in days
+        let minDate = data.min { $0.0 < $1.0 }?.0 ?? Date()
+        let maxDate = data.max { $0.0 < $1.0 }?.0 ?? Date()
+        return Calendar.current.dateComponents([.day], from: minDate, to: maxDate).day ?? 0
+    }
+    
     var body: some View {
         Section(header: Text(title)) {
             Chart(data, id:\.0) {
-                    BarMark(
-                        x: .value("Key", $0.0),
-                        y: .value("Value", $0.1)
-                    )
-                    .foregroundStyle(Color.gray)
+                BarMark(
+                    x: .value("Key", $0.0),
+                    y: .value("Value", $0.1)
+                )
+                .foregroundStyle(Color.gray)
             }
             .chartXAxis {
-                AxisMarks(values: .stride(by: .day)) { value in
-                    configureAxisLabel(for: value, dataCount: data.count)
-                }
+                configureXAxis(count: numDays)
             }
             .chartYAxis {
                 AxisMarks(values: .automatic(desiredCount: 6))
@@ -60,11 +68,10 @@ struct Candle: Hashable {
 
 
 extension [Candle] {
-    var countOfUniqueDays: Int {
-        var dateFormatter = DateFormatter()
-        dateFormatter.timeZone = TimeZone.current
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        return Set(self.map { dateFormatter.string(from: $0.start) }).count
+    var numDays: Int {
+        let minDate = self.min { $0.start < $1.start }?.start ?? Date()
+        let maxDate = self.max { $0.start < $1.start }?.start ?? Date()
+        return Calendar.current.dateComponents([.day], from: minDate, to: maxDate).day ?? 0
     }
 }
 
@@ -72,15 +79,17 @@ struct CandleView: View {
     var title: String
     var candles: [Candle]
     var offsetHours: Int = 0
+    var automaticYAxis: Bool = false
     // let gradient = LinearGradient(
     //         gradient: Gradient(colors: [Color.blue, Color.purple]),
     //         startPoint: .top,
     //         endPoint: .bottom
     //     )
+    
+    
     var body: some View {
         return Section(header: Text(title)) {
             Chart(candles, id:\.date) {
-                
                 RectangleMark(
                     x: .value("date", Calendar.current.startOfDay(for:$0.start.addHours(offsetHours))),
                     yStart: .value("start", $0.start.addHours(offsetHours).dateWithHourAndMinute),
@@ -89,20 +98,22 @@ struct CandleView: View {
                 )
             }
             .chartXAxis {
-                AxisMarks(values: .stride(by: .day)) { value in
-                    configureAxisLabel(for: value, dataCount: candles.countOfUniqueDays)
-                }
+                configureXAxis(count: candles.numDays)
             }
             .chartYAxis {
-                AxisMarks(values: .stride(by: .hour, count: 1)) { value in
-                    if let date = value.as(Date.self) {
-                        let hour = Calendar.current.component(.hour, from: date)
-                        if hour % 2 == 0 {
-                            AxisValueLabel(date.addHours(-offsetHours).hourInAmPm)
+                if(automaticYAxis) {
+                    AxisMarks(values: .automatic)
+                } else {
+                    AxisMarks(values: .stride(by: .hour, count: 1)) { value in
+                        if let date = value.as(Date.self) {
+                            let hour = Calendar.current.component(.hour, from: date)
+                            if hour % 2 == 0 {
+                                AxisValueLabel(date.addHours(-offsetHours).hourInAmPm)
+                            }
                         }
+                        AxisGridLine()
+                        AxisTick()
                     }
-                    AxisGridLine()
-                    AxisTick()
                 }
             }
             .frame(height: 200)
@@ -117,20 +128,25 @@ struct ScatterView: View {
     var title: String
     var data: [Date]
     var showLine: Bool = false
+
+    var numDays: Int {
+        let minDate = data.min() ?? Date()
+        let maxDate = data.max() ?? Date()
+        return Calendar.current.dateComponents([.day], from: minDate, to: maxDate).day ?? 0
+    }
+
     var body: some View {
         
         return Section(header: Text(title)) {
             Chart(data, id:\.self) {
-                    PointMark(
-                        x: .value("x data", Calendar.current.startOfDay(for:$0)),
-                        y: .value("y data",  $0.dateWithHourAndMinute)
-                    ).foregroundStyle(Color.gray)
-
+                PointMark(
+                    x: .value("x data", Calendar.current.startOfDay(for:$0)),
+                    y: .value("y data",  $0.dateWithHourAndMinute)
+                ).foregroundStyle(Color.gray)
+                
             }
             .chartXAxis {
-                AxisMarks(values: .stride(by: .day)) { value in
-                    configureAxisLabel(for: value, dataCount: data.count)
-                }
+                configureXAxis(count: numDays)
             }
             .frame(height: 200)
             .padding()
@@ -143,19 +159,19 @@ func linearRegression(data: [(Double, Double)]) -> [Double]? {
         print("not enough")
         return nil // Not enough data to calculate regression
     }
-
+    
     let n = Double(data.count)
     let sumX = data.map { $0.0 }.reduce(0, +)
     let sumY = data.map { $0.1 }.reduce(0, +)
     let sumXY = data.map { $0.0 * $0.1 }.reduce(0, +)
     let sumX2 = data.map { $0.0 * $0.0 }.reduce(0, +)
-
+    
     let denominator = (n * sumX2 - (sumX * sumX))
     guard denominator != 0 else {
         print("zero")
         return nil // Avoid division by zero
     }
-
+    
     let m = (n * sumXY - sumX * sumY) / denominator
     let b = (sumY - m * sumX) / n
     print(data.map { m * $0.0 + b })
@@ -173,7 +189,7 @@ func linearRegression(data: [(Double, Double)]) -> [Double]? {
 //                    PointMark(
 //                        x: .value("x data", x),
 //                        y: .value("y data", y)
-//                            
+//
 //                    ).foregroundStyle(Color.gray)
 //                }
 //            }

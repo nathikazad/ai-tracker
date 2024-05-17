@@ -64,7 +64,7 @@ struct EventsListView: View {
         ForEach(sortedDates, id: \.self) { date in
             Section(header: Text(date).font(.headline)) {
                 ForEach(groupedEvents[date]!) { event in
-                    Text(event.toString)
+                    Text("\(event.formattedTime): \(event.toString)")
                         .font(.subheadline)
                 }
             }
@@ -74,10 +74,11 @@ struct EventsListView: View {
 struct GraphView: View {
     @Binding var selectedDays: Double
     @Binding var events: [EventModel]
+    var automaticYAxis: Bool = false
     var offsetHours: Int = 0
     var body: some View {
         Section {
-            CandleView(title: "Time", candles: events.dailyTimes(days: Int(selectedDays)).map { Candle(date: $0, start: $1, end: $2 ) }, offsetHours: offsetHours)
+            CandleView(title: "Time", candles: events.dailyTimes(days: Int(selectedDays)).map { Candle(date: $0, start: $1, end: $2 ) }, offsetHours: offsetHours, automaticYAxis: automaticYAxis)
                 .padding(.bottom)
             BarView(title: "Total Hours per day", data: events.dailyTotals( days: Int(selectedDays)))
                 .padding(.bottom)

@@ -173,6 +173,10 @@ struct EventsView: View {
             return AnyView(NavigationLink(destination: PrayerView()) {
                 text
             })
+        case "learning":
+            return AnyView(NavigationLink(destination: LearnView(skill: event.metadata?.learningData?.skill)) {
+                text
+            })
             
         default:
             break

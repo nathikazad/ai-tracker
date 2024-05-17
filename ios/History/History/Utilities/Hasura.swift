@@ -27,7 +27,11 @@ class Hasura {
     private var currentID = 0
     private var socketStatus: SocketStatus = .initialized
     // Tracks callbacks for each subscription ID
-    private var subscriptions = [String: (query: String, status: SubscriptionStatus, callback: (Any?) -> Void)]()
+    private var subscriptions = [String: (query: String, status: SubscriptionStatus, callback: (Any?) -> Void, variables: [String: Any]?)]()
+    
+    private func doesSubscriptionExist(key: String) -> Bool {
+        return subscriptions[key] != nil
+    }
     
     struct GraphQLRequest: Codable {
         let query: String
@@ -135,13 +139,13 @@ class Hasura {
     }
     
     
-    func startListening<T: Decodable>(subscriptionId: String, subscriptionQuery: String, responseType: T.Type, callback: @escaping (Result<T, Error>) -> Void) {
+    func startListening<T: Decodable>(subscriptionId: String, subscriptionQuery: String, responseType: T.Type, variables: [String: Any]? = nil, callback: @escaping (Result<T, Error>) -> Void) {
         if(socketStatus == .initialized) {
             print("calling setup because socket not initialized for listening")
             setup()
         }
         
-        // print("Hasura start listening id:\(subscriptionId)")
+         print("Hasura start listening id:\(subscriptionId) \(doesSubscriptionExist(key: subscriptionId))")
         
         if(subscriptions[subscriptionId] != nil) {
             print("Hasura subscription already listening")
@@ -151,7 +155,7 @@ class Hasura {
         
         // Register the subscription with a callback that correctly handles decoding.
         // Ensure the callback matches the expected signature.
-        subscriptions[subscriptionId] = (query: subscriptionQuery, status: .registered, callback: { message in
+        subscriptions[subscriptionId] = (query: subscriptionQuery, status: .registered, variables: variables,  callback: { message in
             guard let data = try? JSONSerialization.data(withJSONObject: message, options: []) else {
                 callback(.failure(URLError(.cannotParseResponse)))
                 return
@@ -164,62 +168,66 @@ class Hasura {
                 callback(.failure(error))
             }
         })
-        
         if socketStatus == .ready {
-            startSubscription(uniqueID: subscriptionId, subscriptionQuery: subscriptionQuery)
+            startSubscription(subscriptionId: subscriptionId)
         } else {
             print("Socket not ready, subscription \(subscriptionId) registered and will be activated upon connection.")
         }
     }
     
-    struct SubscriptionMessage: Codable {
+    struct SubscriptionMessage {
         let type: String
         let id: String
         let payload: GraphQLRequestPayload
     }
     
-    struct GraphQLRequestPayload: Codable {
+    struct GraphQLRequestPayload {
         let query: String
+        let variables: [String: Any]?
     }
     
-    private func startSubscription(uniqueID: String, subscriptionQuery: String) {
-        let queryPayload = GraphQLRequestPayload(query: subscriptionQuery.replacingOccurrences(of: "\n", with: " "))
+    private func startSubscription(subscriptionId: String) {
+        print("Hasura: startSubscription: for id \(subscriptionId) \(doesSubscriptionExist(key: subscriptionId))")
+        guard let subscription = subscriptions[subscriptionId] else {
+            return
+        }
+        let subscriptionQuery = subscription.query
+        // Example setup for variables; adjust based on actual data and needs
+        let variables: [String: Any]? = subscription.variables
         
-        let subscriptionMessage = SubscriptionMessage(type: "start", id: uniqueID, payload: queryPayload)
+        let queryPayload = GraphQLRequestPayload(query: subscriptionQuery.replacingOccurrences(of: "\n", with: " "), variables: variables)
+        
+        let subscriptionMessage = SubscriptionMessage(type: "start", id: subscriptionId, payload: queryPayload)
         
         do {
-            let encoder = JSONEncoder()
-            encoder.outputFormatting = .withoutEscapingSlashes // Helps keep the query clean, but use if necessary
-            let jsonData = try encoder.encode(subscriptionMessage)
+            let jsonData = try JSONSerialization.data(withJSONObject: ["type": subscriptionMessage.type, "id": subscriptionMessage.id, "payload": ["query": queryPayload.query, "variables": queryPayload.variables]], options: [])
             guard let jsonString = String(data: jsonData, encoding: .utf8) else {
                 print("Failed to encode subscription message to JSON string.")
                 return
             }
             sendMessage(text: jsonString)
-            subscriptions[uniqueID]?.status = .active
-            //            print("Subscription message sent for \(uniqueID), status updated to active.")
+            subscriptions[subscriptionId]?.status = .active
         } catch {
             print("Error encoding subscription message: \(error)")
         }
     }
     
     
-    
-    func stopListening(uniqueID: String) {
-        print("Hasura stop listening id:\(uniqueID)")
-        guard subscriptions[uniqueID] != nil else {
-            print("Subscription ID \(uniqueID) not found.")
+    func stopListening(subscriptionId: String) {
+        print("Hasura stop listening id:\(subscriptionId) \(doesSubscriptionExist(key: subscriptionId))")
+        guard subscriptions[subscriptionId] != nil else {
+            print("Subscription ID \(subscriptionId) not found.")
             return
         }
         
         let stopMessage = """
          {
            "type": "stop",
-           "id": "\(uniqueID)"
+           "id": "\(subscriptionId)"
          }
          """
         sendMessage(text: stopMessage)
-        subscriptions.removeValue(forKey: uniqueID)
+        subscriptions.removeValue(forKey: subscriptionId)
     }
     
     
@@ -252,17 +260,17 @@ class Hasura {
             switch type {
             case "data":
                 // Handle data messages
-                if let idValue = json["id"] {
-                    //                    print("Received subscription id \(idValue)")
-                    if let id = idValue as? String {
-                        if let callback = subscriptions[id]?.callback {
+                if let subscriptionIdAsAny = json["id"] {
+                    if let subscriptionId = subscriptionIdAsAny as? String {
+                        print("Received subscription message id \(subscriptionIdAsAny) \(doesSubscriptionExist(key: subscriptionId))")
+                        if let callback = subscriptions[subscriptionId]?.callback {
                             callback(json["payload"]) // Pass the 'data' to the callback
                         } else {
-                            stopListening(uniqueID: id)
-                            print("Data message does not match any subscription ID or no callback found for subscription: \(id)")
+                            stopListening(subscriptionId: subscriptionId)
+                            print("Data message does not match any subscription ID or no callback found for subscription: \(subscriptionId)")
                         }
                     } else {
-                        print("ID value is not a string: \(idValue)")
+                        print("ID value is not a string: \(subscriptionIdAsAny)")
                     }
                 } else {
                     print("No ID found in the message.")
@@ -276,9 +284,9 @@ class Hasura {
                 socketStatus = .ready;
                 //                print("Received connection_ack message. Activating registered subscriptions.")
                 
-                subscriptions.forEach { uniqueID, details in
+                subscriptions.forEach { subscriptionId, details in
                     if details.status == .registered {
-                        startSubscription(uniqueID: uniqueID, subscriptionQuery: details.query)
+                        startSubscription(subscriptionId: subscriptionId)
                     }
                 }
                 //                print("Received connection_ack message.")

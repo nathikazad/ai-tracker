@@ -35,7 +35,7 @@ extension Date {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "hh:mm a" // 12-hour format with AM/PM
         dateFormatter.timeZone = TimeZone.current // Local time zone
-        return dateFormatter.string(from: self) // Format date to string
+        return dateFormatter.string(from: self).replacingOccurrences(of: ".", with: "").lowercased() // a.m. -> am
     }
     var formattedDate: String {
         let dateFormatter = DateFormatter()

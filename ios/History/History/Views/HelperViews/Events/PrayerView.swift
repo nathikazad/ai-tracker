@@ -44,8 +44,10 @@ struct PrayerView: View {
                         TabBar(selectedTab: $selectedTab)
                     }
                     SliderView(selectedDays: $selectedDays, maxDays: $maxDays)
-                    PrayerScatterTotalView(title: "Total", events: events.prayersByDate(days: Int(selectedDays)))
-                    PrayerScatterView(title: "Individual",  events: events.prayersByDate(days: Int(selectedDays)))
+                    PrayerScatterTotalView(title: "Daily Count", events: events.prayersByDate(days: Int(selectedDays)))
+                    Divider()
+                        .padding(.vertical, 20)
+                    PrayerScatterView(title: "Individual Count",  events: events.prayersByDate(days: Int(selectedDays)))
                 }
             }
         }
@@ -67,9 +69,10 @@ extension [EventModel] {
             let fajr = events.contains { $0.metadata?.prayerData?.name?.contains("fajr") ?? false }
             let dhuhr = events.contains { $0.metadata?.prayerData?.name?.contains("dhuhr") ?? false }
             let asr = events.contains { $0.metadata?.prayerData?.name?.contains("asr") ?? false }
-            let maghrib = events.contains { $0.metadata?.prayerData?.name?.contains("magrib") ?? false }
+            var maghrib = events.contains { $0.metadata?.prayerData?.name?.contains("magrib") ?? false }
+            var maghrib2 = events.contains {  $0.metadata?.prayerData?.name?.contains("maghrib")  ?? false }
             let isha = events.contains { $0.metadata?.prayerData?.name?.contains("isha") ?? false }
-            prayers.append((date, Prayer(fajr: fajr, dhuhr: dhuhr, asr: asr, maghrib: maghrib, isha: isha)))
+            prayers.append((date, Prayer(fajr: fajr, dhuhr: dhuhr, asr: asr, maghrib: maghrib || maghrib2, isha: isha)))
         }
         return prayers.sorted(by: { $0.0 < $1.0 })
     }
@@ -79,9 +82,16 @@ struct PrayerScatterTotalView: View {
     var title: String
     var events: [(Date, Prayer)]
     var showLine: Bool = false
+
+    var numDays: Int {
+        let minDate = events.min { $0.0 < $1.0 }?.0 ?? Date()
+        let maxDate = events.max { $0.0 < $1.0 }?.0 ?? Date()
+        return Calendar.current.dateComponents([.day], from: minDate, to: maxDate).day ?? 0
+    }
+
     var body: some View {
         
-        return Section(header: Text(title)) {
+        return Section {
             Chart(events, id: \.0) {
                     PointMark(
                         x: .value("x data", $0),
@@ -90,12 +100,17 @@ struct PrayerScatterTotalView: View {
 
             }
             .chartXAxis {
-                AxisMarks(values: .stride(by: .day)) { value in
-                    configureAxisLabel(for: value, dataCount: events.count)
-                }
+                configureXAxis(count: numDays)
             }
             .frame(height: 200)
             .padding()
+            HStack {
+                Spacer()
+                Text(title)
+                    .font(.title3)
+                    .foregroundColor(.primary)
+                Spacer()
+            }
         }
     }
 }
@@ -104,42 +119,69 @@ struct PrayerScatterView: View {
     var title: String
     var events: [(Date, Prayer)]
     var showLine: Bool = false
+    let prayerNames = ["Isha", "Maghrib", "Asr", "Dhuhr", "Fajr"]
     var body: some View {
         
-        return Section(header: Text(title)) {
+        return Section {
             Chart(events, id: \.0) {
-                    PointMark(
-                        x: .value("x data", Calendar.current.startOfDay(for:$0)),
-                        y: .value("y data",  5)
-                    ).foregroundStyle($1.fajr ? Color.black : Color.white)
+                if $1.fajr {
                     PointMark(
                         x: .value("x data", Calendar.current.startOfDay(for:$0)),
                         y: .value("y data",  4)
-                    ).foregroundStyle($1.dhuhr ? Color.black : Color.white)
+                    ).foregroundStyle(Color.gray)
+                }
+                if $1.dhuhr {
                     PointMark(
                         x: .value("x data", Calendar.current.startOfDay(for:$0)),
                         y: .value("y data",  3)
-                    ).foregroundStyle($1.asr ? Color.black : Color.white)
+                    ).foregroundStyle(Color.gray)
+                }
+                if $1.asr {
                     PointMark(
                         x: .value("x data", Calendar.current.startOfDay(for:$0)),
                         y: .value("y data",  2)
-                    ).foregroundStyle($1.maghrib ? Color.black : Color.white)
+                    ).foregroundStyle(Color.gray)
+                }
+                if $1.maghrib {
                     PointMark(
                         x: .value("x data", Calendar.current.startOfDay(for:$0)),
                         y: .value("y data",  1)
-                    ).foregroundStyle($1.isha ? Color.black : Color.white)
+                    ).foregroundStyle(Color.gray)
+                }
+                if $1.isha {
+                    PointMark(
+                        x: .value("x data", Calendar.current.startOfDay(for:$0)),
+                        y: .value("y data",  0)
+                    ).foregroundStyle(Color.gray)
+                }
             }
             .chartYAxis {
-                AxisMarks(values: ["fajr", "dhuhr", "asr", "maghrib", "isha"])
+                AxisMarks(values: [0, 1, 2, 3, 4]) { value in
+                    AxisValueLabel {
+                        Text(prayerNames[value.index])
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                    }
+                    .offset(x: 5)
+                    AxisGridLine()
+                }
             }
             .chartXAxis {
-                AxisMarks(values: .stride(by: .day)) { value in
-                    configureAxisLabel(for: value, dataCount: events.count)
-                }
+                configureXAxis(count: events.count)
             }
             .frame(height: 200)
             .padding()
+            // display the title centered below the chart
+            HStack {
+                Spacer()
+                Text(title)
+                    .font(.title3)
+                    .foregroundColor(.primary)
+                Spacer()
+            }
         }
     }
+    
+    
 }
 

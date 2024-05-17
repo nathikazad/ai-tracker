@@ -80,7 +80,7 @@ class TodosController: ObservableObject {
         let startOfToday = Calendar.current.startOfDay(for: Date())
         let subscriptionQuery = TodosController.generateQuery(userId: userId, isSubscription: true)
         
-        Hasura.shared.startListening(subscriptionId: "todos", subscriptionQuery: subscriptionQuery, responseType: TodosResponseData.self) {result in
+        Hasura.shared.startListening(subscriptionId: subscriptionId, subscriptionQuery: subscriptionQuery, responseType: TodosResponseData.self) {result in
             switch result {
             case .success(let responseData):
                 self.sortAndAssign(responseData.data.todos)
@@ -92,7 +92,7 @@ class TodosController: ObservableObject {
     
     
     func cancelListener() {
-        Hasura.shared.stopListening(uniqueID: subscriptionId)
+        Hasura.shared.stopListening(subscriptionId: subscriptionId)
     }
     
     static private func generateQuery(userId: Int, limit: Int? = 20, isSubscription: Bool = false) -> String {

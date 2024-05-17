@@ -59,12 +59,32 @@ class EventsController: ObservableObject {
         }
     }
     
-    static func fetchEvents(userId: Int, eventType: String, locationId: Int? = nil, order: String?) async -> [EventModel] {
+    func listenToEvents(userId: Int) {
+        cancelListener()
+        // print("listening for events")
+        let subscriptionQuery = EventsController.generateEventQuery(userId: userId, gte: currentDate)
+        Hasura.shared.startListening(subscriptionId: subscriptionId, subscriptionQuery: subscriptionQuery, responseType: EventsResponseData.self) {result in
+            switch result {
+            case .success(let responseData):
+                DispatchQueue.main.async {
+                    self.events = responseData.data.events
+                }
+            case .failure(let error):
+                print("Error processing message: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    static func fetchEvents(userId: Int, eventType: String, locationId: Int? = nil, order: String?, metadataFilter: [String: Any]? = nil) async -> [EventModel] {
         
-        let graphqlQuery = EventsController.generateEventQuery(userId: userId, eventType: eventType, locationId: locationId, order: order)
+        let graphqlQuery = EventsController.generateEventQuery(userId: userId, eventType: eventType, locationId: locationId, order: order, metadataFilter: metadataFilter)
+        var variables: [String: Any]? = nil
+        if let metadataFilter = metadataFilter {
+            variables = ["jsonfilter": metadataFilter]
+        }
         do {
             // Directly get the decoded ResponseData object from sendGraphQL
-            let responseData: EventsResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, responseType: EventsResponseData.self)
+            let responseData: EventsResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, variables: variables, responseType: EventsResponseData.self)
             return  responseData.data.events.sortEvents
         } catch {
             print("Error: \(error.localizedDescription)")
@@ -134,31 +154,11 @@ class EventsController: ObservableObject {
     }
     
     
-    
-    func listenToEvents(userId: Int, completion: (() -> Void)? = nil) {
-        cancelListener()
-        // print("listening for events")
-        let subscriptionQuery = EventsController.generateEventQuery(userId: userId, gte: currentDate, isSubscription: true)
-        
-        Hasura.shared.startListening(subscriptionId: subscriptionId, subscriptionQuery: subscriptionQuery, responseType: EventsResponseData.self) {result in
-            switch result {
-            case .success(let responseData):
-                DispatchQueue.main.async {
-                    self.events = responseData.data.events
-                    completion?()
-                }
-            case .failure(let error):
-                print("Error processing message: \(error.localizedDescription)")
-            }
-        }
-    }
-    
-    
     func cancelListener() {
-        Hasura.shared.stopListening(uniqueID: subscriptionId)
+        Hasura.shared.stopListening(subscriptionId: subscriptionId)
     }
     
-    static func generateEventQuery(userId: Int, gte: Date? = nil, eventType: String? = nil, locationId: Int? = nil, isSubscription: Bool = false, order: String? = "asc") -> String {
+    static func generateEventQuery(userId: Int, gte: Date? = nil, eventType: String? = nil, locationId: Int? = nil, isSubscription: Bool = false, order: String? = "asc", metadataFilter: [String: Any]? = nil) -> String {
         var whereClauses: [String] = ["{user_id: {_eq: \(userId)}}"] // Fix syntax for where clause
         
         if let gteDate = gte {
@@ -180,6 +180,11 @@ class EventsController: ObservableObject {
         
         if let locationId = locationId {
             whereClauses.append("{metadata: {_contains: {location: {id: \(locationId)}}}}")
+        }
+        var jsonFilter = ""
+        if let metadataFilter = metadataFilter {
+            jsonFilter = "($jsonfilter: jsonb)"
+            whereClauses.append("{metadata: {_contains: $jsonfilter}}")
         }
         
         var orderByClause: String
@@ -203,11 +208,13 @@ class EventsController: ObservableObject {
             }
         }
         
+
+        
         let whereClause = whereClauses.isEmpty ? "" : "where: {_and: [\(whereClauses.joined(separator: ", "))]}"
         let operationType = isSubscription ? "subscription" : "query"
         
         return """
-        \(operationType) {
+        \(operationType) EventsQuery\(jsonFilter) {
             events(\(orderByClause) \(whereClause)) {
                 start_time
                 end_time
@@ -280,7 +287,8 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
             return name != nil ? "Read \(name!)" : "Read Something"
         case "learning":
             let skill = metadata?.learningData?.skill?.capitalized
-            return skill != nil ? "Learnt \(skill!)" : "Learned Something"
+            let interactionContent: String = interaction?.content ?? ""
+            return skill != nil ? "\(interactionContent)" : "Learned Something"
         case "shopping":
             return metadata?.shoppingData?.name ?? "Shopping"
         case "praying":
@@ -302,7 +310,8 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
             let location = metadata?.meetingData?.location != nil ? " at \(metadata!.meetingData!.location!)" : ""
             return formattedPeople != nil ? "\(action) \(formattedPeople!)\(location)" : "\(action) Someone"
         default:
-            return eventType.capitalized
+            
+            return interaction?.content ?? eventType.capitalized
         }
     }
     
@@ -381,6 +390,7 @@ struct Metadata: Decodable {
         case location
         case polyline
         case timeTaken = "time_taken"
+        case distance
         case readingData = "reading"
         case learningData = "learning"
         case cookingData = "cooking"
@@ -388,7 +398,7 @@ struct Metadata: Decodable {
         case eatingData = "eating"
         case meetingData = "meeting"
         case feelingData = "feeling"
-        case distance
+        
     }
 }
 
@@ -531,7 +541,7 @@ extension [EventModel] {
     func dailyTimes(days: Int) -> [(String, Date, Date)] {
             var dailyTimes = [(String, Date, Date)]()
             let now = Date()
-            var calendar = Calendar.currentInLocal
+            let calendar = Calendar.currentInLocal
             
             let filteredEvents = self.filter { event in
                 guard let eventDate = event.startTime else { return false }
@@ -579,10 +589,10 @@ extension [EventModel] {
         let dailyTimes = self.dailyTimes(days: days)
         var dailyTotals = [Date: Double]()
         
-        for (sday, startTime, endTime) in dailyTimes {
+        for (_, startTime, endTime) in dailyTimes {
             let day = Calendar.currentInLocal.startOfDay(for:startTime)
             let duration = endTime.timeIntervalSince(startTime) / 3600
-            if var total = dailyTotals[day] {
+            if let total = dailyTotals[day] {
                 dailyTotals[day] = total + duration
             } else {
                 dailyTotals[day] = duration
@@ -597,8 +607,8 @@ extension [EventModel] {
     func totalHours(days: Int) -> Int {
         let dailyTimes = self.dailyTimes(days: days)
         var total = 0.0
-        for (sday, startTime, endTime) in dailyTimes {
-            let day = Calendar.currentInLocal.startOfDay(for:startTime)
+        for (_, startTime, endTime) in dailyTimes {
+//            let day = Calendar.currentInLocal.startOfDay(for:startTime)
             let duration = endTime.timeIntervalSince(startTime) / 3600
             total = total + duration
         }
