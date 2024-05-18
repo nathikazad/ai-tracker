@@ -94,30 +94,56 @@ export async function getClosestSleepEvent(user_id: number, startTime: string| n
         },
         event_type: {
             _eq: Category.Sleeping
-        }
+        },
+
     }
     let startConditions: timestamp_comparison_exp = {}
     let endConditions: timestamp_comparison_exp = {}
-    if(startTime) {
-        startConditions._gt = addHours(toDate(startTime), -2.5).toISOString()
-        startConditions._lt = addHours(toDate(startTime), 2).toISOString()
-    }
-    if(endTime) {
-        endConditions._gt = addHours(toDate(endTime), -2.5).toISOString()
-        endConditions._lt = addHours(toDate(endTime), 2.5).toISOString()
-    }
 
-    if(startTime && endTime) {
+
+    if(!startTime && endTime) {
+        // to catch case where start time is there in old event but no end time like "I just woke up"
+        conditions.start_time = {
+            _gt: addHours(toDate(endTime), -12).toISOString(),
+            _lt: endTime
+        }
+        let endConditions1: events_bool_exp = {
+            end_time: {
+                _is_null: true
+            }
+        }
+
+        // to catch case where start time is there in old event and end time is close to the new event like "actually I am just waking up"
+        let endConditions2: events_bool_exp = {
+            end_time: {
+                _gt: addHours(toDate(endTime), -2.5).toISOString(),
+                _lt: addHours(toDate(endTime), 2.5).toISOString()
+            }
+        }
+        conditions._or = [endConditions1, endConditions2]
+    } else if(startTime && !endTime) {
+        // when updating sleep time, like "actually I am just going to sleep"
+        conditions.end_time = {
+            _is_null: true
+        }
+        conditions.start_time = {
+            _gt: addHours(toDate(startTime), -5).toISOString(),
+            _lt: startTime
+        }
+    } else if(startTime && endTime) {
         conditions._or = [{
-            start_time: startConditions
+            start_time: {
+                _gt: addHours(toDate(startTime), -2.5).toISOString(),
+                _lt: addHours(toDate(startTime), 2).toISOString()
+            }
         }, {
-            end_time: endConditions
+            end_time: {
+                _gt: addHours(toDate(endTime), -2.5).toISOString(),
+                _lt: addHours(toDate(endTime), 2.5).toISOString()
+            }
         }]
-    } else if(startTime) {
-        conditions.start_time = startConditions
-    } else if(endTime) {
-        conditions.end_time = endConditions
     }
+    console.log(`Getting closest sleeping event: ${JSON.stringify(conditions)}`)
     let closestSleepingEvent = await getHasura().query({
         events: [
             {
