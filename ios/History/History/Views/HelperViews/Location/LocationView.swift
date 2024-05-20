@@ -19,7 +19,7 @@ struct LocationDetailView: View {
         if(location.id != nil) {
             Task {
                 let userId: Int? = Authentication.shared.userId
-                let resp = await EventsController.fetchEvents(userId: userId!, eventType: "stay", locationId: location.id!, order: "desc")
+                let resp = await EventsController.fetchEvents(userId: userId!, eventType: .staying, locationId: location.id!, order: "desc")
                 DispatchQueue.main.async {
                     events = resp
                     maxDays = resp.maxDays

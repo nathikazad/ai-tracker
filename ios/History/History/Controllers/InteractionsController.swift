@@ -242,7 +242,7 @@ struct InteractionModel: Decodable, Identifiable, Hashable, Equatable {
         return event?.metadata?.location
     }
     
-    var eventTypes: [String] {
+    var eventTypes: [EventType] {
         Array(Set(events)).compactMap { $0.eventType } // or $0.name, depending on the property name
     }
 }

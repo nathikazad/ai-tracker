@@ -23,7 +23,7 @@ struct PrayerView: View {
     private func fetchPrayerDetails() {
         Task {
             let userId: Int? = Authentication.shared.userId
-            let resp = await EventsController.fetchEvents(userId: userId!, eventType: "praying", order: "desc")
+            let resp = await EventsController.fetchEvents(userId: userId!, eventType: .praying, order: "desc")
             DispatchQueue.main.async {
                 print("fetchPrayerDetails \(resp.count)")
                 maxDays = max(events.maxDays, 30)
@@ -92,6 +92,7 @@ struct PrayerScatterTotalView: View {
     var body: some View {
         
         return Section {
+            
             Chart(events, id: \.0) {
                     PointMark(
                         x: .value("x data", $0),
@@ -181,7 +182,5 @@ struct PrayerScatterView: View {
             }
         }
     }
-    
-    
 }
 

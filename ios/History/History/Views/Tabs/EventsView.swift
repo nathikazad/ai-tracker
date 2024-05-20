@@ -119,7 +119,7 @@ struct EventsView: View {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                             if let lastId = eventController.events.last?.id {
                                 withAnimation(.easeInOut(duration: 0.5)) { // Customize the animation style and duration here
-                                    print("changed \(lastId) \(scrollProxy == nil)")
+//                                    print("changed \(lastId) \(scrollProxy == nil)")
                                     scrollProxy?.scrollTo(lastId, anchor: .top)
                                 }
                             }
@@ -151,32 +151,38 @@ struct EventsView: View {
         }
         
         switch event.eventType {
-        case "stay":
+        case .staying:
             if let location = event.metadata?.location {
                 return AnyView(NavigationLink(destination: LocationDetailView(location: location)) {
                     text
                 })
             }
             
-        case "commute":
+        case .commuting:
             if let polyline = event.metadata?.polyline {
                 return AnyView(NavigationLink(destination: PolylineView(encodedPolyline: polyline)) {
                     text
                 })
             }
             
-        case "sleeping":
+        case .sleeping:
             return AnyView(NavigationLink(destination: SleepView()) {
                 text
             })
-        case "praying":
+        case .praying:
             return AnyView(NavigationLink(destination: PrayerView()) {
                 text
             })
-        case "learning":
+        case .learning:
             return AnyView(NavigationLink(destination: LearnView(skill: event.metadata?.learningData?.skill)) {
                 text
             })
+        case .reading:
+            if let book = event.book {
+                return AnyView(NavigationLink(destination: BookView(bookId: book.id)) {
+                    text
+                })
+            }
             
         default:
             break
@@ -191,13 +197,13 @@ struct EventsView: View {
         var result: String = ""
         let timeTaken = calcTimeTaken(event: event, isCurrent: isCurrent)
         switch event.eventType {
-        case "stay":
+        case .staying:
             let locationName = event.metadata?.location?.name ?? "Unnamed location"
             result = "\(locationName)(\(event.id)) \(timeTaken)"
-        case "commute":
+        case .commuting:
             let distance = event.metadata?.distance != nil ? "\(event.metadata!.distance!)km" : ""
             result = "Commute(\(event.id)) \(timeTaken) \(distance)"
-        case "sleeping":
+        case .sleeping:
             result = "Sleep(\(event.id)) \(timeTaken)"
         default:
             result = "\(event.toString) (\(event.id))"

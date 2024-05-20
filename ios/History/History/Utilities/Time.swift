@@ -51,6 +51,10 @@ extension Date {
         return dateFormatter.string(from: self) // Format date to string
     }
     
+    var formattedShortDateAndTime: String {
+        return "\(formattedShortDate) \(formattedTime)"
+    }
+    
     var formattedSuperShortDate: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd" // Day of the week and date
@@ -139,5 +143,53 @@ extension Date {
     
     func addMinute(_ minute: Int) -> Date {
         return Calendar.currentInLocal.date(byAdding: .minute, value: minute, to: self)!
+    }
+}
+
+
+extension EventModel {
+    private func _formattedTime(fillWithX: Bool = false) -> String {
+        let filler = fillWithX ? "XX:XX" : ""
+        let formattedStartTime = startTime?.formattedTime ?? filler
+        let formattedEndTime = endTime?.formattedTime ?? filler
+        if (startTime != nil && endTime != nil) {
+            return "\(formattedStartTime) - \(formattedEndTime)"
+        } else if (startTime != nil) {
+            return "\(formattedStartTime)"
+        } else if (endTime != nil) {
+            return  "\(formattedEndTime)"
+        }
+        return ""
+    }
+    
+    var formattedTime: String {
+        return _formattedTime(fillWithX: false)
+    }
+    
+    var formattedTimeWithX: String {
+        return _formattedTime(fillWithX: true)
+    }
+    
+    var formattedDate: String {
+        return "\(startTime?.formattedDate ?? endTime?.formattedDate ?? "")"
+    }
+    
+    var date: Date {
+        return startTime?.startOfDay ?? endTime!.startOfDay
+    }
+    
+    var formattedTimeWithDate: String {
+        return "\(formattedDate): \(formattedTime)"
+    }
+    
+    var formattedTimeWithDateAndX: String {
+        return "\(formattedDate): \(formattedTimeWithX)"
+    }
+    
+    var totalHoursPerDay: TimeInterval? {
+        if(startTime == nil || endTime == nil){
+            return nil
+        }
+        return endTime!.timeIntervalSince(startTime!)
     }
 }

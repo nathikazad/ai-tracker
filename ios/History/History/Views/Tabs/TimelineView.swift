@@ -131,7 +131,7 @@ struct TimelineView: View {
                                             .frame(maxWidth: .infinity, alignment: .leading)
                                         HStack {
                                             ForEach(interaction.eventTypes, id: \.self) { eventType in
-                                                Text(eventType.trimmingCharacters(in: .whitespaces).capitalized)
+                                                Text(eventType.capitalized)
                                                     .font(.subheadline)
                                                     .padding(5)
                                                     .background(Color.black)
@@ -183,11 +183,11 @@ struct TimelineView: View {
     }
     
     private func interactionLink(interaction: InteractionModel) -> some View {
-        if interaction.eventTypes.contains(where: { $0 == "sleeping" }) {
-            return AnyView(SleepView())
-        } else {
+//        if interaction.eventTypes.contains(where: { $0 == "sleeping" }) {
+//            return AnyView(SleepView())
+//        } else {
             return AnyView(InteractionView(interaction: interaction.id))
-        }
+//        }
     }
     
     

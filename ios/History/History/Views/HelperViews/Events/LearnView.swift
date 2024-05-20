@@ -17,7 +17,7 @@ struct LearnView: View {
     @State private var selectedTab: SelectedTab = .graphs
 
 
-    private func fetchSleepDetails() {
+    private func fetchLearnDetails() {
         Task {
             let userId: Int? = Authentication.shared.userId
             var metadatafilter: [String: Any]? = nil
@@ -25,7 +25,7 @@ struct LearnView: View {
                 metadatafilter = ["learning": ["skill": skill]]
             }
             let resp = await EventsController.fetchEvents(userId: userId!,
-                                                          eventType: "learning",
+                                                          eventType: .learning,
                                                           order: "desc",
                                                           metadataFilter: metadatafilter)
             DispatchQueue.main.async {
@@ -38,11 +38,6 @@ struct LearnView: View {
     }
 
     var body: some View {
-        if(skill != nil) {
-            Text("Learning \(skill!.capitalized)")
-                .font(.title)
-                .padding()
-        }
         List {
             if selectedTab == .events {
                 TabBar(selectedTab: $selectedTab)
@@ -58,7 +53,8 @@ struct LearnView: View {
                 }
             }
         }
-        .onAppear(perform: fetchSleepDetails)
+        .onAppear(perform: fetchLearnDetails)
+        .navigationTitle(skill?.capitalized ?? "Learning")
     }
 }
 

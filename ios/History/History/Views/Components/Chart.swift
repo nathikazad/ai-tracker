@@ -31,7 +31,30 @@ func configureXAxis(count: Int) -> AxisMarks<BuilderConditional<BuilderCondition
 struct BarView: View {
     var title: String
     var data: [(Date, Double)]
-    
+
+    enum ShowY {
+        case hour
+        case minute
+    }
+
+    func getY(_ hour: Double) -> Double {
+        if showY == .hour {
+            return hour
+        } else {
+            return hour * 60
+        }
+    }
+
+    var showY: ShowY {
+        let totalHours = data.map { $0.1 }.reduce(0, +)
+        let average = totalHours / Double(data.count)
+        if average < 2 {
+            return .minute
+        } else {
+            return .hour
+        }
+    }
+
     var numDays: Int {
         // get minimum date, maximum date, and then get the difference in days
         let minDate = data.min { $0.0 < $1.0 }?.0 ?? Date()
@@ -44,16 +67,20 @@ struct BarView: View {
             Chart(data, id:\.0) {
                 BarMark(
                     x: .value("Key", $0.0),
-                    y: .value("Value", $0.1)
+                    y: .value("Value", getY($0.1))
                 )
                 .foregroundStyle(Color.gray)
             }
             .chartXAxis {
                 configureXAxis(count: numDays)
             }
+            
             .chartYAxis {
                 AxisMarks(values: .automatic(desiredCount: 6))
             }
+            .chartYAxisLabel(content: { 
+                Text(showY == .hour ? "Hours" : "Minutes")
+            })
             .frame(height: 200)
             .padding()
             
