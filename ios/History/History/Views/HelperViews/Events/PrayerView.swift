@@ -44,6 +44,7 @@ struct PrayerView: View {
                         TabBar(selectedTab: $selectedTab)
                     }
                     SliderView(selectedDays: $selectedDays, maxDays: $maxDays)
+                    PrayerStatsView(selectedDays: $selectedDays, events: $events)
                     PrayerScatterTotalView(title: "Daily Count", events: events.prayersByDate(days: Int(selectedDays)))
                     Divider()
                         .padding(.vertical, 20)
@@ -56,12 +57,24 @@ struct PrayerView: View {
 }
 
 extension [EventModel] {
-    func prayersByDate(days: Int) -> [(Date, Prayer)] {
-        let filteredEvents = self.filter { event in
+    func fileterPrayers(days: Int) -> [EventModel] {
+        return self.filter { event in
             let eventDate = event.date
             let localEventDate = eventDate.toLocal
             return localEventDate >= Calendar.currentInLocal.date(byAdding: .day, value: -days, to: Date())!
         }
+    }
+    
+    // return tuple of number of prayers prayed vs total number of days
+    func totalLastNdays(days: Int) -> (Int, Int, Double) {
+        // total number of prayers in the last n days by summing the total number of prayers for each day
+        let totalPrayers = self.fileterPrayers(days: days).reduce(0) { $0 + ($1.metadata?.prayerData?.count ?? 0) }
+        let totalDays = (days - 1) * 5 + (self.fileterPrayers(days: days).last?.metadata?.prayerData?.count ?? 0)
+        return (totalPrayers, totalDays, totalPrayers > 0 && totalDays > 0 ? Double(totalPrayers) / Double(totalDays) : 0)
+    }
+    
+    func prayersByDate(days: Int) -> [(Date, Prayer)] {
+        let filteredEvents = fileterPrayers(days: days)
         
         let groupedEvents = Dictionary(grouping: filteredEvents) { $0.date }
         var prayers: [(Date, Prayer)] = []
@@ -69,8 +82,8 @@ extension [EventModel] {
             let fajr = events.contains { $0.metadata?.prayerData?.name?.contains("fajr") ?? false }
             let dhuhr = events.contains { $0.metadata?.prayerData?.name?.contains("dhuhr") ?? false }
             let asr = events.contains { $0.metadata?.prayerData?.name?.contains("asr") ?? false }
-            var maghrib = events.contains { $0.metadata?.prayerData?.name?.contains("magrib") ?? false }
-            var maghrib2 = events.contains {  $0.metadata?.prayerData?.name?.contains("maghrib")  ?? false }
+            let maghrib = events.contains { $0.metadata?.prayerData?.name?.contains("magrib") ?? false }
+            let maghrib2 = events.contains {  $0.metadata?.prayerData?.name?.contains("maghrib")  ?? false }
             let isha = events.contains { $0.metadata?.prayerData?.name?.contains("isha") ?? false }
             prayers.append((date, Prayer(fajr: fajr, dhuhr: dhuhr, asr: asr, maghrib: maghrib || maghrib2, isha: isha)))
         }
@@ -92,7 +105,6 @@ struct PrayerScatterTotalView: View {
     var body: some View {
         
         return Section {
-            
             Chart(events, id: \.0) {
                     PointMark(
                         x: .value("x data", $0),
@@ -113,6 +125,22 @@ struct PrayerScatterTotalView: View {
                 Spacer()
             }
         }
+    }
+}
+
+struct PrayerStatsView: View {
+    @Binding var selectedDays: Double
+    @Binding var events: [EventModel]
+    var body: some View {
+        HStack {
+            let (totalPrayers, totalDays, percentage) = events.totalLastNdays(days: Int(selectedDays))
+            let percentageString = String(format: "%.2f", percentage * 100)
+            Text("Prayed: \(totalPrayers) / \(totalDays) (\(percentageString)%)")
+                .foregroundColor(.gray)
+
+        }
+        .frame(maxWidth: .infinity, alignment: .center)
+        .padding()
     }
 }
 
