@@ -1,3 +1,43 @@
 table:
   name: users
   schema: public
+array_relationships:
+  - name: events
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: events
+          schema: public
+  - name: locations
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: locations
+          schema: public
+computed_fields:
+  - name: closest_user_location
+    definition:
+      function:
+        name: closest_user_location
+        schema: public
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - id
+        - apple_id
+        - timezone
+      filter: {}
+    comment: ""
+update_permissions:
+  - role: user
+    permission:
+      columns:
+        - timezone
+      filter: {}
+      check:
+        id:
+          _eq: X-Hasura-User-Id
+    comment: ""

@@ -1,0 +1,18 @@
+table:
+  name: objects
+  schema: public
+computed_fields:
+  - name: events
+    definition:
+      function:
+        name: object_events
+        schema: public
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - id
+        - name
+        - object_type
+      filter: {}
+    comment: ""

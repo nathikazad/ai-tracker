@@ -1,1 +1,3 @@
+- "!include public_closest_user_location.yaml"
+- "!include public_fetch_associations.yaml"
 - "!include public_match_interactions.yaml"

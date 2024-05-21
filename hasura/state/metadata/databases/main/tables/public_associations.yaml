@@ -1,0 +1,14 @@
+table:
+  name: associations
+  schema: public
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - id
+        - ref_one_id
+        - ref_two_id
+        - ref_one_table
+        - ref_two_table
+      filter: {}
+    comment: ""

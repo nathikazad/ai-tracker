@@ -20,12 +20,16 @@ select_permissions:
     permission:
       columns:
         - created
+        - frequency
         - id
         - name
         - nl_description
-        - period
         - status
-        - target_number
         - user_id
+      filter: {}
+    comment: ""
+delete_permissions:
+  - role: user
+    permission:
       filter: {}
     comment: ""

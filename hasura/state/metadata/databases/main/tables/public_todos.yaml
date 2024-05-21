@@ -12,14 +12,14 @@ select_permissions:
   - role: user
     permission:
       columns:
+        - done_as_expected
         - current_count
         - goal_id
         - id
-        - target_count
         - user_id
         - name
         - status
-        - updated
         - due
+        - updated
       filter: {}
     comment: ""

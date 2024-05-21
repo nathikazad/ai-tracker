@@ -1,33 +1,21 @@
 table:
-  name: interactions
+  name: locations
   schema: public
-array_relationships:
-  - name: events
-    using:
-      foreign_key_constraint_on:
-        column: interaction_id
-        table:
-          name: events
-          schema: public
 select_permissions:
   - role: user
     permission:
       columns:
-        - content
-        - content_type
-        - debug
-        - embedding
         - id
-        - timestamp
         - user_id
+        - name
+        - location
       filter: {}
     comment: ""
 update_permissions:
   - role: user
     permission:
       columns:
-        - content
-        - timestamp
+        - name
       filter: {}
       check: null
     comment: ""
