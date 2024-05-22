@@ -93,13 +93,15 @@ struct SliderView: View {
     @Binding var selectedDays: Double
     @Binding var maxDays: Double
     var body: some View {
-        HStack {
-            Slider(value: $selectedDays, in: 1...max(maxDays, 1), step: 1)
-                .accentColor(.gray)
-            Text("\(Int(selectedDays))")
-                .foregroundColor(.gray)
+        if(maxDays > selectedDays) {
+            HStack {
+                Slider(value: $selectedDays, in: 1...max(maxDays, 1), step: 1)
+                    .accentColor(.gray)
+                Text("\(Int(selectedDays))")
+                    .foregroundColor(.gray)
+            }
+            .padding(.horizontal)
         }
-        .padding(.horizontal)
     }
 }
 

@@ -239,7 +239,6 @@ async function findPeople(event: ASEvent): Promise<any> {
     // console.log(output);
 
     let names = output.replace(/[\[\]]/g, '').split(',').map((s: string) => s.trim())
-    // captitalize the first letter of each category
     names = names.map((c: string) => {
         c = c.replace(/['"]+/g, '');
         // return c.trim().charAt(0).toUpperCase() + c.trim().slice(1);
@@ -248,14 +247,9 @@ async function findPeople(event: ASEvent): Promise<any> {
 
 
 
-    // convert to array of dictionary with field name
-    let people = names.map((name: string) => {
-        return {
-            name: name
-        }
-    })
+    
 
-    return people
+    return names
 }
 
 

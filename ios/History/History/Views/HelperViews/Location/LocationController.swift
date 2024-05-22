@@ -122,28 +122,30 @@ class LocationsController: ObservableObject {
         }
     }
     
-    static func createLocation(name:String, lat: Double, lon: Double) {
+    static func createLocation(name:String, lat: Double, lon: Double) async throws -> Int {
         let body:[String:Any] =  [
             "name": name,
             "lon": lon,
             "lat": lat
         ]
-        Task {
-            do {
-                guard let data = try await ServerCommunicator.sendPostRequestAsync(to: createLocationEndpoint, body: body, token: Authentication.shared.hasuraJwt, stackOnUnreachable: false) else {
-                    print("Failed to receive data or no data returned")
-                    return
-                }
-                if let json = try? JSONSerialization.jsonObject(with: data, options: []),
-                   let jsonData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted),
-                   let jsonString = String(data: jsonData, encoding: .utf8) {
-                    print("Received JSON: \(jsonString)")
-                } else {
-                    print("Failed to decode JSON data")
-                }
-            } catch {
-                print("Error sending data to server or parsing server response: \(error.localizedDescription)")
-            }
+        let data = try await ServerCommunicator.sendPostRequestAsync(to: createLocationEndpoint, body: body, token: Authentication.shared.hasuraJwt, stackOnUnreachable: false)
+        if let data = data, let json = try? JSONSerialization.jsonObject(with: data, options: []),
+            let jsonData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted),
+            let jsonString = String(data: jsonData, encoding: .utf8) {
+             print("Received JSON: \(jsonString)")
+             
+             if let jsonObject = json as? [String: Any],
+                 let id = jsonObject["id"] as? Int {
+                  // Use the id value here
+                  print("Received ID: \(id)")
+                 return id
+             } else {
+                  print("Failed to extract ID from JSON data")
+                  throw NSError(domain: "InvalidDataError", code: 0, userInfo: nil)
+             }
+        } else {
+             print("Failed to decode JSON data")
+            throw NSError(domain: "InvalidDataError", code: 0, userInfo: nil)
         }
     }
     

@@ -221,9 +221,10 @@ class EventsController: ObservableObject {
                     id
                     content
                 }
-                associations {
-                  ref_two_id
-                  ref_two_table
+                locations {
+                  id
+                  name
+                  location
                 }
                 objects {
                     object_type

@@ -152,7 +152,7 @@ struct EventsView: View {
         
         switch event.eventType {
         case .staying:
-            if let location = event.metadata?.location {
+            if let location = event.location {
                 return AnyView(NavigationLink(destination: LocationDetailView(location: location)) {
                     text
                 })
@@ -198,7 +198,7 @@ struct EventsView: View {
         let timeTaken = calcTimeTaken(event: event, isCurrent: isCurrent)
         switch event.eventType {
         case .staying:
-            let locationName = event.metadata?.location?.name ?? "Unnamed location"
+            let locationName = event.location?.name ?? "Unnamed location"
             result = "\(locationName)(\(event.id)) \(timeTaken)"
         case .commuting:
             let distance = event.metadata?.distance != nil ? "\(event.metadata!.distance!)km" : ""

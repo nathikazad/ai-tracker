@@ -9,6 +9,7 @@ export type ValueTypes = {
 	ref_one_table?:true,
 	ref_two_id?:true,
 	ref_two_table?:true,
+	user_id?:true,
 		__typename?: true
 }>;
 	/** aggregated selection of "associations" */
@@ -51,13 +52,15 @@ count?: [{	columns?:ValueTypes["associations_select_column"][],	distinct?:boolea
 	id?:true,
 	ref_one_id?:true,
 	ref_two_id?:true,
+	user_id?:true,
 		__typename?: true
 }>;
 	/** order by avg() on columns of table "associations" */
 ["associations_avg_order_by"]: {
 	id?:ValueTypes["order_by"],
 	ref_one_id?:ValueTypes["order_by"],
-	ref_two_id?:ValueTypes["order_by"]
+	ref_two_id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
 };
 	/** Boolean expression to filter rows from the table "associations". All fields are combined with a logical 'AND'. */
 ["associations_bool_exp"]: {
@@ -68,7 +71,8 @@ count?: [{	columns?:ValueTypes["associations_select_column"][],	distinct?:boolea
 	ref_one_id?:ValueTypes["Int_comparison_exp"],
 	ref_one_table?:ValueTypes["String_comparison_exp"],
 	ref_two_id?:ValueTypes["Int_comparison_exp"],
-	ref_two_table?:ValueTypes["String_comparison_exp"]
+	ref_two_table?:ValueTypes["String_comparison_exp"],
+	user_id?:ValueTypes["Int_comparison_exp"]
 };
 	/** unique or primary key constraints on table "associations" */
 ["associations_constraint"]:associations_constraint;
@@ -76,7 +80,8 @@ count?: [{	columns?:ValueTypes["associations_select_column"][],	distinct?:boolea
 ["associations_inc_input"]: {
 	id?:number,
 	ref_one_id?:number,
-	ref_two_id?:number
+	ref_two_id?:number,
+	user_id?:number
 };
 	/** input type for inserting data into table "associations" */
 ["associations_insert_input"]: {
@@ -84,7 +89,8 @@ count?: [{	columns?:ValueTypes["associations_select_column"][],	distinct?:boolea
 	ref_one_id?:number,
 	ref_one_table?:string,
 	ref_two_id?:number,
-	ref_two_table?:string
+	ref_two_table?:string,
+	user_id?:number
 };
 	/** aggregate max on columns */
 ["associations_max_fields"]: AliasType<{
@@ -93,6 +99,7 @@ count?: [{	columns?:ValueTypes["associations_select_column"][],	distinct?:boolea
 	ref_one_table?:true,
 	ref_two_id?:true,
 	ref_two_table?:true,
+	user_id?:true,
 		__typename?: true
 }>;
 	/** order by max() on columns of table "associations" */
@@ -101,7 +108,8 @@ count?: [{	columns?:ValueTypes["associations_select_column"][],	distinct?:boolea
 	ref_one_id?:ValueTypes["order_by"],
 	ref_one_table?:ValueTypes["order_by"],
 	ref_two_id?:ValueTypes["order_by"],
-	ref_two_table?:ValueTypes["order_by"]
+	ref_two_table?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
 };
 	/** aggregate min on columns */
 ["associations_min_fields"]: AliasType<{
@@ -110,6 +118,7 @@ count?: [{	columns?:ValueTypes["associations_select_column"][],	distinct?:boolea
 	ref_one_table?:true,
 	ref_two_id?:true,
 	ref_two_table?:true,
+	user_id?:true,
 		__typename?: true
 }>;
 	/** order by min() on columns of table "associations" */
@@ -118,7 +127,8 @@ count?: [{	columns?:ValueTypes["associations_select_column"][],	distinct?:boolea
 	ref_one_id?:ValueTypes["order_by"],
 	ref_one_table?:ValueTypes["order_by"],
 	ref_two_id?:ValueTypes["order_by"],
-	ref_two_table?:ValueTypes["order_by"]
+	ref_two_table?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
 };
 	/** response of any mutation on the table "associations" */
 ["associations_mutation_response"]: AliasType<{
@@ -140,7 +150,8 @@ count?: [{	columns?:ValueTypes["associations_select_column"][],	distinct?:boolea
 	ref_one_id?:ValueTypes["order_by"],
 	ref_one_table?:ValueTypes["order_by"],
 	ref_two_id?:ValueTypes["order_by"],
-	ref_two_table?:ValueTypes["order_by"]
+	ref_two_table?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
 };
 	/** primary key columns input for table: associations */
 ["associations_pk_columns_input"]: {
@@ -154,46 +165,53 @@ count?: [{	columns?:ValueTypes["associations_select_column"][],	distinct?:boolea
 	ref_one_id?:number,
 	ref_one_table?:string,
 	ref_two_id?:number,
-	ref_two_table?:string
+	ref_two_table?:string,
+	user_id?:number
 };
 	/** aggregate stddev on columns */
 ["associations_stddev_fields"]: AliasType<{
 	id?:true,
 	ref_one_id?:true,
 	ref_two_id?:true,
+	user_id?:true,
 		__typename?: true
 }>;
 	/** order by stddev() on columns of table "associations" */
 ["associations_stddev_order_by"]: {
 	id?:ValueTypes["order_by"],
 	ref_one_id?:ValueTypes["order_by"],
-	ref_two_id?:ValueTypes["order_by"]
+	ref_two_id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
 };
 	/** aggregate stddev_pop on columns */
 ["associations_stddev_pop_fields"]: AliasType<{
 	id?:true,
 	ref_one_id?:true,
 	ref_two_id?:true,
+	user_id?:true,
 		__typename?: true
 }>;
 	/** order by stddev_pop() on columns of table "associations" */
 ["associations_stddev_pop_order_by"]: {
 	id?:ValueTypes["order_by"],
 	ref_one_id?:ValueTypes["order_by"],
-	ref_two_id?:ValueTypes["order_by"]
+	ref_two_id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
 };
 	/** aggregate stddev_samp on columns */
 ["associations_stddev_samp_fields"]: AliasType<{
 	id?:true,
 	ref_one_id?:true,
 	ref_two_id?:true,
+	user_id?:true,
 		__typename?: true
 }>;
 	/** order by stddev_samp() on columns of table "associations" */
 ["associations_stddev_samp_order_by"]: {
 	id?:ValueTypes["order_by"],
 	ref_one_id?:ValueTypes["order_by"],
-	ref_two_id?:ValueTypes["order_by"]
+	ref_two_id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
 };
 	/** Streaming cursor of the table "associations" */
 ["associations_stream_cursor_input"]: {
@@ -208,20 +226,23 @@ count?: [{	columns?:ValueTypes["associations_select_column"][],	distinct?:boolea
 	ref_one_id?:number,
 	ref_one_table?:string,
 	ref_two_id?:number,
-	ref_two_table?:string
+	ref_two_table?:string,
+	user_id?:number
 };
 	/** aggregate sum on columns */
 ["associations_sum_fields"]: AliasType<{
 	id?:true,
 	ref_one_id?:true,
 	ref_two_id?:true,
+	user_id?:true,
 		__typename?: true
 }>;
 	/** order by sum() on columns of table "associations" */
 ["associations_sum_order_by"]: {
 	id?:ValueTypes["order_by"],
 	ref_one_id?:ValueTypes["order_by"],
-	ref_two_id?:ValueTypes["order_by"]
+	ref_two_id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
 };
 	/** update columns of table "associations" */
 ["associations_update_column"]:associations_update_column;
@@ -238,39 +259,45 @@ count?: [{	columns?:ValueTypes["associations_select_column"][],	distinct?:boolea
 	id?:true,
 	ref_one_id?:true,
 	ref_two_id?:true,
+	user_id?:true,
 		__typename?: true
 }>;
 	/** order by var_pop() on columns of table "associations" */
 ["associations_var_pop_order_by"]: {
 	id?:ValueTypes["order_by"],
 	ref_one_id?:ValueTypes["order_by"],
-	ref_two_id?:ValueTypes["order_by"]
+	ref_two_id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
 };
 	/** aggregate var_samp on columns */
 ["associations_var_samp_fields"]: AliasType<{
 	id?:true,
 	ref_one_id?:true,
 	ref_two_id?:true,
+	user_id?:true,
 		__typename?: true
 }>;
 	/** order by var_samp() on columns of table "associations" */
 ["associations_var_samp_order_by"]: {
 	id?:ValueTypes["order_by"],
 	ref_one_id?:ValueTypes["order_by"],
-	ref_two_id?:ValueTypes["order_by"]
+	ref_two_id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
 };
 	/** aggregate variance on columns */
 ["associations_variance_fields"]: AliasType<{
 	id?:true,
 	ref_one_id?:true,
 	ref_two_id?:true,
+	user_id?:true,
 		__typename?: true
 }>;
 	/** order by variance() on columns of table "associations" */
 ["associations_variance_order_by"]: {
 	id?:ValueTypes["order_by"],
 	ref_one_id?:ValueTypes["order_by"],
-	ref_two_id?:ValueTypes["order_by"]
+	ref_two_id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
 };
 	/** Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'. */
 ["Boolean_comparison_exp"]: {
@@ -1736,13 +1763,20 @@ the end). throws an error if top level container is not an array */
 };
 	/** columns and relationships of "locations" */
 ["locations"]: AliasType<{
+events?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["events_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["events_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["events_bool_exp"]},ValueTypes["events"]],
 	id?:true,
 	location?:true,
 	name?:true,
 	user_id?:true,
 		__typename?: true
 }>;
-	["locations_aggregate"]: AliasType<{
+	/** aggregated selection of "locations" */
+["locations_aggregate"]: AliasType<{
 	aggregate?:ValueTypes["locations_aggregate_fields"],
 	nodes?:ValueTypes["locations"],
 		__typename?: true
@@ -1807,6 +1841,7 @@ count?: [{	columns?:ValueTypes["locations_select_column"][],	distinct?:boolean},
 	_and?:ValueTypes["locations_bool_exp"][],
 	_not?:ValueTypes["locations_bool_exp"],
 	_or?:ValueTypes["locations_bool_exp"][],
+	events?:ValueTypes["events_bool_exp"],
 	id?:ValueTypes["Int_comparison_exp"],
 	location?:ValueTypes["geography_comparison_exp"],
 	name?:ValueTypes["String_comparison_exp"],
@@ -1868,6 +1903,7 @@ count?: [{	columns?:ValueTypes["locations_select_column"][],	distinct?:boolean},
 };
 	/** Ordering options when selecting data from "locations". */
 ["locations_order_by"]: {
+	events_aggregate?:ValueTypes["events_aggregate_order_by"],
 	id?:ValueTypes["order_by"],
 	location?:ValueTypes["order_by"],
 	name?:ValueTypes["order_by"],
@@ -2412,6 +2448,7 @@ events?: [{	/** distinct select on columns */
 	id?:true,
 	name?:true,
 	object_type?:true,
+	user_id?:true,
 		__typename?: true
 }>;
 	/** aggregated selection of "objects" */
@@ -2452,11 +2489,13 @@ count?: [{	columns?:ValueTypes["objects_select_column"][],	distinct?:boolean},tr
 	/** aggregate avg on columns */
 ["objects_avg_fields"]: AliasType<{
 	id?:true,
+	user_id?:true,
 		__typename?: true
 }>;
 	/** order by avg() on columns of table "objects" */
 ["objects_avg_order_by"]: {
-	id?:ValueTypes["order_by"]
+	id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
 };
 	/** Boolean expression to filter rows from the table "objects". All fields are combined with a logical 'AND'. */
 ["objects_bool_exp"]: {
@@ -2466,45 +2505,52 @@ count?: [{	columns?:ValueTypes["objects_select_column"][],	distinct?:boolean},tr
 	events?:ValueTypes["events_bool_exp"],
 	id?:ValueTypes["Int_comparison_exp"],
 	name?:ValueTypes["String_comparison_exp"],
-	object_type?:ValueTypes["String_comparison_exp"]
+	object_type?:ValueTypes["String_comparison_exp"],
+	user_id?:ValueTypes["Int_comparison_exp"]
 };
 	/** unique or primary key constraints on table "objects" */
 ["objects_constraint"]:objects_constraint;
 	/** input type for incrementing numeric columns in table "objects" */
 ["objects_inc_input"]: {
-	id?:number
+	id?:number,
+	user_id?:number
 };
 	/** input type for inserting data into table "objects" */
 ["objects_insert_input"]: {
 	id?:number,
 	name?:string,
-	object_type?:string
+	object_type?:string,
+	user_id?:number
 };
 	/** aggregate max on columns */
 ["objects_max_fields"]: AliasType<{
 	id?:true,
 	name?:true,
 	object_type?:true,
+	user_id?:true,
 		__typename?: true
 }>;
 	/** order by max() on columns of table "objects" */
 ["objects_max_order_by"]: {
 	id?:ValueTypes["order_by"],
 	name?:ValueTypes["order_by"],
-	object_type?:ValueTypes["order_by"]
+	object_type?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
 };
 	/** aggregate min on columns */
 ["objects_min_fields"]: AliasType<{
 	id?:true,
 	name?:true,
 	object_type?:true,
+	user_id?:true,
 		__typename?: true
 }>;
 	/** order by min() on columns of table "objects" */
 ["objects_min_order_by"]: {
 	id?:ValueTypes["order_by"],
 	name?:ValueTypes["order_by"],
-	object_type?:ValueTypes["order_by"]
+	object_type?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
 };
 	/** response of any mutation on the table "objects" */
 ["objects_mutation_response"]: AliasType<{
@@ -2525,7 +2571,8 @@ count?: [{	columns?:ValueTypes["objects_select_column"][],	distinct?:boolean},tr
 	events_aggregate?:ValueTypes["events_aggregate_order_by"],
 	id?:ValueTypes["order_by"],
 	name?:ValueTypes["order_by"],
-	object_type?:ValueTypes["order_by"]
+	object_type?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
 };
 	/** primary key columns input for table: objects */
 ["objects_pk_columns_input"]: {
@@ -2537,34 +2584,41 @@ count?: [{	columns?:ValueTypes["objects_select_column"][],	distinct?:boolean},tr
 ["objects_set_input"]: {
 	id?:number,
 	name?:string,
-	object_type?:string
+	object_type?:string,
+	user_id?:number
 };
 	/** aggregate stddev on columns */
 ["objects_stddev_fields"]: AliasType<{
 	id?:true,
+	user_id?:true,
 		__typename?: true
 }>;
 	/** order by stddev() on columns of table "objects" */
 ["objects_stddev_order_by"]: {
-	id?:ValueTypes["order_by"]
+	id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
 };
 	/** aggregate stddev_pop on columns */
 ["objects_stddev_pop_fields"]: AliasType<{
 	id?:true,
+	user_id?:true,
 		__typename?: true
 }>;
 	/** order by stddev_pop() on columns of table "objects" */
 ["objects_stddev_pop_order_by"]: {
-	id?:ValueTypes["order_by"]
+	id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
 };
 	/** aggregate stddev_samp on columns */
 ["objects_stddev_samp_fields"]: AliasType<{
 	id?:true,
+	user_id?:true,
 		__typename?: true
 }>;
 	/** order by stddev_samp() on columns of table "objects" */
 ["objects_stddev_samp_order_by"]: {
-	id?:ValueTypes["order_by"]
+	id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
 };
 	/** Streaming cursor of the table "objects" */
 ["objects_stream_cursor_input"]: {
@@ -2577,16 +2631,19 @@ count?: [{	columns?:ValueTypes["objects_select_column"][],	distinct?:boolean},tr
 ["objects_stream_cursor_value_input"]: {
 	id?:number,
 	name?:string,
-	object_type?:string
+	object_type?:string,
+	user_id?:number
 };
 	/** aggregate sum on columns */
 ["objects_sum_fields"]: AliasType<{
 	id?:true,
+	user_id?:true,
 		__typename?: true
 }>;
 	/** order by sum() on columns of table "objects" */
 ["objects_sum_order_by"]: {
-	id?:ValueTypes["order_by"]
+	id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
 };
 	/** update columns of table "objects" */
 ["objects_update_column"]:objects_update_column;
@@ -2601,29 +2658,35 @@ count?: [{	columns?:ValueTypes["objects_select_column"][],	distinct?:boolean},tr
 	/** aggregate var_pop on columns */
 ["objects_var_pop_fields"]: AliasType<{
 	id?:true,
+	user_id?:true,
 		__typename?: true
 }>;
 	/** order by var_pop() on columns of table "objects" */
 ["objects_var_pop_order_by"]: {
-	id?:ValueTypes["order_by"]
+	id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
 };
 	/** aggregate var_samp on columns */
 ["objects_var_samp_fields"]: AliasType<{
 	id?:true,
+	user_id?:true,
 		__typename?: true
 }>;
 	/** order by var_samp() on columns of table "objects" */
 ["objects_var_samp_order_by"]: {
-	id?:ValueTypes["order_by"]
+	id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
 };
 	/** aggregate variance on columns */
 ["objects_variance_fields"]: AliasType<{
 	id?:true,
+	user_id?:true,
 		__typename?: true
 }>;
 	/** order by variance() on columns of table "objects" */
 ["objects_variance_order_by"]: {
-	id?:ValueTypes["order_by"]
+	id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
 };
 	/** column ordering options */
 ["order_by"]:order_by;
@@ -3857,7 +3920,8 @@ export type PartialObjects = {
 			ref_one_id?:number,
 			ref_one_table?:string,
 			ref_two_id?:number,
-			ref_two_table?:string
+			ref_two_table?:string,
+			user_id?:number
 	},
 	/** aggregated selection of "associations" */
 ["associations_aggregate"]: {
@@ -3899,13 +3963,15 @@ export type PartialObjects = {
 		__typename?: "associations_avg_fields";
 			id?:number,
 			ref_one_id?:number,
-			ref_two_id?:number
+			ref_two_id?:number,
+			user_id?:number
 	},
 	/** order by avg() on columns of table "associations" */
 ["associations_avg_order_by"]: {
 	id?:PartialObjects["order_by"],
 	ref_one_id?:PartialObjects["order_by"],
-	ref_two_id?:PartialObjects["order_by"]
+	ref_two_id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
 },
 	/** Boolean expression to filter rows from the table "associations". All fields are combined with a logical 'AND'. */
 ["associations_bool_exp"]: {
@@ -3916,7 +3982,8 @@ export type PartialObjects = {
 	ref_one_id?:PartialObjects["Int_comparison_exp"],
 	ref_one_table?:PartialObjects["String_comparison_exp"],
 	ref_two_id?:PartialObjects["Int_comparison_exp"],
-	ref_two_table?:PartialObjects["String_comparison_exp"]
+	ref_two_table?:PartialObjects["String_comparison_exp"],
+	user_id?:PartialObjects["Int_comparison_exp"]
 },
 	/** unique or primary key constraints on table "associations" */
 ["associations_constraint"]:associations_constraint,
@@ -3924,7 +3991,8 @@ export type PartialObjects = {
 ["associations_inc_input"]: {
 	id?:number,
 	ref_one_id?:number,
-	ref_two_id?:number
+	ref_two_id?:number,
+	user_id?:number
 },
 	/** input type for inserting data into table "associations" */
 ["associations_insert_input"]: {
@@ -3932,7 +4000,8 @@ export type PartialObjects = {
 	ref_one_id?:number,
 	ref_one_table?:string,
 	ref_two_id?:number,
-	ref_two_table?:string
+	ref_two_table?:string,
+	user_id?:number
 },
 	/** aggregate max on columns */
 ["associations_max_fields"]: {
@@ -3941,7 +4010,8 @@ export type PartialObjects = {
 			ref_one_id?:number,
 			ref_one_table?:string,
 			ref_two_id?:number,
-			ref_two_table?:string
+			ref_two_table?:string,
+			user_id?:number
 	},
 	/** order by max() on columns of table "associations" */
 ["associations_max_order_by"]: {
@@ -3949,7 +4019,8 @@ export type PartialObjects = {
 	ref_one_id?:PartialObjects["order_by"],
 	ref_one_table?:PartialObjects["order_by"],
 	ref_two_id?:PartialObjects["order_by"],
-	ref_two_table?:PartialObjects["order_by"]
+	ref_two_table?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
 },
 	/** aggregate min on columns */
 ["associations_min_fields"]: {
@@ -3958,7 +4029,8 @@ export type PartialObjects = {
 			ref_one_id?:number,
 			ref_one_table?:string,
 			ref_two_id?:number,
-			ref_two_table?:string
+			ref_two_table?:string,
+			user_id?:number
 	},
 	/** order by min() on columns of table "associations" */
 ["associations_min_order_by"]: {
@@ -3966,7 +4038,8 @@ export type PartialObjects = {
 	ref_one_id?:PartialObjects["order_by"],
 	ref_one_table?:PartialObjects["order_by"],
 	ref_two_id?:PartialObjects["order_by"],
-	ref_two_table?:PartialObjects["order_by"]
+	ref_two_table?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
 },
 	/** response of any mutation on the table "associations" */
 ["associations_mutation_response"]: {
@@ -3988,7 +4061,8 @@ export type PartialObjects = {
 	ref_one_id?:PartialObjects["order_by"],
 	ref_one_table?:PartialObjects["order_by"],
 	ref_two_id?:PartialObjects["order_by"],
-	ref_two_table?:PartialObjects["order_by"]
+	ref_two_table?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
 },
 	/** primary key columns input for table: associations */
 ["associations_pk_columns_input"]: {
@@ -4002,46 +4076,53 @@ export type PartialObjects = {
 	ref_one_id?:number,
 	ref_one_table?:string,
 	ref_two_id?:number,
-	ref_two_table?:string
+	ref_two_table?:string,
+	user_id?:number
 },
 	/** aggregate stddev on columns */
 ["associations_stddev_fields"]: {
 		__typename?: "associations_stddev_fields";
 			id?:number,
 			ref_one_id?:number,
-			ref_two_id?:number
+			ref_two_id?:number,
+			user_id?:number
 	},
 	/** order by stddev() on columns of table "associations" */
 ["associations_stddev_order_by"]: {
 	id?:PartialObjects["order_by"],
 	ref_one_id?:PartialObjects["order_by"],
-	ref_two_id?:PartialObjects["order_by"]
+	ref_two_id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
 },
 	/** aggregate stddev_pop on columns */
 ["associations_stddev_pop_fields"]: {
 		__typename?: "associations_stddev_pop_fields";
 			id?:number,
 			ref_one_id?:number,
-			ref_two_id?:number
+			ref_two_id?:number,
+			user_id?:number
 	},
 	/** order by stddev_pop() on columns of table "associations" */
 ["associations_stddev_pop_order_by"]: {
 	id?:PartialObjects["order_by"],
 	ref_one_id?:PartialObjects["order_by"],
-	ref_two_id?:PartialObjects["order_by"]
+	ref_two_id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
 },
 	/** aggregate stddev_samp on columns */
 ["associations_stddev_samp_fields"]: {
 		__typename?: "associations_stddev_samp_fields";
 			id?:number,
 			ref_one_id?:number,
-			ref_two_id?:number
+			ref_two_id?:number,
+			user_id?:number
 	},
 	/** order by stddev_samp() on columns of table "associations" */
 ["associations_stddev_samp_order_by"]: {
 	id?:PartialObjects["order_by"],
 	ref_one_id?:PartialObjects["order_by"],
-	ref_two_id?:PartialObjects["order_by"]
+	ref_two_id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
 },
 	/** Streaming cursor of the table "associations" */
 ["associations_stream_cursor_input"]: {
@@ -4056,20 +4137,23 @@ export type PartialObjects = {
 	ref_one_id?:number,
 	ref_one_table?:string,
 	ref_two_id?:number,
-	ref_two_table?:string
+	ref_two_table?:string,
+	user_id?:number
 },
 	/** aggregate sum on columns */
 ["associations_sum_fields"]: {
 		__typename?: "associations_sum_fields";
 			id?:number,
 			ref_one_id?:number,
-			ref_two_id?:number
+			ref_two_id?:number,
+			user_id?:number
 	},
 	/** order by sum() on columns of table "associations" */
 ["associations_sum_order_by"]: {
 	id?:PartialObjects["order_by"],
 	ref_one_id?:PartialObjects["order_by"],
-	ref_two_id?:PartialObjects["order_by"]
+	ref_two_id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
 },
 	/** update columns of table "associations" */
 ["associations_update_column"]:associations_update_column,
@@ -4086,39 +4170,45 @@ export type PartialObjects = {
 		__typename?: "associations_var_pop_fields";
 			id?:number,
 			ref_one_id?:number,
-			ref_two_id?:number
+			ref_two_id?:number,
+			user_id?:number
 	},
 	/** order by var_pop() on columns of table "associations" */
 ["associations_var_pop_order_by"]: {
 	id?:PartialObjects["order_by"],
 	ref_one_id?:PartialObjects["order_by"],
-	ref_two_id?:PartialObjects["order_by"]
+	ref_two_id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
 },
 	/** aggregate var_samp on columns */
 ["associations_var_samp_fields"]: {
 		__typename?: "associations_var_samp_fields";
 			id?:number,
 			ref_one_id?:number,
-			ref_two_id?:number
+			ref_two_id?:number,
+			user_id?:number
 	},
 	/** order by var_samp() on columns of table "associations" */
 ["associations_var_samp_order_by"]: {
 	id?:PartialObjects["order_by"],
 	ref_one_id?:PartialObjects["order_by"],
-	ref_two_id?:PartialObjects["order_by"]
+	ref_two_id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
 },
 	/** aggregate variance on columns */
 ["associations_variance_fields"]: {
 		__typename?: "associations_variance_fields";
 			id?:number,
 			ref_one_id?:number,
-			ref_two_id?:number
+			ref_two_id?:number,
+			user_id?:number
 	},
 	/** order by variance() on columns of table "associations" */
 ["associations_variance_order_by"]: {
 	id?:PartialObjects["order_by"],
 	ref_one_id?:PartialObjects["order_by"],
-	ref_two_id?:PartialObjects["order_by"]
+	ref_two_id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
 },
 	/** Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'. */
 ["Boolean_comparison_exp"]: {
@@ -5544,12 +5634,15 @@ the end). throws an error if top level container is not an array */
 	/** columns and relationships of "locations" */
 ["locations"]: {
 		__typename?: "locations";
+			/** A computed field, executes function "location_events" */
+	events?:PartialObjects["events"][],
 			id?:number,
 			location?:PartialObjects["geography"],
 			name?:string,
 			user_id?:number
 	},
-	["locations_aggregate"]: {
+	/** aggregated selection of "locations" */
+["locations_aggregate"]: {
 		__typename?: "locations_aggregate";
 			aggregate?:PartialObjects["locations_aggregate_fields"],
 			nodes?:PartialObjects["locations"][]
@@ -5614,6 +5707,7 @@ the end). throws an error if top level container is not an array */
 	_and?:PartialObjects["locations_bool_exp"][],
 	_not?:PartialObjects["locations_bool_exp"],
 	_or?:PartialObjects["locations_bool_exp"][],
+	events?:PartialObjects["events_bool_exp"],
 	id?:PartialObjects["Int_comparison_exp"],
 	location?:PartialObjects["geography_comparison_exp"],
 	name?:PartialObjects["String_comparison_exp"],
@@ -5675,6 +5769,7 @@ the end). throws an error if top level container is not an array */
 },
 	/** Ordering options when selecting data from "locations". */
 ["locations_order_by"]: {
+	events_aggregate?:PartialObjects["events_aggregate_order_by"],
 	id?:PartialObjects["order_by"],
 	location?:PartialObjects["order_by"],
 	name?:PartialObjects["order_by"],
@@ -6090,7 +6185,8 @@ the end). throws an error if top level container is not an array */
 	events?:PartialObjects["events"][],
 			id?:number,
 			name?:string,
-			object_type?:string
+			object_type?:string,
+			user_id?:number
 	},
 	/** aggregated selection of "objects" */
 ["objects_aggregate"]: {
@@ -6130,11 +6226,13 @@ the end). throws an error if top level container is not an array */
 	/** aggregate avg on columns */
 ["objects_avg_fields"]: {
 		__typename?: "objects_avg_fields";
-			id?:number
+			id?:number,
+			user_id?:number
 	},
 	/** order by avg() on columns of table "objects" */
 ["objects_avg_order_by"]: {
-	id?:PartialObjects["order_by"]
+	id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
 },
 	/** Boolean expression to filter rows from the table "objects". All fields are combined with a logical 'AND'. */
 ["objects_bool_exp"]: {
@@ -6144,45 +6242,52 @@ the end). throws an error if top level container is not an array */
 	events?:PartialObjects["events_bool_exp"],
 	id?:PartialObjects["Int_comparison_exp"],
 	name?:PartialObjects["String_comparison_exp"],
-	object_type?:PartialObjects["String_comparison_exp"]
+	object_type?:PartialObjects["String_comparison_exp"],
+	user_id?:PartialObjects["Int_comparison_exp"]
 },
 	/** unique or primary key constraints on table "objects" */
 ["objects_constraint"]:objects_constraint,
 	/** input type for incrementing numeric columns in table "objects" */
 ["objects_inc_input"]: {
-	id?:number
+	id?:number,
+	user_id?:number
 },
 	/** input type for inserting data into table "objects" */
 ["objects_insert_input"]: {
 	id?:number,
 	name?:string,
-	object_type?:string
+	object_type?:string,
+	user_id?:number
 },
 	/** aggregate max on columns */
 ["objects_max_fields"]: {
 		__typename?: "objects_max_fields";
 			id?:number,
 			name?:string,
-			object_type?:string
+			object_type?:string,
+			user_id?:number
 	},
 	/** order by max() on columns of table "objects" */
 ["objects_max_order_by"]: {
 	id?:PartialObjects["order_by"],
 	name?:PartialObjects["order_by"],
-	object_type?:PartialObjects["order_by"]
+	object_type?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
 },
 	/** aggregate min on columns */
 ["objects_min_fields"]: {
 		__typename?: "objects_min_fields";
 			id?:number,
 			name?:string,
-			object_type?:string
+			object_type?:string,
+			user_id?:number
 	},
 	/** order by min() on columns of table "objects" */
 ["objects_min_order_by"]: {
 	id?:PartialObjects["order_by"],
 	name?:PartialObjects["order_by"],
-	object_type?:PartialObjects["order_by"]
+	object_type?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
 },
 	/** response of any mutation on the table "objects" */
 ["objects_mutation_response"]: {
@@ -6203,7 +6308,8 @@ the end). throws an error if top level container is not an array */
 	events_aggregate?:PartialObjects["events_aggregate_order_by"],
 	id?:PartialObjects["order_by"],
 	name?:PartialObjects["order_by"],
-	object_type?:PartialObjects["order_by"]
+	object_type?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
 },
 	/** primary key columns input for table: objects */
 ["objects_pk_columns_input"]: {
@@ -6215,34 +6321,41 @@ the end). throws an error if top level container is not an array */
 ["objects_set_input"]: {
 	id?:number,
 	name?:string,
-	object_type?:string
+	object_type?:string,
+	user_id?:number
 },
 	/** aggregate stddev on columns */
 ["objects_stddev_fields"]: {
 		__typename?: "objects_stddev_fields";
-			id?:number
+			id?:number,
+			user_id?:number
 	},
 	/** order by stddev() on columns of table "objects" */
 ["objects_stddev_order_by"]: {
-	id?:PartialObjects["order_by"]
+	id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
 },
 	/** aggregate stddev_pop on columns */
 ["objects_stddev_pop_fields"]: {
 		__typename?: "objects_stddev_pop_fields";
-			id?:number
+			id?:number,
+			user_id?:number
 	},
 	/** order by stddev_pop() on columns of table "objects" */
 ["objects_stddev_pop_order_by"]: {
-	id?:PartialObjects["order_by"]
+	id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
 },
 	/** aggregate stddev_samp on columns */
 ["objects_stddev_samp_fields"]: {
 		__typename?: "objects_stddev_samp_fields";
-			id?:number
+			id?:number,
+			user_id?:number
 	},
 	/** order by stddev_samp() on columns of table "objects" */
 ["objects_stddev_samp_order_by"]: {
-	id?:PartialObjects["order_by"]
+	id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
 },
 	/** Streaming cursor of the table "objects" */
 ["objects_stream_cursor_input"]: {
@@ -6255,16 +6368,19 @@ the end). throws an error if top level container is not an array */
 ["objects_stream_cursor_value_input"]: {
 	id?:number,
 	name?:string,
-	object_type?:string
+	object_type?:string,
+	user_id?:number
 },
 	/** aggregate sum on columns */
 ["objects_sum_fields"]: {
 		__typename?: "objects_sum_fields";
-			id?:number
+			id?:number,
+			user_id?:number
 	},
 	/** order by sum() on columns of table "objects" */
 ["objects_sum_order_by"]: {
-	id?:PartialObjects["order_by"]
+	id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
 },
 	/** update columns of table "objects" */
 ["objects_update_column"]:objects_update_column,
@@ -6279,29 +6395,35 @@ the end). throws an error if top level container is not an array */
 	/** aggregate var_pop on columns */
 ["objects_var_pop_fields"]: {
 		__typename?: "objects_var_pop_fields";
-			id?:number
+			id?:number,
+			user_id?:number
 	},
 	/** order by var_pop() on columns of table "objects" */
 ["objects_var_pop_order_by"]: {
-	id?:PartialObjects["order_by"]
+	id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
 },
 	/** aggregate var_samp on columns */
 ["objects_var_samp_fields"]: {
 		__typename?: "objects_var_samp_fields";
-			id?:number
+			id?:number,
+			user_id?:number
 	},
 	/** order by var_samp() on columns of table "objects" */
 ["objects_var_samp_order_by"]: {
-	id?:PartialObjects["order_by"]
+	id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
 },
 	/** aggregate variance on columns */
 ["objects_variance_fields"]: {
 		__typename?: "objects_variance_fields";
-			id?:number
+			id?:number,
+			user_id?:number
 	},
 	/** order by variance() on columns of table "objects" */
 ["objects_variance_order_by"]: {
-	id?:PartialObjects["order_by"]
+	id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
 },
 	/** column ordering options */
 ["order_by"]:order_by,
@@ -7277,7 +7399,8 @@ export type associations = {
 	ref_one_id:number,
 	ref_one_table:string,
 	ref_two_id:number,
-	ref_two_table:string
+	ref_two_table:string,
+	user_id:number
 }
 
 /** aggregated selection of "associations" */
@@ -7323,14 +7446,16 @@ export type associations_avg_fields = {
 	__typename?: "associations_avg_fields",
 	id?:number,
 	ref_one_id?:number,
-	ref_two_id?:number
+	ref_two_id?:number,
+	user_id?:number
 }
 
 /** order by avg() on columns of table "associations" */
 export type associations_avg_order_by = {
 		id?:order_by,
 	ref_one_id?:order_by,
-	ref_two_id?:order_by
+	ref_two_id?:order_by,
+	user_id?:order_by
 }
 
 /** Boolean expression to filter rows from the table "associations". All fields are combined with a logical 'AND'. */
@@ -7342,19 +7467,22 @@ export type associations_bool_exp = {
 	ref_one_id?:Int_comparison_exp,
 	ref_one_table?:String_comparison_exp,
 	ref_two_id?:Int_comparison_exp,
-	ref_two_table?:String_comparison_exp
+	ref_two_table?:String_comparison_exp,
+	user_id?:Int_comparison_exp
 }
 
 /** unique or primary key constraints on table "associations" */
 export enum associations_constraint {
-	associations_pkey = "associations_pkey"
+	associations_pkey = "associations_pkey",
+	associations_ref_one_id_ref_one_table_ref_two_id_ref_two_table_ = "associations_ref_one_id_ref_one_table_ref_two_id_ref_two_table_"
 }
 
 /** input type for incrementing numeric columns in table "associations" */
 export type associations_inc_input = {
 		id?:number,
 	ref_one_id?:number,
-	ref_two_id?:number
+	ref_two_id?:number,
+	user_id?:number
 }
 
 /** input type for inserting data into table "associations" */
@@ -7363,7 +7491,8 @@ export type associations_insert_input = {
 	ref_one_id?:number,
 	ref_one_table?:string,
 	ref_two_id?:number,
-	ref_two_table?:string
+	ref_two_table?:string,
+	user_id?:number
 }
 
 /** aggregate max on columns */
@@ -7373,7 +7502,8 @@ export type associations_max_fields = {
 	ref_one_id?:number,
 	ref_one_table?:string,
 	ref_two_id?:number,
-	ref_two_table?:string
+	ref_two_table?:string,
+	user_id?:number
 }
 
 /** order by max() on columns of table "associations" */
@@ -7382,7 +7512,8 @@ export type associations_max_order_by = {
 	ref_one_id?:order_by,
 	ref_one_table?:order_by,
 	ref_two_id?:order_by,
-	ref_two_table?:order_by
+	ref_two_table?:order_by,
+	user_id?:order_by
 }
 
 /** aggregate min on columns */
@@ -7392,7 +7523,8 @@ export type associations_min_fields = {
 	ref_one_id?:number,
 	ref_one_table?:string,
 	ref_two_id?:number,
-	ref_two_table?:string
+	ref_two_table?:string,
+	user_id?:number
 }
 
 /** order by min() on columns of table "associations" */
@@ -7401,7 +7533,8 @@ export type associations_min_order_by = {
 	ref_one_id?:order_by,
 	ref_one_table?:order_by,
 	ref_two_id?:order_by,
-	ref_two_table?:order_by
+	ref_two_table?:order_by,
+	user_id?:order_by
 }
 
 /** response of any mutation on the table "associations" */
@@ -7426,7 +7559,8 @@ export type associations_order_by = {
 	ref_one_id?:order_by,
 	ref_one_table?:order_by,
 	ref_two_id?:order_by,
-	ref_two_table?:order_by
+	ref_two_table?:order_by,
+	user_id?:order_by
 }
 
 /** primary key columns input for table: associations */
@@ -7440,7 +7574,8 @@ export enum associations_select_column {
 	ref_one_id = "ref_one_id",
 	ref_one_table = "ref_one_table",
 	ref_two_id = "ref_two_id",
-	ref_two_table = "ref_two_table"
+	ref_two_table = "ref_two_table",
+	user_id = "user_id"
 }
 
 /** input type for updating data in table "associations" */
@@ -7449,7 +7584,8 @@ export type associations_set_input = {
 	ref_one_id?:number,
 	ref_one_table?:string,
 	ref_two_id?:number,
-	ref_two_table?:string
+	ref_two_table?:string,
+	user_id?:number
 }
 
 /** aggregate stddev on columns */
@@ -7457,14 +7593,16 @@ export type associations_stddev_fields = {
 	__typename?: "associations_stddev_fields",
 	id?:number,
 	ref_one_id?:number,
-	ref_two_id?:number
+	ref_two_id?:number,
+	user_id?:number
 }
 
 /** order by stddev() on columns of table "associations" */
 export type associations_stddev_order_by = {
 		id?:order_by,
 	ref_one_id?:order_by,
-	ref_two_id?:order_by
+	ref_two_id?:order_by,
+	user_id?:order_by
 }
 
 /** aggregate stddev_pop on columns */
@@ -7472,14 +7610,16 @@ export type associations_stddev_pop_fields = {
 	__typename?: "associations_stddev_pop_fields",
 	id?:number,
 	ref_one_id?:number,
-	ref_two_id?:number
+	ref_two_id?:number,
+	user_id?:number
 }
 
 /** order by stddev_pop() on columns of table "associations" */
 export type associations_stddev_pop_order_by = {
 		id?:order_by,
 	ref_one_id?:order_by,
-	ref_two_id?:order_by
+	ref_two_id?:order_by,
+	user_id?:order_by
 }
 
 /** aggregate stddev_samp on columns */
@@ -7487,14 +7627,16 @@ export type associations_stddev_samp_fields = {
 	__typename?: "associations_stddev_samp_fields",
 	id?:number,
 	ref_one_id?:number,
-	ref_two_id?:number
+	ref_two_id?:number,
+	user_id?:number
 }
 
 /** order by stddev_samp() on columns of table "associations" */
 export type associations_stddev_samp_order_by = {
 		id?:order_by,
 	ref_one_id?:order_by,
-	ref_two_id?:order_by
+	ref_two_id?:order_by,
+	user_id?:order_by
 }
 
 /** Streaming cursor of the table "associations" */
@@ -7511,7 +7653,8 @@ export type associations_stream_cursor_value_input = {
 	ref_one_id?:number,
 	ref_one_table?:string,
 	ref_two_id?:number,
-	ref_two_table?:string
+	ref_two_table?:string,
+	user_id?:number
 }
 
 /** aggregate sum on columns */
@@ -7519,14 +7662,16 @@ export type associations_sum_fields = {
 	__typename?: "associations_sum_fields",
 	id?:number,
 	ref_one_id?:number,
-	ref_two_id?:number
+	ref_two_id?:number,
+	user_id?:number
 }
 
 /** order by sum() on columns of table "associations" */
 export type associations_sum_order_by = {
 		id?:order_by,
 	ref_one_id?:order_by,
-	ref_two_id?:order_by
+	ref_two_id?:order_by,
+	user_id?:order_by
 }
 
 /** update columns of table "associations" */
@@ -7535,7 +7680,8 @@ export enum associations_update_column {
 	ref_one_id = "ref_one_id",
 	ref_one_table = "ref_one_table",
 	ref_two_id = "ref_two_id",
-	ref_two_table = "ref_two_table"
+	ref_two_table = "ref_two_table",
+	user_id = "user_id"
 }
 
 export type associations_updates = {
@@ -7552,14 +7698,16 @@ export type associations_var_pop_fields = {
 	__typename?: "associations_var_pop_fields",
 	id?:number,
 	ref_one_id?:number,
-	ref_two_id?:number
+	ref_two_id?:number,
+	user_id?:number
 }
 
 /** order by var_pop() on columns of table "associations" */
 export type associations_var_pop_order_by = {
 		id?:order_by,
 	ref_one_id?:order_by,
-	ref_two_id?:order_by
+	ref_two_id?:order_by,
+	user_id?:order_by
 }
 
 /** aggregate var_samp on columns */
@@ -7567,14 +7715,16 @@ export type associations_var_samp_fields = {
 	__typename?: "associations_var_samp_fields",
 	id?:number,
 	ref_one_id?:number,
-	ref_two_id?:number
+	ref_two_id?:number,
+	user_id?:number
 }
 
 /** order by var_samp() on columns of table "associations" */
 export type associations_var_samp_order_by = {
 		id?:order_by,
 	ref_one_id?:order_by,
-	ref_two_id?:order_by
+	ref_two_id?:order_by,
+	user_id?:order_by
 }
 
 /** aggregate variance on columns */
@@ -7582,14 +7732,16 @@ export type associations_variance_fields = {
 	__typename?: "associations_variance_fields",
 	id?:number,
 	ref_one_id?:number,
-	ref_two_id?:number
+	ref_two_id?:number,
+	user_id?:number
 }
 
 /** order by variance() on columns of table "associations" */
 export type associations_variance_order_by = {
 		id?:order_by,
 	ref_one_id?:order_by,
-	ref_two_id?:order_by
+	ref_two_id?:order_by,
+	user_id?:order_by
 }
 
 /** Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'. */
@@ -9261,12 +9413,15 @@ export type jsonb_comparison_exp = {
 /** columns and relationships of "locations" */
 export type locations = {
 	__typename?: "locations",
+	/** A computed field, executes function "location_events" */
+	events?:events[],
 	id:number,
 	location:geography,
 	name?:string,
 	user_id:number
 }
 
+/** aggregated selection of "locations" */
 export type locations_aggregate = {
 	__typename?: "locations_aggregate",
 	aggregate?:locations_aggregate_fields,
@@ -9340,6 +9495,7 @@ export type locations_bool_exp = {
 		_and?:locations_bool_exp[],
 	_not?:locations_bool_exp,
 	_or?:locations_bool_exp[],
+	events?:events_bool_exp,
 	id?:Int_comparison_exp,
 	location?:geography_comparison_exp,
 	name?:String_comparison_exp,
@@ -9414,7 +9570,8 @@ export type locations_on_conflict = {
 
 /** Ordering options when selecting data from "locations". */
 export type locations_order_by = {
-		id?:order_by,
+		events_aggregate?:events_aggregate_order_by,
+	id?:order_by,
 	location?:order_by,
 	name?:order_by,
 	user_id?:order_by
@@ -9894,7 +10051,8 @@ export type objects = {
 	events?:events[],
 	id:number,
 	name:string,
-	object_type:string
+	object_type:string,
+	user_id:number
 }
 
 /** aggregated selection of "objects" */
@@ -9938,12 +10096,14 @@ export type objects_aggregate_order_by = {
 /** aggregate avg on columns */
 export type objects_avg_fields = {
 	__typename?: "objects_avg_fields",
-	id?:number
+	id?:number,
+	user_id?:number
 }
 
 /** order by avg() on columns of table "objects" */
 export type objects_avg_order_by = {
-		id?:order_by
+		id?:order_by,
+	user_id?:order_by
 }
 
 /** Boolean expression to filter rows from the table "objects". All fields are combined with a logical 'AND'. */
@@ -9954,7 +10114,8 @@ export type objects_bool_exp = {
 	events?:events_bool_exp,
 	id?:Int_comparison_exp,
 	name?:String_comparison_exp,
-	object_type?:String_comparison_exp
+	object_type?:String_comparison_exp,
+	user_id?:Int_comparison_exp
 }
 
 /** unique or primary key constraints on table "objects" */
@@ -9964,14 +10125,16 @@ export enum objects_constraint {
 
 /** input type for incrementing numeric columns in table "objects" */
 export type objects_inc_input = {
-		id?:number
+		id?:number,
+	user_id?:number
 }
 
 /** input type for inserting data into table "objects" */
 export type objects_insert_input = {
 		id?:number,
 	name?:string,
-	object_type?:string
+	object_type?:string,
+	user_id?:number
 }
 
 /** aggregate max on columns */
@@ -9979,14 +10142,16 @@ export type objects_max_fields = {
 	__typename?: "objects_max_fields",
 	id?:number,
 	name?:string,
-	object_type?:string
+	object_type?:string,
+	user_id?:number
 }
 
 /** order by max() on columns of table "objects" */
 export type objects_max_order_by = {
 		id?:order_by,
 	name?:order_by,
-	object_type?:order_by
+	object_type?:order_by,
+	user_id?:order_by
 }
 
 /** aggregate min on columns */
@@ -9994,14 +10159,16 @@ export type objects_min_fields = {
 	__typename?: "objects_min_fields",
 	id?:number,
 	name?:string,
-	object_type?:string
+	object_type?:string,
+	user_id?:number
 }
 
 /** order by min() on columns of table "objects" */
 export type objects_min_order_by = {
 		id?:order_by,
 	name?:order_by,
-	object_type?:order_by
+	object_type?:order_by,
+	user_id?:order_by
 }
 
 /** response of any mutation on the table "objects" */
@@ -10025,7 +10192,8 @@ export type objects_order_by = {
 		events_aggregate?:events_aggregate_order_by,
 	id?:order_by,
 	name?:order_by,
-	object_type?:order_by
+	object_type?:order_by,
+	user_id?:order_by
 }
 
 /** primary key columns input for table: objects */
@@ -10037,47 +10205,55 @@ export type objects_pk_columns_input = {
 export enum objects_select_column {
 	id = "id",
 	name = "name",
-	object_type = "object_type"
+	object_type = "object_type",
+	user_id = "user_id"
 }
 
 /** input type for updating data in table "objects" */
 export type objects_set_input = {
 		id?:number,
 	name?:string,
-	object_type?:string
+	object_type?:string,
+	user_id?:number
 }
 
 /** aggregate stddev on columns */
 export type objects_stddev_fields = {
 	__typename?: "objects_stddev_fields",
-	id?:number
+	id?:number,
+	user_id?:number
 }
 
 /** order by stddev() on columns of table "objects" */
 export type objects_stddev_order_by = {
-		id?:order_by
+		id?:order_by,
+	user_id?:order_by
 }
 
 /** aggregate stddev_pop on columns */
 export type objects_stddev_pop_fields = {
 	__typename?: "objects_stddev_pop_fields",
-	id?:number
+	id?:number,
+	user_id?:number
 }
 
 /** order by stddev_pop() on columns of table "objects" */
 export type objects_stddev_pop_order_by = {
-		id?:order_by
+		id?:order_by,
+	user_id?:order_by
 }
 
 /** aggregate stddev_samp on columns */
 export type objects_stddev_samp_fields = {
 	__typename?: "objects_stddev_samp_fields",
-	id?:number
+	id?:number,
+	user_id?:number
 }
 
 /** order by stddev_samp() on columns of table "objects" */
 export type objects_stddev_samp_order_by = {
-		id?:order_by
+		id?:order_by,
+	user_id?:order_by
 }
 
 /** Streaming cursor of the table "objects" */
@@ -10092,25 +10268,29 @@ export type objects_stream_cursor_input = {
 export type objects_stream_cursor_value_input = {
 		id?:number,
 	name?:string,
-	object_type?:string
+	object_type?:string,
+	user_id?:number
 }
 
 /** aggregate sum on columns */
 export type objects_sum_fields = {
 	__typename?: "objects_sum_fields",
-	id?:number
+	id?:number,
+	user_id?:number
 }
 
 /** order by sum() on columns of table "objects" */
 export type objects_sum_order_by = {
-		id?:order_by
+		id?:order_by,
+	user_id?:order_by
 }
 
 /** update columns of table "objects" */
 export enum objects_update_column {
 	id = "id",
 	name = "name",
-	object_type = "object_type"
+	object_type = "object_type",
+	user_id = "user_id"
 }
 
 export type objects_updates = {
@@ -10125,34 +10305,40 @@ export type objects_updates = {
 /** aggregate var_pop on columns */
 export type objects_var_pop_fields = {
 	__typename?: "objects_var_pop_fields",
-	id?:number
+	id?:number,
+	user_id?:number
 }
 
 /** order by var_pop() on columns of table "objects" */
 export type objects_var_pop_order_by = {
-		id?:order_by
+		id?:order_by,
+	user_id?:order_by
 }
 
 /** aggregate var_samp on columns */
 export type objects_var_samp_fields = {
 	__typename?: "objects_var_samp_fields",
-	id?:number
+	id?:number,
+	user_id?:number
 }
 
 /** order by var_samp() on columns of table "objects" */
 export type objects_var_samp_order_by = {
-		id?:order_by
+		id?:order_by,
+	user_id?:order_by
 }
 
 /** aggregate variance on columns */
 export type objects_variance_fields = {
 	__typename?: "objects_variance_fields",
-	id?:number
+	id?:number,
+	user_id?:number
 }
 
 /** order by variance() on columns of table "objects" */
 export type objects_variance_order_by = {
-		id?:order_by
+		id?:order_by,
+	user_id?:order_by
 }
 
 /** column ordering options */
@@ -11406,6 +11592,12 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	associations_bool_exp:{
@@ -11456,6 +11648,12 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		user_id:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	associations_constraint: "enum",
@@ -11473,6 +11671,12 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		},
 		ref_two_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
 			type:"Int",
 			array:false,
 			arrayRequired:false,
@@ -11509,6 +11713,12 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		user_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	associations_max_order_by:{
@@ -11541,6 +11751,12 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	associations_min_order_by:{
@@ -11569,6 +11785,12 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		},
 		ref_two_table:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
 			type:"order_by",
 			array:false,
 			arrayRequired:false,
@@ -11625,6 +11847,12 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	associations_pk_columns_input:{
@@ -11666,6 +11894,12 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		user_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	associations_stddev_order_by:{
@@ -11682,6 +11916,12 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		},
 		ref_two_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
 			type:"order_by",
 			array:false,
 			arrayRequired:false,
@@ -11706,6 +11946,12 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	associations_stddev_samp_order_by:{
@@ -11722,6 +11968,12 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		},
 		ref_two_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
 			type:"order_by",
 			array:false,
 			arrayRequired:false,
@@ -11772,6 +12024,12 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		user_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	associations_sum_order_by:{
@@ -11788,6 +12046,12 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		},
 		ref_two_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
 			type:"order_by",
 			array:false,
 			arrayRequired:false,
@@ -11833,6 +12097,12 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	associations_var_samp_order_by:{
@@ -11853,6 +12123,12 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	associations_variance_order_by:{
@@ -11869,6 +12145,12 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		},
 		ref_two_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
 			type:"order_by",
 			array:false,
 			arrayRequired:false,
@@ -15526,6 +15808,40 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
+	locations:{
+		events:{
+			distinct_on:{
+				type:"events_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"events_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"events_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		}
+	},
 	locations_aggregate_bool_exp:{
 		count:{
 			type:"locations_aggregate_bool_exp_count",
@@ -15691,6 +16007,12 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
+		events:{
+			type:"events_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		id:{
 			type:"Int_comparison_exp",
 			array:false,
@@ -15818,6 +16140,12 @@ export const AllTypesProps: Record<string,any> = {
 		}
 	},
 	locations_order_by:{
+		events_aggregate:{
+			type:"events_aggregate_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		id:{
 			type:"order_by",
 			array:false,
@@ -17834,6 +18162,12 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	objects_bool_exp:{
@@ -17878,11 +18212,23 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		user_id:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	objects_constraint: "enum",
 	objects_inc_input:{
 		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
 			type:"Int",
 			array:false,
 			arrayRequired:false,
@@ -17907,6 +18253,12 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		user_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	objects_max_order_by:{
@@ -17927,6 +18279,12 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	objects_min_order_by:{
@@ -17943,6 +18301,12 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		},
 		object_type:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
 			type:"order_by",
 			array:false,
 			arrayRequired:false,
@@ -17993,6 +18357,12 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	objects_pk_columns_input:{
@@ -18022,10 +18392,22 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		user_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	objects_stddev_order_by:{
 		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
 			type:"order_by",
 			array:false,
 			arrayRequired:false,
@@ -18038,10 +18420,22 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	objects_stddev_samp_order_by:{
 		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
 			type:"order_by",
 			array:false,
 			arrayRequired:false,
@@ -18080,10 +18474,22 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		user_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	objects_sum_order_by:{
 		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
 			type:"order_by",
 			array:false,
 			arrayRequired:false,
@@ -18117,6 +18523,12 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	objects_var_samp_order_by:{
@@ -18125,10 +18537,22 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	objects_variance_order_by:{
 		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
 			type:"order_by",
 			array:false,
 			arrayRequired:false,
@@ -22143,7 +22567,8 @@ export const ReturnTypes: Record<string,any> = {
 		ref_one_id:"Int",
 		ref_one_table:"String",
 		ref_two_id:"Int",
-		ref_two_table:"String"
+		ref_two_table:"String",
+		user_id:"Int"
 	},
 	associations_aggregate:{
 		aggregate:"associations_aggregate_fields",
@@ -22165,21 +22590,24 @@ export const ReturnTypes: Record<string,any> = {
 	associations_avg_fields:{
 		id:"Float",
 		ref_one_id:"Float",
-		ref_two_id:"Float"
+		ref_two_id:"Float",
+		user_id:"Float"
 	},
 	associations_max_fields:{
 		id:"Int",
 		ref_one_id:"Int",
 		ref_one_table:"String",
 		ref_two_id:"Int",
-		ref_two_table:"String"
+		ref_two_table:"String",
+		user_id:"Int"
 	},
 	associations_min_fields:{
 		id:"Int",
 		ref_one_id:"Int",
 		ref_one_table:"String",
 		ref_two_id:"Int",
-		ref_two_table:"String"
+		ref_two_table:"String",
+		user_id:"Int"
 	},
 	associations_mutation_response:{
 		affected_rows:"Int",
@@ -22188,37 +22616,44 @@ export const ReturnTypes: Record<string,any> = {
 	associations_stddev_fields:{
 		id:"Float",
 		ref_one_id:"Float",
-		ref_two_id:"Float"
+		ref_two_id:"Float",
+		user_id:"Float"
 	},
 	associations_stddev_pop_fields:{
 		id:"Float",
 		ref_one_id:"Float",
-		ref_two_id:"Float"
+		ref_two_id:"Float",
+		user_id:"Float"
 	},
 	associations_stddev_samp_fields:{
 		id:"Float",
 		ref_one_id:"Float",
-		ref_two_id:"Float"
+		ref_two_id:"Float",
+		user_id:"Float"
 	},
 	associations_sum_fields:{
 		id:"Int",
 		ref_one_id:"Int",
-		ref_two_id:"Int"
+		ref_two_id:"Int",
+		user_id:"Int"
 	},
 	associations_var_pop_fields:{
 		id:"Float",
 		ref_one_id:"Float",
-		ref_two_id:"Float"
+		ref_two_id:"Float",
+		user_id:"Float"
 	},
 	associations_var_samp_fields:{
 		id:"Float",
 		ref_one_id:"Float",
-		ref_two_id:"Float"
+		ref_two_id:"Float",
+		user_id:"Float"
 	},
 	associations_variance_fields:{
 		id:"Float",
 		ref_one_id:"Float",
-		ref_two_id:"Float"
+		ref_two_id:"Float",
+		user_id:"Float"
 	},
 	event_types:{
 		children:"event_types",
@@ -22576,6 +23011,7 @@ export const ReturnTypes: Record<string,any> = {
 		user_id:"Float"
 	},
 	locations:{
+		events:"events",
 		id:"Int",
 		location:"geography",
 		name:"String",
@@ -22750,7 +23186,8 @@ export const ReturnTypes: Record<string,any> = {
 		events:"events",
 		id:"Int",
 		name:"String",
-		object_type:"String"
+		object_type:"String",
+		user_id:"Int"
 	},
 	objects_aggregate:{
 		aggregate:"objects_aggregate_fields",
@@ -22770,42 +23207,52 @@ export const ReturnTypes: Record<string,any> = {
 		variance:"objects_variance_fields"
 	},
 	objects_avg_fields:{
-		id:"Float"
+		id:"Float",
+		user_id:"Float"
 	},
 	objects_max_fields:{
 		id:"Int",
 		name:"String",
-		object_type:"String"
+		object_type:"String",
+		user_id:"Int"
 	},
 	objects_min_fields:{
 		id:"Int",
 		name:"String",
-		object_type:"String"
+		object_type:"String",
+		user_id:"Int"
 	},
 	objects_mutation_response:{
 		affected_rows:"Int",
 		returning:"objects"
 	},
 	objects_stddev_fields:{
-		id:"Float"
+		id:"Float",
+		user_id:"Float"
 	},
 	objects_stddev_pop_fields:{
-		id:"Float"
+		id:"Float",
+		user_id:"Float"
 	},
 	objects_stddev_samp_fields:{
-		id:"Float"
+		id:"Float",
+		user_id:"Float"
 	},
 	objects_sum_fields:{
-		id:"Int"
+		id:"Int",
+		user_id:"Int"
 	},
 	objects_var_pop_fields:{
-		id:"Float"
+		id:"Float",
+		user_id:"Float"
 	},
 	objects_var_samp_fields:{
-		id:"Float"
+		id:"Float",
+		user_id:"Float"
 	},
 	objects_variance_fields:{
-		id:"Float"
+		id:"Float",
+		user_id:"Float"
 	},
 	query_root:{
 		associations:"associations",

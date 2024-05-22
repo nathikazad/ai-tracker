@@ -1,7 +1,8 @@
 import { getHasura } from '../../config';
-import { GraphQLError, $, order_by, timestamptz_comparison_exp } from '../../generated/graphql-zeus';
-import { ASLocation, DBLocation, DeviceLocation } from './locationUtility';
+import { $, order_by } from '../../generated/graphql-zeus';
+import { ASLocation, DBLocation, convertASLocationToPostGISPoint } from './locationUtility';
 
+// STAY EVENTS DB interactions
 export function insertStay(userId: number, startTime: Date | undefined, endTime: Date | undefined, dbLocation?: DBLocation) {
     let chain = getHasura();
     return chain.mutation({
@@ -46,7 +47,6 @@ export function updateStay(id: number, startTime: Date | undefined, endTime: Dat
     })
 }
 
-
 export function deleteStay(eventId: number) {
     let chain = getHasura();
     return chain.mutation({
@@ -58,6 +58,69 @@ export function deleteStay(eventId: number) {
     })
 }
 
+export async function getLastStayEvents(userId: number, limit: number) {
+    let lastEvents = await getHasura().query({
+        events: [{
+            limit: limit,
+            order_by: [{
+                start_time: order_by.desc
+            }],
+            where: {
+                _and: [{
+                    user_id: {
+                        _eq: userId
+                    },
+                    event_type: {
+                        _eq: "stay"
+                    },
+                }]
+            }
+        }, {
+            id: true,
+            metadata: [{}, true],
+            start_time: true,
+            end_time: true
+        }]
+    });
+    lastEvents.events.reverse();
+    return lastEvents.events
+}
+
+export async function getStayEventsWithLocation(userId: number) {
+    let lastEvents = await getHasura().query({
+        events: [{
+            order_by: [{
+                start_time: order_by.desc
+            }],
+            where: {
+                _and: [{
+                    user_id: {
+                        _eq: userId
+                    },
+                    event_type: {
+                        _eq: "stay"
+                    },
+                }]
+            }
+        }, {
+            id: true,
+            metadata: [{}, true],
+            start_time: true,
+            end_time: true,
+            locations: [
+                {}, {
+                    id: true,
+                    location: true,
+                    name: true
+                }
+            ]
+        }]
+    });
+    // lastEvents.events.reverse();
+    return lastEvents.events
+}
+
+//  USER DB interactions
 export async function getClosestUserLocation(userId: number, currentLocation: ASLocation, radius: number = 100): Promise<DBLocation[]> {
     console.log(`POINT(${currentLocation.lat} ${currentLocation.lon})`);
     let locs = await getHasura().query({
@@ -80,41 +143,25 @@ export async function getClosestUserLocation(userId: number, currentLocation: AS
     return locs.users_by_pk!.closest_user_location!;
 }
 
-export async function getLastEvents(userId: number, event_type: string, limit: number) {
-    let lastEvents = await getHasura().query({
-        events: [{
-            limit: limit,
-            order_by: [{
-                start_time: order_by.desc
-            }],
-            where: {
-                _and: [{
-                    user_id: {
-                        _eq: userId
-                    },
-                    event_type: {
-                        _eq: event_type
-                    },
-                    // start_time: {
-                    //     _gte: date.toISOString()
-                    // }
-                    // ,
-                    // end_time: {
-                    //     _is_null: true
-                    // }
-                }]
-            }
+// LOCATION DB interactions
+export async function insertLocation(userId: number, location: ASLocation, name: string): Promise<DBLocation> {
+    let chain = getHasura();
+    let resp = await chain.mutation({
+        insert_locations: [{
+            objects: [{
+                location: $`location`,
+                user_id: userId,
+                name: name
+            }]
         }, {
-            id: true,
-            metadata: [{}, true],
-            start_time: true,
-            end_time: true
+            returning: {
+                id: true,
+                location: true,
+                name: true
+            }
         }]
-    });
-    // for(let event of lastEvents.events) {
-    //     console.log(`event ${event.id} ${event.start_time}`)
-    // }
-    // reverse the order
-    lastEvents.events.reverse();
-    return lastEvents.events
+    }, {
+        "location": convertASLocationToPostGISPoint(location)
+    })
+    return resp.insert_locations!.returning![0];
 }

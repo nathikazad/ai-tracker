@@ -22,6 +22,7 @@ type associations {
   ref_one_table: String!
   ref_two_id: Int!
   ref_two_table: String!
+  user_id: Int!
 }
 
 """
@@ -71,6 +72,7 @@ type associations_avg_fields {
   id: Float
   ref_one_id: Float
   ref_two_id: Float
+  user_id: Float
 }
 
 """
@@ -80,6 +82,7 @@ input associations_avg_order_by {
   id: order_by
   ref_one_id: order_by
   ref_two_id: order_by
+  user_id: order_by
 }
 
 """
@@ -94,6 +97,7 @@ input associations_bool_exp {
   ref_one_table: String_comparison_exp
   ref_two_id: Int_comparison_exp
   ref_two_table: String_comparison_exp
+  user_id: Int_comparison_exp
 }
 
 """
@@ -104,6 +108,11 @@ enum associations_constraint {
   unique or primary key constraint on columns "id"
   """
   associations_pkey
+
+  """
+  unique or primary key constraint on columns "ref_one_table", "ref_two_table", "ref_one_id", "ref_two_id"
+  """
+  associations_ref_one_id_ref_one_table_ref_two_id_ref_two_table_
 }
 
 """
@@ -113,6 +122,7 @@ input associations_inc_input {
   id: Int
   ref_one_id: Int
   ref_two_id: Int
+  user_id: Int
 }
 
 """
@@ -124,6 +134,7 @@ input associations_insert_input {
   ref_one_table: String
   ref_two_id: Int
   ref_two_table: String
+  user_id: Int
 }
 
 """aggregate max on columns"""
@@ -133,6 +144,7 @@ type associations_max_fields {
   ref_one_table: String
   ref_two_id: Int
   ref_two_table: String
+  user_id: Int
 }
 
 """
@@ -144,6 +156,7 @@ input associations_max_order_by {
   ref_one_table: order_by
   ref_two_id: order_by
   ref_two_table: order_by
+  user_id: order_by
 }
 
 """aggregate min on columns"""
@@ -153,6 +166,7 @@ type associations_min_fields {
   ref_one_table: String
   ref_two_id: Int
   ref_two_table: String
+  user_id: Int
 }
 
 """
@@ -164,6 +178,7 @@ input associations_min_order_by {
   ref_one_table: order_by
   ref_two_id: order_by
   ref_two_table: order_by
+  user_id: order_by
 }
 
 """
@@ -193,6 +208,7 @@ input associations_order_by {
   ref_one_table: order_by
   ref_two_id: order_by
   ref_two_table: order_by
+  user_id: order_by
 }
 
 """primary key columns input for table: associations"""
@@ -218,6 +234,9 @@ enum associations_select_column {
 
   """column name"""
   ref_two_table
+
+  """column name"""
+  user_id
 }
 
 """
@@ -229,6 +248,7 @@ input associations_set_input {
   ref_one_table: String
   ref_two_id: Int
   ref_two_table: String
+  user_id: Int
 }
 
 """aggregate stddev on columns"""
@@ -236,6 +256,7 @@ type associations_stddev_fields {
   id: Float
   ref_one_id: Float
   ref_two_id: Float
+  user_id: Float
 }
 
 """
@@ -245,6 +266,7 @@ input associations_stddev_order_by {
   id: order_by
   ref_one_id: order_by
   ref_two_id: order_by
+  user_id: order_by
 }
 
 """aggregate stddev_pop on columns"""
@@ -252,6 +274,7 @@ type associations_stddev_pop_fields {
   id: Float
   ref_one_id: Float
   ref_two_id: Float
+  user_id: Float
 }
 
 """
@@ -261,6 +284,7 @@ input associations_stddev_pop_order_by {
   id: order_by
   ref_one_id: order_by
   ref_two_id: order_by
+  user_id: order_by
 }
 
 """aggregate stddev_samp on columns"""
@@ -268,6 +292,7 @@ type associations_stddev_samp_fields {
   id: Float
   ref_one_id: Float
   ref_two_id: Float
+  user_id: Float
 }
 
 """
@@ -277,6 +302,7 @@ input associations_stddev_samp_order_by {
   id: order_by
   ref_one_id: order_by
   ref_two_id: order_by
+  user_id: order_by
 }
 
 """
@@ -297,6 +323,7 @@ input associations_stream_cursor_value_input {
   ref_one_table: String
   ref_two_id: Int
   ref_two_table: String
+  user_id: Int
 }
 
 """aggregate sum on columns"""
@@ -304,6 +331,7 @@ type associations_sum_fields {
   id: Int
   ref_one_id: Int
   ref_two_id: Int
+  user_id: Int
 }
 
 """
@@ -313,6 +341,7 @@ input associations_sum_order_by {
   id: order_by
   ref_one_id: order_by
   ref_two_id: order_by
+  user_id: order_by
 }
 
 """
@@ -333,6 +362,9 @@ enum associations_update_column {
 
   """column name"""
   ref_two_table
+
+  """column name"""
+  user_id
 }
 
 input associations_updates {
@@ -351,6 +383,7 @@ type associations_var_pop_fields {
   id: Float
   ref_one_id: Float
   ref_two_id: Float
+  user_id: Float
 }
 
 """
@@ -360,6 +393,7 @@ input associations_var_pop_order_by {
   id: order_by
   ref_one_id: order_by
   ref_two_id: order_by
+  user_id: order_by
 }
 
 """aggregate var_samp on columns"""
@@ -367,6 +401,7 @@ type associations_var_samp_fields {
   id: Float
   ref_one_id: Float
   ref_two_id: Float
+  user_id: Float
 }
 
 """
@@ -376,6 +411,7 @@ input associations_var_samp_order_by {
   id: order_by
   ref_one_id: order_by
   ref_two_id: order_by
+  user_id: order_by
 }
 
 """aggregate variance on columns"""
@@ -383,6 +419,7 @@ type associations_variance_fields {
   id: Float
   ref_one_id: Float
   ref_two_id: Float
+  user_id: Float
 }
 
 """
@@ -392,6 +429,7 @@ input associations_variance_order_by {
   id: order_by
   ref_one_id: order_by
   ref_two_id: order_by
+  user_id: order_by
 }
 
 """
@@ -2662,12 +2700,34 @@ input jsonb_comparison_exp {
 columns and relationships of "locations"
 """
 type locations {
+  """
+  A computed field, executes function "location_events"
+  """
+  events(
+    """distinct select on columns"""
+    distinct_on: [events_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [events_order_by!]
+
+    """filter the rows returned"""
+    where: events_bool_exp
+  ): [events!]
   id: Int!
   location: geography!
   name: String
   user_id: Int!
 }
 
+"""
+aggregated selection of "locations"
+"""
 type locations_aggregate {
   aggregate: locations_aggregate_fields
   nodes: [locations!]!
@@ -2749,6 +2809,7 @@ input locations_bool_exp {
   _and: [locations_bool_exp!]
   _not: locations_bool_exp
   _or: [locations_bool_exp!]
+  events: events_bool_exp
   id: Int_comparison_exp
   location: geography_comparison_exp
   name: String_comparison_exp
@@ -2842,6 +2903,7 @@ input locations_on_conflict {
 
 """Ordering options when selecting data from "locations"."""
 input locations_order_by {
+  events_aggregate: events_aggregate_order_by
   id: order_by
   location: order_by
   name: order_by
@@ -4322,6 +4384,7 @@ type objects {
   id: Int!
   name: String!
   object_type: String!
+  user_id: Int!
 }
 
 """
@@ -4369,6 +4432,7 @@ input objects_aggregate_order_by {
 """aggregate avg on columns"""
 type objects_avg_fields {
   id: Float
+  user_id: Float
 }
 
 """
@@ -4376,6 +4440,7 @@ order by avg() on columns of table "objects"
 """
 input objects_avg_order_by {
   id: order_by
+  user_id: order_by
 }
 
 """
@@ -4389,6 +4454,7 @@ input objects_bool_exp {
   id: Int_comparison_exp
   name: String_comparison_exp
   object_type: String_comparison_exp
+  user_id: Int_comparison_exp
 }
 
 """
@@ -4406,6 +4472,7 @@ input type for incrementing numeric columns in table "objects"
 """
 input objects_inc_input {
   id: Int
+  user_id: Int
 }
 
 """
@@ -4415,6 +4482,7 @@ input objects_insert_input {
   id: Int
   name: String
   object_type: String
+  user_id: Int
 }
 
 """aggregate max on columns"""
@@ -4422,6 +4490,7 @@ type objects_max_fields {
   id: Int
   name: String
   object_type: String
+  user_id: Int
 }
 
 """
@@ -4431,6 +4500,7 @@ input objects_max_order_by {
   id: order_by
   name: order_by
   object_type: order_by
+  user_id: order_by
 }
 
 """aggregate min on columns"""
@@ -4438,6 +4508,7 @@ type objects_min_fields {
   id: Int
   name: String
   object_type: String
+  user_id: Int
 }
 
 """
@@ -4447,6 +4518,7 @@ input objects_min_order_by {
   id: order_by
   name: order_by
   object_type: order_by
+  user_id: order_by
 }
 
 """
@@ -4475,6 +4547,7 @@ input objects_order_by {
   id: order_by
   name: order_by
   object_type: order_by
+  user_id: order_by
 }
 
 """primary key columns input for table: objects"""
@@ -4494,6 +4567,9 @@ enum objects_select_column {
 
   """column name"""
   object_type
+
+  """column name"""
+  user_id
 }
 
 """
@@ -4503,11 +4579,13 @@ input objects_set_input {
   id: Int
   name: String
   object_type: String
+  user_id: Int
 }
 
 """aggregate stddev on columns"""
 type objects_stddev_fields {
   id: Float
+  user_id: Float
 }
 
 """
@@ -4515,11 +4593,13 @@ order by stddev() on columns of table "objects"
 """
 input objects_stddev_order_by {
   id: order_by
+  user_id: order_by
 }
 
 """aggregate stddev_pop on columns"""
 type objects_stddev_pop_fields {
   id: Float
+  user_id: Float
 }
 
 """
@@ -4527,11 +4607,13 @@ order by stddev_pop() on columns of table "objects"
 """
 input objects_stddev_pop_order_by {
   id: order_by
+  user_id: order_by
 }
 
 """aggregate stddev_samp on columns"""
 type objects_stddev_samp_fields {
   id: Float
+  user_id: Float
 }
 
 """
@@ -4539,6 +4621,7 @@ order by stddev_samp() on columns of table "objects"
 """
 input objects_stddev_samp_order_by {
   id: order_by
+  user_id: order_by
 }
 
 """
@@ -4557,11 +4640,13 @@ input objects_stream_cursor_value_input {
   id: Int
   name: String
   object_type: String
+  user_id: Int
 }
 
 """aggregate sum on columns"""
 type objects_sum_fields {
   id: Int
+  user_id: Int
 }
 
 """
@@ -4569,6 +4654,7 @@ order by sum() on columns of table "objects"
 """
 input objects_sum_order_by {
   id: order_by
+  user_id: order_by
 }
 
 """
@@ -4583,6 +4669,9 @@ enum objects_update_column {
 
   """column name"""
   object_type
+
+  """column name"""
+  user_id
 }
 
 input objects_updates {
@@ -4599,6 +4688,7 @@ input objects_updates {
 """aggregate var_pop on columns"""
 type objects_var_pop_fields {
   id: Float
+  user_id: Float
 }
 
 """
@@ -4606,11 +4696,13 @@ order by var_pop() on columns of table "objects"
 """
 input objects_var_pop_order_by {
   id: order_by
+  user_id: order_by
 }
 
 """aggregate var_samp on columns"""
 type objects_var_samp_fields {
   id: Float
+  user_id: Float
 }
 
 """
@@ -4618,11 +4710,13 @@ order by var_samp() on columns of table "objects"
 """
 input objects_var_samp_order_by {
   id: order_by
+  user_id: order_by
 }
 
 """aggregate variance on columns"""
 type objects_variance_fields {
   id: Float
+  user_id: Float
 }
 
 """
@@ -4630,6 +4724,7 @@ order by variance() on columns of table "objects"
 """
 input objects_variance_order_by {
   id: order_by
+  user_id: order_by
 }
 
 """column ordering options"""

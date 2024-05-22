@@ -9,7 +9,7 @@ import { parseUserRequest } from './resources/logic';
 import { getUserLanguage } from './resources/user';
 // import { processMovement, setNameForLocation } from './helper/location';
 import { uploadSleep } from './helper/sleep';
-import { addLocation, updateMovements } from './resources/location/location2';
+import { addUserMovement, saveLocation } from './resources/location/location2';
 const app: Express = express();
 
 app.use(express.static(path.join(__dirname, '../public')));
@@ -70,8 +70,7 @@ app.post('/updateLocation', async (req: Request, res: Response) => {
         try {
             console.log(`🦵🏻🦵🏻🦵🏻🦵🏻 ${userId} ${req.body}`)
             console.log(req.body)
-            await addLocation(userId, req.body.locations, req.body.fromBackground || false);
-            await updateMovements(userId)
+            await addUserMovement(userId, req.body.locations, req.body.fromBackground || false);
             // console.log("success")
             res.status(200).json({
                 status: "success",
@@ -111,10 +110,11 @@ app.post('/createLocation', async (req: Request, res: Response) => {
         const userId = authorize(req); 
         try {
             console.log(`Set location ${userId} ${req.body}`)
-            // setNameForLocation(userId, req.body!.lon, req.body!.lat, req.body!.name);
+            let id = await saveLocation(userId, {lat: req.body!.lat, lon: req.body!.lon}, req.body!.name)
             // console.log("success")
             res.status(200).json({
                 status: "success",
+                id: id
             });
         } catch (parseError) {
             console.error('Parsing error:', parseError);

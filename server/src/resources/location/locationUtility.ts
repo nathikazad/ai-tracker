@@ -9,7 +9,7 @@ export interface DeviceLocation extends ASLocation {
     timestamp: string;
 }
 
-interface PostGISPoint {
+export interface PostGISPoint {
     type: "Point";
     coordinates: number[];
 }
@@ -33,6 +33,10 @@ export interface StationaryPeriod {
     closestDistance?: number;
 }
 
+export function getEventLocation(event: any): ASLocation {
+    const eventLocationPostGIS: PostGISPoint = event.metadata!.location!.location
+    return convertPostGISPointToASLocation(eventLocationPostGIS)
+}
 
 export function convertASLocationToPostGISPoint(location: ASLocation): PostGISPoint {
     return {

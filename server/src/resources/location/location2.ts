@@ -1,12 +1,41 @@
 import * as polyline from '@mapbox/polyline';
 import { addHours, getStartOfDay, toDate, toPST } from '../../helper/time';
-import { ASLocation, DeviceLocation, StationaryPeriod, convertASLocationToPostGISPoint, convertPostGISPointToASLocation, getAverageLocation, getDistance, getDuration } from './locationUtility';
-import { getClosestUserLocation, getLastEvents, insertStay, updateStay } from './locationDb';
+import { ASLocation, DeviceLocation, PostGISPoint, StationaryPeriod, convertASLocationToPostGISPoint, convertPostGISPointToASLocation, getAverageLocation, getDistance, getDuration, getEventLocation } from './locationUtility';
+import { getClosestUserLocation, getLastStayEvents, getStayEventsWithLocation, insertLocation, insertStay, updateStay } from './locationDb';
 import { getUserMovementByDate, getUserMovements, insertUserMovement, isTimeCollisionError, updateUserMovement } from './userMovement';
 import { associateEventWithLocation } from '../associations/associationsDb';
 
 
-export async function addLocation(userId: number, locations: DeviceLocation[], fromBackground: boolean = false) {
+export async function saveLocation(userId: number, location: ASLocation, name: string) {
+    let newDBLocation = await insertLocation(userId, location, name);
+    console.log(`Location: ${newDBLocation.id}`)
+    let stayEvents = await getStayEventsWithLocation(userId)
+    console.log(`Events: ${stayEvents.length}`)
+    stayEvents = stayEvents.filter(event => event.metadata?.location?.location ?? false)
+    console.log(`Events with location: ${stayEvents.length}`)
+    // see which ones are within 200m
+    stayEvents = stayEvents.filter(event => {
+        return getDistance(getEventLocation(event), location) < 200
+    })
+    console.log(`Events within 500m: ${stayEvents.length}`)
+    let eventsWithLocation = stayEvents.filter(event => (event.locations?.length ?? 0) > 0)
+    let eventsWithoutLocation = stayEvents.filter(event => (event.locations?.length ?? 0) == 0)
+    console.log(`Events with location: ${eventsWithLocation.length}`)
+    console.log(`Events without location: ${eventsWithoutLocation.length}`)
+
+    for (let event of eventsWithoutLocation) {
+        console.log(`Event(${event.id}) has no location`)
+        associateEventWithLocation(userId, event.id, newDBLocation.id!);
+    }
+
+    for (let event of eventsWithLocation) {
+        console.log(`Event(${event.id}) has location id ${event.locations![0].id} and name ${event.locations![0].name}`)
+    }
+    return newDBLocation.id!
+}
+
+
+export async function addUserMovement(userId: number, locations: DeviceLocation[], fromBackground: boolean = false) {
     // make time equal start of day
     let timestamp = getStartOfDay(locations[0].timestamp);
     try {
@@ -19,15 +48,14 @@ export async function addLocation(userId: number, locations: DeviceLocation[], f
         } else {
             throw error;
         }
-
     }
+    await updateMovements(userId)
 }
-
 
 export async function updateMovements(userId: number) {
     console.log(`start of day ${getStartOfDay(new Date().toISOString())}`)
 
-    let events = await getLastEvents(userId, "stay", 2)
+    let events = await getLastStayEvents(userId, 2)
     for(let event of events) {
         console.log(`EVENT: ${event.id} ${toPST(event.start_time)} - ${toPST(event.end_time)} ${event.metadata?.location?.name}`)
     }
@@ -149,7 +177,7 @@ export async function updateMovements(userId: number) {
         if(new Date(period.endTime).getTime() - new Date(period.startTime).getTime() > 15 * 60 * 1000) {
             let stayEvent = await insertStay(userId, new Date(period.startTime), new Date(period.endTime), closestLocation) 
             if(closestLocation.id && stayEvent.insert_events_one) {
-                await associateEventWithLocation(stayEvent.insert_events_one!.id, closestLocation.id);
+                await associateEventWithLocation(userId, stayEvent.insert_events_one!.id, closestLocation.id);
             }
         }
     }

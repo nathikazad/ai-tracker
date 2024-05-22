@@ -46,7 +46,7 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
     var endTime: Date?
     var metadata: Metadata?
     var interaction: InteractionModel?
-    var associations: [Association] = []
+    var locations: [LocationModel] = []
     var objects: [ASObject] = []
     
     enum CodingKeys: String, CodingKey {
@@ -57,7 +57,7 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
         case eventType = "event_type"
         case metadata
         case interaction
-        case associations
+        case locations
         case objects
     }
     
@@ -76,7 +76,7 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
         
         let endTimeString = try container.decodeIfPresent(String.self, forKey: .endTime)
         endTime = endTimeString?.getDate
-        associations = try container.decodeIfPresent([Association].self, forKey: .associations) ?? []
+        locations = try container.decodeIfPresent([LocationModel].self, forKey: .locations) ?? []
         objects = try container.decodeIfPresent([ASObject].self, forKey: .objects) ?? []
     }
     
@@ -138,6 +138,10 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
     
     var book: ASObject? {
         return objects.books.first
+    }
+    
+    var location: LocationModel? {
+        return locations.first
     }
 }
 
