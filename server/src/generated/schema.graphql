@@ -18,10 +18,6 @@ columns and relationships of "associations"
 """
 type associations {
   id: Int!
-  metadata(
-    """JSON select path"""
-    path: String
-  ): jsonb!
   ref_one_id: Int!
   ref_one_table: String!
   ref_two_id: Int!
@@ -70,11 +66,6 @@ input associations_aggregate_order_by {
   variance: associations_variance_order_by
 }
 
-"""append existing jsonb value of filtered columns with new jsonb value"""
-input associations_append_input {
-  metadata: jsonb
-}
-
 """aggregate avg on columns"""
 type associations_avg_fields {
   id: Float
@@ -99,7 +90,6 @@ input associations_bool_exp {
   _not: associations_bool_exp
   _or: [associations_bool_exp!]
   id: Int_comparison_exp
-  metadata: jsonb_comparison_exp
   ref_one_id: Int_comparison_exp
   ref_one_table: String_comparison_exp
   ref_two_id: Int_comparison_exp
@@ -117,28 +107,6 @@ enum associations_constraint {
 }
 
 """
-delete the field or element with specified path (for JSON arrays, negative integers count from the end)
-"""
-input associations_delete_at_path_input {
-  metadata: [String!]
-}
-
-"""
-delete the array element with specified index (negative integers count from the
-end). throws an error if top level container is not an array
-"""
-input associations_delete_elem_input {
-  metadata: Int
-}
-
-"""
-delete key/value pair or string element. key/value pairs are matched based on their key value
-"""
-input associations_delete_key_input {
-  metadata: String
-}
-
-"""
 input type for incrementing numeric columns in table "associations"
 """
 input associations_inc_input {
@@ -152,7 +120,6 @@ input type for inserting data into table "associations"
 """
 input associations_insert_input {
   id: Int
-  metadata: jsonb
   ref_one_id: Int
   ref_one_table: String
   ref_two_id: Int
@@ -222,7 +189,6 @@ input associations_on_conflict {
 """Ordering options when selecting data from "associations"."""
 input associations_order_by {
   id: order_by
-  metadata: order_by
   ref_one_id: order_by
   ref_one_table: order_by
   ref_two_id: order_by
@@ -234,20 +200,12 @@ input associations_pk_columns_input {
   id: Int!
 }
 
-"""prepend existing jsonb value of filtered columns with new jsonb value"""
-input associations_prepend_input {
-  metadata: jsonb
-}
-
 """
 select columns of table "associations"
 """
 enum associations_select_column {
   """column name"""
   id
-
-  """column name"""
-  metadata
 
   """column name"""
   ref_one_id
@@ -267,7 +225,6 @@ input type for updating data in table "associations"
 """
 input associations_set_input {
   id: Int
-  metadata: jsonb
   ref_one_id: Int
   ref_one_table: String
   ref_two_id: Int
@@ -336,7 +293,6 @@ input associations_stream_cursor_input {
 """Initial value of the column from where the streaming should start"""
 input associations_stream_cursor_value_input {
   id: Int
-  metadata: jsonb
   ref_one_id: Int
   ref_one_table: String
   ref_two_id: Int
@@ -367,9 +323,6 @@ enum associations_update_column {
   id
 
   """column name"""
-  metadata
-
-  """column name"""
   ref_one_id
 
   """column name"""
@@ -383,30 +336,8 @@ enum associations_update_column {
 }
 
 input associations_updates {
-  """append existing jsonb value of filtered columns with new jsonb value"""
-  _append: associations_append_input
-
-  """
-  delete the field or element with specified path (for JSON arrays, negative integers count from the end)
-  """
-  _delete_at_path: associations_delete_at_path_input
-
-  """
-  delete the array element with specified index (negative integers count from
-  the end). throws an error if top level container is not an array
-  """
-  _delete_elem: associations_delete_elem_input
-
-  """
-  delete key/value pair or string element. key/value pairs are matched based on their key value
-  """
-  _delete_key: associations_delete_key_input
-
   """increments the numeric columns with given value of the filtered values"""
   _inc: associations_inc_input
-
-  """prepend existing jsonb value of filtered columns with new jsonb value"""
-  _prepend: associations_prepend_input
 
   """sets the columns of the filtered rows to the given values"""
   _set: associations_set_input
@@ -496,332 +427,6 @@ enum cursor_ordering {
 
   """descending ordering of the cursor"""
   DESC
-}
-
-"""
-columns and relationships of "event_tag"
-"""
-type event_tag {
-  """An object relationship"""
-  event: events!
-  event_id: Int!
-  tag_name: String!
-}
-
-"""
-aggregated selection of "event_tag"
-"""
-type event_tag_aggregate {
-  aggregate: event_tag_aggregate_fields
-  nodes: [event_tag!]!
-}
-
-input event_tag_aggregate_bool_exp {
-  count: event_tag_aggregate_bool_exp_count
-}
-
-input event_tag_aggregate_bool_exp_count {
-  arguments: [event_tag_select_column!]
-  distinct: Boolean
-  filter: event_tag_bool_exp
-  predicate: Int_comparison_exp!
-}
-
-"""
-aggregate fields of "event_tag"
-"""
-type event_tag_aggregate_fields {
-  avg: event_tag_avg_fields
-  count(columns: [event_tag_select_column!], distinct: Boolean): Int!
-  max: event_tag_max_fields
-  min: event_tag_min_fields
-  stddev: event_tag_stddev_fields
-  stddev_pop: event_tag_stddev_pop_fields
-  stddev_samp: event_tag_stddev_samp_fields
-  sum: event_tag_sum_fields
-  var_pop: event_tag_var_pop_fields
-  var_samp: event_tag_var_samp_fields
-  variance: event_tag_variance_fields
-}
-
-"""
-order by aggregate values of table "event_tag"
-"""
-input event_tag_aggregate_order_by {
-  avg: event_tag_avg_order_by
-  count: order_by
-  max: event_tag_max_order_by
-  min: event_tag_min_order_by
-  stddev: event_tag_stddev_order_by
-  stddev_pop: event_tag_stddev_pop_order_by
-  stddev_samp: event_tag_stddev_samp_order_by
-  sum: event_tag_sum_order_by
-  var_pop: event_tag_var_pop_order_by
-  var_samp: event_tag_var_samp_order_by
-  variance: event_tag_variance_order_by
-}
-
-"""
-input type for inserting array relation for remote table "event_tag"
-"""
-input event_tag_arr_rel_insert_input {
-  data: [event_tag_insert_input!]!
-
-  """upsert condition"""
-  on_conflict: event_tag_on_conflict
-}
-
-"""aggregate avg on columns"""
-type event_tag_avg_fields {
-  event_id: Float
-}
-
-"""
-order by avg() on columns of table "event_tag"
-"""
-input event_tag_avg_order_by {
-  event_id: order_by
-}
-
-"""
-Boolean expression to filter rows from the table "event_tag". All fields are combined with a logical 'AND'.
-"""
-input event_tag_bool_exp {
-  _and: [event_tag_bool_exp!]
-  _not: event_tag_bool_exp
-  _or: [event_tag_bool_exp!]
-  event: events_bool_exp
-  event_id: Int_comparison_exp
-  tag_name: String_comparison_exp
-}
-
-"""
-unique or primary key constraints on table "event_tag"
-"""
-enum event_tag_constraint {
-  """
-  unique or primary key constraint on columns "tag_name", "event_id"
-  """
-  event_tag_pkey
-}
-
-"""
-input type for incrementing numeric columns in table "event_tag"
-"""
-input event_tag_inc_input {
-  event_id: Int
-}
-
-"""
-input type for inserting data into table "event_tag"
-"""
-input event_tag_insert_input {
-  event: events_obj_rel_insert_input
-  event_id: Int
-  tag_name: String
-}
-
-"""aggregate max on columns"""
-type event_tag_max_fields {
-  event_id: Int
-  tag_name: String
-}
-
-"""
-order by max() on columns of table "event_tag"
-"""
-input event_tag_max_order_by {
-  event_id: order_by
-  tag_name: order_by
-}
-
-"""aggregate min on columns"""
-type event_tag_min_fields {
-  event_id: Int
-  tag_name: String
-}
-
-"""
-order by min() on columns of table "event_tag"
-"""
-input event_tag_min_order_by {
-  event_id: order_by
-  tag_name: order_by
-}
-
-"""
-response of any mutation on the table "event_tag"
-"""
-type event_tag_mutation_response {
-  """number of rows affected by the mutation"""
-  affected_rows: Int!
-
-  """data from the rows affected by the mutation"""
-  returning: [event_tag!]!
-}
-
-"""
-on_conflict condition type for table "event_tag"
-"""
-input event_tag_on_conflict {
-  constraint: event_tag_constraint!
-  update_columns: [event_tag_update_column!]! = []
-  where: event_tag_bool_exp
-}
-
-"""Ordering options when selecting data from "event_tag"."""
-input event_tag_order_by {
-  event: events_order_by
-  event_id: order_by
-  tag_name: order_by
-}
-
-"""primary key columns input for table: event_tag"""
-input event_tag_pk_columns_input {
-  event_id: Int!
-  tag_name: String!
-}
-
-"""
-select columns of table "event_tag"
-"""
-enum event_tag_select_column {
-  """column name"""
-  event_id
-
-  """column name"""
-  tag_name
-}
-
-"""
-input type for updating data in table "event_tag"
-"""
-input event_tag_set_input {
-  event_id: Int
-  tag_name: String
-}
-
-"""aggregate stddev on columns"""
-type event_tag_stddev_fields {
-  event_id: Float
-}
-
-"""
-order by stddev() on columns of table "event_tag"
-"""
-input event_tag_stddev_order_by {
-  event_id: order_by
-}
-
-"""aggregate stddev_pop on columns"""
-type event_tag_stddev_pop_fields {
-  event_id: Float
-}
-
-"""
-order by stddev_pop() on columns of table "event_tag"
-"""
-input event_tag_stddev_pop_order_by {
-  event_id: order_by
-}
-
-"""aggregate stddev_samp on columns"""
-type event_tag_stddev_samp_fields {
-  event_id: Float
-}
-
-"""
-order by stddev_samp() on columns of table "event_tag"
-"""
-input event_tag_stddev_samp_order_by {
-  event_id: order_by
-}
-
-"""
-Streaming cursor of the table "event_tag"
-"""
-input event_tag_stream_cursor_input {
-  """Stream column input with initial value"""
-  initial_value: event_tag_stream_cursor_value_input!
-
-  """cursor ordering"""
-  ordering: cursor_ordering
-}
-
-"""Initial value of the column from where the streaming should start"""
-input event_tag_stream_cursor_value_input {
-  event_id: Int
-  tag_name: String
-}
-
-"""aggregate sum on columns"""
-type event_tag_sum_fields {
-  event_id: Int
-}
-
-"""
-order by sum() on columns of table "event_tag"
-"""
-input event_tag_sum_order_by {
-  event_id: order_by
-}
-
-"""
-update columns of table "event_tag"
-"""
-enum event_tag_update_column {
-  """column name"""
-  event_id
-
-  """column name"""
-  tag_name
-}
-
-input event_tag_updates {
-  """increments the numeric columns with given value of the filtered values"""
-  _inc: event_tag_inc_input
-
-  """sets the columns of the filtered rows to the given values"""
-  _set: event_tag_set_input
-
-  """filter the rows which have to be updated"""
-  where: event_tag_bool_exp!
-}
-
-"""aggregate var_pop on columns"""
-type event_tag_var_pop_fields {
-  event_id: Float
-}
-
-"""
-order by var_pop() on columns of table "event_tag"
-"""
-input event_tag_var_pop_order_by {
-  event_id: order_by
-}
-
-"""aggregate var_samp on columns"""
-type event_tag_var_samp_fields {
-  event_id: Float
-}
-
-"""
-order by var_samp() on columns of table "event_tag"
-"""
-input event_tag_var_samp_order_by {
-  event_id: order_by
-}
-
-"""aggregate variance on columns"""
-type event_tag_variance_fields {
-  event_id: Float
-}
-
-"""
-order by variance() on columns of table "event_tag"
-"""
-input event_tag_variance_order_by {
-  event_id: order_by
 }
 
 """
@@ -1245,52 +850,35 @@ type events {
   """seconds"""
   cost_time: Int
   end_time: timestamp
-
-  """An array relationship"""
-  event_tags(
-    """distinct select on columns"""
-    distinct_on: [event_tag_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [event_tag_order_by!]
-
-    """filter the rows returned"""
-    where: event_tag_bool_exp
-  ): [event_tag!]!
-
-  """An aggregate relationship"""
-  event_tags_aggregate(
-    """distinct select on columns"""
-    distinct_on: [event_tag_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [event_tag_order_by!]
-
-    """filter the rows returned"""
-    where: event_tag_bool_exp
-  ): event_tag_aggregate!
   event_type: String!
 
   """An object relationship"""
   event_type_object: event_types!
-  goal_id: Int
   id: Int!
 
   """An object relationship"""
   interaction: interactions
   interaction_id: Int
+
+  """
+  A computed field, executes function "event_locations"
+  """
+  locations(
+    """distinct select on columns"""
+    distinct_on: [locations_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [locations_order_by!]
+
+    """filter the rows returned"""
+    where: locations_bool_exp
+  ): [locations!]
   logs(
     """JSON select path"""
     path: String
@@ -1299,6 +887,26 @@ type events {
     """JSON select path"""
     path: String
   ): jsonb
+
+  """
+  A computed field, executes function "event_objects"
+  """
+  objects(
+    """distinct select on columns"""
+    distinct_on: [objects_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [objects_order_by!]
+
+    """filter the rows returned"""
+    where: objects_bool_exp
+  ): [objects!]
 
   """An object relationship"""
   parent: events
@@ -1392,7 +1000,6 @@ type events_avg_fields {
 
   """seconds"""
   cost_time: Float
-  goal_id: Float
   id: Float
   interaction_id: Float
   parent_id: Float
@@ -1408,7 +1015,6 @@ input events_avg_order_by {
 
   """seconds"""
   cost_time: order_by
-  goal_id: order_by
   id: order_by
   interaction_id: order_by
   parent_id: order_by
@@ -1429,16 +1035,15 @@ input events_bool_exp {
   cost_money: Int_comparison_exp
   cost_time: Int_comparison_exp
   end_time: timestamp_comparison_exp
-  event_tags: event_tag_bool_exp
-  event_tags_aggregate: event_tag_aggregate_bool_exp
   event_type: String_comparison_exp
   event_type_object: event_types_bool_exp
-  goal_id: Int_comparison_exp
   id: Int_comparison_exp
   interaction: interactions_bool_exp
   interaction_id: Int_comparison_exp
+  locations: locations_bool_exp
   logs: jsonb_comparison_exp
   metadata: jsonb_comparison_exp
+  objects: objects_bool_exp
   parent: events_bool_exp
   parent_id: Int_comparison_exp
   start_time: timestamp_comparison_exp
@@ -1491,7 +1096,6 @@ input events_inc_input {
 
   """seconds"""
   cost_time: Int
-  goal_id: Int
   id: Int
   interaction_id: Int
   parent_id: Int
@@ -1510,10 +1114,8 @@ input events_insert_input {
   """seconds"""
   cost_time: Int
   end_time: timestamp
-  event_tags: event_tag_arr_rel_insert_input
   event_type: String
   event_type_object: event_types_obj_rel_insert_input
-  goal_id: Int
   id: Int
   interaction: interactions_obj_rel_insert_input
   interaction_id: Int
@@ -1541,7 +1143,6 @@ type events_max_fields {
   cost_time: Int
   end_time: timestamp
   event_type: String
-  goal_id: Int
   id: Int
   interaction_id: Int
   parent_id: Int
@@ -1561,7 +1162,6 @@ input events_max_order_by {
   cost_time: order_by
   end_time: order_by
   event_type: order_by
-  goal_id: order_by
   id: order_by
   interaction_id: order_by
   parent_id: order_by
@@ -1584,7 +1184,6 @@ type events_min_fields {
   cost_time: Int
   end_time: timestamp
   event_type: String
-  goal_id: Int
   id: Int
   interaction_id: Int
   parent_id: Int
@@ -1604,7 +1203,6 @@ input events_min_order_by {
   cost_time: order_by
   end_time: order_by
   event_type: order_by
-  goal_id: order_by
   id: order_by
   interaction_id: order_by
   parent_id: order_by
@@ -1651,15 +1249,15 @@ input events_order_by {
   cost_money: order_by
   cost_time: order_by
   end_time: order_by
-  event_tags_aggregate: event_tag_aggregate_order_by
   event_type: order_by
   event_type_object: event_types_order_by
-  goal_id: order_by
   id: order_by
   interaction: interactions_order_by
   interaction_id: order_by
+  locations_aggregate: locations_aggregate_order_by
   logs: order_by
   metadata: order_by
+  objects_aggregate: objects_aggregate_order_by
   parent: events_order_by
   parent_id: order_by
   start_time: order_by
@@ -1694,9 +1292,6 @@ enum events_select_column {
 
   """column name"""
   event_type
-
-  """column name"""
-  goal_id
 
   """column name"""
   id
@@ -1734,7 +1329,6 @@ input events_set_input {
   cost_time: Int
   end_time: timestamp
   event_type: String
-  goal_id: Int
   id: Int
   interaction_id: Int
   logs: jsonb
@@ -1757,7 +1351,6 @@ type events_stddev_fields {
 
   """seconds"""
   cost_time: Float
-  goal_id: Float
   id: Float
   interaction_id: Float
   parent_id: Float
@@ -1773,7 +1366,6 @@ input events_stddev_order_by {
 
   """seconds"""
   cost_time: order_by
-  goal_id: order_by
   id: order_by
   interaction_id: order_by
   parent_id: order_by
@@ -1792,7 +1384,6 @@ type events_stddev_pop_fields {
 
   """seconds"""
   cost_time: Float
-  goal_id: Float
   id: Float
   interaction_id: Float
   parent_id: Float
@@ -1808,7 +1399,6 @@ input events_stddev_pop_order_by {
 
   """seconds"""
   cost_time: order_by
-  goal_id: order_by
   id: order_by
   interaction_id: order_by
   parent_id: order_by
@@ -1827,7 +1417,6 @@ type events_stddev_samp_fields {
 
   """seconds"""
   cost_time: Float
-  goal_id: Float
   id: Float
   interaction_id: Float
   parent_id: Float
@@ -1843,7 +1432,6 @@ input events_stddev_samp_order_by {
 
   """seconds"""
   cost_time: order_by
-  goal_id: order_by
   id: order_by
   interaction_id: order_by
   parent_id: order_by
@@ -1870,7 +1458,6 @@ input events_stream_cursor_value_input {
   cost_time: Int
   end_time: timestamp
   event_type: String
-  goal_id: Int
   id: Int
   interaction_id: Int
   logs: jsonb
@@ -1893,7 +1480,6 @@ type events_sum_fields {
 
   """seconds"""
   cost_time: Int
-  goal_id: Int
   id: Int
   interaction_id: Int
   parent_id: Int
@@ -1909,7 +1495,6 @@ input events_sum_order_by {
 
   """seconds"""
   cost_time: order_by
-  goal_id: order_by
   id: order_by
   interaction_id: order_by
   parent_id: order_by
@@ -1931,9 +1516,6 @@ enum events_update_column {
 
   """column name"""
   event_type
-
-  """column name"""
-  goal_id
 
   """column name"""
   id
@@ -2005,7 +1587,6 @@ type events_var_pop_fields {
 
   """seconds"""
   cost_time: Float
-  goal_id: Float
   id: Float
   interaction_id: Float
   parent_id: Float
@@ -2021,7 +1602,6 @@ input events_var_pop_order_by {
 
   """seconds"""
   cost_time: order_by
-  goal_id: order_by
   id: order_by
   interaction_id: order_by
   parent_id: order_by
@@ -2040,7 +1620,6 @@ type events_var_samp_fields {
 
   """seconds"""
   cost_time: Float
-  goal_id: Float
   id: Float
   interaction_id: Float
   parent_id: Float
@@ -2056,7 +1635,6 @@ input events_var_samp_order_by {
 
   """seconds"""
   cost_time: order_by
-  goal_id: order_by
   id: order_by
   interaction_id: order_by
   parent_id: order_by
@@ -2075,7 +1653,6 @@ type events_variance_fields {
 
   """seconds"""
   cost_time: Float
-  goal_id: Float
   id: Float
   interaction_id: Float
   parent_id: Float
@@ -2091,7 +1668,6 @@ input events_variance_order_by {
 
   """seconds"""
   cost_time: order_by
-  goal_id: order_by
   id: order_by
   interaction_id: order_by
   parent_id: order_by
@@ -2637,7 +2213,7 @@ type interactions {
   id: Int!
   match_score: float8!
   timestamp: timestamptz
-  transcode_version: Int
+  transcode_version: Int!
   user_id: Int!
 }
 
@@ -3471,19 +3047,6 @@ type mutation_root {
   delete_associations_by_pk(id: Int!): associations
 
   """
-  delete data from the table: "event_tag"
-  """
-  delete_event_tag(
-    """filter the rows which have to be deleted"""
-    where: event_tag_bool_exp!
-  ): event_tag_mutation_response
-
-  """
-  delete single row from the table: "event_tag"
-  """
-  delete_event_tag_by_pk(event_id: Int!, tag_name: String!): event_tag
-
-  """
   delete data from the table: "event_types"
   """
   delete_event_types(
@@ -3634,28 +3197,6 @@ type mutation_root {
     """upsert condition"""
     on_conflict: associations_on_conflict
   ): associations
-
-  """
-  insert data into the table: "event_tag"
-  """
-  insert_event_tag(
-    """the rows to be inserted"""
-    objects: [event_tag_insert_input!]!
-
-    """upsert condition"""
-    on_conflict: event_tag_on_conflict
-  ): event_tag_mutation_response
-
-  """
-  insert a single row into the table: "event_tag"
-  """
-  insert_event_tag_one(
-    """the row to be inserted"""
-    object: event_tag_insert_input!
-
-    """upsert condition"""
-    on_conflict: event_tag_on_conflict
-  ): event_tag
 
   """
   insert data into the table: "event_types"
@@ -3881,30 +3422,8 @@ type mutation_root {
   update data of the table: "associations"
   """
   update_associations(
-    """append existing jsonb value of filtered columns with new jsonb value"""
-    _append: associations_append_input
-
-    """
-    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
-    """
-    _delete_at_path: associations_delete_at_path_input
-
-    """
-    delete the array element with specified index (negative integers count from
-    the end). throws an error if top level container is not an array
-    """
-    _delete_elem: associations_delete_elem_input
-
-    """
-    delete key/value pair or string element. key/value pairs are matched based on their key value
-    """
-    _delete_key: associations_delete_key_input
-
     """increments the numeric columns with given value of the filtered values"""
     _inc: associations_inc_input
-
-    """prepend existing jsonb value of filtered columns with new jsonb value"""
-    _prepend: associations_prepend_input
 
     """sets the columns of the filtered rows to the given values"""
     _set: associations_set_input
@@ -3917,30 +3436,8 @@ type mutation_root {
   update single row of the table: "associations"
   """
   update_associations_by_pk(
-    """append existing jsonb value of filtered columns with new jsonb value"""
-    _append: associations_append_input
-
-    """
-    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
-    """
-    _delete_at_path: associations_delete_at_path_input
-
-    """
-    delete the array element with specified index (negative integers count from
-    the end). throws an error if top level container is not an array
-    """
-    _delete_elem: associations_delete_elem_input
-
-    """
-    delete key/value pair or string element. key/value pairs are matched based on their key value
-    """
-    _delete_key: associations_delete_key_input
-
     """increments the numeric columns with given value of the filtered values"""
     _inc: associations_inc_input
-
-    """prepend existing jsonb value of filtered columns with new jsonb value"""
-    _prepend: associations_prepend_input
 
     """sets the columns of the filtered rows to the given values"""
     _set: associations_set_input
@@ -3954,40 +3451,6 @@ type mutation_root {
     """updates to execute, in order"""
     updates: [associations_updates!]!
   ): [associations_mutation_response]
-
-  """
-  update data of the table: "event_tag"
-  """
-  update_event_tag(
-    """increments the numeric columns with given value of the filtered values"""
-    _inc: event_tag_inc_input
-
-    """sets the columns of the filtered rows to the given values"""
-    _set: event_tag_set_input
-
-    """filter the rows which have to be updated"""
-    where: event_tag_bool_exp!
-  ): event_tag_mutation_response
-
-  """
-  update single row of the table: "event_tag"
-  """
-  update_event_tag_by_pk(
-    """increments the numeric columns with given value of the filtered values"""
-    _inc: event_tag_inc_input
-
-    """sets the columns of the filtered rows to the given values"""
-    _set: event_tag_set_input
-    pk_columns: event_tag_pk_columns_input!
-  ): event_tag
-
-  """
-  update multiples rows of table: "event_tag"
-  """
-  update_event_tag_many(
-    """updates to execute, in order"""
-    updates: [event_tag_updates!]!
-  ): [event_tag_mutation_response]
 
   """
   update data of the table: "event_types"
@@ -4837,6 +4300,25 @@ input object_types_updates {
 columns and relationships of "objects"
 """
 type objects {
+  """
+  A computed field, executes function "object_events"
+  """
+  events(
+    """distinct select on columns"""
+    distinct_on: [events_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [events_order_by!]
+
+    """filter the rows returned"""
+    where: events_bool_exp
+  ): [events!]
   id: Int!
   name: String!
   object_type: String!
@@ -4867,9 +4349,33 @@ type objects_aggregate_fields {
   variance: objects_variance_fields
 }
 
+"""
+order by aggregate values of table "objects"
+"""
+input objects_aggregate_order_by {
+  avg: objects_avg_order_by
+  count: order_by
+  max: objects_max_order_by
+  min: objects_min_order_by
+  stddev: objects_stddev_order_by
+  stddev_pop: objects_stddev_pop_order_by
+  stddev_samp: objects_stddev_samp_order_by
+  sum: objects_sum_order_by
+  var_pop: objects_var_pop_order_by
+  var_samp: objects_var_samp_order_by
+  variance: objects_variance_order_by
+}
+
 """aggregate avg on columns"""
 type objects_avg_fields {
   id: Float
+}
+
+"""
+order by avg() on columns of table "objects"
+"""
+input objects_avg_order_by {
+  id: order_by
 }
 
 """
@@ -4879,6 +4385,7 @@ input objects_bool_exp {
   _and: [objects_bool_exp!]
   _not: objects_bool_exp
   _or: [objects_bool_exp!]
+  events: events_bool_exp
   id: Int_comparison_exp
   name: String_comparison_exp
   object_type: String_comparison_exp
@@ -4917,11 +4424,29 @@ type objects_max_fields {
   object_type: String
 }
 
+"""
+order by max() on columns of table "objects"
+"""
+input objects_max_order_by {
+  id: order_by
+  name: order_by
+  object_type: order_by
+}
+
 """aggregate min on columns"""
 type objects_min_fields {
   id: Int
   name: String
   object_type: String
+}
+
+"""
+order by min() on columns of table "objects"
+"""
+input objects_min_order_by {
+  id: order_by
+  name: order_by
+  object_type: order_by
 }
 
 """
@@ -4946,6 +4471,7 @@ input objects_on_conflict {
 
 """Ordering options when selecting data from "objects"."""
 input objects_order_by {
+  events_aggregate: events_aggregate_order_by
   id: order_by
   name: order_by
   object_type: order_by
@@ -4984,14 +4510,35 @@ type objects_stddev_fields {
   id: Float
 }
 
+"""
+order by stddev() on columns of table "objects"
+"""
+input objects_stddev_order_by {
+  id: order_by
+}
+
 """aggregate stddev_pop on columns"""
 type objects_stddev_pop_fields {
   id: Float
 }
 
+"""
+order by stddev_pop() on columns of table "objects"
+"""
+input objects_stddev_pop_order_by {
+  id: order_by
+}
+
 """aggregate stddev_samp on columns"""
 type objects_stddev_samp_fields {
   id: Float
+}
+
+"""
+order by stddev_samp() on columns of table "objects"
+"""
+input objects_stddev_samp_order_by {
+  id: order_by
 }
 
 """
@@ -5015,6 +4562,13 @@ input objects_stream_cursor_value_input {
 """aggregate sum on columns"""
 type objects_sum_fields {
   id: Int
+}
+
+"""
+order by sum() on columns of table "objects"
+"""
+input objects_sum_order_by {
+  id: order_by
 }
 
 """
@@ -5047,14 +4601,35 @@ type objects_var_pop_fields {
   id: Float
 }
 
+"""
+order by var_pop() on columns of table "objects"
+"""
+input objects_var_pop_order_by {
+  id: order_by
+}
+
 """aggregate var_samp on columns"""
 type objects_var_samp_fields {
   id: Float
 }
 
+"""
+order by var_samp() on columns of table "objects"
+"""
+input objects_var_samp_order_by {
+  id: order_by
+}
+
 """aggregate variance on columns"""
 type objects_variance_fields {
   id: Float
+}
+
+"""
+order by variance() on columns of table "objects"
+"""
+input objects_variance_order_by {
+  id: order_by
 }
 
 """column ordering options"""
@@ -5171,49 +4746,6 @@ type query_root {
     """filter the rows returned"""
     where: locations_bool_exp
   ): locations_aggregate!
-
-  """
-  fetch data from the table: "event_tag"
-  """
-  event_tag(
-    """distinct select on columns"""
-    distinct_on: [event_tag_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [event_tag_order_by!]
-
-    """filter the rows returned"""
-    where: event_tag_bool_exp
-  ): [event_tag!]!
-
-  """
-  fetch aggregated fields from the table: "event_tag"
-  """
-  event_tag_aggregate(
-    """distinct select on columns"""
-    distinct_on: [event_tag_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [event_tag_order_by!]
-
-    """filter the rows returned"""
-    where: event_tag_bool_exp
-  ): event_tag_aggregate!
-
-  """fetch data from the table: "event_tag" using primary key columns"""
-  event_tag_by_pk(event_id: Int!, tag_name: String!): event_tag
 
   """
   fetch data from the table: "event_types"
@@ -5909,63 +5441,6 @@ type subscription_root {
     """filter the rows returned"""
     where: locations_bool_exp
   ): locations_aggregate!
-
-  """
-  fetch data from the table: "event_tag"
-  """
-  event_tag(
-    """distinct select on columns"""
-    distinct_on: [event_tag_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [event_tag_order_by!]
-
-    """filter the rows returned"""
-    where: event_tag_bool_exp
-  ): [event_tag!]!
-
-  """
-  fetch aggregated fields from the table: "event_tag"
-  """
-  event_tag_aggregate(
-    """distinct select on columns"""
-    distinct_on: [event_tag_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [event_tag_order_by!]
-
-    """filter the rows returned"""
-    where: event_tag_bool_exp
-  ): event_tag_aggregate!
-
-  """fetch data from the table: "event_tag" using primary key columns"""
-  event_tag_by_pk(event_id: Int!, tag_name: String!): event_tag
-
-  """
-  fetch data from the table in a streaming manner: "event_tag"
-  """
-  event_tag_stream(
-    """maximum number of rows returned in a single batch"""
-    batch_size: Int!
-
-    """cursor to stream the results returned by the query"""
-    cursor: [event_tag_stream_cursor_input]!
-
-    """filter the rows returned"""
-    where: event_tag_bool_exp
-  ): [event_tag!]!
 
   """
   fetch data from the table: "event_types"

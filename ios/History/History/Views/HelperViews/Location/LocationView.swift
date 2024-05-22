@@ -7,6 +7,7 @@ struct LocationDetailView: View {
     @State private var locationName: String = ""
     @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05))
     @State private var isEditing: Bool = false
+//    @State var location: LocationModel?
     @State var events: [EventModel] = []
     @State private var selectedDays: Double = 7
     @State private var maxDays: Double = 7
@@ -19,12 +20,16 @@ struct LocationDetailView: View {
         if(location.id != nil) {
             Task {
                 let userId: Int? = Authentication.shared.userId
-                let resp = await EventsController.fetchEvents(userId: userId!, eventType: .staying, locationId: location.id!, order: "desc")
-                DispatchQueue.main.async {
-                    events = resp
-                    maxDays = resp.maxDays
-                    selectedDays = min(maxDays, 7)
-                    selectedTab = (events.count > 1) ? SelectedTab.graphs : SelectedTab.events
+                do {
+                    let resp = try await LocationsController.fetchLocation(locationId: location.id!)
+                    DispatchQueue.main.async {
+                        events = resp.events ?? []
+                        maxDays = events.maxDays
+                        selectedDays = min(maxDays, 7)
+                        selectedTab = (events.count > 1) ? SelectedTab.graphs : SelectedTab.events
+                    }
+                } catch {
+                    
                 }
             }
         }
@@ -39,7 +44,7 @@ struct LocationDetailView: View {
                 if isEditing {
                     Button(action: {
                         print("Saving location \(locationName)")
-                        LocationsController.createLocation(name: locationName, lat: location.latitude, lon: location.longitude)
+//                        LocationsController.createLocation(name: locationName, lat: location.latitude, lon: location.longitude)
                         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                     }, label: {
                         Text("Save")

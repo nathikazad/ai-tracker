@@ -9,7 +9,7 @@ import { parseUserRequest } from './resources/logic';
 import { getUserLanguage } from './resources/user';
 // import { processMovement, setNameForLocation } from './helper/location';
 import { uploadSleep } from './helper/sleep';
-import { addLocation, updateMovements } from './helper/location2';
+import { addLocation, updateMovements } from './resources/location/location2';
 const app: Express = express();
 
 app.use(express.static(path.join(__dirname, '../public')));

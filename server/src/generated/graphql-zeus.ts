@@ -5,8 +5,6 @@ export type ValueTypes = {
     /** columns and relationships of "associations" */
 ["associations"]: AliasType<{
 	id?:true,
-metadata?: [{	/** JSON select path */
-	path?:string},true],
 	ref_one_id?:true,
 	ref_one_table?:true,
 	ref_two_id?:true,
@@ -48,10 +46,6 @@ count?: [{	columns?:ValueTypes["associations_select_column"][],	distinct?:boolea
 	var_samp?:ValueTypes["associations_var_samp_order_by"],
 	variance?:ValueTypes["associations_variance_order_by"]
 };
-	/** append existing jsonb value of filtered columns with new jsonb value */
-["associations_append_input"]: {
-	metadata?:ValueTypes["jsonb"]
-};
 	/** aggregate avg on columns */
 ["associations_avg_fields"]: AliasType<{
 	id?:true,
@@ -71,7 +65,6 @@ count?: [{	columns?:ValueTypes["associations_select_column"][],	distinct?:boolea
 	_not?:ValueTypes["associations_bool_exp"],
 	_or?:ValueTypes["associations_bool_exp"][],
 	id?:ValueTypes["Int_comparison_exp"],
-	metadata?:ValueTypes["jsonb_comparison_exp"],
 	ref_one_id?:ValueTypes["Int_comparison_exp"],
 	ref_one_table?:ValueTypes["String_comparison_exp"],
 	ref_two_id?:ValueTypes["Int_comparison_exp"],
@@ -79,19 +72,6 @@ count?: [{	columns?:ValueTypes["associations_select_column"][],	distinct?:boolea
 };
 	/** unique or primary key constraints on table "associations" */
 ["associations_constraint"]:associations_constraint;
-	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
-["associations_delete_at_path_input"]: {
-	metadata?:string[]
-};
-	/** delete the array element with specified index (negative integers count from the
-end). throws an error if top level container is not an array */
-["associations_delete_elem_input"]: {
-	metadata?:number
-};
-	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
-["associations_delete_key_input"]: {
-	metadata?:string
-};
 	/** input type for incrementing numeric columns in table "associations" */
 ["associations_inc_input"]: {
 	id?:number,
@@ -101,7 +81,6 @@ end). throws an error if top level container is not an array */
 	/** input type for inserting data into table "associations" */
 ["associations_insert_input"]: {
 	id?:number,
-	metadata?:ValueTypes["jsonb"],
 	ref_one_id?:number,
 	ref_one_table?:string,
 	ref_two_id?:number,
@@ -158,7 +137,6 @@ end). throws an error if top level container is not an array */
 	/** Ordering options when selecting data from "associations". */
 ["associations_order_by"]: {
 	id?:ValueTypes["order_by"],
-	metadata?:ValueTypes["order_by"],
 	ref_one_id?:ValueTypes["order_by"],
 	ref_one_table?:ValueTypes["order_by"],
 	ref_two_id?:ValueTypes["order_by"],
@@ -168,16 +146,11 @@ end). throws an error if top level container is not an array */
 ["associations_pk_columns_input"]: {
 	id:number
 };
-	/** prepend existing jsonb value of filtered columns with new jsonb value */
-["associations_prepend_input"]: {
-	metadata?:ValueTypes["jsonb"]
-};
 	/** select columns of table "associations" */
 ["associations_select_column"]:associations_select_column;
 	/** input type for updating data in table "associations" */
 ["associations_set_input"]: {
 	id?:number,
-	metadata?:ValueTypes["jsonb"],
 	ref_one_id?:number,
 	ref_one_table?:string,
 	ref_two_id?:number,
@@ -232,7 +205,6 @@ end). throws an error if top level container is not an array */
 	/** Initial value of the column from where the streaming should start */
 ["associations_stream_cursor_value_input"]: {
 	id?:number,
-	metadata?:ValueTypes["jsonb"],
 	ref_one_id?:number,
 	ref_one_table?:string,
 	ref_two_id?:number,
@@ -254,19 +226,8 @@ end). throws an error if top level container is not an array */
 	/** update columns of table "associations" */
 ["associations_update_column"]:associations_update_column;
 	["associations_updates"]: {
-	/** append existing jsonb value of filtered columns with new jsonb value */
-	_append?:ValueTypes["associations_append_input"],
-	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
-	_delete_at_path?:ValueTypes["associations_delete_at_path_input"],
-	/** delete the array element with specified index (negative integers count from
-the end). throws an error if top level container is not an array */
-	_delete_elem?:ValueTypes["associations_delete_elem_input"],
-	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
-	_delete_key?:ValueTypes["associations_delete_key_input"],
 	/** increments the numeric columns with given value of the filtered values */
 	_inc?:ValueTypes["associations_inc_input"],
-	/** prepend existing jsonb value of filtered columns with new jsonb value */
-	_prepend?:ValueTypes["associations_prepend_input"],
 	/** sets the columns of the filtered rows to the given values */
 	_set?:ValueTypes["associations_set_input"],
 	/** filter the rows which have to be updated */
@@ -334,233 +295,6 @@ the end). throws an error if top level container is not an array */
 };
 	/** ordering argument of a cursor */
 ["cursor_ordering"]:cursor_ordering;
-	/** columns and relationships of "event_tag" */
-["event_tag"]: AliasType<{
-	/** An object relationship */
-	event?:ValueTypes["events"],
-	event_id?:true,
-	tag_name?:true,
-		__typename?: true
-}>;
-	/** aggregated selection of "event_tag" */
-["event_tag_aggregate"]: AliasType<{
-	aggregate?:ValueTypes["event_tag_aggregate_fields"],
-	nodes?:ValueTypes["event_tag"],
-		__typename?: true
-}>;
-	["event_tag_aggregate_bool_exp"]: {
-	count?:ValueTypes["event_tag_aggregate_bool_exp_count"]
-};
-	["event_tag_aggregate_bool_exp_count"]: {
-	arguments?:ValueTypes["event_tag_select_column"][],
-	distinct?:boolean,
-	filter?:ValueTypes["event_tag_bool_exp"],
-	predicate:ValueTypes["Int_comparison_exp"]
-};
-	/** aggregate fields of "event_tag" */
-["event_tag_aggregate_fields"]: AliasType<{
-	avg?:ValueTypes["event_tag_avg_fields"],
-count?: [{	columns?:ValueTypes["event_tag_select_column"][],	distinct?:boolean},true],
-	max?:ValueTypes["event_tag_max_fields"],
-	min?:ValueTypes["event_tag_min_fields"],
-	stddev?:ValueTypes["event_tag_stddev_fields"],
-	stddev_pop?:ValueTypes["event_tag_stddev_pop_fields"],
-	stddev_samp?:ValueTypes["event_tag_stddev_samp_fields"],
-	sum?:ValueTypes["event_tag_sum_fields"],
-	var_pop?:ValueTypes["event_tag_var_pop_fields"],
-	var_samp?:ValueTypes["event_tag_var_samp_fields"],
-	variance?:ValueTypes["event_tag_variance_fields"],
-		__typename?: true
-}>;
-	/** order by aggregate values of table "event_tag" */
-["event_tag_aggregate_order_by"]: {
-	avg?:ValueTypes["event_tag_avg_order_by"],
-	count?:ValueTypes["order_by"],
-	max?:ValueTypes["event_tag_max_order_by"],
-	min?:ValueTypes["event_tag_min_order_by"],
-	stddev?:ValueTypes["event_tag_stddev_order_by"],
-	stddev_pop?:ValueTypes["event_tag_stddev_pop_order_by"],
-	stddev_samp?:ValueTypes["event_tag_stddev_samp_order_by"],
-	sum?:ValueTypes["event_tag_sum_order_by"],
-	var_pop?:ValueTypes["event_tag_var_pop_order_by"],
-	var_samp?:ValueTypes["event_tag_var_samp_order_by"],
-	variance?:ValueTypes["event_tag_variance_order_by"]
-};
-	/** input type for inserting array relation for remote table "event_tag" */
-["event_tag_arr_rel_insert_input"]: {
-	data:ValueTypes["event_tag_insert_input"][],
-	/** upsert condition */
-	on_conflict?:ValueTypes["event_tag_on_conflict"]
-};
-	/** aggregate avg on columns */
-["event_tag_avg_fields"]: AliasType<{
-	event_id?:true,
-		__typename?: true
-}>;
-	/** order by avg() on columns of table "event_tag" */
-["event_tag_avg_order_by"]: {
-	event_id?:ValueTypes["order_by"]
-};
-	/** Boolean expression to filter rows from the table "event_tag". All fields are combined with a logical 'AND'. */
-["event_tag_bool_exp"]: {
-	_and?:ValueTypes["event_tag_bool_exp"][],
-	_not?:ValueTypes["event_tag_bool_exp"],
-	_or?:ValueTypes["event_tag_bool_exp"][],
-	event?:ValueTypes["events_bool_exp"],
-	event_id?:ValueTypes["Int_comparison_exp"],
-	tag_name?:ValueTypes["String_comparison_exp"]
-};
-	/** unique or primary key constraints on table "event_tag" */
-["event_tag_constraint"]:event_tag_constraint;
-	/** input type for incrementing numeric columns in table "event_tag" */
-["event_tag_inc_input"]: {
-	event_id?:number
-};
-	/** input type for inserting data into table "event_tag" */
-["event_tag_insert_input"]: {
-	event?:ValueTypes["events_obj_rel_insert_input"],
-	event_id?:number,
-	tag_name?:string
-};
-	/** aggregate max on columns */
-["event_tag_max_fields"]: AliasType<{
-	event_id?:true,
-	tag_name?:true,
-		__typename?: true
-}>;
-	/** order by max() on columns of table "event_tag" */
-["event_tag_max_order_by"]: {
-	event_id?:ValueTypes["order_by"],
-	tag_name?:ValueTypes["order_by"]
-};
-	/** aggregate min on columns */
-["event_tag_min_fields"]: AliasType<{
-	event_id?:true,
-	tag_name?:true,
-		__typename?: true
-}>;
-	/** order by min() on columns of table "event_tag" */
-["event_tag_min_order_by"]: {
-	event_id?:ValueTypes["order_by"],
-	tag_name?:ValueTypes["order_by"]
-};
-	/** response of any mutation on the table "event_tag" */
-["event_tag_mutation_response"]: AliasType<{
-	/** number of rows affected by the mutation */
-	affected_rows?:true,
-	/** data from the rows affected by the mutation */
-	returning?:ValueTypes["event_tag"],
-		__typename?: true
-}>;
-	/** on_conflict condition type for table "event_tag" */
-["event_tag_on_conflict"]: {
-	constraint:ValueTypes["event_tag_constraint"],
-	update_columns:ValueTypes["event_tag_update_column"][],
-	where?:ValueTypes["event_tag_bool_exp"]
-};
-	/** Ordering options when selecting data from "event_tag". */
-["event_tag_order_by"]: {
-	event?:ValueTypes["events_order_by"],
-	event_id?:ValueTypes["order_by"],
-	tag_name?:ValueTypes["order_by"]
-};
-	/** primary key columns input for table: event_tag */
-["event_tag_pk_columns_input"]: {
-	event_id:number,
-	tag_name:string
-};
-	/** select columns of table "event_tag" */
-["event_tag_select_column"]:event_tag_select_column;
-	/** input type for updating data in table "event_tag" */
-["event_tag_set_input"]: {
-	event_id?:number,
-	tag_name?:string
-};
-	/** aggregate stddev on columns */
-["event_tag_stddev_fields"]: AliasType<{
-	event_id?:true,
-		__typename?: true
-}>;
-	/** order by stddev() on columns of table "event_tag" */
-["event_tag_stddev_order_by"]: {
-	event_id?:ValueTypes["order_by"]
-};
-	/** aggregate stddev_pop on columns */
-["event_tag_stddev_pop_fields"]: AliasType<{
-	event_id?:true,
-		__typename?: true
-}>;
-	/** order by stddev_pop() on columns of table "event_tag" */
-["event_tag_stddev_pop_order_by"]: {
-	event_id?:ValueTypes["order_by"]
-};
-	/** aggregate stddev_samp on columns */
-["event_tag_stddev_samp_fields"]: AliasType<{
-	event_id?:true,
-		__typename?: true
-}>;
-	/** order by stddev_samp() on columns of table "event_tag" */
-["event_tag_stddev_samp_order_by"]: {
-	event_id?:ValueTypes["order_by"]
-};
-	/** Streaming cursor of the table "event_tag" */
-["event_tag_stream_cursor_input"]: {
-	/** Stream column input with initial value */
-	initial_value:ValueTypes["event_tag_stream_cursor_value_input"],
-	/** cursor ordering */
-	ordering?:ValueTypes["cursor_ordering"]
-};
-	/** Initial value of the column from where the streaming should start */
-["event_tag_stream_cursor_value_input"]: {
-	event_id?:number,
-	tag_name?:string
-};
-	/** aggregate sum on columns */
-["event_tag_sum_fields"]: AliasType<{
-	event_id?:true,
-		__typename?: true
-}>;
-	/** order by sum() on columns of table "event_tag" */
-["event_tag_sum_order_by"]: {
-	event_id?:ValueTypes["order_by"]
-};
-	/** update columns of table "event_tag" */
-["event_tag_update_column"]:event_tag_update_column;
-	["event_tag_updates"]: {
-	/** increments the numeric columns with given value of the filtered values */
-	_inc?:ValueTypes["event_tag_inc_input"],
-	/** sets the columns of the filtered rows to the given values */
-	_set?:ValueTypes["event_tag_set_input"],
-	/** filter the rows which have to be updated */
-	where:ValueTypes["event_tag_bool_exp"]
-};
-	/** aggregate var_pop on columns */
-["event_tag_var_pop_fields"]: AliasType<{
-	event_id?:true,
-		__typename?: true
-}>;
-	/** order by var_pop() on columns of table "event_tag" */
-["event_tag_var_pop_order_by"]: {
-	event_id?:ValueTypes["order_by"]
-};
-	/** aggregate var_samp on columns */
-["event_tag_var_samp_fields"]: AliasType<{
-	event_id?:true,
-		__typename?: true
-}>;
-	/** order by var_samp() on columns of table "event_tag" */
-["event_tag_var_samp_order_by"]: {
-	event_id?:ValueTypes["order_by"]
-};
-	/** aggregate variance on columns */
-["event_tag_variance_fields"]: AliasType<{
-	event_id?:true,
-		__typename?: true
-}>;
-	/** order by variance() on columns of table "event_tag" */
-["event_tag_variance_order_by"]: {
-	event_id?:ValueTypes["order_by"]
-};
 	/** columns and relationships of "event_types" */
 ["event_types"]: AliasType<{
 children?: [{	/** distinct select on columns */
@@ -790,30 +524,29 @@ children_aggregate?: [{	/** distinct select on columns */
 	/** seconds */
 	cost_time?:true,
 	end_time?:true,
-event_tags?: [{	/** distinct select on columns */
-	distinct_on?:ValueTypes["event_tag_select_column"][],	/** limit the number of rows returned */
-	limit?:number,	/** skip the first n rows. Use only with order_by */
-	offset?:number,	/** sort the rows by one or more columns */
-	order_by?:ValueTypes["event_tag_order_by"][],	/** filter the rows returned */
-	where?:ValueTypes["event_tag_bool_exp"]},ValueTypes["event_tag"]],
-event_tags_aggregate?: [{	/** distinct select on columns */
-	distinct_on?:ValueTypes["event_tag_select_column"][],	/** limit the number of rows returned */
-	limit?:number,	/** skip the first n rows. Use only with order_by */
-	offset?:number,	/** sort the rows by one or more columns */
-	order_by?:ValueTypes["event_tag_order_by"][],	/** filter the rows returned */
-	where?:ValueTypes["event_tag_bool_exp"]},ValueTypes["event_tag_aggregate"]],
 	event_type?:true,
 	/** An object relationship */
 	event_type_object?:ValueTypes["event_types"],
-	goal_id?:true,
 	id?:true,
 	/** An object relationship */
 	interaction?:ValueTypes["interactions"],
 	interaction_id?:true,
+locations?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["locations_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["locations_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["locations_bool_exp"]},ValueTypes["locations"]],
 logs?: [{	/** JSON select path */
 	path?:string},true],
 metadata?: [{	/** JSON select path */
 	path?:string},true],
+objects?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["objects_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["objects_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["objects_bool_exp"]},ValueTypes["objects"]],
 	/** An object relationship */
 	parent?:ValueTypes["events"],
 	parent_id?:true,
@@ -887,7 +620,6 @@ count?: [{	columns?:ValueTypes["events_select_column"][],	distinct?:boolean},tru
 	cost_money?:true,
 	/** seconds */
 	cost_time?:true,
-	goal_id?:true,
 	id?:true,
 	interaction_id?:true,
 	parent_id?:true,
@@ -900,7 +632,6 @@ count?: [{	columns?:ValueTypes["events_select_column"][],	distinct?:boolean},tru
 	cost_money?:ValueTypes["order_by"],
 	/** seconds */
 	cost_time?:ValueTypes["order_by"],
-	goal_id?:ValueTypes["order_by"],
 	id?:ValueTypes["order_by"],
 	interaction_id?:ValueTypes["order_by"],
 	parent_id?:ValueTypes["order_by"],
@@ -918,16 +649,15 @@ count?: [{	columns?:ValueTypes["events_select_column"][],	distinct?:boolean},tru
 	cost_money?:ValueTypes["Int_comparison_exp"],
 	cost_time?:ValueTypes["Int_comparison_exp"],
 	end_time?:ValueTypes["timestamp_comparison_exp"],
-	event_tags?:ValueTypes["event_tag_bool_exp"],
-	event_tags_aggregate?:ValueTypes["event_tag_aggregate_bool_exp"],
 	event_type?:ValueTypes["String_comparison_exp"],
 	event_type_object?:ValueTypes["event_types_bool_exp"],
-	goal_id?:ValueTypes["Int_comparison_exp"],
 	id?:ValueTypes["Int_comparison_exp"],
 	interaction?:ValueTypes["interactions_bool_exp"],
 	interaction_id?:ValueTypes["Int_comparison_exp"],
+	locations?:ValueTypes["locations_bool_exp"],
 	logs?:ValueTypes["jsonb_comparison_exp"],
 	metadata?:ValueTypes["jsonb_comparison_exp"],
+	objects?:ValueTypes["objects_bool_exp"],
 	parent?:ValueTypes["events_bool_exp"],
 	parent_id?:ValueTypes["Int_comparison_exp"],
 	start_time?:ValueTypes["timestamp_comparison_exp"],
@@ -959,7 +689,6 @@ end). throws an error if top level container is not an array */
 	cost_money?:number,
 	/** seconds */
 	cost_time?:number,
-	goal_id?:number,
 	id?:number,
 	interaction_id?:number,
 	parent_id?:number,
@@ -973,10 +702,8 @@ end). throws an error if top level container is not an array */
 	/** seconds */
 	cost_time?:number,
 	end_time?:ValueTypes["timestamp"],
-	event_tags?:ValueTypes["event_tag_arr_rel_insert_input"],
 	event_type?:string,
 	event_type_object?:ValueTypes["event_types_obj_rel_insert_input"],
-	goal_id?:number,
 	id?:number,
 	interaction?:ValueTypes["interactions_obj_rel_insert_input"],
 	interaction_id?:number,
@@ -999,7 +726,6 @@ end). throws an error if top level container is not an array */
 	cost_time?:true,
 	end_time?:true,
 	event_type?:true,
-	goal_id?:true,
 	id?:true,
 	interaction_id?:true,
 	parent_id?:true,
@@ -1016,7 +742,6 @@ end). throws an error if top level container is not an array */
 	cost_time?:ValueTypes["order_by"],
 	end_time?:ValueTypes["order_by"],
 	event_type?:ValueTypes["order_by"],
-	goal_id?:ValueTypes["order_by"],
 	id?:ValueTypes["order_by"],
 	interaction_id?:ValueTypes["order_by"],
 	parent_id?:ValueTypes["order_by"],
@@ -1034,7 +759,6 @@ end). throws an error if top level container is not an array */
 	cost_time?:true,
 	end_time?:true,
 	event_type?:true,
-	goal_id?:true,
 	id?:true,
 	interaction_id?:true,
 	parent_id?:true,
@@ -1051,7 +775,6 @@ end). throws an error if top level container is not an array */
 	cost_time?:ValueTypes["order_by"],
 	end_time?:ValueTypes["order_by"],
 	event_type?:ValueTypes["order_by"],
-	goal_id?:ValueTypes["order_by"],
 	id?:ValueTypes["order_by"],
 	interaction_id?:ValueTypes["order_by"],
 	parent_id?:ValueTypes["order_by"],
@@ -1087,15 +810,15 @@ end). throws an error if top level container is not an array */
 	cost_money?:ValueTypes["order_by"],
 	cost_time?:ValueTypes["order_by"],
 	end_time?:ValueTypes["order_by"],
-	event_tags_aggregate?:ValueTypes["event_tag_aggregate_order_by"],
 	event_type?:ValueTypes["order_by"],
 	event_type_object?:ValueTypes["event_types_order_by"],
-	goal_id?:ValueTypes["order_by"],
 	id?:ValueTypes["order_by"],
 	interaction?:ValueTypes["interactions_order_by"],
 	interaction_id?:ValueTypes["order_by"],
+	locations_aggregate?:ValueTypes["locations_aggregate_order_by"],
 	logs?:ValueTypes["order_by"],
 	metadata?:ValueTypes["order_by"],
+	objects_aggregate?:ValueTypes["objects_aggregate_order_by"],
 	parent?:ValueTypes["events_order_by"],
 	parent_id?:ValueTypes["order_by"],
 	start_time?:ValueTypes["order_by"],
@@ -1122,7 +845,6 @@ end). throws an error if top level container is not an array */
 	cost_time?:number,
 	end_time?:ValueTypes["timestamp"],
 	event_type?:string,
-	goal_id?:number,
 	id?:number,
 	interaction_id?:number,
 	logs?:ValueTypes["jsonb"],
@@ -1140,7 +862,6 @@ end). throws an error if top level container is not an array */
 	cost_money?:true,
 	/** seconds */
 	cost_time?:true,
-	goal_id?:true,
 	id?:true,
 	interaction_id?:true,
 	parent_id?:true,
@@ -1153,7 +874,6 @@ end). throws an error if top level container is not an array */
 	cost_money?:ValueTypes["order_by"],
 	/** seconds */
 	cost_time?:ValueTypes["order_by"],
-	goal_id?:ValueTypes["order_by"],
 	id?:ValueTypes["order_by"],
 	interaction_id?:ValueTypes["order_by"],
 	parent_id?:ValueTypes["order_by"],
@@ -1167,7 +887,6 @@ end). throws an error if top level container is not an array */
 	cost_money?:true,
 	/** seconds */
 	cost_time?:true,
-	goal_id?:true,
 	id?:true,
 	interaction_id?:true,
 	parent_id?:true,
@@ -1180,7 +899,6 @@ end). throws an error if top level container is not an array */
 	cost_money?:ValueTypes["order_by"],
 	/** seconds */
 	cost_time?:ValueTypes["order_by"],
-	goal_id?:ValueTypes["order_by"],
 	id?:ValueTypes["order_by"],
 	interaction_id?:ValueTypes["order_by"],
 	parent_id?:ValueTypes["order_by"],
@@ -1194,7 +912,6 @@ end). throws an error if top level container is not an array */
 	cost_money?:true,
 	/** seconds */
 	cost_time?:true,
-	goal_id?:true,
 	id?:true,
 	interaction_id?:true,
 	parent_id?:true,
@@ -1207,7 +924,6 @@ end). throws an error if top level container is not an array */
 	cost_money?:ValueTypes["order_by"],
 	/** seconds */
 	cost_time?:ValueTypes["order_by"],
-	goal_id?:ValueTypes["order_by"],
 	id?:ValueTypes["order_by"],
 	interaction_id?:ValueTypes["order_by"],
 	parent_id?:ValueTypes["order_by"],
@@ -1228,7 +944,6 @@ end). throws an error if top level container is not an array */
 	cost_time?:number,
 	end_time?:ValueTypes["timestamp"],
 	event_type?:string,
-	goal_id?:number,
 	id?:number,
 	interaction_id?:number,
 	logs?:ValueTypes["jsonb"],
@@ -1246,7 +961,6 @@ end). throws an error if top level container is not an array */
 	cost_money?:true,
 	/** seconds */
 	cost_time?:true,
-	goal_id?:true,
 	id?:true,
 	interaction_id?:true,
 	parent_id?:true,
@@ -1259,7 +973,6 @@ end). throws an error if top level container is not an array */
 	cost_money?:ValueTypes["order_by"],
 	/** seconds */
 	cost_time?:ValueTypes["order_by"],
-	goal_id?:ValueTypes["order_by"],
 	id?:ValueTypes["order_by"],
 	interaction_id?:ValueTypes["order_by"],
 	parent_id?:ValueTypes["order_by"],
@@ -1294,7 +1007,6 @@ the end). throws an error if top level container is not an array */
 	cost_money?:true,
 	/** seconds */
 	cost_time?:true,
-	goal_id?:true,
 	id?:true,
 	interaction_id?:true,
 	parent_id?:true,
@@ -1307,7 +1019,6 @@ the end). throws an error if top level container is not an array */
 	cost_money?:ValueTypes["order_by"],
 	/** seconds */
 	cost_time?:ValueTypes["order_by"],
-	goal_id?:ValueTypes["order_by"],
 	id?:ValueTypes["order_by"],
 	interaction_id?:ValueTypes["order_by"],
 	parent_id?:ValueTypes["order_by"],
@@ -1321,7 +1032,6 @@ the end). throws an error if top level container is not an array */
 	cost_money?:true,
 	/** seconds */
 	cost_time?:true,
-	goal_id?:true,
 	id?:true,
 	interaction_id?:true,
 	parent_id?:true,
@@ -1334,7 +1044,6 @@ the end). throws an error if top level container is not an array */
 	cost_money?:ValueTypes["order_by"],
 	/** seconds */
 	cost_time?:ValueTypes["order_by"],
-	goal_id?:ValueTypes["order_by"],
 	id?:ValueTypes["order_by"],
 	interaction_id?:ValueTypes["order_by"],
 	parent_id?:ValueTypes["order_by"],
@@ -1348,7 +1057,6 @@ the end). throws an error if top level container is not an array */
 	cost_money?:true,
 	/** seconds */
 	cost_time?:true,
-	goal_id?:true,
 	id?:true,
 	interaction_id?:true,
 	parent_id?:true,
@@ -1361,7 +1069,6 @@ the end). throws an error if top level container is not an array */
 	cost_money?:ValueTypes["order_by"],
 	/** seconds */
 	cost_time?:ValueTypes["order_by"],
-	goal_id?:ValueTypes["order_by"],
 	id?:ValueTypes["order_by"],
 	interaction_id?:ValueTypes["order_by"],
 	parent_id?:ValueTypes["order_by"],
@@ -2290,9 +1997,6 @@ count?: [{	columns?:ValueTypes["locations_select_column"][],	distinct?:boolean},
 delete_associations?: [{	/** filter the rows which have to be deleted */
 	where:ValueTypes["associations_bool_exp"]},ValueTypes["associations_mutation_response"]],
 delete_associations_by_pk?: [{	id:number},ValueTypes["associations"]],
-delete_event_tag?: [{	/** filter the rows which have to be deleted */
-	where:ValueTypes["event_tag_bool_exp"]},ValueTypes["event_tag_mutation_response"]],
-delete_event_tag_by_pk?: [{	event_id:number,	tag_name:string},ValueTypes["event_tag"]],
 delete_event_types?: [{	/** filter the rows which have to be deleted */
 	where:ValueTypes["event_types_bool_exp"]},ValueTypes["event_types_mutation_response"]],
 delete_event_types_by_pk?: [{	name:string},ValueTypes["event_types"]],
@@ -2329,12 +2033,6 @@ insert_associations?: [{	/** the rows to be inserted */
 insert_associations_one?: [{	/** the row to be inserted */
 	object:ValueTypes["associations_insert_input"],	/** upsert condition */
 	on_conflict?:ValueTypes["associations_on_conflict"]},ValueTypes["associations"]],
-insert_event_tag?: [{	/** the rows to be inserted */
-	objects:ValueTypes["event_tag_insert_input"][],	/** upsert condition */
-	on_conflict?:ValueTypes["event_tag_on_conflict"]},ValueTypes["event_tag_mutation_response"]],
-insert_event_tag_one?: [{	/** the row to be inserted */
-	object:ValueTypes["event_tag_insert_input"],	/** upsert condition */
-	on_conflict?:ValueTypes["event_tag_on_conflict"]},ValueTypes["event_tag"]],
 insert_event_types?: [{	/** the rows to be inserted */
 	objects:ValueTypes["event_types_insert_input"][],	/** upsert condition */
 	on_conflict?:ValueTypes["event_types_on_conflict"]},ValueTypes["event_types_mutation_response"]],
@@ -2395,36 +2093,15 @@ insert_users?: [{	/** the rows to be inserted */
 insert_users_one?: [{	/** the row to be inserted */
 	object:ValueTypes["users_insert_input"],	/** upsert condition */
 	on_conflict?:ValueTypes["users_on_conflict"]},ValueTypes["users"]],
-update_associations?: [{	/** append existing jsonb value of filtered columns with new jsonb value */
-	_append?:ValueTypes["associations_append_input"],	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
-	_delete_at_path?:ValueTypes["associations_delete_at_path_input"],	/** delete the array element with specified index (negative integers count from
-the end). throws an error if top level container is not an array */
-	_delete_elem?:ValueTypes["associations_delete_elem_input"],	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
-	_delete_key?:ValueTypes["associations_delete_key_input"],	/** increments the numeric columns with given value of the filtered values */
-	_inc?:ValueTypes["associations_inc_input"],	/** prepend existing jsonb value of filtered columns with new jsonb value */
-	_prepend?:ValueTypes["associations_prepend_input"],	/** sets the columns of the filtered rows to the given values */
+update_associations?: [{	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["associations_inc_input"],	/** sets the columns of the filtered rows to the given values */
 	_set?:ValueTypes["associations_set_input"],	/** filter the rows which have to be updated */
 	where:ValueTypes["associations_bool_exp"]},ValueTypes["associations_mutation_response"]],
-update_associations_by_pk?: [{	/** append existing jsonb value of filtered columns with new jsonb value */
-	_append?:ValueTypes["associations_append_input"],	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
-	_delete_at_path?:ValueTypes["associations_delete_at_path_input"],	/** delete the array element with specified index (negative integers count from
-the end). throws an error if top level container is not an array */
-	_delete_elem?:ValueTypes["associations_delete_elem_input"],	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
-	_delete_key?:ValueTypes["associations_delete_key_input"],	/** increments the numeric columns with given value of the filtered values */
-	_inc?:ValueTypes["associations_inc_input"],	/** prepend existing jsonb value of filtered columns with new jsonb value */
-	_prepend?:ValueTypes["associations_prepend_input"],	/** sets the columns of the filtered rows to the given values */
+update_associations_by_pk?: [{	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["associations_inc_input"],	/** sets the columns of the filtered rows to the given values */
 	_set?:ValueTypes["associations_set_input"],	pk_columns:ValueTypes["associations_pk_columns_input"]},ValueTypes["associations"]],
 update_associations_many?: [{	/** updates to execute, in order */
 	updates:ValueTypes["associations_updates"][]},ValueTypes["associations_mutation_response"]],
-update_event_tag?: [{	/** increments the numeric columns with given value of the filtered values */
-	_inc?:ValueTypes["event_tag_inc_input"],	/** sets the columns of the filtered rows to the given values */
-	_set?:ValueTypes["event_tag_set_input"],	/** filter the rows which have to be updated */
-	where:ValueTypes["event_tag_bool_exp"]},ValueTypes["event_tag_mutation_response"]],
-update_event_tag_by_pk?: [{	/** increments the numeric columns with given value of the filtered values */
-	_inc?:ValueTypes["event_tag_inc_input"],	/** sets the columns of the filtered rows to the given values */
-	_set?:ValueTypes["event_tag_set_input"],	pk_columns:ValueTypes["event_tag_pk_columns_input"]},ValueTypes["event_tag"]],
-update_event_tag_many?: [{	/** updates to execute, in order */
-	updates:ValueTypes["event_tag_updates"][]},ValueTypes["event_tag_mutation_response"]],
 update_event_types?: [{	/** append existing jsonb value of filtered columns with new jsonb value */
 	_append?:ValueTypes["event_types_append_input"],	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
 	_delete_at_path?:ValueTypes["event_types_delete_at_path_input"],	/** delete the array element with specified index (negative integers count from
@@ -2726,6 +2403,12 @@ the end). throws an error if top level container is not an array */
 };
 	/** columns and relationships of "objects" */
 ["objects"]: AliasType<{
+events?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["events_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["events_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["events_bool_exp"]},ValueTypes["events"]],
 	id?:true,
 	name?:true,
 	object_type?:true,
@@ -2752,16 +2435,35 @@ count?: [{	columns?:ValueTypes["objects_select_column"][],	distinct?:boolean},tr
 	variance?:ValueTypes["objects_variance_fields"],
 		__typename?: true
 }>;
+	/** order by aggregate values of table "objects" */
+["objects_aggregate_order_by"]: {
+	avg?:ValueTypes["objects_avg_order_by"],
+	count?:ValueTypes["order_by"],
+	max?:ValueTypes["objects_max_order_by"],
+	min?:ValueTypes["objects_min_order_by"],
+	stddev?:ValueTypes["objects_stddev_order_by"],
+	stddev_pop?:ValueTypes["objects_stddev_pop_order_by"],
+	stddev_samp?:ValueTypes["objects_stddev_samp_order_by"],
+	sum?:ValueTypes["objects_sum_order_by"],
+	var_pop?:ValueTypes["objects_var_pop_order_by"],
+	var_samp?:ValueTypes["objects_var_samp_order_by"],
+	variance?:ValueTypes["objects_variance_order_by"]
+};
 	/** aggregate avg on columns */
 ["objects_avg_fields"]: AliasType<{
 	id?:true,
 		__typename?: true
 }>;
+	/** order by avg() on columns of table "objects" */
+["objects_avg_order_by"]: {
+	id?:ValueTypes["order_by"]
+};
 	/** Boolean expression to filter rows from the table "objects". All fields are combined with a logical 'AND'. */
 ["objects_bool_exp"]: {
 	_and?:ValueTypes["objects_bool_exp"][],
 	_not?:ValueTypes["objects_bool_exp"],
 	_or?:ValueTypes["objects_bool_exp"][],
+	events?:ValueTypes["events_bool_exp"],
 	id?:ValueTypes["Int_comparison_exp"],
 	name?:ValueTypes["String_comparison_exp"],
 	object_type?:ValueTypes["String_comparison_exp"]
@@ -2785,6 +2487,12 @@ count?: [{	columns?:ValueTypes["objects_select_column"][],	distinct?:boolean},tr
 	object_type?:true,
 		__typename?: true
 }>;
+	/** order by max() on columns of table "objects" */
+["objects_max_order_by"]: {
+	id?:ValueTypes["order_by"],
+	name?:ValueTypes["order_by"],
+	object_type?:ValueTypes["order_by"]
+};
 	/** aggregate min on columns */
 ["objects_min_fields"]: AliasType<{
 	id?:true,
@@ -2792,6 +2500,12 @@ count?: [{	columns?:ValueTypes["objects_select_column"][],	distinct?:boolean},tr
 	object_type?:true,
 		__typename?: true
 }>;
+	/** order by min() on columns of table "objects" */
+["objects_min_order_by"]: {
+	id?:ValueTypes["order_by"],
+	name?:ValueTypes["order_by"],
+	object_type?:ValueTypes["order_by"]
+};
 	/** response of any mutation on the table "objects" */
 ["objects_mutation_response"]: AliasType<{
 	/** number of rows affected by the mutation */
@@ -2808,6 +2522,7 @@ count?: [{	columns?:ValueTypes["objects_select_column"][],	distinct?:boolean},tr
 };
 	/** Ordering options when selecting data from "objects". */
 ["objects_order_by"]: {
+	events_aggregate?:ValueTypes["events_aggregate_order_by"],
 	id?:ValueTypes["order_by"],
 	name?:ValueTypes["order_by"],
 	object_type?:ValueTypes["order_by"]
@@ -2829,16 +2544,28 @@ count?: [{	columns?:ValueTypes["objects_select_column"][],	distinct?:boolean},tr
 	id?:true,
 		__typename?: true
 }>;
+	/** order by stddev() on columns of table "objects" */
+["objects_stddev_order_by"]: {
+	id?:ValueTypes["order_by"]
+};
 	/** aggregate stddev_pop on columns */
 ["objects_stddev_pop_fields"]: AliasType<{
 	id?:true,
 		__typename?: true
 }>;
+	/** order by stddev_pop() on columns of table "objects" */
+["objects_stddev_pop_order_by"]: {
+	id?:ValueTypes["order_by"]
+};
 	/** aggregate stddev_samp on columns */
 ["objects_stddev_samp_fields"]: AliasType<{
 	id?:true,
 		__typename?: true
 }>;
+	/** order by stddev_samp() on columns of table "objects" */
+["objects_stddev_samp_order_by"]: {
+	id?:ValueTypes["order_by"]
+};
 	/** Streaming cursor of the table "objects" */
 ["objects_stream_cursor_input"]: {
 	/** Stream column input with initial value */
@@ -2857,6 +2584,10 @@ count?: [{	columns?:ValueTypes["objects_select_column"][],	distinct?:boolean},tr
 	id?:true,
 		__typename?: true
 }>;
+	/** order by sum() on columns of table "objects" */
+["objects_sum_order_by"]: {
+	id?:ValueTypes["order_by"]
+};
 	/** update columns of table "objects" */
 ["objects_update_column"]:objects_update_column;
 	["objects_updates"]: {
@@ -2872,16 +2603,28 @@ count?: [{	columns?:ValueTypes["objects_select_column"][],	distinct?:boolean},tr
 	id?:true,
 		__typename?: true
 }>;
+	/** order by var_pop() on columns of table "objects" */
+["objects_var_pop_order_by"]: {
+	id?:ValueTypes["order_by"]
+};
 	/** aggregate var_samp on columns */
 ["objects_var_samp_fields"]: AliasType<{
 	id?:true,
 		__typename?: true
 }>;
+	/** order by var_samp() on columns of table "objects" */
+["objects_var_samp_order_by"]: {
+	id?:ValueTypes["order_by"]
+};
 	/** aggregate variance on columns */
 ["objects_variance_fields"]: AliasType<{
 	id?:true,
 		__typename?: true
 }>;
+	/** order by variance() on columns of table "objects" */
+["objects_variance_order_by"]: {
+	id?:ValueTypes["order_by"]
+};
 	/** column ordering options */
 ["order_by"]:order_by;
 	["query_root"]: AliasType<{
@@ -2912,19 +2655,6 @@ closest_user_location_aggregate?: [{	/** input parameters for function "closest_
 	offset?:number,	/** sort the rows by one or more columns */
 	order_by?:ValueTypes["locations_order_by"][],	/** filter the rows returned */
 	where?:ValueTypes["locations_bool_exp"]},ValueTypes["locations_aggregate"]],
-event_tag?: [{	/** distinct select on columns */
-	distinct_on?:ValueTypes["event_tag_select_column"][],	/** limit the number of rows returned */
-	limit?:number,	/** skip the first n rows. Use only with order_by */
-	offset?:number,	/** sort the rows by one or more columns */
-	order_by?:ValueTypes["event_tag_order_by"][],	/** filter the rows returned */
-	where?:ValueTypes["event_tag_bool_exp"]},ValueTypes["event_tag"]],
-event_tag_aggregate?: [{	/** distinct select on columns */
-	distinct_on?:ValueTypes["event_tag_select_column"][],	/** limit the number of rows returned */
-	limit?:number,	/** skip the first n rows. Use only with order_by */
-	offset?:number,	/** sort the rows by one or more columns */
-	order_by?:ValueTypes["event_tag_order_by"][],	/** filter the rows returned */
-	where?:ValueTypes["event_tag_bool_exp"]},ValueTypes["event_tag_aggregate"]],
-event_tag_by_pk?: [{	event_id:number,	tag_name:string},ValueTypes["event_tag"]],
 event_types?: [{	/** distinct select on columns */
 	distinct_on?:ValueTypes["event_types_select_column"][],	/** limit the number of rows returned */
 	limit?:number,	/** skip the first n rows. Use only with order_by */
@@ -3158,23 +2888,6 @@ closest_user_location_aggregate?: [{	/** input parameters for function "closest_
 	offset?:number,	/** sort the rows by one or more columns */
 	order_by?:ValueTypes["locations_order_by"][],	/** filter the rows returned */
 	where?:ValueTypes["locations_bool_exp"]},ValueTypes["locations_aggregate"]],
-event_tag?: [{	/** distinct select on columns */
-	distinct_on?:ValueTypes["event_tag_select_column"][],	/** limit the number of rows returned */
-	limit?:number,	/** skip the first n rows. Use only with order_by */
-	offset?:number,	/** sort the rows by one or more columns */
-	order_by?:ValueTypes["event_tag_order_by"][],	/** filter the rows returned */
-	where?:ValueTypes["event_tag_bool_exp"]},ValueTypes["event_tag"]],
-event_tag_aggregate?: [{	/** distinct select on columns */
-	distinct_on?:ValueTypes["event_tag_select_column"][],	/** limit the number of rows returned */
-	limit?:number,	/** skip the first n rows. Use only with order_by */
-	offset?:number,	/** sort the rows by one or more columns */
-	order_by?:ValueTypes["event_tag_order_by"][],	/** filter the rows returned */
-	where?:ValueTypes["event_tag_bool_exp"]},ValueTypes["event_tag_aggregate"]],
-event_tag_by_pk?: [{	event_id:number,	tag_name:string},ValueTypes["event_tag"]],
-event_tag_stream?: [{	/** maximum number of rows returned in a single batch */
-	batch_size:number,	/** cursor to stream the results returned by the query */
-	cursor?:ValueTypes["event_tag_stream_cursor_input"][],	/** filter the rows returned */
-	where?:ValueTypes["event_tag_bool_exp"]},ValueTypes["event_tag"]],
 event_types?: [{	/** distinct select on columns */
 	distinct_on?:ValueTypes["event_types_select_column"][],	/** limit the number of rows returned */
 	limit?:number,	/** skip the first n rows. Use only with order_by */
@@ -4141,7 +3854,6 @@ export type PartialObjects = {
 ["associations"]: {
 		__typename?: "associations";
 			id?:number,
-			metadata?:PartialObjects["jsonb"],
 			ref_one_id?:number,
 			ref_one_table?:string,
 			ref_two_id?:number,
@@ -4182,10 +3894,6 @@ export type PartialObjects = {
 	var_samp?:PartialObjects["associations_var_samp_order_by"],
 	variance?:PartialObjects["associations_variance_order_by"]
 },
-	/** append existing jsonb value of filtered columns with new jsonb value */
-["associations_append_input"]: {
-	metadata?:PartialObjects["jsonb"]
-},
 	/** aggregate avg on columns */
 ["associations_avg_fields"]: {
 		__typename?: "associations_avg_fields";
@@ -4205,7 +3913,6 @@ export type PartialObjects = {
 	_not?:PartialObjects["associations_bool_exp"],
 	_or?:PartialObjects["associations_bool_exp"][],
 	id?:PartialObjects["Int_comparison_exp"],
-	metadata?:PartialObjects["jsonb_comparison_exp"],
 	ref_one_id?:PartialObjects["Int_comparison_exp"],
 	ref_one_table?:PartialObjects["String_comparison_exp"],
 	ref_two_id?:PartialObjects["Int_comparison_exp"],
@@ -4213,19 +3920,6 @@ export type PartialObjects = {
 },
 	/** unique or primary key constraints on table "associations" */
 ["associations_constraint"]:associations_constraint,
-	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
-["associations_delete_at_path_input"]: {
-	metadata?:string[]
-},
-	/** delete the array element with specified index (negative integers count from the
-end). throws an error if top level container is not an array */
-["associations_delete_elem_input"]: {
-	metadata?:number
-},
-	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
-["associations_delete_key_input"]: {
-	metadata?:string
-},
 	/** input type for incrementing numeric columns in table "associations" */
 ["associations_inc_input"]: {
 	id?:number,
@@ -4235,7 +3929,6 @@ end). throws an error if top level container is not an array */
 	/** input type for inserting data into table "associations" */
 ["associations_insert_input"]: {
 	id?:number,
-	metadata?:PartialObjects["jsonb"],
 	ref_one_id?:number,
 	ref_one_table?:string,
 	ref_two_id?:number,
@@ -4292,7 +3985,6 @@ end). throws an error if top level container is not an array */
 	/** Ordering options when selecting data from "associations". */
 ["associations_order_by"]: {
 	id?:PartialObjects["order_by"],
-	metadata?:PartialObjects["order_by"],
 	ref_one_id?:PartialObjects["order_by"],
 	ref_one_table?:PartialObjects["order_by"],
 	ref_two_id?:PartialObjects["order_by"],
@@ -4302,16 +3994,11 @@ end). throws an error if top level container is not an array */
 ["associations_pk_columns_input"]: {
 	id:number
 },
-	/** prepend existing jsonb value of filtered columns with new jsonb value */
-["associations_prepend_input"]: {
-	metadata?:PartialObjects["jsonb"]
-},
 	/** select columns of table "associations" */
 ["associations_select_column"]:associations_select_column,
 	/** input type for updating data in table "associations" */
 ["associations_set_input"]: {
 	id?:number,
-	metadata?:PartialObjects["jsonb"],
 	ref_one_id?:number,
 	ref_one_table?:string,
 	ref_two_id?:number,
@@ -4366,7 +4053,6 @@ end). throws an error if top level container is not an array */
 	/** Initial value of the column from where the streaming should start */
 ["associations_stream_cursor_value_input"]: {
 	id?:number,
-	metadata?:PartialObjects["jsonb"],
 	ref_one_id?:number,
 	ref_one_table?:string,
 	ref_two_id?:number,
@@ -4388,19 +4074,8 @@ end). throws an error if top level container is not an array */
 	/** update columns of table "associations" */
 ["associations_update_column"]:associations_update_column,
 	["associations_updates"]: {
-	/** append existing jsonb value of filtered columns with new jsonb value */
-	_append?:PartialObjects["associations_append_input"],
-	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
-	_delete_at_path?:PartialObjects["associations_delete_at_path_input"],
-	/** delete the array element with specified index (negative integers count from
-the end). throws an error if top level container is not an array */
-	_delete_elem?:PartialObjects["associations_delete_elem_input"],
-	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
-	_delete_key?:PartialObjects["associations_delete_key_input"],
 	/** increments the numeric columns with given value of the filtered values */
 	_inc?:PartialObjects["associations_inc_input"],
-	/** prepend existing jsonb value of filtered columns with new jsonb value */
-	_prepend?:PartialObjects["associations_prepend_input"],
 	/** sets the columns of the filtered rows to the given values */
 	_set?:PartialObjects["associations_set_input"],
 	/** filter the rows which have to be updated */
@@ -4468,233 +4143,6 @@ the end). throws an error if top level container is not an array */
 },
 	/** ordering argument of a cursor */
 ["cursor_ordering"]:cursor_ordering,
-	/** columns and relationships of "event_tag" */
-["event_tag"]: {
-		__typename?: "event_tag";
-			/** An object relationship */
-	event?:PartialObjects["events"],
-			event_id?:number,
-			tag_name?:string
-	},
-	/** aggregated selection of "event_tag" */
-["event_tag_aggregate"]: {
-		__typename?: "event_tag_aggregate";
-			aggregate?:PartialObjects["event_tag_aggregate_fields"],
-			nodes?:PartialObjects["event_tag"][]
-	},
-	["event_tag_aggregate_bool_exp"]: {
-	count?:PartialObjects["event_tag_aggregate_bool_exp_count"]
-},
-	["event_tag_aggregate_bool_exp_count"]: {
-	arguments?:PartialObjects["event_tag_select_column"][],
-	distinct?:boolean,
-	filter?:PartialObjects["event_tag_bool_exp"],
-	predicate:PartialObjects["Int_comparison_exp"]
-},
-	/** aggregate fields of "event_tag" */
-["event_tag_aggregate_fields"]: {
-		__typename?: "event_tag_aggregate_fields";
-			avg?:PartialObjects["event_tag_avg_fields"],
-			count?:number,
-			max?:PartialObjects["event_tag_max_fields"],
-			min?:PartialObjects["event_tag_min_fields"],
-			stddev?:PartialObjects["event_tag_stddev_fields"],
-			stddev_pop?:PartialObjects["event_tag_stddev_pop_fields"],
-			stddev_samp?:PartialObjects["event_tag_stddev_samp_fields"],
-			sum?:PartialObjects["event_tag_sum_fields"],
-			var_pop?:PartialObjects["event_tag_var_pop_fields"],
-			var_samp?:PartialObjects["event_tag_var_samp_fields"],
-			variance?:PartialObjects["event_tag_variance_fields"]
-	},
-	/** order by aggregate values of table "event_tag" */
-["event_tag_aggregate_order_by"]: {
-	avg?:PartialObjects["event_tag_avg_order_by"],
-	count?:PartialObjects["order_by"],
-	max?:PartialObjects["event_tag_max_order_by"],
-	min?:PartialObjects["event_tag_min_order_by"],
-	stddev?:PartialObjects["event_tag_stddev_order_by"],
-	stddev_pop?:PartialObjects["event_tag_stddev_pop_order_by"],
-	stddev_samp?:PartialObjects["event_tag_stddev_samp_order_by"],
-	sum?:PartialObjects["event_tag_sum_order_by"],
-	var_pop?:PartialObjects["event_tag_var_pop_order_by"],
-	var_samp?:PartialObjects["event_tag_var_samp_order_by"],
-	variance?:PartialObjects["event_tag_variance_order_by"]
-},
-	/** input type for inserting array relation for remote table "event_tag" */
-["event_tag_arr_rel_insert_input"]: {
-	data:PartialObjects["event_tag_insert_input"][],
-	/** upsert condition */
-	on_conflict?:PartialObjects["event_tag_on_conflict"]
-},
-	/** aggregate avg on columns */
-["event_tag_avg_fields"]: {
-		__typename?: "event_tag_avg_fields";
-			event_id?:number
-	},
-	/** order by avg() on columns of table "event_tag" */
-["event_tag_avg_order_by"]: {
-	event_id?:PartialObjects["order_by"]
-},
-	/** Boolean expression to filter rows from the table "event_tag". All fields are combined with a logical 'AND'. */
-["event_tag_bool_exp"]: {
-	_and?:PartialObjects["event_tag_bool_exp"][],
-	_not?:PartialObjects["event_tag_bool_exp"],
-	_or?:PartialObjects["event_tag_bool_exp"][],
-	event?:PartialObjects["events_bool_exp"],
-	event_id?:PartialObjects["Int_comparison_exp"],
-	tag_name?:PartialObjects["String_comparison_exp"]
-},
-	/** unique or primary key constraints on table "event_tag" */
-["event_tag_constraint"]:event_tag_constraint,
-	/** input type for incrementing numeric columns in table "event_tag" */
-["event_tag_inc_input"]: {
-	event_id?:number
-},
-	/** input type for inserting data into table "event_tag" */
-["event_tag_insert_input"]: {
-	event?:PartialObjects["events_obj_rel_insert_input"],
-	event_id?:number,
-	tag_name?:string
-},
-	/** aggregate max on columns */
-["event_tag_max_fields"]: {
-		__typename?: "event_tag_max_fields";
-			event_id?:number,
-			tag_name?:string
-	},
-	/** order by max() on columns of table "event_tag" */
-["event_tag_max_order_by"]: {
-	event_id?:PartialObjects["order_by"],
-	tag_name?:PartialObjects["order_by"]
-},
-	/** aggregate min on columns */
-["event_tag_min_fields"]: {
-		__typename?: "event_tag_min_fields";
-			event_id?:number,
-			tag_name?:string
-	},
-	/** order by min() on columns of table "event_tag" */
-["event_tag_min_order_by"]: {
-	event_id?:PartialObjects["order_by"],
-	tag_name?:PartialObjects["order_by"]
-},
-	/** response of any mutation on the table "event_tag" */
-["event_tag_mutation_response"]: {
-		__typename?: "event_tag_mutation_response";
-			/** number of rows affected by the mutation */
-	affected_rows?:number,
-			/** data from the rows affected by the mutation */
-	returning?:PartialObjects["event_tag"][]
-	},
-	/** on_conflict condition type for table "event_tag" */
-["event_tag_on_conflict"]: {
-	constraint:PartialObjects["event_tag_constraint"],
-	update_columns:PartialObjects["event_tag_update_column"][],
-	where?:PartialObjects["event_tag_bool_exp"]
-},
-	/** Ordering options when selecting data from "event_tag". */
-["event_tag_order_by"]: {
-	event?:PartialObjects["events_order_by"],
-	event_id?:PartialObjects["order_by"],
-	tag_name?:PartialObjects["order_by"]
-},
-	/** primary key columns input for table: event_tag */
-["event_tag_pk_columns_input"]: {
-	event_id:number,
-	tag_name:string
-},
-	/** select columns of table "event_tag" */
-["event_tag_select_column"]:event_tag_select_column,
-	/** input type for updating data in table "event_tag" */
-["event_tag_set_input"]: {
-	event_id?:number,
-	tag_name?:string
-},
-	/** aggregate stddev on columns */
-["event_tag_stddev_fields"]: {
-		__typename?: "event_tag_stddev_fields";
-			event_id?:number
-	},
-	/** order by stddev() on columns of table "event_tag" */
-["event_tag_stddev_order_by"]: {
-	event_id?:PartialObjects["order_by"]
-},
-	/** aggregate stddev_pop on columns */
-["event_tag_stddev_pop_fields"]: {
-		__typename?: "event_tag_stddev_pop_fields";
-			event_id?:number
-	},
-	/** order by stddev_pop() on columns of table "event_tag" */
-["event_tag_stddev_pop_order_by"]: {
-	event_id?:PartialObjects["order_by"]
-},
-	/** aggregate stddev_samp on columns */
-["event_tag_stddev_samp_fields"]: {
-		__typename?: "event_tag_stddev_samp_fields";
-			event_id?:number
-	},
-	/** order by stddev_samp() on columns of table "event_tag" */
-["event_tag_stddev_samp_order_by"]: {
-	event_id?:PartialObjects["order_by"]
-},
-	/** Streaming cursor of the table "event_tag" */
-["event_tag_stream_cursor_input"]: {
-	/** Stream column input with initial value */
-	initial_value:PartialObjects["event_tag_stream_cursor_value_input"],
-	/** cursor ordering */
-	ordering?:PartialObjects["cursor_ordering"]
-},
-	/** Initial value of the column from where the streaming should start */
-["event_tag_stream_cursor_value_input"]: {
-	event_id?:number,
-	tag_name?:string
-},
-	/** aggregate sum on columns */
-["event_tag_sum_fields"]: {
-		__typename?: "event_tag_sum_fields";
-			event_id?:number
-	},
-	/** order by sum() on columns of table "event_tag" */
-["event_tag_sum_order_by"]: {
-	event_id?:PartialObjects["order_by"]
-},
-	/** update columns of table "event_tag" */
-["event_tag_update_column"]:event_tag_update_column,
-	["event_tag_updates"]: {
-	/** increments the numeric columns with given value of the filtered values */
-	_inc?:PartialObjects["event_tag_inc_input"],
-	/** sets the columns of the filtered rows to the given values */
-	_set?:PartialObjects["event_tag_set_input"],
-	/** filter the rows which have to be updated */
-	where:PartialObjects["event_tag_bool_exp"]
-},
-	/** aggregate var_pop on columns */
-["event_tag_var_pop_fields"]: {
-		__typename?: "event_tag_var_pop_fields";
-			event_id?:number
-	},
-	/** order by var_pop() on columns of table "event_tag" */
-["event_tag_var_pop_order_by"]: {
-	event_id?:PartialObjects["order_by"]
-},
-	/** aggregate var_samp on columns */
-["event_tag_var_samp_fields"]: {
-		__typename?: "event_tag_var_samp_fields";
-			event_id?:number
-	},
-	/** order by var_samp() on columns of table "event_tag" */
-["event_tag_var_samp_order_by"]: {
-	event_id?:PartialObjects["order_by"]
-},
-	/** aggregate variance on columns */
-["event_tag_variance_fields"]: {
-		__typename?: "event_tag_variance_fields";
-			event_id?:number
-	},
-	/** order by variance() on columns of table "event_tag" */
-["event_tag_variance_order_by"]: {
-	event_id?:PartialObjects["order_by"]
-},
 	/** columns and relationships of "event_types" */
 ["event_types"]: {
 		__typename?: "event_types";
@@ -4904,20 +4352,19 @@ the end). throws an error if top level container is not an array */
 			/** seconds */
 	cost_time?:number,
 			end_time?:PartialObjects["timestamp"],
-			/** An array relationship */
-	event_tags?:PartialObjects["event_tag"][],
-			/** An aggregate relationship */
-	event_tags_aggregate?:PartialObjects["event_tag_aggregate"],
 			event_type?:string,
 			/** An object relationship */
 	event_type_object?:PartialObjects["event_types"],
-			goal_id?:number,
 			id?:number,
 			/** An object relationship */
 	interaction?:PartialObjects["interactions"],
 			interaction_id?:number,
+			/** A computed field, executes function "event_locations" */
+	locations?:PartialObjects["locations"][],
 			logs?:PartialObjects["jsonb"],
 			metadata?:PartialObjects["jsonb"],
+			/** A computed field, executes function "event_objects" */
+	objects?:PartialObjects["objects"][],
 			/** An object relationship */
 	parent?:PartialObjects["events"],
 			parent_id?:number,
@@ -4991,7 +4438,6 @@ the end). throws an error if top level container is not an array */
 	cost_money?:number,
 			/** seconds */
 	cost_time?:number,
-			goal_id?:number,
 			id?:number,
 			interaction_id?:number,
 			parent_id?:number,
@@ -5003,7 +4449,6 @@ the end). throws an error if top level container is not an array */
 	cost_money?:PartialObjects["order_by"],
 	/** seconds */
 	cost_time?:PartialObjects["order_by"],
-	goal_id?:PartialObjects["order_by"],
 	id?:PartialObjects["order_by"],
 	interaction_id?:PartialObjects["order_by"],
 	parent_id?:PartialObjects["order_by"],
@@ -5021,16 +4466,15 @@ the end). throws an error if top level container is not an array */
 	cost_money?:PartialObjects["Int_comparison_exp"],
 	cost_time?:PartialObjects["Int_comparison_exp"],
 	end_time?:PartialObjects["timestamp_comparison_exp"],
-	event_tags?:PartialObjects["event_tag_bool_exp"],
-	event_tags_aggregate?:PartialObjects["event_tag_aggregate_bool_exp"],
 	event_type?:PartialObjects["String_comparison_exp"],
 	event_type_object?:PartialObjects["event_types_bool_exp"],
-	goal_id?:PartialObjects["Int_comparison_exp"],
 	id?:PartialObjects["Int_comparison_exp"],
 	interaction?:PartialObjects["interactions_bool_exp"],
 	interaction_id?:PartialObjects["Int_comparison_exp"],
+	locations?:PartialObjects["locations_bool_exp"],
 	logs?:PartialObjects["jsonb_comparison_exp"],
 	metadata?:PartialObjects["jsonb_comparison_exp"],
+	objects?:PartialObjects["objects_bool_exp"],
 	parent?:PartialObjects["events_bool_exp"],
 	parent_id?:PartialObjects["Int_comparison_exp"],
 	start_time?:PartialObjects["timestamp_comparison_exp"],
@@ -5062,7 +4506,6 @@ end). throws an error if top level container is not an array */
 	cost_money?:number,
 	/** seconds */
 	cost_time?:number,
-	goal_id?:number,
 	id?:number,
 	interaction_id?:number,
 	parent_id?:number,
@@ -5076,10 +4519,8 @@ end). throws an error if top level container is not an array */
 	/** seconds */
 	cost_time?:number,
 	end_time?:PartialObjects["timestamp"],
-	event_tags?:PartialObjects["event_tag_arr_rel_insert_input"],
 	event_type?:string,
 	event_type_object?:PartialObjects["event_types_obj_rel_insert_input"],
-	goal_id?:number,
 	id?:number,
 	interaction?:PartialObjects["interactions_obj_rel_insert_input"],
 	interaction_id?:number,
@@ -5103,7 +4544,6 @@ end). throws an error if top level container is not an array */
 	cost_time?:number,
 			end_time?:PartialObjects["timestamp"],
 			event_type?:string,
-			goal_id?:number,
 			id?:number,
 			interaction_id?:number,
 			parent_id?:number,
@@ -5119,7 +4559,6 @@ end). throws an error if top level container is not an array */
 	cost_time?:PartialObjects["order_by"],
 	end_time?:PartialObjects["order_by"],
 	event_type?:PartialObjects["order_by"],
-	goal_id?:PartialObjects["order_by"],
 	id?:PartialObjects["order_by"],
 	interaction_id?:PartialObjects["order_by"],
 	parent_id?:PartialObjects["order_by"],
@@ -5138,7 +4577,6 @@ end). throws an error if top level container is not an array */
 	cost_time?:number,
 			end_time?:PartialObjects["timestamp"],
 			event_type?:string,
-			goal_id?:number,
 			id?:number,
 			interaction_id?:number,
 			parent_id?:number,
@@ -5154,7 +4592,6 @@ end). throws an error if top level container is not an array */
 	cost_time?:PartialObjects["order_by"],
 	end_time?:PartialObjects["order_by"],
 	event_type?:PartialObjects["order_by"],
-	goal_id?:PartialObjects["order_by"],
 	id?:PartialObjects["order_by"],
 	interaction_id?:PartialObjects["order_by"],
 	parent_id?:PartialObjects["order_by"],
@@ -5190,15 +4627,15 @@ end). throws an error if top level container is not an array */
 	cost_money?:PartialObjects["order_by"],
 	cost_time?:PartialObjects["order_by"],
 	end_time?:PartialObjects["order_by"],
-	event_tags_aggregate?:PartialObjects["event_tag_aggregate_order_by"],
 	event_type?:PartialObjects["order_by"],
 	event_type_object?:PartialObjects["event_types_order_by"],
-	goal_id?:PartialObjects["order_by"],
 	id?:PartialObjects["order_by"],
 	interaction?:PartialObjects["interactions_order_by"],
 	interaction_id?:PartialObjects["order_by"],
+	locations_aggregate?:PartialObjects["locations_aggregate_order_by"],
 	logs?:PartialObjects["order_by"],
 	metadata?:PartialObjects["order_by"],
+	objects_aggregate?:PartialObjects["objects_aggregate_order_by"],
 	parent?:PartialObjects["events_order_by"],
 	parent_id?:PartialObjects["order_by"],
 	start_time?:PartialObjects["order_by"],
@@ -5225,7 +4662,6 @@ end). throws an error if top level container is not an array */
 	cost_time?:number,
 	end_time?:PartialObjects["timestamp"],
 	event_type?:string,
-	goal_id?:number,
 	id?:number,
 	interaction_id?:number,
 	logs?:PartialObjects["jsonb"],
@@ -5244,7 +4680,6 @@ end). throws an error if top level container is not an array */
 	cost_money?:number,
 			/** seconds */
 	cost_time?:number,
-			goal_id?:number,
 			id?:number,
 			interaction_id?:number,
 			parent_id?:number,
@@ -5256,7 +4691,6 @@ end). throws an error if top level container is not an array */
 	cost_money?:PartialObjects["order_by"],
 	/** seconds */
 	cost_time?:PartialObjects["order_by"],
-	goal_id?:PartialObjects["order_by"],
 	id?:PartialObjects["order_by"],
 	interaction_id?:PartialObjects["order_by"],
 	parent_id?:PartialObjects["order_by"],
@@ -5271,7 +4705,6 @@ end). throws an error if top level container is not an array */
 	cost_money?:number,
 			/** seconds */
 	cost_time?:number,
-			goal_id?:number,
 			id?:number,
 			interaction_id?:number,
 			parent_id?:number,
@@ -5283,7 +4716,6 @@ end). throws an error if top level container is not an array */
 	cost_money?:PartialObjects["order_by"],
 	/** seconds */
 	cost_time?:PartialObjects["order_by"],
-	goal_id?:PartialObjects["order_by"],
 	id?:PartialObjects["order_by"],
 	interaction_id?:PartialObjects["order_by"],
 	parent_id?:PartialObjects["order_by"],
@@ -5298,7 +4730,6 @@ end). throws an error if top level container is not an array */
 	cost_money?:number,
 			/** seconds */
 	cost_time?:number,
-			goal_id?:number,
 			id?:number,
 			interaction_id?:number,
 			parent_id?:number,
@@ -5310,7 +4741,6 @@ end). throws an error if top level container is not an array */
 	cost_money?:PartialObjects["order_by"],
 	/** seconds */
 	cost_time?:PartialObjects["order_by"],
-	goal_id?:PartialObjects["order_by"],
 	id?:PartialObjects["order_by"],
 	interaction_id?:PartialObjects["order_by"],
 	parent_id?:PartialObjects["order_by"],
@@ -5331,7 +4761,6 @@ end). throws an error if top level container is not an array */
 	cost_time?:number,
 	end_time?:PartialObjects["timestamp"],
 	event_type?:string,
-	goal_id?:number,
 	id?:number,
 	interaction_id?:number,
 	logs?:PartialObjects["jsonb"],
@@ -5350,7 +4779,6 @@ end). throws an error if top level container is not an array */
 	cost_money?:number,
 			/** seconds */
 	cost_time?:number,
-			goal_id?:number,
 			id?:number,
 			interaction_id?:number,
 			parent_id?:number,
@@ -5362,7 +4790,6 @@ end). throws an error if top level container is not an array */
 	cost_money?:PartialObjects["order_by"],
 	/** seconds */
 	cost_time?:PartialObjects["order_by"],
-	goal_id?:PartialObjects["order_by"],
 	id?:PartialObjects["order_by"],
 	interaction_id?:PartialObjects["order_by"],
 	parent_id?:PartialObjects["order_by"],
@@ -5398,7 +4825,6 @@ the end). throws an error if top level container is not an array */
 	cost_money?:number,
 			/** seconds */
 	cost_time?:number,
-			goal_id?:number,
 			id?:number,
 			interaction_id?:number,
 			parent_id?:number,
@@ -5410,7 +4836,6 @@ the end). throws an error if top level container is not an array */
 	cost_money?:PartialObjects["order_by"],
 	/** seconds */
 	cost_time?:PartialObjects["order_by"],
-	goal_id?:PartialObjects["order_by"],
 	id?:PartialObjects["order_by"],
 	interaction_id?:PartialObjects["order_by"],
 	parent_id?:PartialObjects["order_by"],
@@ -5425,7 +4850,6 @@ the end). throws an error if top level container is not an array */
 	cost_money?:number,
 			/** seconds */
 	cost_time?:number,
-			goal_id?:number,
 			id?:number,
 			interaction_id?:number,
 			parent_id?:number,
@@ -5437,7 +4861,6 @@ the end). throws an error if top level container is not an array */
 	cost_money?:PartialObjects["order_by"],
 	/** seconds */
 	cost_time?:PartialObjects["order_by"],
-	goal_id?:PartialObjects["order_by"],
 	id?:PartialObjects["order_by"],
 	interaction_id?:PartialObjects["order_by"],
 	parent_id?:PartialObjects["order_by"],
@@ -5452,7 +4875,6 @@ the end). throws an error if top level container is not an array */
 	cost_money?:number,
 			/** seconds */
 	cost_time?:number,
-			goal_id?:number,
 			id?:number,
 			interaction_id?:number,
 			parent_id?:number,
@@ -5464,7 +4886,6 @@ the end). throws an error if top level container is not an array */
 	cost_money?:PartialObjects["order_by"],
 	/** seconds */
 	cost_time?:PartialObjects["order_by"],
-	goal_id?:PartialObjects["order_by"],
 	id?:PartialObjects["order_by"],
 	interaction_id?:PartialObjects["order_by"],
 	parent_id?:PartialObjects["order_by"],
@@ -6385,10 +5806,6 @@ the end). throws an error if top level container is not an array */
 	delete_associations?:PartialObjects["associations_mutation_response"],
 			/** delete single row from the table: "associations" */
 	delete_associations_by_pk?:PartialObjects["associations"],
-			/** delete data from the table: "event_tag" */
-	delete_event_tag?:PartialObjects["event_tag_mutation_response"],
-			/** delete single row from the table: "event_tag" */
-	delete_event_tag_by_pk?:PartialObjects["event_tag"],
 			/** delete data from the table: "event_types" */
 	delete_event_types?:PartialObjects["event_types_mutation_response"],
 			/** delete single row from the table: "event_types" */
@@ -6433,10 +5850,6 @@ the end). throws an error if top level container is not an array */
 	insert_associations?:PartialObjects["associations_mutation_response"],
 			/** insert a single row into the table: "associations" */
 	insert_associations_one?:PartialObjects["associations"],
-			/** insert data into the table: "event_tag" */
-	insert_event_tag?:PartialObjects["event_tag_mutation_response"],
-			/** insert a single row into the table: "event_tag" */
-	insert_event_tag_one?:PartialObjects["event_tag"],
 			/** insert data into the table: "event_types" */
 	insert_event_types?:PartialObjects["event_types_mutation_response"],
 			/** insert a single row into the table: "event_types" */
@@ -6483,12 +5896,6 @@ the end). throws an error if top level container is not an array */
 	update_associations_by_pk?:PartialObjects["associations"],
 			/** update multiples rows of table: "associations" */
 	update_associations_many?:(PartialObjects["associations_mutation_response"] | undefined)[],
-			/** update data of the table: "event_tag" */
-	update_event_tag?:PartialObjects["event_tag_mutation_response"],
-			/** update single row of the table: "event_tag" */
-	update_event_tag_by_pk?:PartialObjects["event_tag"],
-			/** update multiples rows of table: "event_tag" */
-	update_event_tag_many?:(PartialObjects["event_tag_mutation_response"] | undefined)[],
 			/** update data of the table: "event_types" */
 	update_event_types?:PartialObjects["event_types_mutation_response"],
 			/** update single row of the table: "event_types" */
@@ -6679,6 +6086,8 @@ the end). throws an error if top level container is not an array */
 	/** columns and relationships of "objects" */
 ["objects"]: {
 		__typename?: "objects";
+			/** A computed field, executes function "object_events" */
+	events?:PartialObjects["events"][],
 			id?:number,
 			name?:string,
 			object_type?:string
@@ -6704,16 +6113,35 @@ the end). throws an error if top level container is not an array */
 			var_samp?:PartialObjects["objects_var_samp_fields"],
 			variance?:PartialObjects["objects_variance_fields"]
 	},
+	/** order by aggregate values of table "objects" */
+["objects_aggregate_order_by"]: {
+	avg?:PartialObjects["objects_avg_order_by"],
+	count?:PartialObjects["order_by"],
+	max?:PartialObjects["objects_max_order_by"],
+	min?:PartialObjects["objects_min_order_by"],
+	stddev?:PartialObjects["objects_stddev_order_by"],
+	stddev_pop?:PartialObjects["objects_stddev_pop_order_by"],
+	stddev_samp?:PartialObjects["objects_stddev_samp_order_by"],
+	sum?:PartialObjects["objects_sum_order_by"],
+	var_pop?:PartialObjects["objects_var_pop_order_by"],
+	var_samp?:PartialObjects["objects_var_samp_order_by"],
+	variance?:PartialObjects["objects_variance_order_by"]
+},
 	/** aggregate avg on columns */
 ["objects_avg_fields"]: {
 		__typename?: "objects_avg_fields";
 			id?:number
 	},
+	/** order by avg() on columns of table "objects" */
+["objects_avg_order_by"]: {
+	id?:PartialObjects["order_by"]
+},
 	/** Boolean expression to filter rows from the table "objects". All fields are combined with a logical 'AND'. */
 ["objects_bool_exp"]: {
 	_and?:PartialObjects["objects_bool_exp"][],
 	_not?:PartialObjects["objects_bool_exp"],
 	_or?:PartialObjects["objects_bool_exp"][],
+	events?:PartialObjects["events_bool_exp"],
 	id?:PartialObjects["Int_comparison_exp"],
 	name?:PartialObjects["String_comparison_exp"],
 	object_type?:PartialObjects["String_comparison_exp"]
@@ -6737,6 +6165,12 @@ the end). throws an error if top level container is not an array */
 			name?:string,
 			object_type?:string
 	},
+	/** order by max() on columns of table "objects" */
+["objects_max_order_by"]: {
+	id?:PartialObjects["order_by"],
+	name?:PartialObjects["order_by"],
+	object_type?:PartialObjects["order_by"]
+},
 	/** aggregate min on columns */
 ["objects_min_fields"]: {
 		__typename?: "objects_min_fields";
@@ -6744,6 +6178,12 @@ the end). throws an error if top level container is not an array */
 			name?:string,
 			object_type?:string
 	},
+	/** order by min() on columns of table "objects" */
+["objects_min_order_by"]: {
+	id?:PartialObjects["order_by"],
+	name?:PartialObjects["order_by"],
+	object_type?:PartialObjects["order_by"]
+},
 	/** response of any mutation on the table "objects" */
 ["objects_mutation_response"]: {
 		__typename?: "objects_mutation_response";
@@ -6760,6 +6200,7 @@ the end). throws an error if top level container is not an array */
 },
 	/** Ordering options when selecting data from "objects". */
 ["objects_order_by"]: {
+	events_aggregate?:PartialObjects["events_aggregate_order_by"],
 	id?:PartialObjects["order_by"],
 	name?:PartialObjects["order_by"],
 	object_type?:PartialObjects["order_by"]
@@ -6781,16 +6222,28 @@ the end). throws an error if top level container is not an array */
 		__typename?: "objects_stddev_fields";
 			id?:number
 	},
+	/** order by stddev() on columns of table "objects" */
+["objects_stddev_order_by"]: {
+	id?:PartialObjects["order_by"]
+},
 	/** aggregate stddev_pop on columns */
 ["objects_stddev_pop_fields"]: {
 		__typename?: "objects_stddev_pop_fields";
 			id?:number
 	},
+	/** order by stddev_pop() on columns of table "objects" */
+["objects_stddev_pop_order_by"]: {
+	id?:PartialObjects["order_by"]
+},
 	/** aggregate stddev_samp on columns */
 ["objects_stddev_samp_fields"]: {
 		__typename?: "objects_stddev_samp_fields";
 			id?:number
 	},
+	/** order by stddev_samp() on columns of table "objects" */
+["objects_stddev_samp_order_by"]: {
+	id?:PartialObjects["order_by"]
+},
 	/** Streaming cursor of the table "objects" */
 ["objects_stream_cursor_input"]: {
 	/** Stream column input with initial value */
@@ -6809,6 +6262,10 @@ the end). throws an error if top level container is not an array */
 		__typename?: "objects_sum_fields";
 			id?:number
 	},
+	/** order by sum() on columns of table "objects" */
+["objects_sum_order_by"]: {
+	id?:PartialObjects["order_by"]
+},
 	/** update columns of table "objects" */
 ["objects_update_column"]:objects_update_column,
 	["objects_updates"]: {
@@ -6824,16 +6281,28 @@ the end). throws an error if top level container is not an array */
 		__typename?: "objects_var_pop_fields";
 			id?:number
 	},
+	/** order by var_pop() on columns of table "objects" */
+["objects_var_pop_order_by"]: {
+	id?:PartialObjects["order_by"]
+},
 	/** aggregate var_samp on columns */
 ["objects_var_samp_fields"]: {
 		__typename?: "objects_var_samp_fields";
 			id?:number
 	},
+	/** order by var_samp() on columns of table "objects" */
+["objects_var_samp_order_by"]: {
+	id?:PartialObjects["order_by"]
+},
 	/** aggregate variance on columns */
 ["objects_variance_fields"]: {
 		__typename?: "objects_variance_fields";
 			id?:number
 	},
+	/** order by variance() on columns of table "objects" */
+["objects_variance_order_by"]: {
+	id?:PartialObjects["order_by"]
+},
 	/** column ordering options */
 ["order_by"]:order_by,
 	["query_root"]: {
@@ -6848,12 +6317,6 @@ the end). throws an error if top level container is not an array */
 	closest_user_location?:PartialObjects["locations"][],
 			/** execute function "closest_user_location" and query aggregates on result of table type "locations" */
 	closest_user_location_aggregate?:PartialObjects["locations_aggregate"],
-			/** fetch data from the table: "event_tag" */
-	event_tag?:PartialObjects["event_tag"][],
-			/** fetch aggregated fields from the table: "event_tag" */
-	event_tag_aggregate?:PartialObjects["event_tag_aggregate"],
-			/** fetch data from the table: "event_tag" using primary key columns */
-	event_tag_by_pk?:PartialObjects["event_tag"],
 			/** fetch data from the table: "event_types" */
 	event_types?:PartialObjects["event_types"][],
 			/** fetch aggregated fields from the table: "event_types" */
@@ -6978,14 +6441,6 @@ the end). throws an error if top level container is not an array */
 	closest_user_location?:PartialObjects["locations"][],
 			/** execute function "closest_user_location" and query aggregates on result of table type "locations" */
 	closest_user_location_aggregate?:PartialObjects["locations_aggregate"],
-			/** fetch data from the table: "event_tag" */
-	event_tag?:PartialObjects["event_tag"][],
-			/** fetch aggregated fields from the table: "event_tag" */
-	event_tag_aggregate?:PartialObjects["event_tag_aggregate"],
-			/** fetch data from the table: "event_tag" using primary key columns */
-	event_tag_by_pk?:PartialObjects["event_tag"],
-			/** fetch data from the table in a streaming manner: "event_tag" */
-	event_tag_stream?:PartialObjects["event_tag"][],
 			/** fetch data from the table: "event_types" */
 	event_types?:PartialObjects["event_types"][],
 			/** fetch aggregated fields from the table: "event_types" */
@@ -7819,7 +7274,6 @@ the end). throws an error if top level container is not an array */
 export type associations = {
 	__typename?: "associations",
 	id:number,
-	metadata:jsonb,
 	ref_one_id:number,
 	ref_one_table:string,
 	ref_two_id:number,
@@ -7864,11 +7318,6 @@ export type associations_aggregate_order_by = {
 	variance?:associations_variance_order_by
 }
 
-/** append existing jsonb value of filtered columns with new jsonb value */
-export type associations_append_input = {
-		metadata?:jsonb
-}
-
 /** aggregate avg on columns */
 export type associations_avg_fields = {
 	__typename?: "associations_avg_fields",
@@ -7890,7 +7339,6 @@ export type associations_bool_exp = {
 	_not?:associations_bool_exp,
 	_or?:associations_bool_exp[],
 	id?:Int_comparison_exp,
-	metadata?:jsonb_comparison_exp,
 	ref_one_id?:Int_comparison_exp,
 	ref_one_table?:String_comparison_exp,
 	ref_two_id?:Int_comparison_exp,
@@ -7900,22 +7348,6 @@ export type associations_bool_exp = {
 /** unique or primary key constraints on table "associations" */
 export enum associations_constraint {
 	associations_pkey = "associations_pkey"
-}
-
-/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
-export type associations_delete_at_path_input = {
-		metadata?:string[]
-}
-
-/** delete the array element with specified index (negative integers count from the
-end). throws an error if top level container is not an array */
-export type associations_delete_elem_input = {
-		metadata?:number
-}
-
-/** delete key/value pair or string element. key/value pairs are matched based on their key value */
-export type associations_delete_key_input = {
-		metadata?:string
 }
 
 /** input type for incrementing numeric columns in table "associations" */
@@ -7928,7 +7360,6 @@ export type associations_inc_input = {
 /** input type for inserting data into table "associations" */
 export type associations_insert_input = {
 		id?:number,
-	metadata?:jsonb,
 	ref_one_id?:number,
 	ref_one_table?:string,
 	ref_two_id?:number,
@@ -7992,7 +7423,6 @@ export type associations_on_conflict = {
 /** Ordering options when selecting data from "associations". */
 export type associations_order_by = {
 		id?:order_by,
-	metadata?:order_by,
 	ref_one_id?:order_by,
 	ref_one_table?:order_by,
 	ref_two_id?:order_by,
@@ -8004,15 +7434,9 @@ export type associations_pk_columns_input = {
 		id:number
 }
 
-/** prepend existing jsonb value of filtered columns with new jsonb value */
-export type associations_prepend_input = {
-		metadata?:jsonb
-}
-
 /** select columns of table "associations" */
 export enum associations_select_column {
 	id = "id",
-	metadata = "metadata",
 	ref_one_id = "ref_one_id",
 	ref_one_table = "ref_one_table",
 	ref_two_id = "ref_two_id",
@@ -8022,7 +7446,6 @@ export enum associations_select_column {
 /** input type for updating data in table "associations" */
 export type associations_set_input = {
 		id?:number,
-	metadata?:jsonb,
 	ref_one_id?:number,
 	ref_one_table?:string,
 	ref_two_id?:number,
@@ -8085,7 +7508,6 @@ export type associations_stream_cursor_input = {
 /** Initial value of the column from where the streaming should start */
 export type associations_stream_cursor_value_input = {
 		id?:number,
-	metadata?:jsonb,
 	ref_one_id?:number,
 	ref_one_table?:string,
 	ref_two_id?:number,
@@ -8110,7 +7532,6 @@ export type associations_sum_order_by = {
 /** update columns of table "associations" */
 export enum associations_update_column {
 	id = "id",
-	metadata = "metadata",
 	ref_one_id = "ref_one_id",
 	ref_one_table = "ref_one_table",
 	ref_two_id = "ref_two_id",
@@ -8118,19 +7539,8 @@ export enum associations_update_column {
 }
 
 export type associations_updates = {
-		/** append existing jsonb value of filtered columns with new jsonb value */
-	_append?:associations_append_input,
-	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
-	_delete_at_path?:associations_delete_at_path_input,
-	/** delete the array element with specified index (negative integers count from
-the end). throws an error if top level container is not an array */
-	_delete_elem?:associations_delete_elem_input,
-	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
-	_delete_key?:associations_delete_key_input,
-	/** increments the numeric columns with given value of the filtered values */
+		/** increments the numeric columns with given value of the filtered values */
 	_inc?:associations_inc_input,
-	/** prepend existing jsonb value of filtered columns with new jsonb value */
-	_prepend?:associations_prepend_input,
 	/** sets the columns of the filtered rows to the given values */
 	_set?:associations_set_input,
 	/** filter the rows which have to be updated */
@@ -8210,282 +7620,6 @@ export type closest_user_location_users_args = {
 export enum cursor_ordering {
 	ASC = "ASC",
 	DESC = "DESC"
-}
-
-/** columns and relationships of "event_tag" */
-export type event_tag = {
-	__typename?: "event_tag",
-	/** An object relationship */
-	event:events,
-	event_id:number,
-	tag_name:string
-}
-
-/** aggregated selection of "event_tag" */
-export type event_tag_aggregate = {
-	__typename?: "event_tag_aggregate",
-	aggregate?:event_tag_aggregate_fields,
-	nodes:event_tag[]
-}
-
-export type event_tag_aggregate_bool_exp = {
-		count?:event_tag_aggregate_bool_exp_count
-}
-
-export type event_tag_aggregate_bool_exp_count = {
-		arguments?:event_tag_select_column[],
-	distinct?:boolean,
-	filter?:event_tag_bool_exp,
-	predicate:Int_comparison_exp
-}
-
-/** aggregate fields of "event_tag" */
-export type event_tag_aggregate_fields = {
-	__typename?: "event_tag_aggregate_fields",
-	avg?:event_tag_avg_fields,
-	count:number,
-	max?:event_tag_max_fields,
-	min?:event_tag_min_fields,
-	stddev?:event_tag_stddev_fields,
-	stddev_pop?:event_tag_stddev_pop_fields,
-	stddev_samp?:event_tag_stddev_samp_fields,
-	sum?:event_tag_sum_fields,
-	var_pop?:event_tag_var_pop_fields,
-	var_samp?:event_tag_var_samp_fields,
-	variance?:event_tag_variance_fields
-}
-
-/** order by aggregate values of table "event_tag" */
-export type event_tag_aggregate_order_by = {
-		avg?:event_tag_avg_order_by,
-	count?:order_by,
-	max?:event_tag_max_order_by,
-	min?:event_tag_min_order_by,
-	stddev?:event_tag_stddev_order_by,
-	stddev_pop?:event_tag_stddev_pop_order_by,
-	stddev_samp?:event_tag_stddev_samp_order_by,
-	sum?:event_tag_sum_order_by,
-	var_pop?:event_tag_var_pop_order_by,
-	var_samp?:event_tag_var_samp_order_by,
-	variance?:event_tag_variance_order_by
-}
-
-/** input type for inserting array relation for remote table "event_tag" */
-export type event_tag_arr_rel_insert_input = {
-		data:event_tag_insert_input[],
-	/** upsert condition */
-	on_conflict?:event_tag_on_conflict
-}
-
-/** aggregate avg on columns */
-export type event_tag_avg_fields = {
-	__typename?: "event_tag_avg_fields",
-	event_id?:number
-}
-
-/** order by avg() on columns of table "event_tag" */
-export type event_tag_avg_order_by = {
-		event_id?:order_by
-}
-
-/** Boolean expression to filter rows from the table "event_tag". All fields are combined with a logical 'AND'. */
-export type event_tag_bool_exp = {
-		_and?:event_tag_bool_exp[],
-	_not?:event_tag_bool_exp,
-	_or?:event_tag_bool_exp[],
-	event?:events_bool_exp,
-	event_id?:Int_comparison_exp,
-	tag_name?:String_comparison_exp
-}
-
-/** unique or primary key constraints on table "event_tag" */
-export enum event_tag_constraint {
-	event_tag_pkey = "event_tag_pkey"
-}
-
-/** input type for incrementing numeric columns in table "event_tag" */
-export type event_tag_inc_input = {
-		event_id?:number
-}
-
-/** input type for inserting data into table "event_tag" */
-export type event_tag_insert_input = {
-		event?:events_obj_rel_insert_input,
-	event_id?:number,
-	tag_name?:string
-}
-
-/** aggregate max on columns */
-export type event_tag_max_fields = {
-	__typename?: "event_tag_max_fields",
-	event_id?:number,
-	tag_name?:string
-}
-
-/** order by max() on columns of table "event_tag" */
-export type event_tag_max_order_by = {
-		event_id?:order_by,
-	tag_name?:order_by
-}
-
-/** aggregate min on columns */
-export type event_tag_min_fields = {
-	__typename?: "event_tag_min_fields",
-	event_id?:number,
-	tag_name?:string
-}
-
-/** order by min() on columns of table "event_tag" */
-export type event_tag_min_order_by = {
-		event_id?:order_by,
-	tag_name?:order_by
-}
-
-/** response of any mutation on the table "event_tag" */
-export type event_tag_mutation_response = {
-	__typename?: "event_tag_mutation_response",
-	/** number of rows affected by the mutation */
-	affected_rows:number,
-	/** data from the rows affected by the mutation */
-	returning:event_tag[]
-}
-
-/** on_conflict condition type for table "event_tag" */
-export type event_tag_on_conflict = {
-		constraint:event_tag_constraint,
-	update_columns:event_tag_update_column[],
-	where?:event_tag_bool_exp
-}
-
-/** Ordering options when selecting data from "event_tag". */
-export type event_tag_order_by = {
-		event?:events_order_by,
-	event_id?:order_by,
-	tag_name?:order_by
-}
-
-/** primary key columns input for table: event_tag */
-export type event_tag_pk_columns_input = {
-		event_id:number,
-	tag_name:string
-}
-
-/** select columns of table "event_tag" */
-export enum event_tag_select_column {
-	event_id = "event_id",
-	tag_name = "tag_name"
-}
-
-/** input type for updating data in table "event_tag" */
-export type event_tag_set_input = {
-		event_id?:number,
-	tag_name?:string
-}
-
-/** aggregate stddev on columns */
-export type event_tag_stddev_fields = {
-	__typename?: "event_tag_stddev_fields",
-	event_id?:number
-}
-
-/** order by stddev() on columns of table "event_tag" */
-export type event_tag_stddev_order_by = {
-		event_id?:order_by
-}
-
-/** aggregate stddev_pop on columns */
-export type event_tag_stddev_pop_fields = {
-	__typename?: "event_tag_stddev_pop_fields",
-	event_id?:number
-}
-
-/** order by stddev_pop() on columns of table "event_tag" */
-export type event_tag_stddev_pop_order_by = {
-		event_id?:order_by
-}
-
-/** aggregate stddev_samp on columns */
-export type event_tag_stddev_samp_fields = {
-	__typename?: "event_tag_stddev_samp_fields",
-	event_id?:number
-}
-
-/** order by stddev_samp() on columns of table "event_tag" */
-export type event_tag_stddev_samp_order_by = {
-		event_id?:order_by
-}
-
-/** Streaming cursor of the table "event_tag" */
-export type event_tag_stream_cursor_input = {
-		/** Stream column input with initial value */
-	initial_value:event_tag_stream_cursor_value_input,
-	/** cursor ordering */
-	ordering?:cursor_ordering
-}
-
-/** Initial value of the column from where the streaming should start */
-export type event_tag_stream_cursor_value_input = {
-		event_id?:number,
-	tag_name?:string
-}
-
-/** aggregate sum on columns */
-export type event_tag_sum_fields = {
-	__typename?: "event_tag_sum_fields",
-	event_id?:number
-}
-
-/** order by sum() on columns of table "event_tag" */
-export type event_tag_sum_order_by = {
-		event_id?:order_by
-}
-
-/** update columns of table "event_tag" */
-export enum event_tag_update_column {
-	event_id = "event_id",
-	tag_name = "tag_name"
-}
-
-export type event_tag_updates = {
-		/** increments the numeric columns with given value of the filtered values */
-	_inc?:event_tag_inc_input,
-	/** sets the columns of the filtered rows to the given values */
-	_set?:event_tag_set_input,
-	/** filter the rows which have to be updated */
-	where:event_tag_bool_exp
-}
-
-/** aggregate var_pop on columns */
-export type event_tag_var_pop_fields = {
-	__typename?: "event_tag_var_pop_fields",
-	event_id?:number
-}
-
-/** order by var_pop() on columns of table "event_tag" */
-export type event_tag_var_pop_order_by = {
-		event_id?:order_by
-}
-
-/** aggregate var_samp on columns */
-export type event_tag_var_samp_fields = {
-	__typename?: "event_tag_var_samp_fields",
-	event_id?:number
-}
-
-/** order by var_samp() on columns of table "event_tag" */
-export type event_tag_var_samp_order_by = {
-		event_id?:order_by
-}
-
-/** aggregate variance on columns */
-export type event_tag_variance_fields = {
-	__typename?: "event_tag_variance_fields",
-	event_id?:number
-}
-
-/** order by variance() on columns of table "event_tag" */
-export type event_tag_variance_order_by = {
-		event_id?:order_by
 }
 
 /** columns and relationships of "event_types" */
@@ -8740,20 +7874,19 @@ export type events = {
 	/** seconds */
 	cost_time?:number,
 	end_time?:timestamp,
-	/** An array relationship */
-	event_tags:event_tag[],
-	/** An aggregate relationship */
-	event_tags_aggregate:event_tag_aggregate,
 	event_type:string,
 	/** An object relationship */
 	event_type_object:event_types,
-	goal_id?:number,
 	id:number,
 	/** An object relationship */
 	interaction?:interactions,
 	interaction_id?:number,
+	/** A computed field, executes function "event_locations" */
+	locations?:locations[],
 	logs?:jsonb,
 	metadata?:jsonb,
+	/** A computed field, executes function "event_objects" */
+	objects?:objects[],
 	/** An object relationship */
 	parent?:events,
 	parent_id?:number,
@@ -8835,7 +7968,6 @@ export type events_avg_fields = {
 	cost_money?:number,
 	/** seconds */
 	cost_time?:number,
-	goal_id?:number,
 	id?:number,
 	interaction_id?:number,
 	parent_id?:number,
@@ -8848,7 +7980,6 @@ export type events_avg_order_by = {
 	cost_money?:order_by,
 	/** seconds */
 	cost_time?:order_by,
-	goal_id?:order_by,
 	id?:order_by,
 	interaction_id?:order_by,
 	parent_id?:order_by,
@@ -8867,16 +7998,15 @@ export type events_bool_exp = {
 	cost_money?:Int_comparison_exp,
 	cost_time?:Int_comparison_exp,
 	end_time?:timestamp_comparison_exp,
-	event_tags?:event_tag_bool_exp,
-	event_tags_aggregate?:event_tag_aggregate_bool_exp,
 	event_type?:String_comparison_exp,
 	event_type_object?:event_types_bool_exp,
-	goal_id?:Int_comparison_exp,
 	id?:Int_comparison_exp,
 	interaction?:interactions_bool_exp,
 	interaction_id?:Int_comparison_exp,
+	locations?:locations_bool_exp,
 	logs?:jsonb_comparison_exp,
 	metadata?:jsonb_comparison_exp,
+	objects?:objects_bool_exp,
 	parent?:events_bool_exp,
 	parent_id?:Int_comparison_exp,
 	start_time?:timestamp_comparison_exp,
@@ -8915,7 +8045,6 @@ export type events_inc_input = {
 	cost_money?:number,
 	/** seconds */
 	cost_time?:number,
-	goal_id?:number,
 	id?:number,
 	interaction_id?:number,
 	parent_id?:number,
@@ -8930,10 +8059,8 @@ export type events_insert_input = {
 	/** seconds */
 	cost_time?:number,
 	end_time?:timestamp,
-	event_tags?:event_tag_arr_rel_insert_input,
 	event_type?:string,
 	event_type_object?:event_types_obj_rel_insert_input,
-	goal_id?:number,
 	id?:number,
 	interaction?:interactions_obj_rel_insert_input,
 	interaction_id?:number,
@@ -8958,7 +8085,6 @@ export type events_max_fields = {
 	cost_time?:number,
 	end_time?:timestamp,
 	event_type?:string,
-	goal_id?:number,
 	id?:number,
 	interaction_id?:number,
 	parent_id?:number,
@@ -8975,7 +8101,6 @@ export type events_max_order_by = {
 	cost_time?:order_by,
 	end_time?:order_by,
 	event_type?:order_by,
-	goal_id?:order_by,
 	id?:order_by,
 	interaction_id?:order_by,
 	parent_id?:order_by,
@@ -8995,7 +8120,6 @@ export type events_min_fields = {
 	cost_time?:number,
 	end_time?:timestamp,
 	event_type?:string,
-	goal_id?:number,
 	id?:number,
 	interaction_id?:number,
 	parent_id?:number,
@@ -9012,7 +8136,6 @@ export type events_min_order_by = {
 	cost_time?:order_by,
 	end_time?:order_by,
 	event_type?:order_by,
-	goal_id?:order_by,
 	id?:order_by,
 	interaction_id?:order_by,
 	parent_id?:order_by,
@@ -9052,15 +8175,15 @@ export type events_order_by = {
 	cost_money?:order_by,
 	cost_time?:order_by,
 	end_time?:order_by,
-	event_tags_aggregate?:event_tag_aggregate_order_by,
 	event_type?:order_by,
 	event_type_object?:event_types_order_by,
-	goal_id?:order_by,
 	id?:order_by,
 	interaction?:interactions_order_by,
 	interaction_id?:order_by,
+	locations_aggregate?:locations_aggregate_order_by,
 	logs?:order_by,
 	metadata?:order_by,
+	objects_aggregate?:objects_aggregate_order_by,
 	parent?:events_order_by,
 	parent_id?:order_by,
 	start_time?:order_by,
@@ -9086,7 +8209,6 @@ export enum events_select_column {
 	cost_time = "cost_time",
 	end_time = "end_time",
 	event_type = "event_type",
-	goal_id = "goal_id",
 	id = "id",
 	interaction_id = "interaction_id",
 	logs = "logs",
@@ -9105,7 +8227,6 @@ export type events_set_input = {
 	cost_time?:number,
 	end_time?:timestamp,
 	event_type?:string,
-	goal_id?:number,
 	id?:number,
 	interaction_id?:number,
 	logs?:jsonb,
@@ -9125,7 +8246,6 @@ export type events_stddev_fields = {
 	cost_money?:number,
 	/** seconds */
 	cost_time?:number,
-	goal_id?:number,
 	id?:number,
 	interaction_id?:number,
 	parent_id?:number,
@@ -9138,7 +8258,6 @@ export type events_stddev_order_by = {
 	cost_money?:order_by,
 	/** seconds */
 	cost_time?:order_by,
-	goal_id?:order_by,
 	id?:order_by,
 	interaction_id?:order_by,
 	parent_id?:order_by,
@@ -9154,7 +8273,6 @@ export type events_stddev_pop_fields = {
 	cost_money?:number,
 	/** seconds */
 	cost_time?:number,
-	goal_id?:number,
 	id?:number,
 	interaction_id?:number,
 	parent_id?:number,
@@ -9167,7 +8285,6 @@ export type events_stddev_pop_order_by = {
 	cost_money?:order_by,
 	/** seconds */
 	cost_time?:order_by,
-	goal_id?:order_by,
 	id?:order_by,
 	interaction_id?:order_by,
 	parent_id?:order_by,
@@ -9183,7 +8300,6 @@ export type events_stddev_samp_fields = {
 	cost_money?:number,
 	/** seconds */
 	cost_time?:number,
-	goal_id?:number,
 	id?:number,
 	interaction_id?:number,
 	parent_id?:number,
@@ -9196,7 +8312,6 @@ export type events_stddev_samp_order_by = {
 	cost_money?:order_by,
 	/** seconds */
 	cost_time?:order_by,
-	goal_id?:order_by,
 	id?:order_by,
 	interaction_id?:order_by,
 	parent_id?:order_by,
@@ -9219,7 +8334,6 @@ export type events_stream_cursor_value_input = {
 	cost_time?:number,
 	end_time?:timestamp,
 	event_type?:string,
-	goal_id?:number,
 	id?:number,
 	interaction_id?:number,
 	logs?:jsonb,
@@ -9239,7 +8353,6 @@ export type events_sum_fields = {
 	cost_money?:number,
 	/** seconds */
 	cost_time?:number,
-	goal_id?:number,
 	id?:number,
 	interaction_id?:number,
 	parent_id?:number,
@@ -9252,7 +8365,6 @@ export type events_sum_order_by = {
 	cost_money?:order_by,
 	/** seconds */
 	cost_time?:order_by,
-	goal_id?:order_by,
 	id?:order_by,
 	interaction_id?:order_by,
 	parent_id?:order_by,
@@ -9265,7 +8377,6 @@ export enum events_update_column {
 	cost_time = "cost_time",
 	end_time = "end_time",
 	event_type = "event_type",
-	goal_id = "goal_id",
 	id = "id",
 	interaction_id = "interaction_id",
 	logs = "logs",
@@ -9305,7 +8416,6 @@ export type events_var_pop_fields = {
 	cost_money?:number,
 	/** seconds */
 	cost_time?:number,
-	goal_id?:number,
 	id?:number,
 	interaction_id?:number,
 	parent_id?:number,
@@ -9318,7 +8428,6 @@ export type events_var_pop_order_by = {
 	cost_money?:order_by,
 	/** seconds */
 	cost_time?:order_by,
-	goal_id?:order_by,
 	id?:order_by,
 	interaction_id?:order_by,
 	parent_id?:order_by,
@@ -9334,7 +8443,6 @@ export type events_var_samp_fields = {
 	cost_money?:number,
 	/** seconds */
 	cost_time?:number,
-	goal_id?:number,
 	id?:number,
 	interaction_id?:number,
 	parent_id?:number,
@@ -9347,7 +8455,6 @@ export type events_var_samp_order_by = {
 	cost_money?:order_by,
 	/** seconds */
 	cost_time?:order_by,
-	goal_id?:order_by,
 	id?:order_by,
 	interaction_id?:order_by,
 	parent_id?:order_by,
@@ -9363,7 +8470,6 @@ export type events_variance_fields = {
 	cost_money?:number,
 	/** seconds */
 	cost_time?:number,
-	goal_id?:number,
 	id?:number,
 	interaction_id?:number,
 	parent_id?:number,
@@ -9376,7 +8482,6 @@ export type events_variance_order_by = {
 	cost_money?:order_by,
 	/** seconds */
 	cost_time?:order_by,
-	goal_id?:order_by,
 	id?:order_by,
 	interaction_id?:order_by,
 	parent_id?:order_by,
@@ -9790,7 +8895,7 @@ export type interactions = {
 	id:number,
 	match_score:float8,
 	timestamp?:timestamptz,
-	transcode_version?:number,
+	transcode_version:number,
 	user_id:number
 }
 
@@ -10473,10 +9578,6 @@ export type mutation_root = {
 	delete_associations?:associations_mutation_response,
 	/** delete single row from the table: "associations" */
 	delete_associations_by_pk?:associations,
-	/** delete data from the table: "event_tag" */
-	delete_event_tag?:event_tag_mutation_response,
-	/** delete single row from the table: "event_tag" */
-	delete_event_tag_by_pk?:event_tag,
 	/** delete data from the table: "event_types" */
 	delete_event_types?:event_types_mutation_response,
 	/** delete single row from the table: "event_types" */
@@ -10521,10 +9622,6 @@ export type mutation_root = {
 	insert_associations?:associations_mutation_response,
 	/** insert a single row into the table: "associations" */
 	insert_associations_one?:associations,
-	/** insert data into the table: "event_tag" */
-	insert_event_tag?:event_tag_mutation_response,
-	/** insert a single row into the table: "event_tag" */
-	insert_event_tag_one?:event_tag,
 	/** insert data into the table: "event_types" */
 	insert_event_types?:event_types_mutation_response,
 	/** insert a single row into the table: "event_types" */
@@ -10571,12 +9668,6 @@ export type mutation_root = {
 	update_associations_by_pk?:associations,
 	/** update multiples rows of table: "associations" */
 	update_associations_many?:(associations_mutation_response | undefined)[],
-	/** update data of the table: "event_tag" */
-	update_event_tag?:event_tag_mutation_response,
-	/** update single row of the table: "event_tag" */
-	update_event_tag_by_pk?:event_tag,
-	/** update multiples rows of table: "event_tag" */
-	update_event_tag_many?:(event_tag_mutation_response | undefined)[],
 	/** update data of the table: "event_types" */
 	update_event_types?:event_types_mutation_response,
 	/** update single row of the table: "event_types" */
@@ -10799,6 +9890,8 @@ the end). throws an error if top level container is not an array */
 /** columns and relationships of "objects" */
 export type objects = {
 	__typename?: "objects",
+	/** A computed field, executes function "object_events" */
+	events?:events[],
 	id:number,
 	name:string,
 	object_type:string
@@ -10827,10 +9920,30 @@ export type objects_aggregate_fields = {
 	variance?:objects_variance_fields
 }
 
+/** order by aggregate values of table "objects" */
+export type objects_aggregate_order_by = {
+		avg?:objects_avg_order_by,
+	count?:order_by,
+	max?:objects_max_order_by,
+	min?:objects_min_order_by,
+	stddev?:objects_stddev_order_by,
+	stddev_pop?:objects_stddev_pop_order_by,
+	stddev_samp?:objects_stddev_samp_order_by,
+	sum?:objects_sum_order_by,
+	var_pop?:objects_var_pop_order_by,
+	var_samp?:objects_var_samp_order_by,
+	variance?:objects_variance_order_by
+}
+
 /** aggregate avg on columns */
 export type objects_avg_fields = {
 	__typename?: "objects_avg_fields",
 	id?:number
+}
+
+/** order by avg() on columns of table "objects" */
+export type objects_avg_order_by = {
+		id?:order_by
 }
 
 /** Boolean expression to filter rows from the table "objects". All fields are combined with a logical 'AND'. */
@@ -10838,6 +9951,7 @@ export type objects_bool_exp = {
 		_and?:objects_bool_exp[],
 	_not?:objects_bool_exp,
 	_or?:objects_bool_exp[],
+	events?:events_bool_exp,
 	id?:Int_comparison_exp,
 	name?:String_comparison_exp,
 	object_type?:String_comparison_exp
@@ -10868,12 +9982,26 @@ export type objects_max_fields = {
 	object_type?:string
 }
 
+/** order by max() on columns of table "objects" */
+export type objects_max_order_by = {
+		id?:order_by,
+	name?:order_by,
+	object_type?:order_by
+}
+
 /** aggregate min on columns */
 export type objects_min_fields = {
 	__typename?: "objects_min_fields",
 	id?:number,
 	name?:string,
 	object_type?:string
+}
+
+/** order by min() on columns of table "objects" */
+export type objects_min_order_by = {
+		id?:order_by,
+	name?:order_by,
+	object_type?:order_by
 }
 
 /** response of any mutation on the table "objects" */
@@ -10894,7 +10022,8 @@ export type objects_on_conflict = {
 
 /** Ordering options when selecting data from "objects". */
 export type objects_order_by = {
-		id?:order_by,
+		events_aggregate?:events_aggregate_order_by,
+	id?:order_by,
 	name?:order_by,
 	object_type?:order_by
 }
@@ -10924,16 +10053,31 @@ export type objects_stddev_fields = {
 	id?:number
 }
 
+/** order by stddev() on columns of table "objects" */
+export type objects_stddev_order_by = {
+		id?:order_by
+}
+
 /** aggregate stddev_pop on columns */
 export type objects_stddev_pop_fields = {
 	__typename?: "objects_stddev_pop_fields",
 	id?:number
 }
 
+/** order by stddev_pop() on columns of table "objects" */
+export type objects_stddev_pop_order_by = {
+		id?:order_by
+}
+
 /** aggregate stddev_samp on columns */
 export type objects_stddev_samp_fields = {
 	__typename?: "objects_stddev_samp_fields",
 	id?:number
+}
+
+/** order by stddev_samp() on columns of table "objects" */
+export type objects_stddev_samp_order_by = {
+		id?:order_by
 }
 
 /** Streaming cursor of the table "objects" */
@@ -10955,6 +10099,11 @@ export type objects_stream_cursor_value_input = {
 export type objects_sum_fields = {
 	__typename?: "objects_sum_fields",
 	id?:number
+}
+
+/** order by sum() on columns of table "objects" */
+export type objects_sum_order_by = {
+		id?:order_by
 }
 
 /** update columns of table "objects" */
@@ -10979,16 +10128,31 @@ export type objects_var_pop_fields = {
 	id?:number
 }
 
+/** order by var_pop() on columns of table "objects" */
+export type objects_var_pop_order_by = {
+		id?:order_by
+}
+
 /** aggregate var_samp on columns */
 export type objects_var_samp_fields = {
 	__typename?: "objects_var_samp_fields",
 	id?:number
 }
 
+/** order by var_samp() on columns of table "objects" */
+export type objects_var_samp_order_by = {
+		id?:order_by
+}
+
 /** aggregate variance on columns */
 export type objects_variance_fields = {
 	__typename?: "objects_variance_fields",
 	id?:number
+}
+
+/** order by variance() on columns of table "objects" */
+export type objects_variance_order_by = {
+		id?:order_by
 }
 
 /** column ordering options */
@@ -11013,12 +10177,6 @@ export type query_root = {
 	closest_user_location:locations[],
 	/** execute function "closest_user_location" and query aggregates on result of table type "locations" */
 	closest_user_location_aggregate:locations_aggregate,
-	/** fetch data from the table: "event_tag" */
-	event_tag:event_tag[],
-	/** fetch aggregated fields from the table: "event_tag" */
-	event_tag_aggregate:event_tag_aggregate,
-	/** fetch data from the table: "event_tag" using primary key columns */
-	event_tag_by_pk?:event_tag,
 	/** fetch data from the table: "event_types" */
 	event_types:event_types[],
 	/** fetch aggregated fields from the table: "event_types" */
@@ -11147,14 +10305,6 @@ export type subscription_root = {
 	closest_user_location:locations[],
 	/** execute function "closest_user_location" and query aggregates on result of table type "locations" */
 	closest_user_location_aggregate:locations_aggregate,
-	/** fetch data from the table: "event_tag" */
-	event_tag:event_tag[],
-	/** fetch aggregated fields from the table: "event_tag" */
-	event_tag_aggregate:event_tag_aggregate,
-	/** fetch data from the table: "event_tag" using primary key columns */
-	event_tag_by_pk?:event_tag,
-	/** fetch data from the table in a streaming manner: "event_tag" */
-	event_tag_stream:event_tag[],
 	/** fetch data from the table: "event_types" */
 	event_types:event_types[],
 	/** fetch aggregated fields from the table: "event_types" */
@@ -12154,16 +11304,6 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	associations:{
-		metadata:{
-			path:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
-		}
-	},
 	associations_aggregate_fields:{
 		count:{
 			columns:{
@@ -12248,14 +11388,6 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	associations_append_input:{
-		metadata:{
-			type:"jsonb",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
 	associations_avg_order_by:{
 		id:{
 			type:"order_by",
@@ -12301,12 +11433,6 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		metadata:{
-			type:"jsonb_comparison_exp",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
 		ref_one_id:{
 			type:"Int_comparison_exp",
 			array:false,
@@ -12333,30 +11459,6 @@ export const AllTypesProps: Record<string,any> = {
 		}
 	},
 	associations_constraint: "enum",
-	associations_delete_at_path_input:{
-		metadata:{
-			type:"String",
-			array:true,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	associations_delete_elem_input:{
-		metadata:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	associations_delete_key_input:{
-		metadata:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
 	associations_inc_input:{
 		id:{
 			type:"Int",
@@ -12380,12 +11482,6 @@ export const AllTypesProps: Record<string,any> = {
 	associations_insert_input:{
 		id:{
 			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		metadata:{
-			type:"jsonb",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -12506,12 +11602,6 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		metadata:{
-			type:"order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
 		ref_one_id:{
 			type:"order_by",
 			array:false,
@@ -12545,24 +11635,10 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	associations_prepend_input:{
-		metadata:{
-			type:"jsonb",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
 	associations_select_column: "enum",
 	associations_set_input:{
 		id:{
 			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		metadata:{
-			type:"jsonb",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -12673,12 +11749,6 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		metadata:{
-			type:"jsonb",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
 		ref_one_id:{
 			type:"Int",
 			array:false,
@@ -12726,38 +11796,8 @@ export const AllTypesProps: Record<string,any> = {
 	},
 	associations_update_column: "enum",
 	associations_updates:{
-		_append:{
-			type:"associations_append_input",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		_delete_at_path:{
-			type:"associations_delete_at_path_input",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		_delete_elem:{
-			type:"associations_delete_elem_input",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		_delete_key:{
-			type:"associations_delete_key_input",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
 		_inc:{
 			type:"associations_inc_input",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		_prepend:{
-			type:"associations_prepend_input",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -12926,415 +11966,6 @@ export const AllTypesProps: Record<string,any> = {
 		}
 	},
 	cursor_ordering: "enum",
-	event_tag_aggregate_bool_exp:{
-		count:{
-			type:"event_tag_aggregate_bool_exp_count",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	event_tag_aggregate_bool_exp_count:{
-		arguments:{
-			type:"event_tag_select_column",
-			array:true,
-			arrayRequired:false,
-			required:true
-		},
-		distinct:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		filter:{
-			type:"event_tag_bool_exp",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		predicate:{
-			type:"Int_comparison_exp",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	event_tag_aggregate_fields:{
-		count:{
-			columns:{
-				type:"event_tag_select_column",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			distinct:{
-				type:"Boolean",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
-		}
-	},
-	event_tag_aggregate_order_by:{
-		avg:{
-			type:"event_tag_avg_order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		count:{
-			type:"order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		max:{
-			type:"event_tag_max_order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		min:{
-			type:"event_tag_min_order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		stddev:{
-			type:"event_tag_stddev_order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		stddev_pop:{
-			type:"event_tag_stddev_pop_order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		stddev_samp:{
-			type:"event_tag_stddev_samp_order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		sum:{
-			type:"event_tag_sum_order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		var_pop:{
-			type:"event_tag_var_pop_order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		var_samp:{
-			type:"event_tag_var_samp_order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		variance:{
-			type:"event_tag_variance_order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	event_tag_arr_rel_insert_input:{
-		data:{
-			type:"event_tag_insert_input",
-			array:true,
-			arrayRequired:true,
-			required:true
-		},
-		on_conflict:{
-			type:"event_tag_on_conflict",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	event_tag_avg_order_by:{
-		event_id:{
-			type:"order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	event_tag_bool_exp:{
-		_and:{
-			type:"event_tag_bool_exp",
-			array:true,
-			arrayRequired:false,
-			required:true
-		},
-		_not:{
-			type:"event_tag_bool_exp",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		_or:{
-			type:"event_tag_bool_exp",
-			array:true,
-			arrayRequired:false,
-			required:true
-		},
-		event:{
-			type:"events_bool_exp",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		event_id:{
-			type:"Int_comparison_exp",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		tag_name:{
-			type:"String_comparison_exp",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	event_tag_constraint: "enum",
-	event_tag_inc_input:{
-		event_id:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	event_tag_insert_input:{
-		event:{
-			type:"events_obj_rel_insert_input",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		event_id:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		tag_name:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	event_tag_max_order_by:{
-		event_id:{
-			type:"order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		tag_name:{
-			type:"order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	event_tag_min_order_by:{
-		event_id:{
-			type:"order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		tag_name:{
-			type:"order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	event_tag_on_conflict:{
-		constraint:{
-			type:"event_tag_constraint",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		update_columns:{
-			type:"event_tag_update_column",
-			array:true,
-			arrayRequired:true,
-			required:true
-		},
-		where:{
-			type:"event_tag_bool_exp",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	event_tag_order_by:{
-		event:{
-			type:"events_order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		event_id:{
-			type:"order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		tag_name:{
-			type:"order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	event_tag_pk_columns_input:{
-		event_id:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		tag_name:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	event_tag_select_column: "enum",
-	event_tag_set_input:{
-		event_id:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		tag_name:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	event_tag_stddev_order_by:{
-		event_id:{
-			type:"order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	event_tag_stddev_pop_order_by:{
-		event_id:{
-			type:"order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	event_tag_stddev_samp_order_by:{
-		event_id:{
-			type:"order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	event_tag_stream_cursor_input:{
-		initial_value:{
-			type:"event_tag_stream_cursor_value_input",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		ordering:{
-			type:"cursor_ordering",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	event_tag_stream_cursor_value_input:{
-		event_id:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		tag_name:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	event_tag_sum_order_by:{
-		event_id:{
-			type:"order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	event_tag_update_column: "enum",
-	event_tag_updates:{
-		_inc:{
-			type:"event_tag_inc_input",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		_set:{
-			type:"event_tag_set_input",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		where:{
-			type:"event_tag_bool_exp",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	event_tag_var_pop_order_by:{
-		event_id:{
-			type:"order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	event_tag_var_samp_order_by:{
-		event_id:{
-			type:"order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	event_tag_variance_order_by:{
-		event_id:{
-			type:"order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
 	event_types:{
 		children:{
 			distinct_on:{
@@ -13945,9 +12576,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		event_tags:{
+		locations:{
 			distinct_on:{
-				type:"event_tag_select_column",
+				type:"locations_select_column",
 				array:true,
 				arrayRequired:false,
 				required:true
@@ -13965,45 +12596,13 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			},
 			order_by:{
-				type:"event_tag_order_by",
+				type:"locations_order_by",
 				array:true,
 				arrayRequired:false,
 				required:true
 			},
 			where:{
-				type:"event_tag_bool_exp",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
-		},
-		event_tags_aggregate:{
-			distinct_on:{
-				type:"event_tag_select_column",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			limit:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			order_by:{
-				type:"event_tag_order_by",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			where:{
-				type:"event_tag_bool_exp",
+				type:"locations_bool_exp",
 				array:false,
 				arrayRequired:false,
 				required:false
@@ -14020,6 +12619,38 @@ export const AllTypesProps: Record<string,any> = {
 		metadata:{
 			path:{
 				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		objects:{
+			distinct_on:{
+				type:"objects_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"objects_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"objects_bool_exp",
 				array:false,
 				arrayRequired:false,
 				required:false
@@ -14185,12 +12816,6 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		goal_id:{
-			type:"order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
 		id:{
 			type:"order_by",
 			array:false,
@@ -14277,18 +12902,6 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		event_tags:{
-			type:"event_tag_bool_exp",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		event_tags_aggregate:{
-			type:"event_tag_aggregate_bool_exp",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
 		event_type:{
 			type:"String_comparison_exp",
 			array:false,
@@ -14297,12 +12910,6 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		event_type_object:{
 			type:"event_types_bool_exp",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		goal_id:{
-			type:"Int_comparison_exp",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -14325,6 +12932,12 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
+		locations:{
+			type:"locations_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		logs:{
 			type:"jsonb_comparison_exp",
 			array:false,
@@ -14333,6 +12946,12 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		metadata:{
 			type:"jsonb_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		objects:{
+			type:"objects_bool_exp",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -14430,12 +13049,6 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		goal_id:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
 		id:{
 			type:"Int",
 			array:false,
@@ -14486,12 +13099,6 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		event_tags:{
-			type:"event_tag_arr_rel_insert_input",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
 		event_type:{
 			type:"String",
 			array:false,
@@ -14500,12 +13107,6 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		event_type_object:{
 			type:"event_types_obj_rel_insert_input",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		goal_id:{
-			type:"Int",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -14602,12 +13203,6 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		goal_id:{
-			type:"order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
 		id:{
 			type:"order_by",
 			array:false,
@@ -14665,12 +13260,6 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		},
 		event_type:{
-			type:"order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		goal_id:{
 			type:"order_by",
 			array:false,
 			arrayRequired:false,
@@ -14784,12 +13373,6 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		event_tags_aggregate:{
-			type:"event_tag_aggregate_order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
 		event_type:{
 			type:"order_by",
 			array:false,
@@ -14798,12 +13381,6 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		event_type_object:{
 			type:"event_types_order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		goal_id:{
-			type:"order_by",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -14826,6 +13403,12 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
+		locations_aggregate:{
+			type:"locations_aggregate_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		logs:{
 			type:"order_by",
 			array:false,
@@ -14834,6 +13417,12 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		metadata:{
 			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		objects_aggregate:{
+			type:"objects_aggregate_order_by",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -14923,12 +13512,6 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		goal_id:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
 		id:{
 			type:"Int",
 			array:false,
@@ -14991,12 +13574,6 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		goal_id:{
-			type:"order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
 		id:{
 			type:"order_by",
 			array:false,
@@ -15035,12 +13612,6 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		goal_id:{
-			type:"order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
 		id:{
 			type:"order_by",
 			array:false,
@@ -15074,12 +13645,6 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		},
 		cost_time:{
-			type:"order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		goal_id:{
 			type:"order_by",
 			array:false,
 			arrayRequired:false,
@@ -15149,12 +13714,6 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		goal_id:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
 		id:{
 			type:"Int",
 			array:false,
@@ -15212,12 +13771,6 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		},
 		cost_time:{
-			type:"order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		goal_id:{
 			type:"order_by",
 			array:false,
 			arrayRequired:false,
@@ -15312,12 +13865,6 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		goal_id:{
-			type:"order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
 		id:{
 			type:"order_by",
 			array:false,
@@ -15356,12 +13903,6 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		goal_id:{
-			type:"order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
 		id:{
 			type:"order_by",
 			array:false,
@@ -15395,12 +13936,6 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		},
 		cost_time:{
-			type:"order_by",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		goal_id:{
 			type:"order_by",
 			array:false,
 			arrayRequired:false,
@@ -17539,28 +16074,6 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		delete_event_tag:{
-			where:{
-				type:"event_tag_bool_exp",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		delete_event_tag_by_pk:{
-			event_id:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:true
-			},
-			tag_name:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
 		delete_event_types:{
 			where:{
 				type:"event_types_bool_exp",
@@ -17744,34 +16257,6 @@ export const AllTypesProps: Record<string,any> = {
 			},
 			on_conflict:{
 				type:"associations_on_conflict",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
-		},
-		insert_event_tag:{
-			objects:{
-				type:"event_tag_insert_input",
-				array:true,
-				arrayRequired:true,
-				required:true
-			},
-			on_conflict:{
-				type:"event_tag_on_conflict",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
-		},
-		insert_event_tag_one:{
-			object:{
-				type:"event_tag_insert_input",
-				array:false,
-				arrayRequired:false,
-				required:true
-			},
-			on_conflict:{
-				type:"event_tag_on_conflict",
 				array:false,
 				arrayRequired:false,
 				required:false
@@ -18058,38 +16543,8 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		},
 		update_associations:{
-			_append:{
-				type:"associations_append_input",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			_delete_at_path:{
-				type:"associations_delete_at_path_input",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			_delete_elem:{
-				type:"associations_delete_elem_input",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			_delete_key:{
-				type:"associations_delete_key_input",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
 			_inc:{
 				type:"associations_inc_input",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			_prepend:{
-				type:"associations_prepend_input",
 				array:false,
 				arrayRequired:false,
 				required:false
@@ -18108,38 +16563,8 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		},
 		update_associations_by_pk:{
-			_append:{
-				type:"associations_append_input",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			_delete_at_path:{
-				type:"associations_delete_at_path_input",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			_delete_elem:{
-				type:"associations_delete_elem_input",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			_delete_key:{
-				type:"associations_delete_key_input",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
 			_inc:{
 				type:"associations_inc_input",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			_prepend:{
-				type:"associations_prepend_input",
 				array:false,
 				arrayRequired:false,
 				required:false
@@ -18160,54 +16585,6 @@ export const AllTypesProps: Record<string,any> = {
 		update_associations_many:{
 			updates:{
 				type:"associations_updates",
-				array:true,
-				arrayRequired:true,
-				required:true
-			}
-		},
-		update_event_tag:{
-			_inc:{
-				type:"event_tag_inc_input",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			_set:{
-				type:"event_tag_set_input",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			where:{
-				type:"event_tag_bool_exp",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		update_event_tag_by_pk:{
-			_inc:{
-				type:"event_tag_inc_input",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			_set:{
-				type:"event_tag_set_input",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			pk_columns:{
-				type:"event_tag_pk_columns_input",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		update_event_tag_many:{
-			updates:{
-				type:"event_tag_updates",
 				array:true,
 				arrayRequired:true,
 				required:true
@@ -19333,6 +17710,40 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
+	objects:{
+		events:{
+			distinct_on:{
+				type:"events_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"events_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"events_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		}
+	},
 	objects_aggregate_fields:{
 		count:{
 			columns:{
@@ -19347,6 +17758,82 @@ export const AllTypesProps: Record<string,any> = {
 				arrayRequired:false,
 				required:false
 			}
+		}
+	},
+	objects_aggregate_order_by:{
+		avg:{
+			type:"objects_avg_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		count:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		max:{
+			type:"objects_max_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		min:{
+			type:"objects_min_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		stddev:{
+			type:"objects_stddev_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		stddev_pop:{
+			type:"objects_stddev_pop_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		stddev_samp:{
+			type:"objects_stddev_samp_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		sum:{
+			type:"objects_sum_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		var_pop:{
+			type:"objects_var_pop_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		var_samp:{
+			type:"objects_var_samp_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		variance:{
+			type:"objects_variance_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	objects_avg_order_by:{
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	objects_bool_exp:{
@@ -19367,6 +17854,12 @@ export const AllTypesProps: Record<string,any> = {
 			array:true,
 			arrayRequired:false,
 			required:true
+		},
+		events:{
+			type:"events_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
 		},
 		id:{
 			type:"Int_comparison_exp",
@@ -19416,6 +17909,46 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
+	objects_max_order_by:{
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		name:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_type:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	objects_min_order_by:{
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		name:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_type:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
 	objects_on_conflict:{
 		constraint:{
 			type:"objects_constraint",
@@ -19437,6 +17970,12 @@ export const AllTypesProps: Record<string,any> = {
 		}
 	},
 	objects_order_by:{
+		events_aggregate:{
+			type:"events_aggregate_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		id:{
 			type:"order_by",
 			array:false,
@@ -19485,6 +18024,30 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
+	objects_stddev_order_by:{
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	objects_stddev_pop_order_by:{
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	objects_stddev_samp_order_by:{
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
 	objects_stream_cursor_input:{
 		initial_value:{
 			type:"objects_stream_cursor_value_input",
@@ -19519,6 +18082,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
+	objects_sum_order_by:{
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
 	objects_update_column: "enum",
 	objects_updates:{
 		_inc:{
@@ -19538,6 +18109,30 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:true
+		}
+	},
+	objects_var_pop_order_by:{
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	objects_var_samp_order_by:{
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	objects_variance_order_by:{
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	order_by: "enum",
@@ -19688,84 +18283,6 @@ export const AllTypesProps: Record<string,any> = {
 				array:false,
 				arrayRequired:false,
 				required:false
-			}
-		},
-		event_tag:{
-			distinct_on:{
-				type:"event_tag_select_column",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			limit:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			order_by:{
-				type:"event_tag_order_by",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			where:{
-				type:"event_tag_bool_exp",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
-		},
-		event_tag_aggregate:{
-			distinct_on:{
-				type:"event_tag_select_column",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			limit:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			order_by:{
-				type:"event_tag_order_by",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			where:{
-				type:"event_tag_bool_exp",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
-		},
-		event_tag_by_pk:{
-			event_id:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:true
-			},
-			tag_name:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:true
 			}
 		},
 		event_types:{
@@ -20955,104 +19472,6 @@ export const AllTypesProps: Record<string,any> = {
 			},
 			where:{
 				type:"locations_bool_exp",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
-		},
-		event_tag:{
-			distinct_on:{
-				type:"event_tag_select_column",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			limit:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			order_by:{
-				type:"event_tag_order_by",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			where:{
-				type:"event_tag_bool_exp",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
-		},
-		event_tag_aggregate:{
-			distinct_on:{
-				type:"event_tag_select_column",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			limit:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			order_by:{
-				type:"event_tag_order_by",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			where:{
-				type:"event_tag_bool_exp",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
-		},
-		event_tag_by_pk:{
-			event_id:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:true
-			},
-			tag_name:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		event_tag_stream:{
-			batch_size:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:true
-			},
-			cursor:{
-				type:"event_tag_stream_cursor_input",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			where:{
-				type:"event_tag_bool_exp",
 				array:false,
 				arrayRequired:false,
 				required:false
@@ -23721,7 +22140,6 @@ export const AllTypesProps: Record<string,any> = {
 export const ReturnTypes: Record<string,any> = {
 	associations:{
 		id:"Int",
-		metadata:"jsonb",
 		ref_one_id:"Int",
 		ref_one_table:"String",
 		ref_two_id:"Int",
@@ -23802,64 +22220,6 @@ export const ReturnTypes: Record<string,any> = {
 		ref_one_id:"Float",
 		ref_two_id:"Float"
 	},
-	event_tag:{
-		event:"events",
-		event_id:"Int",
-		tag_name:"String"
-	},
-	event_tag_aggregate:{
-		aggregate:"event_tag_aggregate_fields",
-		nodes:"event_tag"
-	},
-	event_tag_aggregate_fields:{
-		avg:"event_tag_avg_fields",
-		count:"Int",
-		max:"event_tag_max_fields",
-		min:"event_tag_min_fields",
-		stddev:"event_tag_stddev_fields",
-		stddev_pop:"event_tag_stddev_pop_fields",
-		stddev_samp:"event_tag_stddev_samp_fields",
-		sum:"event_tag_sum_fields",
-		var_pop:"event_tag_var_pop_fields",
-		var_samp:"event_tag_var_samp_fields",
-		variance:"event_tag_variance_fields"
-	},
-	event_tag_avg_fields:{
-		event_id:"Float"
-	},
-	event_tag_max_fields:{
-		event_id:"Int",
-		tag_name:"String"
-	},
-	event_tag_min_fields:{
-		event_id:"Int",
-		tag_name:"String"
-	},
-	event_tag_mutation_response:{
-		affected_rows:"Int",
-		returning:"event_tag"
-	},
-	event_tag_stddev_fields:{
-		event_id:"Float"
-	},
-	event_tag_stddev_pop_fields:{
-		event_id:"Float"
-	},
-	event_tag_stddev_samp_fields:{
-		event_id:"Float"
-	},
-	event_tag_sum_fields:{
-		event_id:"Int"
-	},
-	event_tag_var_pop_fields:{
-		event_id:"Float"
-	},
-	event_tag_var_samp_fields:{
-		event_id:"Float"
-	},
-	event_tag_variance_fields:{
-		event_id:"Float"
-	},
 	event_types:{
 		children:"event_types",
 		children_aggregate:"event_types_aggregate",
@@ -23900,16 +22260,15 @@ export const ReturnTypes: Record<string,any> = {
 		cost_money:"Int",
 		cost_time:"Int",
 		end_time:"timestamp",
-		event_tags:"event_tag",
-		event_tags_aggregate:"event_tag_aggregate",
 		event_type:"String",
 		event_type_object:"event_types",
-		goal_id:"Int",
 		id:"Int",
 		interaction:"interactions",
 		interaction_id:"Int",
+		locations:"locations",
 		logs:"jsonb",
 		metadata:"jsonb",
+		objects:"objects",
 		parent:"events",
 		parent_id:"Int",
 		start_time:"timestamp",
@@ -23938,7 +22297,6 @@ export const ReturnTypes: Record<string,any> = {
 		computed_cost_time:"Int",
 		cost_money:"Float",
 		cost_time:"Float",
-		goal_id:"Float",
 		id:"Float",
 		interaction_id:"Float",
 		parent_id:"Float",
@@ -23950,7 +22308,6 @@ export const ReturnTypes: Record<string,any> = {
 		cost_time:"Int",
 		end_time:"timestamp",
 		event_type:"String",
-		goal_id:"Int",
 		id:"Int",
 		interaction_id:"Int",
 		parent_id:"Int",
@@ -23964,7 +22321,6 @@ export const ReturnTypes: Record<string,any> = {
 		cost_time:"Int",
 		end_time:"timestamp",
 		event_type:"String",
-		goal_id:"Int",
 		id:"Int",
 		interaction_id:"Int",
 		parent_id:"Int",
@@ -23980,7 +22336,6 @@ export const ReturnTypes: Record<string,any> = {
 		computed_cost_time:"Int",
 		cost_money:"Float",
 		cost_time:"Float",
-		goal_id:"Float",
 		id:"Float",
 		interaction_id:"Float",
 		parent_id:"Float",
@@ -23990,7 +22345,6 @@ export const ReturnTypes: Record<string,any> = {
 		computed_cost_time:"Int",
 		cost_money:"Float",
 		cost_time:"Float",
-		goal_id:"Float",
 		id:"Float",
 		interaction_id:"Float",
 		parent_id:"Float",
@@ -24000,7 +22354,6 @@ export const ReturnTypes: Record<string,any> = {
 		computed_cost_time:"Int",
 		cost_money:"Float",
 		cost_time:"Float",
-		goal_id:"Float",
 		id:"Float",
 		interaction_id:"Float",
 		parent_id:"Float",
@@ -24010,7 +22363,6 @@ export const ReturnTypes: Record<string,any> = {
 		computed_cost_time:"Int",
 		cost_money:"Int",
 		cost_time:"Int",
-		goal_id:"Int",
 		id:"Int",
 		interaction_id:"Int",
 		parent_id:"Int",
@@ -24020,7 +22372,6 @@ export const ReturnTypes: Record<string,any> = {
 		computed_cost_time:"Int",
 		cost_money:"Float",
 		cost_time:"Float",
-		goal_id:"Float",
 		id:"Float",
 		interaction_id:"Float",
 		parent_id:"Float",
@@ -24030,7 +22381,6 @@ export const ReturnTypes: Record<string,any> = {
 		computed_cost_time:"Int",
 		cost_money:"Float",
 		cost_time:"Float",
-		goal_id:"Float",
 		id:"Float",
 		interaction_id:"Float",
 		parent_id:"Float",
@@ -24040,7 +22390,6 @@ export const ReturnTypes: Record<string,any> = {
 		computed_cost_time:"Int",
 		cost_money:"Float",
 		cost_time:"Float",
-		goal_id:"Float",
 		id:"Float",
 		interaction_id:"Float",
 		parent_id:"Float",
@@ -24298,8 +22647,6 @@ export const ReturnTypes: Record<string,any> = {
 	mutation_root:{
 		delete_associations:"associations_mutation_response",
 		delete_associations_by_pk:"associations",
-		delete_event_tag:"event_tag_mutation_response",
-		delete_event_tag_by_pk:"event_tag",
 		delete_event_types:"event_types_mutation_response",
 		delete_event_types_by_pk:"event_types",
 		delete_events:"events_mutation_response",
@@ -24322,8 +22669,6 @@ export const ReturnTypes: Record<string,any> = {
 		delete_users_by_pk:"users",
 		insert_associations:"associations_mutation_response",
 		insert_associations_one:"associations",
-		insert_event_tag:"event_tag_mutation_response",
-		insert_event_tag_one:"event_tag",
 		insert_event_types:"event_types_mutation_response",
 		insert_event_types_one:"event_types",
 		insert_events:"events_mutation_response",
@@ -24347,9 +22692,6 @@ export const ReturnTypes: Record<string,any> = {
 		update_associations:"associations_mutation_response",
 		update_associations_by_pk:"associations",
 		update_associations_many:"associations_mutation_response",
-		update_event_tag:"event_tag_mutation_response",
-		update_event_tag_by_pk:"event_tag",
-		update_event_tag_many:"event_tag_mutation_response",
 		update_event_types:"event_types_mutation_response",
 		update_event_types_by_pk:"event_types",
 		update_event_types_many:"event_types_mutation_response",
@@ -24405,6 +22747,7 @@ export const ReturnTypes: Record<string,any> = {
 		returning:"object_types"
 	},
 	objects:{
+		events:"events",
 		id:"Int",
 		name:"String",
 		object_type:"String"
@@ -24470,9 +22813,6 @@ export const ReturnTypes: Record<string,any> = {
 		associations_by_pk:"associations",
 		closest_user_location:"locations",
 		closest_user_location_aggregate:"locations_aggregate",
-		event_tag:"event_tag",
-		event_tag_aggregate:"event_tag_aggregate",
-		event_tag_by_pk:"event_tag",
 		event_types:"event_types",
 		event_types_aggregate:"event_types_aggregate",
 		event_types_by_pk:"event_types",
@@ -24515,10 +22855,6 @@ export const ReturnTypes: Record<string,any> = {
 		associations_stream:"associations",
 		closest_user_location:"locations",
 		closest_user_location_aggregate:"locations_aggregate",
-		event_tag:"event_tag",
-		event_tag_aggregate:"event_tag_aggregate",
-		event_tag_by_pk:"event_tag",
-		event_tag_stream:"event_tag",
 		event_types:"event_types",
 		event_types_aggregate:"event_types_aggregate",
 		event_types_by_pk:"event_types",

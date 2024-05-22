@@ -17,9 +17,10 @@ func configureXAxis(count: Int) -> AxisMarks<BuilderConditional<BuilderCondition
             AxisValueLabel(format: .dateTime.day())
                 .offset(x: -10)
         } else {
+            let divider = count/12 + 2
             if let date = value.as(Date.self) {
                 let day = Calendar.current.component(.day, from: date)
-                if day % 2 == 0 {
+                if day % divider == 0 {
                     AxisValueLabel(format: .dateTime.day())
                         .offset(x: -10)
                 }

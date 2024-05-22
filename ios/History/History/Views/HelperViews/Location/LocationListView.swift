@@ -3,17 +3,22 @@ import SwiftUI
 
 
 struct LocationsListView: View {
-    @StateObject var locationsController = LocationsController()
+    @State var locations: [LocationModel] = []
     
     var body: some View {
-        List(locationsController.locations, id: \.id) { location in
+        List(locations, id: \.id) { location in
             NavigationLink(destination: LocationDetailView(location: location)) {
                 Text(location.name ?? "Unknown")
             }
         }
         .navigationTitle("User Locations")
         .onAppear {
-            locationsController.fetchLocations(userId: Authentication.shared.userId!)
+            Task {
+                let resp = try await LocationsController.fetchLocations(userId: Authentication.shared.userId!)
+                DispatchQueue.main.async {
+                    locations = resp
+                }
+            }
         }
     }
 }

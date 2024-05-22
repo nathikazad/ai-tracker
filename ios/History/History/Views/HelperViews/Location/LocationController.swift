@@ -9,7 +9,6 @@ import Foundation
 import CoreLocation
 class LocationsController: ObservableObject {
     
-    @Published var locations: [LocationModel] = []
     let subscriptionId: String = "locations"
     
     struct LocationsResponseData: Decodable {
@@ -19,28 +18,44 @@ class LocationsController: ObservableObject {
         }
     }
     
-    func fetchLocations(userId: Int) {
-        Task {
-            let graphqlQuery = LocationsController.generateQuery(userId: userId)
-            let variables: [String: Any] = ["userId": userId]
-            do {
-                // Directly get the decoded ResponseData object from sendGraphQL
-                print(graphqlQuery)
-                let responseData: LocationsResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, variables: variables, responseType: LocationsResponseData.self)
-                DispatchQueue.main.async {
-                    self.locations = responseData.data.locations
-                }
-            } catch {
-                print("Error: \(error.localizedDescription)")
-            }
+    struct LocationResponseData: Decodable {
+        var data: LocationWrapper
+        struct LocationWrapper: Decodable {
+            var locations_by_pk: LocationModel
         }
     }
     
-    
-    static private func generateQuery(userId: Int, isSubscription: Bool = false) -> String {
-        let operationType =  "query"
+    static func fetchLocations(userId: Int) async throws -> [LocationModel] {
+        let (query, variables): (String, [String: Any]) = LocationsController.generateQueryForUserLocations(userId: userId)
         
-        return """
+        do {
+            // Directly get the decoded ResponseData object from sendGraphQL
+            let responseData: LocationsResponseData = try await Hasura.shared.sendGraphQL(query: query, variables: variables, responseType: LocationsResponseData.self)
+            
+                return responseData.data.locations
+            
+        } catch {
+            print("Error: \(error.localizedDescription)")
+            throw error
+        }
+    }
+
+    static func fetchLocation(locationId: Int) async throws -> LocationModel {
+            let (query, variables): (String, [String: Any]) = LocationsController.generateQueryForLocation(locationId: locationId)
+            
+            do {
+                // Directly get the decoded ResponseData object from sendGraphQL
+                let responseData: LocationResponseData = try await Hasura.shared.sendGraphQL(query: query, variables: variables, responseType: LocationResponseData.self)
+                return responseData.data.locations_by_pk
+            } catch {
+                print("Error: \(error.localizedDescription)")
+                throw error
+            }
+    }
+    
+    
+    static private func generateQueryForUserLocations(userId: Int) -> (String, [String: Any]) {
+        let query =  """
         query LocationQuery($userId: Int) {
           locations(where: {user_id: {_eq: $userId}}) {
             id
@@ -49,6 +64,34 @@ class LocationsController: ObservableObject {
           }
         }
         """
+        let variables: [String: Any] = ["userId": userId]
+        return (query, variables)
+    }
+    
+    
+    static private func generateQueryForLocation(locationId: Int) -> (String, [String: Any]) {
+        let query = """
+        query LocationQuery($locationId: Int!) {
+            locations_by_pk(id: $locationId) {
+                id
+                location
+                name
+                events {
+                    id
+                    metadata
+                    start_time
+                    end_time
+                    id
+                    event_type
+                    parent_id
+                    metadata
+                }
+
+            }
+        }
+        """
+        let variables: [String: Any] = ["locationId": locationId]
+        return (query, variables)
     }
     
     static func editLocationName(id: Int, name: String) {
@@ -141,20 +184,22 @@ class LocationsController: ObservableObject {
 struct LocationModel: Decodable, Identifiable {
     var id: Int?
     var name: String?
-    var location: LocationData
+    var location: LocationData?
+    var events: [EventModel]?
     
     enum CodingKeys: String, CodingKey {
         case id
         case name
         case location
+        case events
     }
     
     var latitude: Double {
-        location.coordinates[1]
+        location?.coordinates[1] ?? 0.0
     }
     
     var longitude: Double {
-        location.coordinates[0]
+        location?.coordinates[0] ?? 0.0
     }
     
     var toCLLocation: CLLocation {
