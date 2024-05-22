@@ -57,8 +57,7 @@ class EventsController: ObservableObject {
     
     func listenToEvents(userId: Int) {
         cancelListener()
-        // print("listening for events")
-        let subscriptionQuery = EventsController.generateEventQuery(userId: userId, gte: currentDate)
+        let subscriptionQuery = EventsController.generateEventQuery(userId: userId, gte: currentDate, isSubscription: true)
         Hasura.shared.startListening(subscriptionId: subscriptionId, subscriptionQuery: subscriptionQuery, responseType: EventsResponseData.self) {result in
             switch result {
             case .success(let responseData):

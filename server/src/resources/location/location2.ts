@@ -1,7 +1,8 @@
 import * as polyline from '@mapbox/polyline';
 import { addHours, getStartOfDay, toDate, toPST } from '../../helper/time';
 import { ASLocation, DeviceLocation, PostGISPoint, StationaryPeriod, convertASLocationToPostGISPoint, convertPostGISPointToASLocation, getAverageLocation, getDistance, getDuration, getEventLocation } from './locationUtility';
-import { getClosestUserLocation, getLastStayEvents, getStayEventsWithLocation, insertLocation, insertStay, updateStay } from './locationDb';
+import { getClosestUserLocation, getLastStayEvents, getStayEventsWithLocation, insertLocation } from './locationDb';
+import  { insertStay, updateStay } from './locationDb';
 import { getUserMovementByDate, getUserMovements, insertUserMovement, isTimeCollisionError, updateUserMovement } from './userMovement';
 import { associateEventWithLocation } from '../associations/associationsDb';
 
@@ -225,23 +226,24 @@ function findStationaryPeriods(deviceLocations: DeviceLocation[], windowSize: nu
         if(stationary) {
             stationaryPeriods[stationaryPeriods.length - 1] = constructStationary(points, `${i - points.length + 1} - ${i-1}`)
             if(velocity[i] > 0.5 || 
-                (distance > 200)) {
+                (distance > 150)) {
                 stationary = false
-                // console.log(`START ${i} ${toPST(data[i].timestamp)} ${velocity[i].toFixed(2)}`)
+                // console.log(`\tSTART ${stationaryPeriods.length} ${toPST(deviceLocations[i].timestamp)} ${velocity[i].toFixed(2)}`)
                 points = []
             }
         } else {
             if(velocity[i] < 0.5) {
                 stationary = true
-                // console.log(`STOP ${i} ${toPST(data[i].timestamp)} ${velocity[i].toFixed(2)}`)
-                stationaryPeriods.push(constructStationary(deviceLocations.slice(i, i+2), `${i} - ${i+1}`))
-                points = []
+                // console.log(`\tSTOP ${stationaryPeriods.length} ${toPST(deviceLocations[i].timestamp)} ${velocity[i].toFixed(2)}`)
+                points = deviceLocations.slice(i, i+2)
+                stationaryPeriods.push(constructStationary(points, `${i} - ${i+1}`))
             }
         }
     }
     // merge points that are less than 100m from each other
     let mergedPoints: StationaryPeriod[] = [stationaryPeriods[0]]
     for(let i = 1; i < stationaryPeriods.length; i++) {
+        
         let last = mergedPoints[mergedPoints.length - 1]
         let distance = getDistance(last.location, stationaryPeriods[i].location)
         if(distance < 100) {
