@@ -498,6 +498,13 @@ extension [EventModel] {
             return date1 ?? Date.distantFuture < date2 ?? Date.distantFuture
         }
     }
+    
+    var numDays: Int {
+        // get minimum date, maximum date, and then get the difference in days
+        let minDate = self.min { $0.date < $1.date }?.date ?? Date()
+        let maxDate = self.max { $0.date < $1.date }?.date ?? Date()
+        return Calendar.current.dateComponents([.day], from: minDate, to: maxDate).day ?? 0
+    }
 }
 
 

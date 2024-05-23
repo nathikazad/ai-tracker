@@ -34,7 +34,7 @@ class InteractionsController: ObservableObject {
 //        }
 //    }
     
-    func editInteraction(
+    static func editInteraction(
         id: Int,
         fieldName: String,
         fieldValue: String,
@@ -79,7 +79,7 @@ class InteractionsController: ObservableObject {
         }
     }
     
-    func deleteInteraction(id: Int, onSuccess: (() -> Void)? = nil) {
+    static func deleteInteraction(id: Int, onSuccess: (() -> Void)? = nil) {
         print("deleting interaction")
         let mutationQuery = """
         mutation {

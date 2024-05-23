@@ -57,9 +57,9 @@ struct PrayerView: View {
 }
 
 extension [EventModel] {
-    func fileterPrayers(days: Int) -> [EventModel] {
+    func filterPrayers(days: Int) -> [EventModel] {
         return self.filter { event in
-            let eventDate = event.date
+            let eventDate = event.date.startOfDay
             let localEventDate = eventDate.toLocal
             return localEventDate >= Calendar.currentInLocal.date(byAdding: .day, value: -days, to: Date())!
         }
@@ -68,15 +68,16 @@ extension [EventModel] {
     // return tuple of number of prayers prayed vs total number of days
     func totalLastNdays(days: Int) -> (Int, Int, Double) {
         // total number of prayers in the last n days by summing the total number of prayers for each day
-        let totalPrayers = self.fileterPrayers(days: days).reduce(0) { $0 + ($1.metadata?.prayerData?.count ?? 0) }
-        let totalDays = (days - 1) * 5 + (self.fileterPrayers(days: days).last?.metadata?.prayerData?.count ?? 0)
-        return (totalPrayers, totalDays, totalPrayers > 0 && totalDays > 0 ? Double(totalPrayers) / Double(totalDays) : 0)
+        let filteredPrayers = self.filterPrayers(days: days)
+        let totalPrayed = filteredPrayers.reduce(0) { $0 + ($1.metadata?.prayerData?.count ?? 0) }
+        let totalPossible = (filteredPrayers.numDays + 1) * 5 + (filteredPrayers.last?.metadata?.prayerData?.count ?? 0)
+        return (totalPrayed, totalPossible, totalPrayed > 0 && totalPossible > 0 ? Double(totalPrayed) / Double(totalPossible) : 0)
     }
     
     func prayersByDate(days: Int) -> [(Date, Prayer)] {
-        let filteredEvents = fileterPrayers(days: days)
+        let filteredEvents = filterPrayers(days: days)
         
-        let groupedEvents = Dictionary(grouping: filteredEvents) { $0.date }
+        let groupedEvents = Dictionary(grouping: filteredEvents) { $0.date.startOfDay }
         var prayers: [(Date, Prayer)] = []
         for (date, events) in groupedEvents {
             let fajr = events.contains { $0.metadata?.prayerData?.name?.contains("fajr") ?? false }
@@ -133,10 +134,14 @@ struct PrayerStatsView: View {
     @Binding var events: [EventModel]
     var body: some View {
         HStack {
-            let (totalPrayers, totalDays, percentage) = events.totalLastNdays(days: Int(selectedDays))
+            let (totalPrayed, totalPossible, percentage) = events.totalLastNdays(days: Int(selectedDays))
             let percentageString = String(format: "%.2f", percentage * 100)
-            Text("Prayed: \(totalPrayers) / \(totalDays) (\(percentageString)%)")
-                .foregroundColor(.gray)
+            HStack {
+                Text("Prayed: \(totalPrayed) / \(totalPossible) (\(percentageString)%)")
+                    .foregroundColor(.gray)
+                Text("-\(totalPossible-totalPrayed)")
+                    .foregroundColor(.red)
+            }
 
         }
         .frame(maxWidth: .infinity, alignment: .center)

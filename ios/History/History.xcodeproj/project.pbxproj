@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		FE129BE42BCB3CFB004058EA /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE129BE32BCB3CFB004058EA /* Authentication.swift */; };
 		FE129BE62BCB87B9004058EA /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE129BE52BCB87B9004058EA /* LocationManager.swift */; };
-		FE12C5E62BC4B2A5002CDC60 /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12C5E52BC4B2A4002CDC60 /* TimelineView.swift */; };
+		FE12C5E62BC4B2A5002CDC60 /* InteractionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12C5E52BC4B2A4002CDC60 /* InteractionsView.swift */; };
 		FE12C5E82BC4B30B002CDC60 /* TodosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12C5E72BC4B30B002CDC60 /* TodosView.swift */; };
 		FE12C5EA2BC4B330002CDC60 /* GoalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12C5E92BC4B330002CDC60 /* GoalsView.swift */; };
 		FE12C5EC2BC4B359002CDC60 /* GraphsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12C5EB2BC4B359002CDC60 /* GraphsView.swift */; };
@@ -121,7 +121,7 @@
 /* Begin PBXFileReference section */
 		FE129BE32BCB3CFB004058EA /* Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
 		FE129BE52BCB87B9004058EA /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
-		FE12C5E52BC4B2A4002CDC60 /* TimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
+		FE12C5E52BC4B2A4002CDC60 /* InteractionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionsView.swift; sourceTree = "<group>"; };
 		FE12C5E72BC4B30B002CDC60 /* TodosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosView.swift; sourceTree = "<group>"; };
 		FE12C5E92BC4B330002CDC60 /* GoalsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsView.swift; sourceTree = "<group>"; };
 		FE12C5EB2BC4B359002CDC60 /* GraphsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphsView.swift; sourceTree = "<group>"; };
@@ -220,7 +220,7 @@
 		FE12C5E42BC4B29C002CDC60 /* Tabs */ = {
 			isa = PBXGroup;
 			children = (
-				FE12C5E52BC4B2A4002CDC60 /* TimelineView.swift */,
+				FE12C5E52BC4B2A4002CDC60 /* InteractionsView.swift */,
 				FE12C5E72BC4B30B002CDC60 /* TodosView.swift */,
 				FE12C5E92BC4B330002CDC60 /* GoalsView.swift */,
 				FE12C5EB2BC4B359002CDC60 /* GraphsView.swift */,
@@ -598,7 +598,7 @@
 				FE477D932BD8122B001FC341 /* CalendarPicker.swift in Sources */,
 				FE8153722BD845B300D972C8 /* PolylineView.swift in Sources */,
 				FE9452F22BF2CC0900B28918 /* InteractionView.swift in Sources */,
-				FE12C5E62BC4B2A5002CDC60 /* TimelineView.swift in Sources */,
+				FE12C5E62BC4B2A5002CDC60 /* InteractionsView.swift in Sources */,
 				FE96B5452BF8505D000BD8E1 /* BookView.swift in Sources */,
 				FE477D8F2BD5E3C8001FC341 /* EventsView.swift in Sources */,
 				FE900C0A2BD363ED00F97050 /* LocationController.swift in Sources */,

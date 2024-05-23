@@ -15,7 +15,7 @@ enum ShowInPopup {
 }
 
 // Define your custom views for each tab
-struct TimelineView: View {
+struct InteractionsView: View {
     @State private var showPopupForId: Int?
     @State private var showInPopup: ShowInPopup = .none
     @State private var draftContent = ""
@@ -152,7 +152,7 @@ struct TimelineView: View {
                     .onDelete { indices in
                         indices.forEach { index in
                             let interactionId = interactions[index].id
-                            interactionController.deleteInteraction(id: interactionId)
+                            InteractionsController.deleteInteraction(id: interactionId)
                         }
                     }
                 }
@@ -210,9 +210,9 @@ struct TimelineView: View {
                     Button(action: {
                         DispatchQueue.main.async {
                             if(showInPopup == .text) {
-                                interactionController.editInteraction(id: showPopupForId!, fieldName: "content", fieldValue: draftContent)
+                                InteractionsController.editInteraction(id: showPopupForId!, fieldName: "content", fieldValue: draftContent)
                             } else if (showInPopup == .date) {
-                                interactionController.editInteraction(id: showPopupForId!, fieldName: "timestamp", fieldValue: selectedTime.toUTCString)
+                                InteractionsController.editInteraction(id: showPopupForId!, fieldName: "timestamp", fieldValue: selectedTime.toUTCString)
                             }
                             self.showInPopup = .none
                             self.showPopupForId = nil
@@ -246,5 +246,5 @@ struct TimelineView: View {
 
 
 #Preview {
-    TimelineView()
+    InteractionsView()
 }

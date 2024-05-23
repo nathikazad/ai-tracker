@@ -182,7 +182,7 @@ extension EventModel {
     }
     
     var date: Date {
-        return startTime?.startOfDay ?? endTime!.startOfDay
+        return startTime ?? endTime!
     }
     
     var formattedTimeWithDate: String {
