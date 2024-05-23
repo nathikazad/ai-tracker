@@ -7,8 +7,32 @@
 
 import SwiftUI
 
+struct CalendarButton: View {
+    @ObservedObject var state = AppState.shared
+    
+    var body: some View {
+        Button(action: {
+            AppState.shared.showSheet(newSheetToShow: .calendar)
+        }) {
+            Text(state.currentDate.formattedDateForCalendar)
+                .foregroundColor(.primary)
+                .padding(.top, 5)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .gesture(
+                    DragGesture().onEnded { gesture in
+                        if gesture.translation.width < 0 { // swipe left
+                            state.goToNextDay()
+                        } else if gesture.translation.width > 0 { // swipe right
+                            state.goToPreviousDay()
+                        }
+                    }
+                )
+        }
+    }
+}
+
 struct CalendarPickerView: View {
-    @State private var selectedDate = Date()
+    @State private var selectedDate = state.currentDate
     let onDateSelected: (Date) -> Void
     
     init(onDateSelected: @escaping (Date) -> Void) {
@@ -27,20 +51,3 @@ struct CalendarPickerView: View {
         }
     }
 }
-
-// TODO: Come back to this
-//struct TimePickerView: View {
-//    @State private var selectedTime: Date
-//    let onTimeSelected: (Date) -> Void
-//    
-//    var body: some View {
-//        VStack {
-//            DatePicker("Select a time", selection: $selectedTime, displayedComponents: .hourAndMinute)
-//                .datePickerStyle(WheelDatePickerStyle())
-//                .padding()
-//                .onChange(of: selectedTime, perform: { value in
-//                    onTimeSelected(value)
-//                })
-//        }
-//    }
-//}

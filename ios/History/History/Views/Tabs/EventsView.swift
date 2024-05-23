@@ -6,32 +6,29 @@
 //
 
 import SwiftUI
-
+import Combine
 
 
 // Define your custom views for each tab
 struct EventsView: View {
-    @StateObject var eventController = EventsController()
     @StateObject private var datePickerModel: DatePickerModel = DatePickerModel()
+    @State private var events: [EventModel] = []
+    @State private var chosenEvent: EventModel?
+    @State private var coreStateSubcription: AnyCancellable?
+    
+    var chosenEventId: Int?
+    
+    var subscriptionId: String {
+        let id = chosenEventId != nil ? "/\(chosenEventId!)" : ""
+        return "events\(id)"
+    }
     
     @State private var scrollProxy: ScrollViewProxy?
     var body: some View {
         VStack {
-            Text(eventController.formattedDate)
-                .foregroundColor(.primary)
-                .padding(.top, 5)
-                .frame(maxWidth: .infinity, alignment: .center)
-                .gesture(
-                    DragGesture().onEnded { gesture in
-                        if gesture.translation.width < 0 { // swipe left
-                            eventController.goToNextDay()
-                        } else if gesture.translation.width > 0 { // swipe right
-                            eventController.goToPreviousDay()
-                        }
-                    }
-                )
+            CalendarButton()
             Group {
-                if eventController.events.isEmpty {
+                if events.isEmpty {
                     VStack {
                         Spacer()
                         Text("No Events Yet")
@@ -49,18 +46,46 @@ struct EventsView: View {
             }
             .onAppear {
                 if(Authentication.shared.areJwtSet) {
-                    eventController.fetchEvents(userId: Authentication.shared.userId!)
-                    eventController.listenToEvents(userId: Authentication.shared.userId!)
+                    listenToEvents()
+                    coreStateSubcription?.cancel()
+                    coreStateSubcription = AppState.shared.subscribeToCoreStateChanges {
+                        print("Core state occurred")
+                        listenToEvents()
+                    }
+
                 }
             }
             .onDisappear {
                 print("Timelineview has disappeared")
-                eventController.cancelListener()
+                EventsController.cancelListener(subscriptionId: subscriptionId)
+                coreStateSubcription?.cancel()
+                coreStateSubcription = nil
             }
         }
         .overlay(
             popupView
         )
+    }
+    
+    private func listenToEvents() {
+        var date: Date? = state.currentDate;
+        var parentId: Int? = nil
+        if let chosenEventId = chosenEventId {
+            date = nil;
+            parentId = chosenEventId
+            Task {
+                let event = await EventsController.fetchEvent(userId: Authentication.shared.userId!, id: chosenEventId)
+                DispatchQueue.main.async {
+                    self.chosenEvent = event
+                }
+            }
+            
+        }
+        EventsController.listenToEvents(userId: Authentication.shared.userId!, subscriptionId: subscriptionId, date: date, parentId: parentId) { events in
+            DispatchQueue.main.async {
+                self.events = events
+            }
+        }
     }
     
     private var emptyStateView: some View {
@@ -81,7 +106,7 @@ struct EventsView: View {
         ScrollViewReader { proxy in
             VStack {
                 List {
-                    ForEach(Array(eventController.events.sortEvents.enumerated()), id: \.element.id) { index, event in
+                    ForEach(Array(events.sortEvents.enumerated()), id: \.element.id) { index, event in
                         HStack {
                             Text(event.formattedTime)
                                 .font(.headline)
@@ -111,8 +136,8 @@ struct EventsView: View {
                     }
                     .onDelete { indices in
                         indices.forEach { index in
-                            let eventId = eventController.events[index].id
-                            eventController.deleteEvent(id: eventId)
+                            let eventId = events[index].id
+                            EventsController.deleteEvent(id: eventId)
                         }
                     }
                 }
@@ -120,11 +145,11 @@ struct EventsView: View {
                 .onAppear {
                     scrollProxy = proxy
                 }
-                .onChange(of: eventController.events) { _ in
-                    if eventController.currentDate == Calendar.current.startOfDay(for: Date())
+                .onChange(of: events) { _ in
+                    if state.currentDate == Calendar.current.startOfDay(for: Date())
                        {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-                            if let lastId = eventController.events.last?.id {
+                            if let lastId = events.last?.id {
                                 withAnimation(.easeInOut(duration: 0.5)) { // Customize the animation style and duration here
 //                                    print("changed \(lastId) \(scrollProxy == nil)")
                                     scrollProxy?.scrollTo(lastId, anchor: .top)

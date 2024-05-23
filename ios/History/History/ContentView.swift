@@ -6,15 +6,23 @@
 //
 
 import SwiftUI
+import Combine
+
+var state: AppState {
+    return AppState.shared
+}
 
 class AppState: ObservableObject, MicrophoneDelegate {
     static let shared = AppState()
+    @Published var currentDate = Calendar.current.startOfDay(for: Date())
     @Published private(set) var chatViewToShow: ChatViewToShow = .none
     @Published private(set) var sheetViewToShow: SheetViewToShow = .none
     @Published private(set) var isRecording: Bool = false
     @Published private(set) var isProcessingRecording: Bool = false
     @Published var inForeground = true
+    
     private var microphone = Microphone()
+    private let coreStatePublisher = PassthroughSubject<Void, Never>()
     
     init() {
         microphone.delegate = self
@@ -56,6 +64,32 @@ class AppState: ObservableObject, MicrophoneDelegate {
     func showSheet(newSheetToShow: SheetViewToShow) {
         sheetViewToShow = newSheetToShow
     }
+    
+    func goToNextDay() {
+        print("next day")
+        currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
+        coreStatePublisher.send()
+    }
+    
+    func goToPreviousDay() {
+        print("previous day")
+        currentDate = Calendar.current.date(byAdding: .day, value: -1, to: currentDate)!
+        coreStatePublisher.send()
+    }
+    
+    func goToDay(newDay:Date) {
+        currentDate = Calendar.current.startOfDay(for:newDay)
+        coreStatePublisher.send()
+    }
+    
+    func notifyCoreStateChanged() {
+        coreStatePublisher.send()
+    }
+    
+    func subscribeToCoreStateChanges(_ callback: @escaping () -> Void) -> AnyCancellable {
+        return coreStatePublisher
+            .sink(receiveValue: callback)
+    }
 }
 
 enum ChatViewToShow {
@@ -63,7 +97,7 @@ enum ChatViewToShow {
 }
 
 enum SheetViewToShow {
-    case none, settings, dailyQuotes
+    case none, settings, dailyQuotes, calendar
 }
 
 struct ContentView: View {
@@ -146,6 +180,11 @@ struct MainView: View {
                         SettingsView()
                     } else if appState.sheetViewToShow == .dailyQuotes {
                         RemindersView()
+                    } else if appState.sheetViewToShow == .calendar {
+                        CalendarPickerView { selectedDate in
+                            appState.goToDay(newDay: selectedDate)
+                            appState.hideSheet()
+                        }
                     }
                 }
                 MicrophoneButton()

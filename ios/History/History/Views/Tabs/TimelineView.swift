@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 enum ShowInPopup {
     case text
@@ -15,40 +16,24 @@ enum ShowInPopup {
 
 // Define your custom views for each tab
 struct TimelineView: View {
-    @StateObject var interactionController = InteractionsController()
     @State private var showPopupForId: Int?
     @State private var showInPopup: ShowInPopup = .none
     @State private var draftContent = ""
     @State private var selectedTime: Date = Date()
-    @State private var isShowingDatePicker = false
     @State private var scrollProxy: ScrollViewProxy?
-    func showCalendarPicker() {
-        isShowingDatePicker = true
-    }
+    @State private var coreStateSubcription: AnyCancellable?
+    @State private var interactions: [InteractionModel] = []
+
+    
+
     
     var body: some View {
         VStack {
-            Button(action: {
-                showCalendarPicker()
-            }) {
-                Text(interactionController.formattedDate)
-                    .foregroundColor(.primary)
-                    .padding(.top, 5)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .gesture(
-                        DragGesture().onEnded { gesture in
-                            if gesture.translation.width < 0 { // swipe left
-                                interactionController.goToNextDay()
-                            } else if gesture.translation.width > 0 { // swipe right
-                                interactionController.goToPreviousDay()
-                            }
-                        }
-                    )
-            }
             
+            CalendarButton()
             
             Group {
-                if interactionController.interactions.isEmpty {
+                if interactions.isEmpty {
                     VStack {
                         Spacer()
                         Text("No Events Yet")
@@ -67,22 +52,31 @@ struct TimelineView: View {
             }
             .onAppear {
                 if(Authentication.shared.areJwtSet) {
-                    interactionController.fetchInteractions(userId: Authentication.shared.userId!)
-                    interactionController.listenToInteractions(userId: Authentication.shared.userId!)
+                    listenToInteractions()
+                    coreStateSubcription?.cancel()
+                    coreStateSubcription = AppState.shared.subscribeToCoreStateChanges {
+                        print("Core state occurred")
+                        listenToInteractions()
+                    }
+                    
                 }
             }
             .onDisappear {
                 print("Timelineview has disappeared")
-                interactionController.cancelListener()
+                InteractionsController.cancelListener()
+                coreStateSubcription?.cancel()
+                coreStateSubcription = nil
             }
         }
         .overlay(
             popupView
         )
-        .sheet(isPresented: $isShowingDatePicker) {
-            CalendarPickerView { selectedDate in
-                interactionController.goToDay(newDay: selectedDate)
-                isShowingDatePicker = false
+    }
+    
+    private func listenToInteractions() {
+        InteractionsController.listenToInteractions(userId: Authentication.shared.userId!) { interactions in
+            DispatchQueue.main.async {
+                self.interactions = interactions
             }
         }
     }
@@ -105,8 +99,8 @@ struct TimelineView: View {
         ScrollViewReader { proxy in
             VStack {
                 List {
-                    ForEach(interactionController.interactions.indices, id: \.self) { index in
-                        let interaction = interactionController.interactions[index]
+                    ForEach(interactions.indices, id: \.self) { index in
+                        let interaction = interactions[index]
                         HStack {
                             Text(interaction.timestamp.formattedTime)
                                 .font(.headline)
@@ -157,7 +151,7 @@ struct TimelineView: View {
                     }
                     .onDelete { indices in
                         indices.forEach { index in
-                            let interactionId = interactionController.interactions[index].id
+                            let interactionId = interactions[index].id
                             interactionController.deleteInteraction(id: interactionId)
                         }
                     }
@@ -166,11 +160,11 @@ struct TimelineView: View {
                 .onAppear {
                     scrollProxy = proxy
                 }
-                .onChange(of: interactionController.interactions) { _ in
-                    if interactionController.currentDate == Calendar.current.startOfDay(for: Date())
+                .onChange(of: interactions) { _ in
+                    if state.currentDate == Calendar.current.startOfDay(for: Date())
                     {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-                            if let lastId = interactionController.interactions.last?.id {
+                            if let lastId = interactions.last?.id {
                                 withAnimation(.easeInOut(duration: 0.5)) {
                                     scrollProxy?.scrollTo(lastId, anchor: .top)
                                 }

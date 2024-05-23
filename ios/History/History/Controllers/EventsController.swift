@@ -8,31 +8,6 @@
 import Foundation
 class EventsController: ObservableObject {
     
-    @Published var events: [EventModel] = []
-    @Published var currentDate = Calendar.current.startOfDay(for: Date())
-    let subscriptionId: String = "events"
-    
-    
-    var formattedDate: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE MMMM dd" // Custom format for day, month, and date
-        return formatter.string(from: currentDate)
-    }
-    
-    func goToNextDay() {
-        print("next day")
-        currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
-        fetchEvents(userId: Authentication.shared.userId!)
-        listenToEvents(userId: Authentication.shared.userId!)
-    }
-    
-    func goToPreviousDay() {
-        print("previous day")
-        currentDate = Calendar.current.date(byAdding: .day, value: -1, to: currentDate)!
-        fetchEvents(userId: Authentication.shared.userId!)
-        listenToEvents(userId: Authentication.shared.userId!)
-    }
-    
     struct EventsResponseData: Decodable {
         var data: EventsWrapper
         struct EventsWrapper: Decodable {
@@ -40,39 +15,46 @@ class EventsController: ObservableObject {
         }
     }
     
-    func fetchEvents(userId: Int) {
-        Task {
-            let graphqlQuery = EventsController.generateEventQuery(userId: userId, gte: currentDate)
-            do {
-                // Directly get the decoded ResponseData object from sendGraphQL
-                let responseData: EventsResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, responseType: EventsResponseData.self)
-                DispatchQueue.main.async {
-                    self.events = responseData.data.events.sortEvents
-                }
-            } catch {
-                print("Error: \(error.localizedDescription)")
-            }
+    static func fetchEvents(userId: Int, date: Date?) async -> [EventModel] {
+        let graphqlQuery = EventsController.generateEventQuery(userId: userId, gte: date)
+        do {
+            // Directly get the decoded ResponseData object from sendGraphQL
+            let responseData: EventsResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, responseType: EventsResponseData.self)
+            return responseData.data.events.sortEvents
+        } catch {
+            print("Error: \(error.localizedDescription)")
+            return []
         }
     }
     
-    func listenToEvents(userId: Int) {
-        cancelListener()
-        let subscriptionQuery = EventsController.generateEventQuery(userId: userId, gte: currentDate, isSubscription: true)
+    static func fetchEvent(userId:Int, id: Int) async -> EventModel? {
+        let graphqlQuery = EventsController.generateEventQuery(userId: userId, id: id)
+        do {
+            // Directly get the decoded ResponseData object from sendGraphQL
+            let responseData: EventsResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, responseType: EventsResponseData.self)
+            return responseData.data.events[0]
+        } catch {
+            print("Error: \(error.localizedDescription)")
+            return nil
+        }
+    }
+    
+    static func listenToEvents(userId: Int, subscriptionId:String, date:Date?, parentId: Int? = nil, eventUpdateCallback: @escaping ([EventModel]) -> Void) {
+        cancelListener(subscriptionId: subscriptionId)
+        let subscriptionQuery = EventsController.generateEventQuery(userId: userId, gte: date, isSubscription: true, parentId: parentId)
         Hasura.shared.startListening(subscriptionId: subscriptionId, subscriptionQuery: subscriptionQuery, responseType: EventsResponseData.self) {result in
             switch result {
             case .success(let responseData):
-                DispatchQueue.main.async {
-                    self.events = responseData.data.events
-                }
+                eventUpdateCallback(responseData.data.events)
             case .failure(let error):
                 print("Error processing message: \(error.localizedDescription)")
             }
         }
     }
     
-    static func fetchEvents(userId: Int, eventType: EventType, locationId: Int? = nil, order: String?, metadataFilter: [String: Any]? = nil) async -> [EventModel] {
+    static func fetchEvents(userId: Int, eventType: EventType, locationId: Int? = nil, order: String?, metadataFilter: [String: Any]? = nil, parentId: Int? = nil) async -> [EventModel] {
         
-        let graphqlQuery = EventsController.generateEventQuery(userId: userId, eventType: eventType, locationId: locationId, order: order, metadataFilter: metadataFilter)
+        let graphqlQuery = EventsController.generateEventQuery(userId: userId, eventType: eventType, locationId: locationId, order: order, metadataFilter: metadataFilter, parentId: parentId)
         var variables: [String: Any]? = nil
         if let metadataFilter = metadataFilter {
             variables = ["jsonfilter": metadataFilter]
@@ -115,7 +97,7 @@ class EventsController: ObservableObject {
         }
     }
     
-    func deleteEvent(id: Int, onSuccess: (() -> Void)? = nil) {
+    static func deleteEvent(id: Int, onSuccess: (() -> Void)? = nil) {
         print("deleting event")
         let mutationQuery = """
         mutation {
@@ -147,11 +129,11 @@ class EventsController: ObservableObject {
     }
     
     
-    func cancelListener() {
+    static func cancelListener(subscriptionId: String) {
         Hasura.shared.stopListening(subscriptionId: subscriptionId)
     }
     
-    static func generateEventQuery(userId: Int, gte: Date? = nil, eventType: EventType? = nil, locationId: Int? = nil, isSubscription: Bool = false, order: String? = "asc", metadataFilter: [String: Any]? = nil) -> String {
+    static func generateEventQuery(userId: Int, id: Int? = nil, gte: Date? = nil, eventType: EventType? = nil, locationId: Int? = nil, isSubscription: Bool = false, order: String? = "asc", metadataFilter: [String: Any]? = nil, parentId: Int? = nil) -> String {
         var whereClauses: [String] = ["{user_id: {_eq: \(userId)}}"] // Fix syntax for where clause
         
         if let gteDate = gte {
@@ -174,6 +156,15 @@ class EventsController: ObservableObject {
         if let locationId = locationId {
             whereClauses.append("{metadata: {_contains: {location: {id: \(locationId)}}}}")
         }
+        
+        if let parentId = parentId {
+            whereClauses.append("{parent_id: {_eq: \(parentId)}}")
+        }
+        
+        if let id = id {
+            whereClauses.append("{id: {_eq: \(id)}}")
+        }
+        
         var jsonFilter = ""
         if let metadataFilter = metadataFilter {
             jsonFilter = "($jsonfilter: jsonb)"

@@ -8,34 +8,9 @@
 import Foundation
 import SwiftUI
 class InteractionsController: ObservableObject {
+    static let subscriptionId: String = "interactions"
     
-    @Published var interactions: [InteractionModel] = []
-    @Published var currentDate = Calendar.current.startOfDay(for: Date())
-    let subscriptionId: String = "interactions"
-    
-    
-    var formattedDate: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE MMMM dd" // Custom format for day, month, and date
-        return formatter.string(from: currentDate)
-    }
-    
-    func goToDay(newDay:Date) {
-        currentDate = Calendar.current.startOfDay(for:newDay)
-        listenToInteractions(userId: Authentication.shared.userId!)
-    }
-    
-    func goToNextDay() {
-        print("next day")
-        currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
-        listenToInteractions(userId: Authentication.shared.userId!)
-    }
-    
-    func goToPreviousDay() {
-        print("previous day")
-        currentDate = Calendar.current.date(byAdding: .day, value: -1, to: currentDate)!
-        listenToInteractions(userId: Authentication.shared.userId!)
-    }
+
     
     struct InteractionsResponseData: Decodable {
         var data: InteractionsWrapper
@@ -44,20 +19,20 @@ class InteractionsController: ObservableObject {
         }
     }
     
-    func fetchInteractions(userId: Int) {
-        Task {
-            let graphqlQuery = InteractionsController.generateQuery(userId: userId, gte: currentDate)
-            do {
-                // Directly get the decoded ResponseData object from sendGraphQL
-                let responseData: InteractionsResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, responseType: InteractionsResponseData.self)
-                DispatchQueue.main.async {
-                    self.interactions = responseData.data.interactions
-                }
-            } catch {
-                print("Error: \(error.localizedDescription)")
-            }
-        }
-    }
+//    static func fetchInteractions(userId: Int) {
+//        Task {
+//            let graphqlQuery = InteractionsController.generateQuery(userId: userId, gte: AppState.shared.currentDate)
+//            do {
+//                // Directly get the decoded ResponseData object from sendGraphQL
+//                let responseData: InteractionsResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, responseType: InteractionsResponseData.self)
+//                DispatchQueue.main.async {
+//                    self.interactions = responseData.data.interactions
+//                }
+//            } catch {
+//                print("Error: \(error.localizedDescription)")
+//            }
+//        }
+//    }
     
     func editInteraction(
         id: Int,
@@ -137,18 +112,15 @@ class InteractionsController: ObservableObject {
     
     
     
-    func listenToInteractions(userId: Int, completion: (() -> Void)? = nil) {
+    static func listenToInteractions(userId: Int, eventUpdateCallback: @escaping ([InteractionModel]) -> Void) {
         cancelListener()
         // print("listening for interactions")
-        let subscriptionQuery = InteractionsController.generateQuery(userId: userId, gte: currentDate, isSubscription: true)
+        let subscriptionQuery = InteractionsController.generateQuery(userId: userId, gte: AppState.shared.currentDate, isSubscription: true)
         
         Hasura.shared.startListening(subscriptionId: subscriptionId, subscriptionQuery: subscriptionQuery, responseType: InteractionsResponseData.self) {result in
             switch result {
             case .success(let responseData):
-                DispatchQueue.main.async {
-                    self.interactions = responseData.data.interactions
-                    completion?()
-                }
+                eventUpdateCallback(responseData.data.interactions)
             case .failure(let error):
                 print("Error processing message: \(error.localizedDescription)")
             }
@@ -156,7 +128,7 @@ class InteractionsController: ObservableObject {
     }
     
     
-    func cancelListener() {
+    static func cancelListener() {
         Hasura.shared.stopListening(subscriptionId: subscriptionId)
     }
     

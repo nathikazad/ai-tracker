@@ -101,6 +101,7 @@ struct SettingsView: View {
         Authentication.shared.hasuraJWTObject?.userId = currentUserId
         print("User switched to \(currentUserId)")
         self.currentUserName = getName()
+        state.notifyCoreStateChanged()
     }
 }
 

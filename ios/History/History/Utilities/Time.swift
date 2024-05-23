@@ -31,6 +31,13 @@ extension Calendar {
     }
 }
 extension Date {
+    var formattedDateForCalendar: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE MMMM dd" // Custom format for day, month, and date
+        formatter.timeZone = TimeZone.current // Local time zone
+        return formatter.string(from: self)
+    }
+    
     var formattedTime: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "hh:mm a" // 12-hour format with AM/PM
