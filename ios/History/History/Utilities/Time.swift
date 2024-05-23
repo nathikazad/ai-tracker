@@ -192,4 +192,12 @@ extension EventModel {
         }
         return endTime!.timeIntervalSince(startTime!)
     }
+    
+    var timeTaken: String? {
+        if endTime != nil && startTime != nil {
+            return startTime!.durationInHHMM(to: endTime!)
+        } else {
+            return nil
+        }
+    }
 }

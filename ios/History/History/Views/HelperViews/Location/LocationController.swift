@@ -85,6 +85,16 @@ class LocationsController: ObservableObject {
                     event_type
                     parent_id
                     metadata
+                    locations {
+                      id
+                      name
+                      location
+                    }
+                    objects {
+                        object_type
+                        name
+                        id
+                    }
                 }
 
             }

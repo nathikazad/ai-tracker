@@ -121,6 +121,16 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
             let formattedPeople: String? = joinWords(people)
             let location = metadata?.meetingData?.location != nil ? " at \(metadata!.meetingData!.location!)" : ""
             return formattedPeople != nil ? "\(action) \(formattedPeople!)\(location)" : "\(action) Someone"
+        case .sleeping:
+            
+            return "Slept \(timeTaken != nil ? "for \(timeTaken!)"  : "")"
+        case .staying:
+            let eventName = (socialEvent?.name != nil) ? " for \(socialEvent!.name)" : ""
+            let locationName = location?.name ?? "Unnamed location"
+            return "\(locationName)\(eventName)"// \(timeTaken)"
+        case .commuting:
+            let distance = metadata?.distance != nil ? "\(metadata!.distance!)km" : ""
+            return "Commute"// \(timeTaken) \(distance)"
         default:
             
             return interaction?.content ?? eventType.capitalized
@@ -140,6 +150,10 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
         return objects.books.first
     }
     
+    var socialEvent: ASObject? {
+        return objects.socialEvents.first
+    }
+    
     var location: LocationModel? {
         return locations.first
     }
@@ -148,6 +162,10 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
 extension [ASObject] {
     var books: [ASObject] {
         return self.objectIds(objectType: .book)
+    }
+    
+    var socialEvents: [ASObject] {
+        return self.objectIds(objectType: .socialEvent)
     }
 
     func objectIds(objectType: ASObjectType) -> [ASObject] {
@@ -160,6 +178,7 @@ enum ASObjectType: String, Decodable {
     case person = "Person"
     case recipe = "Recipe"
     case store = "Store"
+    case socialEvent = "SocialEvent"
     case unknown = "Unknown"
 }
 
