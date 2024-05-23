@@ -50,6 +50,7 @@
 		FE900C082BD363D200F97050 /* LocationListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE900C072BD363D200F97050 /* LocationListView.swift */; };
 		FE900C0A2BD363ED00F97050 /* LocationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE900C092BD363ED00F97050 /* LocationController.swift */; };
 		FE9452F22BF2CC0900B28918 /* InteractionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9452F12BF2CC0900B28918 /* InteractionView.swift */; };
+		FE9477C02BFECF20003AD03A /* StayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9477BF2BFECF20003AD03A /* StayView.swift */; };
 		FE96B5422BF81A8A000BD8E1 /* EventModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE96B5412BF81A8A000BD8E1 /* EventModel.swift */; };
 		FE96B5452BF8505D000BD8E1 /* BookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE96B5442BF8505D000BD8E1 /* BookView.swift */; };
 		FE96B5472BF8509E000BD8E1 /* ObjectController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE96B5462BF8509E000BD8E1 /* ObjectController.swift */; };
@@ -162,6 +163,7 @@
 		FE900C072BD363D200F97050 /* LocationListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationListView.swift; sourceTree = "<group>"; };
 		FE900C092BD363ED00F97050 /* LocationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationController.swift; sourceTree = "<group>"; };
 		FE9452F12BF2CC0900B28918 /* InteractionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionView.swift; sourceTree = "<group>"; };
+		FE9477BF2BFECF20003AD03A /* StayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StayView.swift; sourceTree = "<group>"; };
 		FE96B5412BF81A8A000BD8E1 /* EventModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventModel.swift; sourceTree = "<group>"; };
 		FE96B5442BF8505D000BD8E1 /* BookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookView.swift; sourceTree = "<group>"; };
 		FE96B5462BF8509E000BD8E1 /* ObjectController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectController.swift; sourceTree = "<group>"; };
@@ -398,6 +400,7 @@
 				FE9452F12BF2CC0900B28918 /* InteractionView.swift */,
 				FE9BA2E42BF6998600AE25A9 /* PrayerView.swift */,
 				FE69D7692BF6CFEE0061E2E6 /* LearnView.swift */,
+				FE9477BF2BFECF20003AD03A /* StayView.swift */,
 			);
 			path = Events;
 			sourceTree = "<group>";
@@ -600,6 +603,7 @@
 				FE477D8F2BD5E3C8001FC341 /* EventsView.swift in Sources */,
 				FE900C0A2BD363ED00F97050 /* LocationController.swift in Sources */,
 				FE9BA2E52BF6998600AE25A9 /* PrayerView.swift in Sources */,
+				FE9477C02BFECF20003AD03A /* StayView.swift in Sources */,
 				FE1C0EB12BC0A29300FF56AB /* Hasura.swift in Sources */,
 				FE8965AA2BC7B31D00E9D633 /* UserController.swift in Sources */,
 				FE477D912BD5E3E2001FC341 /* EventsController.swift in Sources */,

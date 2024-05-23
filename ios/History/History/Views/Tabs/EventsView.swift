@@ -13,7 +13,7 @@ import SwiftUI
 struct EventsView: View {
     @StateObject var eventController = EventsController()
     @StateObject private var datePickerModel: DatePickerModel = DatePickerModel()
-
+    
     @State private var scrollProxy: ScrollViewProxy?
     var body: some View {
         VStack {
@@ -90,7 +90,14 @@ struct EventsView: View {
                                     datePickerModel.showPopupForEvent(event: event)
                                 }
                             Divider()
-                            destinationView(for: event, isCurrent: index == eventController.events.count - 1)
+                            destinationView(for: event) {
+                                VStack {
+                                Text("\(event.toString) (\(String(event.id)))")
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .font(.subheadline)
+                                }
+                            }
+                            
                         }
                         .id(event.id)
                         .swipeActions(edge: .leading, allowsFullSwipe: true) {
@@ -130,97 +137,48 @@ struct EventsView: View {
         }
     }
     
-    
-    
-    func destinationView(for event: EventModel, isCurrent: Bool) -> some View {
-        let text = 
-        VStack {
-            Text(formatEventText(for: event, isCurrent: isCurrent))
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .font(.subheadline)
-            //            HStack {
-            
-//            Text(event.eventType.trimmingCharacters(in: .whitespaces).capitalized)
-//                .font(.subheadline)
-//                .padding(5)
-//                .background(Color.black)
-//                .foregroundColor(.white)
-//                .cornerRadius(5)
-            //            }
-//                .frame(maxWidth: .infinity, alignment: .leading)
+    private func destinationView<Content: View>(for event: EventModel, @ViewBuilder content: () -> Content) -> some View {
+        if let destination = eventDestination(for: event) {
+            return AnyView(
+                NavigationLink(destination: destination) {
+                    content()
+                }
+            )
+        } else {
+            return AnyView(content())
         }
-        
+    }
+
+    private func eventDestination(for event: EventModel) -> AnyView? {
         switch event.eventType {
         case .staying:
             if let location = event.location {
-                return AnyView(NavigationLink(destination: LocationDetailView(location: location)) {
-                    text
-                })
+                return AnyView(LocationDetailView(location: location))
             }
-            
         case .commuting:
             if let polyline = event.metadata?.polyline {
-                return AnyView(NavigationLink(destination: PolylineView(encodedPolyline: polyline)) {
-                    text
-                })
+                return AnyView(PolylineView(encodedPolyline: polyline))
             }
-            
         case .sleeping:
-            return AnyView(NavigationLink(destination: SleepView()) {
-                text
-            })
+            return AnyView(SleepView())
         case .praying:
-            return AnyView(NavigationLink(destination: PrayerView()) {
-                text
-            })
+            return AnyView(PrayerView())
         case .learning:
-            return AnyView(NavigationLink(destination: LearnView(skill: event.metadata?.learningData?.skill)) {
-                text
-            })
+            if let skill = event.metadata?.learningData?.skill {
+                return AnyView(LearnView(skill: skill))
+            }
         case .reading:
             if let book = event.book {
-                return AnyView(NavigationLink(destination: BookView(bookId: book.id)) {
-                    text
-                })
+                return AnyView(BookView(bookId: book.id))
             }
-            
         default:
-            break
+            return nil
         }
-        
-        // If none of the cases apply, return just the text without a NavigationLink
-        return AnyView(text)
+        return nil
     }
+
     
-    
-    func formatEventText(for event: EventModel, isCurrent: Bool) -> String {
-        var result: String = ""
-        let timeTaken = calcTimeTaken(event: event, isCurrent: isCurrent)
-        switch event.eventType {
-        case .staying:
-            let locationName = event.location?.name ?? "Unnamed location"
-            result = "\(locationName)(\(event.id)) \(timeTaken)"
-        case .commuting:
-            let distance = event.metadata?.distance != nil ? "\(event.metadata!.distance!)km" : ""
-            result = "Commute(\(event.id)) \(timeTaken) \(distance)"
-        case .sleeping:
-            result = "Sleep(\(event.id)) \(timeTaken)"
-        default:
-            result = "\(event.toString) (\(event.id))"
-        }
-        
-        return result
-    }
-    
-    func calcTimeTaken(event: EventModel, isCurrent:Bool) -> String {
-        var timeTaken: String? = event.metadata?.timeTaken
-        if isCurrent && event.endTime == nil && event.startTime != nil {
-            timeTaken = event.startTime!.durationSinceInHHMM
-        } else if event.endTime != nil && event.startTime != nil {
-            timeTaken = event.startTime!.durationInHHMM(to: event.endTime!)
-        }
-        return timeTaken != nil ? "Time:\(timeTaken!)"  : ""
-    }
+
     
     class DatePickerModel: ObservableObject {
         @Published var startTime: Date = Date()
