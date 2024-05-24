@@ -28,14 +28,8 @@ struct MicrophoneButton: View {
             }
             .offset(y: -60)
             .padding(.bottom, -30)
-            // Applying the long press gesture
             .simultaneousGesture(LongPressGesture().onEnded { _ in
-                // if(Authentication.shared.isAdmin){
-                //     appState.showChat(newChatViewToShow: .investor)
-                // } else {
                     appState.showChat(newChatViewToShow: .normal)
-                // }
-                print("long press")
             })
         }
     }

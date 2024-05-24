@@ -46,6 +46,7 @@ struct EventsView: View {
                 }
             }
             .onAppear {
+                print("EventsView: onAppear")
                 if(Authentication.shared.areJwtSet) {
                     listenToEvents()
                     coreStateSubcription?.cancel()
@@ -57,7 +58,7 @@ struct EventsView: View {
                 }
             }
             .onDisappear {
-                print("Timelineview has disappeared")
+                print("EventsView: onDisappear")
                 EventsController.cancelListener(subscriptionId: subscriptionId)
                 coreStateSubcription?.cancel()
                 coreStateSubcription = nil
@@ -281,7 +282,7 @@ struct EventsView: View {
                 return AnyView(PolylineView(encodedPolyline: polyline))
             }
         case .working:
-            return AnyView(WorkView(event: event))
+            return AnyView(WorkView(event: event, eventId: event.id))
         case .sleeping:
             return AnyView(SleepView())
         case .praying:

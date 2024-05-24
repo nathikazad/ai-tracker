@@ -56,7 +56,10 @@ class ChatViewModel: ObservableObject {
     @Published var currentMessage: String = ""
     @Published var investorMessageCount: Int = 0
     
-    init() {
+    let closeCallback: () -> Void
+        
+    init(closeCallback: @escaping () -> Void) {
+        self.closeCallback = closeCallback
         setupInitialChatContents()
     }
     
@@ -116,7 +119,7 @@ class ChatViewModel: ObservableObject {
     
     func addOkButton() {
         let okButton = Button(action: {
-            AppState.shared.showChat(newChatViewToShow:.none)
+            self.closeCallback()
         }) {
             Text("Ok")
                 .foregroundColor(Color("OppositeColor"))
@@ -156,13 +159,20 @@ class ChatViewModel: ObservableObject {
 }
 
 struct ChatView: View {
-    @StateObject var chatViewModel = ChatViewModel()
+    @StateObject var chatViewModel:ChatViewModel
     @ObservedObject var appState = AppState.shared
     @State private var showKeyboard: Bool = false
     @State private var lastContentOffset: CGFloat = 0
     @State private var lastUpdateTime = Date()
     @State private var scrollToId: Int?  // State to determine which item to scroll to
 
+    let closeCallback: () -> Void
+    init(closeCallback: @escaping () -> Void) {
+        self.closeCallback = closeCallback
+        _chatViewModel = StateObject(wrappedValue: ChatViewModel(closeCallback: closeCallback))
+    }
+
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -207,7 +217,7 @@ struct ChatView: View {
             .navigationBarTitle("Maximus", displayMode: .inline)
             .navigationBarItems(
                 leading: appState.chatViewToShow != .onBoard ? Button(action: {
-                    self.appState.showChat(newChatViewToShow:.none)
+                    self.closeCallback()
                 }) {
                     Image(systemName: "chevron.left")
                         .foregroundColor(.primary)

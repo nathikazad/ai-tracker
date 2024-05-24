@@ -9,12 +9,15 @@
 import SwiftUI
 struct WorkView: View {
     @State var event: EventModel? = nil
-    var eventId: Int? = nil
-
+    @State var navigationStackId: Int? = nil
+    @State var chatViewPresented: Bool = false
+    var eventId: Int
+    
     private func fetchData() {
-        if(event == nil && eventId != nil) {
+        
+        if(event == nil) {
             Task {
-                let event = await EventsController.fetchEvent(id:eventId!)
+                let event = await EventsController.fetchEvent(id:eventId)
                 DispatchQueue.main.async {
                     self.event = event
                 }
@@ -24,10 +27,34 @@ struct WorkView: View {
 
     var body: some View {
         List {
-            Text(String(event?.id ?? 0))
-            Text(event?.toString ?? "Not sure")
+            Button(action: {
+                print("Clicked plus")
+                print("WorkView: boyd: \(state.navigationStackIds)")
+                chatViewPresented = true
+            }) {
+                Image(systemName: "plus.circle")
+            }
+            .frame(maxWidth: .infinity, alignment: .center)
             
         }
-        .onAppear(perform: fetchData)
+        
+        .onAppear {
+            print("WorkView: onAppear: \(state.navigationStackIds)")
+            navigationStackId = state.pushView()
+            print("WorkView: onAppear: \(state.navigationStackIds)")
+            fetchData()
+        }
+        .onDisappear {
+            print("WorkView: onDisappear: \(state.navigationStackIds)")
+            if let navigationStackId = navigationStackId {
+                state.popView(id: navigationStackId)
+            }
+        }
+        .navigationTitle("Working(\(String(eventId)))")
+        .fullScreenCover(isPresented: $chatViewPresented) {
+            ChatView {
+                chatViewPresented = false
+            }
+        }
     }
 }
