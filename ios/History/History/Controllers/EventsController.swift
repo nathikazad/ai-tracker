@@ -16,7 +16,7 @@ class EventsController: ObservableObject {
     }
     
     static func fetchEvents(userId: Int, date: Date?) async -> [EventModel] {
-        let graphqlQuery = EventsController.generateEventQuery(userId: userId, gte: date)
+        let (graphqlQuery, variables) = EventsController.generateEventQuery(userId: userId, gte: date)
         do {
             // Directly get the decoded ResponseData object from sendGraphQL
             let responseData: EventsResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, responseType: EventsResponseData.self)
@@ -27,11 +27,11 @@ class EventsController: ObservableObject {
         }
     }
     
-    static func fetchEvent(userId:Int, id: Int) async -> EventModel? {
-        let graphqlQuery = EventsController.generateEventQuery(userId: userId, id: id)
+    static func fetchEvent(id: Int) async -> EventModel? {
+        let (graphqlQuery, variables) = EventsController.generateEventQuery(id: id, nested: true)
         do {
             // Directly get the decoded ResponseData object from sendGraphQL
-            let responseData: EventsResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, responseType: EventsResponseData.self)
+            let responseData: EventsResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery,responseType: EventsResponseData.self)
             return responseData.data.events[0]
         } catch {
             print("Error: \(error.localizedDescription)")
@@ -39,9 +39,9 @@ class EventsController: ObservableObject {
         }
     }
     
-    static func listenToEvents(userId: Int, subscriptionId:String, date:Date?, parentId: Int? = nil, eventUpdateCallback: @escaping ([EventModel]) -> Void) {
+    static func listenToEvents(userId: Int, subscriptionId:String, nested: Bool, date:Date?, parentId: Int? = nil, eventUpdateCallback: @escaping ([EventModel]) -> Void) {
         cancelListener(subscriptionId: subscriptionId)
-        let subscriptionQuery = EventsController.generateEventQuery(userId: userId, gte: date, isSubscription: true, parentId: parentId)
+        let (subscriptionQuery, variables) = EventsController.generateEventQuery(userId: userId, gte: date, isSubscription: true, parentId: parentId, nested: nested)
         Hasura.shared.startListening(subscriptionId: subscriptionId, subscriptionQuery: subscriptionQuery, responseType: EventsResponseData.self) {result in
             switch result {
             case .success(let responseData):
@@ -52,13 +52,9 @@ class EventsController: ObservableObject {
         }
     }
     
-    static func fetchEvents(userId: Int, eventType: EventType, locationId: Int? = nil, order: String?, metadataFilter: [String: Any]? = nil, parentId: Int? = nil) async -> [EventModel] {
+    static func fetchEvents(nested: Bool, userId: Int? = nil, eventType: EventType? = nil, locationId: Int? = nil, order: String?, metadataFilter: [String: Any]? = nil, parentId: Int? = nil) async -> [EventModel] {
         
-        let graphqlQuery = EventsController.generateEventQuery(userId: userId, eventType: eventType, locationId: locationId, order: order, metadataFilter: metadataFilter, parentId: parentId)
-        var variables: [String: Any]? = nil
-        if let metadataFilter = metadataFilter {
-            variables = ["jsonfilter": metadataFilter]
-        }
+        let (graphqlQuery, variables) = EventsController.generateEventQuery(userId: userId, eventType: eventType, locationId: locationId, order: order, metadataFilter: metadataFilter, parentId: parentId, nested: nested)
         do {
             let responseData: EventsResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, variables: variables, responseType: EventsResponseData.self)
             return  responseData.data.events.sortEvents
@@ -69,16 +65,8 @@ class EventsController: ObservableObject {
         
     }
     
-    static func editEvent(id: Int, startTime: Date?, endTime:Date?, onSuccess: (() -> Void)? = nil) {
-        print("editing event")
-        let mutationQuery = """
-        mutation MyMutation($id: Int!, $start_time: timestamp, $end_time: timestamp) {
-          update_events_by_pk(pk_columns: {id: $id}, _set: {start_time: $start_time, end_time: $end_time}) {
-            id
-          }
-        }
-        """
-        let variables: [String: Any] = ["id": id, "start_time": startTime?.toUTCString ?? nil, "end_time": endTime?.toUTCString ?? nil]
+    static func editEvent(id: Int, startTime: Date? = nil, endTime:Date? = nil, parentId: Int? = nil, onSuccess: (() -> Void)? = nil) {
+        let (mutationQuery, variables) = EventsController.mutationQuery(id: id, startTime: startTime, endTime: endTime, parentId: parentId)
         struct EditEventResponse: Decodable {
             var data: EditEventWrapper
             struct EditEventWrapper: Decodable {
@@ -96,6 +84,38 @@ class EventsController: ObservableObject {
             }
         }
     }
+
+    static func mutationQuery(id: Int, startTime: Date? = nil, endTime: Date? = nil, parentId: Int? = nil) -> (String, [String: Any]) {
+        var parameterClauses: [String] = []
+        var setClauses: [String] = []
+        var variables: [String: Any] = ["id": id]
+
+        if let startTime = startTime {
+            parameterClauses.append("$start_time: timestamp!")
+            setClauses.append("start_time: $start_time")
+            variables["start_time"] = startTime.toUTCString
+        }
+        if let endTime = endTime {
+            parameterClauses.append("$end_time: timestamp!")
+            setClauses.append("end_time: $end_time")
+            variables["end_time"] = endTime.toUTCString
+        }
+        if let parentId = parentId {
+            parameterClauses.append("$parent_id: Int!")
+            setClauses.append("parent_id: $parent_id")
+            variables["parent_id"] = parentId
+        }
+        let mutationQuery = """
+        mutation MyMutation($id: Int!, \(parameterClauses.joined(separator: ", "))) {
+          update_events_by_pk(pk_columns: {id: $id}, _set: { \(setClauses.joined(separator: ", ")) }) {
+            id
+          }
+        }
+        """
+        return (mutationQuery, variables)
+    }
+    
+    
     
     static func deleteEvent(id: Int, onSuccess: (() -> Void)? = nil) {
         print("deleting event")
@@ -133,8 +153,14 @@ class EventsController: ObservableObject {
         Hasura.shared.stopListening(subscriptionId: subscriptionId)
     }
     
-    static func generateEventQuery(userId: Int, id: Int? = nil, gte: Date? = nil, eventType: EventType? = nil, locationId: Int? = nil, isSubscription: Bool = false, order: String? = "asc", metadataFilter: [String: Any]? = nil, parentId: Int? = nil) -> String {
-        var whereClauses: [String] = ["{user_id: {_eq: \(userId)}}"] // Fix syntax for where clause
+    static func generateEventQuery(userId: Int? = nil, id: Int? = nil, gte: Date? = nil, eventType: EventType? = nil, locationId: Int? = nil, isSubscription: Bool = false, order: String? = "asc", metadataFilter: [String: Any]? = nil, parentId: Int? = nil, nested: Bool = false) -> (String, [String: Any]) {
+        var whereClauses: [String] = [] 
+        var variables: [String: Any] = [:]
+        var parameterClauses: [String] = []
+        var includeChildren = false
+        if let userId = userId {
+            whereClauses.append("{user_id: {_eq: \(userId)}}")
+        }
         
         if let gteDate = gte {
             let startOfTodayUTCString = gteDate.toUTCString
@@ -159,6 +185,10 @@ class EventsController: ObservableObject {
         
         if let parentId = parentId {
             whereClauses.append("{parent_id: {_eq: \(parentId)}}")
+            includeChildren = true
+        } else if nested {
+            whereClauses.append("{parent_id: {_is_null: true }}")
+            includeChildren = true
         }
         
         if let id = id {
@@ -167,8 +197,9 @@ class EventsController: ObservableObject {
         
         var jsonFilter = ""
         if let metadataFilter = metadataFilter {
-            jsonFilter = "($jsonfilter: jsonb)"
+            parameterClauses.append("$jsonfilter: jsonb")
             whereClauses.append("{metadata: {_contains: $jsonfilter}}")
+            variables = ["jsonfilter": metadataFilter]
         }
         
         var orderByClause: String
@@ -196,33 +227,43 @@ class EventsController: ObservableObject {
         
         let whereClause = whereClauses.isEmpty ? "" : "where: {_and: [\(whereClauses.joined(separator: ", "))]}"
         let operationType = isSubscription ? "subscription" : "query"
-        
-        return """
-        \(operationType) EventsQuery\(jsonFilter) {
+        let childrenSelections = includeChildren ? "children {\(EventsController.eventSelections)}" : ""
+        let parameterString = parameterClauses.isEmpty ? "" : "(\(parameterClauses.joined(separator: ", ")))"
+
+        let query = """
+        \(operationType) EventsQuery\(parameterString) {
             events(\(orderByClause) \(whereClause)) {
-                start_time
-                end_time
-                id
-                event_type
-                parent_id
-                metadata
-                interaction {
-                    timestamp
-                    id
-                    content
-                }
-                locations {
-                  id
-                  name
-                  location
-                }
-                objects {
-                    object_type
-                    name
-                    id
-                }
+                \(EventsController.eventSelections)
+                \(childrenSelections)
             }
         }
+        """
+        return (query, variables)
+    }
+
+    private static var eventSelections: String {
+        return """
+            start_time
+            end_time
+            id
+            event_type
+            parent_id
+            metadata
+            interaction {
+                timestamp
+                id
+                content
+            }
+            locations {
+              id
+              name
+              location
+            }
+            objects {
+                object_type
+                name
+                id
+            }
         """
     }
 }

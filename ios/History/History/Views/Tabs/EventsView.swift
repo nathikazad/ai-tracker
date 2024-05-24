@@ -11,10 +11,11 @@ import Combine
 
 // Define your custom views for each tab
 struct EventsView: View {
-    @StateObject private var datePickerModel: DatePickerModel = DatePickerModel()
+    @State private var expandedEventIds: Set<Int> = []
+    @StateObject private var datePickerModel: TwoDatePickerModel = TwoDatePickerModel()
     @State private var events: [EventModel] = []
-    @State private var chosenEvent: EventModel?
     @State private var coreStateSubcription: AnyCancellable?
+    @State private var reassignParentForId: Int? = nil
     
     var chosenEventId: Int?
     
@@ -67,22 +68,21 @@ struct EventsView: View {
         )
     }
     
-    private func listenToEvents() {
-        var date: Date? = state.currentDate;
-        var parentId: Int? = nil
-        if let chosenEventId = chosenEventId {
-            date = nil;
-            parentId = chosenEventId
-            Task {
-                let event = await EventsController.fetchEvent(userId: Authentication.shared.userId!, id: chosenEventId)
-                DispatchQueue.main.async {
-                    self.chosenEvent = event
-                }
+    private var popupView: some View {
+        Group {
+            if datePickerModel.showPopupForId != nil {
+                TwoDatePickerView(datePickerModel: datePickerModel)
             }
-            
         }
-        EventsController.listenToEvents(userId: Authentication.shared.userId!, subscriptionId: subscriptionId, date: date, parentId: parentId) { events in
+    }
+    
+    private func listenToEvents() {
+        EventsController.listenToEvents(userId: Authentication.shared.userId!, subscriptionId: subscriptionId, nested: true, date: state.currentDate) {
+            events in
+            
+            print("EventsView: listenToEvents: new event")
             DispatchQueue.main.async {
+                self.events = []
                 self.events = events
             }
         }
@@ -104,73 +104,169 @@ struct EventsView: View {
     
     private var listView: some View {
         ScrollViewReader { proxy in
-            VStack {
-                List {
-                    ForEach(Array(events.sortEvents.enumerated()), id: \.element.id) { index, event in
-                        HStack {
-                            Text(event.formattedTime)
-                                .font(.headline)
-                                .frame(width: 100, alignment: .leading)
-                                .onTapGesture {
-                                    datePickerModel.showPopupForEvent(event: event)
-                                }
-                            Divider()
-                            destinationView(for: event) {
-                                VStack {
-                                Text("\(event.toString) (\(String(event.id)))")
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .font(.subheadline)
-                                }
-                            }
-                            
-                        }
-                        .id(event.id)
-                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                            Button(action: {
-                                print("Tapped right on \(event.id)")
-                                // TODO: start microphone with parameters
-                            }) {
-                                Image(systemName: "mic.fill")                                .foregroundColor(.green) // Setting the color of the icon
-                            }
-                        }
-                    }
-                    .onDelete { indices in
-                        indices.forEach { index in
-                            let eventId = events[index].id
-                            EventsController.deleteEvent(id: eventId)
-                        }
-                    }
-                }
-                .padding(.vertical, 0)
-                .onAppear {
-                    scrollProxy = proxy
-                }
-                .onChange(of: events) { _ in
-                    if state.currentDate == Calendar.current.startOfDay(for: Date())
-                       {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-                            if let lastId = events.last?.id {
-                                withAnimation(.easeInOut(duration: 0.5)) { // Customize the animation style and duration here
-//                                    print("changed \(lastId) \(scrollProxy == nil)")
-                                    scrollProxy?.scrollTo(lastId, anchor: .top)
+            VStack(spacing: 0) {
+                ZStack(alignment: .top) {
+                    List {
+                        ForEach(events.sortEvents, id: \.id) { event in
+                            eventRow(event)
+                            if event.children.count > 0 && expandedEventIds.contains(event.id) {
+                                ForEach(event.children.sortEvents, id: \.id) { child in
+                                    eventRow(child, level: 1)
                                 }
                             }
                         }
                     }
+                    .onAppear {
+                        scrollProxy = proxy
+                    }
+                    .onChange(of: events) {
+                        if state.currentDate == Calendar.current.startOfDay(for: Date())
+                        {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                                if let lastId = events.last?.id {
+                                    withAnimation(.easeInOut(duration: 0.5)) { // Customize the animation style and duration here
+                                        //                                    print("changed \(lastId) \(scrollProxy == nil)")
+                                        scrollProxy?.scrollTo(lastId, anchor: .top)
+                                    }
+                                }
+                            }
+                        }
+                        
+                    }
+                    .padding(.top, 15)
+                    
+                    HStack {
+                        Spacer()
+                        
+                        Button(action: {
+                            if expandedEventIds.count > 0 {
+                                expandedEventIds = []
+                            } else {
+                                expandedEventIds = Set(events.withChildren.map { $0.id })
+                            }
+                        }) {
+                            if expandedEventIds.count > 0 {
+                                Image(systemName: "minus.circle")
+                                    .padding()
+                                    .padding(.trailing, 15)
+                            } else {
+                                Image(systemName: "plus.circle")
+                                    .padding()
+                                    .padding(.trailing, 15)
+                            }
+                        }
+                    }
+                    .background(Color(uiColor: .secondarySystemBackground))
                 }
             }
         }
     }
     
-    private func destinationView<Content: View>(for event: EventModel, @ViewBuilder content: () -> Content) -> some View {
+    private func eventRow(_ event: EventModel, level: Int = 0) -> some View {
+        return HStack {
+            if(level > 0) {
+                Rectangle()
+                .frame(width: CGFloat(4 * level))
+                .foregroundColor(Color.gray)
+            }
+            Text(event.formattedTime)
+                .font(.headline)
+                .frame(width: 100, alignment: .leading)
+                .onTapGesture {
+                    print("tapped")
+                    datePickerModel.showPopupForEvent(event: event)
+                }
+            Divider()
+            
+            ZStack(alignment: .leading) {
+                HStack {
+                    Text("\(event.toString) (\(String(event.id)))")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .font(.subheadline)
+                    if(reassignParentForId != nil) {
+                        if(reassignParentForId == event.id) {
+                            Button(action: {
+                                reassignParentForId = nil
+                            }) {
+                                Image(systemName: "xmark")
+                            }
+                            .buttonStyle(HighPriorityButtonStyle())
+                        } else {
+                            Button(action: {
+                                print("Change parent of \(reassignParentForId) to \(event.id)")
+                                EventsController.editEvent(id: reassignParentForId!, parentId: event.id)
+                                reassignParentForId = nil
+                            }) {
+                                Image(systemName: "arrow.left.circle.fill")
+                            }
+                            .buttonStyle(HighPriorityButtonStyle())
+                        }
+                    } else if(event.children.count > 0) {
+                        Button(action: {
+                            if expandedEventIds.contains(event.id) {
+                                expandedEventIds.remove(event.id)
+                                
+                            } else {
+                                expandedEventIds.insert(event.id)
+                            }
+                        }) {
+                            if expandedEventIds.contains(event.id) {
+                                Image(systemName: "minus.circle")
+                            } else {
+                                Image(systemName: "plus.circle")
+                            }
+                        }
+                        .buttonStyle(HighPriorityButtonStyle())
+                    }
+                }
+                destinationLink(event)
+                
+            }
+            
+        }
+        .id(event.id)
+        .swipeActions(edge: .leading, allowsFullSwipe: false) {
+            Button(action: {
+                print("Clicked mic on \(event.id)")
+                // TODO: start microphone with parameters
+            }) {
+                Image(systemName: "mic.fill")
+            }
+            Button(action: {
+                print("Clicked chat on \(event.id)")
+                // TODO: start chat with parameters
+            }) {
+                Image(systemName: "message.fill")
+            }
+        }
+        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+            Button(action: {
+                print("Deleting \(event.id)")
+                EventsController.deleteEvent(id: event.id)
+            }) {
+                Image(systemName: "trash.fill")
+            }
+            .tint(.red)
+            Button(action: {
+                print("Clicked rearrange on \(event.id)")
+                reassignParentForId = event.id
+            }) {
+                Image(systemName: "arrow.up.and.line.horizontal.and.arrow.down")
+            }
+        }
+    }
+    
+    private func destinationLink(_ event: EventModel) -> some View {
         if let destination = eventDestination(for: event) {
             return AnyView(
                 NavigationLink(destination: destination) {
-                    content()
+                    EmptyView()
                 }
+                .padding(.horizontal, 10)
+                .opacity(0)
             )
         } else {
-            return AnyView(content())
+            return AnyView(EmptyView())
         }
     }
 
@@ -184,6 +280,8 @@ struct EventsView: View {
             if let polyline = event.metadata?.polyline {
                 return AnyView(PolylineView(encodedPolyline: polyline))
             }
+        case .working:
+            return AnyView(WorkView(event: event))
         case .sleeping:
             return AnyView(SleepView())
         case .praying:
@@ -200,113 +298,6 @@ struct EventsView: View {
             return nil
         }
         return nil
-    }
-
-    
-
-    
-    class DatePickerModel: ObservableObject {
-        @Published var startTime: Date = Date()
-        @Published var startTimeIsNull: Bool = false
-        @Published var endTime: Date =  Date()
-        @Published var endTimeIsNull: Bool = false
-        @Published private(set) var isShowingDatePicker = false
-        @Published private(set) var popupScreenFirst: Bool = true
-        @Published private(set) var showPopupForId: Int?
-
-        var getStartTime: Date? {
-            return startTimeIsNull ? nil : startTime
-        }
-
-        var getEndTime: Date? {
-            return endTimeIsNull ? nil : endTime
-        }
-        
-        func showPopupForEvent(event: EventModel) {
-            startTime = event.startTime ?? Date()
-            endTime = event.endTime ?? Date()
-            startTimeIsNull = event.startTime == nil
-            endTimeIsNull = event.endTime == nil
-            showPopupForId = event.id
-            popupScreenFirst = true
-        }
-        
-        func showNextScreen() {
-            popupScreenFirst = false
-        }
-        
-        func dismissPopup() {
-            showPopupForId = nil
-            print("dismissing popup")
-        }
-    }
-    
-    
-    private var popupView: some View {
-        Group {
-            if datePickerModel.showPopupForId != nil {
-                VStack {
-                    if(datePickerModel.popupScreenFirst) {
-                        Text("Start Time")
-                        Toggle("Null", isOn: $datePickerModel.startTimeIsNull)
-                            .padding()
-                        if !datePickerModel.startTimeIsNull {
-                            DatePicker("Start Time", selection: $datePickerModel.startTime, displayedComponents:  [.date, .hourAndMinute])
-                                .datePickerStyle(WheelDatePickerStyle())
-                                .frame(maxHeight: 150)
-                                .padding()
-                        }
-                        
-
-                        
-                    } else {
-                        Text("End Time")
-                        Toggle("Null", isOn: $datePickerModel.endTimeIsNull)
-                            .padding()
-                        if !datePickerModel.endTimeIsNull {
-                            DatePicker("End Time", selection: $datePickerModel.endTime, displayedComponents:  [.date, .hourAndMinute])
-                                .datePickerStyle(WheelDatePickerStyle())
-                                .frame(maxHeight: 150)
-                                .padding()
-                        }
-                        
-                    }
-                    
-                    Button(action: {
-                        if(datePickerModel.popupScreenFirst) {
-                            datePickerModel.showNextScreen()
-                        } else {
-                            DispatchQueue.main.async {
-                                let startTime = datePickerModel.getStartTime
-                                let endTime = datePickerModel.getEndTime
-                                EventsController.editEvent(id: datePickerModel.showPopupForId!, startTime: startTime, endTime: endTime)
-                                self.datePickerModel.dismissPopup()
-                            }
-                            
-                        }
-                    }) {
-                        Text(datePickerModel.popupScreenFirst ? "Next" : "Save")
-                            .foregroundColor(.primary)
-                    }
-                    .padding(.top, 5)
-                }
-                .padding()
-                .background(Color("OppositeColor"))
-                .cornerRadius(10)
-                .shadow(radius: 5)
-                .frame(width: 300)
-                .overlay(
-                    Button(action: {
-                        datePickerModel.dismissPopup()
-                    }) {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.largeTitle)
-                            .foregroundColor(.gray)
-                    },
-                    alignment: .topTrailing
-                )
-            }
-        }
     }
 }
 

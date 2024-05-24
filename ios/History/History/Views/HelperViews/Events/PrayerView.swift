@@ -23,12 +23,12 @@ struct PrayerView: View {
     private func fetchPrayerDetails() {
         Task {
             let userId: Int? = Authentication.shared.userId
-            let resp = await EventsController.fetchEvents(userId: userId!, eventType: .praying, order: "desc")
+            let resp = await EventsController.fetchEvents(nested: false, userId: userId!, eventType: .praying, order: "desc")
             DispatchQueue.main.async {
                 print("fetchPrayerDetails \(resp.count)")
                 maxDays = max(events.maxDays, 30)
                 selectedDays = min(maxDays, 7)
-                events = resp
+                events = resp.flatten
             }
         }
     }

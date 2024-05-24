@@ -51,6 +51,7 @@
 		FE900C0A2BD363ED00F97050 /* LocationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE900C092BD363ED00F97050 /* LocationController.swift */; };
 		FE9452F22BF2CC0900B28918 /* InteractionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9452F12BF2CC0900B28918 /* InteractionView.swift */; };
 		FE9477C02BFECF20003AD03A /* StayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9477BF2BFECF20003AD03A /* StayView.swift */; };
+		FE9477C42BFFB9E4003AD03A /* WorkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9477C32BFFB9E4003AD03A /* WorkView.swift */; };
 		FE96B5422BF81A8A000BD8E1 /* EventModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE96B5412BF81A8A000BD8E1 /* EventModel.swift */; };
 		FE96B5452BF8505D000BD8E1 /* BookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE96B5442BF8505D000BD8E1 /* BookView.swift */; };
 		FE96B5472BF8509E000BD8E1 /* ObjectController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE96B5462BF8509E000BD8E1 /* ObjectController.swift */; };
@@ -60,6 +61,8 @@
 		FE9EAE512BC042260082DE87 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9EAE502BC042260082DE87 /* ChatView.swift */; };
 		FEA34E6D2BD0B83300CE2A12 /* LocationsDebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA34E6C2BD0B83300CE2A12 /* LocationsDebugView.swift */; };
 		FEA549A52BD34D290058E7D8 /* LocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA549A42BD34D290058E7D8 /* LocationView.swift */; };
+		FEA98C112BFFC96C006BB857 /* HighPriorityButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA98C102BFFC96C006BB857 /* HighPriorityButtonStyle.swift */; };
+		FEA98C132BFFEC70006BB857 /* TwoDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA98C122BFFEC70006BB857 /* TwoDatePicker.swift */; };
 		FEB366E32BDDEC5D000A48C0 /* SendBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB366E22BDDEC5D000A48C0 /* SendBar.swift */; };
 		FEB366E62BDDF8F9000A48C0 /* Chart.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB366E52BDDF8F9000A48C0 /* Chart.swift */; };
 		FEB8FD1F2BAA253100EE9B68 /* Intents.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB8FD1E2BAA253100EE9B68 /* Intents.swift */; };
@@ -164,6 +167,7 @@
 		FE900C092BD363ED00F97050 /* LocationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationController.swift; sourceTree = "<group>"; };
 		FE9452F12BF2CC0900B28918 /* InteractionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionView.swift; sourceTree = "<group>"; };
 		FE9477BF2BFECF20003AD03A /* StayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StayView.swift; sourceTree = "<group>"; };
+		FE9477C32BFFB9E4003AD03A /* WorkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkView.swift; sourceTree = "<group>"; };
 		FE96B5412BF81A8A000BD8E1 /* EventModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventModel.swift; sourceTree = "<group>"; };
 		FE96B5442BF8505D000BD8E1 /* BookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookView.swift; sourceTree = "<group>"; };
 		FE96B5462BF8509E000BD8E1 /* ObjectController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectController.swift; sourceTree = "<group>"; };
@@ -173,6 +177,8 @@
 		FE9EAE502BC042260082DE87 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		FEA34E6C2BD0B83300CE2A12 /* LocationsDebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsDebugView.swift; sourceTree = "<group>"; };
 		FEA549A42BD34D290058E7D8 /* LocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationView.swift; sourceTree = "<group>"; };
+		FEA98C102BFFC96C006BB857 /* HighPriorityButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighPriorityButtonStyle.swift; sourceTree = "<group>"; };
+		FEA98C122BFFEC70006BB857 /* TwoDatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoDatePicker.swift; sourceTree = "<group>"; };
 		FEB366E22BDDEC5D000A48C0 /* SendBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendBar.swift; sourceTree = "<group>"; };
 		FEB366E52BDDF8F9000A48C0 /* Chart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chart.swift; sourceTree = "<group>"; };
 		FEB8FD1E2BAA253100EE9B68 /* Intents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intents.swift; sourceTree = "<group>"; };
@@ -237,6 +243,8 @@
 				FE3E9F652BC8ACAD008BD120 /* NavigationTitle.swift */,
 				FE477D922BD8122B001FC341 /* CalendarPicker.swift */,
 				FEB366E22BDDEC5D000A48C0 /* SendBar.swift */,
+				FEA98C102BFFC96C006BB857 /* HighPriorityButtonStyle.swift */,
+				FEA98C122BFFEC70006BB857 /* TwoDatePicker.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -401,6 +409,7 @@
 				FE9BA2E42BF6998600AE25A9 /* PrayerView.swift */,
 				FE69D7692BF6CFEE0061E2E6 /* LearnView.swift */,
 				FE9477BF2BFECF20003AD03A /* StayView.swift */,
+				FE9477C32BFFB9E4003AD03A /* WorkView.swift */,
 			);
 			path = Events;
 			sourceTree = "<group>";
@@ -575,7 +584,9 @@
 				FE4F7BA52BA7D79E0041CB6A /* ContentView.swift in Sources */,
 				FECA5EEC2BE56970007ADE17 /* EventsComponents.swift in Sources */,
 				FE8811EB2BC799BF00B112A8 /* GoalsController.swift in Sources */,
+				FEA98C112BFFC96C006BB857 /* HighPriorityButtonStyle.swift in Sources */,
 				FECA5EEE2BE569F6007ADE17 /* Time.swift in Sources */,
+				FEA98C132BFFEC70006BB857 /* TwoDatePicker.swift in Sources */,
 				FEB366E62BDDF8F9000A48C0 /* Chart.swift in Sources */,
 				FE12C5EA2BC4B330002CDC60 /* GoalsView.swift in Sources */,
 				FE71B3882BD07BCE008F7D1A /* AudioRecorder.swift in Sources */,
@@ -609,6 +620,7 @@
 				FE477D912BD5E3E2001FC341 /* EventsController.swift in Sources */,
 				FE96B5472BF8509E000BD8E1 /* ObjectController.swift in Sources */,
 				FE5264812BA99AF700502521 /* ServerCommunicator.swift in Sources */,
+				FE9477C42BFFB9E4003AD03A /* WorkView.swift in Sources */,
 				FE8811EF2BC799BF00B112A8 /* TodosController.swift in Sources */,
 				FED942102BE0767900F0B24C /* Investor.swift in Sources */,
 				FEA34E6D2BD0B83300CE2A12 /* LocationsDebugView.swift in Sources */,

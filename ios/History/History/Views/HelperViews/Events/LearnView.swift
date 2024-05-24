@@ -24,7 +24,8 @@ struct LearnView: View {
             if(skill != nil) {
                 metadatafilter = ["learning": ["skill": skill]]
             }
-            let resp = await EventsController.fetchEvents(userId: userId!,
+            let resp = await EventsController.fetchEvents(nested: false,
+                                                          userId: userId!,
                                                           eventType: .learning,
                                                           order: "desc",
                                                           metadataFilter: metadatafilter)

@@ -21,6 +21,7 @@ enum EventType: String, Decodable {
     case feeling = "feeling"
     case meeting = "meeting"
     case eating = "eating"
+    case working = "working"
     case unknown = "unknown"
 
     var capitalized: String {
@@ -48,6 +49,7 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
     var interaction: InteractionModel?
     var locations: [LocationModel] = []
     var objects: [ASObject] = []
+    var children: [EventModel] = []
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -59,6 +61,7 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
         case interaction
         case locations
         case objects
+        case children
     }
     
     init(from decoder: Decoder) throws {
@@ -78,6 +81,7 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
         endTime = endTimeString?.getDate
         locations = try container.decodeIfPresent([LocationModel].self, forKey: .locations) ?? []
         objects = try container.decodeIfPresent([ASObject].self, forKey: .objects) ?? []
+        children = try container.decodeIfPresent([EventModel].self, forKey: .children) ?? []
     }
     
     fileprivate func joinWords(_ names: [String]) -> String? {
@@ -110,6 +114,8 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
             } else {
                 return "Prayed"
             }
+        case .working:
+            return "Working"
         case .cooking:
             return metadata?.cookingData?.name != nil ? "Cooked \(metadata!.cookingData!.name!.capitalized)" : "Cooked Something"
         case .feeling:
@@ -156,6 +162,10 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
     
     var location: LocationModel? {
         return locations.first
+    }
+
+    var depth: Int {
+        return children.isEmpty ? 0 : 1 + children.map(\.depth).max()!
     }
 }
 
@@ -498,12 +508,37 @@ extension [EventModel] {
             return date1 ?? Date.distantFuture < date2 ?? Date.distantFuture
         }
     }
+
+    var flatten: [EventModel] {
+        var events: [EventModel] = []
+        for event in self {
+            events.append(event)
+            events.append(contentsOf: event.children.flatten)
+        }
+        return events.sortEvents   
+    }
+
+    // Get minimum and maximum depth of the event children tree
+    var depthRange: (Int, Int) {
+        var minDepth = Int.max
+        var maxDepth = 0
+        for event in self {
+            let depth = event.depth
+            minDepth = Swift.min(minDepth, depth)
+            maxDepth = Swift.max(maxDepth, depth)
+        }
+        return (minDepth, maxDepth)
+    }
     
     var numDays: Int {
         // get minimum date, maximum date, and then get the difference in days
         let minDate = self.min { $0.date < $1.date }?.date ?? Date()
         let maxDate = self.max { $0.date < $1.date }?.date ?? Date()
         return Calendar.current.dateComponents([.day], from: minDate, to: maxDate).day ?? 0
+    }
+
+    var withChildren: [EventModel] {
+        return self.filter { $0.children.count > 0 }
     }
 }
 
