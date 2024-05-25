@@ -27,11 +27,12 @@ app.post('/parseUserRequestFromAudio', async (req: Request, res: Response, next:
         let userLanguage = await getUserLanguage(userId)
         convertAudioToText(req, res, userLanguage, next, async (text: string) => {
             try {
-                // const parseText = req.headers.parse ?? "true"
-                // if (parseText == "true") {
-                //     console.log(`parsing text: ${text}`)
-                //     parseUserRequest(text.replace(/"/g, '').trim(), userId, req.body["parentEventId"] ?? undefined); 
-                // }
+                console.log(`final text2: ${text}`);
+                if (req.headers.parse) {
+                    console.log(`parsing text: ${text}`)
+                    let parentEventId = req.headers.parentEventId ? parseInt(req.headers.parentEventId as string) : undefined;
+                    parseUserRequest(text.replace(/"/g, '').trim(), userId, parentEventId); 
+                }
                 res.status(200).json({
                     status: "success",
                     text: text
