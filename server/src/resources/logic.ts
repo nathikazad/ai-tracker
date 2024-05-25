@@ -34,7 +34,7 @@ export async function parseUserRequest(text: string, userId: number, parentEvent
                 } else {
                     event.metadata = event.metadata ?? {}
                     event.metadata.notes = event.metadata.notes ?? {}
-                    event.metadata.notes[new Date().toISOString()] = interactionId
+                    event.metadata.notes[new Date().toISOString()] = text
                     await updateEvent(parentEventId, undefined, undefined, event.metadata, interactionId)
                     // also check for feeling or expense
                 }    
