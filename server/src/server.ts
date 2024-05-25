@@ -19,7 +19,6 @@ app.use(express.json());
 app.post('/parseUserRequestFromAudio', async (req: Request, res: Response, next: NextFunction) => {
     console.log(`inside parseUserRequestFromAudio`)
     console.log(req.headers.parse)
-    console.log(req.headers.parentEventId)
     console.log(req.headers.parenteventid)
     try {
         const userId = authorize(req); 
@@ -31,7 +30,7 @@ app.post('/parseUserRequestFromAudio', async (req: Request, res: Response, next:
                 console.log(`final text2: ${text}`);
                 if (req.headers.parse) {
                     console.log(`parsing text: ${text}`)
-                    let parentEventId = req.headers.parentEventId ? parseInt(req.headers.parentEventId as string) : undefined;
+                    let parentEventId = req.headers.parenteventid ? parseInt(req.headers.parenteventid as string) : undefined;
                     parseUserRequest(text.replace(/"/g, '').trim(), userId, parentEventId); 
                 }
                 res.status(200).json({
