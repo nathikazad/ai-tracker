@@ -19,7 +19,7 @@ app.use(express.json());
 app.post('/parseUserRequestFromAudio', async (req: Request, res: Response, next: NextFunction) => {
     console.log(`inside parseUserRequestFromAudio`)
     console.log(req.headers.parse)
-    console.log(req.body.parse)
+    console.log(req.headers.parentEventId)
     try {
         const userId = authorize(req); 
         console.log(`userId: ${userId}`)
