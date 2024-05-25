@@ -20,6 +20,7 @@ app.post('/parseUserRequestFromAudio', async (req: Request, res: Response, next:
     console.log(`inside parseUserRequestFromAudio`)
     console.log(req.headers.parse)
     console.log(req.headers.parentEventId)
+    console.log(req.headers.parenteventid)
     try {
         const userId = authorize(req); 
         console.log(`userId: ${userId}`)
@@ -53,9 +54,11 @@ app.post('/parseUserRequestFromAudio', async (req: Request, res: Response, next:
 app.post('/parseUserRequestFromText', async (req: Request, res: Response) => {
     try {
         const userId = authorize(req); 
-        const text = req.body["text"]    
+        const text = req.body["text"]
+        const parentEventId = req.body["parentEventId"]  ? parseInt(req.body["parentEventId"] as string) : undefined;
+        console.log(parentEventId)
         try {
-            parseUserRequest(text, userId); 
+            parseUserRequest(text, userId, parentEventId); 
             res.status(200).json({
                 status: "success",
                 text: text
