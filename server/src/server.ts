@@ -18,6 +18,8 @@ app.use(express.json());
 
 app.post('/parseUserRequestFromAudio', async (req: Request, res: Response, next: NextFunction) => {
     console.log(`inside parseUserRequestFromAudio`)
+    console.log(req.headers.parse)
+    console.log(req.body.parse)
     try {
         const userId = authorize(req); 
         console.log(`userId: ${userId}`)
@@ -25,7 +27,11 @@ app.post('/parseUserRequestFromAudio', async (req: Request, res: Response, next:
         let userLanguage = await getUserLanguage(userId)
         convertAudioToText(req, res, userLanguage, next, async (text: string) => {
             try {
-                parseUserRequest(text.replace(/"/g, '').trim(), userId); 
+                // const parseText = req.headers.parse ?? "true"
+                // if (parseText == "true") {
+                //     console.log(`parsing text: ${text}`)
+                //     parseUserRequest(text.replace(/"/g, '').trim(), userId, req.body["parentEventId"] ?? undefined); 
+                // }
                 res.status(200).json({
                     status: "success",
                     text: text
