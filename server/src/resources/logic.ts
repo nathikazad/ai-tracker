@@ -9,8 +9,13 @@ import { getUserTimeZone } from "./user";
 
 
 
-export async function parseUserRequest(text: string, userId: number) {
-    let interactionId = await insertInteraction(userId, text, "event", {});
+export async function parseUserRequest(text: string, userId: number, parentEventId: number | null = null) {
+    let debugInfo: any = {}
+    console.log(`parsing text: ${text}, parentEventId: ${parentEventId}`)
+    if(parentEventId) {
+        debugInfo["parentEventId"] = parentEventId
+    }
+    let interactionId = await insertInteraction(userId, text, "event", debugInfo);
     if(userId == 1 || userId == 2) {
         let timezone = await getUserTimeZone(userId)
         let i:Interaction = {
@@ -21,7 +26,14 @@ export async function parseUserRequest(text: string, userId: number) {
             timezone,
         }
         console.log(`Interaction(${i.id}) at  ${toPST(i.recordedAt)}: \n ${JSON.stringify(i, null, 4)}`)
-        await interactionToEvent(i)
+        if(parentEventId) {
+            // check whether it is stay event
+            //      if yes, then add the event to the stay using interactionToEvent(i, parentEventId)
+            //      if no, then add the event as a note to the parent event
+            //             also check for feeling or expense
+        } else {
+            await interactionToEvent(i)
+        }
     }
 }
 
