@@ -55,7 +55,6 @@ export function convertAudioToText(req: Request, res: Response, userLanguage: st
                             console.log(`spanish text to translate: ${value.text}`);
                             value.text = await translateToSpanish(value.text);
                         }
-                        console.log(`final text: ${text}`);
                         callback(value.text)
                         fs.unlink(newFile.path, () => {})
                     });

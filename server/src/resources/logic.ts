@@ -2,9 +2,9 @@ import { getHasura } from "../config";
 import { toPST } from "../helper/time";
 import { complete3 } from "../third/openai";
 import { insertInteraction } from "./interactions";
-import { Interaction, interactionToEvent } from "./logic/eventLogic";
+import { Category, Interaction, interactionToEvent } from "./logic/eventLogic";
 import { getUserTimeZone } from "./user";
-// import { parseGoal } from "./logic/goalLogic";
+import { getEvent, updateEvent } from "./events/eventLogicDb";
 
 
 
@@ -27,10 +27,18 @@ export async function parseUserRequest(text: string, userId: number, parentEvent
         }
         console.log(`Interaction(${i.id}) at  ${toPST(i.recordedAt)}: \n ${JSON.stringify(i, null, 4)}`)
         if(parentEventId) {
-            // check whether it is stay event
-            //      if yes, then add the event to the stay using interactionToEvent(i, parentEventId)
-            //      if no, then add the event as a note to the parent event
-            //             also check for feeling or expense
+            let event = await getEvent(userId, parentEventId)
+            if(event != null) {
+                if(event.eventType == Category.Stay) {
+                    await interactionToEvent(i, parentEventId)
+                } else {
+                    event.metadata = event.metadata ?? {}
+                    event.metadata.notes = event.metadata.notes ?? {}
+                    event.metadata.notes[new Date().toISOString()] = interactionId
+                    await updateEvent(parentEventId, undefined, undefined, event.metadata, interactionId)
+                    // also check for feeling or expense
+                }    
+            }
         } else {
             await interactionToEvent(i)
         }

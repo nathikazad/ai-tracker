@@ -100,7 +100,7 @@ export async function updateMovements(userId: number) {
     }
     console.log(`locations ${locations.length}`)
     console.log(`new locations ${newLocations.length}`)
-    let stationaryPeriods = findStationaryPeriods(newLocations, 3, 20, 60, 60 * 1000)
+    let stationaryPeriods = findStationaryPeriods(newLocations, 3, 20, 60, 5)
     console.log(`stationary periods ${stationaryPeriods.length}`)
     if(events.length == 2) {
         for(let i = 0; i < stationaryPeriods.length; i++) {
@@ -163,6 +163,7 @@ export async function updateMovements(userId: number) {
         }
         console.log(`update ${events[1].id} ${toPST(period.startTime)} ${toPST(period.endTime)} ${closestLocation.name}`)
         updateStay(events[1].id, new Date(period.startTime), new Date(period.endTime), closestLocation)
+        // update event triggers
     }
 
     
@@ -175,11 +176,12 @@ export async function updateMovements(userId: number) {
             location: convertASLocationToPostGISPoint(period.location),
             name: "Unknown location"
         }
-        if(new Date(period.endTime).getTime() - new Date(period.startTime).getTime() > 15 * 60 * 1000) {
-            let stayEvent = await insertStay(userId, new Date(period.startTime), new Date(period.endTime), closestLocation) 
-            if(closestLocation.id && stayEvent.insert_events_one) {
-                await associateEventWithLocation(userId, stayEvent.insert_events_one!.id, closestLocation.id);
-            }
+        
+        let stayEvent = await insertStay(userId, new Date(period.startTime), new Date(period.endTime), closestLocation) 
+        // inside event triggers
+
+        if(closestLocation.id && stayEvent.insert_events_one) {
+            await associateEventWithLocation(userId, stayEvent.insert_events_one!.id, closestLocation.id);
         }
     }
 }
@@ -256,7 +258,8 @@ function findStationaryPeriods(deviceLocations: DeviceLocation[], windowSize: nu
             mergedPoints.push(stationaryPeriods[i])
         }
     }
-    return mergedPoints;
+    // filter out periods that are less than 5 minutes
+    return mergedPoints.filter(p => new Date(p.endTime).getTime() - new Date(p.startTime).getTime() > minDuration * 60 * 1000)
 }
 
 function constructStationary(initData: DeviceLocation[], range: string) : StationaryPeriod {

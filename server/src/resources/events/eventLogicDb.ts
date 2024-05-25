@@ -36,7 +36,36 @@ export async function updateEvent(id: number, startTime:string | undefined, endT
     markInteractionAsTranscoded(interactionId)
 }
 
-export async function createEvent(event: ASEvent, category: Category, userId: number, interactionId: number) {
+export async function getEvent(userId: number, eventId: number) : Promise<{eventType: Category, metadata: any} | undefined> {
+    let event = await getHasura().query({
+        events: [
+            {
+                where: {
+                    id: {
+                        _eq: eventId
+                    },
+                    user_id: {
+                        _eq: userId
+                    }
+                }
+            },
+            {
+                event_type: true,
+                metadata: [{}, true]
+            }
+        ]
+    })
+    if(event.events.length == 0) {
+        return undefined
+    }
+    return {
+        eventType: event.events[0].event_type as Category,
+        metadata: event.events[0].metadata
+    }
+    
+}
+
+export async function createEvent(event: ASEvent, category: Category, userId: number, interactionId: number, parentEventId: number | undefined = undefined) {
     console.log(`Creating event: ${category}`)
     let resp = await getHasura().mutation({
         insert_events_one: [
@@ -48,7 +77,8 @@ export async function createEvent(event: ASEvent, category: Category, userId: nu
                     end_time: event.endTime,
                     metadata: $`metatadata`,
                     interaction_id: interactionId,
-                    logs: $`logs`
+                    logs: $`logs`,
+                    parent_id: parentEventId
                 }
                    
             },
