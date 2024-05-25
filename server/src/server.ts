@@ -57,7 +57,7 @@ app.post('/parseUserRequestFromText', async (req: Request, res: Response) => {
         const parentEventId = req.body["parentEventId"]  ? parseInt(req.body["parentEventId"] as string) : undefined;
         console.log(parentEventId)
         try {
-            parseUserRequest(text, userId, parentEventId); 
+            await parseUserRequest(text, userId, parentEventId); 
             res.status(200).json({
                 status: "success",
                 text: text
