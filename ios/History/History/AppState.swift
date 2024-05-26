@@ -29,16 +29,18 @@ class AppState: ObservableObject, MicrophoneDelegate {
     @Published private(set) var isProcessingRecording: Bool = false
     @Published private(set) var navigationStackIds: [Int] = []
     @Published var inForeground = true
+    @Published private(set) var parentEventId: Int? = nil
     
     private var microphone = Microphone()
     private let coreStatePublisher = PassthroughSubject<Void, Never>()
+    private let recordingFinishedPublisher = PassthroughSubject<String, Never>()
     
     init() {
         microphone.delegate = self
     }
     
-    func microphoneButtonClick() {
-        microphone.microphoneButtonClick()
+    func microphoneButtonClick(parse:Bool = true) {
+        microphone.microphoneButtonClick(parse: parse, parentEventId: parentEventId)
     }
     
     func didStartRecording() {
@@ -46,8 +48,13 @@ class AppState: ObservableObject, MicrophoneDelegate {
         isRecording = true
         isProcessingRecording = false
     }
+    
+    func setParentEventId(_ id:Int?) {
+        parentEventId = id
+    }
 
     func didStopRecording(response: String) {
+        recordingFinishedPublisher.send(response)
         print("ViewController is aware: Recording has stopped with response \(response)")
         isRecording = false
         isProcessingRecording = false
@@ -110,6 +117,11 @@ class AppState: ObservableObject, MicrophoneDelegate {
     
     func subscribeToCoreStateChanges(_ callback: @escaping () -> Void) -> AnyCancellable {
         return coreStatePublisher
+            .sink(receiveValue: callback)
+    }
+    
+    func subscribeToRecordingFinished(_ callback: @escaping (String) -> Void) -> AnyCancellable {
+        return recordingFinishedPublisher
             .sink(receiveValue: callback)
     }
 }

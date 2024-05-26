@@ -211,7 +211,7 @@ struct InteractionModel: Decodable, Identifiable, Hashable, Equatable {
     }
     
     var location : LocationModel? {
-        return event?.metadata?.location
+        return event?.location
     }
     
     var eventTypes: [EventType] {

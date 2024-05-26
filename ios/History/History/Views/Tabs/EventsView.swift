@@ -110,10 +110,8 @@ struct EventsView: View {
                     List {
                         ForEach(events.sortEvents, id: \.id) { event in
                             eventRow(event)
-                            if event.children.count > 0 && expandedEventIds.contains(event.id) {
-                                ForEach(event.children.sortEvents, id: \.id) { child in
-                                    eventRow(child, level: 1)
-                                }
+                            if expandedEventIds.contains(event.id) && event.children.count > 0 {
+                                expandedEventRows(event)
                             }
                         }
                     }
@@ -163,6 +161,16 @@ struct EventsView: View {
         }
     }
     
+    private func expandedEventRows(_ event: EventModel) -> some View {
+        return
+            ForEach(event.children.sortEvents, id: \.id) { child in
+                eventRow(child, level: 1)
+                // if expandedEventIds.contains(child.id) && child.hasNotes {
+                //     MinimizedNoteView(notes: child.metadata!.notes, level:2)
+                // }
+            }
+    }
+    
     private func eventRow(_ event: EventModel, level: Int = 0) -> some View {
         return HStack {
             if(level > 0) {
@@ -194,7 +202,6 @@ struct EventsView: View {
                             .buttonStyle(HighPriorityButtonStyle())
                         } else {
                             Button(action: {
-                                print("Change parent of \(reassignParentForId) to \(event.id)")
                                 EventsController.editEvent(id: reassignParentForId!, parentId: event.id)
                                 reassignParentForId = nil
                             }) {
@@ -202,7 +209,7 @@ struct EventsView: View {
                             }
                             .buttonStyle(HighPriorityButtonStyle())
                         }
-                    } else if(event.children.count > 0) {
+                    } else if(event.children.count > 0) { //|| event.hasNotes
                         Button(action: {
                             if expandedEventIds.contains(event.id) {
                                 expandedEventIds.remove(event.id)
@@ -229,13 +236,15 @@ struct EventsView: View {
         .swipeActions(edge: .leading, allowsFullSwipe: false) {
             Button(action: {
                 print("Clicked mic on \(event.id)")
-                // TODO: start microphone with parameters
+                state.setParentEventId(event.id)
+                state.microphoneButtonClick()
             }) {
                 Image(systemName: "mic.fill")
             }
             Button(action: {
                 print("Clicked chat on \(event.id)")
-                // TODO: start chat with parameters
+                state.setParentEventId(event.id)
+                state.showChat(newChatViewToShow: .normal)
             }) {
                 Image(systemName: "message.fill")
             }
@@ -277,12 +286,14 @@ struct EventsView: View {
             if let location = event.location {
                 return AnyView(LocationDetailView(location: location))
             }
-        case .commuting:
-            if let polyline = event.metadata?.polyline {
-                return AnyView(PolylineView(encodedPolyline: polyline))
-            }
+//        case .commuting:
+//            if let polyline = event.metadata?.polyline {
+//                return AnyView(PolylineView(encodedPolyline: polyline))
+//            }
         case .working:
-            return AnyView(WorkView(event: event, eventId: event.id))
+            return AnyView(NotesView(eventId: event.id, title: "Working"))
+        case .exercising:
+            return AnyView(NotesView(eventId: event.id, title: "Exercising"))
         case .sleeping:
             return AnyView(SleepView())
         case .praying:

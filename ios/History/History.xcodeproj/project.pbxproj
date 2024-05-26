@@ -51,7 +51,7 @@
 		FE900C0A2BD363ED00F97050 /* LocationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE900C092BD363ED00F97050 /* LocationController.swift */; };
 		FE9452F22BF2CC0900B28918 /* InteractionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9452F12BF2CC0900B28918 /* InteractionView.swift */; };
 		FE9477C02BFECF20003AD03A /* StayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9477BF2BFECF20003AD03A /* StayView.swift */; };
-		FE9477C42BFFB9E4003AD03A /* WorkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9477C32BFFB9E4003AD03A /* WorkView.swift */; };
+		FE9477C42BFFB9E4003AD03A /* NotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9477C32BFFB9E4003AD03A /* NotesView.swift */; };
 		FE950F202C011BE00022EA64 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE950F1F2C011BE00022EA64 /* AppState.swift */; };
 		FE96B5422BF81A8A000BD8E1 /* EventModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE96B5412BF81A8A000BD8E1 /* EventModel.swift */; };
 		FE96B5452BF8505D000BD8E1 /* BookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE96B5442BF8505D000BD8E1 /* BookView.swift */; };
@@ -59,6 +59,7 @@
 		FE977B0F2BD9C2A6008E743C /* SleepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE977B0E2BD9C2A6008E743C /* SleepView.swift */; };
 		FE9959542BC8B5B000F3187B /* RemindersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9959532BC8B5B000F3187B /* RemindersView.swift */; };
 		FE9BA2E52BF6998600AE25A9 /* PrayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9BA2E42BF6998600AE25A9 /* PrayerView.swift */; };
+		FE9E18B92C02933400611CE8 /* Popup.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9E18B82C02933400611CE8 /* Popup.swift */; };
 		FE9EAE512BC042260082DE87 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9EAE502BC042260082DE87 /* ChatView.swift */; };
 		FEA34E6D2BD0B83300CE2A12 /* LocationsDebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA34E6C2BD0B83300CE2A12 /* LocationsDebugView.swift */; };
 		FEA549A52BD34D290058E7D8 /* LocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA549A42BD34D290058E7D8 /* LocationView.swift */; };
@@ -168,7 +169,7 @@
 		FE900C092BD363ED00F97050 /* LocationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationController.swift; sourceTree = "<group>"; };
 		FE9452F12BF2CC0900B28918 /* InteractionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionView.swift; sourceTree = "<group>"; };
 		FE9477BF2BFECF20003AD03A /* StayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StayView.swift; sourceTree = "<group>"; };
-		FE9477C32BFFB9E4003AD03A /* WorkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkView.swift; sourceTree = "<group>"; };
+		FE9477C32BFFB9E4003AD03A /* NotesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesView.swift; sourceTree = "<group>"; };
 		FE950F1F2C011BE00022EA64 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		FE96B5412BF81A8A000BD8E1 /* EventModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventModel.swift; sourceTree = "<group>"; };
 		FE96B5442BF8505D000BD8E1 /* BookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookView.swift; sourceTree = "<group>"; };
@@ -176,6 +177,7 @@
 		FE977B0E2BD9C2A6008E743C /* SleepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepView.swift; sourceTree = "<group>"; };
 		FE9959532BC8B5B000F3187B /* RemindersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemindersView.swift; sourceTree = "<group>"; };
 		FE9BA2E42BF6998600AE25A9 /* PrayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerView.swift; sourceTree = "<group>"; };
+		FE9E18B82C02933400611CE8 /* Popup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Popup.swift; sourceTree = "<group>"; };
 		FE9EAE502BC042260082DE87 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		FEA34E6C2BD0B83300CE2A12 /* LocationsDebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsDebugView.swift; sourceTree = "<group>"; };
 		FEA549A42BD34D290058E7D8 /* LocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationView.swift; sourceTree = "<group>"; };
@@ -247,6 +249,7 @@
 				FEB366E22BDDEC5D000A48C0 /* SendBar.swift */,
 				FEA98C102BFFC96C006BB857 /* HighPriorityButtonStyle.swift */,
 				FEA98C122BFFEC70006BB857 /* TwoDatePicker.swift */,
+				FE9E18B82C02933400611CE8 /* Popup.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -412,7 +415,7 @@
 				FE9BA2E42BF6998600AE25A9 /* PrayerView.swift */,
 				FE69D7692BF6CFEE0061E2E6 /* LearnView.swift */,
 				FE9477BF2BFECF20003AD03A /* StayView.swift */,
-				FE9477C32BFFB9E4003AD03A /* WorkView.swift */,
+				FE9477C32BFFB9E4003AD03A /* NotesView.swift */,
 			);
 			path = Events;
 			sourceTree = "<group>";
@@ -622,9 +625,10 @@
 				FE8965AA2BC7B31D00E9D633 /* UserController.swift in Sources */,
 				FE477D912BD5E3E2001FC341 /* EventsController.swift in Sources */,
 				FE950F202C011BE00022EA64 /* AppState.swift in Sources */,
+				FE9E18B92C02933400611CE8 /* Popup.swift in Sources */,
 				FE96B5472BF8509E000BD8E1 /* ObjectController.swift in Sources */,
 				FE5264812BA99AF700502521 /* ServerCommunicator.swift in Sources */,
-				FE9477C42BFFB9E4003AD03A /* WorkView.swift in Sources */,
+				FE9477C42BFFB9E4003AD03A /* NotesView.swift in Sources */,
 				FE8811EF2BC799BF00B112A8 /* TodosController.swift in Sources */,
 				FED942102BE0767900F0B24C /* Investor.swift in Sources */,
 				FEA34E6D2BD0B83300CE2A12 /* LocationsDebugView.swift in Sources */,

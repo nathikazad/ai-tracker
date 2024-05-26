@@ -12,6 +12,7 @@ enum EventType: String, Decodable {
     case learning = "learning"
     case shopping = "shopping"
     case sleeping = "sleeping"
+    case exercising = "exercising"
     case commuting = "commute"
     case dancing = "dancing"
     case staying = "stay"
@@ -99,7 +100,7 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
     var toString: String {
         switch eventType {
         case .reading:
-            let name = metadata?.readingData?.name?.capitalized
+            let name = book?.name
             return name != nil ? "Read \(name!)" : "Read Something"
         case .learning:
             let skill = metadata?.learningData?.skill?.capitalized
@@ -116,6 +117,8 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
             }
         case .working:
             return "Working"
+        case .exercising:
+            return "Exercising"
         case .cooking:
             return metadata?.cookingData?.name != nil ? "Cooked \(metadata!.cookingData!.name!.capitalized)" : "Cooked Something"
         case .feeling:
@@ -135,7 +138,7 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
             let locationName = location?.name ?? "Unnamed location"
             return "\(locationName)\(eventName)"// \(timeTaken)"
         case .commuting:
-            let distance = metadata?.distance != nil ? "\(metadata!.distance!)km" : ""
+//            let distance = metadata?.distance != nil ? "\(metadata!.distance!)km" : ""
             return "Commute"// \(timeTaken) \(distance)"
         default:
             
@@ -162,6 +165,11 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
     
     var location: LocationModel? {
         return locations.first
+    }
+    
+    var hasNotes: Bool {
+        let count = metadata?.notes.count ?? 0
+        return count > 0
     }
 
     var depth: Int {
@@ -244,7 +252,7 @@ struct Association: Decodable {
 }
 
 struct Metadata: Decodable {
-    var location: LocationModel?
+//    var location: LocationModel?
     
     var readingData: ReadingData?
     var learningData: LearningData?
@@ -254,15 +262,10 @@ struct Metadata: Decodable {
     var feelingData: FeelingData?
     var meetingData: MeetingData?
     var eatingData: EatingData?
+    var notes: [Date: String] = [:]
     
-    var polyline: String?
-    var timeTaken: String?
-    var distance: String?
+
     enum CodingKeys: String, CodingKey {
-        case location
-        case polyline
-        case timeTaken = "time_taken"
-        case distance
         case readingData = "reading"
         case learningData = "learning"
         case cookingData = "cooking"
@@ -270,7 +273,35 @@ struct Metadata: Decodable {
         case eatingData = "eating"
         case meetingData = "meeting"
         case feelingData = "feeling"
-        
+        case notes
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        readingData = try container.decodeIfPresent(ReadingData.self, forKey: .readingData)
+        learningData = try container.decodeIfPresent(LearningData.self, forKey: .learningData)
+        prayerData = try container.decodeIfPresent(PrayerData.self, forKey: .prayerData)
+        cookingData = try container.decodeIfPresent(CookingData.self, forKey: .cookingData)
+        feelingData = try container.decodeIfPresent(FeelingData.self, forKey: .feelingData)
+        meetingData = try container.decodeIfPresent(MeetingData.self, forKey: .meetingData)
+        eatingData = try container.decodeIfPresent(EatingData.self, forKey: .eatingData)
+        let notes = try container.decodeIfPresent([String: String].self, forKey: .notes) ?? [:]
+        for (dateString, note) in notes {
+            if let date = dateString.getDate {
+                self.notes[date] = note
+            }
+        }
+    }
+
+    var notesToJson: [String: String] {
+        if !notes.isEmpty {
+            var notes: [String: String] = [:]
+            for (date, note) in self.notes {
+                notes[date.toUTCString] = note
+            }
+            return notes
+        }
+        return [:]
     }
     
     struct FeelingData: Decodable {

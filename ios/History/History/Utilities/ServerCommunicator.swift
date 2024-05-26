@@ -10,7 +10,8 @@ import Foundation
 class ServerCommunicator: ObservableObject {
     static var internetCheckTimer: Timer?
     static var pendingRequests: [(urlString: String, body: [String: Any]?, token: String?)] = []
-    static func uploadAudioFile(at fileUrl: URL, to uploadUrlString: String, token: String? = nil) throws -> Data? {
+    static func uploadAudioFile(at fileUrl: URL, to uploadUrlString: String, token: String? = nil, parse: Bool = true, parentEventId: Int? = nil) throws -> Data? {
+        
         guard let uploadUrl = URL(string: uploadUrlString) else {
             throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Invalid upload URL."])
         }
@@ -20,6 +21,15 @@ class ServerCommunicator: ObservableObject {
         
         if let token = token {
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+        
+        if parse {
+            request.setValue("true", forHTTPHeaderField: "parse")
+        }
+        
+        if let parentEventId = parentEventId {
+            print("ServerCommunicator: uploadAudioFile: setting parent id \(parentEventId)")
+            request.setValue(String(parentEventId), forHTTPHeaderField: "parentEventId")
         }
         
         

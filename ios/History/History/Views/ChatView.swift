@@ -133,23 +133,27 @@ class ChatViewModel: ObservableObject {
     
     func sendUserMessage(_ message: String, scrollToUserMessage: (Int) -> Void) {
         
-        
-        if(appState.chatViewToShow == .normal) {
+        print("ChatViewModel: sendUserMessage \(message)")
+//        if(appState.chatViewToShow == .normal) {
             addMessage(message: message, sender: .User)
             Task {
                 do {
-                    let response = try await ServerCommunicator.sendPostRequestAsync(to: parseTextEndpoint, body: ["text": message], token: Authentication.shared.hasuraJwt!, stackOnUnreachable: false)
+                    var body = ["text": message]
+                    if let parentEventId = state.parentEventId {
+                        body["parentEventId"] = String(parentEventId)
+                    }
+                    try await ServerCommunicator.sendPostRequestAsync(to: parseTextEndpoint, body: body, token: Authentication.shared.hasuraJwt!, stackOnUnreachable: false)
                     addComputerMessage(message: "Your message has been recorded")
                     addOkButton()
                 } catch {
                     print("Server communication error")
                 }
             }
-        } else if (appState.chatViewToShow == .investor) {
-            let scrollTo = chatContents.last!.id
-            addInvestorMessage()
-            scrollToUserMessage(scrollTo + 2)
-        }
+//        } else if (appState.chatViewToShow == .investor) {
+//            let scrollTo = chatContents.last!.id
+//            addInvestorMessage()
+//            scrollToUserMessage(scrollTo + 2)
+//        }
     }
     
     func addChatContent<V: View>(view: V) {
@@ -159,13 +163,15 @@ class ChatViewModel: ObservableObject {
 }
 
 struct ChatView: View {
+    
     @StateObject var chatViewModel:ChatViewModel
     @ObservedObject var appState = AppState.shared
     @State private var showKeyboard: Bool = false
     @State private var lastContentOffset: CGFloat = 0
     @State private var lastUpdateTime = Date()
     @State private var scrollToId: Int?  // State to determine which item to scroll to
-
+    
+    
     let closeCallback: () -> Void
     init(closeCallback: @escaping () -> Void) {
         self.closeCallback = closeCallback
@@ -197,9 +203,9 @@ struct ChatView: View {
                         }
                         lastContentOffset = value
                     }
-                    .onChange(of: scrollToId) { id in
+                    .onChange(of: scrollToId) { newValue, oldValue in
                         withAnimation {
-                            scrollView.scrollTo(id, anchor: .bottom)
+                            scrollView.scrollTo(newValue, anchor: .bottom)
                         }
                     }
                 }

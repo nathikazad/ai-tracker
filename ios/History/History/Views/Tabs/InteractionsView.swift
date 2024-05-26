@@ -8,11 +8,7 @@
 import SwiftUI
 import Combine
 
-enum ShowInPopup {
-    case text
-    case date
-    case none
-}
+
 
 // Define your custom views for each tab
 struct InteractionsView: View {
@@ -24,9 +20,6 @@ struct InteractionsView: View {
     @State private var coreStateSubcription: AnyCancellable?
     @State private var interactions: [InteractionModel] = []
 
-    
-
-    
     var body: some View {
         VStack {
             
@@ -73,9 +66,38 @@ struct InteractionsView: View {
         )
     }
     
+    func closePopup() {
+        showPopupForId = nil
+        showInPopup = .none
+        draftContent = ""
+    }
+    
+    private var popupView: some View {
+        Group {
+            if(showInPopup == .date) {
+                popupViewForDate(selectedTime: $selectedTime,
+                saveAction: {
+                    DispatchQueue.main.async {
+                        InteractionsController.editInteraction(id: showPopupForId!, fieldName: "timestamp", fieldValue: selectedTime.toUTCString)
+                        closePopup()
+                    }
+                }, closeAction: closePopup)
+            } else if showInPopup == .text {
+                popupViewForText(draftContent: $draftContent,
+                 saveAction: {
+                     DispatchQueue.main.async {
+                         InteractionsController.editInteraction(id: showPopupForId!, fieldName: "content", fieldValue: draftContent)
+                         closePopup()
+                     }
+                 }, closeAction: closePopup)
+            }
+        }
+    }
+    
     private func listenToInteractions() {
         InteractionsController.listenToInteractions(userId: Authentication.shared.userId!) { interactions in
             DispatchQueue.main.async {
+                self.interactions = []
                 self.interactions = interactions
             }
         }
@@ -118,24 +140,29 @@ struct InteractionsView: View {
                                         .font(.subheadline)
                                 }
                             } else {
-                                NavigationLink(destination: interactionLink(interaction: interaction)) {
-                                    VStack {
-                                        Text("\(interaction.content) ")
-                                            .font(.subheadline)
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                        HStack {
-                                            ForEach(interaction.eventTypes, id: \.self) { eventType in
-                                                Text(eventType.capitalized)
-                                                    .font(.subheadline)
-                                                    .padding(5)
-                                                    .background(Color.black)
-                                                    .foregroundColor(.white)
-                                                    .cornerRadius(5)
-                                            }
-                                        }
+                                VStack {
+                                    Text(interaction.content)
+                                        .font(.subheadline)
                                         .frame(maxWidth: .infinity, alignment: .leading)
+                                        .onTapGesture {
+                                            draftContent = interaction.content
+                                            showPopupForId = interaction.id
+                                            showInPopup = .text
+                                        }
+                                    HStack {
+                                        ForEach(interaction.eventTypes, id: \.self) { eventType in
+                                            Text(eventType.capitalized)
+                                                .font(.subheadline)
+                                                .padding(5)
+                                                .background(Color.black)
+                                                .foregroundColor(.white)
+                                                .cornerRadius(5)
+                                        }
                                     }
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                                 }
+                                
+//                                NavigationLink(destination: interactionLink(interaction: interaction)) {
                             }
                         }
                         .id(interaction.id)
@@ -183,67 +210,7 @@ struct InteractionsView: View {
             return AnyView(InteractionView(interaction: interaction.id))
 //        }
     }
-    
-    
-    private var popupView: some View {
-        Group {
-            if showPopupForId != nil {
-                VStack {
-                    if(showInPopup == .text) {
-                        Text("Edit Content")
-                            .font(.headline) // Optional: Sets the font for the title
-                            .padding(.bottom, 5) // Reduces the space below the title
-                        
-                        TextEditor(text: $draftContent)
-                            .frame(minHeight: 50, maxHeight: 200) // Reduces the minimum height and sets a max height
-                            .padding(4) // Reduces padding around the TextEditor
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 5)
-                                    .stroke(Color.gray, lineWidth: 1) // Border for TextEditor
-                            )
-                    } else if (showInPopup == .date) {
-                        DatePicker("Select Time", selection: $selectedTime, displayedComponents: .hourAndMinute)
-                            .datePickerStyle(WheelDatePickerStyle())
-                            .frame(maxHeight: 150)
-                    }
-                    
-                    Button(action: {
-                        DispatchQueue.main.async {
-                            if(showInPopup == .text) {
-                                InteractionsController.editInteraction(id: showPopupForId!, fieldName: "content", fieldValue: draftContent)
-                            } else if (showInPopup == .date) {
-                                InteractionsController.editInteraction(id: showPopupForId!, fieldName: "timestamp", fieldValue: selectedTime.toUTCString)
-                            }
-                            self.showInPopup = .none
-                            self.showPopupForId = nil
-                        }
-                    }) {
-                        Text("Save")
-                            .foregroundColor(.primary)
-                    }
-                    .padding(.top, 5)
-                }
-                .padding()
-                .background(Color("OppositeColor"))
-                .cornerRadius(10)
-                .shadow(radius: 5)
-                .frame(width: 300)
-                .overlay(
-                    Button(action: {
-                        showPopupForId = nil
-                        showInPopup = .none
-                    }) {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.largeTitle)
-                            .foregroundColor(.gray)
-                    },
-                    alignment: .topTrailing
-                )
-            }
-        }
-    }
 }
-
 
 #Preview {
     InteractionsView()

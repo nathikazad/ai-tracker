@@ -13,6 +13,7 @@ struct MicrophoneButton: View {
     var body: some View {
         VStack {
             Button(action: {
+                state.setParentEventId(nil)
                 appState.microphoneButtonClick()
                 print("Mic button tapped!")
             }) {
@@ -29,6 +30,7 @@ struct MicrophoneButton: View {
             .offset(y: -60)
             .padding(.bottom, -30)
             .simultaneousGesture(LongPressGesture().onEnded { _ in
+                    state.setParentEventId(nil)
                     appState.showChat(newChatViewToShow: .normal)
             })
         }

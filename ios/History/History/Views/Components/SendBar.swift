@@ -6,15 +6,16 @@
 //
 
 import SwiftUI
-
+import Combine
 struct SendBar: View {
     @Binding var currentMessage: String
     @Binding var showKeyboard: Bool
     var sendUserMessage: (String) -> Void
-    @State var isRecording: Bool = false
+    @ObservedObject var appState = AppState.shared
     @FocusState private var isTextFieldFocused: Bool
+    @State private var recordingSubscription: AnyCancellable?
     
-
+    
     
     private func getLineLimit(for text: String) -> Int {
         let lineCount = text.components(separatedBy: "\n").count
@@ -30,11 +31,11 @@ struct SendBar: View {
                 .lineLimit(getLineLimit(for: currentMessage), reservesSpace: true)
             Button(action: {
                 // Toggle recording state
-                self.isRecording.toggle()
+                appState.microphoneButtonClick(parse: false)
                 isTextFieldFocused = false
-                // Here, add the functionality to start/stop recording
+                
             }) {
-                Image(systemName: isRecording ? "stop.fill" : "mic.fill") // Change icon based on recording state
+                Image(systemName: appState.isRecording ? "stop.fill" : "mic.fill") // Change icon based on recording state
                     .foregroundColor(Color("OppositeColor"))
                     .padding(.horizontal, 8)
                     .padding(.vertical, 8)
@@ -43,11 +44,11 @@ struct SendBar: View {
             }
             .padding(.trailing, 0)
             .padding(.leading, 0)
-            .onChange(of: showKeyboard) { newValue in // hacked code to make keyboard disappear
+            .onChange(of: showKeyboard) {
                 print("on changed showKeyboard")
                 isTextFieldFocused = showKeyboard
             }
-            .onChange(of: isTextFieldFocused) { newValue in // hacked code to make keyboard disappear
+            .onChange(of: isTextFieldFocused) {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     print("on changed isTextFieldFocused")
                     showKeyboard = isTextFieldFocused
@@ -55,15 +56,26 @@ struct SendBar: View {
             }
             SendButton {
                 if !currentMessage.isEmpty {
-                    sendUserMessage(currentMessage)
                     currentMessage = ""
+                    sendUserMessage(currentMessage)
                 }
             }
-            .disabled(isRecording || currentMessage.isEmpty)
+            .disabled(appState.isRecording || currentMessage.isEmpty)
         }
         .padding(.bottom, 10)
         .padding(.horizontal, 20)
+        .onAppear {
+            recordingSubscription?.cancel()
+            recordingSubscription = AppState.shared.subscribeToRecordingFinished { response in
+                currentMessage.append(response)
+            }
+        }
+        .onDisappear {
+            recordingSubscription?.cancel()
+            recordingSubscription = nil
+        }
     }
+        
     
 }
 

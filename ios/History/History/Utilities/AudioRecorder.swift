@@ -20,16 +20,20 @@ class Microphone {
     var audioRecorder: AudioRecorder?
     var recordingTimer: Timer?
     var isRecording = false
+    var parse: Bool = true
+    var parentEventId: Int? = nil
     
     weak var delegate: MicrophoneDelegate?
     
-    func microphoneButtonClick() {
+    func microphoneButtonClick(parse: Bool = true, parentEventId: Int? = nil) {
         DispatchQueue.main.async {
             self.delegate?.didStartProcessingRecording()
         }
         recordingTimer?.invalidate()
         recordingTimer = nil
         if !isRecording {
+            self.parse = parse
+            self.parentEventId = parentEventId
             Task.init {
                 self.audioRecorder = AudioRecorder()
                 await self.audioRecorder!.startRecording()
@@ -51,6 +55,8 @@ class Microphone {
                     self.delegate?.didStopRecording(response: response)
                 }
                 self.audioRecorder = nil
+                self.parse = true
+                self.parentEventId = nil
                 print("Recording stopped")
             }
         }
@@ -60,8 +66,8 @@ class Microphone {
         guard let recorder = audioRecorder else { return "Audio recorder not initialized"}
         let fileUrl = await recorder.stopRecording()
         do {
-            let data = try ServerCommunicator.uploadAudioFile(at: fileUrl, to: parseAudioEndpoint, token: Authentication.shared.hasuraJwt!)
-            if let data = data, let responseText = String(data: data, encoding: .utf8) {
+            let data = try ServerCommunicator.uploadAudioFile(at: fileUrl, to: parseAudioEndpoint, token: Authentication.shared.hasuraJwt!, parse: parse, parentEventId: parentEventId)
+            if let data = data {
                 let decoder = JSONDecoder()
                 do {
                     struct Response: Codable {

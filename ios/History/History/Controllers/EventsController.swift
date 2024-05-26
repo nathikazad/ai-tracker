@@ -28,15 +28,34 @@ class EventsController: ObservableObject {
     }
     
     static func fetchEvent(id: Int) async -> EventModel? {
-        let (graphqlQuery, variables) = EventsController.generateEventQuery(id: id, nested: true)
+        let (graphqlQuery, variables) = EventsController.generateEventQuery(id: id, nested: false)
         do {
             // Directly get the decoded ResponseData object from sendGraphQL
             let responseData: EventsResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery,responseType: EventsResponseData.self)
-            return responseData.data.events[0]
+            if(responseData.data.events.count > 0) {
+                return responseData.data.events[0]
+            }
         } catch {
             print("Error: \(error.localizedDescription)")
             return nil
         }
+        return nil
+    }
+    
+    static func listenToEvent(id: Int, subscriptionId:String, eventUpdateCallback: @escaping (EventModel) -> Void) {
+        let (subscriptionQuery, variables) = EventsController.generateEventQuery(id: id, isSubscription: true, nested: false)
+        Hasura.shared.startListening(subscriptionId: subscriptionId, subscriptionQuery: subscriptionQuery, responseType: EventsResponseData.self) {result in
+            switch result {
+            case .success(let responseData):
+                if(responseData.data.events.count > 0) {
+                    eventUpdateCallback(responseData.data.events[0])
+                }
+                
+            case .failure(let error):
+                print("Error processing message: \(error.localizedDescription)")
+            }
+        }
+        
     }
     
     static func listenToEvents(userId: Int, subscriptionId:String, nested: Bool, date:Date?, parentId: Int? = nil, eventUpdateCallback: @escaping ([EventModel]) -> Void) {
@@ -65,8 +84,8 @@ class EventsController: ObservableObject {
         
     }
     
-    static func editEvent(id: Int, startTime: Date? = nil, endTime:Date? = nil, parentId: Int? = nil, onSuccess: (() -> Void)? = nil) {
-        let (mutationQuery, variables) = EventsController.mutationQuery(id: id, startTime: startTime, endTime: endTime, parentId: parentId)
+    static func editEvent(id: Int, startTime: Date? = nil, endTime:Date? = nil, parentId: Int? = nil, notes:[String:String]? = nil, onSuccess: (() -> Void)? = nil) {
+        let (mutationQuery, variables) = EventsController.mutationQuery(id: id, startTime: startTime, endTime: endTime, parentId: parentId, notes: notes)
         struct EditEventResponse: Decodable {
             var data: EditEventWrapper
             struct EditEventWrapper: Decodable {
@@ -85,7 +104,7 @@ class EventsController: ObservableObject {
         }
     }
 
-    static func mutationQuery(id: Int, startTime: Date? = nil, endTime: Date? = nil, parentId: Int? = nil) -> (String, [String: Any]) {
+    static func mutationQuery(id: Int, startTime: Date? = nil, endTime: Date? = nil, parentId: Int? = nil, notes:[String:String]? = nil ) -> (String, [String: Any]) {
         var parameterClauses: [String] = []
         var setClauses: [String] = []
         var variables: [String: Any] = ["id": id]
@@ -104,6 +123,11 @@ class EventsController: ObservableObject {
             parameterClauses.append("$parent_id: Int!")
             setClauses.append("parent_id: $parent_id")
             variables["parent_id"] = parentId
+        }
+        if let notes = notes {
+            parameterClauses.append("$metadata: jsonb!")
+            setClauses.append("metadata: $metadata")
+            variables["metadata"] = ["notes": notes]
         }
         let mutationQuery = """
         mutation MyMutation($id: Int!, \(parameterClauses.joined(separator: ", "))) {
