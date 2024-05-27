@@ -1,16 +1,17 @@
 import SwiftUI
 
-struct SleepView: View {
+struct EventTypeView: View {
     @State var events: [EventModel] = []
     @State private var selectedDays: Double = 7
     @State private var maxDays: Double = 7
     @State private var selectedTab: SelectedTab = .graphs
+    
+    var eventType: EventType
 
-
-    private func fetchSleepDetails() {
+    private func fetchEventDetails() {
         Task {
             let userId: Int? = Authentication.shared.userId
-            let resp = await EventsController.fetchEvents(nested: false, userId: userId!, eventType: .sleeping, order: "desc")
+            let resp = await EventsController.fetchEvents(userId: userId!, eventType: eventType, order: "desc")
             DispatchQueue.main.async {
                 maxDays = max(events.maxDays, 30)
                 selectedDays = min(maxDays, 7)
@@ -35,7 +36,7 @@ struct SleepView: View {
                 }
             }
         }
-        .onAppear(perform: fetchSleepDetails)
+        .onAppear(perform: fetchEventDetails)
     }
 }
 

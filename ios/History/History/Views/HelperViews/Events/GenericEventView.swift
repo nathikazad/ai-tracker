@@ -7,8 +7,9 @@
 
 
 import SwiftUI
-struct NotesView: View {
+struct GenericEventView: View {
     @State var event: EventModel? = nil
+    @State var parent: EventModel? = nil
     @State var chatViewPresented: Bool = false
     @State private var showInPopup: ShowInPopup = .none
     @State private var newDate: Date = Date()
@@ -21,81 +22,66 @@ struct NotesView: View {
     
     
     var eventId: Int
-    var title: String
-    
+    var parentId: Int?
 
     var subscriptionId: String {
         return "event/\(eventId)"
     }
-    
-    @State private var firstName: String = "John"
-    @State private var phoneNumber: String = "+1234567890"
 
     
     var body: some View {
-        NavigationView {
+//        NavigationView {
             Form {
-                Section(header: Text("Contact Info")) {
-                    TextField("First Name", text: $firstName)
-                    TextField("Phone Number", text: $phoneNumber)
-                }
-                
-                Section(header: Text("Notes")) {
-                    List {
-                        let notes: [Date: String] = event?.metadata?.notes ?? [:]
-                        ForEach(Array(notes.keys).sorted(by: <), id: \.self) { date in
-                            if let note = notes[date] {
-                                HStack {
-                                    Text(date.formattedTime)
-                                        .font(.headline)
-                                        .frame(width: 100, alignment: .leading)
-                                        .onTapGesture {
-                                            showInPopup = .date
-                                            newDate = date
-                                            showPopupForDate = date
-                                        }
-                                    Divider()
-                                    Text(note)
-                                        .onTapGesture {
-                                            showInPopup = .text
-                                            draftContent = note
-                                            showPopupForDate = date
-                                        }
-                                }
-                                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                                    Button(action: {
-                                        print("Deleting note \(eventId) \(date)")
-                                        if var notes = event?.metadata?.notesToJson {
-                                            notes.removeValue(forKey: date.toUTCString)
-                                            EventsController.editEvent(id: eventId, notes: notes)
-                                        }
-                                    }) {
-                                        Image(systemName: "trash.fill")
-                                    }
-                                    .tint(.red)
-                                }
+                if let event = event {
+                    Section(header: Text("Event Info")) {
+                        Text(event.formattedTimeWithDate)//
+                        
+                        ZStack(alignment: .leading) {
+                            Text("Event Type: \(event.eventType.capitalized)")
+                            EventDestination(event: event, destination: AnyView(EventTypeView(eventType: event.eventType)))
+                        }
+                        
+                        if let location = event.location ?? parent?.location {
+                            ZStack(alignment: .leading) {
+                                Text("Location: \(parent!.location!.name!)")
+                                EventDestination(event: parent!)
                             }
                         }
-                        Button(action: {
-                            print("Clicked plus")
-                            print("WorkView: body: \(state.navigationStackIds)")
-                            state.setParentEventId(eventId)
-                            chatViewPresented = true
-                        }) {
-                            Image(systemName: "plus.circle")
-                        }
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        
+                        // metadata
                     }
                 }
                 
+                
+                // Books
+                // Persons
+                // Recipes
+                
+                NotesView(event: $event,
+                          editDateAction:
+                            { date in
+                                    showInPopup = .date
+                                    newDate = date
+                                    showPopupForDate = date
+                            },
+                          editTextAction:
+                            { date, note in
+                                showInPopup = .text
+                                draftContent = note
+                                showPopupForDate = date
+                            },
+                          createNoteAction: {
+                            parentId in
+                                state.setParentEventId(parentId)
+                                chatViewPresented = true
+                                    
+                            }
+                )
                 if(event?.hasChildren ?? false) {
                     Section(header: Text("Events")) {
                         List {
                             ForEach(event!.children.sortEvents, id: \.id) { event in
                                 EventRow(
                                     event: event,
-                                    reassignParentForId: $reassignParentForId,
                                     expandedEventIds: $expandedEventIds,
                                     dateClickedAction: { event in
                                         //                                    datePickerModel.showPopupForEvent(event: event)
@@ -107,9 +93,7 @@ struct NotesView: View {
                     }
                 }
             }
-        }
-        
-        
+//        }
         .onAppear {
             EventsController.listenToEvent(id: eventId, subscriptionId: subscriptionId) {
                 event in
@@ -119,11 +103,21 @@ struct NotesView: View {
                     self.event = event
                 }
             }
+            if let parentId = parentId {
+                Task {
+                    print("GenericEventView fetching parent \(parentId)")
+                    let parent = await EventsController.fetchEvent(id: parentId)
+                        DispatchQueue.main.async {
+                            print("GenericEventView parent location \(parent?.location?.name ?? "Not tjere")")
+                            self.parent = parent
+                        }
+                    }
+            }
         }
         .onDisappear {
             EventsController.cancelListener(subscriptionId: subscriptionId)
         }
-        .navigationTitle("\(title)(\(String(eventId)))")
+        .navigationTitle("\(event?.eventType.capitalized ?? "Event")(\(String(eventId)))")
         .fullScreenCover(isPresented: $chatViewPresented) {
             ChatView {
                 chatViewPresented = false

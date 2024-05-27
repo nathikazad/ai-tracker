@@ -43,34 +43,6 @@ struct TabBar: View {
     }
 }
 
-struct EventsListView: View {
-    @Binding var events: [EventModel]
-
-    var body: some View {
-        // Group events by their formatted date
-        let groupedEvents = Dictionary(grouping: events) { $0.formattedDate }
-
-        let sortedDates = groupedEvents.keys.sorted(by: { (date1, date2) -> Bool in
-            let date1Components = date1.split(separator: " ")
-            let date2Components = date2.split(separator: " ")
-            
-            guard !date1Components.isEmpty, !date2Components.isEmpty, date1Components.count == 2, date2Components.count == 2 else {
-                return false
-            }
-            
-            return date1Components[1] > date2Components[1]
-        })
-
-        ForEach(sortedDates, id: \.self) { date in
-            Section(header: Text(date).font(.headline)) {
-                ForEach(groupedEvents[date]!) { event in
-                    Text("\(event.formattedTime): \(event.toString)")
-                        .font(.subheadline)
-                }
-            }
-        }
-    }
-}
 struct GraphView: View {
     @Binding var selectedDays: Double
     @Binding var events: [EventModel]
@@ -82,9 +54,9 @@ struct GraphView: View {
                 .padding(.bottom)
             BarView(title: "Total Hours per day", data: events.dailyTotals( days: Int(selectedDays)))
                 .padding(.bottom)
-//            ScatterView(title: "Start time",  data: events.startTimes(days: Int(selectedDays), unique: true))
-//            ScatterView(title: "End time", data: events.endTimes(days: Int(selectedDays), unique: true))
-//                .padding(.bottom)
+            //            ScatterView(title: "Start time",  data: events.startTimes(days: Int(selectedDays), unique: true))
+            //            ScatterView(title: "End time", data: events.endTimes(days: Int(selectedDays), unique: true))
+            //                .padding(.bottom)
         }
     }
 }

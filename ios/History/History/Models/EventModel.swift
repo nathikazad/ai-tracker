@@ -56,7 +56,7 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
         case id
         case startTime = "start_time"
         case endTime = "end_time"
-        case parentId
+        case parentId = "parent_id"
         case eventType = "event_type"
         case metadata
         case interaction
@@ -572,8 +572,8 @@ extension [EventModel] {
         return Calendar.current.dateComponents([.day], from: minDate, to: maxDate).day ?? 0
     }
 
-    var withChildren: [EventModel] {
-        return self.filter { $0.children.count > 0 }
+    var withChildrenOrNotes: [EventModel] {
+        return self.filter { $0.hasChildren || $0.hasNotes}
     }
 }
 

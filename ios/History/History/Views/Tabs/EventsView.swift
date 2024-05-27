@@ -15,12 +15,13 @@ struct EventsView: View {
     @StateObject private var datePickerModel: TwoDatePickerModel = TwoDatePickerModel()
     @State private var events: [EventModel] = []
     @State private var coreStateSubcription: AnyCancellable?
-    @State private var reassignParentForId: Int? = nil
     
-    var chosenEventId: Int?
+    var eventId: Int?
+    var eventType: EventType?
     
     var subscriptionId: String {
-        let id = chosenEventId != nil ? "/\(chosenEventId!)" : ""
+        var id = eventId != nil ? "/\(eventId!)" : ""
+        id += eventType != nil ? "/\(eventType!)" : ""
         return "events\(id)"
     }
     
@@ -78,7 +79,7 @@ struct EventsView: View {
     }
     
     private func listenToEvents() {
-        EventsController.listenToEvents(userId: Authentication.shared.userId!, subscriptionId: subscriptionId, nested: true, date: state.currentDate) {
+        EventsController.listenToEvents(userId: Authentication.shared.userId!, subscriptionId: subscriptionId, onlyRootNodes: true, date: state.currentDate, parentId: eventId) {
             events in
             
             print("EventsView: listenToEvents: new event")
@@ -109,40 +110,15 @@ struct EventsView: View {
                 ZStack(alignment: .top) {
                     List {
                         ForEach(events.sortEvents, id: \.id) { event in
-                            EventRow(
-                                event: event,
-                                reassignParentForId: $reassignParentForId,
-                                expandedEventIds: $expandedEventIds,
-                                dateClickedAction: { event in
-                                    datePickerModel.showPopupForEvent(event: event)
-                                }
-                                
-                            )
+                            eventRow(event)
                             if expandedEventIds.contains(event.id) && event.children.count > 0 {
+                                MinimizedNoteView(notes: event.metadata!.notes, level:1)
                                 ForEach(event.children.sortEvents, id: \.id) { child in
-                                    EventRow(
-                                        event: child,
-                                        reassignParentForId: $reassignParentForId,
-                                        expandedEventIds: $expandedEventIds,
-                                        dateClickedAction: { event in
-                                            datePickerModel.showPopupForEvent(event: event)
-                                        },
-                                        level: 1)
+                                    eventRow(child, level: 1)
                                     if expandedEventIds.contains(child.id) {
-                                        if child.hasNotes {
-                                            MinimizedNoteView(notes: child.metadata!.notes, level:2)
-                                        }
-                                        if child.hasChildren {
-                                            ForEach(child.children.sortEvents, id: \.id) { grandChild in
-                                                EventRow(
-                                                    event: grandChild,
-                                                    reassignParentForId: $reassignParentForId,
-                                                    expandedEventIds: $expandedEventIds,
-                                                    dateClickedAction: { event in
-                                                        datePickerModel.showPopupForEvent(event: event)
-                                                    },
-                                                    level: 2)
-                                            }
+                                        MinimizedNoteView(notes: child.metadata!.notes, level:2)
+                                        ForEach(child.children.sortEvents, id: \.id) { grandChild in
+                                            eventRow(grandChild, level: 2)
                                         }
                                      }
                                 }
@@ -175,7 +151,7 @@ struct EventsView: View {
                             if expandedEventIds.count > 0 {
                                 expandedEventIds = []
                             } else {
-                                expandedEventIds = Set(events.withChildren.map { $0.id })
+                                expandedEventIds = Set(events.withChildrenOrNotes.map { $0.id })
                             }
                         }) {
                             if expandedEventIds.count > 0 {
@@ -194,6 +170,17 @@ struct EventsView: View {
             }
         }
     }
+    
+    private func eventRow(_ event: EventModel, level: Int = 0) -> EventRow {
+        return EventRow(
+            event: event,
+            expandedEventIds: $expandedEventIds,
+            dateClickedAction: { event in
+                datePickerModel.showPopupForEvent(event: event)
+            },
+            level: level)
+    }
+    
 }
 
 

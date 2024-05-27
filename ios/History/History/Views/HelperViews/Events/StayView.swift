@@ -13,7 +13,7 @@ struct StayView: View {
 
     private func fetchData() {
         Task {
-            let childEvents = await EventsController.fetchEvents(nested: true, order: "desc", parentId:eventId)
+            let childEvents = await EventsController.fetchEvents(order: "desc", parentId:eventId)
             let event = await EventsController.fetchEvent(id:eventId)
             DispatchQueue.main.async {
                 self.childEvents = childEvents

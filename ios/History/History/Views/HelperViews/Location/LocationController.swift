@@ -77,23 +77,9 @@ class LocationsController: ObservableObject {
                 location
                 name
                 events {
-                    id
-                    metadata
-                    start_time
-                    end_time
-                    id
-                    event_type
-                    parent_id
-                    metadata
-                    locations {
-                      id
-                      name
-                      location
-                    }
-                    objects {
-                        object_type
-                        name
-                        id
+                    \(EventsController.eventSelections)
+                    children {
+                        \(EventsController.eventSelections)
                     }
                 }
 

@@ -28,7 +28,7 @@ class EventsController: ObservableObject {
     }
     
     static func fetchEvent(id: Int) async -> EventModel? {
-        let (graphqlQuery, variables) = EventsController.generateEventQuery(id: id, nested: false)
+        let (graphqlQuery, variables) = EventsController.generateEventQuery(id: id, onlyRootNodes: false)
         do {
             // Directly get the decoded ResponseData object from sendGraphQL
             let responseData: EventsResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery,responseType: EventsResponseData.self)
@@ -43,7 +43,7 @@ class EventsController: ObservableObject {
     }
     
     static func listenToEvent(id: Int, subscriptionId:String, eventUpdateCallback: @escaping (EventModel) -> Void) {
-        let (subscriptionQuery, variables) = EventsController.generateEventQuery(id: id, isSubscription: true, nested: false)
+        let (subscriptionQuery, variables) = EventsController.generateEventQuery(id: id, isSubscription: true, onlyRootNodes: false)
         Hasura.shared.startListening(subscriptionId: subscriptionId, subscriptionQuery: subscriptionQuery, responseType: EventsResponseData.self) {result in
             switch result {
             case .success(let responseData):
@@ -58,9 +58,9 @@ class EventsController: ObservableObject {
         
     }
     
-    static func listenToEvents(userId: Int, subscriptionId:String, nested: Bool, date:Date?, parentId: Int? = nil, eventUpdateCallback: @escaping ([EventModel]) -> Void) {
+    static func listenToEvents(userId: Int, subscriptionId:String, onlyRootNodes: Bool, date:Date?, parentId: Int? = nil, eventUpdateCallback: @escaping ([EventModel]) -> Void) {
         cancelListener(subscriptionId: subscriptionId)
-        let (subscriptionQuery, variables) = EventsController.generateEventQuery(userId: userId, gte: date, isSubscription: true, parentId: parentId, nested: nested)
+        let (subscriptionQuery, variables) = EventsController.generateEventQuery(userId: userId, gte: date, isSubscription: true, parentId: parentId, onlyRootNodes: onlyRootNodes)
         Hasura.shared.startListening(subscriptionId: subscriptionId, subscriptionQuery: subscriptionQuery, responseType: EventsResponseData.self) {result in
             switch result {
             case .success(let responseData):
@@ -71,9 +71,11 @@ class EventsController: ObservableObject {
         }
     }
     
-    static func fetchEvents(nested: Bool, userId: Int? = nil, eventType: EventType? = nil, locationId: Int? = nil, order: String?, metadataFilter: [String: Any]? = nil, parentId: Int? = nil) async -> [EventModel] {
+    static func fetchEvents(userId: Int? = nil, onlyRootNodes: Bool = false, eventType: EventType? = nil, locationId: Int? = nil, order: String?, metadataFilter: [String: Any]? = nil, parentId: Int? = nil) async -> [EventModel] {
         
-        let (graphqlQuery, variables) = EventsController.generateEventQuery(userId: userId, eventType: eventType, locationId: locationId, order: order, metadataFilter: metadataFilter, parentId: parentId, nested: nested)
+        let (graphqlQuery, variables) = EventsController.generateEventQuery(userId: userId, eventType: eventType, locationId: locationId, order: order, metadataFilter: metadataFilter, parentId: parentId, onlyRootNodes: onlyRootNodes)
+        print(graphqlQuery)
+        print(variables)
         do {
             let responseData: EventsResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, variables: variables, responseType: EventsResponseData.self)
             return  responseData.data.events.sortEvents
@@ -177,11 +179,11 @@ class EventsController: ObservableObject {
         Hasura.shared.stopListening(subscriptionId: subscriptionId)
     }
     
-    static func generateEventQuery(userId: Int? = nil, id: Int? = nil, gte: Date? = nil, eventType: EventType? = nil, locationId: Int? = nil, isSubscription: Bool = false, order: String? = "asc", metadataFilter: [String: Any]? = nil, parentId: Int? = nil, nested: Bool = false) -> (String, [String: Any]) {
-        var whereClauses: [String] = [] 
+    static func generateEventQuery(userId: Int? = nil, id: Int? = nil, gte: Date? = nil, eventType: EventType? = nil, locationId: Int? = nil, isSubscription: Bool = false, order: String? = "asc", metadataFilter: [String: Any]? = nil, parentId: Int? = nil, onlyRootNodes: Bool = false) -> (String, [String: Any]) {
+        var whereClauses: [String] = []
         var variables: [String: Any] = [:]
         var parameterClauses: [String] = []
-        var includeChildren = false
+//        var includeChildren = false
         if let userId = userId {
             whereClauses.append("{user_id: {_eq: \(userId)}}")
         }
@@ -209,10 +211,10 @@ class EventsController: ObservableObject {
         
         if let parentId = parentId {
             whereClauses.append("{parent_id: {_eq: \(parentId)}}")
-            includeChildren = true
-        } else if nested {
+//            includeChildren = true
+        } else if onlyRootNodes {
             whereClauses.append("{parent_id: {_is_null: true }}")
-            includeChildren = true
+//            includeChildren = true
         }
         
         if let id = id {
@@ -266,7 +268,7 @@ class EventsController: ObservableObject {
         return (query, variables)
     }
 
-    private static var eventSelections: String {
+    static var eventSelections: String {
         return """
             start_time
             end_time
