@@ -109,9 +109,43 @@ struct EventsView: View {
                 ZStack(alignment: .top) {
                     List {
                         ForEach(events.sortEvents, id: \.id) { event in
-                            eventRow(event)
+                            EventRow(
+                                event: event,
+                                reassignParentForId: $reassignParentForId,
+                                expandedEventIds: $expandedEventIds,
+                                dateClickedAction: { event in
+                                    datePickerModel.showPopupForEvent(event: event)
+                                }
+                                
+                            )
                             if expandedEventIds.contains(event.id) && event.children.count > 0 {
-                                expandedEventRows(event)
+                                ForEach(event.children.sortEvents, id: \.id) { child in
+                                    EventRow(
+                                        event: child,
+                                        reassignParentForId: $reassignParentForId,
+                                        expandedEventIds: $expandedEventIds,
+                                        dateClickedAction: { event in
+                                            datePickerModel.showPopupForEvent(event: event)
+                                        },
+                                        level: 1)
+                                    if expandedEventIds.contains(child.id) {
+                                        if child.hasNotes {
+                                            MinimizedNoteView(notes: child.metadata!.notes, level:2)
+                                        }
+                                        if child.hasChildren {
+                                            ForEach(child.children.sortEvents, id: \.id) { grandChild in
+                                                EventRow(
+                                                    event: grandChild,
+                                                    reassignParentForId: $reassignParentForId,
+                                                    expandedEventIds: $expandedEventIds,
+                                                    dateClickedAction: { event in
+                                                        datePickerModel.showPopupForEvent(event: event)
+                                                    },
+                                                    level: 2)
+                                            }
+                                        }
+                                     }
+                                }
                             }
                         }
                     }
@@ -159,157 +193,6 @@ struct EventsView: View {
                 }
             }
         }
-    }
-    
-    private func expandedEventRows(_ event: EventModel) -> some View {
-        return
-            ForEach(event.children.sortEvents, id: \.id) { child in
-                eventRow(child, level: 1)
-                // if expandedEventIds.contains(child.id) && child.hasNotes {
-                //     MinimizedNoteView(notes: child.metadata!.notes, level:2)
-                // }
-            }
-    }
-    
-    private func eventRow(_ event: EventModel, level: Int = 0) -> some View {
-        return HStack {
-            if(level > 0) {
-                Rectangle()
-                .frame(width: CGFloat(4 * level))
-                .foregroundColor(Color.gray)
-            }
-            Text(event.formattedTime)
-                .font(.headline)
-                .frame(width: 100, alignment: .leading)
-                .onTapGesture {
-                    print("tapped")
-                    datePickerModel.showPopupForEvent(event: event)
-                }
-            Divider()
-            
-            ZStack(alignment: .leading) {
-                HStack {
-                    Text("\(event.toString) (\(String(event.id)))")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .font(.subheadline)
-                    if(reassignParentForId != nil) {
-                        if(reassignParentForId == event.id) {
-                            Button(action: {
-                                reassignParentForId = nil
-                            }) {
-                                Image(systemName: "xmark")
-                            }
-                            .buttonStyle(HighPriorityButtonStyle())
-                        } else {
-                            Button(action: {
-                                EventsController.editEvent(id: reassignParentForId!, parentId: event.id)
-                                reassignParentForId = nil
-                            }) {
-                                Image(systemName: "arrow.left.circle.fill")
-                            }
-                            .buttonStyle(HighPriorityButtonStyle())
-                        }
-                    } else if(event.children.count > 0) { //|| event.hasNotes
-                        Button(action: {
-                            if expandedEventIds.contains(event.id) {
-                                expandedEventIds.remove(event.id)
-                                
-                            } else {
-                                expandedEventIds.insert(event.id)
-                            }
-                        }) {
-                            if expandedEventIds.contains(event.id) {
-                                Image(systemName: "minus.circle")
-                            } else {
-                                Image(systemName: "plus.circle")
-                            }
-                        }
-                        .buttonStyle(HighPriorityButtonStyle())
-                    }
-                }
-                destinationLink(event)
-                
-            }
-            
-        }
-        .id(event.id)
-        .swipeActions(edge: .leading, allowsFullSwipe: false) {
-            Button(action: {
-                print("Clicked mic on \(event.id)")
-                state.setParentEventId(event.id)
-                state.microphoneButtonClick()
-            }) {
-                Image(systemName: "mic.fill")
-            }
-            Button(action: {
-                print("Clicked chat on \(event.id)")
-                state.setParentEventId(event.id)
-                state.showChat(newChatViewToShow: .normal)
-            }) {
-                Image(systemName: "message.fill")
-            }
-        }
-        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-            Button(action: {
-                print("Deleting \(event.id)")
-                EventsController.deleteEvent(id: event.id)
-            }) {
-                Image(systemName: "trash.fill")
-            }
-            .tint(.red)
-            Button(action: {
-                print("Clicked rearrange on \(event.id)")
-                reassignParentForId = event.id
-            }) {
-                Image(systemName: "arrow.up.and.line.horizontal.and.arrow.down")
-            }
-        }
-    }
-    
-    private func destinationLink(_ event: EventModel) -> some View {
-        if let destination = eventDestination(for: event) {
-            return AnyView(
-                NavigationLink(destination: destination) {
-                    EmptyView()
-                }
-                .padding(.horizontal, 10)
-                .opacity(0)
-            )
-        } else {
-            return AnyView(EmptyView())
-        }
-    }
-
-    private func eventDestination(for event: EventModel) -> AnyView? {
-        switch event.eventType {
-        case .staying:
-            if let location = event.location {
-                return AnyView(LocationDetailView(location: location))
-            }
-//        case .commuting:
-//            if let polyline = event.metadata?.polyline {
-//                return AnyView(PolylineView(encodedPolyline: polyline))
-//            }
-        case .working:
-            return AnyView(NotesView(eventId: event.id, title: "Working"))
-        case .exercising:
-            return AnyView(NotesView(eventId: event.id, title: "Exercising"))
-        case .sleeping:
-            return AnyView(SleepView())
-        case .praying:
-            return AnyView(PrayerView())
-        case .learning:
-            if let skill = event.metadata?.learningData?.skill {
-                return AnyView(LearnView(skill: skill))
-            }
-        case .reading:
-            if let book = event.book {
-                return AnyView(BookView(bookId: book.id))
-            }
-        default:
-            return nil
-        }
-        return nil
     }
 }
 

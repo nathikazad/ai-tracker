@@ -171,6 +171,10 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
         let count = metadata?.notes.count ?? 0
         return count > 0
     }
+    
+    var hasChildren: Bool {
+        return children.count > 0
+    }
 
     var depth: Int {
         return children.isEmpty ? 0 : 1 + children.map(\.depth).max()!
@@ -261,7 +265,7 @@ struct Metadata: Decodable {
     var cookingData: CookingData?
     var feelingData: FeelingData?
     var meetingData: MeetingData?
-    var eatingData: EatingData?
+    var eatingData: [EatingData] = []
     var notes: [Date: String] = [:]
     
 
@@ -284,7 +288,7 @@ struct Metadata: Decodable {
         cookingData = try container.decodeIfPresent(CookingData.self, forKey: .cookingData)
         feelingData = try container.decodeIfPresent(FeelingData.self, forKey: .feelingData)
         meetingData = try container.decodeIfPresent(MeetingData.self, forKey: .meetingData)
-        eatingData = try container.decodeIfPresent(EatingData.self, forKey: .eatingData)
+        eatingData = try container.decodeIfPresent([EatingData].self, forKey: .eatingData) ?? []
         let notes = try container.decodeIfPresent([String: String].self, forKey: .notes) ?? [:]
         for (dateString, note) in notes {
             if let date = dateString.getDate {

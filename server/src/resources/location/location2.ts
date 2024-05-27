@@ -216,7 +216,7 @@ function findStationaryPeriods(deviceLocations: DeviceLocation[], windowSize: nu
         if(i < deviceLocations.length - 1) {
             distance = getDistance(deviceLocations[i], deviceLocations[i+1])
         }
-        console.log(`i: ${i} ${toPST(deviceLocations[i].timestamp)} ${velocity[i].toFixed(2)} ${deviceLocations[i].accuracy?.toFixed(2)} ${distance}`)
+        console.log(`i: ${i} ${toPST(deviceLocations[i].timestamp)} d:${distance} v:${velocity[i].toFixed(2)} a:${deviceLocations[i].accuracy?.toFixed(2)} `)
         points.push(deviceLocations[i])
         let totalPointsTime = 0
         if(points.length > 1)
@@ -230,13 +230,13 @@ function findStationaryPeriods(deviceLocations: DeviceLocation[], windowSize: nu
             if(velocity[i] > 0.5 || 
                 (distance > 150)) {
                 stationary = false
-                // console.log(`\tSTART ${stationaryPeriods.length} ${toPST(deviceLocations[i].timestamp)} ${velocity[i].toFixed(2)}`)
+                console.log(`\tSTART velThresh: ${velocity[i] > 0.5}, distThresh: ${distance > 150}`)
                 points = []
             }
         } else {
             if(velocity[i] < 0.5) {
                 stationary = true
-                // console.log(`\tSTOP ${stationaryPeriods.length} ${toPST(deviceLocations[i].timestamp)} ${velocity[i].toFixed(2)}`)
+                console.log(`\tSTOP ${stationaryPeriods.length} velThresh: ${velocity[i] < 0.5}`)
                 points = deviceLocations.slice(i, i+2)
                 stationaryPeriods.push(constructStationary(points, `${i} - ${i+1}`))
             }

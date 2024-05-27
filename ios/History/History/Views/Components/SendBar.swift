@@ -56,8 +56,8 @@ struct SendBar: View {
             }
             SendButton {
                 if !currentMessage.isEmpty {
-                    currentMessage = ""
                     sendUserMessage(currentMessage)
+                    currentMessage = ""
                 }
             }
             .disabled(appState.isRecording || currentMessage.isEmpty)

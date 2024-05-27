@@ -14,61 +14,101 @@ struct NotesView: View {
     @State private var newDate: Date = Date()
     @State private var showPopupForDate: Date = Date()
     @State private var draftContent = ""
+    
+    
+    @State var expandedEventIds: Set<Int> = []
+    @State var reassignParentForId: Int? = nil
+    
+    
     var eventId: Int
     var title: String
     
-    
-    var subscriptionId: String {
-        return "work\(eventId)"
-    }
 
+    var subscriptionId: String {
+        return "event/\(eventId)"
+    }
+    
+    @State private var firstName: String = "John"
+    @State private var phoneNumber: String = "+1234567890"
+
+    
     var body: some View {
-        List {
-            let notes: [Date: String] = event?.metadata?.notes ?? [:]
-            ForEach(Array(notes.keys).sorted(by: <), id: \.self) { date in
-                if let note = notes[date] {
-                    HStack {
-                        Text(date.formattedTime)
-                            .font(.headline)
-                            .frame(width: 100, alignment: .leading)
-                            .onTapGesture {
-                                showInPopup = .date
-                                newDate = date
-                                showPopupForDate = date
+        NavigationView {
+            Form {
+                Section(header: Text("Contact Info")) {
+                    TextField("First Name", text: $firstName)
+                    TextField("Phone Number", text: $phoneNumber)
+                }
+                
+                Section(header: Text("Notes")) {
+                    List {
+                        let notes: [Date: String] = event?.metadata?.notes ?? [:]
+                        ForEach(Array(notes.keys).sorted(by: <), id: \.self) { date in
+                            if let note = notes[date] {
+                                HStack {
+                                    Text(date.formattedTime)
+                                        .font(.headline)
+                                        .frame(width: 100, alignment: .leading)
+                                        .onTapGesture {
+                                            showInPopup = .date
+                                            newDate = date
+                                            showPopupForDate = date
+                                        }
+                                    Divider()
+                                    Text(note)
+                                        .onTapGesture {
+                                            showInPopup = .text
+                                            draftContent = note
+                                            showPopupForDate = date
+                                        }
+                                }
+                                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                    Button(action: {
+                                        print("Deleting note \(eventId) \(date)")
+                                        if var notes = event?.metadata?.notesToJson {
+                                            notes.removeValue(forKey: date.toUTCString)
+                                            EventsController.editEvent(id: eventId, notes: notes)
+                                        }
+                                    }) {
+                                        Image(systemName: "trash.fill")
+                                    }
+                                    .tint(.red)
+                                }
                             }
-                        Divider()
-                        Text(note)
-                        .onTapGesture {
-                            showInPopup = .text
-                            draftContent = note
-                            showPopupForDate = date
                         }
-                    }
-                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                         Button(action: {
-                            print("Deleting note \(eventId) \(date)")
-                            if var notes = event?.metadata?.notesToJson {
-                                notes.removeValue(forKey: date.toUTCString)
-                                EventsController.editEvent(id: eventId, notes: notes)
-                            }
+                            print("Clicked plus")
+                            print("WorkView: body: \(state.navigationStackIds)")
+                            state.setParentEventId(eventId)
+                            chatViewPresented = true
                         }) {
-                            Image(systemName: "trash.fill")
+                            Image(systemName: "plus.circle")
                         }
-                        .tint(.red)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        
+                    }
+                }
+                
+                if(event?.hasChildren ?? false) {
+                    Section(header: Text("Events")) {
+                        List {
+                            ForEach(event!.children.sortEvents, id: \.id) { event in
+                                EventRow(
+                                    event: event,
+                                    reassignParentForId: $reassignParentForId,
+                                    expandedEventIds: $expandedEventIds,
+                                    dateClickedAction: { event in
+                                        //                                    datePickerModel.showPopupForEvent(event: event)
+                                    }
+                                    
+                                )
+                            }
+                        }
                     }
                 }
             }
-            Button(action: {
-                print("Clicked plus")
-                print("WorkView: body: \(state.navigationStackIds)")
-                state.setParentEventId(eventId)
-                chatViewPresented = true
-            }) {
-                Image(systemName: "plus.circle")
-            }
-            .frame(maxWidth: .infinity, alignment: .center)
-            
         }
+        
         
         .onAppear {
             EventsController.listenToEvent(id: eventId, subscriptionId: subscriptionId) {
@@ -140,9 +180,9 @@ struct MinimizedNoteView: View {
                 HStack {
                     if(level > 0) {
                         Rectangle()
-                        .frame(width: 4)
-                        .foregroundColor(Color.gray)
-                        .padding(.leading, CGFloat(level * 4))
+                            .frame(width: 4)
+                            .foregroundColor(Color.gray)
+                            .padding(.leading, CGFloat(level * 4))
                     }
                     Text(date.formattedTime)
                         .font(.headline)
@@ -156,3 +196,4 @@ struct MinimizedNoteView: View {
         }
     }
 }
+

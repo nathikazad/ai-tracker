@@ -251,7 +251,8 @@ class EventsController: ObservableObject {
         
         let whereClause = whereClauses.isEmpty ? "" : "where: {_and: [\(whereClauses.joined(separator: ", "))]}"
         let operationType = isSubscription ? "subscription" : "query"
-        let childrenSelections = includeChildren ? "children {\(EventsController.eventSelections)}" : ""
+//        let childrenSelections = includeChildren ? "children {\(EventsController.eventSelections)}" : ""
+        let childrenSelections = "children {\(EventsController.eventSelections)\n children {\(EventsController.eventSelections)}}"
         let parameterString = parameterClauses.isEmpty ? "" : "(\(parameterClauses.joined(separator: ", ")))"
 
         let query = """
