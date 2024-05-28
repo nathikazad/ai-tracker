@@ -71,6 +71,7 @@ struct EventsListView: View {
     private func eventRow(_ event: EventModel, level: Int = 0) -> EventRow {
         return EventRow(
             event: event,
+            reassignParentForId: $reassignParentForId,
             expandedEventIds: $expandedEventIds,
             dateClickedAction: { event in
                 

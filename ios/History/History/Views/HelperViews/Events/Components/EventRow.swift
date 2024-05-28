@@ -7,35 +7,11 @@
 import SwiftUI
 struct EventRow: View {
     var event: EventModel
-    @State private var reassignParentForId: Int? = nil
+    @Binding var reassignParentForId: Int?
     @Binding var expandedEventIds: Set<Int>
     var dateClickedAction: ((EventModel) -> Void)?
     var level: Int = 0
     var showTimeWithRespectToCurrentDate: Bool = false
-    
-    func formatTime(_ event:EventModel) -> AttributedString {
-        if !showTimeWithRespectToCurrentDate {
-            return AttributedString(event.formattedTime)
-        }
-        let time = event.formattedTimeWithReferenceDate(state.currentDate)
-        let timeComponents = time.split(separator: "-1")
-        print(timeComponents)
-        let superScript = NSAttributedString(string: "-1",
-            attributes: [
-            .baselineOffset: 16,
-            .font: UIFont.systemFont(ofSize: 14),
-        ])
-        let attributedString = NSMutableAttributedString()
-        for i in 0..<timeComponents.count-1 {
-            attributedString.append(NSAttributedString(string: String(timeComponents[i])))
-            attributedString.append(superScript)
-        }
-        attributedString.append(NSAttributedString(string: String(timeComponents[timeComponents.count-1])))
-        if time.hasSuffix("-1") {
-            attributedString.append(superScript)
-        }
-        return AttributedString(attributedString)
-    }
     
     var body: some View {
         HStack {
@@ -97,6 +73,55 @@ struct EventRow: View {
                 Image(systemName: "arrow.up.and.line.horizontal.and.arrow.down")
             }
         }
+    }
+    
+    // super hacked up code to add subscripts
+    private func formatTime(_ event:EventModel) -> AttributedString {
+        if !showTimeWithRespectToCurrentDate {
+            return AttributedString(event.formattedTime)
+        }
+        let time = event.formattedTimeWithReferenceDate(state.currentDate)
+        let pattern = "(\\+1|-1)"
+        let regex = try! NSRegularExpression(pattern: pattern, options: [])
+        let range = NSRange(time.startIndex..<time.endIndex, in: time)
+        let matches = regex.matches(in: time, options: [], range: range)
+        if matches.count > 0 {
+            var arr: [String] = []
+            var index = 0
+            for match in matches {
+                let start = time.index(time.startIndex, offsetBy: index)
+                let midone = time.index(time.startIndex, offsetBy: match.range.lowerBound - 1)
+                let midtwo = time.index(time.startIndex, offsetBy: match.range.lowerBound)
+                let end = time.index(time.startIndex, offsetBy: match.range.upperBound-1)
+                arr.append(time[start...midone].lowercased())
+                arr.append(time[midtwo...end].lowercased())
+                index =  match.range.upperBound
+            }
+            if(index < time.count) {
+                let start = time.index(time.startIndex, offsetBy: index)
+                let mid = time.index(time.startIndex, offsetBy: time.count-1)
+                arr.append(time[start...mid].lowercased())
+            }
+            let attributedString = NSMutableAttributedString()
+            for i in 0..<arr.count {
+                
+                if arr[i] == "-1" {
+                    attributedString.append(NSAttributedString(string: " -1", attributes: [
+                        .baselineOffset: 16,
+                        .font: UIFont.systemFont(ofSize: 14),
+                    ]))
+                } else if arr[i] == "+1" {
+                    attributedString.append(NSAttributedString(string: " +1", attributes: [
+                        .baselineOffset: 16,
+                        .font: UIFont.systemFont(ofSize: 14),
+                    ]))
+                } else {
+                    attributedString.append(NSAttributedString(string: arr[i]))
+                }
+            }
+            return AttributedString(attributedString)
+        }
+        return AttributedString(time)
     }
 }
 

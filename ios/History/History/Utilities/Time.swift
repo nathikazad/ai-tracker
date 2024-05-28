@@ -48,7 +48,7 @@ extension Date {
     func formattedTimeWithReferenceDate(_ referenceDate: Date) -> String {
         let daysDifference = Calendar.currentInLocal.dateComponents([.day], from: referenceDate.startOfDay, to: self.startOfDay).day ?? 0
         if daysDifference != 0 {
-            return "\(formattedTime)\(daysDifference)"
+            return "\(formattedTime)\(String(format: "%+d", daysDifference))"
         } else {
             return formattedTime
         }

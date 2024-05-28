@@ -12,6 +12,7 @@ import Combine
 // Define your custom views for each tab
 struct EventsView: View {
     @State private var expandedEventIds: Set<Int> = []
+    @State private var reassignParentForId: Int? = nil
     @StateObject private var datePickerModel: TwoDatePickerModel = TwoDatePickerModel()
     @State private var events: [EventModel] = []
     @State private var coreStateSubcription: AnyCancellable?
@@ -197,6 +198,7 @@ struct EventsView: View {
     private func eventRow(_ event: EventModel, level: Int = 0) -> EventRow {
         return EventRow(
             event: event,
+            reassignParentForId: $reassignParentForId,
             expandedEventIds: $expandedEventIds,
             dateClickedAction: { event in
                 datePickerModel.showPopupForEvent(event: event)

@@ -69,6 +69,7 @@ struct GenericEventView: View {
                         ForEach(event!.children.sortEvents, id: \.id) { event in
                             EventRow(
                                 event: event,
+                                reassignParentForId: $reassignParentForId,
                                 expandedEventIds: $expandedEventIds
                             )
                         }
