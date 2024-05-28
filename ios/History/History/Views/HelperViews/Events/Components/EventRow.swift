@@ -9,8 +9,33 @@ struct EventRow: View {
     var event: EventModel
     @State private var reassignParentForId: Int? = nil
     @Binding var expandedEventIds: Set<Int>
-    var dateClickedAction: (EventModel) -> Void
+    var dateClickedAction: ((EventModel) -> Void)?
     var level: Int = 0
+    var showTimeWithRespectToCurrentDate: Bool = false
+    
+    func formatTime(_ event:EventModel) -> AttributedString {
+        if !showTimeWithRespectToCurrentDate {
+            return AttributedString(event.formattedTime)
+        }
+        let time = event.formattedTimeWithReferenceDate(state.currentDate)
+        let timeComponents = time.split(separator: "-1")
+        print(timeComponents)
+        let superScript = NSAttributedString(string: "-1",
+            attributes: [
+            .baselineOffset: 16,
+            .font: UIFont.systemFont(ofSize: 14),
+        ])
+        let attributedString = NSMutableAttributedString()
+        for i in 0..<timeComponents.count-1 {
+            attributedString.append(NSAttributedString(string: String(timeComponents[i])))
+            attributedString.append(superScript)
+        }
+        attributedString.append(NSAttributedString(string: String(timeComponents[timeComponents.count-1])))
+        if time.hasSuffix("-1") {
+            attributedString.append(superScript)
+        }
+        return AttributedString(attributedString)
+    }
     
     var body: some View {
         HStack {
@@ -18,14 +43,14 @@ struct EventRow: View {
                 Rectangle()
                     .frame(width: 4)
                     .foregroundColor(Color.gray)
-                    .padding(.leading, CGFloat(level * 4))
+                    .padding(.leading, CGFloat((level - 1) * 10))
             }
-            Text(event.formattedTime)
+            Text(formatTime(event))
                 .font(.headline)
                 .frame(width: 100, alignment: .leading)
                 .onTapGesture {
                     print("tapped")
-                    dateClickedAction(event)
+                    dateClickedAction?(event)
                 }
             Divider()
             

@@ -175,6 +175,10 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
     var hasChildren: Bool {
         return children.count > 0
     }
+    
+    var hasChildrenOrNotes: Bool {
+        return hasChildren || hasNotes
+    }
 
     var depth: Int {
         return children.isEmpty ? 0 : 1 + children.map(\.depth).max()!

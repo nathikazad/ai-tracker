@@ -33,10 +33,7 @@ private func eventDestination(for event: EventModel) -> AnyView? {
 //            if let polyline = event.metadata?.polyline {
 //                return AnyView(PolylineView(encodedPolyline: polyline))
 //            }
-    case .working:
-        return AnyView(GenericEventView(eventId: event.id, parentId: event.parentId))
-    case .exercising:
-        return AnyView(GenericEventView(eventId: event.id, parentId: event.parentId))
+
     case .sleeping:
         return AnyView(EventTypeView(eventType: .sleeping))
     case .praying:
@@ -45,12 +42,8 @@ private func eventDestination(for event: EventModel) -> AnyView? {
         if let skill = event.metadata?.learningData?.skill {
             return AnyView(LearnView(skill: skill))
         }
-    case .reading:
-        if let book = event.book {
-            return AnyView(BookView(bookId: book.id))
-        }
     default:
-        return nil
+        return AnyView(GenericEventView(eventId: event.id, parentId: event.parentId))
     }
     return nil
 }

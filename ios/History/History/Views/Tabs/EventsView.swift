@@ -15,6 +15,8 @@ struct EventsView: View {
     @StateObject private var datePickerModel: TwoDatePickerModel = TwoDatePickerModel()
     @State private var events: [EventModel] = []
     @State private var coreStateSubcription: AnyCancellable?
+    @State private var options = ["All"]
+    @State private var selectedOption = "All"
     
     var eventId: Int?
     var eventType: EventType?
@@ -86,6 +88,8 @@ struct EventsView: View {
             DispatchQueue.main.async {
                 self.events = []
                 self.events = events
+                self.options = Array(Set(events.flatten.map { $0.eventType.rawValue.capitalized }))
+                self.options.insert("All", at: 0)
             }
         }
     }
@@ -104,14 +108,22 @@ struct EventsView: View {
         }
     }
     
+    private var eventsToShow: [EventModel] {
+        if(selectedOption != "All") {
+            return events.flatten.filter { $0.eventType.rawValue.capitalized == selectedOption }.sortEvents
+        } else {
+            return events
+        }
+    }
+    
     private var listView: some View {
         ScrollViewReader { proxy in
             VStack(spacing: 0) {
                 ZStack(alignment: .top) {
                     List {
-                        ForEach(events.sortEvents, id: \.id) { event in
+                        ForEach(eventsToShow.sortEvents, id: \.id) { event in
                             eventRow(event)
-                            if expandedEventIds.contains(event.id) && event.children.count > 0 {
+                            if expandedEventIds.contains(event.id) {
                                 MinimizedNoteView(notes: event.metadata!.notes, level:1)
                                 ForEach(event.children.sortEvents, id: \.id) { child in
                                     eventRow(child, level: 1)
@@ -145,13 +157,24 @@ struct EventsView: View {
                     .padding(.top, 15)
                     
                     HStack {
-                        Spacer()
                         
+                        Picker("Options", selection: $selectedOption) {
+                            ForEach(options, id: \.self) { option in
+                                Text(option).tag(option)
+                            }
+                        }
+                        .pickerStyle(MenuPickerStyle())
+                        .padding(.leading, 15)
+                        // .onChange(of: selectedOption) { newValue in
+                        //     // Perform your action here
+                        //     print("Selected option changed to \(newValue)")
+                        // }
+                        Spacer()
                         Button(action: {
                             if expandedEventIds.count > 0 {
                                 expandedEventIds = []
                             } else {
-                                expandedEventIds = Set(events.withChildrenOrNotes.map { $0.id })
+                                expandedEventIds = Set(eventsToShow.withChildrenOrNotes.map { $0.id })
                             }
                         }) {
                             if expandedEventIds.count > 0 {
@@ -178,7 +201,8 @@ struct EventsView: View {
             dateClickedAction: { event in
                 datePickerModel.showPopupForEvent(event: event)
             },
-            level: level)
+            level: level,
+            showTimeWithRespectToCurrentDate: true)
     }
     
 }

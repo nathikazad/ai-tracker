@@ -44,6 +44,16 @@ extension Date {
         dateFormatter.timeZone = TimeZone.current // Local time zone
         return dateFormatter.string(from: self).replacingOccurrences(of: ".", with: "").lowercased() // a.m. -> am
     }
+
+    func formattedTimeWithReferenceDate(_ referenceDate: Date) -> String {
+        let daysDifference = Calendar.currentInLocal.dateComponents([.day], from: referenceDate.startOfDay, to: self.startOfDay).day ?? 0
+        if daysDifference != 0 {
+            return "\(formattedTime)\(daysDifference)"
+        } else {
+            return formattedTime
+        }
+    }
+    
     var formattedDate: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "EEE MM/dd" // Day of the week and date
@@ -171,6 +181,25 @@ extension EventModel {
     
     var formattedTime: String {
         return _formattedTime(fillWithX: false)
+    }
+
+    func formattedTimeWithReferenceDate(_ referenceDate: Date) -> String {
+        var formattedStartTime = ""
+        if let startTime = startTime {
+            formattedStartTime = startTime.formattedTimeWithReferenceDate(referenceDate)
+        }
+        var formattedEndTime = ""
+        if let endTime = endTime {
+            formattedEndTime = endTime.formattedTimeWithReferenceDate(referenceDate)
+        }
+        if (startTime != nil && endTime != nil) {
+            return "\(formattedStartTime) - \(formattedEndTime)"
+        } else if (startTime != nil) {
+            return "\(formattedStartTime)"
+        } else if (endTime != nil) {
+            return  "\(formattedEndTime)"
+        }
+        return ""
     }
     
     var formattedTimeWithX: String {

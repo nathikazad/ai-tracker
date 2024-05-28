@@ -11,11 +11,8 @@ struct GenericEventView: View {
     @State var event: EventModel? = nil
     @State var parent: EventModel? = nil
     @State var chatViewPresented: Bool = false
-    @State private var showInPopup: ShowInPopup = .none
-    @State private var newDate: Date = Date()
-    @State private var showPopupForDate: Date = Date()
-    @State private var draftContent = ""
-    
+    @StateObject private var noteStruct: NoteStruct = NoteStruct()
+    @StateObject private var bookStruct: BookStruct = BookStruct()
     
     @State var expandedEventIds: Set<Int> = []
     @State var reassignParentForId: Int? = nil
@@ -23,77 +20,62 @@ struct GenericEventView: View {
     
     var eventId: Int
     var parentId: Int?
-
+    
     var subscriptionId: String {
         return "event/\(eventId)"
     }
-
+    
     
     var body: some View {
-//        NavigationView {
-            Form {
-                if let event = event {
-                    Section(header: Text("Event Info")) {
-                        Text(event.formattedTimeWithDate)//
-                        
-                        ZStack(alignment: .leading) {
-                            Text("Event Type: \(event.eventType.capitalized)")
-                            EventDestination(event: event, destination: AnyView(EventTypeView(eventType: event.eventType)))
-                        }
-                        
-                        if let location = event.location ?? parent?.location {
-                            ZStack(alignment: .leading) {
-                                Text("Location: \(parent!.location!.name!)")
-                                EventDestination(event: parent!)
-                            }
-                        }
-                        // metadata
+        Form {
+            if let event = event {
+                Section(header: Text("Event Info")) {
+                    Text(event.formattedTimeWithDate)//
+
+                    NavigationLink(destination: EventTypeView(eventType: event.eventType)) {
+                        Text("Event Type: \(event.eventType.capitalized)")
                     }
+                    
+                    if let location = event.location ?? parent?.location {
+                        NavigationLink(destination: LocationDetailView(location: location)) {
+                            Text(location.name ?? "Unknown")
+                        }
+                    }
+                    
+                    if let interaction = event.interaction?.content {
+                        Text(interaction)
+                    }
+                    
+                    MinBooksView(event: $event, bookStruct: bookStruct)
                 }
-                
-                
-                // Books
-                // Persons
-                // Recipes
-                
-                NotesView(event: $event,
-                          editDateAction:
-                            { date in
-                                    showInPopup = .date
-                                    newDate = date
-                                    showPopupForDate = date
-                            },
-                          editTextAction:
-                            { date, note in
-                                showInPopup = .text
-                                draftContent = note
-                                showPopupForDate = date
-                            },
-                          createNoteAction: {
-                            parentId in
-                                state.setParentEventId(parentId)
-                                chatViewPresented = true
-                                    
-                            }
-                )
-                if(event?.hasChildren ?? false) {
-                    Section(header: Text("Events")) {
-                        List {
-                            ForEach(event!.children.sortEvents, id: \.id) { event in
-                                EventRow(
-                                    event: event,
-                                    expandedEventIds: $expandedEventIds,
-                                    dateClickedAction: { event in
-                                        //                                    datePickerModel.showPopupForEvent(event: event)
-                                    }
-                                    
-                                )
-                            }
+            }
+            
+            
+            // Books
+            // Persons
+            // Recipes
+            
+            NotesView(event: $event,
+                      noteStruct: noteStruct,
+                      createNoteAction: {
+                parentId in
+                state.setParentEventId(parentId)
+                chatViewPresented = true
+            }
+            )
+            if(event?.hasChildren ?? false) {
+                Section(header: Text("Events")) {
+                    List {
+                        ForEach(event!.children.sortEvents, id: \.id) { event in
+                            EventRow(
+                                event: event,
+                                expandedEventIds: $expandedEventIds
+                            )
                         }
                     }
                 }
             }
-//        }
+        }
         .onAppear {
             EventsController.listenToEvent(id: eventId, subscriptionId: subscriptionId) {
                 event in
@@ -107,11 +89,11 @@ struct GenericEventView: View {
                 Task {
                     print("GenericEventView fetching parent \(parentId)")
                     let parent = await EventsController.fetchEvent(id: parentId)
-                        DispatchQueue.main.async {
-                            print("GenericEventView parent location \(parent?.location?.name ?? "Not tjere")")
-                            self.parent = parent
-                        }
+                    DispatchQueue.main.async {
+                        print("GenericEventView parent location \(parent?.location?.name ?? "Not tjere")")
+                        self.parent = parent
                     }
+                }
             }
         }
         .onDisappear {
@@ -130,63 +112,7 @@ struct GenericEventView: View {
     
     private var popupView: some View {
         Group {
-            if(showInPopup == .date) {
-                popupViewForDate(selectedTime: $newDate,
-                                 saveAction: {
-                    DispatchQueue.main.async {
-                        if var notes = event?.metadata?.notesToJson {
-                            let content = notes[showPopupForDate.toUTCString]
-                            notes.removeValue(forKey: showPopupForDate.toUTCString)
-                            notes[newDate.toUTCString] = content
-                            EventsController.editEvent(id: eventId, notes: notes)
-                        }
-                        closePopup()
-                    }
-                }, closeAction: closePopup)
-            } else if showInPopup == .text {
-                popupViewForText(draftContent: $draftContent,
-                                 saveAction: {
-                    DispatchQueue.main.async {
-                        if var notes = event?.metadata?.notesToJson {
-                            notes[showPopupForDate.toUTCString] = draftContent
-                            EventsController.editEvent(id: eventId, notes: notes)
-                        }
-                        closePopup()
-                    }
-                }, closeAction: closePopup
-                )
-            }
-        }
-    }
-    
-    func closePopup() {
-        showInPopup = .none
-        draftContent = ""
-    }
-}
-
-struct MinimizedNoteView: View {
-    var notes: [Date: String]
-    var level: Int
-    var body: some View {
-        ForEach(Array(notes.keys).sorted(by: <), id: \.self) { date in
-            if let note = notes[date] {
-                HStack {
-                    if(level > 0) {
-                        Rectangle()
-                            .frame(width: 4)
-                            .foregroundColor(Color.gray)
-                            .padding(.leading, CGFloat(level * 4))
-                    }
-                    Text(date.formattedTime)
-                        .font(.headline)
-                        .frame(width: 100, alignment: .leading)
-                    Divider()
-                    Text(note)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .font(.subheadline)
-                }
-            }
+            NotesPopup(noteStruct: noteStruct, event: $event, eventId: eventId)
         }
     }
 }
