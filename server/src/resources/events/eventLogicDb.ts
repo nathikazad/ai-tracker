@@ -70,7 +70,7 @@ export async function getEvent(userId: number, eventId: number) : Promise<{event
 }
 
 export async function createEvent(event: ASEvent, category: Category, interaction: Interaction, parentEventId: number | undefined = undefined) {
-    console.log(`Creating event: ${category}`)
+    console.log(`Creating event: ${category} ${interaction.recordedAt}`)
     let resp = await getHasura().mutation({
         insert_events_one: [
             {
