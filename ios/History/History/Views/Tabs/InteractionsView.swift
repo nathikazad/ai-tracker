@@ -44,10 +44,10 @@ struct InteractionsView: View {
                 }
             }
             .onAppear {
-                if(Authentication.shared.areJwtSet) {
+                if(auth.areJwtSet) {
                     listenToInteractions()
                     coreStateSubcription?.cancel()
-                    coreStateSubcription = AppState.shared.subscribeToCoreStateChanges {
+                    coreStateSubcription = state.subscribeToCoreStateChanges {
                         print("Core state occurred")
                         listenToInteractions()
                     }
@@ -74,16 +74,16 @@ struct InteractionsView: View {
     
     private var popupView: some View {
         Group {
-            if(showInPopup == .date) {
-                popupViewForDate(selectedTime: $selectedTime,
+            if(showInPopup == .modifyDate) {
+                PopupViewForDate(selectedTime: $selectedTime,
                 saveAction: {
                     DispatchQueue.main.async {
                         InteractionsController.editInteraction(id: showPopupForId!, fieldName: "timestamp", fieldValue: selectedTime.toUTCString)
                         closePopup()
                     }
                 }, closeAction: closePopup)
-            } else if showInPopup == .text {
-                popupViewForText(draftContent: $draftContent,
+            } else if showInPopup == .modifyText {
+                PopupViewForText(draftContent: $draftContent,
                  saveAction: {
                      DispatchQueue.main.async {
                          InteractionsController.editInteraction(id: showPopupForId!, fieldName: "content", fieldValue: draftContent)
@@ -95,7 +95,7 @@ struct InteractionsView: View {
     }
     
     private func listenToInteractions() {
-        InteractionsController.listenToInteractions(userId: Authentication.shared.userId!) { interactions in
+        InteractionsController.listenToInteractions(userId: auth.userId!) { interactions in
             DispatchQueue.main.async {
                 self.interactions = []
                 self.interactions = interactions
@@ -130,7 +130,7 @@ struct InteractionsView: View {
                                 .onTapGesture {
                                     selectedTime = interaction.timestamp
                                     showPopupForId = interaction.id
-                                    showInPopup = .date
+                                    showInPopup = .modifyDate
                                 }
                             Divider()
                             
@@ -147,7 +147,7 @@ struct InteractionsView: View {
                                         .onTapGesture {
                                             draftContent = interaction.content
                                             showPopupForId = interaction.id
-                                            showInPopup = .text
+                                            showInPopup = .modifyText
                                         }
                                     HStack {
                                         ForEach(interaction.eventTypes, id: \.self) { eventType in

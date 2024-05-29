@@ -22,7 +22,7 @@ struct PrayerView: View {
 
     private func fetchPrayerDetails() {
         Task {
-            let userId: Int? = Authentication.shared.userId
+            let userId: Int? = auth.userId
             let resp = await EventsController.fetchEvents(userId: userId!, eventType: .praying, order: "desc")
             DispatchQueue.main.async {
                 print("fetchPrayerDetails \(resp.count)")

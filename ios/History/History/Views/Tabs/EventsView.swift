@@ -51,10 +51,10 @@ struct EventsView: View {
             }
             .onAppear {
                 print("EventsView: onAppear")
-                if(Authentication.shared.areJwtSet) {
+                if(auth.areJwtSet) {
                     listenToEvents()
                     coreStateSubcription?.cancel()
-                    coreStateSubcription = AppState.shared.subscribeToCoreStateChanges {
+                    coreStateSubcription = state.subscribeToCoreStateChanges {
                         print("Core state occurred")
                         listenToEvents()
                     }
@@ -82,7 +82,7 @@ struct EventsView: View {
     }
     
     private func listenToEvents() {
-        EventsController.listenToEvents(userId: Authentication.shared.userId!, subscriptionId: subscriptionId, onlyRootNodes: true, date: state.currentDate, parentId: eventId) {
+        EventsController.listenToEvents(userId: auth.userId!, subscriptionId: subscriptionId, onlyRootNodes: true, date: state.currentDate, parentId: eventId) {
             events in
             
             print("EventsView: listenToEvents: new event")

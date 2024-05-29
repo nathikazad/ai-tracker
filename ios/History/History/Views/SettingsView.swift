@@ -71,9 +71,9 @@ struct SettingsView: View {
                         }
                     }
                     Button(action: {
-                        Authentication.shared.signOutCallback()
-                        AppState.shared.hideSheet()
-                        AppState.shared.showChat(newChatViewToShow: .onBoard)
+                        auth.signOutCallback()
+                        state.hideSheet()
+                        state.showChat(newChatViewToShow: .onBoard)
                     }) {
                         Label("Logout", systemImage: "arrow.right.square.fill")
                             .foregroundColor(.primary)
@@ -84,8 +84,8 @@ struct SettingsView: View {
     }
     
     func changeUserId() {
-        let originalUser =  HasuraJWTObject(jwt: Authentication.shared.hasuraJwt!)
-        guard var currentUserId = Authentication.shared.hasuraJWTObject?.userId else { return }
+        let originalUser =  HasuraJWTObject(jwt: auth.hasuraJwt!)
+        guard var currentUserId = auth.hasuraJWTObject?.userId else { return }
         
         switch currentUserId {
         case 1:
@@ -98,7 +98,7 @@ struct SettingsView: View {
             currentUserId = 1
         }
         
-        Authentication.shared.hasuraJWTObject?.userId = currentUserId
+        auth.hasuraJWTObject?.userId = currentUserId
         print("User switched to \(currentUserId)")
         self.currentUserName = getName()
         state.notifyCoreStateChanged()
@@ -106,7 +106,7 @@ struct SettingsView: View {
 }
 
 func getName() -> String {
-    guard var currentUserId = Authentication.shared.hasuraJWTObject?.userId else { return "Unknown"}
+    guard var currentUserId = auth.hasuraJWTObject?.userId else { return "Unknown"}
     switch currentUserId {
     case 1:
         return "Nathik"

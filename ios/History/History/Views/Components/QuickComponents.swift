@@ -32,3 +32,28 @@ struct HighPriorityButtonStyle: PrimitiveButtonStyle {
         }
     }
 }
+struct LabelledTextField: View {
+    var name:String
+    @Binding var value:String
+    
+    var body: some View {
+        HStack {
+            Text("\(name):")
+                .foregroundColor(.gray)
+                .frame(width: 80, alignment: .leading)
+            TextField("\(name)", text: $value) {
+                UIApplication.shared.minimizeKeyboard()
+            }
+        }
+    }
+}
+
+
+extension UIApplication {
+    func minimizeKeyboard() {
+        sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
+
+
+

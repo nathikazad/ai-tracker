@@ -23,8 +23,8 @@ struct BookView: View {
             if book != nil {
                 List {
                     Section(header: Text("Book Details")) {
-                        Text("Date started: \(book!.dateStarted?.formattedShortDateAndTime ?? "Unknown")")
-                        Text("Date finished: \(book!.dateEnded?.formattedShortDateAndTime ?? "Unknown")")
+                        Text("Date started: \(book!.firstEventDate?.formattedShortDateAndTime ?? "Unknown")")
+                        Text("Date finished: \(book!.lastEventDate?.formattedShortDateAndTime ?? "Unknown")")
                         // round to 2 decimal places
                         let duration: String = String(format: "%.2f", book!.totalDurationInHours)
                         Text("Time Read: \(duration) hours")
@@ -43,7 +43,7 @@ struct BookView: View {
     
     private func fetchBook() {
         Task {
-            let resp = await ObjectController.fetchObject(objectId: bookId)
+            let resp = await ObjectController.fetchObject(type:ASObject.self, objectId: bookId)
             DispatchQueue.main.async {
                 book = resp
                 if let bookEvents = book?.events {
@@ -68,10 +68,8 @@ struct MinBooksView: View {
     
     var body: some View {
         if event?.eventType == .reading {
-            
-
                 if let book: ASObject = event?.book {
-                    NavigationLink(destination: BookView(bookId: book.id)) {
+                    NavigationLink(destination: BookView(bookId: book.id!)) {
                         Text("Book: \(book.name)")
                     }
                 } else if let bookName = event?.metadata?.readingData?.name {
@@ -120,8 +118,8 @@ struct BooksPopup: View {
     @Binding var event: EventModel?
     var eventId: Int
     var body: some View {
-        if(noteStruct.showInPopup == .date) {
-            popupViewForDate(selectedTime: $noteStruct.newDate,
+        if(noteStruct.showInPopup == .modifyDate) {
+            PopupViewForDate(selectedTime: $noteStruct.newDate,
                              saveAction: {
                 DispatchQueue.main.async {
                     if var notes = event?.metadata?.notesToJson {
@@ -133,8 +131,8 @@ struct BooksPopup: View {
                     closePopup()
                 }
             }, closeAction: closePopup)
-        } else if noteStruct.showInPopup == .text {
-            popupViewForText(draftContent: $noteStruct.draftContent,
+        } else if noteStruct.showInPopup == .modifyText {
+            PopupViewForText(draftContent: $noteStruct.draftContent,
                              saveAction: {
                 DispatchQueue.main.async {
                     if var notes = event?.metadata?.notesToJson {

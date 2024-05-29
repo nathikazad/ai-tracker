@@ -54,12 +54,12 @@ struct GoalsView: View {
                 }
             }
             .onAppear {
-                if(Authentication.shared.areJwtSet) {
+                if(auth.areJwtSet) {
                     print("Goal View has appeared")
                     Task {
-                        await goalsController.fetchGoals(userId: Authentication.shared.userId!)
+                        await goalsController.fetchGoals(userId: auth.userId!)
                     }
-                    goalsController.listenToGoals(userId: Authentication.shared.userId!)
+                    goalsController.listenToGoals(userId: auth.userId!)
                 }
             }
             .onDisappear {

@@ -21,7 +21,7 @@ class InteractionsController: ObservableObject {
     
 //    static func fetchInteractions(userId: Int) {
 //        Task {
-//            let graphqlQuery = InteractionsController.generateQuery(userId: userId, gte: AppState.shared.currentDate)
+//            let graphqlQuery = InteractionsController.generateQuery(userId: userId, gte: auth.currentDate)
 //            do {
 //                // Directly get the decoded ResponseData object from sendGraphQL
 //                let responseData: InteractionsResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, responseType: InteractionsResponseData.self)
@@ -115,7 +115,7 @@ class InteractionsController: ObservableObject {
     static func listenToInteractions(userId: Int, eventUpdateCallback: @escaping ([InteractionModel]) -> Void) {
         cancelListener()
         // print("listening for interactions")
-        let subscriptionQuery = InteractionsController.generateQuery(userId: userId, gte: AppState.shared.currentDate, isSubscription: true)
+        let subscriptionQuery = InteractionsController.generateQuery(userId: userId, gte: state.currentDate, isSubscription: true)
         
         Hasura.shared.startListening(subscriptionId: subscriptionId, subscriptionQuery: subscriptionQuery, responseType: InteractionsResponseData.self) {result in
             switch result {

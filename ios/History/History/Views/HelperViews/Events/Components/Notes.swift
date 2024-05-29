@@ -31,7 +31,7 @@ struct NotesView: View {
                                     .font(.headline)
                                     .frame(width: 100, alignment: .leading)
                                     .onTapGesture {
-                                        noteStruct.showInPopup = .date
+                                        noteStruct.showInPopup = .modifyDate
                                         noteStruct.newDate = date
                                         noteStruct.showPopupForDate = date
                                     }
@@ -39,7 +39,7 @@ struct NotesView: View {
                                 Text(note)
                                     .onTapGesture {
                                         print("tapped")
-                                        noteStruct.showInPopup = .text
+                                        noteStruct.showInPopup = .modifyText
                                         noteStruct.draftContent = note
                                         noteStruct.showPopupForDate = date
                                     }
@@ -77,8 +77,8 @@ struct NotesPopup: View {
     @Binding var event: EventModel?
     var eventId: Int
     var body: some View {
-        if(noteStruct.showInPopup == .date) {
-            popupViewForDate(selectedTime: $noteStruct.newDate,
+        if(noteStruct.showInPopup == .modifyDate) {
+            PopupViewForDate(selectedTime: $noteStruct.newDate,
                              saveAction: {
                 DispatchQueue.main.async {
                     if var notes = event?.metadata?.notesToJson {
@@ -90,8 +90,8 @@ struct NotesPopup: View {
                     closePopup()
                 }
             }, closeAction: closePopup)
-        } else if noteStruct.showInPopup == .text {
-            popupViewForText(draftContent: $noteStruct.draftContent,
+        } else if noteStruct.showInPopup == .modifyText {
+            PopupViewForText(draftContent: $noteStruct.draftContent,
                              saveAction: {
                 DispatchQueue.main.async {
                     if var notes = event?.metadata?.notesToJson {

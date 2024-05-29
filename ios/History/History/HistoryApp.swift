@@ -26,9 +26,9 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         foregroundObserver = NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: .main) { _ in
             print("entered foreground")
-            if(Authentication.shared.areJwtSet) {
+            if(auth.areJwtSet) {
                 Task {
-                    await Authentication.shared.checkAndReloadHasuraJwt()
+                    await auth.checkAndReloadHasuraJwt()
                     // print("calling setup from foreground observer")
                     Hasura.shared.setup()
                     await ServerCommunicator.processPendingRequests()

@@ -8,12 +8,41 @@
 import SwiftUI
 
 enum ShowInPopup {
-    case text
-    case date
+    case modifyText
+    case modifyDate
+    case modifyAssociation
+    case create
     case none
 }
 
-struct popupViewForText: View {
+struct PopupViewForPicker: View {
+    var options: [String]
+    var saveAction: (String) -> Void
+    var closeAction: () -> Void
+    @State var selectedOption:String = ""
+    
+    var body: some View {
+        Group {
+            PopupView(
+                editComponent:
+                    Group {
+                        Picker("Options", selection: $selectedOption) {
+                            ForEach(options, id: \.self) {
+                                Text($0)
+                            }
+                        }
+                        .pickerStyle(WheelPickerStyle())
+                    },
+                saveAction: {
+                    saveAction(selectedOption)
+                },
+                closeAction: closeAction
+            )
+        }
+    }
+}
+
+struct PopupViewForText: View {
     @Binding var draftContent: String
     var saveAction: () -> Void
     var closeAction: () -> Void
@@ -42,7 +71,7 @@ struct popupViewForText: View {
     }
 }
 
-struct popupViewForDate: View {
+struct PopupViewForDate: View {
     @Binding var selectedTime: Date
     var saveAction: () -> Void
     var closeAction: () -> Void

@@ -8,19 +8,13 @@
 import SwiftUI
 
 struct ContentView: View {
-    @ObservedObject var appState = AppState.shared
+    @ObservedObject var appState = state
     var chatViewPresented: Binding<Bool> {
         Binding(
             get: {
                 return self.appState.chatViewToShow != .none
             },
             set: { isPresented in
-                print("ContentView: chatViewPresented: set: \(isPresented)")
-//                if(isPresented) {
-//                    self.appState.showChat(newChatViewToShow: .normal)
-//                } else {
-//                    self.appState.showChat(newChatViewToShow: .none)
-//                }
             }
         )
     }
@@ -37,7 +31,7 @@ struct ContentView: View {
         }
         .onAppear {
             DispatchQueue.main.async {
-                if(!Authentication.shared.areJwtSet) {
+                if(!auth.areJwtSet) {
                     self.appState.showChat(newChatViewToShow:.onBoard)
                 }
             }
@@ -49,7 +43,7 @@ struct ContentView: View {
 
 struct MainView: View {
     @State private var selectedTab: Tab = .timeline
-    @ObservedObject var appState = AppState.shared
+    @ObservedObject var appState = state
     
     var sheetViewPresented: Binding<Bool> {
         Binding(

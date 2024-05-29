@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct CalendarButton: View {
-    @ObservedObject var state = AppState.shared
+    @ObservedObject var appState = state
     
     var body: some View {
         Button(action: {
-            AppState.shared.showSheet(newSheetToShow: .calendar)
+            appState.showSheet(newSheetToShow: .calendar)
         }) {
             Text(state.currentDate.formattedDateForCalendar)
                 .foregroundColor(.primary)

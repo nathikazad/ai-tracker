@@ -14,7 +14,7 @@ struct LocationsListView: View {
         .navigationTitle("User Locations")
         .onAppear {
             Task {
-                let resp = try await LocationsController.fetchLocations(userId: Authentication.shared.userId!)
+                let resp = try await LocationsController.fetchLocations(userId: auth.userId!)
                 DispatchQueue.main.async {
                     locations = resp
                 }

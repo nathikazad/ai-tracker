@@ -60,11 +60,11 @@ struct TodosView: View {
             .padding(.all, 0)
             .onAppear {
                 print("TodosView has appeared")
-                if(Authentication.shared.areJwtSet) {
+                if(auth.areJwtSet) {
                     Task {
-                        await todoController.fetchTodos(userId: Authentication.shared.userId!)
+                        await todoController.fetchTodos(userId: auth.userId!)
                     }
-                    todoController.listenToTodos(userId: Authentication.shared.userId!)
+                    todoController.listenToTodos(userId: auth.userId!)
                 }
             }
             .onDisappear {

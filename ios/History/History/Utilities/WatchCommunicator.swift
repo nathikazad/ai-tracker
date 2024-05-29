@@ -8,6 +8,10 @@
 import Foundation
 import WatchConnectivity
 
+var watch: WatchCommunicator {
+    return WatchCommunicator.shared
+}
+
 class WatchCommunicator: NSObject, WCSessionDelegate, ObservableObject {
     static let shared = WatchCommunicator()
     var session: WCSession
@@ -47,14 +51,14 @@ class WatchCommunicator: NSObject, WCSessionDelegate, ObservableObject {
         print("received something")
         if let messageContent = message["data"] as? String {
             print("Received message: \(messageContent)")
-            sendToWatch()
+            sync()
         }
     }
 
     func sessionReachabilityDidChange(_ session: WCSession) {
         if session.isReachable {
             print("Watch became reachable.")
-            sendToWatch()
+            sync()
         } else {
             print("Watch became unreachable.")
         }
@@ -69,12 +73,12 @@ class WatchCommunicator: NSObject, WCSessionDelegate, ObservableObject {
     }
     
     
-    func sendToWatch() {
+    func sync() {
         print("sending data to watch")
         if session.isReachable {
             print("watch reachable")
-            let userId = Authentication.shared.hasuraJWTObject?.userId
-            let message = ["hasuraJwt": Authentication.shared.hasuraJwt ?? "nil", "userId": (userId != nil) ? String(userId!) : "nil"]
+            let userId = auth.hasuraJWTObject?.userId
+            let message = ["hasuraJwt": auth.hasuraJwt ?? "nil", "userId": (userId != nil) ? String(userId!) : "nil"]
             session.sendMessage(message as [String : Any], replyHandler: nil) { (error) in
                 print(error.localizedDescription)
             }

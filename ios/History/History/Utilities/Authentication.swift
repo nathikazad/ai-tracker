@@ -8,6 +8,11 @@
 import Foundation
 import AuthenticationServices
 
+
+var auth: Authentication {
+    return Authentication.shared
+}
+
 class Authentication {
     static let shared = Authentication()
     
@@ -70,13 +75,13 @@ class Authentication {
     }
     
     func signInCallback() {
-        Hasura.shared.setup()
-        WatchCommunicator.shared.sendToWatch()
+        hasura.setup()
+        watch.sync()
         Task {
             user = try await UserController.fetchUser()
-            if LocationManager.shared.isTrackingLocation {
+            if locationManager.isTrackingLocation {
                 print("Authentication: signInCallback: Tracking location enabled")
-                LocationManager.shared.startMonitoringLocation()
+                locationManager.startMonitoringLocation()
             }
             await UserController.ensureUserTimezone()
             
@@ -87,9 +92,9 @@ class Authentication {
     func signOutCallback() {
         UserDefaults.standard.removeObject(forKey: hasuraJwtKey)
         UserDefaults.standard.removeObject(forKey: appleJwtKey)
-        WatchCommunicator.shared.sendToWatch()
-        Hasura.shared.closeConnection()
-        LocationManager.shared.stopMonitoringLocation()
+        watch.sync()
+        hasura.closeConnection()
+        locationManager.stopMonitoringLocation()
     }
 }
 
@@ -111,11 +116,11 @@ func handleSignIn(result: Result<ASAuthorization, any Error>) async -> Bool {
         }
         let userLanguage = Locale(identifier:Locale.preferredLanguages.first ?? "en").language.languageCode?.identifier ?? "en"
         print("User Language: \(userLanguage)")
-        Authentication.shared.appleJwt = identityTokenString
+        auth.appleJwt = identityTokenString
         let jwt = await fetchHasuraJwt(appleKey: identityTokenString, username: username, userLanguage: userLanguage)
         if(jwt != nil) {
-            Authentication.shared.hasuraJwt = jwt
-            Authentication.shared.signInCallback()
+            auth.hasuraJwt = jwt
+            auth.signInCallback()
             return true
         } else {
             return false
@@ -140,7 +145,7 @@ private func fetchHasuraJwt(appleKey: String, username: String? = nil, userLangu
         body["language"] = userLanguage
     }
     do {
-        guard let data = try await ServerCommunicator.sendPostRequestAsync(to: jwtEndpoint, body: body, token: nil, stackOnUnreachable: false) else {
+        guard let data = try await ServerCommunicator.sendPostRequestAsync(to: jwtEndpoint, body: body, token: nil, waitAndSendIfServerUnreachable: false) else {
             print("Failed to receive data")
             return nil
         }

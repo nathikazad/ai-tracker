@@ -18,7 +18,7 @@ class UserController: ObservableObject {
     
     static func ensureUserTimezone() async {
         do {
-            let user = Authentication.shared.user!
+            let user = auth.user!
             if user.timezone !=  TimeZone.current.identifier {
                 try await updateUserTimezone(timezone:  TimeZone.current.identifier)
                 print("User timezone updated to \( TimeZone.current.identifier)")
@@ -30,7 +30,7 @@ class UserController: ObservableObject {
     }
     
     static func fetchUser() async throws -> UserModel {
-        let graphqlQuery = generateQuery(userId: Authentication.shared.userId!)
+        let graphqlQuery = generateQuery(userId: auth.userId!)
         
         do {
             let responseData: ResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, responseType: ResponseData.self)
@@ -49,7 +49,7 @@ class UserController: ObservableObject {
     static func updateUserTimezone(timezone: String) async throws{
         let mutationQuery = """
         mutation {
-            update_users_by_pk(pk_columns: {id: \(Authentication.shared.userId!)}, _set: {timezone: \"\(timezone)\"}) {
+            update_users_by_pk(pk_columns: {id: \(auth.userId!)}, _set: {timezone: \"\(timezone)\"}) {
                 id
                 timezone
             }

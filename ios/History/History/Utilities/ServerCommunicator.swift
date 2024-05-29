@@ -94,7 +94,7 @@ class ServerCommunicator: ObservableObject {
         case serverNotReachable
     }
     
-    static func sendPostRequest(to uploadUrlString: String, body: [String: Any]? = [:], token: String?, stackOnUnreachable: Bool, completion: ((Result<Data?, Error>) -> Void)? = nil) {
+    static func sendPostRequest(to uploadUrlString: String, body: [String: Any]? = [:], token: String?, waitAndSendIfServerUnreachable: Bool, completion: ((Result<Data?, Error>) -> Void)? = nil) {
         Task {
             if await isServerReachable() {
                 do {
@@ -105,7 +105,7 @@ class ServerCommunicator: ObservableObject {
                 }
             } else {
                 print("ServerCommunicator: Server not reachable: appending(\(pendingRequests.count+1))")
-                if(stackOnUnreachable) {
+                if(waitAndSendIfServerUnreachable) {
                     // TODO: add the completion to pending requests maybe?
                     pendingRequests.append((urlString: uploadUrlString, body: body, token: token))
                     startTimer()
@@ -131,9 +131,9 @@ class ServerCommunicator: ObservableObject {
     }
     
     
-    static func sendPostRequestAsync(to uploadUrlString: String, body: [String: Any]? = [:], token: String?, stackOnUnreachable: Bool) async throws -> Data? {
+    static func sendPostRequestAsync(to uploadUrlString: String, body: [String: Any]? = [:], token: String?, waitAndSendIfServerUnreachable: Bool) async throws -> Data? {
         return try await withCheckedThrowingContinuation { continuation in
-            sendPostRequest(to: uploadUrlString, body: body, token: token, stackOnUnreachable: stackOnUnreachable) { result in
+            sendPostRequest(to: uploadUrlString, body: body, token: token, waitAndSendIfServerUnreachable: waitAndSendIfServerUnreachable) { result in
                 switch result {
                 case .success(let data):
                     continuation.resume(returning: data)

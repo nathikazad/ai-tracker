@@ -52,7 +52,7 @@ struct Message: Identifiable {
 class ChatViewModel: ObservableObject {
     @Published var chatContents: [IdentifiableView] = []
     @Published var isSignedIn: Bool = false
-    @ObservedObject var appState = AppState.shared
+    @ObservedObject var appState = state
     @Published var currentMessage: String = ""
     @Published var investorMessageCount: Int = 0
     
@@ -142,7 +142,7 @@ class ChatViewModel: ObservableObject {
                     if let parentEventId = state.parentEventId {
                         body["parentEventId"] = String(parentEventId)
                     }
-                    try await ServerCommunicator.sendPostRequestAsync(to: parseTextEndpoint, body: body, token: Authentication.shared.hasuraJwt!, stackOnUnreachable: false)
+                    try await ServerCommunicator.sendPostRequestAsync(to: parseTextEndpoint, body: body, token: auth.hasuraJwt!, waitAndSendIfServerUnreachable: false)
                     addComputerMessage(message: "Your message has been recorded")
                     addOkButton()
                 } catch {
@@ -165,7 +165,7 @@ class ChatViewModel: ObservableObject {
 struct ChatView: View {
     
     @StateObject var chatViewModel:ChatViewModel
-    @ObservedObject var appState = AppState.shared
+    @ObservedObject var appState = state
     @State private var showKeyboard: Bool = false
     @State private var lastContentOffset: CGFloat = 0
     @State private var lastUpdateTime = Date()

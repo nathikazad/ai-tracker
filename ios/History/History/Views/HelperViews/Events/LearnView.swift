@@ -19,7 +19,7 @@ struct LearnView: View {
 
     private func fetchLearnDetails() {
         Task {
-            let userId: Int? = Authentication.shared.userId
+            let userId: Int? = auth.userId
             var metadatafilter: [String: Any]? = nil
             if(skill != nil) {
                 metadatafilter = ["learning": ["skill": skill]]

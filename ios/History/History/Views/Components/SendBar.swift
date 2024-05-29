@@ -11,7 +11,7 @@ struct SendBar: View {
     @Binding var currentMessage: String
     @Binding var showKeyboard: Bool
     var sendUserMessage: (String) -> Void
-    @ObservedObject var appState = AppState.shared
+    @ObservedObject var appState = state
     @FocusState private var isTextFieldFocused: Bool
     @State private var recordingSubscription: AnyCancellable?
     
@@ -66,7 +66,7 @@ struct SendBar: View {
         .padding(.horizontal, 20)
         .onAppear {
             recordingSubscription?.cancel()
-            recordingSubscription = AppState.shared.subscribeToRecordingFinished { response in
+            recordingSubscription = state.subscribeToRecordingFinished { response in
                 currentMessage.append(response)
             }
         }

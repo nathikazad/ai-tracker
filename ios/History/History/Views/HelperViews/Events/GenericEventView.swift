@@ -50,6 +50,12 @@ struct GenericEventView: View {
                 }
             }
             
+            if event?.eventType == .meeting {
+                Section(header: Text("People")) {
+                    MinPeopleView(event: $event)
+                }
+            }
+            
             
             // Books
             // Persons
@@ -61,8 +67,9 @@ struct GenericEventView: View {
                 parentId in
                 state.setParentEventId(parentId)
                 chatViewPresented = true
-            }
-            )
+            })
+            
+            // Child Events
             if(event?.hasChildren ?? false) {
                 Section(header: Text("Events")) {
                     List {
@@ -109,12 +116,11 @@ struct GenericEventView: View {
         .overlay {
             popupView
         }
+        
     }
-    
+
     private var popupView: some View {
-        Group {
-            NotesPopup(noteStruct: noteStruct, event: $event, eventId: eventId)
-        }
+        NotesPopup(noteStruct: noteStruct, event: $event, eventId: eventId)
     }
 }
 

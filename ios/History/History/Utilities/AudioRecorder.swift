@@ -67,21 +67,21 @@ class Microphone {
         let fileUrl = await recorder.stopRecording()
         do {
             let data = try ServerCommunicator.uploadAudioFile(at: fileUrl, to: parseAudioEndpoint, token: Authentication.shared.hasuraJwt!, parse: parse, parentEventId: parentEventId)
-            if let data = data {
-                let decoder = JSONDecoder()
-                do {
-                    struct Response: Codable {
-                        var status: String
-                        var text: String
-                    }
-                    let jsonResponse = try decoder.decode(Response.self, from: data)
-                    return jsonResponse.text
-                    
-                }
-            } else {
-                print("JSON decodong error")
-                return "JSON decoding error"
-            }
+           if let data = data {
+               let decoder = JSONDecoder()
+               do {
+                   struct Response: Codable {
+                       var status: String
+                       var text: String
+                   }
+                   let jsonResponse = try decoder.decode(Response.self, from: data)
+                   return jsonResponse.text
+                   
+               }
+           } else {
+               print("JSON decodong error")
+               return "JSON decoding error"
+           }
         } catch {
             print("Some uploading error")
             return "Some uploading error"

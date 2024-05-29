@@ -2,6 +2,11 @@ import Foundation
 import CoreLocation
 import Combine
 
+
+var locationManager: LocationManager {
+    return LocationManager.shared
+}
+
 class LocationManager: NSObject, CLLocationManagerDelegate {
     static let shared = LocationManager()
     
@@ -157,7 +162,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         print("LocationManager: sendRemainingLocations: sending \(locationsQueue.count) -> \(locationsToSend.count) locations")
         locationsSentCount += locationsToSend.count
         locationsToSend.forEach {
-            receivedLocations.append(($0, AppState.shared.inForeground)) 
+            receivedLocations.append(($0, state.inForeground))
         }
         
         uploadLocationToServer(locationsToSend)
@@ -176,7 +181,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     
     func uploadLocationToServer(_ locations: [CLLocation]) {
         print("LocationManager: UploadLocationToServer:sending location \(locations.count)")
-        guard let token = Authentication.shared.hasuraJwt else {
+        guard let token = auth.hasuraJwt else {
             print("No token available")
             return
         }
@@ -184,9 +189,9 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
             print("sending location \(locations.count)")
             let body = [
                 "locations": locations.map { $0.toJSON() },
-                "fromBackground": !AppState.shared.inForeground
+                "fromBackground": !state.inForeground
             ]
-            ServerCommunicator.sendPostRequest(to: updateLocationEndpoint, body: body, token: token, stackOnUnreachable: true)
+            ServerCommunicator.sendPostRequest(to: updateLocationEndpoint, body: body, token: token, waitAndSendIfServerUnreachable: true)
             sentToServerCount += 1
         }
     }

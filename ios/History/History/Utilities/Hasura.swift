@@ -19,6 +19,52 @@ enum SocketStatus {
     case ready
 }
 
+struct HasuraQuery {
+    enum QueryType: String {
+        case query; case subscription
+    }
+    
+    var queryFor:String
+    var queryName:String
+    var queryType:QueryType
+    
+    private var whereClauses: [String] = []
+    private var variables: [String: Any] = [:]
+    private var parameterClauses: [String] = []
+    private var selections: String = ""
+    
+    public init(queryFor: String, queryName: String, queryType: QueryType) {
+        self.queryType = queryType
+        self.queryName = queryName
+        self.queryFor = queryFor
+    }
+    
+    mutating func addParameter(name:String, type:String, value: Any,  op:String) {
+        parameterClauses.append("$\(name): \(type)!")
+        whereClauses.append("\(name): {\(op): $\(name)}")
+        variables[name] = value
+    }
+    
+    mutating func setSelections(selections:String) {
+        self.selections = selections
+    }
+    
+    var getQueryAndVariables: (String, [String: Any]) {
+        let whereClause = whereClauses.isEmpty ? "" : "where: {\(whereClauses.joined(separator: ", "))}"
+        let parameterString = parameterClauses.isEmpty ? "" : "(\(parameterClauses.joined(separator: ", ")))"
+        let query = """
+        \(queryType.rawValue) \(queryName)\(parameterString) {
+          \(queryFor)(\(whereClause)) {
+            \(selections)
+        }
+        """
+        return (query, variables)
+    }
+}
+
+var hasura: Hasura {
+    return Hasura.shared
+}
 
 class Hasura {
     static let shared = Hasura()
@@ -76,7 +122,7 @@ class Hasura {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        if let jwt = Authentication.shared.hasuraJwt {
+        if let jwt = auth.hasuraJwt {
             request.setValue("Bearer \(jwt)", forHTTPHeaderField: "Authorization")
         }
         request.httpBody = jsonData
@@ -105,13 +151,13 @@ class Hasura {
         print("setting up hasura socket")
         socketStatus = .handshaking
         Task {
-            await Authentication.shared.checkAndReloadHasuraJwt()
+            await auth.checkAndReloadHasuraJwt()
             let url = URL(string: "wss://\(HasuraAddress)/v1/graphql")!
             var request = URLRequest(url: url)
-            if(Authentication.shared.hasuraJwt == nil) { //sometimes socket tries to connect after logout, this is to catch that edge case, so don't remove
+            if(auth.hasuraJwt == nil) { //sometimes socket tries to connect after logout, this is to catch that edge case, so don't remove
                 return
             }
-            let token = Authentication.shared.hasuraJwt!
+            let token = auth.hasuraJwt!
             request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
             request.addValue("graphql-ws", forHTTPHeaderField: "Sec-WebSocket-Protocol")
             

@@ -65,7 +65,7 @@ struct LocationDetailView: View {
                     Button(action: {
                         print("Saving location \(locationName)")
                         saveLocation()
-                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                        UIApplication.shared.minimizeKeyboard()
                     }, label: {
                         Text("Save")
                     })

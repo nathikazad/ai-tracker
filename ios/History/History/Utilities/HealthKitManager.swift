@@ -205,7 +205,7 @@ class HealthKitManager {
                 }
                 let body: [String: Any] = ["sleepData": sleepDataDicts]
                     print("Send sleep data")
-                    ServerCommunicator.sendPostRequest(to: uploadSleepEndpoint, body: body, token: Authentication.shared.hasuraJwt, stackOnUnreachable: true) { result in
+                    ServerCommunicator.sendPostRequest(to: uploadSleepEndpoint, body: body, token: auth.hasuraJwt, waitAndSendIfServerUnreachable: true) { result in
                         switch result {
                         case .success:
                             UserDefaults.standard.set(Date(), forKey: "lastUploadTime")

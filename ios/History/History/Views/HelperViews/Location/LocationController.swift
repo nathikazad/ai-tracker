@@ -124,7 +124,7 @@ class LocationsController: ObservableObject {
             "lon": lon,
             "lat": lat
         ]
-        let data = try await ServerCommunicator.sendPostRequestAsync(to: createLocationEndpoint, body: body, token: Authentication.shared.hasuraJwt, stackOnUnreachable: false)
+        let data = try await ServerCommunicator.sendPostRequestAsync(to: createLocationEndpoint, body: body, token: auth.hasuraJwt, waitAndSendIfServerUnreachable: false)
         if let data = data, let json = try? JSONSerialization.jsonObject(with: data, options: []),
             let jsonData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted),
             let jsonString = String(data: jsonData, encoding: .utf8) {

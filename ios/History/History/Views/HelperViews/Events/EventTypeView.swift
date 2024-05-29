@@ -10,7 +10,7 @@ struct EventTypeView: View {
 
     private func fetchEventDetails() {
         Task {
-            let userId: Int? = Authentication.shared.userId
+            let userId: Int? = auth.userId
             let resp = await EventsController.fetchEvents(userId: userId!, eventType: eventType, order: "desc")
             DispatchQueue.main.async {
                 maxDays = max(events.maxDays, 30)

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MicrophoneButton: View {
-    @ObservedObject var appState = AppState.shared
+    @ObservedObject var appState = state
     
     var body: some View {
         VStack {

@@ -39,7 +39,7 @@ class GoalsController: ObservableObject {
         
         do {
             // Directly get the decoded ResponseData object from sendGraphQL
-            let responseData: GoalsResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, responseType: GoalsResponseData.self)
+            let responseData: GoalsResponseData = try await hasura.sendGraphQL(query: graphqlQuery, responseType: GoalsResponseData.self)
             sortAndAssign(responseData.data.goals)
         } catch {
             print("Error: \(error.localizedDescription)")
@@ -69,7 +69,7 @@ class GoalsController: ObservableObject {
 
         Task {
             do {
-                let response: DeleteGoalResponse = try await Hasura.shared.sendGraphQL(query: mutationQuery, responseType: DeleteGoalResponse.self)
+                let response: DeleteGoalResponse = try await hasura.sendGraphQL(query: mutationQuery, responseType: DeleteGoalResponse.self)
                 DispatchQueue.main.async {
                     print("Goal deleted: \(response.data.delete_goals_by_pk.id)")
                     onSuccess?()
@@ -87,7 +87,7 @@ class GoalsController: ObservableObject {
         let startOfToday = Calendar.current.startOfDay(for: Date())
         let subscriptionQuery = GoalsController.generateQuery(userId: userId, isSubscription: true)
         
-        Hasura.shared.startListening(subscriptionId:subscriptionId, subscriptionQuery: subscriptionQuery, responseType: GoalsResponseData.self) {result in
+        hasura.startListening(subscriptionId:subscriptionId, subscriptionQuery: subscriptionQuery, responseType: GoalsResponseData.self) {result in
             switch result {
             case .success(let responseData):
                 self.sortAndAssign(responseData.data.goals)
@@ -99,7 +99,7 @@ class GoalsController: ObservableObject {
     
     
     func cancelListener() {
-        Hasura.shared.stopListening(subscriptionId: subscriptionId)
+        hasura.stopListening(subscriptionId: subscriptionId)
     }
     
     static private func generateQuery(userId: Int, limit: Int? = 20, isSubscription: Bool = false) -> String {
