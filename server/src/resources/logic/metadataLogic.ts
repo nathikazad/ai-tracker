@@ -20,7 +20,7 @@ export async function extractMetadata(event: ASEvent): Promise<ASEvent> {
             case Category.Meeting:
                 let people = await findPeople(event)
                 let meetingInfo = await extractMeetingInfo(event)
-                addData(category, {people, meetingInfo})
+                addData(category, {people, ...meetingInfo})
                 break;
             case Category.Feeling:
                 let feelingInfo = await extractFeelingInfo(event)
