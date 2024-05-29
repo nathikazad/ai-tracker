@@ -42,10 +42,10 @@ struct GenericEventView: View {
                         }
                     }
                     
-                    if let interaction = event.interaction?.content {
-                        Text(interaction)
-                    }
-                    
+//                    if let interaction = event.interaction?.content {
+//                        Text(interaction)
+//                    }
+//                    
                     MinBooksView(event: $event, bookStruct: bookStruct)
                 }
             }

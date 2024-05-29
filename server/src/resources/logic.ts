@@ -18,29 +18,29 @@ export async function parseUserRequest(text: string, userId: number, parentEvent
     let interactionId = await insertInteraction(userId, text, "event", debugInfo);
     if(userId == 1 || userId == 2) {
         let timezone = await getUserTimeZone(userId)
-        let i:Interaction = {
+        let interaction:Interaction = {
             id: interactionId,
             userId,
             statement: text,
             recordedAt: new Date().toISOString(),
             timezone,
         }
-        console.log(`Interaction(${i.id}) at  ${toPST(i.recordedAt)}: \n ${JSON.stringify(i, null, 4)}`)
+        console.log(`Interaction(${interaction.id}) at  ${toPST(interaction.recordedAt)}: \n ${JSON.stringify(interaction, null, 4)}`)
         if(parentEventId) {
             let event = await getEvent(userId, parentEventId)
             if(event != null) {
                 if(event.eventType == Category.Stay) {
-                    await interactionToEvent(i, parentEventId)
+                    await interactionToEvent(interaction, parentEventId)
                 } else {
                     event.metadata = event.metadata ?? {}
                     event.metadata.notes = event.metadata.notes ?? {}
                     event.metadata.notes[new Date().toISOString()] = text
-                    await updateEvent(parentEventId, undefined, undefined, event.metadata, interactionId)
+                    await updateEvent(parentEventId, undefined, undefined, event.metadata, interaction)
                     // also check for feeling or expense
                 }    
             }
         } else {
-            await interactionToEvent(i)
+            await interactionToEvent(interaction)
         }
     }
 }
