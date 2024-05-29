@@ -8,6 +8,8 @@ import { createEmbedding } from "../../third/openai";
 
 export async function updateEvent(id: number, startTime:string | undefined, endTime: string | undefined, metadata: any | undefined, interaction: Interaction) {
     console.log(`Updating event: ${id} ${toPST(startTime)} ${toPST(endTime)} ${JSON.stringify(metadata)}`)
+    metadata = metadata || {}
+   metadata[interaction.recordedAt] = interaction.statement
     let resp = await getHasura().mutation({
         update_events_by_pk: [
             {
@@ -16,12 +18,11 @@ export async function updateEvent(id: number, startTime:string | undefined, endT
                 },
                 _set: {
                     start_time: startTime,
-                    end_time: endTime,
-                    metadata: $`metadata`,
+                    end_time: endTime
                 },
                 _append: {
                     logs: $`logs`,
-                    notes: $`notes`
+                    metadata: $`metadata`
                 },
             },
             {
@@ -32,9 +33,6 @@ export async function updateEvent(id: number, startTime:string | undefined, endT
         metadata: metadata,
         logs: {
             [interaction.recordedAt]: interaction.id
-        },
-        notes: {
-            [interaction.recordedAt]: interaction.statement
         }
     })
     markInteractionAsTranscoded(interaction.id)
@@ -79,7 +77,7 @@ export async function createEvent(event: ASEvent, category: Category, interactio
                     event_type: category,
                     start_time: event.startTime,
                     end_time: event.endTime,
-                    metadata: $`metatadata`,
+                    metadata: $`metadata`,
                     interaction_id: interaction.id,
                     logs: $`logs`,
                     parent_id: parentEventId
@@ -91,12 +89,12 @@ export async function createEvent(event: ASEvent, category: Category, interactio
             }
         ]
     }, {
-        metatadata: {[category]: event.metadata[category]},
+        metadata: {
+            [category]: event.metadata[category],
+            [interaction.recordedAt]: interaction.statement
+        },
         logs: {
             [toPST(new Date().toISOString())]: interaction.id
-        },
-        notes: {
-            [interaction.recordedAt]: interaction.statement
         }
     })
     markInteractionAsTranscoded(interaction.id)
