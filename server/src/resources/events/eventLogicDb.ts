@@ -9,7 +9,8 @@ import { createEmbedding } from "../../third/openai";
 export async function updateEvent(id: number, startTime:string | undefined, endTime: string | undefined, metadata: any | undefined, interaction: Interaction) {
     console.log(`Updating event: ${id} ${toPST(startTime)} ${toPST(endTime)} ${JSON.stringify(metadata)}`)
     metadata = metadata || {}
-   metadata[interaction.recordedAt] = interaction.statement
+    metadata.notes = metadata.notes || {}
+    metadata.notes[interaction.recordedAt] = interaction.statement
     let resp = await getHasura().mutation({
         update_events_by_pk: [
             {
@@ -18,11 +19,11 @@ export async function updateEvent(id: number, startTime:string | undefined, endT
                 },
                 _set: {
                     start_time: startTime,
-                    end_time: endTime
+                    end_time: endTime,
+                    metadata: $`metadata`
                 },
                 _append: {
-                    logs: $`logs`,
-                    metadata: $`metadata`
+                    logs: $`logs`
                 },
             },
             {
@@ -91,7 +92,9 @@ export async function createEvent(event: ASEvent, category: Category, interactio
     }, {
         metadata: {
             [category]: event.metadata[category],
-            [interaction.recordedAt]: interaction.statement
+            notes: {
+                [interaction.recordedAt]: interaction.statement
+            }
         },
         logs: {
             [toPST(new Date().toISOString())]: interaction.id
