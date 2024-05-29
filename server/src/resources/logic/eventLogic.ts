@@ -57,7 +57,7 @@ export async function interactionToEvent(interaction: Interaction, parentId: num
     console.log(`Event: \n ${JSON.stringify(event, null, 4)}`)
     console.log(`\t start_time: ${toPST(event.startTime)} \n\t end_time: ${toPST(event.endTime)}`);
     if (event.categories.length == 0) {
-        createEvent(event, Category.Unknown, interaction.userId, interaction.id, parentId)
+        createEvent(event, Category.Unknown, interaction, parentId)
     }
     else {
         for (let category of event.categories) {
@@ -72,11 +72,11 @@ export async function interactionToEvent(interaction: Interaction, parentId: num
                     if (event.endTime != null) {
                         event.metadata.locks.end_time = true
                     }
-                    await updateEvent(closestSleepingEvent.id, event.startTime ?? closestSleepingEvent.start_time, event.endTime ?? closestSleepingEvent.end_time, event.metadata, interaction.id)
+                    await updateEvent(closestSleepingEvent.id, event.startTime ?? closestSleepingEvent.start_time, event.endTime ?? closestSleepingEvent.end_time, event.metadata, interaction)
                     continue
                 } else {
                     console.log(`Creating new sleep event`)
-                    await createEvent(event, category, interaction.userId, interaction.id, parentId)
+                    await createEvent(event, category, interaction, parentId)
                 }
             }
             // For possibly long events like learning, shopping, cooking, if the end time is mentioned without start time, update the end time of the last event
@@ -89,14 +89,14 @@ export async function interactionToEvent(interaction: Interaction, parentId: num
                     await updateEvent(lastEvent.id, lastEvent.start_time, event.endTime, {
                         ...lastEvent.metadata,
                         ...event.metadata
-                    }, interaction.id)
+                    }, interaction)
                 } else {
                     console.log(`Creating new event 1`)
-                    await createEvent(event, category, interaction.userId, interaction.id, parentId)
+                    await createEvent(event, category, interaction, parentId)
                 }
             } else {
                 console.log(`Creating new event 2`)
-                await createEvent(event, category, interaction.userId, interaction.id, parentId)
+                await createEvent(event, category, interaction, parentId)
             }
         }
     }

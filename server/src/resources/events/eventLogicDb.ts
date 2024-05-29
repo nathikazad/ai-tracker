@@ -1,12 +1,12 @@
 import { get } from "http";
 import { getHasura } from "../../config"
 import { addHours, toDate, toPST } from "../../helper/time";
-import { ASEvent, Category } from "../logic/eventLogic";
+import { ASEvent, Category, Interaction } from "../logic/eventLogic";
 import { $, events_bool_exp, order_by, timestamp_comparison_exp } from "./../../generated/graphql-zeus";
 import { createEmbedding } from "../../third/openai";
 
 
-export async function updateEvent(id: number, startTime:string | undefined, endTime: string | undefined, metadata: any | undefined, interactionId: number) {
+export async function updateEvent(id: number, startTime:string | undefined, endTime: string | undefined, metadata: any | undefined, interaction: Interaction) {
     console.log(`Updating event: ${id} ${toPST(startTime)} ${toPST(endTime)} ${JSON.stringify(metadata)}`)
     let resp = await getHasura().mutation({
         update_events_by_pk: [
@@ -20,8 +20,9 @@ export async function updateEvent(id: number, startTime:string | undefined, endT
                     metadata: $`metadata`,
                 },
                 _append: {
-                    logs: $`logs`
-                }
+                    logs: $`logs`,
+                    notes: $`notes`
+                },
             },
             {
                 id: true
@@ -30,10 +31,13 @@ export async function updateEvent(id: number, startTime:string | undefined, endT
     }, {
         metadata: metadata,
         logs: {
-            [toPST(new Date().toISOString())]: interactionId
+            [interaction.recordedAt]: interaction.id
+        },
+        notes: {
+            [startTime ?? endTime ?? interaction.recordedAt]: interaction.statement
         }
     })
-    markInteractionAsTranscoded(interactionId)
+    markInteractionAsTranscoded(interaction.id)
 }
 
 export async function getEvent(userId: number, eventId: number) : Promise<{eventType: Category, metadata: any} | undefined> {
@@ -65,18 +69,18 @@ export async function getEvent(userId: number, eventId: number) : Promise<{event
     
 }
 
-export async function createEvent(event: ASEvent, category: Category, userId: number, interactionId: number, parentEventId: number | undefined = undefined) {
+export async function createEvent(event: ASEvent, category: Category, interaction: Interaction, parentEventId: number | undefined = undefined) {
     console.log(`Creating event: ${category}`)
     let resp = await getHasura().mutation({
         insert_events_one: [
             {
                 object: {
-                    user_id: userId,
+                    user_id: interaction.userId,
                     event_type: category,
                     start_time: event.startTime,
                     end_time: event.endTime,
                     metadata: $`metatadata`,
-                    interaction_id: interactionId,
+                    interaction_id: interaction.id,
                     logs: $`logs`,
                     parent_id: parentEventId
                 }
@@ -89,10 +93,13 @@ export async function createEvent(event: ASEvent, category: Category, userId: nu
     }, {
         metatadata: {[category]: event.metadata[category]},
         logs: {
-            [toPST(new Date().toISOString())]: interactionId
+            [toPST(new Date().toISOString())]: interaction.id
+        },
+        notes: {
+            [event.startTime ?? event.endTime ?? interaction.recordedAt]: interaction.statement
         }
     })
-    markInteractionAsTranscoded(interactionId)
+    markInteractionAsTranscoded(interaction.id)
     console.log(`Event created: ${resp.insert_events_one?.id}`)
 }
 
