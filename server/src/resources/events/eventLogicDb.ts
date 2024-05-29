@@ -34,7 +34,7 @@ export async function updateEvent(id: number, startTime:string | undefined, endT
             [interaction.recordedAt]: interaction.id
         },
         notes: {
-            [startTime ?? endTime ?? interaction.recordedAt]: interaction.statement
+            [interaction.recordedAt]: interaction.statement
         }
     })
     markInteractionAsTranscoded(interaction.id)
@@ -71,7 +71,6 @@ export async function getEvent(userId: number, eventId: number) : Promise<{event
 
 export async function createEvent(event: ASEvent, category: Category, interaction: Interaction, parentEventId: number | undefined = undefined) {
     console.log(`Creating event: ${category}`)
-    console.log(event.startTime, event.endTime, interaction.recordedAt)
     let resp = await getHasura().mutation({
         insert_events_one: [
             {
@@ -97,7 +96,7 @@ export async function createEvent(event: ASEvent, category: Category, interactio
             [toPST(new Date().toISOString())]: interaction.id
         },
         notes: {
-            [event.startTime ?? event.endTime ?? interaction.recordedAt]: interaction.statement
+            [interaction.recordedAt]: interaction.statement
         }
     })
     markInteractionAsTranscoded(interaction.id)
