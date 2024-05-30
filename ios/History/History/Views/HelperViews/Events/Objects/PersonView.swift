@@ -25,9 +25,7 @@ struct PersonView: View {
     @State private var description = ""
     @State private var contactMethods: [String] = []
     enum builderMode { case create, edit, view }
-    @State var mode: builderMode = .create
-    
-    
+    @State var mode: builderMode = .create  
     var createAction: ((Person) -> Void)?
     
     var body: some View {
@@ -36,70 +34,79 @@ struct PersonView: View {
                 Text("Name:")
                     .foregroundColor(.gray)
                     .frame(width: 80, alignment: .leading)
-                if mode != .view {
+                
+                if mode == .create {
                     TextField("Enter Name", text: $name) {
                         UIApplication.shared.minimizeKeyboard()
                     }
-                } else {
-                    Text(name)
-                }
-                
-                Spacer()
-                
-                if mode != .create {
+                } else if mode == .edit {
+                    TextField("Enter Name", text: $name) {
+                        UIApplication.shared.minimizeKeyboard()
+                    }
+                    Spacer()
                     Button(action: {
-                        mode = mode == .view ? .edit : .view
+                        mode = .view
                     }) {
-                        Image(systemName: mode == .view ? "pencil.circle" : "xmark.circle")
+                        Image(systemName: "xmark.circle")
+                    }
+                    .buttonStyle(HighPriorityButtonStyle())
+                } else if mode == .view {
+                    Text(name)
+                    Spacer()
+                    Button(action: {
+                        mode = .edit
+                    }) {
+                        Image(systemName: "pencil.circle")
                     }
                     .buttonStyle(HighPriorityButtonStyle())
                 }
             }
             
-            if mode != .view || !description.isEmpty {
+            if mode == .edit || mode == .create {
                 Section(header: Text("Description")) {
-                    if mode != .view {
                         TextEditor(text: $description)
                             .frame(minHeight: 50)
-                    } else {
-                        Text(description)
-                    }
+                }
+            } else if !description.isEmpty {
+                Section(header: Text("Description")) {
+                    Text(description)
                 }
             }
             
-            if mode != .view || contactMethods.count  > 0 {
+            if mode == .edit || mode == .create  {
                 Section(header: Text("Contact Methods")) {
                     List {
-                        if mode != .view {
-                            ForEach(contactMethods.indices, id: \.self) { index in
-                                TextField("Enter contact method", text: $contactMethods[index]) {
-                                    UIApplication.shared.minimizeKeyboard()
-                                }
+                        ForEach(contactMethods.indices, id: \.self) { index in
+                            TextField("Enter contact method", text: $contactMethods[index]) {
+                                UIApplication.shared.minimizeKeyboard()
                             }
-                            .onDelete(perform: {
-                                offsets in
-                                contactMethods.remove(atOffsets: offsets)
-                                mode = .edit
-                            })
-                            Button(action: {
-                                if !(contactMethods.last?.isEmpty ?? false) {
-                                    contactMethods.append("")
-                                }
-                            }) {
-                                Label("Add Contact Method", systemImage: "plus.circle")
+                        }
+                        .onDelete(perform: {
+                            offsets in
+                            contactMethods.remove(atOffsets: offsets)
+                            mode = .edit
+                        })
+                        Button(action: {
+                            if !(contactMethods.last?.isEmpty ?? false) {
+                                contactMethods.append("")
                             }
-                            .frame(maxWidth: .infinity, alignment: .center)
-                        } else {
-                            ForEach(contactMethods.indices, id: \.self) { index in
-                                Text(contactMethods[index])
-                            }
-                            
+                        }) {
+                            Label("Add Contact Method", systemImage: "plus.circle")
+                        }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                    }
+                }
+            } else if contactMethods.count  > 0 {
+                Section(header: Text("Contact Methods")) {
+                    List {
+                        ForEach(contactMethods.indices, id: \.self) { index in
+                            Text(contactMethods[index])
                         }
                     }
                 }
             }
        
-            if mode != .view {
+            if mode == .edit || mode == .create {
                 Section {
                     Button(action: {
                         person.name = name
@@ -143,8 +150,6 @@ struct PersonView: View {
                     .frame(maxWidth: .infinity, alignment: .center)
                     .foregroundColor(.red)
                 }
-                
-                
             }
             
         }
