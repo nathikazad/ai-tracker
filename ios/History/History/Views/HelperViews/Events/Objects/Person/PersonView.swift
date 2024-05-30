@@ -212,6 +212,10 @@ struct PersonView: View {
                 }
             }
             
+            if mode == .view && person.events.count > 0 {
+                EventsListView(events: $person.events)
+            }
+            
         }
         .onAppear {
             if personId == nil {
@@ -225,7 +229,6 @@ struct PersonView: View {
                             name = person.name
                             description = person.data?.description ?? ""
                             contactMethods = person.data?.contactMethods ?? []
-                            print("photo ", person.data?.photo)
                             if let photo = person.data?.photo {
                                 image = loadImage(location: photo)
                             }

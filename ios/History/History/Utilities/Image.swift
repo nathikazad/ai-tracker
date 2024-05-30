@@ -21,8 +21,6 @@ func saveImage(image: UIImage, imageLocation: String? = nil) -> String? {
     }
     
     let filename = paths[0].appendingPathComponent("\(finalLocation).png")
-    print("save location ", finalLocation)
-    print("file name ", filename)
     
     do {
         try imageData.write(to: filename)
@@ -36,8 +34,5 @@ func saveImage(image: UIImage, imageLocation: String? = nil) -> String? {
 func loadImage(location: String) -> UIImage? {
     let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
     let filename = paths[0].appendingPathComponent("\(location).png")
-    
-    print("load location ", location)
-    print("file name ", filename)
     return UIImage(contentsOfFile:filename.path)
 }

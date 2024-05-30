@@ -70,25 +70,7 @@ struct GenericEventView: View {
                 
                 // Child Events
                 if(event.hasChildren) {
-                    Section(header: Text("Events")) {
-                        List {
-                            ForEach(event.children.sortEvents, id: \.id) { event in
-                                EventRow(event: event, reassignParentForId: $reassignParentForId, expandedEventIds: $expandedEventIds)
-                                if expandedEventIds.contains(event.id) {
-                                    MinimizedNoteView(notes: event.metadata!.notes, level:1)
-                                    ForEach(event.children.sortEvents, id: \.id) { child in
-                                        EventRow(event: event, reassignParentForId: $reassignParentForId, expandedEventIds: $expandedEventIds, level: 1)
-                                        if expandedEventIds.contains(child.id) {
-                                            MinimizedNoteView(notes: child.metadata!.notes, level:2)
-                                            ForEach(child.children.sortEvents, id: \.id) { grandChild in
-                                                EventRow(event: event, reassignParentForId: $reassignParentForId, expandedEventIds: $expandedEventIds, level: 2)
-                                            }
-                                         }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    EventsListView(events: Binding(get: { event.children }, set: { events in }), withDate: false)
                 }
             }
         }

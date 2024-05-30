@@ -10,6 +10,7 @@ struct EventsListView: View {
     @Binding var events: [EventModel]
     @State private var expandedEventIds: Set<Int> = []
     @State private var reassignParentForId: Int? = nil
+    var withDate: Bool = true
     var body: some View {
         // Group events by their formatted date
         let groupedEvents = Dictionary(grouping: events) { $0.formattedDate }
@@ -27,24 +28,26 @@ struct EventsListView: View {
         
         ForEach(sortedDates, id: \.self) { date in
             Section(header:
-                        HStack
-                    {
-                Text(date).font(.headline)
-                Spacer()
-                let dateIds = Set(groupedEvents[date]!.withChildrenOrNotes.map { $0.id })
-                if(dateIds.count > 1) {
-                    Button(action: {
-                        if expandedEventIds.intersection(dateIds).isEmpty {
-                            expandedEventIds.formUnion(dateIds)
-                        } else {
-                            expandedEventIds.subtract(dateIds)
-                        }
-                        print(expandedEventIds)
-                    }) {
-                        if expandedEventIds.intersection(dateIds).isEmpty {
-                            Image(systemName: "plus.circle")
-                        } else {
-                            Image(systemName: "minus.circle")
+                HStack
+                {
+                if withDate {
+                    Text(date)
+                    Spacer()
+                    let dateIds = Set(groupedEvents[date]!.withChildrenOrNotes.map { $0.id })
+                    if(dateIds.count > 1) {
+                        Button(action: {
+                            if expandedEventIds.intersection(dateIds).isEmpty {
+                                expandedEventIds.formUnion(dateIds)
+                            } else {
+                                expandedEventIds.subtract(dateIds)
+                            }
+                            print(expandedEventIds)
+                        }) {
+                            if expandedEventIds.intersection(dateIds).isEmpty {
+                                Image(systemName: "plus.circle")
+                            } else {
+                                Image(systemName: "minus.circle")
+                            }
                         }
                     }
                 }

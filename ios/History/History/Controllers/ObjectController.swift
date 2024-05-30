@@ -55,6 +55,11 @@ class ObjectController {
                   id
                   content
               }
+              objects {
+                  object_type
+                  name
+                  id
+              }
             }
           }
         """
