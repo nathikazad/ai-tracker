@@ -15,123 +15,157 @@
 import SwiftUI
 
 
-struct PersonBuilderView: View {
-//    @State private var person: Person
+struct PersonView: View {
+    //    @State private var person: Person
     @Environment(\.presentationMode) var presentationMode
-    @State private var name = ""
-    @State private var description = ""
-    @State private var contactMethods: [String]
-    var saveAction: (Person) -> Void
     
-    init(name: String? = nil, person:Person? = nil, saveAction: @escaping (Person) -> Void) {
-        _name = State(initialValue: person?.name ?? name ?? "")
-        _description = State(initialValue: person?.notes.first ?? "")
-        _contactMethods = State(initialValue: person?.contactMethods ?? [""])
-        self.saveAction = saveAction
-    }
+    @State var personId:Int? = nil
+    @State var person: Person = Person(name: "", data: PersonData())
+    @State var name:String = ""
+    @State private var description = ""
+    @State private var contactMethods: [String] = []
+    enum builderMode { case create, edit, view }
+    @State var mode: builderMode = .create
+    
+    
+    var createAction: ((Person) -> Void)?
     
     var body: some View {
         Form {
-            LabelledTextField(name: "Name", value: $name)
-            Section(header: Text("Description")) {
-                TextEditor(text: $description)
-                    .frame(minHeight: 50)
+            HStack {
+                Text("Name:")
+                    .foregroundColor(.gray)
+                    .frame(width: 80, alignment: .leading)
+                if mode != .view {
+                    TextField("Enter Name", text: $name) {
+                        UIApplication.shared.minimizeKeyboard()
+                    }
+                } else {
+                    Text(name)
+                }
+                
+                Spacer()
+                
+                if mode != .create {
+                    Button(action: {
+                        mode = mode == .view ? .edit : .view
+                    }) {
+                        Image(systemName: mode == .view ? "pencil.circle" : "xmark.circle")
+                    }
+                    .buttonStyle(HighPriorityButtonStyle())
+                }
             }
             
-            Section(header: Text("Contact Methods")) {
-                List {
-                    ForEach(contactMethods.indices, id: \.self) { index in
-                        TextField("Enter contact method", text: $contactMethods[index]) {
-                            UIApplication.shared.minimizeKeyboard()
+            if mode != .view || !description.isEmpty {
+                Section(header: Text("Description")) {
+                    if mode != .view {
+                        TextEditor(text: $description)
+                            .frame(minHeight: 50)
+                    } else {
+                        Text(description)
+                    }
+                }
+            }
+            
+            if mode != .view || contactMethods.count  > 0 {
+                Section(header: Text("Contact Methods")) {
+                    List {
+                        if mode != .view {
+                            ForEach(contactMethods.indices, id: \.self) { index in
+                                TextField("Enter contact method", text: $contactMethods[index]) {
+                                    UIApplication.shared.minimizeKeyboard()
+                                }
+                            }
+                            .onDelete(perform: {
+                                offsets in
+                                contactMethods.remove(atOffsets: offsets)
+                                mode = .edit
+                            })
+                            Button(action: {
+                                if !(contactMethods.last?.isEmpty ?? false) {
+                                    contactMethods.append("")
+                                }
+                            }) {
+                                Label("Add Contact Method", systemImage: "plus.circle")
+                            }
+                            .frame(maxWidth: .infinity, alignment: .center)
+                        } else {
+                            ForEach(contactMethods.indices, id: \.self) { index in
+                                Text(contactMethods[index])
+                            }
+                            
                         }
                     }
-                    .onDelete(perform: deleteMethod)
-                    
+                }
+            }
+       
+            if mode != .view {
+                Section {
                     Button(action: {
-                        self.contactMethods.append("")
+                        person.name = name
+                        person.data?.description = description
+                        person.data?.contactMethods = contactMethods
+                        Task {
+                            if mode == .create {
+                                let personId = await ObjectController.createObject(userId: auth.userId!, object: person)
+                                person.id = personId
+                                if createAction != nil {
+//                                    createAction?(person)
+                                    self.presentationMode.wrappedValue.dismiss()
+                                }
+                            } else {
+                                await ObjectController.mutateObject(object: person)
+                                DispatchQueue.main.async {
+                                    mode = .view
+                                }
+                            }
+                        }
+
                     }) {
-                        Label("Add New Method", systemImage: "plus.circle")
+                        Text("Save")
                     }
+                    .disabled(name.count < 3)
                     .frame(maxWidth: .infinity, alignment: .center)
                 }
             }
             
-            Button(action: {
-                let person: Person = Person(name: name, notes: [description], contactMethods: contactMethods)
-                saveAction(person)
-                self.presentationMode.wrappedValue.dismiss()
-            }) {
-                Text("Save")
-            }
-            .frame(maxWidth: .infinity)
-            .padding()
-            .disabled(name.count < 3)
-        }
-        .navigationTitle(name.isEmpty ? "Create Person" : name)
-    }
-    
-    private func deleteMethod(at offsets: IndexSet) {
-        contactMethods.remove(atOffsets: offsets)
-    }
-}
-
-struct PersonView: View {
-    var personId: Int
-    @State private var person: Person?
-    
-    var body: some View {
-        ScrollView {
-            if let person = person {
-                VStack(alignment: .leading, spacing: 20) {
-                    Text("Name: \(person.name)")
-                        .font(.title)
-                    if let description = person.notes.first {
-                        Text("Description: \(description)")
-                            .font(.body)
+            if mode == .edit {
+                Section {
+                    Button(action: {
+                        Task {
+                            await ObjectController.deleteObject(id: person.id!)
+                            self.presentationMode.wrappedValue.dismiss()
+                        }
+                        
+                    }) {
+                        Text("Delete")
                     }
-                    if(!person.contactMethods.isEmpty) {
-                        Text("Contact Methods")
-                            .font(.headline)
-                        ForEach(person.contactMethods, id: \.self) { contact in
-                            Text(contact)
-                                .padding(.leading, 10)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .foregroundColor(.red)
+                }
+                
+                
+            }
+            
+        }
+        .onAppear {
+            if personId == nil {
+                mode = .create
+            } else {
+                mode = .view
+                Task {
+                    if let person = await ObjectController.fetchObject(type: Person.self, objectId: personId!) {
+                        DispatchQueue.main.async {
+                            self.person = person
+                            name = person.name
+                            description = person.data?.description ?? ""
+                            contactMethods = person.data?.contactMethods ?? []
                         }
                     }
                 }
-                .padding()
-                
-                NavigationLink(destination: PersonBuilderView(person: person, saveAction: self.savePerson)) {
-                    Text("Edit")
-                        .foregroundColor(.blue)
-                }
-                .padding()
-            } else {
-                Text("Loading...")
             }
         }
-        .navigationTitle(person?.name ?? "Person Details")
-        .onAppear {
-            fetchPerson()
-        }
-    }
-    
-    private func fetchPerson() {
-        Task {
-            if let fetchedPerson = await ObjectController.fetchObject(type: Person.self, objectId: personId) {
-                DispatchQueue.main.async {
-                    person = fetchedPerson
-                }
-            }
-        }
-    }
-    
-    private func savePerson(updatedPerson: Person) {
-        Task {
-//            await ObjectController.updateObject(person: updatedPerson)
-            DispatchQueue.main.async {
-                self.person = updatedPerson
-            }
-        }
+        .navigationTitle(name.isEmpty ? "Create Person" : name)
     }
 }
 
@@ -142,23 +176,53 @@ struct MinPeopleView: View {
     var body: some View {
         if event?.eventType == .meeting {
             ForEach(event!.people, id: \.id) { person in
-                NavigationLink(destination: PersonView(personId: person.id!)) {
-                    Text("Person: \(person.name.capitalized)")
+                NavigationButton(destination: PersonView(personId: person.id!)) {
+                    Text("\(person.name.capitalized)")
+                }
+                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                    Button(action: {
+                        Task {
+                            if let association = event!.getAssociation(associationType: .object, associationId: person.id!) {
+                                await AssociationController.deleteAssociation(id: association.id)
+                            }
+                        }
+                    }) {
+                        Image(systemName: "trash.fill")
+                    }
+                    .tint(.red)
                 }
             }
             if let people = event?.metadata?.meetingData?.people {
                 ForEach(people, id: \.self) { personName in
-                    NavigationLink(destination: PersonBuilderView(
+                    NavigationLink(destination: PersonView(
                         name: personName.capitalized,
-                        saveAction: {
+                        createAction: {
                             person in
-                            print(person.name)
-                    })) {
-                        Text("Add \(personName.capitalized)")
-                    }
+                            Task {
+                                await AssociationController.createEventObjectAssociation(userId: auth.userId!, eventId: event!.id, objectId: person.id!)
+                                MetadataController.removePerson(event: event!, personName: personName)
+                            }
+                        })) {
+                            HStack {
+                                Text("Add \(personName.capitalized)")
+                                Button(action: {
+                                    MetadataController.removePerson(event: event!, personName: personName)
+                                }) {
+                                    Image(systemName: "xmark.square.fill")
+                                }
+                                .buttonStyle(HighPriorityButtonStyle())
+                            }
+                        }
                 }
             }
-            NavigationButton(destination: PeopleView()) {
+            NavigationButton(destination: PeopleView(
+                clickAction: {
+                    person in
+                    Task {
+                        await AssociationController.createEventObjectAssociation(userId: auth.userId!, eventId: event!.id, objectId: person.id!)
+                    }
+                }
+            )) {
                 Spacer()
                 Image(systemName: "plus.circle")
                 Spacer()
@@ -170,9 +234,9 @@ struct MinPeopleView: View {
 // fetch all people
 
 struct PeopleView: View {
-    @State var people: [ASObject] = []
+    @State var people: [Person] = []
     @State private var searchText = ""
-    var clickAction: ((ASObject) -> Void)? 
+    var clickAction: ((Person) -> Void)?
     @Environment(\.presentationMode) var presentationMode
     
     // action to execute
@@ -186,8 +250,8 @@ struct PeopleView: View {
                 .cornerRadius(8)
                 .padding(2)
             
-            NavigationButton(destination: PersonBuilderView(
-                saveAction: {
+            NavigationButton(destination: PersonView(
+                createAction: {
                     person in
                     people.append(person)
                 }
@@ -201,6 +265,8 @@ struct PeopleView: View {
                 Spacer()
             }
             
+            
+            
             ForEach(filteredPeople, id: \.id) { person in
                 if(clickAction != nil) {
                     Button(action: {
@@ -211,11 +277,14 @@ struct PeopleView: View {
                     }
                 } else {
                     NavigationButton(destination: PersonView(
-                        personId: person.id!),
-                        content: {
-                            Text(person.name)
-                        }
-                    )
+                        personId: person.id,
+                        createAction: {
+                            person in
+                            people.append(person)
+                        })
+                    ) {
+                        Text(person.name)
+                    }
                 }
             }
             
@@ -226,14 +295,14 @@ struct PeopleView: View {
     
     func fetchPeople() {
         Task {
-            let resp = await ObjectController.fetchObjects(userId: auth.userId!, objectType: .book)
+            let resp = await ObjectController.fetchObjects(type: Person.self, userId: auth.userId!, objectType: .person)
             DispatchQueue.main.async {
-                people = resp.books
+                people = resp
             }
         }
     }
     
-    var filteredPeople: [ASObject] {
+    var filteredPeople: [Person] {
         if searchText.isEmpty {
             return people
         } else {

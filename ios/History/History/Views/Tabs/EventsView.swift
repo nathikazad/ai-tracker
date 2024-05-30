@@ -160,7 +160,7 @@ struct EventsView: View {
                     HStack {
                         
                         Picker("Options", selection: $selectedOption) {
-                            ForEach(options, id: \.self) { option in
+                            ForEach(options.sorted(), id: \.self) { option in
                                 Text(option).tag(option)
                             }
                         }
@@ -206,8 +206,8 @@ struct EventsView: View {
             level: level,
             showTimeWithRespectToCurrentDate: true)
     }
-    
 }
+
 
 
 //#Preview {

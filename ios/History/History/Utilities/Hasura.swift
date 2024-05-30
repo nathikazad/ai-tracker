@@ -8,15 +8,38 @@
 import Foundation
 import SwiftUI
 
-enum SubscriptionStatus {
-    case registered
-    case active
+protocol GraphQLData: Decodable {}
+
+struct GraphQLResponse<T: GraphQLData>: Decodable {
+    var data: T
 }
 
-enum SocketStatus {
-    case initialized
-    case handshaking
-    case ready
+func encodeToDictionary<T: Codable>(_ input: T) throws -> [String: Any] {
+    let encoder = JSONEncoder()
+    
+    let jsonData = try encoder.encode(input)
+    guard let jsonDictionary = try JSONSerialization.jsonObject(with: jsonData, options: .allowFragments) as? [String: Any] else {
+        throw NSError(domain: "JSONErrorDomain", code: 1001, userInfo: [NSLocalizedDescriptionKey: "Failed to cast JSON to Dictionary"])
+    }
+    return jsonDictionary
+}
+
+protocol JSONRepresentable: Codable {
+    func toJson() throws -> [String: Any]
+}
+
+// Provide a default implementation of the protocol
+extension JSONRepresentable {
+    func toJson() throws -> [String: Any] {
+        let encoder = JSONEncoder()
+        let jsonData = try encoder.encode(self)
+        
+        guard let jsonDictionary = try JSONSerialization.jsonObject(with: jsonData, options: .allowFragments) as? [String: Any] else {
+            throw NSError(domain: "JSONErrorDomain", code: 1001, userInfo: [NSLocalizedDescriptionKey: "Failed to cast JSON to Dictionary"])
+        }
+        
+        return jsonDictionary
+    }
 }
 
 struct HasuraQuery {
@@ -39,10 +62,12 @@ struct HasuraQuery {
         self.queryFor = queryFor
     }
     
-    mutating func addParameter(name:String, type:String, value: Any,  op:String) {
-        parameterClauses.append("$\(name): \(type)!")
-        whereClauses.append("\(name): {\(op): $\(name)}")
-        variables[name] = value
+    mutating func addParameter(name:String, type:String, value: Any?,  op:String) {
+        if value != nil {
+            parameterClauses.append("$\(name): \(type)!")
+            whereClauses.append("\(name): {\(op): $\(name)}")
+            variables[name] = value
+        }
     }
     
     mutating func setSelections(selections:String) {
@@ -51,9 +76,9 @@ struct HasuraQuery {
     
     var getQueryAndVariables: (String, [String: Any]) {
         let whereClause = whereClauses.isEmpty ? "" : "where: {\(whereClauses.joined(separator: ", "))}"
-        let parameterString = parameterClauses.isEmpty ? "" : "(\(parameterClauses.joined(separator: ", ")))"
+        let parameterClause = parameterClauses.isEmpty ? "" : "(\(parameterClauses.joined(separator: ", ")))"
         let query = """
-        \(queryType.rawValue) \(queryName)\(parameterString) {
+        \(queryType.rawValue) \(queryName)\(parameterClause) {
           \(queryFor)(\(whereClause)) {
             \(selections)
         }
@@ -62,11 +87,85 @@ struct HasuraQuery {
     }
 }
 
+struct HasuraMutation {
+    enum MutationType: String {
+        case create; case update; case delete;
+    }
+    
+    var mutationName: String
+    var mutationType: MutationType
+    var mutationFor: String
+
+    private var parameterClauses: [String] = []
+    private var setClauses: [String] = []
+    private var appendClauses: [String] = []
+    private var objectClauses: [String] = []
+    private var variables: [String: Any] = [:]
+    private var id: Int?
+
+    public init(mutationFor: String, mutationName: String, mutationType: MutationType, id: Int? = nil) {
+        self.mutationType = mutationType
+        self.mutationName = mutationName
+        self.mutationFor = mutationFor
+        if mutationType == .update || mutationType == .delete {
+            parameterClauses.append("$id: Int!")
+            variables["id"] = id!
+        }
+        
+    }
+
+    mutating func addParameter(name:String, type:String, value: Any?) {
+        if value != nil {
+            parameterClauses.append("$\(name): \(type)!")
+            if mutationType == .update {
+                if type == "jsonb" {
+                    appendClauses.append("\(name): $\(name)")
+                } else {
+                    setClauses.append("\(name): $\(name)")
+                }
+            } else {
+                objectClauses.append("\(name): $\(name)")
+            }
+            variables[name] = value
+        }
+    }
+
+    var getMutationAndVariables: (String, [String: Any]) {
+        let pkClause = mutationType == .update ? "pk_columns: {id: $id}" : ""
+        let setClause = setClauses.isEmpty ? "" : "_set: {\(setClauses.joined(separator: ", "))}"
+        let appendClause = appendClauses.isEmpty ? "" : "_append: {\(appendClauses.joined(separator: ", "))}"
+        let objectClause = objectClauses.isEmpty ? "" : "object: {\(objectClauses.joined(separator: ", "))}"
+        let parameterClause = parameterClauses.isEmpty ? "" : "(\(parameterClauses.joined(separator: ", ")))"
+        var finalSetClause = mutationType == .update ? "\(pkClause), \(setClause), \(appendClause)" : objectClause
+        finalSetClause = mutationType == .delete ? "id: $id" : finalSetClause
+        let mutation = """
+        mutation \(mutationName)\(parameterClause) {
+          \(mutationFor)(\(finalSetClause)) {
+            id
+          }
+        }
+        """
+        print(mutation)
+        return (mutation, variables)
+    }
+
+}
+
 var hasura: Hasura {
     return Hasura.shared
 }
 
 class Hasura {
+    enum SubscriptionStatus {
+        case registered
+        case active
+    }
+
+    enum SocketStatus {
+        case initialized
+        case handshaking
+        case ready
+    }
     static let shared = Hasura()
     private var webSocketTask: URLSessionWebSocketTask?
     private var session: URLSession?

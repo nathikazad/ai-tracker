@@ -25,10 +25,10 @@ struct EventDestination: View {
 
 private func eventDestination(for event: EventModel) -> AnyView? {
     switch event.eventType {
-    case .staying:
-        if let location = event.location {
-            return AnyView(LocationDetailView(location: location))
-        }
+//    case .staying:
+//        if let location = event.location {
+//            return AnyView(LocationDetailView(location: location))
+//        }
 //        case .commuting:
 //            if let polyline = event.metadata?.polyline {
 //                return AnyView(PolylineView(encodedPolyline: polyline))

@@ -7,19 +7,16 @@
 
 import Foundation
 class EventsController: ObservableObject {
-    
-    struct EventsResponseData: Decodable {
-        var data: EventsWrapper
-        struct EventsWrapper: Decodable {
-            var events: [EventModel]
-        }
+        
+    struct EventsResponseData: GraphQLData {
+        var events: [EventModel]
     }
     
     static func fetchEvents(userId: Int, date: Date?) async -> [EventModel] {
-        let (graphqlQuery, variables) = EventsController.generateEventQuery(userId: userId, gte: date)
+        let (graphqlQuery, _) = EventsController.generateEventQuery(userId: userId, gte: date)
         do {
             // Directly get the decoded ResponseData object from sendGraphQL
-            let responseData: EventsResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, responseType: EventsResponseData.self)
+            let responseData: GraphQLResponse<EventsResponseData> = try await Hasura.shared.sendGraphQL(query: graphqlQuery, responseType: GraphQLResponse<EventsResponseData>.self)
             return responseData.data.events.sortEvents
         } catch {
             print("Error: \(error.localizedDescription)")
@@ -28,10 +25,10 @@ class EventsController: ObservableObject {
     }
     
     static func fetchEvent(id: Int) async -> EventModel? {
-        let (graphqlQuery, variables) = EventsController.generateEventQuery(id: id, onlyRootNodes: false)
+        let (graphqlQuery, _) = EventsController.generateEventQuery(id: id, onlyRootNodes: false)
         do {
             // Directly get the decoded ResponseData object from sendGraphQL
-            let responseData: EventsResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery,responseType: EventsResponseData.self)
+            let responseData: GraphQLResponse<EventsResponseData> = try await Hasura.shared.sendGraphQL(query: graphqlQuery,responseType: GraphQLResponse<EventsResponseData>.self)
             if(responseData.data.events.count > 0) {
                 return responseData.data.events[0]
             }
@@ -43,8 +40,8 @@ class EventsController: ObservableObject {
     }
     
     static func listenToEvent(id: Int, subscriptionId:String, eventUpdateCallback: @escaping (EventModel) -> Void) {
-        let (subscriptionQuery, variables) = EventsController.generateEventQuery(id: id, isSubscription: true, onlyRootNodes: false)
-        Hasura.shared.startListening(subscriptionId: subscriptionId, subscriptionQuery: subscriptionQuery, responseType: EventsResponseData.self) {result in
+        let (subscriptionQuery, _) = EventsController.generateEventQuery(id: id, isSubscription: true, onlyRootNodes: false)
+        Hasura.shared.startListening(subscriptionId: subscriptionId, subscriptionQuery: subscriptionQuery, responseType: GraphQLResponse<EventsResponseData>.self) {result in
             switch result {
             case .success(let responseData):
                 if(responseData.data.events.count > 0) {
@@ -60,8 +57,8 @@ class EventsController: ObservableObject {
     
     static func listenToEvents(userId: Int, subscriptionId:String, onlyRootNodes: Bool, date:Date?, parentId: Int? = nil, eventUpdateCallback: @escaping ([EventModel]) -> Void) {
         cancelListener(subscriptionId: subscriptionId)
-        let (subscriptionQuery, variables) = EventsController.generateEventQuery(userId: userId, gte: date, isSubscription: true, parentId: parentId, onlyRootNodes: onlyRootNodes)
-        Hasura.shared.startListening(subscriptionId: subscriptionId, subscriptionQuery: subscriptionQuery, responseType: EventsResponseData.self) {result in
+        let (subscriptionQuery, _) = EventsController.generateEventQuery(userId: userId, gte: date, isSubscription: true, parentId: parentId, onlyRootNodes: onlyRootNodes)
+        Hasura.shared.startListening(subscriptionId: subscriptionId, subscriptionQuery: subscriptionQuery, responseType: GraphQLResponse<EventsResponseData>.self) {result in
             switch result {
             case .success(let responseData):
                 eventUpdateCallback(responseData.data.events)
@@ -77,7 +74,7 @@ class EventsController: ObservableObject {
         print(graphqlQuery)
         print(variables)
         do {
-            let responseData: EventsResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, variables: variables, responseType: EventsResponseData.self)
+            let responseData: GraphQLResponse<EventsResponseData> = try await Hasura.shared.sendGraphQL(query: graphqlQuery, variables: variables, responseType: GraphQLResponse<EventsResponseData>.self)
             return  responseData.data.events.sortEvents
         } catch {
             print("Error: \(error.localizedDescription)")
@@ -86,19 +83,18 @@ class EventsController: ObservableObject {
         
     }
     
-    static func editEvent(id: Int, startTime: Date? = nil, endTime:Date? = nil, parentId: Int? = nil, notes:[String:String]? = nil, onSuccess: (() -> Void)? = nil) {
-        let (mutationQuery, variables) = EventsController.mutationQuery(id: id, startTime: startTime, endTime: endTime, parentId: parentId, notes: notes)
-        struct EditEventResponse: Decodable {
-            var data: EditEventWrapper
-            struct EditEventWrapper: Decodable {
-                var update_events_by_pk: EditedEvent
-                struct EditedEvent: Decodable {
-                    var id: Int
-                }
+    static func editEvent(id: Int, startTime: Date? = nil, endTime:Date? = nil, parentId: Int? = nil, notes:[String:String]? = nil, metadata:[String:Any]? = nil, onSuccess: (() -> Void)? = nil) {
+        let (mutationQuery, variables) = EventsController.mutationQuery(id: id, startTime: startTime, endTime: endTime, parentId: parentId, notes: notes, metadata: metadata)
+
+        struct EditEventResponse: GraphQLData {
+            var update_events_by_pk: EditedEvent
+            struct EditedEvent: Decodable {
+                var id: Int
             }
         }
+
         Task {
-            let response: EditEventResponse = try await Hasura.shared.sendGraphQL(query: mutationQuery, variables: variables, responseType: EditEventResponse.self)
+            let response: GraphQLResponse<EditEventResponse> = try await Hasura.shared.sendGraphQL(query: mutationQuery, variables: variables, responseType: GraphQLResponse<EditEventResponse>.self)
             DispatchQueue.main.async {
                 print("Event edited: \(response.data.update_events_by_pk.id)")
                 onSuccess?()
@@ -106,39 +102,18 @@ class EventsController: ObservableObject {
         }
     }
 
-    static func mutationQuery(id: Int, startTime: Date? = nil, endTime: Date? = nil, parentId: Int? = nil, notes:[String:String]? = nil ) -> (String, [String: Any]) {
-        var parameterClauses: [String] = []
-        var setClauses: [String] = []
-        var variables: [String: Any] = ["id": id]
-
-        if let startTime = startTime {
-            parameterClauses.append("$start_time: timestamp!")
-            setClauses.append("start_time: $start_time")
-            variables["start_time"] = startTime.toUTCString
-        }
-        if let endTime = endTime {
-            parameterClauses.append("$end_time: timestamp!")
-            setClauses.append("end_time: $end_time")
-            variables["end_time"] = endTime.toUTCString
-        }
-        if let parentId = parentId {
-            parameterClauses.append("$parent_id: Int!")
-            setClauses.append("parent_id: $parent_id")
-            variables["parent_id"] = parentId
-        }
+    static func mutationQuery(id: Int, startTime: Date? = nil, endTime: Date? = nil, parentId: Int? = nil, notes:[String:String]? = nil, metadata:[String:Any]? = nil) -> (String, [String: Any]) {
+        var hasuraMutation: HasuraMutation = HasuraMutation(mutationFor: "update_events_by_pk", mutationName: "EventMutation", mutationType: .update, id: id)
+        hasuraMutation.addParameter(name: "start_time", type: "timestamp", value: startTime?.toUTCString)
+        hasuraMutation.addParameter(name: "end_time", type: "timestamp", value: endTime?.toUTCString)
+        hasuraMutation.addParameter(name: "parent_id", type: "Int", value: parentId)
         if let notes = notes {
-            parameterClauses.append("$metadata: jsonb!")
-            setClauses.append("metadata: $metadata")
-            variables["metadata"] = ["notes": notes]
+            hasuraMutation.addParameter(name: "metadata", type: "jsonb", value: ["notes": notes])
         }
-        let mutationQuery = """
-        mutation MyMutation($id: Int!, \(parameterClauses.joined(separator: ", "))) {
-          update_events_by_pk(pk_columns: {id: $id}, _set: { \(setClauses.joined(separator: ", ")) }) {
-            id
-          }
+        if let metadata = metadata {
+            hasuraMutation.addParameter(name: "metadata", type: "jsonb", value: metadata)
         }
-        """
-        return (mutationQuery, variables)
+        return hasuraMutation.getMutationAndVariables
     }
     
     
@@ -153,19 +128,17 @@ class EventsController: ObservableObject {
         }
         """
         
-        struct DeleteEventResponse: Decodable {
-            var data: DeletedEventWrapper
-            struct DeletedEventWrapper: Decodable {
-                var delete_events_by_pk: DeletedEvent
-                struct DeletedEvent: Decodable {
-                    var id: Int
-                }
+        
+        
+        struct DeleteEventResponse: GraphQLData {
+            var delete_events_by_pk: DeletedEvent
+            struct DeletedEvent: Decodable {
+                var id: Int
             }
-            
-            
         }
+        
         Task {
-            let response: DeleteEventResponse = try await Hasura.shared.sendGraphQL(query: mutationQuery, responseType: DeleteEventResponse.self)
+            let response: GraphQLResponse<DeleteEventResponse> = try await Hasura.shared.sendGraphQL(query: mutationQuery, responseType: GraphQLResponse<DeleteEventResponse>.self)
             DispatchQueue.main.async {
                 print("Event deleted: \(response.data.delete_events_by_pk.id)")
                 onSuccess?()
@@ -221,7 +194,6 @@ class EventsController: ObservableObject {
             whereClauses.append("{id: {_eq: \(id)}}")
         }
         
-        var jsonFilter = ""
         if let metadataFilter = metadataFilter {
             parameterClauses.append("$jsonfilter: jsonb")
             whereClauses.append("{metadata: {_contains: $jsonfilter}}")
@@ -290,6 +262,11 @@ class EventsController: ObservableObject {
                 object_type
                 name
                 id
+            }
+            associations {
+              id
+              ref_two_id
+              ref_two_table
             }
         """
     }

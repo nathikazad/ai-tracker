@@ -8,14 +8,20 @@
 import Foundation
 
 
-//struct Association: Decodable {
-//    var id: Int
-//    var table: String
-//    enum CodingKeys: String, CodingKey {
-//        case id = "ref_two_id"
-//        case table = "ref_two_table"
-//    }
-//}
+struct Association: Decodable {
+    enum AssociationType: String, Decodable {
+        case object = "objects"
+        case location = "locations"
+    }
+    var id: Int
+    var associtaionId: Int
+    var associationType: AssociationType
+    enum CodingKeys: String, CodingKey {
+        case id
+        case associtaionId = "ref_two_id"
+        case associationType = "ref_two_table"
+    }
+}
 
 struct EventModel: Decodable, Identifiable, Hashable, Equatable {
     var id: Int
@@ -28,6 +34,7 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
     var locations: [LocationModel] = []
     var objects: [ASObject] = []
     var children: [EventModel] = []
+    var associations: [Association] = []
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -40,6 +47,7 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
         case locations
         case objects
         case children
+        case associations
     }
     
     init(from decoder: Decoder) throws {
@@ -60,6 +68,7 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
         locations = try container.decodeIfPresent([LocationModel].self, forKey: .locations) ?? []
         objects = try container.decodeIfPresent([ASObject].self, forKey: .objects) ?? []
         children = try container.decodeIfPresent([EventModel].self, forKey: .children) ?? []
+        associations = try container.decodeIfPresent([Association].self, forKey: .associations) ?? []
     }
     
     
@@ -91,6 +100,10 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
     var depth: Int {
         return children.isEmpty ? 0 : 1 + children.map(\.depth).max()!
     }
+    
+    func getAssociation(associationType: Association.AssociationType, associationId: Int) -> Association? {
+        return associations.filter({ $0.associtaionId == associationId}).first
+    }
 }
 
 struct Metadata: Decodable {
@@ -103,6 +116,7 @@ struct Metadata: Decodable {
     var cookingData: CookingData?
     var feelingData: FeelingData?
     var meetingData: MeetingData?
+    var distractionData: DistractionData?
     var eatingData: [EatingData] = []
     var notes: [Date: String] = [:]
     
@@ -115,6 +129,7 @@ struct Metadata: Decodable {
         case eatingData = "eating"
         case meetingData = "meeting"
         case feelingData = "feeling"
+        case distractionData = "distraction"
         case notes
     }
     
@@ -127,6 +142,7 @@ struct Metadata: Decodable {
         feelingData = try container.decodeIfPresent(FeelingData.self, forKey: .feelingData)
         meetingData = try container.decodeIfPresent(MeetingData.self, forKey: .meetingData)
         eatingData = try container.decodeIfPresent([EatingData].self, forKey: .eatingData) ?? []
+        distractionData = try container.decodeIfPresent(DistractionData.self, forKey: .distractionData)
         let notes = try container.decodeIfPresent([String: String].self, forKey: .notes) ?? [:]
         for (dateString, note) in notes {
             if let date = dateString.getDate {

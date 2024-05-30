@@ -60,7 +60,6 @@ struct NotesView: View {
                     }
                     Button(action: {
                         print("Clicked plus")
-                        print("WorkView: body: \(state.navigationStackIds)")
                         createNoteAction(event!.id)
                     }) {
                         Image(systemName: "plus.circle")

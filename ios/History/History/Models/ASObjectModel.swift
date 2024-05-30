@@ -59,6 +59,7 @@ class ASObject: Decodable {
         case name
         case objectType = "object_type"
         case events
+        case metadata
     }
     
     init(name:String, objectType: ASObjectType) {
@@ -73,6 +74,11 @@ class ASObject: Decodable {
         let objectTypeString = try container.decode(String.self, forKey: .objectType)
         objectType = ASObjectType(rawValue: objectTypeString) ?? .unknown
         events = try container.decodeIfPresent([EventModel].self, forKey: .events) ?? []
+    }
+
+
+    var metadata:  [String: Any] {
+        return [:]
     }
     
     var firstEventDate: Date? {
@@ -95,40 +101,45 @@ class ASObject: Decodable {
     }
 }
 
-struct PersonStruct: Decodable {
-    var contactMethods:[String] = []
+class PersonData: JSONRepresentable {
+    var contactMethods:[String]? = []
     var photo:String? = nil
-    var notes: [String] = []
+    var description: String? = nil
     
     enum CodingKeys: String, CodingKey {
         case contactMethods
         case photo
-        case notes
+        case description
+    }
+    
+    func toJson() throws ->  [String: Any] {
+        return try encodeToDictionary(self)
     }
 }
 
 class Person: ASObject {
-    var photo: String? = nil
-    var contactMethods:[String] = []
-    var notes: [String] = []
-    
-    enum CodingKeys: String, CodingKey {
-        case personData = "person"
-    }
+    var data: PersonData? = nil
     
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        let personStruct:PersonStruct = try container.decode(PersonStruct.self, forKey: .personData)
-        photo = personStruct.photo
-        notes = personStruct.notes
-        contactMethods = personStruct.contactMethods
+        data = try container.decode(PersonData.self, forKey: .metadata)
         try super.init(from: decoder)
     }
     
-    init(name: String, photo: String? = nil, notes: [String] = [], contactMethods: [String] = []) {
+    init(name: String, data: PersonData) {
+        self.data = data
         super.init(name: name, objectType: .person)
-        self.photo = photo
-        self.notes = notes
-        self.contactMethods = contactMethods
+    }
+    
+    
+    override var metadata:  [String: Any] {
+        print("to json of Person")
+        do {
+            return try data!.toJson()
+        } catch {
+            print("PersonObject: toJson: Error")
+            print(error)
+            return [:]
+        }
     }
 }

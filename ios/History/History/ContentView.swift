@@ -58,7 +58,7 @@ struct MainView: View {
         )
     }
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack(alignment: .bottom) {
                 TabView(selection: $selectedTab) {
                     TodosView().tabItem { Label("Todos", systemImage: "checklist") }.tag(Tab.todos)

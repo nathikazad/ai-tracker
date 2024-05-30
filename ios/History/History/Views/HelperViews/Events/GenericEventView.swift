@@ -31,7 +31,7 @@ struct GenericEventView: View {
             if let event = event {
                 Section(header: Text("Event Info")) {
                     Text(event.formattedTimeWithDate)//
-
+                    
                     NavigationLink(destination: EventTypeView(eventType: event.eventType)) {
                         Text("Event Type: \(event.eventType.capitalized)")
                     }
@@ -42,43 +42,51 @@ struct GenericEventView: View {
                         }
                     }
                     
-//                    if let interaction = event.interaction?.content {
-//                        Text(interaction)
-//                    }
-//                    
+                    //                    if let interaction = event.interaction?.content {
+                    //                        Text(interaction)
+                    //                    }
+                    //
                     MinBooksView(event: $event, bookStruct: bookStruct)
                 }
-            }
-            
-            if event?.eventType == .meeting {
-                Section(header: Text("People")) {
-                    MinPeopleView(event: $event)
+                
+                if event.eventType == .meeting {
+                    Section(header: Text("People")) {
+                        MinPeopleView(event: $event)
+                    }
                 }
-            }
-            
-            
-            // Books
-            // Persons
-            // Recipes
-            
-            NotesView(event: $event,
-                      noteStruct: noteStruct,
-                      createNoteAction: {
-                parentId in
-                state.setParentEventId(parentId)
-                chatViewPresented = true
-            })
-            
-            // Child Events
-            if(event?.hasChildren ?? false) {
-                Section(header: Text("Events")) {
-                    List {
-                        ForEach(event!.children.sortEvents, id: \.id) { event in
-                            EventRow(
-                                event: event,
-                                reassignParentForId: $reassignParentForId,
-                                expandedEventIds: $expandedEventIds
-                            )
+                
+                
+                // Books
+                // Persons
+                // Recipes
+                
+                NotesView(event: $event,
+                          noteStruct: noteStruct,
+                          createNoteAction: {
+                    parentId in
+                    state.setParentEventId(parentId)
+                    chatViewPresented = true
+                })
+                
+                // Child Events
+                if(event.hasChildren) {
+                    Section(header: Text("Events")) {
+                        List {
+                            ForEach(event.children.sortEvents, id: \.id) { event in
+                                EventRow(event: event, reassignParentForId: $reassignParentForId, expandedEventIds: $expandedEventIds)
+                                if expandedEventIds.contains(event.id) {
+                                    MinimizedNoteView(notes: event.metadata!.notes, level:1)
+                                    ForEach(event.children.sortEvents, id: \.id) { child in
+                                        EventRow(event: event, reassignParentForId: $reassignParentForId, expandedEventIds: $expandedEventIds, level: 1)
+                                        if expandedEventIds.contains(child.id) {
+                                            MinimizedNoteView(notes: child.metadata!.notes, level:2)
+                                            ForEach(child.children.sortEvents, id: \.id) { grandChild in
+                                                EventRow(event: event, reassignParentForId: $reassignParentForId, expandedEventIds: $expandedEventIds, level: 2)
+                                            }
+                                         }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -107,7 +115,7 @@ struct GenericEventView: View {
         .onDisappear {
             EventsController.cancelListener(subscriptionId: subscriptionId)
         }
-        .navigationTitle("\(event?.eventType.capitalized ?? "Event")(\(String(eventId)))")
+        .navigationTitle(event != nil ? "\(event!.eventType.capitalized)(\(String(eventId)))" : "")
         .fullScreenCover(isPresented: $chatViewPresented) {
             ChatView {
                 chatViewPresented = false

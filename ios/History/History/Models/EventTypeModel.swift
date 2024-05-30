@@ -50,7 +50,7 @@ extension Metadata {
         }
     }
 
-    struct MeetingData: Decodable {
+    struct MeetingData: JSONRepresentable {
         var people: [String]?
         var meetingType: String?
         var location: String?
@@ -58,6 +58,21 @@ extension Metadata {
             case people
             case meetingType
             case location
+        }
+
+        func toJson() throws ->  [String: Any] {
+            return try encodeToDictionary(self)
+        }
+    }
+    
+    struct DistractionData: JSONRepresentable {
+        var name: String?
+        enum CodingKeys: String, CodingKey {
+            case name
+        }
+
+        func toJson() throws ->  [String: Any] {
+            return try encodeToDictionary(self)
         }
     }
 
@@ -126,8 +141,8 @@ extension EventModel {
     var toString: String {
         switch eventType {
         case .reading:
-            let name = book?.name
-            return name != nil ? "Read \(name!)" : "Read Something"
+            let name = book?.name ?? metadata?.readingData?.name
+            return name != nil ? "Read \(name!.capitalized)" : "Read Something"
         case .learning:
             let skill = metadata?.learningData?.skill?.capitalized
             let interactionContent: String = interaction?.content ?? ""
@@ -151,14 +166,16 @@ extension EventModel {
             let name = metadata?.feelingData?.name?.capitalized
             return name != nil ? "Felt \(name!)" : "Felt Something"
         case .meeting:
-            let people = metadata?.meetingData?.people?.map({ $0.capitalized }) ?? []
+            let peopleStrings:[String] = people.map{ $0.name } + (metadata?.meetingData?.people?.map({ $0.capitalized }) ?? [])
             let action = metadata?.meetingData?.meetingType == "inperson" ? "Met" : "Spoke to"
-            let formattedPeople: String? = people.joinWithAndAtEnd
+            let formattedPeople: String? = peopleStrings.joinWithAndAtEnd
             let location = metadata?.meetingData?.location != nil ? " at \(metadata!.meetingData!.location!)" : ""
             return formattedPeople != nil ? "\(action) \(formattedPeople!)\(location)" : "\(action) Someone"
         case .sleeping:
-            
             return "Slept \(timeTaken != nil ? "for \(timeTaken!)"  : "")"
+        case .distracting:
+            let distraction = metadata?.distractionData?.name
+            return "Distracted with \(distraction != nil ? distraction!  : "unknown distraction")"
         case .staying:
             let eventName = (socialEvent?.name != nil) ? " for \(socialEvent!.name)" : ""
             let locationName = location?.name ?? "Unnamed location"
