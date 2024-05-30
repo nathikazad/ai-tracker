@@ -257,7 +257,7 @@ async function extractMeetingInfo(event: ASEvent): Promise<any> {
     let prompt = `
     Given a sentence: "${event.sentence}"
     Tell me what kind of meeting it was.
-    inperson/phone/online
+    inperson/phone/online/message
 
     If users says doesn't clearly mention where the meeting took place, then assume it is a phone meeting.
     If it was inperson, tell me the location if is mentioned in the sentence.
@@ -265,7 +265,7 @@ async function extractMeetingInfo(event: ASEvent): Promise<any> {
     Output specs:
     Give me output as only a json object, prefixed and suffixed by triple backticks, 
     with only the fields 
-        meetingType: string; one of inperson/phone/online
+        meetingType: string; one of inperson/phone/online/message
         location?: string; only if meetingType is InPerson
         If there is not information to determine the values, then do not include the fields
     '\n`

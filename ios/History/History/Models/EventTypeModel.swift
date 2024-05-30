@@ -63,6 +63,20 @@ extension Metadata {
         func toJson() throws ->  [String: Any] {
             return try encodeToDictionary(self)
         }
+
+        var action: String {
+            switch meetingType {
+            case "inperson":
+                return "Met"
+            case "phone":
+                return "Spoke to"
+            case "message":
+                return "Messaged"
+            default:
+                return "Spoke to"
+            }
+            
+        }
     }
     
     struct DistractionData: JSONRepresentable {
@@ -167,7 +181,7 @@ extension EventModel {
             return name != nil ? "Felt \(name!)" : "Felt Something"
         case .meeting:
             let peopleStrings:[String] = people.map{ $0.name } + (metadata?.meetingData?.people?.map({ $0.capitalized }) ?? [])
-            let action = metadata?.meetingData?.meetingType == "inperson" ? "Met" : "Spoke to"
+            let action = metadata?.meetingData?.action ?? "Spoke to"
             let formattedPeople: String? = peopleStrings.joinWithAndAtEnd
             let location = metadata?.meetingData?.location != nil ? " at \(metadata!.meetingData!.location!)" : ""
             return formattedPeople != nil ? "\(action) \(formattedPeople!)\(location)" : "\(action) Someone"
