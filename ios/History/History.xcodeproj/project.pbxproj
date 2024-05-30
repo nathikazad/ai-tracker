@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FE06FD042C0913E800E65D41 /* MinPeopleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE06FD032C0913E800E65D41 /* MinPeopleView.swift */; };
+		FE06FD062C09140500E65D41 /* PeopleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE06FD052C09140500E65D41 /* PeopleView.swift */; };
 		FE129BE42BCB3CFB004058EA /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE129BE32BCB3CFB004058EA /* Authentication.swift */; };
 		FE129BE62BCB87B9004058EA /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE129BE52BCB87B9004058EA /* LocationManager.swift */; };
 		FE12C5E62BC4B2A5002CDC60 /* InteractionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12C5E52BC4B2A4002CDC60 /* InteractionsView.swift */; };
@@ -137,6 +139,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		FE06FD032C0913E800E65D41 /* MinPeopleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinPeopleView.swift; sourceTree = "<group>"; };
+		FE06FD052C09140500E65D41 /* PeopleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleView.swift; sourceTree = "<group>"; };
 		FE129BE32BCB3CFB004058EA /* Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
 		FE129BE52BCB87B9004058EA /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		FE12C5E52BC4B2A4002CDC60 /* InteractionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionsView.swift; sourceTree = "<group>"; };
@@ -253,6 +257,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		FE06FD022C0913D500E65D41 /* Person */ = {
+			isa = PBXGroup;
+			children = (
+				FE06FD032C0913E800E65D41 /* MinPeopleView.swift */,
+				FEC7849D2C064EAE007C38F1 /* PersonView.swift */,
+				FE06FD052C09140500E65D41 /* PeopleView.swift */,
+			);
+			path = Person;
+			sourceTree = "<group>";
+		};
 		FE12C5E42BC4B29C002CDC60 /* Tabs */ = {
 			isa = PBXGroup;
 			children = (
@@ -491,8 +505,8 @@
 		FEDBC06A2C055BE400233EA0 /* Objects */ = {
 			isa = PBXGroup;
 			children = (
+				FE06FD022C0913D500E65D41 /* Person */,
 				FE96B5442BF8505D000BD8E1 /* BookView.swift */,
-				FEC7849D2C064EAE007C38F1 /* PersonView.swift */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -667,6 +681,7 @@
 				FE977B0F2BD9C2A6008E743C /* EventTypeView.swift in Sources */,
 				FE12C5EF2BC4B832002CDC60 /* MicrophoneButton.swift in Sources */,
 				FE12C5EC2BC4B359002CDC60 /* GraphsView.swift in Sources */,
+				FE06FD062C09140500E65D41 /* PeopleView.swift in Sources */,
 				FEA549A52BD34D290058E7D8 /* LocationView.swift in Sources */,
 				FE9EAE512BC042260082DE87 /* ChatView.swift in Sources */,
 				FE4594272BD9E713002B163E /* HealthKitManager.swift in Sources */,
@@ -677,6 +692,7 @@
 				FE477D932BD8122B001FC341 /* CalendarPicker.swift in Sources */,
 				FE8153722BD845B300D972C8 /* PolylineView.swift in Sources */,
 				FE9452F22BF2CC0900B28918 /* InteractionView.swift in Sources */,
+				FE06FD042C0913E800E65D41 /* MinPeopleView.swift in Sources */,
 				FE12C5E62BC4B2A5002CDC60 /* InteractionsView.swift in Sources */,
 				FE8AB2AC2C079AB400131C13 /* StringHelper.swift in Sources */,
 				FE8AB2AE2C07CA0600131C13 /* AssociationController.swift in Sources */,
