@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		FE06FD042C0913E800E65D41 /* MinPeopleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE06FD032C0913E800E65D41 /* MinPeopleView.swift */; };
 		FE06FD062C09140500E65D41 /* PeopleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE06FD052C09140500E65D41 /* PeopleView.swift */; };
+		FE06FD082C0921C900E65D41 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE06FD072C0921C900E65D41 /* Image.swift */; };
 		FE129BE42BCB3CFB004058EA /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE129BE32BCB3CFB004058EA /* Authentication.swift */; };
 		FE129BE62BCB87B9004058EA /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE129BE52BCB87B9004058EA /* LocationManager.swift */; };
 		FE12C5E62BC4B2A5002CDC60 /* InteractionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12C5E52BC4B2A4002CDC60 /* InteractionsView.swift */; };
@@ -141,6 +142,7 @@
 /* Begin PBXFileReference section */
 		FE06FD032C0913E800E65D41 /* MinPeopleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinPeopleView.swift; sourceTree = "<group>"; };
 		FE06FD052C09140500E65D41 /* PeopleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleView.swift; sourceTree = "<group>"; };
+		FE06FD072C0921C900E65D41 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		FE129BE32BCB3CFB004058EA /* Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
 		FE129BE52BCB87B9004058EA /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		FE12C5E52BC4B2A4002CDC60 /* InteractionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionsView.swift; sourceTree = "<group>"; };
@@ -418,6 +420,7 @@
 				FE4594262BD9E713002B163E /* HealthKitManager.swift */,
 				FECA5EED2BE569F6007ADE17 /* Time.swift */,
 				FE8AB2AB2C079AB400131C13 /* StringHelper.swift */,
+				FE06FD072C0921C900E65D41 /* Image.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -711,6 +714,7 @@
 				FE96B5472BF8509E000BD8E1 /* ObjectController.swift in Sources */,
 				FE5264812BA99AF700502521 /* ServerCommunicator.swift in Sources */,
 				FE8AB2B02C07DDCB00131C13 /* MetadataController.swift in Sources */,
+				FE06FD082C0921C900E65D41 /* Image.swift in Sources */,
 				FE9477C42BFFB9E4003AD03A /* GenericEventView.swift in Sources */,
 				FE8811EF2BC799BF00B112A8 /* TodosController.swift in Sources */,
 				FED942102BE0767900F0B24C /* Investor.swift in Sources */,

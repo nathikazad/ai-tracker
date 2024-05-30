@@ -13,6 +13,7 @@
 //import SwiftUI
 //
 import SwiftUI
+import PhotosUI
 
 
 struct PersonView: View {
@@ -28,12 +29,71 @@ struct PersonView: View {
     @State var mode: builderMode = .create  
     var createAction: ((Person) -> Void)?
     
+    @State private var selectedItem: PhotosPickerItem?
+    @State var image: UIImage?
+    
     var body: some View {
         Form {
             HStack {
+                if mode == .create || mode == .edit {
+                    PhotosPicker(
+                        selection: $selectedItem,
+                        matching: .images,
+                        photoLibrary: .shared()) {
+                            if let image = image {
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 50, height: 50)
+                                    .clipShape(Circle())
+                                    .overlay(
+                                        Circle().stroke(Color.white, lineWidth: 2) // Optional: Adds a white border for visual clarity
+                                    )
+                                    .padding(.trailing, 5)
+                            } else {
+                                Circle()
+                                    .fill(Color.gray.opacity(0.5))
+                                    .frame(width: 50, height: 50)
+                                    .overlay(
+                                        Image(systemName: "plus")
+                                            .foregroundColor(.white)
+                                    )
+                                    .padding(.trailing, 5)
+                            }
+                        }
+                        .onChange(of: selectedItem) {
+                            Task {
+                                if let data = try? await selectedItem?.loadTransferable(type: Data.self) {
+                                    let retImage = UIImage(data: data)
+                                    if let loc = saveImage(image: retImage!, imageLocation: person.data?.photo) {
+                                        image = loadImage(location: loc)
+                                        person.data?.photo = loc
+                                    }
+                                } else {
+                                    print("Failed to load the image")
+                                }
+                            }
+                        }
+                    } else {
+                        if let image = image {
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFit()
+                                .aspectRatio(contentMode: .fill) // This will fill the space, possibly cropping the image
+                                .frame(width: 50, height: 50)
+                                .clipShape(Circle())
+                                .overlay(
+                                    Circle().stroke(Color.white, lineWidth: 2) // Optional: Adds a white border for visual clarity
+                                )
+                                .padding(.trailing, 5)
+                        }
+                    }
+                
                 Text("Name:")
                     .foregroundColor(.gray)
-                    .frame(width: 80, alignment: .leading)
+                    .frame(width: 60, alignment: .leading)
+                    .padding(.leading, 10)
                 
                 if mode == .create {
                     TextField("Enter Name", text: $name) {
@@ -165,6 +225,10 @@ struct PersonView: View {
                             name = person.name
                             description = person.data?.description ?? ""
                             contactMethods = person.data?.contactMethods ?? []
+                            print("photo ", person.data?.photo)
+                            if let photo = person.data?.photo {
+                                image = loadImage(location: photo)
+                            }
                         }
                     }
                 }
