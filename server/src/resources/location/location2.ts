@@ -189,7 +189,8 @@ export async function updateMovements(userId: number) {
 function findStationaryPeriods(deviceLocations: DeviceLocation[], windowSize: number, thresholdDistance: number, thresholdTime: number, minDuration: number): StationaryPeriod[] {
     console.log(`data ${deviceLocations.length}`)
     deviceLocations.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
-    deviceLocations = deviceLocations.filter(p => p.accuracy && p.accuracy < 40)
+    // filter out points with accuracy less than 40 except if it is the last point
+    deviceLocations = deviceLocations.filter((p, i) => (p.accuracy && p.accuracy < 40) || i == deviceLocations.length - 1)
     let velocity: number[] = []
     for (let i = 0; i < deviceLocations.length; i++) {
         const currWindowSize = (windowSize > deviceLocations.length - i) ? deviceLocations.length - i : windowSize;
@@ -230,13 +231,13 @@ function findStationaryPeriods(deviceLocations: DeviceLocation[], windowSize: nu
             if(velocity[i] > 0.5 || 
                 (distance > 150)) {
                 stationary = false
-                console.log(`\tSTART velThresh: ${velocity[i] > 0.5}, distThresh: ${distance > 150}`)
+                console.log(`\tSTART MOVING velThresh: ${velocity[i] > 0.5}, distThresh: ${distance > 150}`)
                 points = []
             }
         } else {
             if(velocity[i] < 0.5) {
                 stationary = true
-                console.log(`\tSTOP ${stationaryPeriods.length} velThresh: ${velocity[i] < 0.5}`)
+                console.log(`\tSTOP MOVING ${stationaryPeriods.length} velThresh: ${velocity[i] < 0.5}`)
                 points = deviceLocations.slice(i, i+2)
                 stationaryPeriods.push(constructStationary(points, `${i} - ${i+1}`))
             }

@@ -14,7 +14,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     
     private let locationUpdateDistanceFilter: CLLocationDistance = 30
     var waitAndSendLocationTimer: Timer?
-   let timeToWaitBeforeSending = 200.0 //seconds
+   let timeToWaitBeforeSending = 300.0 //seconds
     
 
     var receivedLocations: [(CLLocation, Bool)] = []
@@ -157,7 +157,6 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
                 locationsToSend.append(locationsQueue[i])
                 lastAddedIndex = i
             }
-
         }
         print("LocationManager: sendRemainingLocations: sending \(locationsQueue.count) -> \(locationsToSend.count) locations")
         locationsSentCount += locationsToSend.count
@@ -186,6 +185,13 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
             return
         }
         Task {
+            var locationsInJSON = locations.map { $0.toJSON() }
+            
+            // Copy over the last location and send it twice
+            var lastLocationJSON = locationsInJSON[locationsInJSON.count-1]
+            lastLocationJSON["timestamp"] = Date().toUTCString
+            locationsInJSON.append(lastLocationJSON)
+            
             print("sending location \(locations.count)")
             let body = [
                 "locations": locations.map { $0.toJSON() },
