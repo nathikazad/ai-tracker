@@ -258,7 +258,9 @@ async function extractMeetingInfo(event: ASEvent): Promise<any> {
     Tell me what kind of meeting it was.
     inperson/phone/online/message
 
-    If users says doesn't clearly mention where the meeting took place, then assume it is a phone meeting.
+    If users says 'speak' or 'call' assume it is a phone meeting. 
+    If user says 'met' assume it is an inperson meeting.
+    If user says 'chat' or 'message' assume it is an online meeting.
     If it was inperson, tell me the location if is mentioned in the sentence.
     
     Output specs:
