@@ -234,20 +234,19 @@ async function findPeople(event: ASEvent): Promise<any> {
         model: "70b",
         temperature: 0.1
     })
-
-
-    console.log(output);
-
-    let names = output.replace(/[\[\]]/g, '').split(',').map((s: string) => s.trim())
-    names = names.map((c: string) => {
-        c = c.replace(/['"]+/g, '');
-        // return c.trim().charAt(0).toUpperCase() + c.trim().slice(1);
-        return c.trim();
-    });
-
-
-
     
+
+    // console.log(output);
+    
+
+    let names = extractJson(output)
+    // capitalize the first letter of each segment of the names
+    names = names.map((n: string) => {
+        n = n.replace(/['"]+/g, '');
+        return {
+            name: n.split(" ").map((s: string) => s[0].toUpperCase() + s.slice(1)).join(" ")
+        }
+    })
 
     return names
 }
@@ -277,7 +276,7 @@ async function extractMeetingInfo(event: ASEvent): Promise<any> {
     })
 
 
-    console.log(output);
+    // console.log(output);
     let meetingInfo = extractJson(output)
     return meetingInfo
 }
