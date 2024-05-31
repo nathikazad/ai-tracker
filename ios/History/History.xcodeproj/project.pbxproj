@@ -902,6 +902,8 @@
 				INFOPLIST_FILE = History/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Aspire;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app needs camer information to capture bills";
+				INFOPLIST_KEY_NSContactsUsageDescription = "This app needs to capture images";
 				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "To keep track of sleep information";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "To keep track of sleep information";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "To keep track of sleep information";
@@ -949,6 +951,8 @@
 				INFOPLIST_FILE = History/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Aspire;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app needs camer information to capture bills";
+				INFOPLIST_KEY_NSContactsUsageDescription = "This app needs to capture images";
 				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "To keep track of sleep information";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "To keep track of sleep information";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "To keep track of sleep information";

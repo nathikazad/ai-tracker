@@ -114,7 +114,7 @@ struct HasuraMutation {
         
     }
 
-    mutating func addParameter(name:String, type:String, value: Any?) {
+    mutating func addParameter(name:String, type:String, value: Any?, passNullValue: Bool = false) {
         if value != nil {
             parameterClauses.append("$\(name): \(type)!")
             if mutationType == .update {
@@ -127,6 +127,8 @@ struct HasuraMutation {
                 objectClauses.append("\(name): $\(name)")
             }
             variables[name] = value
+        } else if passNullValue {
+            setClauses.append("\(name): null")
         }
     }
 

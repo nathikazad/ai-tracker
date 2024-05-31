@@ -12,6 +12,7 @@ struct MinPeopleView: View {
     
     var body: some View {
         if event?.eventType == .meeting {
+            // tracked people
             ForEach(event!.people, id: \.id) { person in
                 NavigationButton(destination: PersonView(personId: person.id!)) {
                     Text("\(person.name.capitalized)")
@@ -29,21 +30,23 @@ struct MinPeopleView: View {
                     .tint(.red)
                 }
             }
+            // untracked people
             if let people = event?.metadata?.meetingData?.people {
-                ForEach(people, id: \.self) { personName in
+                ForEach(people, id: \.name) { person in
                     NavigationLink(destination: PersonView(
-                        name: personName.capitalized,
+                        name: person.name.capitalized,
+                        description: event?.notes.first?.1 ?? "",
                         createAction: {
                             person in
                             Task {
                                 let  _ = await AssociationController.createEventObjectAssociation(userId: auth.userId!, eventId: event!.id, objectId: person.id!)
-                                MetadataController.removePerson(event: event!, personName: personName)
+                                MetadataController.removePerson(event: event!, personName: person.name)
                             }
                         })) {
                             HStack {
-                                Text("Add \(personName.capitalized)")
+                                Text("Add \(person.name.capitalized)")
                                 Button(action: {
-                                    MetadataController.removePerson(event: event!, personName: personName)
+                                    MetadataController.removePerson(event: event!, personName: person.name)
                                 }) {
                                     Image(systemName: "xmark.square.fill")
                                 }

@@ -49,9 +49,22 @@ extension Metadata {
             case score
         }
     }
+    
+    
 
     struct MeetingData: JSONRepresentable {
-        var people: [String]?
+        struct PersonInfo: JSONRepresentable {
+            var name: String
+            var id: Int? = nil
+            var description: String? = nil
+            enum CodingKeys: String, CodingKey {
+                case name
+                case id
+                case description
+            }
+        }
+        var people: [PersonInfo]?
+        
         var meetingType: String?
         var location: String?
         enum CodingKeys: String, CodingKey {
@@ -180,7 +193,7 @@ extension EventModel {
             let name = metadata?.feelingData?.name?.capitalized
             return name != nil ? "Felt \(name!)" : "Felt Something"
         case .meeting:
-            let peopleStrings:[String] = people.map{ $0.name } + (metadata?.meetingData?.people?.map({ $0.capitalized }) ?? [])
+            let peopleStrings:[String] = people.map{ $0.name } + (metadata?.meetingData?.people?.map({ $0.name.capitalized }) ?? [])
             let action = metadata?.meetingData?.action ?? "Spoke to"
             let formattedPeople: String? = peopleStrings.joinWithAndAtEnd
             let location = metadata?.meetingData?.location != nil ? " at \(metadata!.meetingData!.location!)" : ""

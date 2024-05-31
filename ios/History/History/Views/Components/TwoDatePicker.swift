@@ -83,8 +83,7 @@ struct TwoDatePickerView: View {
                             DispatchQueue.main.async {
                                 let startTime = datePickerModel.getStartTime
                                 let endTime = datePickerModel.getEndTime
-                                print("editing")
-                                EventsController.editEvent(id: datePickerModel.showPopupForId!, startTime: startTime, endTime: endTime)
+                                EventsController.editEvent(id: datePickerModel.showPopupForId!, startTime: startTime, endTime: endTime, passNullTimeValues: true)
                                 self.datePickerModel.dismissPopup()
                             }
                             

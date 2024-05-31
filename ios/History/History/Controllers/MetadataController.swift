@@ -10,7 +10,7 @@ import Foundation
 class MetadataController {
     static func removePerson(event: EventModel, personName: String) {
         var meetingData = event.metadata!.meetingData
-        meetingData!.people = meetingData!.people!.filter { $0 != personName }
+        meetingData!.people = meetingData!.people!.filter { $0.name != personName }
         do {
             try EventsController.editEvent(id: event.id, metadata: ["meeting": meetingData!.toJson()])
         } catch {

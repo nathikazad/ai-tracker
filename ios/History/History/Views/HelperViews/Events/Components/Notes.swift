@@ -16,7 +16,12 @@ class NoteStruct: ObservableObject {
 
 struct NotesView: View {
     @Binding var event: EventModel?
+    @Binding var showCamera: Bool
+    @Binding var selectedImage: UIImage?
+    @State private var editMode: Bool = false
     @StateObject var noteStruct: NoteStruct
+    
+    
     var createNoteAction: (Int) -> Void
     
     var body: some View {
@@ -24,47 +29,78 @@ struct NotesView: View {
             let notes: [Date: String] = event?.metadata?.notes ?? [:]
             Section(header: Text("Notes")) {
                 List {                    
-                    ForEach(Array(notes.keys).sorted(by: <), id: \.self) { date in
-                        if let note = notes[date] {
-                            HStack {
-                                Text(date.formattedTime)
-                                    .font(.headline)
-                                    .frame(width: 100, alignment: .leading)
-                                    .onTapGesture {
-                                        noteStruct.showInPopup = .modifyDate
-                                        noteStruct.newDate = date
-                                        noteStruct.showPopupForDate = date
-                                    }
-                                Divider()
-                                Text(note)
-                                    .onTapGesture {
-                                        print("tapped")
-                                        noteStruct.showInPopup = .modifyText
-                                        noteStruct.draftContent = note
-                                        noteStruct.showPopupForDate = date
-                                    }
-                            }
-                            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                                Button(action: {
-                                    print("Deleting note \(event!.id) \(date)")
-                                    if var notes = event?.metadata?.notesToJson {
-                                        notes.removeValue(forKey: date.toUTCString)
-                                        EventsController.editEvent(id: event!.id, notes: notes)
-                                    }
-                                }) {
-                                    Image(systemName: "trash.fill")
+                    ForEach(event!.notes, id: \.1) { date, note in
+                        HStack {
+                            Text(date.formattedTime)
+                                .font(.headline)
+                                .frame(width: 100, alignment: .leading)
+                                .onTapGesture {
+                                    noteStruct.showInPopup = .modifyDate
+                                    noteStruct.newDate = date
+                                    noteStruct.showPopupForDate = date
                                 }
-                                .tint(.red)
+                            Divider()
+                            Text(note)
+                                .onTapGesture {
+                                    print("tapped")
+                                    noteStruct.showInPopup = .modifyText
+                                    noteStruct.draftContent = note
+                                    noteStruct.showPopupForDate = date
+                                }
+                        }
+                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                            Button(action: {
+                                print("Deleting note \(event!.id) \(date)")
+                                if var notes = event?.metadata?.notesToJson {
+                                    notes.removeValue(forKey: date.toUTCString)
+                                    EventsController.editEvent(id: event!.id, notes: notes)
+                                }
+                            }) {
+                                Image(systemName: "trash.fill")
                             }
+                            .tint(.red)
                         }
                     }
-                    Button(action: {
-                        print("Clicked plus")
-                        createNoteAction(event!.id)
-                    }) {
-                        Image(systemName: "plus.circle")
+                    if let images = event?.metadata?.images, images.count > 0 {
+                        HorizontalImageView(images: images, editMode: $editMode, selectedImage: $selectedImage) {
+                            imageLocation in
+                            var newImages = images.filter({$0 != imageLocation})
+                            deleteImage(location: imageLocation)
+                            EventsController.editEvent(id: event!.id, images: newImages)
+                            
+                        }
                     }
-                    .frame(maxWidth: .infinity, alignment: .center)
+                    HStack(spacing: 10) {
+                        Spacer()
+                        Button(action: {
+                            print("Clicked plus")
+                            createNoteAction(event!.id)
+                        }) {
+                            Image(systemName: "plus.circle")
+                        }
+                        .buttonStyle(HighPriorityButtonStyle())
+                        
+                        Button(action: {
+                            print("Clicked camera")
+                            self.showCamera.toggle()
+                        }) {
+                            Image(systemName: "camera")
+                        }
+                        .buttonStyle(HighPriorityButtonStyle())
+                        
+                        if (event?.metadata?.images.count ?? 0) > 0 {
+                            Button(action: {
+                                print("Clicked camera")
+                                editMode.toggle()
+                            }) {
+                                Image(systemName: editMode ? "xmark.circle" : "pencil.circle")
+                            }
+                            .buttonStyle(HighPriorityButtonStyle())
+                        }
+                        
+                        Spacer()
+                        
+                    }
                 }
             }
         }

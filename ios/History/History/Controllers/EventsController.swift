@@ -83,8 +83,8 @@ class EventsController: ObservableObject {
         
     }
     
-    static func editEvent(id: Int, startTime: Date? = nil, endTime:Date? = nil, parentId: Int? = nil, notes:[String:String]? = nil, metadata:[String:Any]? = nil, onSuccess: (() -> Void)? = nil) {
-        let (mutationQuery, variables) = EventsController.mutationQuery(id: id, startTime: startTime, endTime: endTime, parentId: parentId, notes: notes, metadata: metadata)
+    static func editEvent(id: Int, startTime: Date? = nil, endTime:Date? = nil, parentId: Int? = nil, notes:[String:String]? = nil, metadata:[String:Any]? = nil, images:[String]? = nil, passNullTimeValues: Bool = false, onSuccess: (() -> Void)? = nil) {
+        let (mutationQuery, variables) = EventsController.mutationQuery(id: id, startTime: startTime, endTime: endTime, parentId: parentId, notes: notes, metadata: metadata, images:images, passNullTimeValues: passNullTimeValues)
 
         struct EditEventResponse: GraphQLData {
             var update_events_by_pk: EditedEvent
@@ -102,13 +102,16 @@ class EventsController: ObservableObject {
         }
     }
 
-    static func mutationQuery(id: Int, startTime: Date? = nil, endTime: Date? = nil, parentId: Int? = nil, notes:[String:String]? = nil, metadata:[String:Any]? = nil) -> (String, [String: Any]) {
+    static func mutationQuery(id: Int, startTime: Date? = nil, endTime: Date? = nil, parentId: Int? = nil, notes:[String:String]? = nil, metadata:[String:Any]? = nil, images:[String]? = nil, passNullTimeValues: Bool = false) -> (String, [String: Any]) {
         var hasuraMutation: HasuraMutation = HasuraMutation(mutationFor: "update_events_by_pk", mutationName: "EventMutation", mutationType: .update, id: id)
-        hasuraMutation.addParameter(name: "start_time", type: "timestamp", value: startTime?.toUTCString)
-        hasuraMutation.addParameter(name: "end_time", type: "timestamp", value: endTime?.toUTCString)
+        hasuraMutation.addParameter(name: "start_time", type: "timestamp", value: startTime?.toUTCString, passNullValue: passNullTimeValues)
+        hasuraMutation.addParameter(name: "end_time", type: "timestamp", value: endTime?.toUTCString, passNullValue: passNullTimeValues)
         hasuraMutation.addParameter(name: "parent_id", type: "Int", value: parentId)
         if let notes = notes {
             hasuraMutation.addParameter(name: "metadata", type: "jsonb", value: ["notes": notes])
+        }
+        if let images = images {
+            hasuraMutation.addParameter(name: "metadata", type: "jsonb", value: ["images": images])
         }
         if let metadata = metadata {
             hasuraMutation.addParameter(name: "metadata", type: "jsonb", value: metadata)

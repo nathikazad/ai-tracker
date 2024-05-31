@@ -89,6 +89,18 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
         return count > 0
     }
     
+    var notes: [(Date, String)] {
+        var n:[(Date, String)] = []
+        if hasNotes {
+            // for loop
+            for date in Array(metadata!.notes.keys).sorted(by: <) {
+                let note = metadata!.notes[date]!
+                n.append((date, note))
+            }
+        }
+        return n
+    }
+    
     var hasChildren: Bool {
         return children.count > 0
     }
@@ -119,6 +131,7 @@ struct Metadata: Decodable {
     var distractionData: DistractionData?
     var eatingData: [EatingData] = []
     var notes: [Date: String] = [:]
+    var images: [String] = []
     
     
     enum CodingKeys: String, CodingKey {
@@ -131,6 +144,7 @@ struct Metadata: Decodable {
         case feelingData = "feeling"
         case distractionData = "distraction"
         case notes
+        case images
     }
     
     init(from decoder: Decoder) throws {
@@ -149,6 +163,7 @@ struct Metadata: Decodable {
                 self.notes[date] = note
             }
         }
+        images = try container.decodeIfPresent([String].self, forKey: .images) ?? []
     }
     
     var notesToJson: [String: String] {

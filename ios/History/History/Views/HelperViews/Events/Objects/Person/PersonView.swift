@@ -23,7 +23,7 @@ struct PersonView: View {
     @State var personId:Int? = nil
     @State var person: Person = Person(name: "", data: PersonData())
     @State var name:String = ""
-    @State private var description = ""
+    @State var description = ""
     @State private var contactMethods: [String] = []
     enum builderMode { case create, edit, view }
     @State var mode: builderMode = .create  
@@ -126,6 +126,11 @@ struct PersonView: View {
                 Section(header: Text("Description")) {
                         TextEditor(text: $description)
                             .frame(minHeight: 50)
+                            .onChange(of: description)  {
+                                if description.last == "\n" {
+                                    UIApplication.shared.minimizeKeyboard()
+                                }
+                            }
                 }
             } else if !description.isEmpty {
                 Section(header: Text("Description")) {
@@ -177,7 +182,7 @@ struct PersonView: View {
                                 let personId = await ObjectController.createObject(userId: auth.userId!, object: person)
                                 person.id = personId
                                 if createAction != nil {
-//                                    createAction?(person)
+                                    createAction?(person)
                                     self.presentationMode.wrappedValue.dismiss()
                                 }
                             } else {

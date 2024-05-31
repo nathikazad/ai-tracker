@@ -14,8 +14,8 @@ struct GenericEventView: View {
     @StateObject private var noteStruct: NoteStruct = NoteStruct()
     @StateObject private var bookStruct: BookStruct = BookStruct()
     
-    @State var expandedEventIds: Set<Int> = []
-    @State var reassignParentForId: Int? = nil
+    @State private var showCamera = false
+    @State private var selectedImage: UIImage?
     
     
     var eventId: Int
@@ -27,6 +27,7 @@ struct GenericEventView: View {
     
     
     var body: some View {
+        
         Form {
             if let event = event {
                 Section(header: Text("Event Info")) {
@@ -46,7 +47,9 @@ struct GenericEventView: View {
                     //                        Text(interaction)
                     //                    }
                     //
-                    MinBooksView(event: $event, bookStruct: bookStruct)
+                    if event.eventType == .reading {
+                        MinBooksView(event: $event, bookStruct: bookStruct)
+                    }
                 }
                 
                 if event.eventType == .meeting {
@@ -61,6 +64,8 @@ struct GenericEventView: View {
                 // Recipes
                 
                 NotesView(event: $event,
+                          showCamera: $showCamera,
+                          selectedImage: $selectedImage,
                           noteStruct: noteStruct,
                           createNoteAction: {
                     parentId in
@@ -98,13 +103,48 @@ struct GenericEventView: View {
             EventsController.cancelListener(subscriptionId: subscriptionId)
         }
         .navigationTitle(event != nil ? "\(event!.eventType.capitalized)(\(String(eventId)))" : "")
-        .fullScreenCover(isPresented: $chatViewPresented) {
-            ChatView {
-                chatViewPresented = false
+        .fullScreenCover(
+            isPresented: Binding(
+                get: { chatViewPresented || showCamera }, 
+                set: { value in
+                    if !value {
+                        chatViewPresented = false
+                        showCamera = false
+                    }
+                }
+            )) {
+            if chatViewPresented {
+                ChatView {
+                    chatViewPresented = false
+                }
+            }
+            if showCamera {
+                accessCameraView { image in
+                    
+                    if let imageLocation = saveImage(image: image) {
+                        var images = event?.metadata?.images ?? []
+                        images.append(imageLocation)
+                        EventsController.editEvent(id: event!.id, images: images)
+                    }
+                    showCamera = false
+                }
+                .background(BlackBackgroundView())
             }
         }
         .overlay {
             popupView
+        }
+        .sheet(isPresented: Binding(get: { selectedImage != nil }, set: { value in
+            if !value {
+                selectedImage = nil
+            }
+        })) {
+            if let selectedImage = selectedImage {
+                Image(uiImage: selectedImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .padding()
+            }
         }
         
     }
@@ -113,4 +153,3 @@ struct GenericEventView: View {
         NotesPopup(noteStruct: noteStruct, event: $event, eventId: eventId)
     }
 }
-

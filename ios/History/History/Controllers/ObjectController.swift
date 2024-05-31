@@ -7,8 +7,6 @@
 
 import Foundation
 class ObjectController {
-    
-    
     struct ObjectResponseData<T: Decodable>: GraphQLData {
         var objects_by_pk: T
     }
