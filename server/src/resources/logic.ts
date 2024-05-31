@@ -27,9 +27,9 @@ export async function parseUserRequest(text: string, userId: number, parentEvent
         }
         console.log(`Interaction(${interaction.id}) at  ${toPST(interaction.recordedAt)}: \n ${JSON.stringify(interaction, null, 4)}`)
         if(parentEventId) {
-            let event = await getEvent(userId, parentEventId)
+            let event = await getEvent(parentEventId)
             if(event != null) {
-                if(event.eventType == Category.Stay) {
+                if(event.event_type == Category.Stay) {
                     await interactionToEvent(interaction, parentEventId)
                 } else {
                     event.metadata = event.metadata ?? {}

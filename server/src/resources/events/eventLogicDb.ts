@@ -39,33 +39,21 @@ export async function updateEvent(id: number, startTime:string | undefined, endT
     markInteractionAsTranscoded(interaction.id)
 }
 
-export async function getEvent(userId: number, eventId: number) : Promise<{eventType: Category, metadata: any} | undefined> {
+export async function getEvent(eventId: number) {
     let event = await getHasura().query({
-        events: [
+        events_by_pk: [
             {
-                where: {
-                    id: {
-                        _eq: eventId
-                    },
-                    user_id: {
-                        _eq: userId
-                    }
-                }
+                id: eventId
             },
             {
                 event_type: true,
-                metadata: [{}, true]
+                metadata: [{}, true],
+                start_time: true,
+                end_time: true
             }
         ]
     })
-    if(event.events.length == 0) {
-        return undefined
-    }
-    return {
-        eventType: event.events[0].event_type as Category,
-        metadata: event.events[0].metadata
-    }
-    
+    return event.events_by_pk
 }
 
 export async function createEvent(event: ASEvent, category: Category, interaction: Interaction, parentEventId: number | undefined = undefined) {
@@ -75,6 +63,27 @@ export async function createEvent(event: ASEvent, category: Category, interactio
         notes = {
             [interaction.recordedAt]: interaction.statement
         }
+    }
+    if (parentEventId) {
+        let parentEvent = await getEvent(parentEventId)
+        if (parentEvent != null) {
+            try {
+                let parentTime = toDate(parentEvent.start_time || parentEvent.end_time!)
+                let eventTime = toDate(event.startTime || event.endTime!)
+                // get difference in days
+                let difference = Math.abs(parentTime.getTime() - eventTime.getTime()) / (1000 * 3600 * 24)
+                if (difference > 1) {
+                    console.log(`Parent event is more than a day away. Setting current event to parent event time`)
+                    event.startTime = parentEvent.start_time
+                    event.endTime = parentEvent.end_time
+                }
+            } catch (e) {
+                
+            }
+        } else {
+            parentEventId = undefined
+        }
+        
     }
     let resp = await getHasura().mutation({
         insert_events_one: [
