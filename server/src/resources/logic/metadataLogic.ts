@@ -236,7 +236,7 @@ async function findPeople(event: ASEvent): Promise<any> {
     })
 
 
-    // console.log(output);
+    console.log(output);
 
     let names = output.replace(/[\[\]]/g, '').split(',').map((s: string) => s.trim())
     names = names.map((c: string) => {
