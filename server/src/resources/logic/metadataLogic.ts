@@ -239,11 +239,11 @@ async function findPeople(event: ASEvent): Promise<any> {
     // console.log(output);
 
     let names = output.replace(/[\[\]]/g, '').split(',').map((s: string) => s.trim())
-    // names = names.map((c: string) => {
-    //     c = c.replace(/['"]+/g, '');
-    //     // return c.trim().charAt(0).toUpperCase() + c.trim().slice(1);
-    //     return c.trim();
-    // });
+    names = names.map((c: string) => {
+        c = c.replace(/['"]+/g, '');
+        // return c.trim().charAt(0).toUpperCase() + c.trim().slice(1);
+        return c.trim();
+    });
 
 
 
