@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		FE06FD042C0913E800E65D41 /* MinPeopleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE06FD032C0913E800E65D41 /* MinPeopleView.swift */; };
+		FE06FD042C0913E800E65D41 /* MinPeopleViewForEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE06FD032C0913E800E65D41 /* MinPeopleViewForEventView.swift */; };
 		FE06FD062C09140500E65D41 /* PeopleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE06FD052C09140500E65D41 /* PeopleView.swift */; };
 		FE06FD082C0921C900E65D41 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE06FD072C0921C900E65D41 /* Image.swift */; };
 		FE129BE42BCB3CFB004058EA /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE129BE32BCB3CFB004058EA /* Authentication.swift */; };
@@ -47,6 +47,7 @@
 		FE6ED6D52C06AA5D00E6A2A6 /* EventModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6ED6D42C06AA5D00E6A2A6 /* EventModels.swift */; };
 		FE6ED6D72C06AA9100E6A2A6 /* EventTypeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6ED6D62C06AA9100E6A2A6 /* EventTypeModel.swift */; };
 		FE71B3882BD07BCE008F7D1A /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */; };
+		FE7EBFC82C0A8F2200F720EB /* PersonAssociationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7EBFC72C0A8F2200F720EB /* PersonAssociationsView.swift */; };
 		FE8153722BD845B300D972C8 /* PolylineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8153712BD845B300D972C8 /* PolylineView.swift */; };
 		FE8811EB2BC799BF00B112A8 /* GoalsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8811E62BC799BE00B112A8 /* GoalsController.swift */; };
 		FE8811EC2BC799BF00B112A8 /* InteractionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8811E72BC799BE00B112A8 /* InteractionsController.swift */; };
@@ -80,6 +81,7 @@
 		FEB366E62BDDF8F9000A48C0 /* Chart.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB366E52BDDF8F9000A48C0 /* Chart.swift */; };
 		FEB8FD1F2BAA253100EE9B68 /* Intents.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB8FD1E2BAA253100EE9B68 /* Intents.swift */; };
 		FEB8FD202BAA253100EE9B68 /* Intents.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB8FD1E2BAA253100EE9B68 /* Intents.swift */; };
+		FEBED49A2C0AD79800DB2D5F /* PersonViewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBED4992C0AD79800DB2D5F /* PersonViewHelper.swift */; };
 		FEC5386E2BBDE4E5006BDBDA /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEC5386D2BBDE4E5006BDBDA /* WidgetKit.framework */; };
 		FEC538702BBDE4E5006BDBDA /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEC5386F2BBDE4E5006BDBDA /* SwiftUI.framework */; };
 		FEC538732BBDE4E5006BDBDA /* Shortcut.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEC538722BBDE4E5006BDBDA /* Shortcut.swift */; };
@@ -140,7 +142,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		FE06FD032C0913E800E65D41 /* MinPeopleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinPeopleView.swift; sourceTree = "<group>"; };
+		FE06FD032C0913E800E65D41 /* MinPeopleViewForEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinPeopleViewForEventView.swift; sourceTree = "<group>"; };
 		FE06FD052C09140500E65D41 /* PeopleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleView.swift; sourceTree = "<group>"; };
 		FE06FD072C0921C900E65D41 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		FE129BE32BCB3CFB004058EA /* Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
@@ -182,6 +184,7 @@
 		FE6ED6D22C06A9F500E6A2A6 /* ASObjectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASObjectModel.swift; sourceTree = "<group>"; };
 		FE6ED6D42C06AA5D00E6A2A6 /* EventModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventModels.swift; sourceTree = "<group>"; };
 		FE6ED6D62C06AA9100E6A2A6 /* EventTypeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTypeModel.swift; sourceTree = "<group>"; };
+		FE7EBFC72C0A8F2200F720EB /* PersonAssociationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonAssociationsView.swift; sourceTree = "<group>"; };
 		FE8153712BD845B300D972C8 /* PolylineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolylineView.swift; sourceTree = "<group>"; };
 		FE8811E62BC799BE00B112A8 /* GoalsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoalsController.swift; sourceTree = "<group>"; };
 		FE8811E72BC799BE00B112A8 /* InteractionsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractionsController.swift; sourceTree = "<group>"; };
@@ -213,6 +216,7 @@
 		FEB366E22BDDEC5D000A48C0 /* SendBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendBar.swift; sourceTree = "<group>"; };
 		FEB366E52BDDF8F9000A48C0 /* Chart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chart.swift; sourceTree = "<group>"; };
 		FEB8FD1E2BAA253100EE9B68 /* Intents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intents.swift; sourceTree = "<group>"; };
+		FEBED4992C0AD79800DB2D5F /* PersonViewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonViewHelper.swift; sourceTree = "<group>"; };
 		FEC5386C2BBDE4E5006BDBDA /* ShortcutExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ShortcutExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		FEC5386D2BBDE4E5006BDBDA /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		FEC5386F2BBDE4E5006BDBDA /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -262,9 +266,11 @@
 		FE06FD022C0913D500E65D41 /* Person */ = {
 			isa = PBXGroup;
 			children = (
-				FE06FD032C0913E800E65D41 /* MinPeopleView.swift */,
+				FE06FD032C0913E800E65D41 /* MinPeopleViewForEventView.swift */,
 				FEC7849D2C064EAE007C38F1 /* PersonView.swift */,
 				FE06FD052C09140500E65D41 /* PeopleView.swift */,
+				FE7EBFC72C0A8F2200F720EB /* PersonAssociationsView.swift */,
+				FEBED4992C0AD79800DB2D5F /* PersonViewHelper.swift */,
 			);
 			path = Person;
 			sourceTree = "<group>";
@@ -670,6 +676,7 @@
 				FEB366E62BDDF8F9000A48C0 /* Chart.swift in Sources */,
 				FE12C5EA2BC4B330002CDC60 /* GoalsView.swift in Sources */,
 				FEDBC0672C050C3F00233EA0 /* EventButtons.swift in Sources */,
+				FEBED49A2C0AD79800DB2D5F /* PersonViewHelper.swift in Sources */,
 				FE71B3882BD07BCE008F7D1A /* AudioRecorder.swift in Sources */,
 				FE129BE62BCB87B9004058EA /* LocationManager.swift in Sources */,
 				FE4F7BB12BA7D7C80041CB6A /* WatchCommunicator.swift in Sources */,
@@ -695,12 +702,13 @@
 				FE477D932BD8122B001FC341 /* CalendarPicker.swift in Sources */,
 				FE8153722BD845B300D972C8 /* PolylineView.swift in Sources */,
 				FE9452F22BF2CC0900B28918 /* InteractionView.swift in Sources */,
-				FE06FD042C0913E800E65D41 /* MinPeopleView.swift in Sources */,
+				FE06FD042C0913E800E65D41 /* MinPeopleViewForEventView.swift in Sources */,
 				FE12C5E62BC4B2A5002CDC60 /* InteractionsView.swift in Sources */,
 				FE8AB2AC2C079AB400131C13 /* StringHelper.swift in Sources */,
 				FE8AB2AE2C07CA0600131C13 /* AssociationController.swift in Sources */,
 				FE96B5452BF8505D000BD8E1 /* BookView.swift in Sources */,
 				FE477D8F2BD5E3C8001FC341 /* EventsView.swift in Sources */,
+				FE7EBFC82C0A8F2200F720EB /* PersonAssociationsView.swift in Sources */,
 				FE900C0A2BD363ED00F97050 /* LocationController.swift in Sources */,
 				FE9BA2E52BF6998600AE25A9 /* PrayerView.swift in Sources */,
 				FE9477C02BFECF20003AD03A /* StayView.swift in Sources */,

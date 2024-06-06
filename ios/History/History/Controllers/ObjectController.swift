@@ -42,29 +42,17 @@ class ObjectController {
             metadata
             object_type
             events(order_by: {id: desc}) {
-              start_time
-              end_time
-              id
-              event_type
-              parent_id
-              metadata
-              interaction {
-                  timestamp
-                  id
-                  content
-              }
-              objects {
-                  object_type
-                  name
-                  id
-              }
+                \(EventsController.eventSelections)
+            }
+            parent_events(order_by: {id: desc}) {
+                \(EventsController.eventSelections)
             }
           }
         """
     }
 
     static func fetchObject<T: ASObject>(type: T.Type, objectId: Int) async -> T? {
-        let graphqlQuery = generateQueryForObject(objectId: objectId)
+        let graphqlQuery = generateQueryForObject(objectId: objectId)        
         
         do {
             let responseData: GraphQLResponse<ObjectResponseData<T>> = try await Hasura.shared.sendGraphQL(query: graphqlQuery, responseType: GraphQLResponse<ObjectResponseData<T>>.self)

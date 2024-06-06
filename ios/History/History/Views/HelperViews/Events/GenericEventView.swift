@@ -7,9 +7,9 @@
 
 
 import SwiftUI
+
 struct GenericEventView: View {
     @State var event: EventModel? = nil
-    @State var parent: EventModel? = nil
     @State var chatViewPresented: Bool = false
     @StateObject private var noteStruct: NoteStruct = NoteStruct()
     @StateObject private var bookStruct: BookStruct = BookStruct()
@@ -17,9 +17,9 @@ struct GenericEventView: View {
     @State private var showCamera = false
     @State private var selectedImage: UIImage?
     
+    @State private var selectedCategory: String = "note"
     
     var eventId: Int
-    var parentId: Int?
     
     var subscriptionId: String {
         return "event/\(eventId)"
@@ -37,65 +37,70 @@ struct GenericEventView: View {
                         Text("Event Type: \(event.eventType.capitalized)")
                     }
                     
-                    if let location = event.location ?? parent?.location {
+                    if let location = event.location ?? event.parent?.location ?? event.parent?.parent?.location {
                         NavigationLink(destination: LocationDetailView(location: location)) {
                             Text(location.name ?? "Unknown")
                         }
                     }
+                    if let parent = event.parent {
+                        HStack(spacing: 5) {
+                            Text("Parent Event: ")
+                            NavigationLink(destination: GenericEventView(eventId: parent.id)) {
+                                Text(parent.eventType.capitalized)
+                            }
+                        }
+                    }
                     
-                    //                    if let interaction = event.interaction?.content {
-                    //                        Text(interaction)
-                    //                    }
-                    //
                     if event.eventType == .reading {
                         MinBooksView(event: $event, bookStruct: bookStruct)
                     }
                 }
                 
-                if event.eventType == .meeting {
-                    Section(header: Text("People")) {
-                        MinPeopleView(event: $event)
+                if event.allPeopleCount > 3 {
+                    Picker("Select Category", selection: $selectedCategory) {
+                        ForEach(["note", "person.3.fill", "clock"], id: \.self) { category in
+                            HStack {
+                                Image(systemName: category) // Display the image next to the text
+                                    .foregroundColor(.blue)
+                            }
+                            .tag(category)
+                        }
                     }
+                    .pickerStyle(SegmentedPickerStyle())
+                } else if event.allPeopleCount > 0 ||  event.eventType == .meeting {
+                    MinPeopleView(event:  Binding(get: {event}, set: { v in}))
                 }
                 
                 
-                // Books
-                // Persons
-                // Recipes
+                if selectedCategory == "note" {
+                    NotesView(event: Binding(get: {event}, set: { v in}),
+                              showCamera: $showCamera,
+                              selectedImage: $selectedImage,
+                              noteStruct: noteStruct,
+                              createNoteAction: {
+                        parentId in
+                        state.setParentEventId(parentId)
+                        chatViewPresented = true
+                    })
+                } else if selectedCategory == "person.3.fill" {
+                    MinPeopleView(event:  Binding(get: {event}, set: { v in}))
+                }
                 
-                NotesView(event: $event,
-                          showCamera: $showCamera,
-                          selectedImage: $selectedImage,
-                          noteStruct: noteStruct,
-                          createNoteAction: {
-                    parentId in
-                    state.setParentEventId(parentId)
-                    chatViewPresented = true
-                })
                 
-                // Child Events
                 if(event.hasChildren) {
-                    EventsListView(events: Binding(get: { event.children }, set: { events in }), withDate: false)
+                    if event.allObjects.people.count <= 3 || selectedCategory == "clock" {
+                        EventsListView(events: Binding(get: { event.children }, set: { events in }), withDate: false)
+                    }
                 }
             }
         }
         .onAppear {
-            EventsController.listenToEvent(id: eventId, subscriptionId: subscriptionId) {
+            EventsController.listenToEvent(id: eventId, subscriptionId: subscriptionId, withParents: true) {
                 event in
                 print("WorkView: listenToEvent: new event")
                 DispatchQueue.main.async {
                     self.event = nil
                     self.event = event
-                }
-            }
-            if let parentId = parentId {
-                Task {
-                    print("GenericEventView fetching parent \(parentId)")
-                    let parent = await EventsController.fetchEvent(id: parentId)
-                    DispatchQueue.main.async {
-                        print("GenericEventView parent location \(parent?.location?.name ?? "Not tjere")")
-                        self.parent = parent
-                    }
                 }
             }
         }

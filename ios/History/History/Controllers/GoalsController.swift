@@ -46,8 +46,6 @@ class GoalsController: ObservableObject {
         }
     }
     
-    
-    
     func deleteGoal(id: Int, onSuccess: (() -> Void)? = nil) {
         let mutationQuery = """
         mutation {

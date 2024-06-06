@@ -15,7 +15,7 @@ class NoteStruct: ObservableObject {
 }
 
 struct NotesView: View {
-    @Binding var event: EventModel?
+    @Binding var event: EventModel
     @Binding var showCamera: Bool
     @Binding var selectedImage: UIImage?
     @State private var editMode: Bool = false
@@ -26,10 +26,10 @@ struct NotesView: View {
     
     var body: some View {
         if(event != nil) {
-            let notes: [Date: String] = event?.metadata?.notes ?? [:]
+            let notes: [Date: String] = event.metadata?.notes ?? [:]
             Section(header: Text("Notes")) {
                 List {                    
-                    ForEach(event!.notes, id: \.1) { date, note in
+                    ForEach(event.notes, id: \.1) { date, note in
                         HStack {
                             Text(date.formattedTime)
                                 .font(.headline)
@@ -50,10 +50,10 @@ struct NotesView: View {
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             Button(action: {
-                                print("Deleting note \(event!.id) \(date)")
-                                if var notes = event?.metadata?.notesToJson {
+                                print("Deleting note \(event.id) \(date)")
+                                if var notes = event.metadata?.notesToJson {
                                     notes.removeValue(forKey: date.toUTCString)
-                                    EventsController.editEvent(id: event!.id, notes: notes)
+                                    EventsController.editEvent(id: event.id, notes: notes)
                                 }
                             }) {
                                 Image(systemName: "trash.fill")
@@ -61,12 +61,12 @@ struct NotesView: View {
                             .tint(.red)
                         }
                     }
-                    if let images = event?.metadata?.images, images.count > 0 {
+                    if let images = event.metadata?.images, images.count > 0 {
                         HorizontalImageView(images: images, editMode: $editMode, selectedImage: $selectedImage) {
                             imageLocation in
                             var newImages = images.filter({$0 != imageLocation})
                             deleteImage(location: imageLocation)
-                            EventsController.editEvent(id: event!.id, images: newImages)
+                            EventsController.editEvent(id: event.id, images: newImages)
                             
                         }
                     }
@@ -74,7 +74,11 @@ struct NotesView: View {
                         Spacer()
                         Button(action: {
                             print("Clicked plus")
-                            createNoteAction(event!.id)
+//                            createNoteAction(event!.id)
+                            noteStruct.showInPopup = .createText
+                            noteStruct.draftContent = ""
+                            noteStruct.showPopupForDate = Date().setDate(event.startTime ?? event.endTime!)
+                            
                         }) {
                             Image(systemName: "plus.circle")
                         }
@@ -88,7 +92,7 @@ struct NotesView: View {
                         }
                         .buttonStyle(HighPriorityButtonStyle())
                         
-                        if (event?.metadata?.images.count ?? 0) > 0 {
+                        if (event.metadata?.images.count ?? 0) > 0 {
                             Button(action: {
                                 print("Clicked camera")
                                 editMode.toggle()
@@ -125,9 +129,13 @@ struct NotesPopup: View {
                     closePopup()
                 }
             }, closeAction: closePopup)
-        } else if noteStruct.showInPopup == .modifyText {
-            PopupViewForText(draftContent: $noteStruct.draftContent,
-                             saveAction: {
+        } else if noteStruct.showInPopup == .createText || noteStruct.showInPopup == .modifyText {
+            PopupViewForText(
+                title: noteStruct.showInPopup == .createText ? "Create Note" : "Edit Note",
+                draftContent: $noteStruct.draftContent,
+                closeAction: closePopup
+                             
+            ) {
                 DispatchQueue.main.async {
                     if var notes = event?.metadata?.notesToJson {
                         notes[noteStruct.showPopupForDate.toUTCString] = noteStruct.draftContent
@@ -135,8 +143,7 @@ struct NotesPopup: View {
                     }
                     closePopup()
                 }
-            }, closeAction: closePopup
-            )
+            }
         }
     }
     

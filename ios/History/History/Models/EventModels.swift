@@ -49,6 +49,24 @@ extension [EventModel] {
         }
         return events.sortEvents
     }
+    
+    var flattenObjects: [ASObject] {
+        var objects: [ASObject] = []
+        for event in self {
+            objects.append(contentsOf: event.objects)
+            objects.append(contentsOf: event.children.flattenObjects)
+        }
+        return objects;
+    }
+    
+    var flattenLocations: [LocationModel] {
+        var locations: [LocationModel] = []
+        for event in self {
+            locations.append(contentsOf: event.locations)
+            locations.append(contentsOf: event.children.flattenLocations)
+        }
+        return locations;
+    }
 
     // Get minimum and maximum depth of the event children tree
     var depthRange: (Int, Int) {

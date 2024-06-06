@@ -23,7 +23,7 @@ struct Association: Decodable {
     }
 }
 
-struct EventModel: Decodable, Identifiable, Hashable, Equatable {
+class EventModel: Decodable, Identifiable, Hashable, Equatable {
     var id: Int
     var parentId: Int?
     var eventType: EventType
@@ -35,6 +35,7 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
     var objects: [ASObject] = []
     var children: [EventModel] = []
     var associations: [Association] = []
+    var parent: EventModel? = nil
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -48,9 +49,10 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
         case objects
         case children
         case associations
+        case parent
     }
     
-    init(from decoder: Decoder) throws {
+    required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(Int.self, forKey: .id)
         parentId = try container.decodeIfPresent(Int.self, forKey: .parentId)
@@ -68,6 +70,7 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
         locations = try container.decodeIfPresent([LocationModel].self, forKey: .locations) ?? []
         objects = try container.decodeIfPresent([ASObject].self, forKey: .objects) ?? []
         children = try container.decodeIfPresent([EventModel].self, forKey: .children) ?? []
+        parent = try container.decodeIfPresent(EventModel.self, forKey: .parent)
         associations = try container.decodeIfPresent([Association].self, forKey: .associations) ?? []
     }
     
@@ -116,6 +119,11 @@ struct EventModel: Decodable, Identifiable, Hashable, Equatable {
     func getAssociation(associationType: Association.AssociationType, associationId: Int) -> Association? {
         return associations.filter({ $0.associtaionId == associationId}).first
     }
+    
+    var allPeopleCount: Int {
+        allObjects.people.count + (metadata?.meetingData?.people?.count ?? 0)
+    }
+
 }
 
 struct Metadata: Decodable {

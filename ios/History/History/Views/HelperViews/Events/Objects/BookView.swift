@@ -132,8 +132,12 @@ struct BooksPopup: View {
                 }
             }, closeAction: closePopup)
         } else if noteStruct.showInPopup == .modifyText {
-            PopupViewForText(draftContent: $noteStruct.draftContent,
-                             saveAction: {
+            PopupViewForText(
+                title: "Edit Note",
+                draftContent: $noteStruct.draftContent,
+                closeAction: closePopup
+                             
+            ) {
                 DispatchQueue.main.async {
                     if var notes = event?.metadata?.notesToJson {
                         notes[noteStruct.showPopupForDate.toUTCString] = noteStruct.draftContent
@@ -141,8 +145,7 @@ struct BooksPopup: View {
                     }
                     closePopup()
                 }
-            }, closeAction: closePopup
-            )
+            }
         }
     }
     

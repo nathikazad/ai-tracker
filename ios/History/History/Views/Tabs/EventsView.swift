@@ -142,7 +142,7 @@ struct EventsView: View {
                         scrollProxy = proxy
                     }
                     .onChange(of: events) {
-                        if state.currentDate == Calendar.current.startOfDay(for: Date())
+                        if state.isItToday
                         {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                                 if let lastId = events.last?.id {

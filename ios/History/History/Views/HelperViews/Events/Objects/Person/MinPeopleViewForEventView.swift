@@ -8,19 +8,21 @@
 import SwiftUI
 
 struct MinPeopleView: View {
-    @Binding var event: EventModel?
+    @Binding var event: EventModel
     
     var body: some View {
-        if event?.eventType == .meeting {
+        let people = event.people
+        let childPeople = event.childObjects.people
+        Section(header: Text("People")) {
             // tracked people
-            ForEach(event!.people, id: \.id) { person in
+            ForEach(event.people, id: \.id) { person in
                 NavigationButton(destination: PersonView(personId: person.id!)) {
                     Text("\(person.name.capitalized)")
                 }
                 .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                     Button(action: {
                         Task {
-                            if let association = event!.getAssociation(associationType: .object, associationId: person.id!) {
+                            if let association = event.getAssociation(associationType: .object, associationId: person.id!) {
                                 await AssociationController.deleteAssociation(id: association.id)
                             }
                         }
@@ -30,23 +32,29 @@ struct MinPeopleView: View {
                     .tint(.red)
                 }
             }
+            
+            ForEach(childPeople, id: \.id) { person in
+                NavigationButton(destination: PersonView(personId: person.id!)) {
+                    Text("\(person.name.capitalized)")
+                }
+            }
             // untracked people
-            if let people = event?.metadata?.meetingData?.people {
+            if let people = event.metadata?.meetingData?.people {
                 ForEach(people, id: \.name) { person in
                     NavigationLink(destination: PersonView(
                         name: person.name.capitalized,
-                        description: event?.notes.first?.1 ?? "",
+                        description: event.notes.first?.1 ?? "",
                         createAction: {
                             person in
                             Task {
-                                let  _ = await AssociationController.createEventObjectAssociation(userId: auth.userId!, eventId: event!.id, objectId: person.id!)
-                                MetadataController.removePerson(event: event!, personName: person.name)
+                                let  _ = await AssociationController.createEventObjectAssociation(userId: auth.userId!, eventId: event.id, objectId: person.id!)
+                                MetadataController.removePerson(event: event, personName: person.name)
                             }
                         })) {
                             HStack {
                                 Text("Add \(person.name.capitalized)")
                                 Button(action: {
-                                    MetadataController.removePerson(event: event!, personName: person.name)
+                                    MetadataController.removePerson(event: event, personName: person.name)
                                 }) {
                                     Image(systemName: "xmark.square.fill")
                                 }
@@ -59,7 +67,7 @@ struct MinPeopleView: View {
                 clickAction: {
                     person in
                     Task {
-                        await AssociationController.createEventObjectAssociation(userId: auth.userId!, eventId: event!.id, objectId: person.id!)
+                        await AssociationController.createEventObjectAssociation(userId: auth.userId!, eventId: event.id, objectId: person.id!)
                     }
                 }
             )) {

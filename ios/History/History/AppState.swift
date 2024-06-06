@@ -94,23 +94,6 @@ class AppState: ObservableObject, MicrophoneDelegate {
         sheetViewToShow = newSheetToShow
     }
     
-    func goToNextDay() {
-        print("next day")
-        currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
-        coreStatePublisher.send()
-    }
-    
-    func goToPreviousDay() {
-        print("previous day")
-        currentDate = Calendar.current.date(byAdding: .day, value: -1, to: currentDate)!
-        coreStatePublisher.send()
-    }
-    
-    func goToDay(newDay:Date) {
-        currentDate = Calendar.current.startOfDay(for:newDay)
-        coreStatePublisher.send()
-    }
-    
     func notifyCoreStateChanged() {
         coreStatePublisher.send()
     }

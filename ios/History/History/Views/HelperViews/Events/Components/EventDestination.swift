@@ -43,7 +43,7 @@ private func eventDestination(for event: EventModel) -> AnyView? {
             return AnyView(LearnView(skill: skill))
         }
     default:
-        return AnyView(GenericEventView(eventId: event.id, parentId: event.parentId))
+        return AnyView(GenericEventView(eventId: event.id))
     }
     return nil
 }

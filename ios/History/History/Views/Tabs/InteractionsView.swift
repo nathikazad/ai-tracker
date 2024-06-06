@@ -83,13 +83,17 @@ struct InteractionsView: View {
                     }
                 }, closeAction: closePopup)
             } else if showInPopup == .modifyText {
-                PopupViewForText(draftContent: $draftContent,
-                 saveAction: {
-                     DispatchQueue.main.async {
-                         InteractionsController.editInteraction(id: showPopupForId!, fieldName: "content", fieldValue: draftContent)
-                         closePopup()
-                     }
-                 }, closeAction: closePopup)
+                PopupViewForText(
+                    title: "Edit Interaction",
+                    draftContent: $draftContent,
+                    closeAction: closePopup)
+                {
+                    DispatchQueue.main.async {
+                        InteractionsController.editInteraction(id: showPopupForId!, fieldName: "content", fieldValue: draftContent)
+                        closePopup()
+                    }
+                }
+                
             }
         }
     }

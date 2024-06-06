@@ -8,6 +8,15 @@
 import Foundation
 
 extension EventModel {
+    
+    var allObjects: [ASObject] {
+        return objects + childObjects
+    }
+    
+    var childObjects: [ASObject] {
+        return children.flattenObjects
+    }
+
     var book: ASObject? {
         return objects.books.first
     }
@@ -53,6 +62,8 @@ class ASObject: Decodable {
     var name: String
     var objectType: ASObjectType
     var events: [EventModel] = []
+    var rootEvents: [EventModel] = []
+    
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -60,6 +71,7 @@ class ASObject: Decodable {
         case objectType = "object_type"
         case events
         case metadata
+        case parentEvents = "parent_events"
     }
     
     init(name:String, objectType: ASObjectType) {
@@ -74,6 +86,7 @@ class ASObject: Decodable {
         let objectTypeString = try container.decode(String.self, forKey: .objectType)
         objectType = ASObjectType(rawValue: objectTypeString) ?? .unknown
         events = try container.decodeIfPresent([EventModel].self, forKey: .events) ?? []
+        rootEvents = try container.decodeIfPresent([EventModel].self, forKey: .parentEvents) ?? []
     }
 
 

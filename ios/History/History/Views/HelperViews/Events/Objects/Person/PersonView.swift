@@ -111,7 +111,13 @@ struct PersonView: View {
                     }
                     .buttonStyle(HighPriorityButtonStyle())
                 } else if mode == .view {
-                    Text(name)
+                    Button (action: {
+                        mode = .edit
+                    }) {
+                        Text(name)
+                    }
+                    
+                    // add IG, LinkedIn, Phone, Email and WhatsApp buttons
                     Spacer()
                     Button(action: {
                         mode = .edit
@@ -125,16 +131,22 @@ struct PersonView: View {
             if mode == .edit || mode == .create {
                 Section(header: Text("Description")) {
                         TextEditor(text: $description)
-                            .frame(minHeight: 50)
+                            .frame(minHeight: 150)
                             .onChange(of: description)  {
                                 if description.last == "\n" {
+                                    description = String(description.dropLast())
                                     UIApplication.shared.minimizeKeyboard()
                                 }
+                                
                             }
                 }
             } else if !description.isEmpty {
                 Section(header: Text("Description")) {
-                    Text(description)
+                    Button (action: {
+                        mode = .edit
+                    }) {
+                        Text(description)
+                    }
                 }
             }
             
@@ -163,14 +175,36 @@ struct PersonView: View {
                 }
             } else if contactMethods.count  > 0 {
                 Section(header: Text("Contact Methods")) {
-                    List {
-                        ForEach(contactMethods.indices, id: \.self) { index in
-                            Text(contactMethods[index])
+                    let contactsWithLinks  = contactMethods.filter { getImages($0).count > 0}
+                    let contactsWithoutLinks  = contactMethods.filter { getImages($0).count == 0}
+                    if contactsWithLinks.count > 0 {
+                        HStack (spacing: 10) {
+                            
+                            ForEach(contactsWithLinks, id: \.self) { contact in
+                                let images = getImages(contact)
+                                if images.count > 0 {
+                                    ForEach(images, id: \.self) { image in
+                                        Button(action: {
+                                            openContact(contact, image)
+                                        }) {
+                                            Image(image) // Replace "instagramIcon" with the name of your icon in the asset catalog
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: 30, height: 30) // Adjust the size as needed
+                                                .background(Color.white) // Instagram color is typically white
+                                        }.buttonStyle(HighPriorityButtonStyle())
+                                    }
+                                }
+                            }
                         }
+                        .padding(5)
+                    }
+                    ForEach(contactsWithoutLinks, id: \.self) { contact in
+                        Text(contact)
                     }
                 }
+                
             }
-       
             if mode == .edit || mode == .create {
                 Section {
                     Button(action: {
@@ -217,10 +251,9 @@ struct PersonView: View {
                 }
             }
             
-            if mode == .view && person.events.count > 0 {
-                EventsListView(events: $person.events)
+            if mode == .view {
+                PersonAssociationsView(person: $person)
             }
-            
         }
         .onAppear {
             if personId == nil {
@@ -242,7 +275,7 @@ struct PersonView: View {
                 }
             }
         }
-        .navigationTitle(name.isEmpty ? "Create Person" : name)
+        .navigationTitle((name.isEmpty ? "Create Person" : name) + (personId != nil ? "(\(personId!))" : ""))
     }
 }
 

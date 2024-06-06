@@ -144,6 +144,18 @@ extension Date {
         return calendar.date(from: newComponents) ?? Date()  // Fallback to current date if nil
     }
     
+    func setDate(_ anotherDate:Date) -> Date {
+        let calendar = Calendar.currentInLocal
+        let components = calendar.dateComponents([.hour, .minute], from: self)
+        var newComponents = DateComponents()
+        newComponents.hour = components.hour
+        newComponents.minute = components.minute
+        newComponents.year = calendar.component(.year, from: anotherDate)
+        newComponents.month = calendar.component(.month, from: anotherDate)
+        newComponents.day = calendar.component(.day, from: anotherDate)
+        return calendar.date(from: newComponents) ?? Date()
+    }
+    
     var startOfDay: Date {
         return Calendar.currentInLocal.startOfDay(for: self)
     }

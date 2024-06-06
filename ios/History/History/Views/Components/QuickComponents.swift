@@ -33,6 +33,25 @@ struct HighPriorityButtonStyle: PrimitiveButtonStyle {
     }
 }
 
+struct CustomNavigationLink: View {
+    var destination: GenericEventView
+    var label: String
+    var showArrow: Bool = true
+
+    var body: some View {
+        HStack(spacing: 2) {
+            Text(label)
+                .font(.body)
+            if showArrow {
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+            }
+        }
+        .background(NavigationLink(destination: destination, label: { EmptyView() }).opacity(0))
+    }
+}
+
 struct BlackBackgroundView: UIViewRepresentable {
     func makeUIView(context: Context) -> UIView {
         return InnerView()
