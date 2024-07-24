@@ -4,7 +4,7 @@ import { ASLocation, DeviceLocation, PostGISPoint, StationaryPeriod, convertASLo
 import { getClosestUserLocation, getLastStayEvents, getStayEventsWithLocation, insertLocation } from './locationDb';
 import  { insertStay, updateStay } from './locationDb';
 import { getUserMovementByDate, getUserMovements, insertUserMovement, isTimeCollisionError, updateUserMovement } from './userMovement';
-import { associateEventWithLocation } from '../associations/associationsDb';
+import { associateEventAssociationWithLocation, associateEventWithLocation } from '../associations/associationsDb';
 
 
 export async function saveLocation(userId: number, location: ASLocation, name: string) {
@@ -25,12 +25,21 @@ export async function saveLocation(userId: number, location: ASLocation, name: s
     console.log(`Events without location: ${eventsWithoutLocation.length}`)
 
     for (let event of eventsWithoutLocation) {
-        console.log(`Event(${event.id}) has no location`)
-        associateEventWithLocation(userId, event.id, newDBLocation.id!);
+        console.log(`Event(${event.id}) has no location, creating location`)
+        // associateEventWithLocation(userId, event.id, newDBLocation.id!);
     }
 
     for (let event of eventsWithLocation) {
         console.log(`Event(${event.id}) has location id ${event.locations![0].id} and name ${event.locations![0].name}`)
+        let distanceToExistingLocation = getDistance(getEventLocation(event), event.locations![0].location)
+        let distanceToNewLocation = getDistance(getEventLocation(event), location)
+        console.log(`Distance to existing location: ${distanceToExistingLocation}`)
+        console.log(`Distance to new location: ${distanceToNewLocation}`)
+        if (distanceToNewLocation < distanceToExistingLocation) {
+            console.log(`Updating location for event ${event.id}`)
+            let association = event.associations!.filter(association => association.ref_one_table == "locations" || association.ref_two_table == "locations")[0]
+            // associateEventAssociationWithLocation(association.id, newDBLocation.id!);
+        }
     }
     return newDBLocation.id!
 }

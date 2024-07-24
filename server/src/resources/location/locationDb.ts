@@ -113,6 +113,15 @@ export async function getStayEventsWithLocation(userId: number) {
                     location: true,
                     name: true
                 }
+            ],
+            associations: [
+                {}, {
+                    id: true,
+                    ref_two_id: true,
+                    ref_two_table: true,
+                    ref_one_id: true,
+                    ref_one_table: true
+                }
             ]
         }]
     });
