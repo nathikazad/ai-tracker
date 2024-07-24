@@ -15,27 +15,32 @@ let actionsTypes: [ActionTypeModel] = [
                     ),
                     staticFields: ActionModelTypeStaticSchema(
                         startTime:
-                            Schema(type: "DateTime",
-                                   description: "The hour that the user woke up",
-                                   name: "Sleep time"
-                                  ),
+                            Schema(
+                                name: "Sleep time",
+                                type: "DateTime",
+                                description: "The hour that the user woke up"
+                            ),
                         endTime:
-                            Schema(type: "DateTime",
-                                   description: "The hour that the user went to sleep",
-                                   name: "Wake Up time"
+                            Schema(name: "Wake Up time",
+                                   type: "DateTime",
+                                   description: "The hour that the user went to sleep"
                                   )
                     ),
                     dynamicFields: [
                         "notes":
-                            Schema(type: "String",
-                                   description: "Additional notes if any about the sleep"
-                                  )
+                            Schema(
+                                name: "Notes",
+                                type: "String",
+                                description: "Additional notes if any about the sleep"
+                            )
                     ],
                     computed: [
                         "duration":
-                            Schema(type: "TimeDuration",
-                                   description: "Hours person slept"
-                                  )
+                            Schema(
+                                name: "Duration",
+                                type: "TimeDuration",
+                                description: "Hours person slept"
+                            )
                     ],
                     aggregates: [
                         "Wake up time":
@@ -116,15 +121,19 @@ let actionsTypes: [ActionTypeModel] = [
                     ),
                     staticFields: ActionModelTypeStaticSchema(
                         time:
-                            Schema(type: "DateTime",
-                                   description: "The time user prayed"
-                                  )
+                            Schema(
+                                name: "Prayer Time",
+                                type: "DateTime",
+                                description: "The time user prayed"
+                            )
                     ),
                     dynamicFields: [
                         "Prayer Name":
-                            Schema(type: "PrayerName",
-                                   description: "Additional notes if any about the sleep"
-                                  )
+                            Schema(
+                                name: "Prayer Name",
+                                type: "PrayerName",
+                                description: "Name of the prayer"
+                            )
                     ],
                     internalTypes: [
                         "PrayerName": [

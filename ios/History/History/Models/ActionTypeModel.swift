@@ -18,11 +18,11 @@ class Schema {
     var type: String
 //    var array: Bool
     var description: String
-    var name: String?
-    init(type: String, description: String, name: String? = nil) {
+    var name: String
+    init(name: String, type: String, description: String) {
+        self.name = name
         self.type = type
         self.description = description
-        self.name = name
     }
 }
 
@@ -126,7 +126,7 @@ class ActionTypeModel: ObservableObject {
     var name: String
     @Published var meta: ActionTypeMeta
     var staticFields: ActionModelTypeStaticSchema
-    var dynamicFields: [String: Schema]
+    @Published var dynamicFields: [String: Schema]
     var internalTypes: [String: Any]
     var aggregates: [String: Aggregate]
     var computed: [String: Any]
