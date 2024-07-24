@@ -25,6 +25,11 @@
 		FE477D8F2BD5E3C8001FC341 /* EventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE477D8E2BD5E3C8001FC341 /* EventsView.swift */; };
 		FE477D912BD5E3E2001FC341 /* EventsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE477D902BD5E3E2001FC341 /* EventsController.swift */; };
 		FE477D932BD8122B001FC341 /* CalendarPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE477D922BD8122B001FC341 /* CalendarPicker.swift */; };
+		FE4AB3872C4EF43800A07749 /* ListActionTypesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3862C4EF43800A07749 /* ListActionTypesView.swift */; };
+		FE4AB3892C4EF46B00A07749 /* ActionTypeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3882C4EF46B00A07749 /* ActionTypeModel.swift */; };
+		FE4AB38B2C4EF4E500A07749 /* ActionTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB38A2C4EF4E500A07749 /* ActionTypeView.swift */; };
+		FE4AB38D2C4EF7B200A07749 /* ActionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB38C2C4EF7B200A07749 /* ActionController.swift */; };
+		FE4AB38F2C51830600A07749 /* EditActionTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB38E2C51830600A07749 /* EditActionTypeView.swift */; };
 		FE4F7BA32BA7D79E0041CB6A /* HistoryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BA22BA7D79E0041CB6A /* HistoryApp.swift */; };
 		FE4F7BA52BA7D79E0041CB6A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BA42BA7D79E0041CB6A /* ContentView.swift */; };
 		FE4F7BA72BA7D79F0041CB6A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE4F7BA62BA7D79F0041CB6A /* Assets.xcassets */; };
@@ -161,6 +166,11 @@
 		FE477D8E2BD5E3C8001FC341 /* EventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsView.swift; sourceTree = "<group>"; };
 		FE477D902BD5E3E2001FC341 /* EventsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsController.swift; sourceTree = "<group>"; };
 		FE477D922BD8122B001FC341 /* CalendarPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPicker.swift; sourceTree = "<group>"; };
+		FE4AB3862C4EF43800A07749 /* ListActionTypesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListActionTypesView.swift; sourceTree = "<group>"; };
+		FE4AB3882C4EF46B00A07749 /* ActionTypeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionTypeModel.swift; sourceTree = "<group>"; };
+		FE4AB38A2C4EF4E500A07749 /* ActionTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionTypeView.swift; sourceTree = "<group>"; };
+		FE4AB38C2C4EF7B200A07749 /* ActionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionController.swift; sourceTree = "<group>"; };
+		FE4AB38E2C51830600A07749 /* EditActionTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditActionTypeView.swift; sourceTree = "<group>"; };
 		FE4F7B9F2BA7D79E0041CB6A /* History.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = History.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE4F7BA22BA7D79E0041CB6A /* HistoryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryApp.swift; sourceTree = "<group>"; };
 		FE4F7BA42BA7D79E0041CB6A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -303,6 +313,16 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
+		FE4AB3852C4EF42500A07749 /* Actions */ = {
+			isa = PBXGroup;
+			children = (
+				FE4AB3862C4EF43800A07749 /* ListActionTypesView.swift */,
+				FE4AB38A2C4EF4E500A07749 /* ActionTypeView.swift */,
+				FE4AB38E2C51830600A07749 /* EditActionTypeView.swift */,
+			);
+			path = Actions;
+			sourceTree = "<group>";
+		};
 		FE4F7B962BA7D79E0041CB6A = {
 			isa = PBXGroup;
 			children = (
@@ -408,6 +428,7 @@
 				FE96B5462BF8509E000BD8E1 /* ObjectController.swift */,
 				FE8AB2AD2C07CA0600131C13 /* AssociationController.swift */,
 				FE8AB2AF2C07DDCB00131C13 /* MetadataController.swift */,
+				FE4AB38C2C4EF7B200A07749 /* ActionController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -450,6 +471,7 @@
 				FE6ED6D22C06A9F500E6A2A6 /* ASObjectModel.swift */,
 				FE6ED6D42C06AA5D00E6A2A6 /* EventModels.swift */,
 				FE6ED6D62C06AA9100E6A2A6 /* EventTypeModel.swift */,
+				FE4AB3882C4EF46B00A07749 /* ActionTypeModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -479,6 +501,7 @@
 		FEA34E6B2BD0B81900CE2A12 /* HelperViews */ = {
 			isa = PBXGroup;
 			children = (
+				FE4AB3852C4EF42500A07749 /* Actions */,
 				FE96B5432BF85049000BD8E1 /* Objects */,
 				FE977B0D2BD9C298008E743C /* Events */,
 				FE900C062BD363C700F97050 /* Location */,
@@ -667,6 +690,7 @@
 				FE69D76A2BF6CFEE0061E2E6 /* LearnView.swift in Sources */,
 				FE9959542BC8B5B000F3187B /* RemindersView.swift in Sources */,
 				FE4F7BD22BA8FC600041CB6A /* BottomBar.swift in Sources */,
+				FE4AB38B2C4EF4E500A07749 /* ActionTypeView.swift in Sources */,
 				FE4F7BA52BA7D79E0041CB6A /* ContentView.swift in Sources */,
 				FECA5EEC2BE56970007ADE17 /* EventsComponents.swift in Sources */,
 				FE8811EB2BC799BF00B112A8 /* GoalsController.swift in Sources */,
@@ -674,15 +698,18 @@
 				FECA5EEE2BE569F6007ADE17 /* Time.swift in Sources */,
 				FEA98C132BFFEC70006BB857 /* TwoDatePicker.swift in Sources */,
 				FEB366E62BDDF8F9000A48C0 /* Chart.swift in Sources */,
+				FE4AB3872C4EF43800A07749 /* ListActionTypesView.swift in Sources */,
 				FE12C5EA2BC4B330002CDC60 /* GoalsView.swift in Sources */,
 				FEDBC0672C050C3F00233EA0 /* EventButtons.swift in Sources */,
 				FEBED49A2C0AD79800DB2D5F /* PersonViewHelper.swift in Sources */,
+				FE4AB38F2C51830600A07749 /* EditActionTypeView.swift in Sources */,
 				FE71B3882BD07BCE008F7D1A /* AudioRecorder.swift in Sources */,
 				FE129BE62BCB87B9004058EA /* LocationManager.swift in Sources */,
 				FE4F7BB12BA7D7C80041CB6A /* WatchCommunicator.swift in Sources */,
 				FE9E18BB2C02DE4000611CE8 /* EventRow.swift in Sources */,
 				FEC7849E2C064EAE007C38F1 /* PersonView.swift in Sources */,
 				FEDBC0632C04FB2F00233EA0 /* Notes.swift in Sources */,
+				FE4AB3892C4EF46B00A07749 /* ActionTypeModel.swift in Sources */,
 				FE4F7BA32BA7D79E0041CB6A /* HistoryApp.swift in Sources */,
 				FE6ED6D12C06A3E300E6A2A6 /* NavigationButton.swift in Sources */,
 				FEB366E32BDDEC5D000A48C0 /* SendBar.swift in Sources */,
@@ -718,6 +745,7 @@
 				FE6ED6D72C06AA9100E6A2A6 /* EventTypeModel.swift in Sources */,
 				FE477D912BD5E3E2001FC341 /* EventsController.swift in Sources */,
 				FE950F202C011BE00022EA64 /* AppState.swift in Sources */,
+				FE4AB38D2C4EF7B200A07749 /* ActionController.swift in Sources */,
 				FE9E18B92C02933400611CE8 /* Popup.swift in Sources */,
 				FE96B5472BF8509E000BD8E1 /* ObjectController.swift in Sources */,
 				FE5264812BA99AF700502521 /* ServerCommunicator.swift in Sources */,

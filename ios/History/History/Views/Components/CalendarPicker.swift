@@ -30,7 +30,8 @@ extension AppState {
     }
     
     var isItToday: Bool {
-        state.currentDate == Calendar.current.startOfDay(for: Date())
+        print("isItToday \(state.currentDate.toUTCString) \(Calendar.current.startOfDay(for: Date()).toUTCString) \(state.currentDate == Calendar.current.startOfDay(for: Date()))")
+        return state.currentDate == Calendar.current.startOfDay(for: Date())
     }
 }
 
@@ -40,6 +41,13 @@ struct CalendarButton: View {
     var body: some View {
         HStack {
             Spacer()
+            if !appState.isItToday {
+                Button(action: {
+                    state.goToDay()
+                }) {
+                    Image(systemName: "arrow.clockwise.circle.fill")
+                }
+            }
             Button(action: {
                 state.showSheet(newSheetToShow: .calendar)
             }) {
@@ -54,14 +62,6 @@ struct CalendarButton: View {
                             }
                         }
                     )
-            }
-            
-            if !appState.isItToday {
-                Button(action: {
-                    state.goToDay()
-                }) {
-                    Image(systemName: "arrow.clockwise.fill")
-                }
             }
             Spacer()
 
