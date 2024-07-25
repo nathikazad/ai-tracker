@@ -97,15 +97,5 @@ class InternalObject: Observable {
 }
 
 
-enum DataType: String, CaseIterable {
-    case timeDuration = "TimeDuration"
-    case time = "Time"
-    case date = "Date"
-    case dateTime = "DateTime"
-    case number = "Number"
-    case enumerator = "Enum"
-    case string = "String"
-}
 
-let allDataTypeStrings = DataType.allCases.map { $0.rawValue }
 

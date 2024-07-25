@@ -39,7 +39,7 @@ let actionsTypes: [ActionTypeModel] = [
                         "duration":
                             Schema(
                                 name: "Duration",
-                                dataType: "TimeDuration",
+                                dataType: "Duration",
                                 description: "Hours person slept"
                             )
                     ],
@@ -94,7 +94,7 @@ let actionsTypes: [ActionTypeModel] = [
                             Aggregate(
                                 field: "duration",
                                 window: .daily,
-                                dataType: .timeDuration,
+                                dataType: .duration,
                                 aggregatorType: .sum,
                                 conditions: [
                                     Condition(
@@ -313,12 +313,29 @@ func fetchActions(type: String) -> [ActionModel] {
 }
 
 
-// finished:  work on action view
-// work on action type view
-// work on action type edit
-// work on action edit
+// finished: work on action view
+// finished: work on action type view
+// finished: work on action type create/edit
+// work on create/modify/delete action
 // put action type and action into database and then fetch it
-// then work on create action type
-// then work on create action
-// then work on edit action type
-// then work on edit action
+// RELASE
+// work on object view
+// work on object create/edit
+// put object into database and then fetch it
+// RELASE
+// work on aggregates
+// RELASE
+// work on goals
+// RELASE
+// work on reminders
+// RELASE
+// integrate location
+// RELASE
+// integrate sleep
+// RELASE
+// integrate plaid
+// RELEASE
+
+
+
+
