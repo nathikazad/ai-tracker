@@ -8,7 +8,7 @@ import SwiftUI
 
 import Foundation
 struct EditActionTypeView: View {
-    var actionTypeName: String
+    @State var actionTypeName: String?
     @StateObject var model: ActionTypeModel
     var createAction: ((ActionTypeModel) -> Void)?
     
@@ -59,7 +59,7 @@ struct EditActionTypeView: View {
                 DisclosureGroup {
                     SchemaView(schema: Binding(
                         get: { model.staticFields.startTime ?? Schema(
-                            name:"Start Time", dataType: "String", description: "") },
+                            name:"Start Time", dataType: "DateTime", description: "") },
                         set: { newValue in model.staticFields.startTime = newValue }
                     ), dataType: "DateTime")
                 } label: {
@@ -69,7 +69,7 @@ struct EditActionTypeView: View {
                 DisclosureGroup {
                     SchemaView(schema: Binding(
                         get: { model.staticFields.endTime ?? Schema(
-                            name:"End Time", dataType: "String", description: "") },
+                            name:"End Time", dataType: "DateTime", description: "") },
                         set: { newValue in model.staticFields.endTime = newValue }
                     ), dataType: "DateTime")
                 } label: {
@@ -81,7 +81,7 @@ struct EditActionTypeView: View {
                 DisclosureGroup {
                     SchemaView(schema: Binding(
                         get: { model.staticFields.time ?? Schema(
-                            name:"Time", dataType: "String", description: "") },
+                            name:"Time", dataType: "DateTime", description: "") },
                         set: { newValue in model.staticFields.time = newValue }
                     ), dataType: "DateTime")
                 } label: {
@@ -110,15 +110,40 @@ struct EditActionTypeView: View {
                     Label("Add Internal Object", systemImage: "plus")
                 }
             }
+
+            if actionTypeName != nil {
+                Button(action: {
+                    Task {
+                        await updateActionType(actionTypeModel: model)
+                        createAction?(model)
+                    }
+                }) {
+                    Label("Update \(model.name)", systemImage: "square.and.arrow.up")
+                        .frame(maxWidth: .infinity, alignment: .center)
+                }
+            } else {
+                Button(action: {
+                    Task {
+                        await updateActionType(actionTypeModel: model)
+                        actionTypeName = model.name
+                        createAction?(model)
+                    }
+                }) {
+                    Text("Create \(model.name) Action")
+                        .frame(maxWidth: .infinity, alignment: .center)
+                }
+            }
         }
         .navigationTitle(model.name)
         .onAppear {
             Task {
-                if let m = await fetchActionType(type: actionTypeName) {
-                    DispatchQueue.main.async {
-                        self.model.name = m.name
-                        self.model.meta = m.meta
-                        self.model.staticFields = m.staticFields
+                if let actionTypeName = actionTypeName {
+                    if let m = await fetchActionType(type: actionTypeName) {
+                        DispatchQueue.main.async {
+                            self.model.name = m.name
+                            self.model.meta = m.meta
+                            self.model.staticFields = m.staticFields
+                        }
                     }
                 }
             }

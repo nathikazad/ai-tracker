@@ -51,7 +51,7 @@ struct SchemaView: View {
                 .cornerRadius(8)
         }
         
-        if schema.dataType == "enum" {
+        if schema.dataType == "Enum" {
             EnumView(items: $schema.enumValues)
         }
     }

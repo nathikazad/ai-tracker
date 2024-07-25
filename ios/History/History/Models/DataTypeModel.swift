@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum DataType: String, CaseIterable {
+enum DataType: String, CaseIterable, Codable {
     case duration = "Duration"
     case time = "Time"
     case date = "Date"

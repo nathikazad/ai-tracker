@@ -26,7 +26,7 @@ struct ListActionsTypesView: View {
                 .padding(2)
             
             NavigationButton(destination: EditActionTypeView(
-                actionTypeName: generateRandomString(),
+                actionTypeName: nil,
                 model: ActionTypeModel(name: "", meta: ActionTypeMeta(), staticFields: ActionModelTypeStaticSchema()),
                 createAction: {
                     action in

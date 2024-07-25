@@ -28,7 +28,7 @@
 		FE4AB3872C4EF43800A07749 /* ListActionTypesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3862C4EF43800A07749 /* ListActionTypesView.swift */; };
 		FE4AB3892C4EF46B00A07749 /* ActionTypeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3882C4EF46B00A07749 /* ActionTypeModel.swift */; };
 		FE4AB38B2C4EF4E500A07749 /* ActionTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB38A2C4EF4E500A07749 /* ActionTypeView.swift */; };
-		FE4AB38D2C4EF7B200A07749 /* ActionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB38C2C4EF7B200A07749 /* ActionController.swift */; };
+		FE4AB38D2C4EF7B200A07749 /* ActionTypeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB38C2C4EF7B200A07749 /* ActionTypeController.swift */; };
 		FE4AB38F2C51830600A07749 /* EditActionTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB38E2C51830600A07749 /* EditActionTypeView.swift */; };
 		FE4AB3932C51D95D00A07749 /* WrappingHStack in Frameworks */ = {isa = PBXBuildFile; productRef = FE4AB3922C51D95D00A07749 /* WrappingHStack */; };
 		FE4AB3952C51F03300A07749 /* ActionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3942C51F03300A07749 /* ActionModel.swift */; };
@@ -38,6 +38,8 @@
 		FE4AB3A02C51F2C500A07749 /* EnumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB39F2C51F2C500A07749 /* EnumView.swift */; };
 		FE4AB3A22C51F2E000A07749 /* DynamicFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3A12C51F2E000A07749 /* DynamicFieldView.swift */; };
 		FE4AB3A42C5207C100A07749 /* DataTypeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3A32C5207C100A07749 /* DataTypeModel.swift */; };
+		FE4AB3A62C52F76B00A07749 /* ActionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3A52C52F76B00A07749 /* ActionController.swift */; };
+		FE4AB3A82C52F99800A07749 /* AnyTypeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3A72C52F99800A07749 /* AnyTypeModel.swift */; };
 		FE4F7BA32BA7D79E0041CB6A /* HistoryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BA22BA7D79E0041CB6A /* HistoryApp.swift */; };
 		FE4F7BA52BA7D79E0041CB6A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BA42BA7D79E0041CB6A /* ContentView.swift */; };
 		FE4F7BA72BA7D79F0041CB6A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE4F7BA62BA7D79F0041CB6A /* Assets.xcassets */; };
@@ -177,7 +179,7 @@
 		FE4AB3862C4EF43800A07749 /* ListActionTypesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListActionTypesView.swift; sourceTree = "<group>"; };
 		FE4AB3882C4EF46B00A07749 /* ActionTypeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionTypeModel.swift; sourceTree = "<group>"; };
 		FE4AB38A2C4EF4E500A07749 /* ActionTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionTypeView.swift; sourceTree = "<group>"; };
-		FE4AB38C2C4EF7B200A07749 /* ActionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionController.swift; sourceTree = "<group>"; };
+		FE4AB38C2C4EF7B200A07749 /* ActionTypeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionTypeController.swift; sourceTree = "<group>"; };
 		FE4AB38E2C51830600A07749 /* EditActionTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditActionTypeView.swift; sourceTree = "<group>"; };
 		FE4AB3942C51F03300A07749 /* ActionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionModel.swift; sourceTree = "<group>"; };
 		FE4AB3962C51F05C00A07749 /* AggregateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AggregateModel.swift; sourceTree = "<group>"; };
@@ -186,6 +188,8 @@
 		FE4AB39F2C51F2C500A07749 /* EnumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnumView.swift; sourceTree = "<group>"; };
 		FE4AB3A12C51F2E000A07749 /* DynamicFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicFieldView.swift; sourceTree = "<group>"; };
 		FE4AB3A32C5207C100A07749 /* DataTypeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTypeModel.swift; sourceTree = "<group>"; };
+		FE4AB3A52C52F76B00A07749 /* ActionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionController.swift; sourceTree = "<group>"; };
+		FE4AB3A72C52F99800A07749 /* AnyTypeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyTypeModel.swift; sourceTree = "<group>"; };
 		FE4F7B9F2BA7D79E0041CB6A /* History.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = History.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE4F7BA22BA7D79E0041CB6A /* HistoryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryApp.swift; sourceTree = "<group>"; };
 		FE4F7BA42BA7D79E0041CB6A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -456,7 +460,8 @@
 				FE96B5462BF8509E000BD8E1 /* ObjectController.swift */,
 				FE8AB2AD2C07CA0600131C13 /* AssociationController.swift */,
 				FE8AB2AF2C07DDCB00131C13 /* MetadataController.swift */,
-				FE4AB38C2C4EF7B200A07749 /* ActionController.swift */,
+				FE4AB38C2C4EF7B200A07749 /* ActionTypeController.swift */,
+				FE4AB3A52C52F76B00A07749 /* ActionController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -503,6 +508,7 @@
 				FE4AB3942C51F03300A07749 /* ActionModel.swift */,
 				FE4AB3962C51F05C00A07749 /* AggregateModel.swift */,
 				FE4AB3A32C5207C100A07749 /* DataTypeModel.swift */,
+				FE4AB3A72C52F99800A07749 /* AnyTypeModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -735,6 +741,7 @@
 				FE4AB3872C4EF43800A07749 /* ListActionTypesView.swift in Sources */,
 				FE12C5EA2BC4B330002CDC60 /* GoalsView.swift in Sources */,
 				FEDBC0672C050C3F00233EA0 /* EventButtons.swift in Sources */,
+				FE4AB3A82C52F99800A07749 /* AnyTypeModel.swift in Sources */,
 				FEBED49A2C0AD79800DB2D5F /* PersonViewHelper.swift in Sources */,
 				FE4AB38F2C51830600A07749 /* EditActionTypeView.swift in Sources */,
 				FE71B3882BD07BCE008F7D1A /* AudioRecorder.swift in Sources */,
@@ -783,7 +790,7 @@
 				FE6ED6D72C06AA9100E6A2A6 /* EventTypeModel.swift in Sources */,
 				FE477D912BD5E3E2001FC341 /* EventsController.swift in Sources */,
 				FE950F202C011BE00022EA64 /* AppState.swift in Sources */,
-				FE4AB38D2C4EF7B200A07749 /* ActionController.swift in Sources */,
+				FE4AB38D2C4EF7B200A07749 /* ActionTypeController.swift in Sources */,
 				FE9E18B92C02933400611CE8 /* Popup.swift in Sources */,
 				FE96B5472BF8509E000BD8E1 /* ObjectController.swift in Sources */,
 				FE5264812BA99AF700502521 /* ServerCommunicator.swift in Sources */,
@@ -794,6 +801,7 @@
 				FED942102BE0767900F0B24C /* Investor.swift in Sources */,
 				FE6ED6D32C06A9F500E6A2A6 /* ASObjectModel.swift in Sources */,
 				FEA34E6D2BD0B83300CE2A12 /* LocationsDebugView.swift in Sources */,
+				FE4AB3A62C52F76B00A07749 /* ActionController.swift in Sources */,
 				FE3E9F662BC8ACAD008BD120 /* NavigationTitle.swift in Sources */,
 				FE12C5E82BC4B30B002CDC60 /* TodosView.swift in Sources */,
 			);
