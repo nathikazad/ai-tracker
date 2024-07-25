@@ -25,21 +25,22 @@ struct ListActionsTypesView: View {
                 .cornerRadius(8)
                 .padding(2)
             
-//            NavigationButton(destination: EditActionTypeView(
-//                actionTypeName: "Sleep",
-//                createAction: {
-//                    action in
-//                    actions.append(action)
-//                }
-//            )) {
-//                Text(" ")
-//                Spacer()
-//                Image(systemName: "plus.circle")
-//                Text("Add new action")
-//                    .padding(.leading, 5)
-//                // navigation link to create user with action to execute on creation
-//                Spacer()
-//            }
+            NavigationButton(destination: EditActionTypeView(
+                actionTypeName: generateRandomString(),
+                model: ActionTypeModel(name: "", meta: ActionTypeMeta(), staticFields: ActionModelTypeStaticSchema()),
+                createAction: {
+                    action in
+                    actions.append(action)
+                }
+            )) {
+                Text(" ")
+                Spacer()
+                Image(systemName: "plus.circle")
+                Text("Add new action")
+                    .padding(.leading, 5)
+                // navigation link to create user with action to execute on creation
+                Spacer()
+            }
             
             
             

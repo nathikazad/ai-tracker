@@ -31,6 +31,12 @@
 		FE4AB38D2C4EF7B200A07749 /* ActionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB38C2C4EF7B200A07749 /* ActionController.swift */; };
 		FE4AB38F2C51830600A07749 /* EditActionTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB38E2C51830600A07749 /* EditActionTypeView.swift */; };
 		FE4AB3932C51D95D00A07749 /* WrappingHStack in Frameworks */ = {isa = PBXBuildFile; productRef = FE4AB3922C51D95D00A07749 /* WrappingHStack */; };
+		FE4AB3952C51F03300A07749 /* ActionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3942C51F03300A07749 /* ActionModel.swift */; };
+		FE4AB3972C51F05C00A07749 /* AggregateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3962C51F05C00A07749 /* AggregateModel.swift */; };
+		FE4AB39C2C51F26B00A07749 /* SchemaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB39B2C51F26B00A07749 /* SchemaView.swift */; };
+		FE4AB39E2C51F29C00A07749 /* InternalObjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB39D2C51F29C00A07749 /* InternalObjectView.swift */; };
+		FE4AB3A02C51F2C500A07749 /* EnumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB39F2C51F2C500A07749 /* EnumView.swift */; };
+		FE4AB3A22C51F2E000A07749 /* DynamicFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3A12C51F2E000A07749 /* DynamicFieldView.swift */; };
 		FE4F7BA32BA7D79E0041CB6A /* HistoryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BA22BA7D79E0041CB6A /* HistoryApp.swift */; };
 		FE4F7BA52BA7D79E0041CB6A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BA42BA7D79E0041CB6A /* ContentView.swift */; };
 		FE4F7BA72BA7D79F0041CB6A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE4F7BA62BA7D79F0041CB6A /* Assets.xcassets */; };
@@ -172,6 +178,12 @@
 		FE4AB38A2C4EF4E500A07749 /* ActionTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionTypeView.swift; sourceTree = "<group>"; };
 		FE4AB38C2C4EF7B200A07749 /* ActionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionController.swift; sourceTree = "<group>"; };
 		FE4AB38E2C51830600A07749 /* EditActionTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditActionTypeView.swift; sourceTree = "<group>"; };
+		FE4AB3942C51F03300A07749 /* ActionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionModel.swift; sourceTree = "<group>"; };
+		FE4AB3962C51F05C00A07749 /* AggregateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AggregateModel.swift; sourceTree = "<group>"; };
+		FE4AB39B2C51F26B00A07749 /* SchemaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemaView.swift; sourceTree = "<group>"; };
+		FE4AB39D2C51F29C00A07749 /* InternalObjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternalObjectView.swift; sourceTree = "<group>"; };
+		FE4AB39F2C51F2C500A07749 /* EnumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnumView.swift; sourceTree = "<group>"; };
+		FE4AB3A12C51F2E000A07749 /* DynamicFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicFieldView.swift; sourceTree = "<group>"; };
 		FE4F7B9F2BA7D79E0041CB6A /* History.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = History.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE4F7BA22BA7D79E0041CB6A /* HistoryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryApp.swift; sourceTree = "<group>"; };
 		FE4F7BA42BA7D79E0041CB6A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -318,11 +330,23 @@
 		FE4AB3852C4EF42500A07749 /* Actions */ = {
 			isa = PBXGroup;
 			children = (
+				FE4AB39A2C51F23100A07749 /* Components */,
 				FE4AB3862C4EF43800A07749 /* ListActionTypesView.swift */,
 				FE4AB38A2C4EF4E500A07749 /* ActionTypeView.swift */,
 				FE4AB38E2C51830600A07749 /* EditActionTypeView.swift */,
 			);
 			path = Actions;
+			sourceTree = "<group>";
+		};
+		FE4AB39A2C51F23100A07749 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				FE4AB39B2C51F26B00A07749 /* SchemaView.swift */,
+				FE4AB39D2C51F29C00A07749 /* InternalObjectView.swift */,
+				FE4AB39F2C51F2C500A07749 /* EnumView.swift */,
+				FE4AB3A12C51F2E000A07749 /* DynamicFieldView.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 		FE4F7B962BA7D79E0041CB6A = {
@@ -474,6 +498,8 @@
 				FE6ED6D42C06AA5D00E6A2A6 /* EventModels.swift */,
 				FE6ED6D62C06AA9100E6A2A6 /* EventTypeModel.swift */,
 				FE4AB3882C4EF46B00A07749 /* ActionTypeModel.swift */,
+				FE4AB3942C51F03300A07749 /* ActionModel.swift */,
+				FE4AB3962C51F05C00A07749 /* AggregateModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -691,10 +717,13 @@
 				FE6ED6D52C06AA5D00E6A2A6 /* EventModels.swift in Sources */,
 				FE69D76A2BF6CFEE0061E2E6 /* LearnView.swift in Sources */,
 				FE9959542BC8B5B000F3187B /* RemindersView.swift in Sources */,
+				FE4AB3A22C51F2E000A07749 /* DynamicFieldView.swift in Sources */,
 				FE4F7BD22BA8FC600041CB6A /* BottomBar.swift in Sources */,
 				FE4AB38B2C4EF4E500A07749 /* ActionTypeView.swift in Sources */,
+				FE4AB39C2C51F26B00A07749 /* SchemaView.swift in Sources */,
 				FE4F7BA52BA7D79E0041CB6A /* ContentView.swift in Sources */,
 				FECA5EEC2BE56970007ADE17 /* EventsComponents.swift in Sources */,
+				FE4AB3972C51F05C00A07749 /* AggregateModel.swift in Sources */,
 				FE8811EB2BC799BF00B112A8 /* GoalsController.swift in Sources */,
 				FEA98C112BFFC96C006BB857 /* QuickComponents.swift in Sources */,
 				FECA5EEE2BE569F6007ADE17 /* Time.swift in Sources */,
@@ -706,10 +735,12 @@
 				FEBED49A2C0AD79800DB2D5F /* PersonViewHelper.swift in Sources */,
 				FE4AB38F2C51830600A07749 /* EditActionTypeView.swift in Sources */,
 				FE71B3882BD07BCE008F7D1A /* AudioRecorder.swift in Sources */,
+				FE4AB3952C51F03300A07749 /* ActionModel.swift in Sources */,
 				FE129BE62BCB87B9004058EA /* LocationManager.swift in Sources */,
 				FE4F7BB12BA7D7C80041CB6A /* WatchCommunicator.swift in Sources */,
 				FE9E18BB2C02DE4000611CE8 /* EventRow.swift in Sources */,
 				FEC7849E2C064EAE007C38F1 /* PersonView.swift in Sources */,
+				FE4AB3A02C51F2C500A07749 /* EnumView.swift in Sources */,
 				FEDBC0632C04FB2F00233EA0 /* Notes.swift in Sources */,
 				FE4AB3892C4EF46B00A07749 /* ActionTypeModel.swift in Sources */,
 				FE4F7BA32BA7D79E0041CB6A /* HistoryApp.swift in Sources */,
@@ -729,6 +760,7 @@
 				FE1C0EAE2BC0713B00FF56AB /* Authentication.swift in Sources */,
 				FE900C082BD363D200F97050 /* LocationListView.swift in Sources */,
 				FE477D932BD8122B001FC341 /* CalendarPicker.swift in Sources */,
+				FE4AB39E2C51F29C00A07749 /* InternalObjectView.swift in Sources */,
 				FE8153722BD845B300D972C8 /* PolylineView.swift in Sources */,
 				FE9452F22BF2CC0900B28918 /* InteractionView.swift in Sources */,
 				FE06FD042C0913E800E65D41 /* MinPeopleViewForEventView.swift in Sources */,

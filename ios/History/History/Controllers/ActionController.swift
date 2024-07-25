@@ -132,7 +132,7 @@ let actionsTypes: [ActionTypeModel] = [
                         "Prayer Name":
                             Schema(
                                 name: "PrayerName",
-                                dataType: "enum",
+                                dataType: "Enum",
                                 description: "The type of prayer",
                                 enumValues: ["Fajr", "Dhuhr", "Asr", "Magrib", "Isha"]
                             )
@@ -201,7 +201,7 @@ let actionsTypes: [ActionTypeModel] = [
                         "ShoppingType":
                             Schema(
                                 name: "ShoppingType",
-                                dataType: "enum",
+                                dataType: "Enum",
                                 description: "The type of shopping",
                                 enumValues: ["In Person", "Online"]
                             ),
@@ -220,7 +220,7 @@ let actionsTypes: [ActionTypeModel] = [
                                 "quantity":
                                     Schema(
                                         name: "Quantity",
-                                        dataType: "number",
+                                        dataType: "Number",
                                         description: "The quantity of item that was bought"
                                     ),
                                 "unitOfQuantity":
@@ -232,7 +232,7 @@ let actionsTypes: [ActionTypeModel] = [
                                 "cost":
                                     Schema(
                                         name: "Cost",
-                                        dataType: "number",
+                                        dataType: "Number",
                                         description: "The cost of the item"
                                     ),
                             ]

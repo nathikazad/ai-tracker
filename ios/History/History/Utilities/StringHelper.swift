@@ -18,6 +18,11 @@ extension Binding where Value == String? {
     }
 }
 
+func generateRandomString() -> String {
+    let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    return String((0..<10).map{ _ in letters.randomElement()! })
+}
+
 extension [String] {
     var joinWithAndAtEnd: String? {
         if count > 1 {
