@@ -30,6 +30,7 @@
 		FE4AB38B2C4EF4E500A07749 /* ActionTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB38A2C4EF4E500A07749 /* ActionTypeView.swift */; };
 		FE4AB38D2C4EF7B200A07749 /* ActionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB38C2C4EF7B200A07749 /* ActionController.swift */; };
 		FE4AB38F2C51830600A07749 /* EditActionTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB38E2C51830600A07749 /* EditActionTypeView.swift */; };
+		FE4AB3932C51D95D00A07749 /* WrappingHStack in Frameworks */ = {isa = PBXBuildFile; productRef = FE4AB3922C51D95D00A07749 /* WrappingHStack */; };
 		FE4F7BA32BA7D79E0041CB6A /* HistoryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BA22BA7D79E0041CB6A /* HistoryApp.swift */; };
 		FE4F7BA52BA7D79E0041CB6A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BA42BA7D79E0041CB6A /* ContentView.swift */; };
 		FE4F7BA72BA7D79F0041CB6A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE4F7BA62BA7D79F0041CB6A /* Assets.xcassets */; };
@@ -250,6 +251,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE4AB3932C51D95D00A07749 /* WrappingHStack in Frameworks */,
 				FE4F7BCC2BA7DBB70041CB6A /* WatchConnectivity.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -562,6 +564,7 @@
 			);
 			name = History;
 			packageProductDependencies = (
+				FE4AB3922C51D95D00A07749 /* WrappingHStack */,
 			);
 			productName = History;
 			productReference = FE4F7B9F2BA7D79E0041CB6A /* History.app */;
@@ -636,8 +639,7 @@
 			);
 			mainGroup = FE4F7B962BA7D79E0041CB6A;
 			packageReferences = (
-				FE1C0EB32BC0A46200FF56AB /* XCRemoteSwiftPackageReference "swift-graphql" */,
-				FE1C0EC22BC0BFDE00FF56AB /* XCRemoteSwiftPackageReference "apollo-ios" */,
+				FE4AB3912C51D94400A07749 /* XCRemoteSwiftPackageReference "WrappingHStack" */,
 			);
 			productRefGroup = FE4F7BA02BA7D79E0041CB6A /* Products */;
 			projectDirPath = "";
@@ -1183,23 +1185,23 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		FE1C0EB32BC0A46200FF56AB /* XCRemoteSwiftPackageReference "swift-graphql" */ = {
+		FE4AB3912C51D94400A07749 /* XCRemoteSwiftPackageReference "WrappingHStack" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/maticzav/swift-graphql/";
+			repositoryURL = "https://github.com/dkk/WrappingHStack";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 5.1.2;
-			};
-		};
-		FE1C0EC22BC0BFDE00FF56AB /* XCRemoteSwiftPackageReference "apollo-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apollographql/apollo-ios.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.9.3;
+				minimumVersion = 2.2.11;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FE4AB3922C51D95D00A07749 /* WrappingHStack */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FE4AB3912C51D94400A07749 /* XCRemoteSwiftPackageReference "WrappingHStack" */;
+			productName = WrappingHStack;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FE4F7B972BA7D79E0041CB6A /* Project object */;
 }

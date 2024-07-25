@@ -7,6 +7,7 @@
 
 import Foundation
 
+let externalDataTypes: [String] = ["Expense", "Organization", "Item"]
 let actionsTypes: [ActionTypeModel] = [
     ActionTypeModel(name: "Sleep",
                     meta: ActionTypeMeta(
@@ -17,12 +18,12 @@ let actionsTypes: [ActionTypeModel] = [
                         startTime:
                             Schema(
                                 name: "Sleep time",
-                                type: "DateTime",
+                                dataType: "DateTime",
                                 description: "The hour that the user woke up"
                             ),
                         endTime:
                             Schema(name: "Wake Up time",
-                                   type: "DateTime",
+                                   dataType: "DateTime",
                                    description: "The hour that the user went to sleep"
                                   )
                     ),
@@ -30,7 +31,7 @@ let actionsTypes: [ActionTypeModel] = [
                         "notes":
                             Schema(
                                 name: "Notes",
-                                type: "String",
+                                dataType: "String",
                                 description: "Additional notes if any about the sleep"
                             )
                     ],
@@ -38,7 +39,7 @@ let actionsTypes: [ActionTypeModel] = [
                         "duration":
                             Schema(
                                 name: "Duration",
-                                type: "TimeDuration",
+                                dataType: "TimeDuration",
                                 description: "Hours person slept"
                             )
                     ],
@@ -123,24 +124,120 @@ let actionsTypes: [ActionTypeModel] = [
                         time:
                             Schema(
                                 name: "Prayer Time",
-                                type: "DateTime",
+                                dataType: "DateTime",
                                 description: "The time user prayed"
                             )
                     ),
                     dynamicFields: [
                         "Prayer Name":
                             Schema(
-                                name: "Prayer Name",
-                                type: "PrayerName",
-                                description: "Name of the prayer"
+                                name: "PrayerName",
+                                dataType: "enum",
+                                description: "The type of prayer",
+                                enumValues: ["Fajr", "Dhuhr", "Asr", "Magrib", "Isha"]
                             )
                     ],
-                    internalTypes: [
-                        "PrayerName": [
-                            "description": "Name of the prayer",
-                            "type": "enum",
-                            "values": ["Fajr", "Dhuhr", "Asr", "Magrib", "Isha"]
+                    aggregates:
+                        ["Prayers prayed per day":
+                            Aggregate(
+                                field: "*",
+                                window: .daily,
+                                dataType: .number,
+                                aggregatorType: .count,
+                                conditions:[
+                                    Condition(
+                                        field: "prayerName",
+                                        comparisonOperator: "eq",
+                                        value: "Fajr"
+                                    )
+                                ],
+                                goals: [
+                                    Goal(
+                                        comparisonOperator: "eq",
+                                        value: 5)
+                                ]
+                            )
                         ]
+                   ),
+    ActionTypeModel(name: "Shopping",
+                    meta: ActionTypeMeta(
+                        hasDuration: true,
+                        description: "This event is when a user goes shopping"
+                    ),
+                    staticFields: ActionModelTypeStaticSchema(
+                        startTime:
+                            Schema(
+                                name: "Start Time",
+                                dataType: "DateTime",
+                                description: "The time user went shopping"
+                            ),
+                        endTime:
+                            Schema(
+                                name: "End Time",
+                                dataType: "DateTime",
+                                description: "The time user got back from shopping"
+                            )
+                    ),
+                    dynamicFields: [
+                        "itemList":
+                            Schema(
+                                name: "List of Items",
+                                dataType: "ItemRow",
+                                description: "List of items that was bought",
+                                array: true
+                            ),
+                        "store":
+                            Schema(
+                                name: "Store",
+                                dataType: "Organization",
+                                description: "The store from where the items were bought"
+                            ),
+                        "cost":
+                            Schema(
+                                name: "Cost",
+                                dataType: "Expense",
+                                description: "The total cost of the items"
+                            ),
+                        "ShoppingType":
+                            Schema(
+                                name: "ShoppingType",
+                                dataType: "enum",
+                                description: "The type of shopping",
+                                enumValues: ["In Person", "Online"]
+                            ),
+                    ],
+                    internalObjects: [
+                        "ItemRow": InternalObject(
+                            name: "ItemRow",
+                            description: "The item that was bought",
+                            fields: [
+                                "item":
+                                    Schema(
+                                        name: "Item",
+                                        dataType: "Item",
+                                        description: "The item that was bought"
+                                    ),
+                                "quantity":
+                                    Schema(
+                                        name: "Quantity",
+                                        dataType: "number",
+                                        description: "The quantity of item that was bought"
+                                    ),
+                                "unitOfQuantity":
+                                    Schema(
+                                        name: "Unit",
+                                        dataType: "String",
+                                        description: "The unit of quantity of item"
+                                    ),
+                                "cost":
+                                    Schema(
+                                        name: "Cost",
+                                        dataType: "number",
+                                        description: "The cost of the item"
+                                    ),
+                            ]
+
+                        )
                     ],
                     aggregates:
                         ["Prayers prayed per day":

@@ -8,21 +8,36 @@
 import Foundation
 
 
-
-struct DynamicData {
-    var data: [String: Any]  // Use Any for dynamic handling of types
+class Schema {
+    var name: String
+    var dataType: String
+    var description: String
+    var array: Bool
+    var enumValues: [String]
+    var objectFields: [String: Schema]
     
+    init( name: String, dataType: String, description: String,
+          array: Bool = false,
+          enumValues: [String] = [],
+          objectFields: [String : Schema] = [:]) {
+        self.dataType = dataType
+        self.array = array
+        self.description = description
+        self.name = name
+        self.enumValues = enumValues
+        self.objectFields = objectFields
+    }
 }
 
-class Schema {
-    var type: String
-//    var array: Bool
-    var description: String
+class InternalObject: Observable {
     var name: String
-    init(name: String, type: String, description: String) {
+    var description: String
+    @Published var fields: [String: Schema]
+    
+    init(name: String, description: String, fields: [String : Schema]) {
         self.name = name
-        self.type = type
         self.description = description
+        self.fields = fields
     }
 }
 
@@ -127,25 +142,28 @@ class ActionTypeModel: ObservableObject {
     @Published var meta: ActionTypeMeta
     var staticFields: ActionModelTypeStaticSchema
     @Published var dynamicFields: [String: Schema]
-    var internalTypes: [String: Any]
+    @Published var internalObjects: [String: InternalObject]
     var aggregates: [String: Aggregate]
     var computed: [String: Any]
     var goals: [String: Any]
     
+    var internalDataTypes: [String] {
+        internalObjects.values.compactMap { $0.name }.sorted()
+    }
     
     init(name: String, 
          meta: ActionTypeMeta,
          staticFields: ActionModelTypeStaticSchema,
          dynamicFields: [String: Schema] = [:],
          computed: [String: Any] = [:],
-         internalTypes: [String: Any] = [:],
+         internalObjects: [String: InternalObject] = [:],
          aggregates: [String: Aggregate] = [:], goals: [String: Any] = [:]) {
         self.name = name
         self.meta = meta
         self.staticFields = staticFields
         self.dynamicFields = dynamicFields
         self.computed = computed
-        self.internalTypes = internalTypes
+        self.internalObjects = internalObjects
         self.aggregates = aggregates
         self.goals = goals
     }
