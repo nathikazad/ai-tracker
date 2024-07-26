@@ -26,7 +26,7 @@ struct ListActionsTypesView: View {
                 .padding(2)
             
             NavigationButton(destination: EditActionTypeView(
-                actionTypeName: nil,
+                actionTypeId: nil,
                 model: ActionTypeModel(name: "", meta: ActionTypeMeta(), staticFields: ActionModelTypeStaticSchema()),
                 createAction: {
                     action in
@@ -72,7 +72,7 @@ struct ListActionsTypesView: View {
     
     func fetchPeople() {
         Task {
-            let resp = await fetchActionTypes()
+            let resp = await fetchActionTypes(userId: 1)
             DispatchQueue.main.async {
                 actions = resp
             }

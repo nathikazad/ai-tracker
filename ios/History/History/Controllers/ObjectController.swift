@@ -47,7 +47,6 @@ class ObjectController {
             parent_events(order_by: {id: desc}) {
                 \(EventsController.eventSelections)
             }
-          }
         """
     }
 

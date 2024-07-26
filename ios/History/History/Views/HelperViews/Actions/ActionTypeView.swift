@@ -37,7 +37,7 @@ struct ShowActionTypeView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink(destination: EditActionTypeView(
-                    actionTypeName: model.name,
+                    actionTypeId: model.id,
                     model: model
                 )) {
                     Image(systemName: "pencil")
@@ -45,7 +45,7 @@ struct ShowActionTypeView: View {
             }
         }
         .onAppear {
-            self.actions = fetchActions(type: model.name)
+//            self.actions = fetchActions(type: model.name)
         }
     }
 }

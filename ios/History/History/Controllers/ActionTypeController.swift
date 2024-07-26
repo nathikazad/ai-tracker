@@ -8,324 +8,209 @@
 import Foundation
 
 let externalDataTypes: [String] = ["Expense", "Organization", "Item"]
-var actionsTypes: [ActionTypeModel] = [
-    ActionTypeModel(name: "Sleep",
-                    meta: ActionTypeMeta(
-                        hasDuration: true,
-                        description: "This event is when a user sleeps for a period of time"
-                    ),
-                    staticFields: ActionModelTypeStaticSchema(
-                        startTime:
-                            Schema(
-                                name: "Sleep time",
-                                dataType: "DateTime",
-                                description: "The hour that the user woke up"
-                            ),
-                        endTime:
-                            Schema(name: "Wake Up time",
-                                   dataType: "DateTime",
-                                   description: "The hour that the user went to sleep"
-                                  )
-                    ),
-                    dynamicFields: [
-                        "notes":
-                            Schema(
-                                name: "Notes",
-                                dataType: "LongString",
-                                description: "Additional notes if any about the sleep"
-                            )
-                    ],
-                    computed: [
-                        "duration":
-                            Schema(
-                                name: "Duration",
-                                dataType: "Duration",
-                                description: "Hours person slept"
-                            )
-                    ],
-                    aggregates: [
-                        "Wake up time":
-                            Aggregate(
-                                field: "startTime",
-                                window: .daily,
-                                dataType: .time,
-                                aggregatorType: .first,
-                                conditions: [
-                                    Condition(
-                                        field: "endTime",
-                                        comparisonOperator: "gt",
-                                        value: "18:00:00"),
-                                    Condition(
-                                        field: "startTime",
-                                        comparisonOperator: "lt",
-                                        value: "15:00:00"
-                                    ),
-                                ],
-                                goals: [
-                                    Goal(
-                                        comparisonOperator: "lt",
-                                        value: "06:30:00")
-                                ]
-                            ),
-                        "Sleep time":
-                            Aggregate(
-                                field: "endTime",
-                                window: .daily,
-                                dataType: .time,
-                                aggregatorType: .first,
-                                conditions: [
-                                    Condition(
-                                        field: "endTime",
-                                        comparisonOperator: "gt",
-                                        value: "18:00:00"),
-                                    Condition(
-                                        field: "startTime",
-                                        comparisonOperator: "lt",
-                                        value: "15:00:00"
-                                    ),
-                                ],
-                                goals: [
-                                    Goal(
-                                        comparisonOperator: "lt",
-                                        value:  "23:00:00")
-                                ]
-                            ),
-                        "Duration":
-                            Aggregate(
-                                field: "duration",
-                                window: .daily,
-                                dataType: .duration,
-                                aggregatorType: .sum,
-                                conditions: [
-                                    Condition(
-                                        field: "endTime",
-                                        comparisonOperator: "gt",
-                                        value: "18:00:00"),
-                                    Condition(
-                                        field: "startTime",
-                                        comparisonOperator: "lt",
-                                        value: "15:00:00"
-                                    ),
-                                ],
-                                goals: [
-                                    Goal(
-                                        comparisonOperator: "gt",
-                                        value: "07:00:00")
-                                ]
-                            ),
-                    ]
-                   ),
-    ActionTypeModel(name: "Pray",
-                    meta: ActionTypeMeta(
-                        hasDuration: false,
-                        description: "This event is when a user prays"
-                    ),
-                    staticFields: ActionModelTypeStaticSchema(
-                        time:
-                            Schema(
-                                name: "Prayer Time",
-                                dataType: "DateTime",
-                                description: "The time user prayed"
-                            )
-                    ),
-                    dynamicFields: [
-                        "Prayer Name":
-                            Schema(
-                                name: "PrayerName",
-                                dataType: "Enum",
-                                description: "The type of prayer",
-                                enumValues: ["Fajr", "Dhuhr", "Asr", "Magrib", "Isha"]
-                            )
-                    ],
-                    aggregates:
-                        ["Prayers prayed per day":
-                            Aggregate(
-                                field: "*",
-                                window: .daily,
-                                dataType: .number,
-                                aggregatorType: .count,
-                                conditions:[
-                                    Condition(
-                                        field: "prayerName",
-                                        comparisonOperator: "eq",
-                                        value: "Fajr"
-                                    )
-                                ],
-                                goals: [
-                                    Goal(
-                                        comparisonOperator: "eq",
-                                        value: 5)
-                                ]
-                            )
-                        ]
-                   ),
-    ActionTypeModel(name: "Shopping",
-                    meta: ActionTypeMeta(
-                        hasDuration: true,
-                        description: "This event is when a user goes shopping"
-                    ),
-                    staticFields: ActionModelTypeStaticSchema(
-                        startTime:
-                            Schema(
-                                name: "Start Time",
-                                dataType: "DateTime",
-                                description: "The time user went shopping"
-                            ),
-                        endTime:
-                            Schema(
-                                name: "End Time",
-                                dataType: "DateTime",
-                                description: "The time user got back from shopping"
-                            )
-                    ),
-                    dynamicFields: [
-                        "itemList":
-                            Schema(
-                                name: "List of Items",
-                                dataType: "ItemRow",
-                                description: "List of items that was bought",
-                                array: true
-                            ),
-                        "store":
-                            Schema(
-                                name: "Store",
-                                dataType: "Organization",
-                                description: "The store from where the items were bought"
-                            ),
-                        "cost":
-                            Schema(
-                                name: "Cost",
-                                dataType: "Expense",
-                                description: "The total cost of the items"
-                            ),
-                        "ShoppingType":
-                            Schema(
-                                name: "ShoppingType",
-                                dataType: "Enum",
-                                description: "The type of shopping",
-                                enumValues: ["In Person", "Online"]
-                            ),
-                    ],
-                    internalObjects: [
-                        "ItemRow": InternalObject(
-                            name: "ItemRow",
-                            description: "The item that was bought",
-                            fields: [
-                                "item":
-                                    Schema(
-                                        name: "Item",
-                                        dataType: "Item",
-                                        description: "The item that was bought"
-                                    ),
-                                "quantity":
-                                    Schema(
-                                        name: "Quantity",
-                                        dataType: "Number",
-                                        description: "The quantity of item that was bought"
-                                    ),
-                                "unitOfQuantity":
-                                    Schema(
-                                        name: "Unit",
-                                        dataType: "Unit",
-                                        description: "The unit of quantity of item"
-                                    ),
-                                "cost":
-                                    Schema(
-                                        name: "Cost",
-                                        dataType: "Currency",
-                                        description: "The cost of the item"
-                                    ),
-                            ]
 
-                        )
-                    ],
-                    aggregates:
-                        ["Prayers prayed per day":
-                            Aggregate(
-                                field: "*",
-                                window: .daily,
-                                dataType: .number,
-                                aggregatorType: .count,
-                                conditions:[
-                                    Condition(
-                                        field: "prayerName",
-                                        comparisonOperator: "eq",
-                                        value: "Fajr"
-                                    )
-                                ],
-                                goals: [
-                                    Goal(
-                                        comparisonOperator: "eq",
-                                        value: 5)
-                                ]
-                            )
-                        ]
-                   )
-]
-
-func fetchActionTypes() async -> [ActionTypeModel] {
-    return actionsTypes
+func updateActionType(actionTypeModel: ActionTypeModel) async -> Int {
+//    if let index = actionsTypes.firstIndex(where: { $0.name == actionTypeModel.name }) {
+//        actionsTypes[index] = actionTypeModel
+//    }
+    return 1
 }
 
-func fetchActionType(type: String) async -> ActionTypeModel? {
-    return actionsTypes.filter { $0.name == type }.first
-}
+func actionTypeModelMutation(userId: Int, model: ActionTypeModel, actionTypeId: Int?) async -> Int? {
+    var hasuraStruct:HasuraMutation = HasuraMutation(
+        mutationFor: "insert_action_types_one",
+        mutationName: "ActionTypeModelMutation",
+        mutationType: .create)
+    hasuraStruct.addParameter(name: "user_id", type: "Int", value: userId)
+    hasuraStruct.addParameter(name: "name", type: "String", value: model.name)
+    hasuraStruct.addParameter(name: "hasDuration", type: "Boolean", value: model.meta.hasDuration)
+    hasuraStruct.addParameter(name: "description", type: "String", value: model.meta.description)
+    let metadata: ActionTypeMetadataForHasura = ActionTypeMetadataForHasura(
+        staticFields: model.staticFields,
+        internalObjects: model.internalObjects, aggregates: model.aggregates,
+        computed: model.computed)
+    hasuraStruct.addParameter(name: "metadata", type: "jsonb", value: metadata.toJSONDictionary())
 
-func updateActionType(actionTypeModel: ActionTypeModel) async {
-    if let index = actionsTypes.firstIndex(where: { $0.name == actionTypeModel.name }) {
-        actionsTypes[index] = actionTypeModel
-    }
-}
-
-func updateActionType(actionTypeModel: ActionTypeModel, actionName: String? = nil) async {
-    do {
-        // Serialize to JSON
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .iso8601 // Use ISO8601 for date encoding
-        let jsonData = try encoder.encode(actionTypeModel)
-        
-        // Convert JSON data to a dictionary
-        guard let jsonObject = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] else {
-            print("Error: Cannot convert JSON data to dictionary")
-            return
+    let (graphqlQuery, variables) = hasuraStruct.getMutationAndVariables
+    
+    struct CreateActionTypeResponse: GraphQLData {
+        var insert_action_types_one: CreatedObject
+        struct CreatedObject: Decodable {
+            var id: Int
         }
-        
-        // Call dbFunction with the JSON object
-        let id = await dbUpdateFunction(jsonObject: jsonObject)
-        
-        // You can do something with the returned id if needed
-        print("Action type added with id: \(id)")
+    }
+    
+    do {
+        let responseData: GraphQLResponse<CreateActionTypeResponse> = try await Hasura.shared.sendGraphQL(query: graphqlQuery, variables: variables, responseType: GraphQLResponse<CreateActionTypeResponse>.self)
+        return responseData.data.insert_action_types_one.id
     } catch {
-        print("Error serializing ActionTypeModel to JSON: \(error)")
+        // Log error details for debugging purposes
+        print("Failed to create object: \(error.localizedDescription)")
+        return nil
     }
 }
 
-func fetchActionType(id: String) async throws -> ActionTypeModel {
-    // Call dbFetchFunction to get JSON object
-    let jsonObject = await dbFetchFunction(id: id)
-    
-    // Convert dictionary to JSON data
-    let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: [])
-    
-    // Deserialize JSON data to ActionTypeModel
-    let decoder = JSONDecoder()
-    decoder.dateDecodingStrategy = .iso8601 // Use ISO8601 for date decoding
-    let model = try decoder.decode(ActionTypeModel.self, from: jsonData)
-    
-    return model
+
+
+func fetchActionTypes(userId: Int, actionTypeId: Int? = nil) async -> [ActionTypeModel] {
+    let (graphqlQuery, variables) = generateQueryForActionTypes(userId: userId, actionTypeId: actionTypeId)
+    struct ActionTypeData: GraphQLData {
+        var action_types: [ActionTypeForHasura]
+    }
+    do {
+//        let responseData2: Any = try await Hasura.shared.sendGraphQL(query: graphqlQuery, variables: variables)
+        let responseData: GraphQLResponse<ActionTypeData> = try await Hasura.shared.sendGraphQL(query: graphqlQuery, variables: variables, responseType: GraphQLResponse<ActionTypeData>.self)
+        return responseData.data.action_types.map { $0.toActionTypeModel() }
+    } catch {
+        print(error)
+        print("Failed to fetch object: \(error.localizedDescription)")
+        return []
+    }
 }
 
-func dbFetchFunction(id: String) async -> [String: Any] {
-    // This function would interact with the database
-    // and return a JSON object as a dictionary
-    return ["name": "Sleep", "meta": ["hasDuration": true], /* ... other fields ... */]
+func generateQueryForActionTypes(userId: Int, actionTypeId: Int?) -> (String, [String: Any]) {
+    var hasuraStruct:HasuraQuery = HasuraQuery(queryFor: "action_types", queryName: "ActionTypesQuery", queryType: .query)
+    hasuraStruct.addParameter(name: "user_id", type: "Int", value: userId, op: "_eq")
+    if (actionTypeId != nil) {
+        hasuraStruct.addParameter(name: "id", type: "Int", value: actionTypeId, op: "_eq")
+    }
+    hasuraStruct.setSelections(selections:actionTypeSelections)
+    return hasuraStruct.getQueryAndVariables
 }
 
-// Assume this function is already implemented
-func dbUpdateFunction(jsonObject: [String: Any], actionName: String? = nil) async -> String {
-    // This function would interact with the database
-    // and return an id
-    return "some-generated-id"
+var actionTypeSelections: String {
+    return """
+        id
+        created_at
+        description
+        hasDuration
+        metadata
+        name
+        updated_at
+        user_id
+    """
+}
+
+struct ActionTypeForHasura: Codable {
+    let id: Int
+    let createdAt: Date
+    let description: String
+    let hasDuration: Bool
+    let name: String
+    let updatedAt: Date
+    let userId: Int
+    let metadata: ActionTypeMetadataForHasura
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case createdAt = "created_at"
+        case description
+        case hasDuration
+        case metadata
+        case name
+        case updatedAt = "updated_at"
+        case userId = "user_id"
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let createdAtString = try container.decodeIfPresent(String.self, forKey: .createdAt)
+        createdAt = createdAtString!.getDate!
+        id = try container.decode(Int.self, forKey: .id)
+        description = try container.decode(String.self, forKey: .description)
+        hasDuration = try container.decode(Bool.self, forKey: .hasDuration)
+        name = try container.decode(String.self, forKey: .name)
+        let updatedAtString = try container.decodeIfPresent(String.self, forKey: .updatedAt)
+        updatedAt = updatedAtString!.getDate!
+        userId = try container.decode(Int.self, forKey: .userId)
+        metadata = try container.decodeIfPresent(ActionTypeMetadataForHasura.self, forKey: .metadata) ?? ActionTypeMetadataForHasura()
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(createdAt, forKey: .createdAt)
+        try container.encode(description, forKey: .description)
+        try container.encode(hasDuration, forKey: .hasDuration)
+        try container.encode(name, forKey: .name)
+        try container.encode(updatedAt, forKey: .updatedAt)
+        try container.encode(userId, forKey: .userId)
+        try container.encode(metadata, forKey: .metadata)
+    }
+    
+    func toActionTypeModel() -> ActionTypeModel {
+        let meta = ActionTypeMeta(
+            hasDuration: self.hasDuration, description: self.description
+        )
+        return ActionTypeModel(
+            id: id,
+            name: self.name,
+            meta: meta,
+            staticFields: metadata.staticFields,
+            dynamicFields: metadata.dynamicFields,
+            computed: [:],
+            internalObjects: metadata.internalObjects,
+            aggregates: metadata.aggregates
+        )
+    }
+}
+
+struct ActionTypeMetadataForHasura: Codable {
+    var staticFields: ActionModelTypeStaticSchema
+    var dynamicFields: [String: Schema]
+    var internalObjects: [String: InternalObject]
+    var aggregates: [String: Aggregate]
+    var computed: [String: Schema]
+
+    enum CodingKeys: String, CodingKey {
+        case staticFields, dynamicFields, internalObjects, aggregates, computed
+    }
+    
+    init(staticFields: ActionModelTypeStaticSchema = ActionModelTypeStaticSchema(),
+         dynamicFields: [String : Schema] = [:],
+         internalObjects: [String : InternalObject] = [:],
+         aggregates: [String : Aggregate] = [:],
+         computed: [String : Schema]  = [:]
+    ) {
+        self.staticFields = staticFields
+        self.dynamicFields = dynamicFields
+        self.internalObjects = internalObjects
+        self.aggregates = aggregates
+        self.computed = computed
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        staticFields = try container.decode(ActionModelTypeStaticSchema.self, forKey: .staticFields)
+        dynamicFields = try container.decodeIfPresent([String: Schema].self, forKey: .dynamicFields) ?? [:]
+        internalObjects = (try? container.decode([String: InternalObject].self, forKey: .internalObjects)) ?? [:]
+        aggregates = (try? container.decode([String: Aggregate].self, forKey: .aggregates)) ?? [:]
+        computed = (try? container.decode([String: Schema].self, forKey: .computed)) ?? [:]
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(staticFields, forKey: .staticFields)
+        try container.encode(dynamicFields, forKey: .dynamicFields)
+        try container.encode(internalObjects, forKey: .internalObjects)
+        try container.encode(aggregates, forKey: .aggregates)
+        try container.encode(computed, forKey: .computed)
+    }
+    
+    func toJSONDictionary() -> [String: Any] {
+        do {
+            let encoder = JSONEncoder()
+            let data = try encoder.encode(self)
+            if let dictionary = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] {
+                return dictionary
+            } else {
+                print("Error: Could not convert encoded data to dictionary")
+                return [:]
+            }
+        } catch {
+            print("Error encoding to JSON: \(error)")
+            return [:]
+        }
+    }
 }
 
 
@@ -333,7 +218,8 @@ func dbUpdateFunction(jsonObject: [String: Any], actionName: String? = nil) asyn
 // finished: work on action view
 // finished: work on action type view
 // finished: work on action type create/edit
-// working: put action type into database and then fetch it
+// working: put action type into database and then 
+// finished: fetch it
 // work on create/modify/delete action
 // put action action into database and then fetch it
 

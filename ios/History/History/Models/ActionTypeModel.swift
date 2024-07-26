@@ -7,61 +7,47 @@
 
 import Foundation
 
-class ActionTypeModel: ObservableObject, Codable {
+class ActionTypeModel: ObservableObject {
+    var id: Int?
     @Published var name: String
     @Published var meta: ActionTypeMeta
     var staticFields: ActionModelTypeStaticSchema
     @Published var dynamicFields: [String: Schema]
     @Published var internalObjects: [String: InternalObject]
     var aggregates: [String: Aggregate]
-    var computed: [String: Any]
+    var computed: [String: Schema]
     
     var internalDataTypes: [String] {
         internalObjects.values.compactMap { $0.name }.sorted()
     }
     
-    enum CodingKeys: String, CodingKey {
-        case name, meta, staticFields, dynamicFields, internalObjects, aggregates, computed
+    func copy(_ m: ActionTypeModel) {
+        self.name = m.name
+        self.meta = m.meta
+        self.staticFields = m.staticFields
+        self.dynamicFields = m.dynamicFields
+        self.aggregates = m.aggregates
     }
     
-    init(name: String,
-         meta: ActionTypeMeta,
-         staticFields: ActionModelTypeStaticSchema,
-         dynamicFields: [String: Schema] = [:],
-         computed: [String: Any] = [:],
-         internalObjects: [String: InternalObject] = [:],
-         aggregates: [String: Aggregate] = [:],
-         goals: [String: Any] = [:]) {
-        self.name = name
-        self.meta = meta
-        self.staticFields = staticFields
-        self.dynamicFields = dynamicFields
-        self.computed = computed
-        self.internalObjects = internalObjects
-        self.aggregates = aggregates
-    }
-    
-    required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        name = try container.decode(String.self, forKey: .name)
-        meta = try container.decode(ActionTypeMeta.self, forKey: .meta)
-        staticFields = try container.decode(ActionModelTypeStaticSchema.self, forKey: .staticFields)
-        dynamicFields = try container.decode([String: Schema].self, forKey: .dynamicFields)
-        internalObjects = try container.decode([String: InternalObject].self, forKey: .internalObjects)
-        aggregates = try container.decode([String: Aggregate].self, forKey: .aggregates)
-        computed = try container.decode([String: AnyCodable].self, forKey: .computed)
-    }
-    
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(name, forKey: .name)
-        try container.encode(meta, forKey: .meta)
-        try container.encode(staticFields, forKey: .staticFields)
-        try container.encode(dynamicFields, forKey: .dynamicFields)
-        try container.encode(internalObjects, forKey: .internalObjects)
-        try container.encode(aggregates, forKey: .aggregates)
-        try container.encode(computed.mapValues { AnyCodable($0) }, forKey: .computed)
-    }
+    init(
+        id: Int? = nil,
+        name: String,
+        meta: ActionTypeMeta,
+        staticFields: ActionModelTypeStaticSchema,
+        dynamicFields: [String: Schema] = [:],
+        computed: [String: Schema] = [:],
+        internalObjects: [String: InternalObject] = [:],
+        aggregates: [String: Aggregate] = [:],
+        goals: [String: Any] = [:]) {
+            self.id = id
+            self.name = name
+            self.meta = meta
+            self.staticFields = staticFields
+            self.dynamicFields = dynamicFields
+            self.computed = computed
+            self.internalObjects = internalObjects
+            self.aggregates = aggregates
+        }
 }
 
 class ActionTypeMeta: ObservableObject, Codable {
@@ -138,6 +124,16 @@ class Schema: Codable {
         self.array = array
         self.enumValues = enumValues
         self.objectFields = objectFields
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decode(String.self, forKey: .name)
+        dataType = try container.decode(String.self, forKey: .dataType)
+        description = try container.decode(String.self, forKey: .description)
+        array = try container.decodeIfPresent(Bool.self, forKey: .array) ?? false
+        enumValues = try container.decodeIfPresent([String].self, forKey: .enumValues) ?? []
+        objectFields = try container.decodeIfPresent([String: Schema].self, forKey: .objectFields) ?? [:]
     }
 }
 

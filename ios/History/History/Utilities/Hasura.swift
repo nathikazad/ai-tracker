@@ -81,6 +81,7 @@ struct HasuraQuery {
         \(queryType.rawValue) \(queryName)\(parameterClause) {
           \(queryFor)(\(whereClause)) {
             \(selections)
+            }
         }
         """
         return (query, variables)
@@ -95,14 +96,14 @@ struct HasuraMutation {
     var mutationName: String
     var mutationType: MutationType
     var mutationFor: String
-
+    
     private var parameterClauses: [String] = []
     private var setClauses: [String] = []
     private var appendClauses: [String] = []
     private var objectClauses: [String] = []
     private var variables: [String: Any] = [:]
     private var id: Int?
-
+    
     public init(mutationFor: String, mutationName: String, mutationType: MutationType, id: Int? = nil) {
         self.mutationType = mutationType
         self.mutationName = mutationName
@@ -113,7 +114,7 @@ struct HasuraMutation {
         }
         
     }
-
+    
     mutating func addParameter(name:String, type:String, value: Any?, passNullValue: Bool = false) {
         if value != nil {
             parameterClauses.append("$\(name): \(type)!")
@@ -131,7 +132,7 @@ struct HasuraMutation {
             setClauses.append("\(name): null")
         }
     }
-
+    
     var getMutationAndVariables: (String, [String: Any]) {
         let pkClause = mutationType == .update ? "pk_columns: {id: $id}" : ""
         let setClause = setClauses.isEmpty ? "" : "_set: {\(setClauses.joined(separator: ", "))}"
@@ -150,7 +151,7 @@ struct HasuraMutation {
         print(mutation)
         return (mutation, variables)
     }
-
+    
 }
 
 var hasura: Hasura {
@@ -162,7 +163,7 @@ class Hasura {
         case registered
         case active
     }
-
+    
     enum SocketStatus {
         case initialized
         case handshaking
@@ -209,7 +210,20 @@ class Hasura {
         }
     }
     
+    func sendGraphQL(query: String, variables: [String: Any]? = nil) async throws -> [String: Any] {
+        let data = try await sendGraphQLRequest(query: query, variables: variables)
+        guard let jsonResult = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+            throw URLError(.cannotParseResponse)
+        }
+        return jsonResult
+    }
+    
     func sendGraphQL<T: Decodable>(query: String, variables: [String: Any]? = nil, responseType: T.Type) async throws -> T {
+        let data = try await sendGraphQLRequest(query: query, variables: variables)
+        return try JSONDecoder().decode(T.self, from: data)
+    }
+    
+    private func sendGraphQLRequest(query: String, variables: [String: Any]? = nil) async throws -> Data {
         var body: [String: Any] = ["query": query]
         if let vars = variables {
             body["variables"] = vars
@@ -231,20 +245,15 @@ class Hasura {
         let (data, response) = try await URLSession.shared.data(for: request)
         
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-            throw URLError(.badServerResponse)
-        }
-        if let httpResponse = response as? HTTPURLResponse {
-            //            print("HTTP Status Code: \(httpResponse.statusCode)")
-            //                    if let responseBody = String(data: data, encoding: .utf8) {
-            //                        print("Server Response:\n\(responseBody)")
-            //                    }
-            
-            if httpResponse.statusCode != 200, let responseBody = String(data: data, encoding: .utf8) {
+            if let httpResponse = response as? HTTPURLResponse,
+               httpResponse.statusCode != 200,
+               let responseBody = String(data: data, encoding: .utf8) {
                 print("Response body: \(responseBody)")
             }
+            throw URLError(.badServerResponse)
         }
         
-        return try decodeData(responseType, data)
+        return data
     }
     
     
@@ -292,7 +301,7 @@ class Hasura {
             setup()
         }
         
-         print("Hasura start listening id:\(subscriptionId) \(doesSubscriptionExist(key: subscriptionId))")
+        print("Hasura start listening id:\(subscriptionId) \(doesSubscriptionExist(key: subscriptionId))")
         
         if(subscriptions[subscriptionId] != nil) {
             print("Hasura subscription already listening")

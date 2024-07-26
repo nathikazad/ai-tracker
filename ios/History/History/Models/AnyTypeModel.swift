@@ -15,19 +15,35 @@ struct AnyCodable: Codable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
+        print("Attempting to decode AnyCodable")
+        
         if let value = try? container.decode(String.self) {
+            print("Decoded as String: \(value)")
             self.value = value
         } else if let value = try? container.decode(Int.self) {
+            print("Decoded as Int: \(value)")
             self.value = value
         } else if let value = try? container.decode(Double.self) {
+            print("Decoded as Double: \(value)")
             self.value = value
         } else if let value = try? container.decode(Bool.self) {
+            print("Decoded as Bool: \(value)")
             self.value = value
         } else if let value = try? container.decode([String: AnyCodable].self) {
+            print("Decoded as Dictionary: \(value)")
             self.value = value
         } else if let value = try? container.decode([AnyCodable].self) {
+            print("Decoded as Array: \(value)")
             self.value = value
         } else {
+            print("Failed to decode as any known type")
+            // Here, you can add more detailed debugging
+            do {
+                let rawValue = try container.decode(Data.self)
+                print("Raw data: \(String(data: rawValue, encoding: .utf8) ?? "Unable to convert to string")")
+            } catch {
+                print("Unable to decode as raw data: \(error)")
+            }
             throw DecodingError.dataCorruptedError(in: container, debugDescription: "AnyCodable value cannot be decoded")
         }
     }
