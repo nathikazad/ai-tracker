@@ -1,95 +1,11 @@
 //
-//  ActionController.swift
+//  ActionTypeHasura.swift
 //  History
 //
-//  Created by Nathik Azad on 7/22/24.
+//  Created by Nathik Azad on 7/26/24.
 //
 
 import Foundation
-
-let externalDataTypes: [String] = ["Expense", "Organization", "Item"]
-
-func updateActionType(actionTypeModel: ActionTypeModel) async -> Int {
-//    if let index = actionsTypes.firstIndex(where: { $0.name == actionTypeModel.name }) {
-//        actionsTypes[index] = actionTypeModel
-//    }
-    return 1
-}
-
-func actionTypeModelMutation(userId: Int, model: ActionTypeModel, actionTypeId: Int?) async -> Int? {
-    var hasuraStruct:HasuraMutation = HasuraMutation(
-        mutationFor: "insert_action_types_one",
-        mutationName: "ActionTypeModelMutation",
-        mutationType: .create)
-    hasuraStruct.addParameter(name: "user_id", type: "Int", value: userId)
-    hasuraStruct.addParameter(name: "name", type: "String", value: model.name)
-    hasuraStruct.addParameter(name: "hasDuration", type: "Boolean", value: model.meta.hasDuration)
-    hasuraStruct.addParameter(name: "description", type: "String", value: model.meta.description)
-    let metadata: ActionTypeMetadataForHasura = ActionTypeMetadataForHasura(
-        staticFields: model.staticFields,
-        internalObjects: model.internalObjects, aggregates: model.aggregates,
-        computed: model.computed)
-    hasuraStruct.addParameter(name: "metadata", type: "jsonb", value: metadata.toJSONDictionary())
-
-    let (graphqlQuery, variables) = hasuraStruct.getMutationAndVariables
-    
-    struct CreateActionTypeResponse: GraphQLData {
-        var insert_action_types_one: CreatedObject
-        struct CreatedObject: Decodable {
-            var id: Int
-        }
-    }
-    
-    do {
-        let responseData: GraphQLResponse<CreateActionTypeResponse> = try await Hasura.shared.sendGraphQL(query: graphqlQuery, variables: variables, responseType: GraphQLResponse<CreateActionTypeResponse>.self)
-        return responseData.data.insert_action_types_one.id
-    } catch {
-        // Log error details for debugging purposes
-        print("Failed to create object: \(error.localizedDescription)")
-        return nil
-    }
-}
-
-
-
-func fetchActionTypes(userId: Int, actionTypeId: Int? = nil) async -> [ActionTypeModel] {
-    let (graphqlQuery, variables) = generateQueryForActionTypes(userId: userId, actionTypeId: actionTypeId)
-    struct ActionTypeData: GraphQLData {
-        var action_types: [ActionTypeForHasura]
-    }
-    do {
-//        let responseData2: Any = try await Hasura.shared.sendGraphQL(query: graphqlQuery, variables: variables)
-        let responseData: GraphQLResponse<ActionTypeData> = try await Hasura.shared.sendGraphQL(query: graphqlQuery, variables: variables, responseType: GraphQLResponse<ActionTypeData>.self)
-        return responseData.data.action_types.map { $0.toActionTypeModel() }
-    } catch {
-        print(error)
-        print("Failed to fetch object: \(error.localizedDescription)")
-        return []
-    }
-}
-
-func generateQueryForActionTypes(userId: Int, actionTypeId: Int?) -> (String, [String: Any]) {
-    var hasuraStruct:HasuraQuery = HasuraQuery(queryFor: "action_types", queryName: "ActionTypesQuery", queryType: .query)
-    hasuraStruct.addParameter(name: "user_id", type: "Int", value: userId, op: "_eq")
-    if (actionTypeId != nil) {
-        hasuraStruct.addParameter(name: "id", type: "Int", value: actionTypeId, op: "_eq")
-    }
-    hasuraStruct.setSelections(selections:actionTypeSelections)
-    return hasuraStruct.getQueryAndVariables
-}
-
-var actionTypeSelections: String {
-    return """
-        id
-        created_at
-        description
-        hasDuration
-        metadata
-        name
-        updated_at
-        user_id
-    """
-}
 
 struct ActionTypeForHasura: Codable {
     let id: Int
@@ -147,7 +63,7 @@ struct ActionTypeForHasura: Codable {
             meta: meta,
             staticFields: metadata.staticFields,
             dynamicFields: metadata.dynamicFields,
-            computed: [:],
+            computed: metadata.computed,
             internalObjects: metadata.internalObjects,
             aggregates: metadata.aggregates
         )
@@ -160,7 +76,7 @@ struct ActionTypeMetadataForHasura: Codable {
     var internalObjects: [String: InternalObject]
     var aggregates: [String: Aggregate]
     var computed: [String: Schema]
-
+    
     enum CodingKeys: String, CodingKey {
         case staticFields, dynamicFields, internalObjects, aggregates, computed
     }
@@ -212,35 +128,4 @@ struct ActionTypeMetadataForHasura: Codable {
         }
     }
 }
-
-
-
-// finished: work on action view
-// finished: work on action type view
-// finished: work on action type create/edit
-// working: put action type into database and then 
-// finished: fetch it
-// work on create/modify/delete action
-// put action action into database and then fetch it
-
-// RELASE
-// work on object view
-// work on object create/edit
-// put object into database and then fetch it
-// RELASE
-// work on aggregates
-// RELASE
-// work on goals
-// RELASE
-// work on reminders
-// RELASE
-// integrate location
-// RELASE
-// integrate sleep
-// RELASE
-// integrate plaid
-// RELEASE
-
-
-
 

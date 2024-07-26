@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ShowActionTypeView: View {
+struct ListActionsView: View {
     var model: ActionTypeModel
     @State var actions: [ActionModel] = []
     var createAction: ((ActionTypeModel) -> Void)?
@@ -36,8 +36,7 @@ struct ShowActionTypeView: View {
         .navigationTitle( "\(model.name)")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                NavigationLink(destination: EditActionTypeView(
-                    actionTypeId: model.id,
+                NavigationLink(destination: ActionTypeView(
                     model: model
                 )) {
                     Image(systemName: "pencil")

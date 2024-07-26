@@ -25,8 +25,7 @@ struct ListActionsTypesView: View {
                 .cornerRadius(8)
                 .padding(2)
             
-            NavigationButton(destination: EditActionTypeView(
-                actionTypeId: nil,
+            NavigationButton(destination: ActionTypeView(
                 model: ActionTypeModel(name: "", meta: ActionTypeMeta(), staticFields: ActionModelTypeStaticSchema()),
                 createAction: {
                     action in
@@ -53,7 +52,7 @@ struct ListActionsTypesView: View {
                         Text(action.name)
                     }
                 } else {
-                    NavigationButton(destination: ShowActionTypeView(
+                    NavigationButton(destination: ListActionsView(
                         model: action,
                         createAction: {
                             action in
@@ -67,12 +66,12 @@ struct ListActionsTypesView: View {
             
         }
         .navigationBarTitle(Text(clickAction == nil ? "Select Action" : "Actions"), displayMode: .inline)
-        .onAppear(perform: fetchPeople)
+        .onAppear(perform: fetchActionTypes)
     }
     
-    func fetchPeople() {
+    func fetchActionTypes() {
         Task {
-            let resp = await fetchActionTypes(userId: 1)
+            let resp = await ActionTypesController.fetchActionTypes(userId: 1)
             DispatchQueue.main.async {
                 actions = resp
             }
