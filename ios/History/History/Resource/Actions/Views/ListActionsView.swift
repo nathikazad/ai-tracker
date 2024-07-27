@@ -44,7 +44,7 @@ struct ListActionsView: View {
             }
         }
         .onAppear {
-//            self.actions = fetchActions(type: model.name)
+            self.actions = fetchActions(type: "Sleep")
         }
     }
 }

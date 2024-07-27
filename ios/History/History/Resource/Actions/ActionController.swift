@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 func fetchActions(type: String) -> [ActionModel] {
     return [ActionModel(id: 1,
                         staticData:

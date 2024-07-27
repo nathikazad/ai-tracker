@@ -51,6 +51,7 @@ struct EventsView: View {
             }
             .onAppear {
                 print("EventsView: onAppear")
+                printer()
                 if(auth.areJwtSet) {
                     listenToEvents()
                     coreStateSubcription?.cancel()
