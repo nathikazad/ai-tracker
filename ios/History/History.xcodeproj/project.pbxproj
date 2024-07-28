@@ -58,6 +58,7 @@
 		FE4F7BDC2BA957780041CB6A /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */; };
 		FE5264812BA99AF700502521 /* ServerCommunicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5264802BA99AF700502521 /* ServerCommunicator.swift */; };
 		FE5264822BA99AF700502521 /* ServerCommunicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5264802BA99AF700502521 /* ServerCommunicator.swift */; };
+		FE638F3A2C55A7D3001C34F0 /* ActionHasura.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE638F392C55A7D3001C34F0 /* ActionHasura.swift */; };
 		FE69D76A2BF6CFEE0061E2E6 /* LearnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69D7692BF6CFEE0061E2E6 /* LearnView.swift */; };
 		FE6ED6D12C06A3E300E6A2A6 /* NavigationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6ED6D02C06A3E300E6A2A6 /* NavigationButton.swift */; };
 		FE6ED6D32C06A9F500E6A2A6 /* ASObjectModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6ED6D22C06A9F500E6A2A6 /* ASObjectModel.swift */; };
@@ -212,6 +213,7 @@
 		FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
 		FE5264802BA99AF700502521 /* ServerCommunicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommunicator.swift; sourceTree = "<group>"; };
 		FE5264832BA9A1A400502521 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		FE638F392C55A7D3001C34F0 /* ActionHasura.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionHasura.swift; sourceTree = "<group>"; };
 		FE69D7692BF6CFEE0061E2E6 /* LearnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearnView.swift; sourceTree = "<group>"; };
 		FE6ED6D02C06A3E300E6A2A6 /* NavigationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationButton.swift; sourceTree = "<group>"; };
 		FE6ED6D22C06A9F500E6A2A6 /* ASObjectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASObjectModel.swift; sourceTree = "<group>"; };
@@ -383,7 +385,9 @@
 			children = (
 				FE4AB3AF2C544E5D00A07749 /* Views */,
 				FE4AB3A52C52F76B00A07749 /* ActionController.swift */,
+				FE4AB3942C51F03300A07749 /* ActionModel.swift */,
 				FE4AB3B02C5551BA00A07749 /* TestAction.swift */,
+				FE638F392C55A7D3001C34F0 /* ActionHasura.swift */,
 			);
 			path = Actions;
 			sourceTree = "<group>";
@@ -544,7 +548,6 @@
 				FE6ED6D22C06A9F500E6A2A6 /* ASObjectModel.swift */,
 				FE6ED6D42C06AA5D00E6A2A6 /* EventModels.swift */,
 				FE6ED6D62C06AA9100E6A2A6 /* EventTypeModel.swift */,
-				FE4AB3942C51F03300A07749 /* ActionModel.swift */,
 				FE4AB3962C51F05C00A07749 /* AggregateModel.swift */,
 				FE4AB3A32C5207C100A07749 /* DataTypeModel.swift */,
 				FE4AB3A72C52F99800A07749 /* AnyTypeModel.swift */,
@@ -824,6 +827,7 @@
 				FE9BA2E52BF6998600AE25A9 /* PrayerView.swift in Sources */,
 				FE9477C02BFECF20003AD03A /* StayView.swift in Sources */,
 				FE1C0EB12BC0A29300FF56AB /* Hasura.swift in Sources */,
+				FE638F3A2C55A7D3001C34F0 /* ActionHasura.swift in Sources */,
 				FEDBC0652C0509AC00233EA0 /* EventDestination.swift in Sources */,
 				FE8965AA2BC7B31D00E9D633 /* UserController.swift in Sources */,
 				FE6ED6D72C06AA9100E6A2A6 /* EventTypeModel.swift in Sources */,

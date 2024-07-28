@@ -12,7 +12,7 @@ let externalDataTypes: [String] = ["Expense", "Organization", "Item"]
 class ActionTypesController {
     static func createActionTypeModel(model: ActionTypeModel) async -> Int? {
         var hasuraStruct:HasuraMutation = HasuraMutation(
-            mutationFor: "insert_action_types_one",
+            mutationFor: "insert_v2_action_types_one",
             mutationName: "ActionTypeModelMutation",
             mutationType: .create)
         hasuraStruct.addParameter(name: "user_id", type: "Int", value: Authentication.shared.userId!)
@@ -45,7 +45,7 @@ class ActionTypesController {
     
     static func updateActionTypeModel(model: ActionTypeModel) async {
         var hasuraMutation: HasuraMutation = HasuraMutation(
-            mutationFor: "update_action_types_by_pk",
+            mutationFor: "update_v2_action_types_by_pk",
             mutationName: "UpdateActionTypeModelMutation",
             mutationType: .update,
             id: model.id
@@ -86,7 +86,7 @@ class ActionTypesController {
     
     static func deleteActionTypeModel(id: Int) async {
         let hasuraMutation: HasuraMutation = HasuraMutation(
-            mutationFor: "delete_action_types_by_pk",
+            mutationFor: "delete_v2_action_types_by_pk",
             mutationName: "DeleteActionTypeModelMutation",
             mutationType: .delete,
             id: id
@@ -116,11 +116,11 @@ class ActionTypesController {
     static func fetchActionTypes(userId: Int, actionTypeId: Int? = nil) async -> [ActionTypeModel] {
         let (graphqlQuery, variables) = generateQueryForActionTypes(userId: userId, actionTypeId: actionTypeId)
         struct ActionTypeData: GraphQLData {
-            var action_types: [ActionTypeForHasura]
+            var v2_action_types: [ActionTypeForHasura]
         }
         do {
             let responseData: GraphQLResponse<ActionTypeData> = try await Hasura.shared.sendGraphQL(query: graphqlQuery, variables: variables, responseType: GraphQLResponse<ActionTypeData>.self)
-            return responseData.data.action_types.map { $0.toActionTypeModel() }
+            return responseData.data.v2_action_types.map { $0.toActionTypeModel() }
         } catch {
             print(error)
             print("Failed to fetch object: \(error.localizedDescription)")
@@ -129,7 +129,7 @@ class ActionTypesController {
     }
     
     static private func generateQueryForActionTypes(userId: Int, actionTypeId: Int?) -> (String, [String: Any]) {
-        var hasuraStruct:HasuraQuery = HasuraQuery(queryFor: "action_types", queryName: "ActionTypesQuery", queryType: .query)
+        var hasuraStruct:HasuraQuery = HasuraQuery(queryFor: "v2_action_types", queryName: "ActionTypesQuery", queryType: .query)
         hasuraStruct.addParameter(name: "user_id", type: "Int", value: userId, op: "_eq")
         if (actionTypeId != nil) {
             hasuraStruct.addParameter(name: "id", type: "Int", value: actionTypeId, op: "_eq")
@@ -138,7 +138,7 @@ class ActionTypesController {
         return hasuraStruct.getQueryAndVariables
     }
     
-    static private var actionTypeSelections: String {
+    static var actionTypeSelections: String {
         return """
             id
             created_at

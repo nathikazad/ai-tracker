@@ -14,22 +14,27 @@ struct ListActionsView: View {
     var body: some View {
         List {
             ForEach(actions, id: \.id) { action in
-                Section(header: Text("Action ID: \(action.id)")) {
-                    Text("Details for action \(action.id)")
-                    if let startTime = action.staticData.startTime {
-                        Text("\(model.staticFields.startTime?.name ?? "Start Time"): \(getDateTime(startTime))")
-                    }
-                    if let endTime = action.staticData.endTime {
-                        Text("\(model.staticFields.endTime?.name ?? "End Time"): \(getDateTime(endTime)) ")
-                    }
-                    if let time = action.staticData.time {
-                        Text("Time: \(getDateTime(time))")
-                    }
-                    ForEach(Array(action.dynamicData.keys), id: \.self) { key in
-                        if let value = action.dynamicData[key] {
-                            Text("\(key.capitalized): \(String(describing: value))")
+                Section(header: Text("Action: \(action.actionTypeModel.name)")) {
+                    if(!action.actionTypeModel.meta.hasDuration) {
+                        Text("Time: \(getDateTime(action.startTime))")
+                    } else {
+                        let startTimeName =  action.actionTypeModel.staticFields.startTime?.name ?? "Start Time"
+                        Text("\(startTimeName): \(getDateTime(action.startTime))")
+                        if let endTime = action.endTime {
+                            let endTimeName =  action.actionTypeModel.staticFields.endTime?.name ?? "End Time"
+                            Text("\(endTimeName): \(getDateTime(endTime)) ")
                         }
                     }
+
+
+////                    if let time = action.staticData.startTime {
+////                        Text("Time: \(getDateTime(time))")
+////                    }
+//                    ForEach(Array(action.dynamicData.keys), id: \.self) { key in
+//                        if let value = action.dynamicData[key] {
+//                            Text("\(key.capitalized): \(String(describing: value))")
+//                        }
+//                    }
                 }
             }
         }
@@ -44,7 +49,10 @@ struct ListActionsView: View {
             }
         }
         .onAppear {
-            self.actions = fetchActions(type: "Sleep")
+            Task {
+                self.actions = await ActionController.fetchActions(userId: 1, actionId: 2)
+                print(self.actions.count)
+            }
         }
     }
 }
@@ -62,8 +70,7 @@ func getDateTime(_ dateString: String) -> String {
 }
 
 func formatDateString(_ dateString: String, toFormat outputFormat: String) -> String {
-    
-    func getTimeZoneOffset(from dateString: String) -> TimeZone? {
+        func getTimeZoneOffset(from dateString: String) -> TimeZone? {
         let regex = try! NSRegularExpression(pattern: "[+-]\\d{2}:\\d{2}", options: [])
         if let match = regex.firstMatch(in: dateString, options: [], range: NSRange(location: 0, length: dateString.count)) {
             let offsetString = (dateString as NSString).substring(with: match.range)
