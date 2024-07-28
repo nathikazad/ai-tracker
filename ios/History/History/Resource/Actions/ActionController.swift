@@ -104,10 +104,10 @@ class ActionController {
         }
     }
     
-    static func fetchActions(userId: Int, actionId: Int? = nil) async -> [ActionModel] {
-        let (graphqlQuery, variables) = generateQueryForActions(userId: userId, actionId: actionId)
+    static func fetchActions(userId: Int, actionId: Int? = nil, actionTypeId: Int? = nil) async -> [ActionModel] {
+        let (graphqlQuery, variables) = generateQueryForActions(userId: userId, actionId: actionId, actionTypeId: actionTypeId)
         struct ActionData: GraphQLData {
-            var v2_actions: [ActionModelForHasura]
+            var v2_actions: [ActionForHasura]
         }
         do {
             let responseData: GraphQLResponse<ActionData> = try await Hasura.shared.sendGraphQL(query: graphqlQuery, variables: variables, responseType: GraphQLResponse<ActionData>.self)
@@ -119,11 +119,14 @@ class ActionController {
         }
     }
     
-    static private func generateQueryForActions(userId: Int, actionId: Int?) -> (String, [String: Any]) {
+    static private func generateQueryForActions(userId: Int, actionId: Int?, actionTypeId: Int? = nil) -> (String, [String: Any]) {
         var hasuraStruct: HasuraQuery = HasuraQuery(queryFor: "v2_actions", queryName: "ActionsQuery", queryType: .query)
         hasuraStruct.addParameter(name: "user_id", type: "Int", value: userId, op: "_eq")
         if let actionId = actionId {
             hasuraStruct.addParameter(name: "id", type: "Int", value: actionId, op: "_eq")
+        }
+        if let actionTypeId = actionTypeId {
+            hasuraStruct.addParameter(name: "action_type_id", type: "Int", value: actionTypeId, op: "_eq")
         }
         hasuraStruct.setSelections(selections: actionSelections)
         return hasuraStruct.getQueryAndVariables

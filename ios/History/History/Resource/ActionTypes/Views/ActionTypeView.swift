@@ -8,7 +8,8 @@ import SwiftUI
 
 import Foundation
 struct ActionTypeView: View {
-    @StateObject var model: ActionTypeModel
+    var actionTypeId: Int?
+    @StateObject var model: ActionTypeModel = ActionTypeModel(name: "", meta: ActionTypeMeta(), staticFields: ActionModelTypeStaticSchema())
     var createAction: ((ActionTypeModel) -> Void)?
     
     var body: some View {
@@ -110,7 +111,7 @@ struct ActionTypeView: View {
                 }
             }
             
-            if model.id != nil {
+            if actionTypeId != nil {
                 Button(action: {
                     Task {
                         await ActionTypesController.updateActionTypeModel(model: model)
@@ -137,7 +138,7 @@ struct ActionTypeView: View {
         .navigationTitle(model.name)
         .onAppear {
             Task {
-                let m:[ActionTypeModel] = await ActionTypesController.fetchActionTypes(userId: 1, actionTypeId: model.id)
+                let m:[ActionTypeModel] = await ActionTypesController.fetchActionTypes(userId: 1, actionTypeId: actionTypeId)
                 DispatchQueue.main.async {
                     if !m.isEmpty {
                         self.model.copy(m[0])

@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct ListActionsView: View {
-    var model: ActionTypeModel
+    var actionTypeId: Int
+    var actionTypeName: String
     @State var actions: [ActionModel] = []
     var createAction: ((ActionTypeModel) -> Void)?
     var body: some View {
@@ -25,24 +26,20 @@ struct ListActionsView: View {
                             Text("\(endTimeName): \(getDateTime(endTime)) ")
                         }
                     }
-
-
-////                    if let time = action.staticData.startTime {
-////                        Text("Time: \(getDateTime(time))")
-////                    }
-//                    ForEach(Array(action.dynamicData.keys), id: \.self) { key in
-//                        if let value = action.dynamicData[key] {
-//                            Text("\(key.capitalized): \(String(describing: value))")
-//                        }
-//                    }
+                    ForEach(Array(action.actionTypeModel.dynamicFields.keys), id: \.self) { key in
+                        if let value = action.dynamicData[key] {
+                            let fieldName: String = action.actionTypeModel.dynamicFields[key]!.name
+                            Text("\(fieldName): \(value.description)")
+                        }
+                    }
                 }
             }
         }
-        .navigationTitle( "\(model.name)")
+        .navigationTitle( "\(actionTypeName)")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink(destination: ActionTypeView(
-                    model: model
+                    actionTypeId: actionTypeId
                 )) {
                     Image(systemName: "pencil")
                 }
@@ -50,7 +47,7 @@ struct ListActionsView: View {
         }
         .onAppear {
             Task {
-                self.actions = await ActionController.fetchActions(userId: 1, actionId: 2)
+                self.actions = await ActionController.fetchActions(userId: Authentication.shared.userId!, actionTypeId: actionTypeId)
                 print(self.actions.count)
             }
         }

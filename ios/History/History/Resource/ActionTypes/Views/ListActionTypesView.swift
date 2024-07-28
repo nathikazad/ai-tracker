@@ -53,7 +53,8 @@ struct ListActionsTypesView: View {
                     }
                 } else {
                     NavigationButton(destination: ListActionsView(
-                        model: action,
+                        actionTypeId: action.id!,
+                        actionTypeName: action.name,
                         createAction: {
                             action in
                             actions.append(action)

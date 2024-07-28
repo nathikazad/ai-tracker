@@ -27,7 +27,7 @@ class ActionTypesController {
         
         let (graphqlQuery, variables) = hasuraStruct.getMutationAndVariables
         struct CreateActionTypeResponse: GraphQLData {
-            var insert_action_types_one: CreatedObject
+            var insert_v2_action_types_one: CreatedObject
             struct CreatedObject: Decodable {
                 var id: Int
             }
@@ -35,7 +35,7 @@ class ActionTypesController {
         
         do {
             let responseData: GraphQLResponse<CreateActionTypeResponse> = try await Hasura.shared.sendGraphQL(query: graphqlQuery, variables: variables, responseType: GraphQLResponse<CreateActionTypeResponse>.self)
-            return responseData.data.insert_action_types_one.id
+            return responseData.data.insert_v2_action_types_one.id
         } catch {
             // Log error details for debugging purposes
             print("Failed to create object: \(error.localizedDescription)")
@@ -67,7 +67,7 @@ class ActionTypesController {
         let (graphqlQuery, variables) = hasuraMutation.getMutationAndVariables
         
         struct UpdateActionTypeResponse: GraphQLData {
-            var update_action_types_by_pk: UpdatedObject
+            var update_v2_action_types_by_pk: UpdatedObject
             struct UpdatedObject: Decodable {
                 var id: Int
             }
@@ -80,6 +80,7 @@ class ActionTypesController {
                 responseType: GraphQLResponse<UpdateActionTypeResponse>.self
             )
         } catch {
+            print(error)
             print("Failed to update action type: \(error.localizedDescription)")
         }
     }
@@ -95,7 +96,7 @@ class ActionTypesController {
         let (graphqlQuery, variables) = hasuraMutation.getMutationAndVariables
         
         struct DeleteActionTypeResponse: GraphQLData {
-            var delete_action_types_by_pk: DeletedObject
+            var delete_v2_action_types_by_pk: DeletedObject
             struct DeletedObject: Decodable {
                 var id: Int
             }

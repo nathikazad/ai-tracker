@@ -6,13 +6,13 @@
 //
 
 import Foundation
-struct ActionModelForHasura: Codable {
+struct ActionForHasura: Codable {
     let id: Int
     let actionTypeId: Int
     let startTime: String
     let endTime: String?
     let parentId: Int?
-    let dynamicData: [String: Any]
+    let dynamicData: [String: AnyCodable]
     let createdAt: Date
     let updatedAt: Date
     let userId: Int
@@ -38,7 +38,7 @@ struct ActionModelForHasura: Codable {
         startTime = try container.decode(String.self, forKey: .startTime)
         endTime = try container.decodeIfPresent(String.self, forKey: .endTime)
         parentId = try container.decodeIfPresent(Int.self, forKey: .parentId)
-        dynamicData = [:]//try container.decode([String: Any].self, forKey: .dynamicData)
+        dynamicData = try container.decode([String: AnyCodable].self, forKey: .dynamicData)
         let createdAtString = try container.decode(String.self, forKey: .createdAt)
         createdAt = createdAtString.getDate!
         let updatedAtString = try container.decode(String.self, forKey: .updatedAt)
@@ -54,7 +54,7 @@ struct ActionModelForHasura: Codable {
         try container.encodeIfPresent(startTime, forKey: .startTime)
         try container.encodeIfPresent(endTime, forKey: .endTime)
         try container.encodeIfPresent(parentId, forKey: .parentId)
-//        try container.encode(dynamicData, forKey: .dynamicData)
+        try container.encode(dynamicData, forKey: .dynamicData)
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(updatedAt, forKey: .updatedAt)
         try container.encode(userId, forKey: .userId)

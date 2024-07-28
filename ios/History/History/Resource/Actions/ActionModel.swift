@@ -14,10 +14,10 @@ class ActionModel: ObservableObject {
     @Published var startTime: String
     @Published var endTime: String?
     var parentId: Int?
-    @Published var dynamicData: [String: Any]
+    @Published var dynamicData: [String: AnyCodable]
     var actionTypeModel: ActionTypeModel
 
-    init(id: Int? = nil, actionTypeId: Int, startTime: String, endTime: String? = nil, parentId: Int? = nil, dynamicData: [String: Any] = [:], actionTypeModel: ActionTypeModel) {
+    init(id: Int? = nil, actionTypeId: Int, startTime: String, endTime: String? = nil, parentId: Int? = nil, dynamicData: [String: AnyCodable] = [:], actionTypeModel: ActionTypeModel) {
         self.id = id
         self.actionTypeId = actionTypeId
         self.startTime = startTime

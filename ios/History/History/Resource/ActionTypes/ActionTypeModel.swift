@@ -22,6 +22,7 @@ class ActionTypeModel: ObservableObject {
     }
     
     func copy(_ m: ActionTypeModel) {
+        self.id = m.id
         self.name = m.name
         self.meta = m.meta
         self.staticFields = m.staticFields
