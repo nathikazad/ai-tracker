@@ -33,8 +33,8 @@ class ActionTypeModel: ObservableObject {
     init(
         id: Int? = nil,
         name: String,
-        meta: ActionTypeMeta,
-        staticFields: ActionModelTypeStaticSchema,
+        meta: ActionTypeMeta = ActionTypeMeta(),
+        staticFields: ActionModelTypeStaticSchema = ActionModelTypeStaticSchema(),
         dynamicFields: [String: Schema] = [:],
         computed: [String: Schema] = [:],
         internalObjects: [String: InternalObject] = [:],
@@ -114,6 +114,15 @@ class Schema: Codable {
     enum CodingKeys: String, CodingKey {
         case name, dataType, description, array, enumValues, objectFields
     }
+    
+    var getEnums: [String] {
+        if(!enumValues.isEmpty) {
+            return enumValues
+        } else {
+            return ["None"]
+        }
+    }
+    
     
     init(name: String, dataType: String, description: String,
          array: Bool = false,

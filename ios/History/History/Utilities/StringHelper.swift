@@ -18,9 +18,9 @@ extension Binding where Value == String? {
     }
 }
 
-func generateRandomString() -> String {
-    let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    return String((0..<10).map{ _ in letters.randomElement()! })
+func generateRandomString(_ len:Int = 5) -> String {
+    let letters = "abcdefghijklmnopqrstuvwxyz"
+    return String((0..<len).map{ _ in letters.randomElement()! })
 }
 
 extension [String] {

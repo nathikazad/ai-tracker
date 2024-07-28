@@ -59,6 +59,8 @@
 		FE5264812BA99AF700502521 /* ServerCommunicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5264802BA99AF700502521 /* ServerCommunicator.swift */; };
 		FE5264822BA99AF700502521 /* ServerCommunicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5264802BA99AF700502521 /* ServerCommunicator.swift */; };
 		FE638F3A2C55A7D3001C34F0 /* ActionForHasura.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE638F392C55A7D3001C34F0 /* ActionForHasura.swift */; };
+		FE638F3C2C55E2A2001C34F0 /* ShowActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE638F3B2C55E2A2001C34F0 /* ShowActionView.swift */; };
+		FE638F3F2C55E594001C34F0 /* MinActionComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE638F3E2C55E594001C34F0 /* MinActionComponent.swift */; };
 		FE69D76A2BF6CFEE0061E2E6 /* LearnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69D7692BF6CFEE0061E2E6 /* LearnView.swift */; };
 		FE6ED6D12C06A3E300E6A2A6 /* NavigationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6ED6D02C06A3E300E6A2A6 /* NavigationButton.swift */; };
 		FE6ED6D32C06A9F500E6A2A6 /* ASObjectModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6ED6D22C06A9F500E6A2A6 /* ASObjectModel.swift */; };
@@ -214,6 +216,8 @@
 		FE5264802BA99AF700502521 /* ServerCommunicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommunicator.swift; sourceTree = "<group>"; };
 		FE5264832BA9A1A400502521 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		FE638F392C55A7D3001C34F0 /* ActionForHasura.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionForHasura.swift; sourceTree = "<group>"; };
+		FE638F3B2C55E2A2001C34F0 /* ShowActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowActionView.swift; sourceTree = "<group>"; };
+		FE638F3E2C55E594001C34F0 /* MinActionComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinActionComponent.swift; sourceTree = "<group>"; };
 		FE69D7692BF6CFEE0061E2E6 /* LearnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearnView.swift; sourceTree = "<group>"; };
 		FE6ED6D02C06A3E300E6A2A6 /* NavigationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationButton.swift; sourceTree = "<group>"; };
 		FE6ED6D22C06A9F500E6A2A6 /* ASObjectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASObjectModel.swift; sourceTree = "<group>"; };
@@ -395,7 +399,9 @@
 		FE4AB3AF2C544E5D00A07749 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				FE638F3D2C55E57F001C34F0 /* Components */,
 				FE4AB38A2C4EF4E500A07749 /* ListActionsView.swift */,
+				FE638F3B2C55E2A2001C34F0 /* ShowActionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -479,6 +485,14 @@
 				FEC5386F2BBDE4E5006BDBDA /* SwiftUI.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FE638F3D2C55E57F001C34F0 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				FE638F3E2C55E594001C34F0 /* MinActionComponent.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 		FE7EF1DA2BBE0ECB00279E18 /* Views */ = {
@@ -770,6 +784,7 @@
 				FE4AB3A22C51F2E000A07749 /* DynamicFieldView.swift in Sources */,
 				FE4F7BD22BA8FC600041CB6A /* BottomBar.swift in Sources */,
 				FE4AB38B2C4EF4E500A07749 /* ListActionsView.swift in Sources */,
+				FE638F3F2C55E594001C34F0 /* MinActionComponent.swift in Sources */,
 				FE4AB39C2C51F26B00A07749 /* SchemaView.swift in Sources */,
 				FE4F7BA52BA7D79E0041CB6A /* ContentView.swift in Sources */,
 				FECA5EEC2BE56970007ADE17 /* EventsComponents.swift in Sources */,
@@ -830,6 +845,7 @@
 				FE638F3A2C55A7D3001C34F0 /* ActionForHasura.swift in Sources */,
 				FEDBC0652C0509AC00233EA0 /* EventDestination.swift in Sources */,
 				FE8965AA2BC7B31D00E9D633 /* UserController.swift in Sources */,
+				FE638F3C2C55E2A2001C34F0 /* ShowActionView.swift in Sources */,
 				FE6ED6D72C06AA9100E6A2A6 /* EventTypeModel.swift in Sources */,
 				FE477D912BD5E3E2001FC341 /* EventsController.swift in Sources */,
 				FE950F202C011BE00022EA64 /* AppState.swift in Sources */,

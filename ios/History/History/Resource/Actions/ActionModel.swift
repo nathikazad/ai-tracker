@@ -15,7 +15,7 @@ class ActionModel: ObservableObject {
     @Published var endTime: String?
     var parentId: Int?
     @Published var dynamicData: [String: AnyCodable]
-    var actionTypeModel: ActionTypeModel
+    @Published var actionTypeModel: ActionTypeModel
 
     init(id: Int? = nil, actionTypeId: Int, startTime: String, endTime: String? = nil, parentId: Int? = nil, dynamicData: [String: AnyCodable] = [:], actionTypeModel: ActionTypeModel) {
         self.id = id
@@ -26,6 +26,16 @@ class ActionModel: ObservableObject {
         self.dynamicData = dynamicData
         self.actionTypeModel = actionTypeModel
         print(dynamicData)
+    }
+    
+    func copy(_ newModel:ActionModel) {
+        self.id = newModel.id
+        self.actionTypeId = newModel.actionTypeId
+        self.startTime = newModel.startTime
+        self.endTime = newModel.endTime
+        self.parentId = newModel.parentId
+        self.dynamicData = newModel.dynamicData
+        self.actionTypeModel = newModel.actionTypeModel
     }
 }
 

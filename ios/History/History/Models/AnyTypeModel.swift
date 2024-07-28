@@ -7,7 +7,7 @@
 //
 import Foundation
 struct AnyCodable: Codable {
-    let value: Any
+    var value: Any
     
     init(_ value: Any) {
         self.value = value
@@ -52,7 +52,7 @@ struct AnyCodable: Codable {
         }
     }
     
-    var description: String {
+    var toString: String {
         switch value {
         case let number as NSNumber:
             return number.stringValue

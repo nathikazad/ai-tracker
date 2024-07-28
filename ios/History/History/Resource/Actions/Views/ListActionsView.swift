@@ -8,29 +8,17 @@
 import SwiftUI
 
 struct ListActionsView: View {
-    var actionTypeId: Int
+    var actionType: ActionTypeModel
     var actionTypeName: String
     @State var actions: [ActionModel] = []
     var createAction: ((ActionTypeModel) -> Void)?
     var body: some View {
         List {
             ForEach(actions, id: \.id) { action in
-                Section(header: Text("Action: \(action.actionTypeModel.name)")) {
-                    if(!action.actionTypeModel.meta.hasDuration) {
-                        Text("Time: \(getDateTime(action.startTime))")
-                    } else {
-                        let startTimeName =  action.actionTypeModel.staticFields.startTime?.name ?? "Start Time"
-                        Text("\(startTimeName): \(getDateTime(action.startTime))")
-                        if let endTime = action.endTime {
-                            let endTimeName =  action.actionTypeModel.staticFields.endTime?.name ?? "End Time"
-                            Text("\(endTimeName): \(getDateTime(endTime)) ")
-                        }
-                    }
-                    ForEach(Array(action.actionTypeModel.dynamicFields.keys), id: \.self) { key in
-                        if let value = action.dynamicData[key] {
-                            let fieldName: String = action.actionTypeModel.dynamicFields[key]!.name
-                            Text("\(fieldName): \(value.description)")
-                        }
+                NavigationButton(destination: ShowActionView(actionModel: action))
+                {
+                    Section {
+                        MinActionComponent(action: action)
                     }
                 }
             }
@@ -38,8 +26,14 @@ struct ListActionsView: View {
         .navigationTitle( "\(actionTypeName)")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
+                NavigationLink(destination: ShowActionView(actionType: actionType)) {
+                    Image(systemName: "plus")
+                        .foregroundColor(.primary)
+                }
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink(destination: ActionTypeView(
-                    actionTypeId: actionTypeId
+                    actionTypeId: actionType.id
                 )) {
                     Image(systemName: "pencil")
                 }
@@ -47,7 +41,7 @@ struct ListActionsView: View {
         }
         .onAppear {
             Task {
-                self.actions = await ActionController.fetchActions(userId: Authentication.shared.userId!, actionTypeId: actionTypeId)
+                self.actions = await ActionController.fetchActions(userId: Authentication.shared.userId!, actionTypeId: actionType.id)
                 print(self.actions.count)
             }
         }

@@ -156,8 +156,11 @@ class ActionTypesController {
 // finished: work on action view
 // finished: work on action type view
 // finished: work on action type create/edit
-// working: put action type into database and then 
-// finished: fetch it
+// finished: put action type into database and then
+// finished: fetch action type
+// finished: fetch action
+//    finished: displaying dynamic primitives
+//    working: displaying dynamic objects
 // work on create/modify/delete action
 // put action action into database and then fetch it
 

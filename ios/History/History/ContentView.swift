@@ -82,11 +82,11 @@ struct MainView: View {
                         }
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
-                            NavigationLink(destination: ListActionsTypesView()) {
-                                Image(systemName: "plus")
-                                    .foregroundColor(.primary)
-                            }
+                        NavigationLink(destination: ListActionsTypesView()) {
+                            Image(systemName: "plus")
+                                .foregroundColor(.primary)
                         }
+                    }
                 }
                 .sheet(isPresented: sheetViewPresented) {
                     if appState.sheetViewToShow == .settings {

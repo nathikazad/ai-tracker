@@ -53,7 +53,7 @@ struct ListActionsTypesView: View {
                     }
                 } else {
                     NavigationButton(destination: ListActionsView(
-                        actionTypeId: action.id!,
+                        actionType: action,
                         actionTypeName: action.name,
                         createAction: {
                             action in
