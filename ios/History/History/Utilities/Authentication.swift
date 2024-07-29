@@ -79,10 +79,10 @@ class Authentication {
         watch.sync()
         Task {
             user = try await UserController.fetchUser()
-            if locationManager.isTrackingLocation {
-                print("Authentication: signInCallback: Tracking location enabled")
-                locationManager.startMonitoringLocation()
-            }
+//            if locationManager.isTrackingLocation {
+//                print("Authentication: signInCallback: Tracking location enabled")
+//                locationManager.startMonitoringLocation()
+//            }
             await UserController.ensureUserTimezone()
             
         }
@@ -94,7 +94,7 @@ class Authentication {
         UserDefaults.standard.removeObject(forKey: appleJwtKey)
         watch.sync()
         hasura.closeConnection()
-        locationManager.stopMonitoringLocation()
+//        locationManager.stopMonitoringLocation()
     }
 }
 

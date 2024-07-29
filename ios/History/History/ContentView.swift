@@ -61,11 +61,10 @@ struct MainView: View {
         NavigationStack {
             ZStack(alignment: .bottom) {
                 TabView(selection: $selectedTab) {
-                    TodosView().tabItem { Label("Todos", systemImage: "checklist") }.tag(Tab.todos)
+//                    TodosView().tabItem { Label("Todos", systemImage: "checklist") }.tag(Tab.todos)
                     ActionsTabView().tabItem { Label("Timeline", systemImage: "clock") }.tag(Tab.timeline)
-                    Text("").tabItem { Image(systemName: "mic.fill") } // Placeholder
-                    GoalsView().tabItem { Label("Goals", systemImage: "target") }.tag(Tab.goals)
-                    InteractionsView().tabItem { Label("Interactions", systemImage: "message.badge.waveform.fill") }.tag(Tab.interactions)
+//                    GoalsView().tabItem { Label("Goals", systemImage: "target") }.tag(Tab.goals)
+                    ListActionsTypesView().tabItem { Label("Explorer", systemImage: "globe") }.tag(Tab.explorer)
 //                    GraphsView().tabItem { Label("Graphs", systemImage: "chart.line.uptrend.xyaxis") }.tag(Tab.graphs)
                 }
                 .toolbar {
@@ -75,16 +74,21 @@ struct MainView: View {
                         }
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
+                        NavigationLink(destination: ListActionsTypesView(
+                            clickAction: {
+                                actionType in
+                                print(actionType.name)
+                            }
+                        )) {
+                            Image(systemName: "plus")
+                                .foregroundColor(.primary)
+                        }
+                    }
+                    ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {
                             appState.showSheet(newSheetToShow: .settings)
                         }) {
                             Image(systemName: "line.horizontal.3").foregroundColor(.primary)
-                        }
-                    }
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        NavigationLink(destination: ListActionsTypesView()) {
-                            Image(systemName: "plus")
-                                .foregroundColor(.primary)
                         }
                     }
                 }
@@ -100,7 +104,7 @@ struct MainView: View {
                         }
                     }
                 }
-                MicrophoneButton()
+//                MicrophoneButton()
             }
             .edgesIgnoringSafeArea(.bottom)
         }
@@ -114,8 +118,8 @@ struct MainView: View {
             return "Timeline"
         case .goals:
             return "Goals"
-        case .interactions:
-            return "Interactions"
+        case .explorer:
+            return "Explorer"
         case .graphs:
             return "Graphs"
             
@@ -126,7 +130,7 @@ struct MainView: View {
         case todos
         case timeline
         case goals
-        case interactions
+        case explorer
         case graphs
     }
 }

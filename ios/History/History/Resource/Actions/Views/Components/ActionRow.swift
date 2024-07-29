@@ -16,8 +16,6 @@ import Foundation
 import SwiftUI
 struct ActionRow: View {
     var event: ActionModel
-    @Binding var reassignParentForId: Int?
-    @Binding var expandedEventIds: Set<Int>
     var dateClickedAction: ((ActionModel) -> Void)?
     var level: Int = 0
     var showTimeWithRespectToCurrentDate: Bool = false
@@ -44,45 +42,40 @@ struct ActionRow: View {
                     Text("\(event.actionTypeModel.name) \(event.toString ?? "") (\(String(event.id ?? 0)))")
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .font(.subheadline)
-//                    EventButtonsView(event: event, reassignParentForId: $reassignParentForId, expandedEventIds: $expandedEventIds)
                 }
-//                EventDestination(event: event)
+                ActionDestination(event: event)
             }
             
         }
         .id(event.id)
-        .swipeActions(edge: .leading, allowsFullSwipe: false) {
-            Button(action: {
-                print("Clicked mic on \(event.id)")
-                state.setParentEventId(event.id)
-                state.microphoneButtonClick()
-            }) {
-                Image(systemName: "mic.fill")
-            }
-            Button(action: {
-                print("Clicked chat on \(event.id)")
-                state.setParentEventId(event.id)
-                state.showChat(newChatViewToShow: .normal)
-            }) {
-                Image(systemName: "message.fill")
-            }
-        }
         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
             Button(action: {
                 print("Deleting \(event.id)")
-//                EventsController.deleteEvent(id: event.id)
+                Task {
+                    await ActionController.deleteActionModel(id: event.id!)
+                }
             }) {
                 Image(systemName: "trash.fill")
             }
             .tint(.red)
-            Button(action: {
-                print("Clicked rearrange on \(event.id)")
-                reassignParentForId = event.id
-            }) {
-                Image(systemName: "arrow.up.and.line.horizontal.and.arrow.down")
-            }
         }
     }
+    
+    struct ActionDestination: View {
+        var event: ActionModel
+        var body: some View {
+            let destination = ShowActionView(actionModel: event)
+            return AnyView(
+                NavigationLink(destination: destination) {
+                    EmptyView()
+                }
+                    .padding(.horizontal, 10)
+                    .opacity(0)
+            )
+            
+        }
+    }
+
     
     // super hacked up code to add subscripts
     private func formatTime(_ event: ActionModel) -> AttributedString {

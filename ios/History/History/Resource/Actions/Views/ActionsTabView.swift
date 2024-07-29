@@ -11,13 +11,9 @@ import Combine
 
 // Define your custom views for each tab
 struct ActionsTabView: View {
-    @State private var expandedEventIds: Set<Int> = []
-    @State private var reassignParentForId: Int? = nil
     @StateObject private var datePickerModel: TwoDatePickerModel = TwoDatePickerModel()
     @State private var events: [ActionModel] = []
     @State private var coreStateSubcription: AnyCancellable?
-    @State private var options = ["All"]
-    @State private var selectedOption = "All"
     
     var eventId: Int?
     var eventType: EventType?
@@ -86,12 +82,9 @@ struct ActionsTabView: View {
             events in
             
             print("EventsView: listenToEvents: new event")
-//            events[0].actionTypeModel
             DispatchQueue.main.async {
                 self.events = []
                 self.events = events
-//                self.options = Array(Set(events.flatten.map { $0.actionTypeModel.name.rawValue.capitalized }))
-                self.options.insert("All", at: 0)
             }
         }
     }
@@ -111,11 +104,6 @@ struct ActionsTabView: View {
     }
     
     private var eventsToShow: [ActionModel] {
-//        if(selectedOption != "All") {
-//            return events.flatten.filter { $0.eventType.rawValue.capitalized == selectedOption }.sortEvents
-//        } else {
-//            return events
-//        }
         return events
     }
     
@@ -126,18 +114,6 @@ struct ActionsTabView: View {
                     List {
                         ForEach(eventsToShow.sortEvents, id: \.id) { event in
                             eventRow(event)
-//                            if expandedEventIds.contains(event.id) {
-//                                MinimizedNoteView(notes: event.metadata!.notes, level:1)
-//                                ForEach(event.children.sortEvents, id: \.id) { child in
-//                                    eventRow(child, level: 1)
-//                                    if expandedEventIds.contains(child.id) {
-//                                        MinimizedNoteView(notes: child.metadata!.notes, level:2)
-//                                        ForEach(child.children.sortEvents, id: \.id) { grandChild in
-//                                            eventRow(grandChild, level: 2)
-//                                        }
-//                                     }
-//                                }
-//                            }
                         }
                     }
                     .onAppear {
@@ -159,39 +135,6 @@ struct ActionsTabView: View {
 //                    }
                     .padding(.top, 15)
                     
-                    HStack {
-                        
-                        Picker("Options", selection: $selectedOption) {
-                            ForEach(options.sorted(), id: \.self) { option in
-                                Text(option).tag(option)
-                            }
-                        }
-                        .pickerStyle(MenuPickerStyle())
-                        .padding(.leading, 15)
-                        // .onChange(of: selectedOption) { newValue in
-                        //     // Perform your action here
-                        //     print("Selected option changed to \(newValue)")
-                        // }
-                        Spacer()
-                        Button(action: {
-//                            if expandedEventIds.count > 0 {
-//                                expandedEventIds = []
-//                            } else {
-//                                expandedEventIds = Set(eventsToShow.withChildrenOrNotes.map { $0.id })
-//                            }
-                        }) {
-                            if expandedEventIds.count > 0 {
-                                Image(systemName: "minus.circle")
-                                    .padding()
-                                    .padding(.trailing, 15)
-                            } else {
-                                Image(systemName: "plus.circle")
-                                    .padding()
-                                    .padding(.trailing, 15)
-                            }
-                        }
-                    }
-                    .background(Color(uiColor: .secondarySystemBackground))
                 }
             }
         }
@@ -200,8 +143,6 @@ struct ActionsTabView: View {
     private func eventRow(_ event: ActionModel, level: Int = 0) -> ActionRow {
         return ActionRow(
             event: event,
-            reassignParentForId: $reassignParentForId,
-            expandedEventIds: $expandedEventIds,
             dateClickedAction: { event in
                 datePickerModel.showPopupForAction(event: event)
             },

@@ -45,10 +45,10 @@ struct ListActionsTypesView: View {
             
             ForEach(filteredActions, id: \.name) { action in
                 if(clickAction != nil) {
-                    Button(action: {
-                        clickAction!(action)
-                        goBack()
-                    }) {
+                    NavigationButton(destination: ShowActionView(actionType: action))
+                    // clickAction!(action)
+                    //     goBack()
+                    {
                         Text(action.name)
                     }
                 } else {

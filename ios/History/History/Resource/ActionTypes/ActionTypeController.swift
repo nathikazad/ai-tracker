@@ -37,6 +37,8 @@ class ActionTypesController {
             let responseData: GraphQLResponse<CreateActionTypeResponse> = try await Hasura.shared.sendGraphQL(query: graphqlQuery, variables: variables, responseType: GraphQLResponse<CreateActionTypeResponse>.self)
             return responseData.data.insert_v2_action_types_one.id
         } catch {
+            print(graphqlQuery)
+            print(variables)
             // Log error details for debugging purposes
             print("Failed to create object: \(error.localizedDescription)")
             return nil
@@ -65,7 +67,6 @@ class ActionTypesController {
         hasuraMutation.addParameter(name: "metadata", type: .jsonb, value: metadata.toJSONDictionary())
         
         let (graphqlQuery, variables) = hasuraMutation.getMutationAndVariables
-        
         struct UpdateActionTypeResponse: GraphQLData {
             var update_v2_action_types_by_pk: UpdatedObject
             struct UpdatedObject: Decodable {
@@ -80,6 +81,8 @@ class ActionTypesController {
                 responseType: GraphQLResponse<UpdateActionTypeResponse>.self
             )
         } catch {
+            print(graphqlQuery)
+            print(variables)
             print(error)
             print("Failed to update action type: \(error.localizedDescription)")
         }
@@ -123,6 +126,8 @@ class ActionTypesController {
             let responseData: GraphQLResponse<ActionTypeData> = try await Hasura.shared.sendGraphQL(query: graphqlQuery, variables: variables, responseType: GraphQLResponse<ActionTypeData>.self)
             return responseData.data.v2_action_types.map { $0.toActionTypeModel() }
         } catch {
+            print(graphqlQuery)
+            print(variables)
             print(error)
             print("Failed to fetch object: \(error.localizedDescription)")
             return []
@@ -138,6 +143,8 @@ class ActionTypesController {
             let responseData: GraphQLResponse<ActionTypeData> = try await Hasura.shared.sendGraphQL(query: graphqlQuery, variables: variables, responseType: GraphQLResponse<ActionTypeData>.self)
             return responseData.data.v2_action_types.first?.toActionTypeModel()
         } catch {
+            print(graphqlQuery)
+            print(variables)
             print(error)
             print("Failed to fetch action type: \(error.localizedDescription)")
             return nil

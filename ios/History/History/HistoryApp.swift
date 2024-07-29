@@ -11,7 +11,7 @@ import SwiftUI
 @main
 struct HistoryApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    private var locationManager = LocationManager.shared
+//    private var locationManager = LocationManager.shared
     var body: some Scene {
         WindowGroup {
             ContentView()
@@ -34,7 +34,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                     await ServerCommunicator.processPendingRequests()
 //                    LocationManager.shared.forceUpdateLocation()
                     state.inForeground = true
-                    print("Health kit enabled: \(HealthKitManager.shared.authorized)")
+//                    print("Health kit enabled: \(HealthKitManager.shared.authorized)")
                 }
             }
             

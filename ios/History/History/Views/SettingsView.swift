@@ -9,14 +9,14 @@ import CoreLocation
 import HealthKit
 
 struct SettingsView: View {
-    private var locationManager = LocationManager.shared
-    private var healthManager = HealthKitManager.shared
-    @State private var isTrackingLocation = LocationManager.shared.isTrackingLocation
-    @State private var isTrackingSleep = HealthKitManager.shared.isTracking
+//    private var locationManager = LocationManager.shared
+//    private var healthManager = HealthKitManager.shared
+//    @State private var isTrackingLocation = LocationManager.shared.isTrackingLocation
+//    @State private var isTrackingSleep = HealthKitManager.shared.isTracking
     @State private var currentUserName: String
     
     init() {
-        _isTrackingLocation = State(initialValue: LocationManager.shared.isTrackingLocation)
+//        _isTrackingLocation = State(initialValue: LocationManager.shared.isTrackingLocation)
         _currentUserName = State(initialValue: getName())
     }
     
@@ -25,51 +25,51 @@ struct SettingsView: View {
         NavigationView {
             List {
                 Section(header: Text("Settings")) {
-                    NavigationLink(destination: LocationsListView()) {
-                        Label("Places", systemImage: "mappin.and.ellipse")
-                            .foregroundColor(.primary)
-                    };
+//                    NavigationLink(destination: LocationsListView()) {
+//                        Label("Places", systemImage: "mappin.and.ellipse")
+//                            .foregroundColor(.primary)
+//                    };
                     Button(action: changeUserId) {
                         Label("Change User \(currentUserName)", systemImage: "person.2.fill")
                             .foregroundColor(.primary)
                     }
                     
-                    NavigationLink(destination: LocationsDebugView()) {
-                        Label("Debug Locations \(LocationManager.shared.locationsReceivedCount) \(LocationManager.shared.locationsSentCount)  [\(LocationManager.shared.sentToServerCount)]", systemImage: "mappin.and.ellipse")
-                            .foregroundColor(.primary)
-                    };
+//                    NavigationLink(destination: LocationsDebugView()) {
+//                        Label("Debug Locations \(LocationManager.shared.locationsReceivedCount) \(LocationManager.shared.locationsSentCount)  [\(LocationManager.shared.sentToServerCount)]", systemImage: "mappin.and.ellipse")
+//                            .foregroundColor(.primary)
+//                    };
                     
                     
                     
-                    Toggle(isOn: $isTrackingLocation) {
-                        Label("Track Location", systemImage: "location.fill")
-                    }
-                    .foregroundColor(.primary)
-                    .onChange(of: isTrackingLocation) { value in
-                        print("onChange \(value)")
-                        if value {
-                            print("change to start")
-                            locationManager.startMonitoringLocation()
-                        } else {
-                            print("change to stop")
-                            locationManager.stopMonitoringLocation()
-                        }
-                    }
-                    
-                    Toggle(isOn: $isTrackingSleep) {
-                        Label("Track Sleep", systemImage: "moon.zzz.fill")
-                    }
-                    .foregroundColor(.primary)
-                    .onChange(of: isTrackingSleep) { value in
-                        print("onChange \(value)")
-                        if value {
-                            print("change sleep to start")
-                            healthManager.startTracking()
-                        } else {
-                            print("Stop Sleep Tracking")
-                            healthManager.stopTracking()
-                        }
-                    }
+//                    Toggle(isOn: $isTrackingLocation) {
+//                        Label("Track Location", systemImage: "location.fill")
+//                    }
+//                    .foregroundColor(.primary)
+//                    .onChange(of: isTrackingLocation) { value in
+//                        print("onChange \(value)")
+//                        if value {
+//                            print("change to start")
+//                            locationManager.startMonitoringLocation()
+//                        } else {
+//                            print("change to stop")
+//                            locationManager.stopMonitoringLocation()
+//                        }
+//                    }
+//                    
+//                    Toggle(isOn: $isTrackingSleep) {
+//                        Label("Track Sleep", systemImage: "moon.zzz.fill")
+//                    }
+//                    .foregroundColor(.primary)
+//                    .onChange(of: isTrackingSleep) { value in
+//                        print("onChange \(value)")
+//                        if value {
+//                            print("change sleep to start")
+//                            healthManager.startTracking()
+//                        } else {
+//                            print("Stop Sleep Tracking")
+//                            healthManager.stopTracking()
+//                        }
+//                    }
                     Button(action: {
                         auth.signOutCallback()
                         state.hideSheet()

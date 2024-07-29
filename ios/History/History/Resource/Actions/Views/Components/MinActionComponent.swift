@@ -11,13 +11,13 @@ struct MinActionComponent: View {
     var body: some View {
         VStack(alignment: .leading) {
             if(!action.actionTypeModel.meta.hasDuration) {
-                Text("Time: \(getDateTime(action.startTime.toUTCString))")
+                Text("Time: \(action.startTime.formattedShortDateAndTime)")
             } else {
                 let startTimeName =  action.actionTypeModel.staticFields.startTime?.name ?? "Start Time"
-                Text("\(startTimeName): \(getDateTime(action.startTime.toUTCString))")
+                Text("\(startTimeName): \(action.startTime.formattedShortDateAndTime)")
                 if let endTime = action.endTime {
                     let endTimeName =  action.actionTypeModel.staticFields.endTime?.name ?? "End Time"
-                    Text("\(endTimeName): \(getDateTime(endTime.toUTCString)) ")
+                    Text("\(endTimeName): \(endTime.formattedShortDateAndTime) ")
                 }
             }
             ForEach(Array(action.actionTypeModel.dynamicFields.keys), id: \.self) { key in

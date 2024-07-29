@@ -8,7 +8,6 @@ import SwiftUI
 
 import Foundation
 struct ActionTypeView: View {
-    var actionTypeId: Int?
     @StateObject var model: ActionTypeModel = ActionTypeModel(name: "", meta: ActionTypeMeta(), staticFields: ActionModelTypeStaticSchema())
     var createAction: ((ActionTypeModel) -> Void)?
     
@@ -94,7 +93,7 @@ struct ActionTypeView: View {
                     DynamicFieldView(model: model, originalKey: originalKey)
                 }
                 Button(action: {
-                    model.dynamicFields[generateRandomString()] = Schema(name: "New Field", dataType: "String", description: "")
+                    model.dynamicFields[generateRandomString()] = Schema(name: "New Field", dataType: "ShortString", description: "")
                 }) {
                     Label("Add Dynamic Field", systemImage: "plus")
                 }
@@ -111,7 +110,7 @@ struct ActionTypeView: View {
                 }
             }
             
-            if actionTypeId != nil {
+            if model.id != nil {
                 Button(action: {
                     Task {
                         await ActionTypesController.updateActionTypeModel(model: model)
@@ -138,10 +137,12 @@ struct ActionTypeView: View {
         .navigationTitle(model.name)
         .onAppear {
             Task {
-                let m:[ActionTypeModel] = await ActionTypesController.fetchActionTypes(userId: 1, actionTypeId: actionTypeId)
-                DispatchQueue.main.async {
-                    if !m.isEmpty {
-                        self.model.copy(m[0])
+                if(self.model.id != nil) {
+                    let m:[ActionTypeModel] = await ActionTypesController.fetchActionTypes(userId: Authentication.shared.userId!, actionTypeId: model.id!)
+                    DispatchQueue.main.async {
+                        if !m.isEmpty {
+                            self.model.copy(m[0])
+                        }
                     }
                 }
             }
