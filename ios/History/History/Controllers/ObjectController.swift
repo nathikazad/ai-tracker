@@ -27,8 +27,8 @@ class ObjectController {
     
     static func generateQueryForObjects(userId: Int, objectType: ASObjectType?) -> (String, [String: Any]) {
         var hasuraStruct:HasuraQuery = HasuraQuery(queryFor: "objects", queryName: "ObjectsQuery", queryType: .query)
-        hasuraStruct.addParameter(name: "user_id", type: "Int", value: userId, op: "_eq")
-        hasuraStruct.addParameter(name: "object_type", type: "String", value: objectType?.rawValue, op: "_eq")
+        hasuraStruct.addParameter(name: "user_id", type: .int, value: userId, op: .equals)
+        hasuraStruct.addParameter(name: "object_type", type: .string, value: objectType?.rawValue, op: .equals)
         hasuraStruct.setSelections(selections:objectSelections)
         return hasuraStruct.getQueryAndVariables
     }
@@ -78,10 +78,10 @@ class ObjectController {
 
     static func createObject(userId: Int, object: ASObject) async -> Int? {
         var hasuraStruct:HasuraMutation = HasuraMutation(mutationFor: "insert_objects_one", mutationName: "CreateObjectMutation", mutationType: .create)
-        hasuraStruct.addParameter(name: "user_id", type: "Int", value: userId)
-        hasuraStruct.addParameter(name: "name", type: "String", value: object.name)
-        hasuraStruct.addParameter(name: "object_type", type: "String", value: object.objectType.rawValue)
-        hasuraStruct.addParameter(name: "metadata", type: "jsonb", value: object.metadata)
+        hasuraStruct.addParameter(name: "user_id", type: .int, value: userId)
+        hasuraStruct.addParameter(name: "name", type: .string, value: object.name)
+        hasuraStruct.addParameter(name: "object_type", type: .string, value: object.objectType.rawValue)
+        hasuraStruct.addParameter(name: "metadata", type: .jsonb, value: object.metadata)
 
         let (graphqlQuery, variables) = hasuraStruct.getMutationAndVariables
         
@@ -104,8 +104,8 @@ class ObjectController {
     
     static func mutateObject(object: ASObject) async {
         var hasuraMutation: HasuraMutation = HasuraMutation(mutationFor: "update_objects_by_pk", mutationName: "ObjectMutation", mutationType: .update, id: object.id)
-        hasuraMutation.addParameter(name: "name", type: "String", value: object.name)
-        hasuraMutation.addParameter(name: "metadata", type: "jsonb", value: object.metadata)
+        hasuraMutation.addParameter(name: "name", type: .string, value: object.name)
+        hasuraMutation.addParameter(name: "metadata", type: .jsonb, value: object.metadata)
 
         let (graphqlQuery, variables) = hasuraMutation.getMutationAndVariables
         

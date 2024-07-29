@@ -42,6 +42,36 @@ extension JSONRepresentable {
     }
 }
 
+enum ParameterType: String {
+    case int = "Int"
+    case string = "String"
+    case bool = "Boolean"
+    case float = "Float"
+    case double = "Float8"
+    case timestamp = "timestamptz"
+    case jsonb = "jsonb"
+    
+    var graphQLType: String {
+        return self.rawValue
+    }
+}
+
+enum HasuraComparisonOperator: String {
+    case equals = "_eq"
+    case notEquals = "_neq"
+    case greaterThan = "_gt"
+    case greaterThanOrEquals = "_gte"
+    case lessThan = "_lt"
+    case lessThanOrEquals = "_lte"
+    case inArray = "_in"
+    case notIn = "_nin"
+    case like = "_like"
+    case notLike = "_nlike"
+    case ilike = "_ilike"
+    case notIlike = "_nilike"
+    // Add more operators as needed
+}
+
 struct HasuraQuery {
     enum QueryType: String {
         case query; case subscription
@@ -62,13 +92,14 @@ struct HasuraQuery {
         self.queryFor = queryFor
     }
     
-    mutating func addParameter(name:String, type:String, value: Any?,  op:String) {
-        if value != nil {
-            parameterClauses.append("$\(name): \(type)!")
-            whereClauses.append("\(name): {\(op): $\(name)}")
+    mutating func addParameter(name: String, type: ParameterType, value: Any?, op: HasuraComparisonOperator) {
+        if let value = value {
+            parameterClauses.append("$\(name): \(type.graphQLType)!")
+            whereClauses.append("\(name): {\(op.rawValue): $\(name)}")
             variables[name] = value
         }
     }
+
     
     mutating func setSelections(selections:String) {
         self.selections = selections
@@ -115,11 +146,11 @@ struct HasuraMutation {
         
     }
     
-    mutating func addParameter(name:String, type:String, value: Any?, passNullValue: Bool = false) {
-        if value != nil {
-            parameterClauses.append("$\(name): \(type)!")
+    mutating func addParameter(name: String, type: ParameterType, value: Any?, passNullValue: Bool = false) {
+        if let value = value {
+            parameterClauses.append("$\(name): \(type.graphQLType)!")
             if mutationType == .update {
-                if type == "jsonb" {
+                if type == .jsonb {
                     appendClauses.append("\(name): $\(name)")
                 } else {
                     setClauses.append("\(name): $\(name)")
@@ -148,7 +179,6 @@ struct HasuraMutation {
           }
         }
         """
-        print(mutation)
         return (mutation, variables)
     }
     

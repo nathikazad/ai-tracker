@@ -74,4 +74,30 @@ struct AnyCodable: Codable {
         }
     }
     
+    func toJSONCompatible() -> Any {
+        switch value {
+        case let number as NSNumber:
+            return number
+        case let string as String:
+            return string
+        case let bool as Bool:
+            return bool
+        case let array as [Any]:
+            return array.map { AnyCodable($0).toJSONCompatible() }
+        case let dictionary as [String: Any]:
+            return dictionary.mapValues { AnyCodable($0).toJSONCompatible() }
+        case is AnyCodable:
+            return (value as! AnyCodable).toJSONCompatible()
+        case Optional<Any>.none:
+            return NSNull()
+        default:
+            return String(describing: value)
+        }
+    }
+}
+
+extension Dictionary where Key == String, Value == AnyCodable {
+    func toJson() -> [String: Any] {
+        return self.mapValues { $0.toJSONCompatible() }
+    }
 }

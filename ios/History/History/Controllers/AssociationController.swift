@@ -10,11 +10,11 @@ class AssociationController {
 
     static func createEventObjectAssociation(userId: Int, eventId: Int, objectId: Int) async -> Int? {
         var hasuraStruct:HasuraMutation = HasuraMutation(mutationFor: "insert_associations_one", mutationName: "CreateAssociationMutation", mutationType: .create)
-        hasuraStruct.addParameter(name: "user_id", type: "Int", value: userId)
-        hasuraStruct.addParameter(name: "ref_one_table", type: "String", value: "events")
-        hasuraStruct.addParameter(name: "ref_one_id", type: "Int", value: eventId)
-        hasuraStruct.addParameter(name: "ref_two_table", type: "String", value: "objects")
-        hasuraStruct.addParameter(name: "ref_two_id", type: "Int", value: objectId)
+        hasuraStruct.addParameter(name: "user_id", type: .int, value: userId)
+        hasuraStruct.addParameter(name: "ref_one_table", type: .string, value: "events")
+        hasuraStruct.addParameter(name: "ref_one_id", type: .int, value: eventId)
+        hasuraStruct.addParameter(name: "ref_two_table", type: .string, value: "objects")
+        hasuraStruct.addParameter(name: "ref_two_id", type: .int, value: objectId)
         
 
         let (graphqlQuery, variables) = hasuraStruct.getMutationAndVariables

@@ -9,19 +9,13 @@ import SwiftUI
 
 struct ShowActionView: View {
     @StateObject private var action: ActionModel
-    @State private var startTime: Date
-    @State private var endTime: Date?
     
     init(actionModel: ActionModel) {
         _action = StateObject(wrappedValue: actionModel)
-        _startTime = State(initialValue: actionModel.startTime.getDate!)
-        _endTime = State(initialValue: actionModel.endTime?.getDate)
     }
     
     init(actionType: ActionTypeModel) {
-        _action = StateObject(wrappedValue:  ActionModel(actionTypeId: actionType.id!, startTime: "", actionTypeModel: actionType))
-        _startTime = State(initialValue: Date())
-        _endTime = State(initialValue: nil)
+        _action = StateObject(wrappedValue:  ActionModel(actionTypeId: actionType.id!, startTime: Date().toUTCString, actionTypeModel: actionType))
     }
     
     var body: some View {
@@ -29,7 +23,10 @@ struct ShowActionView: View {
             Section(header: Text("Time Information")) {
                 DatePicker(
                     action.actionTypeModel.staticFields.startTime?.name ?? "Start Time",
-                    selection: $startTime,
+                    selection: Binding(
+                        get: { self.action.startTime.getDate ?? Date()},
+                        set: { self.action.startTime = $0.toUTCString }
+                    ),
                     displayedComponents: [.date, .hourAndMinute]
                 )
                 
@@ -37,8 +34,8 @@ struct ShowActionView: View {
                     DatePicker(
                         action.actionTypeModel.staticFields.endTime?.name ?? "End Time",
                         selection: Binding(
-                            get: { self.endTime ?? self.startTime },
-                            set: { self.endTime = $0 }
+                            get: { self.action.endTime?.getDate ?? Date() },
+                            set: { self.action.endTime = $0.toUTCString }
                         ),
                         displayedComponents: [.date, .hourAndMinute]
                     )
@@ -48,54 +45,16 @@ struct ShowActionView: View {
             Section(header: Text("Dynamic Fields")) {
                 ForEach(Array(action.actionTypeModel.dynamicFields.keys), id: \.self) { key in
                     if let field = action.actionTypeModel.dynamicFields[key] {
-                        if field.dataType != "LongString" {
-                            HStack {
-//                                                            Text("\(field.name): \(field.dataType) \(key)")
-                                Text("\(field.name): ")
-                                    .frame(alignment: .leading)
-                                if field.dataType == "Enum" {
-                                    Spacer()
-                                    Picker("", selection: Binding(
-                                        get: { action.dynamicData[key]?.toString ?? action.actionTypeModel.dynamicFields[key]?.getEnums.first ?? "None"},
-                                        set: { newValue in
-                                            action.dynamicData[key] = AnyCodable(newValue)
-                                            action.objectWillChange.send()
-                                        }
-                                    )) {
-                                        ForEach(action.actionTypeModel.dynamicFields[key]?.getEnums ?? ["None"], id: \.self) { type in
-                                            Text(type).tag(type)
-                                        }
-                                    }
-                                    .pickerStyle(MenuPickerStyle())
-                                } else if field.dataType == "ShortString" {
-                                    Spacer()
-                                    TextField(field.name, text: Binding(
-                                        get: { action.dynamicData[key]?.toString ?? ""},
-                                        set: { newValue in
-                                            action.dynamicData[key] = AnyCodable(newValue)
-                                            action.objectWillChange.send()
-                                        }
-                                    ))
-                                    .frame(width: 150, alignment: .trailing)
-                                    .multilineTextAlignment(.trailing)
-                                }
-                            }
-                            
-                        } else {
-//                            Text("\(field.name): ")
-//                            Text("\(field.name): \(field.dataType) \(key)")
-                            VStack(alignment: .leading) {
-                                Text("\(field.name): ")
-                                TextEditor(text: Binding(
-                                    get: { action.dynamicData[key]?.toString ?? ""},
-                                    set: { newValue in
-                                        action.dynamicData[key] = AnyCodable(newValue)
-                                        action.objectWillChange.send()
-                                    }))
-                                .frame(height: 100)  // Adjust this value to approximate 4 lines
-                                .padding(4)
-                                .background(Color(UIColor.systemGray6))
-                                .cornerRadius(8)
+                        Group {
+                            switch field.dataType {
+                            case "LongString":
+                                LongStringComponent(fieldName: field.name, value: bindingFor(key))
+                            case "ShortString":
+                                ShortStringComponent(fieldName: field.name, value: bindingFor(key))
+                            case "Enum":
+                                EnumComponent(fieldName: field.name, value: bindingFor(key), enumValues: field.getEnums)
+                            default:
+                                EmptyView()
                             }
                         }
                     }
@@ -121,14 +80,27 @@ struct ShowActionView: View {
         }
     }
     
+    private func bindingFor(_ key: String) -> Binding<AnyCodable?> {
+        Binding(
+            get: { action.dynamicData[key] },
+            set: { 
+                action.dynamicData[key] = $0
+                action.objectWillChange.send()
+            }
+        )
+    }
+    
     private func saveChanges() {
-        //        action.startTime = startTime
-        //        action.endTime = endTime
-        
-        // Save updated action to your data source
-        // This might involve calling a method on your view model or data manager
-        // For example: DataManager.shared.updateAction(action)
-        
-        // Optionally, you might want to dismiss the view or show a confirmation message
+        Task {
+            print(action.id)
+            if let actionId = action.id {
+                print("updating")
+                await ActionController.updateActionModel(model: action)
+            } else {
+                print("creating")
+                let actionId = await ActionController.createActionModel(model: action)
+                action.id = actionId
+            }
+        }
     }
 }

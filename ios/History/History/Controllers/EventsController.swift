@@ -104,17 +104,17 @@ class EventsController: ObservableObject {
 
     static func mutationQuery(id: Int, startTime: Date? = nil, endTime: Date? = nil, parentId: Int? = nil, notes:[String:String]? = nil, metadata:[String:Any]? = nil, images:[String]? = nil, passNullTimeValues: Bool = false) -> (String, [String: Any]) {
         var hasuraMutation: HasuraMutation = HasuraMutation(mutationFor: "update_events_by_pk", mutationName: "EventMutation", mutationType: .update, id: id)
-        hasuraMutation.addParameter(name: "start_time", type: "timestamp", value: startTime?.toUTCString, passNullValue: passNullTimeValues)
-        hasuraMutation.addParameter(name: "end_time", type: "timestamp", value: endTime?.toUTCString, passNullValue: passNullTimeValues)
-        hasuraMutation.addParameter(name: "parent_id", type: "Int", value: parentId)
+        hasuraMutation.addParameter(name: "start_time", type: .timestamp, value: startTime?.toUTCString, passNullValue: passNullTimeValues)
+        hasuraMutation.addParameter(name: "end_time", type: .timestamp, value: endTime?.toUTCString, passNullValue: passNullTimeValues)
+        hasuraMutation.addParameter(name: "parent_id", type: .int, value: parentId)
         if let notes = notes {
-            hasuraMutation.addParameter(name: "metadata", type: "jsonb", value: ["notes": notes])
+            hasuraMutation.addParameter(name: "metadata", type: .jsonb, value: ["notes": notes])
         }
         if let images = images {
-            hasuraMutation.addParameter(name: "metadata", type: "jsonb", value: ["images": images])
+            hasuraMutation.addParameter(name: "metadata", type: .jsonb, value: ["images": images])
         }
         if let metadata = metadata {
-            hasuraMutation.addParameter(name: "metadata", type: "jsonb", value: metadata)
+            hasuraMutation.addParameter(name: "metadata", type: .jsonb, value: metadata)
         }
         return hasuraMutation.getMutationAndVariables
     }

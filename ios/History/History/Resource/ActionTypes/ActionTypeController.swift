@@ -15,15 +15,15 @@ class ActionTypesController {
             mutationFor: "insert_v2_action_types_one",
             mutationName: "ActionTypeModelMutation",
             mutationType: .create)
-        hasuraStruct.addParameter(name: "user_id", type: "Int", value: Authentication.shared.userId!)
-        hasuraStruct.addParameter(name: "name", type: "String", value: model.name)
-        hasuraStruct.addParameter(name: "hasDuration", type: "Boolean", value: model.meta.hasDuration)
-        hasuraStruct.addParameter(name: "description", type: "String", value: model.meta.description)
+        hasuraStruct.addParameter(name: "user_id", type: .int, value: Authentication.shared.userId!)
+        hasuraStruct.addParameter(name: "name", type: .string, value: model.name)
+        hasuraStruct.addParameter(name: "hasDuration", type: .bool, value: model.meta.hasDuration)
+        hasuraStruct.addParameter(name: "description", type: .string, value: model.meta.description)
         let metadata: ActionTypeMetadataForHasura = ActionTypeMetadataForHasura(
             staticFields: model.staticFields,
             internalObjects: model.internalObjects, aggregates: model.aggregates,
             computed: model.computed)
-        hasuraStruct.addParameter(name: "metadata", type: "jsonb", value: metadata.toJSONDictionary())
+        hasuraStruct.addParameter(name: "metadata", type: .jsonb, value: metadata.toJSONDictionary())
         
         let (graphqlQuery, variables) = hasuraStruct.getMutationAndVariables
         struct CreateActionTypeResponse: GraphQLData {
@@ -51,9 +51,9 @@ class ActionTypesController {
             id: model.id
         )
         
-        hasuraMutation.addParameter(name: "name", type: "String", value: model.name)
-        hasuraMutation.addParameter(name: "hasDuration", type: "Boolean", value: model.meta.hasDuration)
-        hasuraMutation.addParameter(name: "description", type: "String", value: model.meta.description)
+        hasuraMutation.addParameter(name: "name", type: .string, value: model.name)
+        hasuraMutation.addParameter(name: "hasDuration", type: .bool, value: model.meta.hasDuration)
+        hasuraMutation.addParameter(name: "description", type: .string, value: model.meta.description)
         
         let metadata: ActionTypeMetadataForHasura = ActionTypeMetadataForHasura(
             staticFields: model.staticFields,
@@ -62,7 +62,7 @@ class ActionTypesController {
             aggregates: model.aggregates,
             computed: model.computed
         )
-        hasuraMutation.addParameter(name: "metadata", type: "jsonb", value: metadata.toJSONDictionary())
+        hasuraMutation.addParameter(name: "metadata", type: .jsonb, value: metadata.toJSONDictionary())
         
         let (graphqlQuery, variables) = hasuraMutation.getMutationAndVariables
         
@@ -131,9 +131,9 @@ class ActionTypesController {
     
     static private func generateQueryForActionTypes(userId: Int, actionTypeId: Int?) -> (String, [String: Any]) {
         var hasuraStruct:HasuraQuery = HasuraQuery(queryFor: "v2_action_types", queryName: "ActionTypesQuery", queryType: .query)
-        hasuraStruct.addParameter(name: "user_id", type: "Int", value: userId, op: "_eq")
+        hasuraStruct.addParameter(name: "user_id", type: .int, value: userId, op: .equals)
         if (actionTypeId != nil) {
-            hasuraStruct.addParameter(name: "id", type: "Int", value: actionTypeId, op: "_eq")
+            hasuraStruct.addParameter(name: "id", type: .int, value: actionTypeId, op: .equals)
         }
         hasuraStruct.setSelections(selections:actionTypeSelections)
         return hasuraStruct.getQueryAndVariables

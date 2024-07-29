@@ -13,12 +13,12 @@ class ActionController {
             mutationFor: "insert_v2_actions_one",
             mutationName: "ActionModelMutation",
             mutationType: .create)
-        hasuraStruct.addParameter(name: "user_id", type: "Int", value: Authentication.shared.userId!)
-        hasuraStruct.addParameter(name: "action_type_id", type: "Int", value: model.actionTypeId)
-        hasuraStruct.addParameter(name: "start_time", type: "String", value: model.startTime)
-        hasuraStruct.addParameter(name: "end_time", type: "String", value: model.endTime)
-        hasuraStruct.addParameter(name: "parent_id", type: "Int", value: model.parentId)
-        hasuraStruct.addParameter(name: "dynamic_data", type: "jsonb", value: model.dynamicData)
+        hasuraStruct.addParameter(name: "user_id", type: .int, value: Authentication.shared.userId!)
+        hasuraStruct.addParameter(name: "action_type_id", type: .int, value: model.actionTypeId)
+        hasuraStruct.addParameter(name: "start_time", type: .timestamp, value: model.startTime)
+        hasuraStruct.addParameter(name: "end_time", type: .timestamp, value: model.endTime)
+        hasuraStruct.addParameter(name: "parent_id", type: .int, value: model.parentId)
+        hasuraStruct.addParameter(name: "dynamic_data", type: .jsonb, value: model.dynamicData.toJson())
         
         let (graphqlQuery, variables) = hasuraStruct.getMutationAndVariables
         struct CreateActionResponse: GraphQLData {
@@ -32,6 +32,7 @@ class ActionController {
             let responseData: GraphQLResponse<CreateActionResponse> = try await Hasura.shared.sendGraphQL(query: graphqlQuery, variables: variables, responseType: GraphQLResponse<CreateActionResponse>.self)
             return responseData.data.insert_v2_actions_one.id
         } catch {
+            print(error)
             print("Failed to create action: \(error.localizedDescription)")
             return nil
         }
@@ -50,14 +51,13 @@ class ActionController {
             id: id
         )
         
-        hasuraMutation.addParameter(name: "action_type_id", type: "Int", value: model.actionTypeId)
-        hasuraMutation.addParameter(name: "start_time", type: "String", value: model.startTime)
-        hasuraMutation.addParameter(name: "end_time", type: "String", value: model.endTime)
-        hasuraMutation.addParameter(name: "parent_id", type: "Int", value: model.parentId)
-        hasuraMutation.addParameter(name: "dynamic_data", type: "jsonb", value: model.dynamicData)
+        hasuraMutation.addParameter(name: "action_type_id", type: .int, value: model.actionTypeId)
+        hasuraMutation.addParameter(name: "start_time", type: .timestamp, value: model.startTime)
+        hasuraMutation.addParameter(name: "end_time", type: .timestamp, value: model.endTime)
+        hasuraMutation.addParameter(name: "parent_id", type: .int, value: model.parentId)
+        hasuraMutation.addParameter(name: "dynamic_data", type: .jsonb, value: model.dynamicData.toJson())
         
         let (graphqlQuery, variables) = hasuraMutation.getMutationAndVariables
-        
         struct UpdateActionResponse: GraphQLData {
             var update_v2_actions_by_pk: UpdatedObject
             struct UpdatedObject: Decodable {
@@ -72,6 +72,7 @@ class ActionController {
                 responseType: GraphQLResponse<UpdateActionResponse>.self
             )
         } catch {
+            print(error)
             print("Failed to update action: \(error.localizedDescription)")
         }
     }
@@ -121,12 +122,12 @@ class ActionController {
     
     static private func generateQueryForActions(userId: Int, actionId: Int?, actionTypeId: Int? = nil) -> (String, [String: Any]) {
         var hasuraStruct: HasuraQuery = HasuraQuery(queryFor: "v2_actions", queryName: "ActionsQuery", queryType: .query)
-        hasuraStruct.addParameter(name: "user_id", type: "Int", value: userId, op: "_eq")
+        hasuraStruct.addParameter(name: "user_id", type: .int, value: userId, op: .equals)
         if let actionId = actionId {
-            hasuraStruct.addParameter(name: "id", type: "Int", value: actionId, op: "_eq")
+            hasuraStruct.addParameter(name: "id", type: .int, value: actionId, op: .equals)
         }
         if let actionTypeId = actionTypeId {
-            hasuraStruct.addParameter(name: "action_type_id", type: "Int", value: actionTypeId, op: "_eq")
+            hasuraStruct.addParameter(name: "action_type_id", type: .int, value: actionTypeId, op: .equals)
         }
         hasuraStruct.setSelections(selections: actionSelections)
         return hasuraStruct.getQueryAndVariables
