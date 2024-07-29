@@ -128,12 +128,27 @@ class ActionTypesController {
             return []
         }
     }
+
+    static func fetchActionType(userId: Int, actionTypeId: Int) async -> ActionTypeModel? {
+        let (graphqlQuery, variables) = generateQueryForActionTypes(userId: userId, actionTypeId: actionTypeId)
+        struct ActionTypeData: GraphQLData {
+            var v2_action_types: [ActionTypeForHasura]
+        }
+        do {
+            let responseData: GraphQLResponse<ActionTypeData> = try await Hasura.shared.sendGraphQL(query: graphqlQuery, variables: variables, responseType: GraphQLResponse<ActionTypeData>.self)
+            return responseData.data.v2_action_types.first?.toActionTypeModel()
+        } catch {
+            print(error)
+            print("Failed to fetch action type: \(error.localizedDescription)")
+            return nil
+        }
+    }
     
     static private func generateQueryForActionTypes(userId: Int, actionTypeId: Int?) -> (String, [String: Any]) {
         var hasuraStruct:HasuraQuery = HasuraQuery(queryFor: "v2_action_types", queryName: "ActionTypesQuery", queryType: .query)
-        hasuraStruct.addParameter(name: "user_id", type: .int, value: userId, op: .equals)
+        hasuraStruct.addWhereClause(name: "user_id", type: .int, value: userId, op: .equals)
         if (actionTypeId != nil) {
-            hasuraStruct.addParameter(name: "id", type: .int, value: actionTypeId, op: .equals)
+            hasuraStruct.addWhereClause(name: "id", type: .int, value: actionTypeId, op: .equals)
         }
         hasuraStruct.setSelections(selections:actionTypeSelections)
         return hasuraStruct.getQueryAndVariables
@@ -149,6 +164,7 @@ class ActionTypesController {
             name
             updated_at
             user_id
+            short_desc_syntax
         """
     }
 }
@@ -159,29 +175,42 @@ class ActionTypesController {
 // finished: put action type into database and then
 // finished: fetch action type
 // finished: fetch action
-//    finished: displaying dynamic primitives
-//    working: displaying dynamic objects
-// work on create/modify/delete action
-// put action action into database and then fetch it
+// finished: displaying dynamic primitives
+// finished: on create/modify/delete action
+// finished: put action action into database and then fetch it
+// finished: formatting short view
+//  working: tabs: timeline, data navigator
+// internal object edit, time stamped string
+// RELEASE
 
+
+// work on aggregates
 // RELASE
+// work on goals incl tabs
+// RELASE
+
+// COMMUNITY
+// work on shared goals incl tabs for groups
+// RELEASE
+
+
+// RELATIONAL DB
 // work on object view
 // work on object create/edit
 // put object into database and then fetch it
 // RELASE
-// work on aggregates
-// RELASE
-// work on goals
-// RELASE
-// work on reminders
-// RELASE
+
+// THIRD PARTY
 // integrate location
 // RELASE
-// integrate sleep
+// integrate saaha
 // RELASE
 // integrate plaid
 // RELEASE
 
+
+// work on reminders
+// RELASE
 
 
 

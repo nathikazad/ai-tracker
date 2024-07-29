@@ -16,6 +16,7 @@ class ActionTypeModel: ObservableObject {
     @Published var internalObjects: [String: InternalObject]
     var aggregates: [String: Aggregate]
     var computed: [String: Schema]
+    var shortDescSyntax: String?
     
     var internalDataTypes: [String] {
         internalObjects.values.compactMap { $0.name }.sorted()
@@ -39,6 +40,7 @@ class ActionTypeModel: ObservableObject {
         computed: [String: Schema] = [:],
         internalObjects: [String: InternalObject] = [:],
         aggregates: [String: Aggregate] = [:],
+        shortDescSyntax: String? = nil,
         goals: [String: Any] = [:]) {
             self.id = id
             self.name = name
@@ -48,6 +50,7 @@ class ActionTypeModel: ObservableObject {
             self.computed = computed
             self.internalObjects = internalObjects
             self.aggregates = aggregates
+            self.shortDescSyntax = shortDescSyntax
         }
 }
 

@@ -62,7 +62,7 @@ struct MainView: View {
             ZStack(alignment: .bottom) {
                 TabView(selection: $selectedTab) {
                     TodosView().tabItem { Label("Todos", systemImage: "checklist") }.tag(Tab.todos)
-                    EventsView().tabItem { Label("Timeline", systemImage: "clock") }.tag(Tab.timeline)
+                    ActionsTabView().tabItem { Label("Timeline", systemImage: "clock") }.tag(Tab.timeline)
                     Text("").tabItem { Image(systemName: "mic.fill") } // Placeholder
                     GoalsView().tabItem { Label("Goals", systemImage: "target") }.tag(Tab.goals)
                     InteractionsView().tabItem { Label("Interactions", systemImage: "message.badge.waveform.fill") }.tag(Tab.interactions)

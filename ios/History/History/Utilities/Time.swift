@@ -249,3 +249,67 @@ extension EventModel {
         }
     }
 }
+
+
+extension ActionModel {
+    private func _formattedTime(fillWithX: Bool = false) -> String {
+        let filler = fillWithX ? "XX:XX" : ""
+        let formattedStartTime = startTime
+        let formattedEndTime = endTime?.formattedTime ?? filler
+         if (endTime != nil) {
+            return  "\(formattedEndTime)"
+        } else {
+            return "\(formattedStartTime) - \(formattedEndTime)"
+        }
+    }
+    
+    var formattedTime: String {
+        return _formattedTime(fillWithX: false)
+    }
+
+    func formattedTimeWithReferenceDate(_ referenceDate: Date) -> String {
+        let formattedStartTime = startTime.formattedTimeWithReferenceDate(referenceDate)
+        if (endTime != nil) {
+            let formattedEndTime = endTime!.formattedTimeWithReferenceDate(referenceDate)
+            return "\(formattedStartTime) - \(formattedEndTime)"
+        } else {
+            return "\(formattedStartTime)"
+        }
+        return ""
+    }
+    
+    var formattedTimeWithX: String {
+        return _formattedTime(fillWithX: true)
+    }
+    
+    var formattedDate: String {
+        return "\(startTime.formattedDate)"
+    }
+    
+    var date: Date {
+        return startTime
+    }
+    
+    var formattedTimeWithDate: String {
+        return "\(formattedDate): \(formattedTime)"
+    }
+    
+    var formattedTimeWithDateAndX: String {
+        return "\(formattedDate): \(formattedTimeWithX)"
+    }
+    
+    var totalHoursPerDay: TimeInterval? {
+        if(endTime == nil){
+            return nil
+        }
+        return endTime!.timeIntervalSince(startTime)
+    }
+    
+    var timeTaken: String? {
+        if endTime != nil {
+            return startTime.durationInHHMM(to: endTime!)
+        } else {
+            return nil
+        }
+    }
+}

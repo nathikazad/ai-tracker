@@ -92,7 +92,7 @@ struct HasuraQuery {
         self.queryFor = queryFor
     }
     
-    mutating func addParameter(name: String, type: ParameterType, value: Any?, op: HasuraComparisonOperator) {
+    mutating func addWhereClause(name: String, type: ParameterType, value: Any?, op: HasuraComparisonOperator) {
         if let value = value {
             parameterClauses.append("$\(name): \(type.graphQLType)!")
             whereClauses.append("\(name): {\(op.rawValue): $\(name)}")
@@ -100,6 +100,16 @@ struct HasuraQuery {
         }
     }
 
+    mutating func addWhereClause(clause: String) {
+        whereClauses.append(clause)
+    }
+    
+    mutating func addParameter(name: String, type: ParameterType, value: Any?) {
+        if let value = value {
+            parameterClauses.append("$\(name): \(type.graphQLType)!")
+            variables[name] = value
+        }
+    }
     
     mutating func setSelections(selections:String) {
         self.selections = selections

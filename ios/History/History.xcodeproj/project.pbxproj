@@ -62,6 +62,9 @@
 		FE638F3C2C55E2A2001C34F0 /* ShowActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE638F3B2C55E2A2001C34F0 /* ShowActionView.swift */; };
 		FE638F3F2C55E594001C34F0 /* MinActionComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE638F3E2C55E594001C34F0 /* MinActionComponent.swift */; };
 		FE638F432C56FF4E001C34F0 /* ShowActionComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE638F422C56FF4E001C34F0 /* ShowActionComponents.swift */; };
+		FE638F462C571840001C34F0 /* ActionModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE638F452C571840001C34F0 /* ActionModels.swift */; };
+		FE638F482C571BDB001C34F0 /* ActionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE638F472C571BDB001C34F0 /* ActionRow.swift */; };
+		FE638F4A2C571EE2001C34F0 /* ActionsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE638F492C571EE2001C34F0 /* ActionsTabView.swift */; };
 		FE69D76A2BF6CFEE0061E2E6 /* LearnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69D7692BF6CFEE0061E2E6 /* LearnView.swift */; };
 		FE6ED6D12C06A3E300E6A2A6 /* NavigationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6ED6D02C06A3E300E6A2A6 /* NavigationButton.swift */; };
 		FE6ED6D32C06A9F500E6A2A6 /* ASObjectModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6ED6D22C06A9F500E6A2A6 /* ASObjectModel.swift */; };
@@ -220,6 +223,9 @@
 		FE638F3B2C55E2A2001C34F0 /* ShowActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowActionView.swift; sourceTree = "<group>"; };
 		FE638F3E2C55E594001C34F0 /* MinActionComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinActionComponent.swift; sourceTree = "<group>"; };
 		FE638F422C56FF4E001C34F0 /* ShowActionComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowActionComponents.swift; sourceTree = "<group>"; };
+		FE638F452C571840001C34F0 /* ActionModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionModels.swift; sourceTree = "<group>"; };
+		FE638F472C571BDB001C34F0 /* ActionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionRow.swift; sourceTree = "<group>"; };
+		FE638F492C571EE2001C34F0 /* ActionsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionsTabView.swift; sourceTree = "<group>"; };
 		FE69D7692BF6CFEE0061E2E6 /* LearnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearnView.swift; sourceTree = "<group>"; };
 		FE6ED6D02C06A3E300E6A2A6 /* NavigationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationButton.swift; sourceTree = "<group>"; };
 		FE6ED6D22C06A9F500E6A2A6 /* ASObjectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASObjectModel.swift; sourceTree = "<group>"; };
@@ -389,11 +395,10 @@
 		FE4AB3AE2C544E3F00A07749 /* Actions */ = {
 			isa = PBXGroup;
 			children = (
+				FE638F442C571823001C34F0 /* Models */,
 				FE4AB3AF2C544E5D00A07749 /* Views */,
 				FE4AB3A52C52F76B00A07749 /* ActionController.swift */,
-				FE4AB3942C51F03300A07749 /* ActionModel.swift */,
 				FE4AB3B02C5551BA00A07749 /* TestAction.swift */,
-				FE638F392C55A7D3001C34F0 /* ActionForHasura.swift */,
 			);
 			path = Actions;
 			sourceTree = "<group>";
@@ -404,6 +409,7 @@
 				FE638F3D2C55E57F001C34F0 /* Components */,
 				FE4AB38A2C4EF4E500A07749 /* ListActionsView.swift */,
 				FE638F3B2C55E2A2001C34F0 /* ShowActionView.swift */,
+				FE638F492C571EE2001C34F0 /* ActionsTabView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -494,8 +500,19 @@
 			children = (
 				FE638F3E2C55E594001C34F0 /* MinActionComponent.swift */,
 				FE638F422C56FF4E001C34F0 /* ShowActionComponents.swift */,
+				FE638F472C571BDB001C34F0 /* ActionRow.swift */,
 			);
 			path = Components;
+			sourceTree = "<group>";
+		};
+		FE638F442C571823001C34F0 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				FE4AB3942C51F03300A07749 /* ActionModel.swift */,
+				FE638F392C55A7D3001C34F0 /* ActionForHasura.swift */,
+				FE638F452C571840001C34F0 /* ActionModels.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		FE7EF1DA2BBE0ECB00279E18 /* Views */ = {
@@ -831,7 +848,9 @@
 				FEB8FD1F2BAA253100EE9B68 /* Intents.swift in Sources */,
 				FE1C0EAE2BC0713B00FF56AB /* Authentication.swift in Sources */,
 				FE900C082BD363D200F97050 /* LocationListView.swift in Sources */,
+				FE638F482C571BDB001C34F0 /* ActionRow.swift in Sources */,
 				FE477D932BD8122B001FC341 /* CalendarPicker.swift in Sources */,
+				FE638F462C571840001C34F0 /* ActionModels.swift in Sources */,
 				FE4AB39E2C51F29C00A07749 /* InternalObjectView.swift in Sources */,
 				FE8153722BD845B300D972C8 /* PolylineView.swift in Sources */,
 				FE9452F22BF2CC0900B28918 /* InteractionView.swift in Sources */,
@@ -863,6 +882,7 @@
 				FE8811EF2BC799BF00B112A8 /* TodosController.swift in Sources */,
 				FED942102BE0767900F0B24C /* Investor.swift in Sources */,
 				FE6ED6D32C06A9F500E6A2A6 /* ASObjectModel.swift in Sources */,
+				FE638F4A2C571EE2001C34F0 /* ActionsTabView.swift in Sources */,
 				FEA34E6D2BD0B83300CE2A12 /* LocationsDebugView.swift in Sources */,
 				FE4AB3A62C52F76B00A07749 /* ActionController.swift in Sources */,
 				FE3E9F662BC8ACAD008BD120 /* NavigationTitle.swift in Sources */,

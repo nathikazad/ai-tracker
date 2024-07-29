@@ -24,8 +24,8 @@ struct ShowActionView: View {
                 DatePicker(
                     action.actionTypeModel.staticFields.startTime?.name ?? "Start Time",
                     selection: Binding(
-                        get: { self.action.startTime.getDate ?? Date()},
-                        set: { self.action.startTime = $0.toUTCString }
+                        get: { self.action.startTime},
+                        set: { self.action.startTime = $0 }
                     ),
                     displayedComponents: [.date, .hourAndMinute]
                 )
@@ -34,8 +34,8 @@ struct ShowActionView: View {
                     DatePicker(
                         action.actionTypeModel.staticFields.endTime?.name ?? "End Time",
                         selection: Binding(
-                            get: { self.action.endTime?.getDate ?? Date() },
-                            set: { self.action.endTime = $0.toUTCString }
+                            get: { self.action.endTime ?? Date() },
+                            set: { self.action.endTime = $0 }
                         ),
                         displayedComponents: [.date, .hourAndMinute]
                     )

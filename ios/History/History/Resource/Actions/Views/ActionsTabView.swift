@@ -10,11 +10,11 @@ import Combine
 
 
 // Define your custom views for each tab
-struct EventsView: View {
+struct ActionsTabView: View {
     @State private var expandedEventIds: Set<Int> = []
     @State private var reassignParentForId: Int? = nil
     @StateObject private var datePickerModel: TwoDatePickerModel = TwoDatePickerModel()
-    @State private var events: [EventModel] = []
+    @State private var events: [ActionModel] = []
     @State private var coreStateSubcription: AnyCancellable?
     @State private var options = ["All"]
     @State private var selectedOption = "All"
@@ -82,14 +82,15 @@ struct EventsView: View {
     }
     
     private func listenToEvents() {
-        EventsController.listenToEvents(userId: auth.userId!, subscriptionId: subscriptionId, onlyRootNodes: true, date: state.currentDate, parentId: eventId) {
+        ActionController.listenToActions(userId: auth.userId!, subscriptionId: subscriptionId, forDate: state.currentDate) {
             events in
             
             print("EventsView: listenToEvents: new event")
+//            events[0].actionTypeModel
             DispatchQueue.main.async {
                 self.events = []
                 self.events = events
-                self.options = Array(Set(events.flatten.map { $0.eventType.rawValue.capitalized }))
+//                self.options = Array(Set(events.flatten.map { $0.actionTypeModel.name.rawValue.capitalized }))
                 self.options.insert("All", at: 0)
             }
         }
@@ -109,12 +110,13 @@ struct EventsView: View {
         }
     }
     
-    private var eventsToShow: [EventModel] {
-        if(selectedOption != "All") {
-            return events.flatten.filter { $0.eventType.rawValue.capitalized == selectedOption }.sortEvents
-        } else {
-            return events
-        }
+    private var eventsToShow: [ActionModel] {
+//        if(selectedOption != "All") {
+//            return events.flatten.filter { $0.eventType.rawValue.capitalized == selectedOption }.sortEvents
+//        } else {
+//            return events
+//        }
+        return events
     }
     
     private var listView: some View {
@@ -124,37 +126,37 @@ struct EventsView: View {
                     List {
                         ForEach(eventsToShow.sortEvents, id: \.id) { event in
                             eventRow(event)
-                            if expandedEventIds.contains(event.id) {
-                                MinimizedNoteView(notes: event.metadata!.notes, level:1)
-                                ForEach(event.children.sortEvents, id: \.id) { child in
-                                    eventRow(child, level: 1)
-                                    if expandedEventIds.contains(child.id) {
-                                        MinimizedNoteView(notes: child.metadata!.notes, level:2)
-                                        ForEach(child.children.sortEvents, id: \.id) { grandChild in
-                                            eventRow(grandChild, level: 2)
-                                        }
-                                     }
-                                }
-                            }
+//                            if expandedEventIds.contains(event.id) {
+//                                MinimizedNoteView(notes: event.metadata!.notes, level:1)
+//                                ForEach(event.children.sortEvents, id: \.id) { child in
+//                                    eventRow(child, level: 1)
+//                                    if expandedEventIds.contains(child.id) {
+//                                        MinimizedNoteView(notes: child.metadata!.notes, level:2)
+//                                        ForEach(child.children.sortEvents, id: \.id) { grandChild in
+//                                            eventRow(grandChild, level: 2)
+//                                        }
+//                                     }
+//                                }
+//                            }
                         }
                     }
                     .onAppear {
                         scrollProxy = proxy
                     }
-                    .onChange(of: events) {
-                        if state.isItToday
-                        {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-                                if let lastId = events.last?.id {
-                                    withAnimation(.easeInOut(duration: 0.5)) { // Customize the animation style and duration here
-                                        //                                    print("changed \(lastId) \(scrollProxy == nil)")
-                                        scrollProxy?.scrollTo(lastId, anchor: .top)
-                                    }
-                                }
-                            }
-                        }
-                        
-                    }
+//                    .onChange(of: events) {
+//                        if state.isItToday
+//                        {
+//                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+//                                if let lastId = events.last?.id {
+//                                    withAnimation(.easeInOut(duration: 0.5)) { // Customize the animation style and duration here
+//                                        //                                    print("changed \(lastId) \(scrollProxy == nil)")
+//                                        scrollProxy?.scrollTo(lastId, anchor: .top)
+//                                    }
+//                                }
+//                            }
+//                        }
+//
+//                    }
                     .padding(.top, 15)
                     
                     HStack {
@@ -172,11 +174,11 @@ struct EventsView: View {
                         // }
                         Spacer()
                         Button(action: {
-                            if expandedEventIds.count > 0 {
-                                expandedEventIds = []
-                            } else {
-                                expandedEventIds = Set(eventsToShow.withChildrenOrNotes.map { $0.id })
-                            }
+//                            if expandedEventIds.count > 0 {
+//                                expandedEventIds = []
+//                            } else {
+//                                expandedEventIds = Set(eventsToShow.withChildrenOrNotes.map { $0.id })
+//                            }
                         }) {
                             if expandedEventIds.count > 0 {
                                 Image(systemName: "minus.circle")
@@ -195,13 +197,13 @@ struct EventsView: View {
         }
     }
     
-    private func eventRow(_ event: EventModel, level: Int = 0) -> EventRow {
-        return EventRow(
+    private func eventRow(_ event: ActionModel, level: Int = 0) -> ActionRow {
+        return ActionRow(
             event: event,
             reassignParentForId: $reassignParentForId,
             expandedEventIds: $expandedEventIds,
             dateClickedAction: { event in
-                datePickerModel.showPopupForEvent(event: event)
+                datePickerModel.showPopupForAction(event: event)
             },
             level: level,
             showTimeWithRespectToCurrentDate: true)

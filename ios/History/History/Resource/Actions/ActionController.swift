@@ -15,8 +15,10 @@ class ActionController {
             mutationType: .create)
         hasuraStruct.addParameter(name: "user_id", type: .int, value: Authentication.shared.userId!)
         hasuraStruct.addParameter(name: "action_type_id", type: .int, value: model.actionTypeId)
-        hasuraStruct.addParameter(name: "start_time", type: .timestamp, value: model.startTime)
-        hasuraStruct.addParameter(name: "end_time", type: .timestamp, value: model.endTime)
+        hasuraStruct.addParameter(name: "start_time", type: .timestamp, value: model.startTime.toUTCString)
+        if let endTime = model.endTime {
+            hasuraStruct.addParameter(name: "end_time", type: .timestamp, value: endTime.toUTCString)
+        }
         hasuraStruct.addParameter(name: "parent_id", type: .int, value: model.parentId)
         hasuraStruct.addParameter(name: "dynamic_data", type: .jsonb, value: model.dynamicData.toJson())
         
@@ -52,8 +54,10 @@ class ActionController {
         )
         
         hasuraMutation.addParameter(name: "action_type_id", type: .int, value: model.actionTypeId)
-        hasuraMutation.addParameter(name: "start_time", type: .timestamp, value: model.startTime)
-        hasuraMutation.addParameter(name: "end_time", type: .timestamp, value: model.endTime)
+        hasuraMutation.addParameter(name: "start_time", type: .timestamp, value: model.startTime.toUTCString)
+        if let endTime = model.endTime {
+            hasuraMutation.addParameter(name: "end_time", type: .timestamp, value: endTime.toUTCString)
+        }
         hasuraMutation.addParameter(name: "parent_id", type: .int, value: model.parentId)
         hasuraMutation.addParameter(name: "dynamic_data", type: .jsonb, value: model.dynamicData.toJson())
         
@@ -120,14 +124,46 @@ class ActionController {
         }
     }
     
-    static private func generateQueryForActions(userId: Int, actionId: Int?, actionTypeId: Int? = nil) -> (String, [String: Any]) {
-        var hasuraStruct: HasuraQuery = HasuraQuery(queryFor: "v2_actions", queryName: "ActionsQuery", queryType: .query)
-        hasuraStruct.addParameter(name: "user_id", type: .int, value: userId, op: .equals)
+    static func listenToActions(userId: Int, subscriptionId: String, actionId: Int? = nil, actionTypeId: Int? = nil, forDate: Date? = nil, actionUpdateCallback: @escaping ([ActionModel]) -> Void) {
+        Hasura.shared.stopListening(subscriptionId: subscriptionId)
+        let (subscriptionQuery, variables) = generateQueryForActions(userId: userId, actionId: actionId, actionTypeId: actionTypeId, isSubscription: true, forDate: forDate)
+        print(subscriptionQuery)
+        print(variables)
+        struct ActionData: GraphQLData {
+            var v2_actions: [ActionForHasura]
+        }
+        
+        Hasura.shared.startListening(subscriptionId: subscriptionId, subscriptionQuery: subscriptionQuery, responseType: GraphQLResponse<ActionData>.self, variables: variables) { result in
+            switch result {
+            case .success(let responseData):
+                let actions = responseData.data.v2_actions.map { $0.toActionModel() }
+                actionUpdateCallback(actions)
+            case .failure(let error):
+                print("Error processing action update: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    static private func generateQueryForActions(userId: Int, actionId: Int?, actionTypeId: Int? = nil, isSubscription:Bool = false, forDate: Date? = nil) -> (String, [String: Any]) {
+        var hasuraStruct: HasuraQuery = HasuraQuery(queryFor: "v2_actions", queryName: "ActionsQuery", queryType: isSubscription ? .subscription : .query)
+        hasuraStruct.addWhereClause(name: "user_id", type: .int, value: userId, op: .equals)
         if let actionId = actionId {
-            hasuraStruct.addParameter(name: "id", type: .int, value: actionId, op: .equals)
+            hasuraStruct.addWhereClause(name: "id", type: .int, value: actionId, op: .equals)
+        }
+        if let gteDate = forDate {
+            let startOfTodayUTCString = gteDate.toUTCString
+            let calendar = Calendar.current
+            let dayAfterGteDate = calendar.date(byAdding: .day, value: +1, to: gteDate)!
+            let dayAfterUTCString = dayAfterGteDate.toUTCString
+            let startTimeConditions = "_and: {start_time: {_gt: $start_time, _lt: $end_time}}"
+            let endTimeConditions = "_and: {end_time: {_gt: $start_time, _lt: $end_time}}"
+            let combinedConditions = "_or: [{\(startTimeConditions)},{\(endTimeConditions)}]"
+            hasuraStruct.addWhereClause(clause: combinedConditions)
+            hasuraStruct.addParameter(name: "start_time", type: .timestamp, value: startOfTodayUTCString)
+            hasuraStruct.addParameter(name: "end_time", type: .timestamp, value: dayAfterUTCString)
         }
         if let actionTypeId = actionTypeId {
-            hasuraStruct.addParameter(name: "action_type_id", type: .int, value: actionTypeId, op: .equals)
+            hasuraStruct.addWhereClause(name: "action_type_id", type: .int, value: actionTypeId, op: .equals)
         }
         hasuraStruct.setSelections(selections: actionSelections)
         return hasuraStruct.getQueryAndVariables

@@ -27,8 +27,8 @@ class ObjectController {
     
     static func generateQueryForObjects(userId: Int, objectType: ASObjectType?) -> (String, [String: Any]) {
         var hasuraStruct:HasuraQuery = HasuraQuery(queryFor: "objects", queryName: "ObjectsQuery", queryType: .query)
-        hasuraStruct.addParameter(name: "user_id", type: .int, value: userId, op: .equals)
-        hasuraStruct.addParameter(name: "object_type", type: .string, value: objectType?.rawValue, op: .equals)
+        hasuraStruct.addWhereClause(name: "user_id", type: .int, value: userId, op: .equals)
+        hasuraStruct.addWhereClause(name: "object_type", type: .string, value: objectType?.rawValue, op: .equals)
         hasuraStruct.setSelections(selections:objectSelections)
         return hasuraStruct.getQueryAndVariables
     }

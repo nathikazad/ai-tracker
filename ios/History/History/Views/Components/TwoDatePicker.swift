@@ -34,6 +34,15 @@ class TwoDatePickerModel: ObservableObject {
         popupScreenFirst = true
     }
     
+    func showPopupForAction(event: ActionModel) {
+        startTime = event.startTime
+        endTime = event.endTime ?? Date()
+        startTimeIsNull = false
+        endTimeIsNull = event.endTime == nil
+        showPopupForId = event.id
+        popupScreenFirst = true
+    }
+    
     func showNextScreen() {
         popupScreenFirst = false
     }

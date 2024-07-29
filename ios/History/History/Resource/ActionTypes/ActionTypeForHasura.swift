@@ -12,6 +12,7 @@ struct ActionTypeForHasura: Codable {
     let createdAt: Date
     let description: String
     let hasDuration: Bool
+    let shortDescSyntax: String?
     let name: String
     let updatedAt: Date
     let userId: Int
@@ -26,6 +27,7 @@ struct ActionTypeForHasura: Codable {
         case name
         case updatedAt = "updated_at"
         case userId = "user_id"
+        case shortDescSyntax = "short_desc_syntax"
     }
     
     init(from decoder: Decoder) throws {
@@ -40,6 +42,7 @@ struct ActionTypeForHasura: Codable {
         updatedAt = updatedAtString!.getDate!
         userId = try container.decode(Int.self, forKey: .userId)
         metadata = try container.decodeIfPresent(ActionTypeMetadataForHasura.self, forKey: .metadata) ?? ActionTypeMetadataForHasura()
+        shortDescSyntax = try container.decodeIfPresent(String.self, forKey: .shortDescSyntax)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -65,7 +68,8 @@ struct ActionTypeForHasura: Codable {
             dynamicFields: metadata.dynamicFields,
             computed: metadata.computed,
             internalObjects: metadata.internalObjects,
-            aggregates: metadata.aggregates
+            aggregates: metadata.aggregates,
+            shortDescSyntax: shortDescSyntax
         )
     }
 }
