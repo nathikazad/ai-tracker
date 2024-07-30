@@ -43,30 +43,12 @@ struct ShowActionView: View {
             }
             
             if(Array(action.actionTypeModel.dynamicFields.keys).count > 0) {
-                Section(header: Text("Dynamic Fields")) {
-                    ForEach(Array(action.actionTypeModel.dynamicFields.keys), id: \.self) { key in
-                        if let field = action.actionTypeModel.dynamicFields[key] {
-                            Group {
-                                switch field.dataType {
-                                case "LongString":
-                                    LongStringComponent(fieldName: field.name, value: bindingFor(key))
-                                case "ShortString":
-                                    ShortStringComponent(fieldName: field.name, value: bindingFor(key), isArray:field.array)
-                                case "Enum":
-                                    EnumComponent(fieldName: field.name, value: bindingFor(key), enumValues: field.getEnums)
-                                case "Unit":
-                                    UnitComponent(fieldName: field.name, value: bindingFor(key))
-                                case "Currency":
-                                    CurrencyComponent(fieldName: field.name, value: bindingFor(key))
-                                case "Duration":
-                                    DurationComponent(fieldName: field.name, value: bindingFor(key))
-                                default:
-                                    EmptyView()
-                                }
-                            }
-                        }
-                    }
-                }
+                DynamicFieldsView(
+                    dynamicFields: $action.actionTypeModel.dynamicFields,
+                    dynamicData: $action.dynamicData,
+                    updateView: {
+                        self.action.objectWillChange.send()
+                    })
             }
             
             Section {
@@ -96,21 +78,11 @@ struct ShowActionView: View {
             }
         }
     }
-    
-    private func bindingFor(_ key: String) -> Binding<AnyCodable?> {
-        Binding(
-            get: { action.dynamicData[key] },
-            set: { 
-                action.dynamicData[key] = $0
-                action.objectWillChange.send()
-            }
-        )
-    }
-    
+
     private func saveChanges() {
         Task {
-            print(action.id)
-            if let actionId = action.id {
+//            print(action.id)
+            if action.id != nil {
                 print("updating")
                 await ActionController.updateActionModel(model: action)
             } else {
@@ -119,5 +91,78 @@ struct ShowActionView: View {
                 action.id = actionId
             }
         }
+    }
+}
+
+
+
+struct DynamicFieldsView: View {
+    @Binding var dynamicFields: [String: Schema]
+    @Binding var dynamicData: [String: AnyCodable]
+    var updateView: (() -> Void)
+    var body: some View {
+        Section {
+            Section(header: Text("Dynamic Fields")) {
+                ForEach(Array(dynamicFields.keys), id: \.self) { key in
+                    if let field = dynamicFields[key] {
+                        if let dataType = getDataType(from: field.dataType) {
+                            Group {
+                                switch dataType {
+                                case .longString:
+                                    LongStringComponent(fieldName: field.name,
+                                                        value: bindingFor(key, "") as Binding<String>)
+                                case .shortString:
+                                    ShortStringComponent(fieldName: field.name,
+                                                         value: bindingFor(key, "") as Binding<String>)
+                                case .enumerator:
+                                    EnumComponent(fieldName: field.name,
+                                                  value: bindingFor(key, field.getEnums.first!),
+                                                  enumValues: field.getEnums)
+                                case .unit:
+                                    UnitComponent(
+                                        fieldName: field.name,
+                                        unit: bindingFor(key, Unit.defaultUnit) as Binding<Unit>
+                                    )
+                                case .currency:
+                                    CurrencyComponent(
+                                        fieldName: field.name,
+                                        currency: bindingFor(key, Currency.defaultCurrency) as Binding<Currency>
+                                    )
+                                case .duration:
+                                    DurationComponent(
+                                        fieldName: field.name,
+                                        duration: bindingFor(key, Duration.defaultDuration) as Binding<Duration>
+                                    )
+                                case .dateTime:
+                                    TimeComponent(
+                                        fieldName: field.name,
+                                        time: bindingFor(key, Date()) as Binding<Date>
+                                    )
+                                case .time:
+                                    TimeComponent(
+                                        fieldName: field.name,
+                                        time: bindingFor(key, Date()) as Binding<Date>
+                                    )
+                                default:
+                                    EmptyView()
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    private func bindingFor<T>(_ key: String, _ defaultValue: T) -> Binding<T> {
+        Binding(
+            get: {
+                (dynamicData[key]?.toType(T.self) as? T) ?? defaultValue
+            },
+            set: { newValue in
+                dynamicData[key] = AnyCodable(newValue)
+                updateView()
+            }
+        )
     }
 }

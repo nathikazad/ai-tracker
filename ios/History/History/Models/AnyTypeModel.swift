@@ -73,6 +73,14 @@ struct AnyCodable: Codable {
             return "AnyCodable(\(String(describing: value)))"
         }
     }
+
+    var toInt: Int? {
+        if let number = value as? NSNumber {
+            return number.intValue
+        } else {
+            return nil
+        }
+    }
     
     func toJSONCompatible() -> Any {
         switch value {

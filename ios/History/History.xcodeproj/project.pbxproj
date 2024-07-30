@@ -106,12 +106,6 @@
 		FEB8FD1F2BAA253100EE9B68 /* Intents.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB8FD1E2BAA253100EE9B68 /* Intents.swift */; };
 		FEB8FD202BAA253100EE9B68 /* Intents.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB8FD1E2BAA253100EE9B68 /* Intents.swift */; };
 		FEBED49A2C0AD79800DB2D5F /* PersonViewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBED4992C0AD79800DB2D5F /* PersonViewHelper.swift */; };
-		FEC5386E2BBDE4E5006BDBDA /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEC5386D2BBDE4E5006BDBDA /* WidgetKit.framework */; };
-		FEC538702BBDE4E5006BDBDA /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEC5386F2BBDE4E5006BDBDA /* SwiftUI.framework */; };
-		FEC538732BBDE4E5006BDBDA /* Shortcut.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEC538722BBDE4E5006BDBDA /* Shortcut.swift */; };
-		FEC538752BBDE4E5006BDBDA /* AppIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEC538742BBDE4E5006BDBDA /* AppIntent.swift */; };
-		FEC538772BBDE4E6006BDBDA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FEC538762BBDE4E6006BDBDA /* Assets.xcassets */; };
-		FEC5387B2BBDE4E6006BDBDA /* ShortcutExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FEC5386C2BBDE4E5006BDBDA /* ShortcutExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		FEC538812BBDF8C7006BDBDA /* WidgetIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEC538802BBDF8C7006BDBDA /* WidgetIntent.swift */; };
 		FEC7849E2C064EAE007C38F1 /* PersonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEC7849D2C064EAE007C38F1 /* PersonView.swift */; };
 		FECA5EEC2BE56970007ADE17 /* EventsComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = FECA5EEB2BE56970007ADE17 /* EventsComponents.swift */; };
@@ -121,6 +115,7 @@
 		FEDBC0652C0509AC00233EA0 /* EventDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEDBC0642C0509AC00233EA0 /* EventDestination.swift */; };
 		FEDBC0672C050C3F00233EA0 /* EventButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEDBC0662C050C3F00233EA0 /* EventButtons.swift */; };
 		FEDBC0692C053A2800233EA0 /* EventList.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEDBC0682C053A2800233EA0 /* EventList.swift */; };
+		FEE6D79E2C58822300E65367 /* ActionModelConditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE6D79D2C58822300E65367 /* ActionModelConditions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -130,13 +125,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = FE4F7BB52BA7D7E60041CB6A;
 			remoteInfo = "MiniHistory Watch App";
-		};
-		FEC538792BBDE4E6006BDBDA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FE4F7B972BA7D79E0041CB6A /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = FEC5386B2BBDE4E5006BDBDA;
-			remoteInfo = ShortcutExtension;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -158,7 +146,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				FEC5387B2BBDE4E6006BDBDA /* ShortcutExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -264,7 +251,6 @@
 		FEB366E52BDDF8F9000A48C0 /* Chart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chart.swift; sourceTree = "<group>"; };
 		FEB8FD1E2BAA253100EE9B68 /* Intents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intents.swift; sourceTree = "<group>"; };
 		FEBED4992C0AD79800DB2D5F /* PersonViewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonViewHelper.swift; sourceTree = "<group>"; };
-		FEC5386C2BBDE4E5006BDBDA /* ShortcutExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ShortcutExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		FEC5386D2BBDE4E5006BDBDA /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		FEC5386F2BBDE4E5006BDBDA /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		FEC538722BBDE4E5006BDBDA /* Shortcut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shortcut.swift; sourceTree = "<group>"; };
@@ -280,6 +266,7 @@
 		FEDBC0642C0509AC00233EA0 /* EventDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDestination.swift; sourceTree = "<group>"; };
 		FEDBC0662C050C3F00233EA0 /* EventButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventButtons.swift; sourceTree = "<group>"; };
 		FEDBC0682C053A2800233EA0 /* EventList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventList.swift; sourceTree = "<group>"; };
+		FEE6D79D2C58822300E65367 /* ActionModelConditions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionModelConditions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -296,15 +283,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		FEC538692BBDE4E5006BDBDA /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				FEC538702BBDE4E5006BDBDA /* SwiftUI.framework in Frameworks */,
-				FEC5386E2BBDE4E5006BDBDA /* WidgetKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -430,7 +408,6 @@
 			children = (
 				FE4F7B9F2BA7D79E0041CB6A /* History.app */,
 				FE4F7BB62BA7D7E60041CB6A /* Aspire Watch.app */,
-				FEC5386C2BBDE4E5006BDBDA /* ShortcutExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -511,6 +488,7 @@
 				FE4AB3942C51F03300A07749 /* ActionModel.swift */,
 				FE638F392C55A7D3001C34F0 /* ActionForHasura.swift */,
 				FE638F452C571840001C34F0 /* ActionModels.swift */,
+				FEE6D79D2C58822300E65367 /* ActionModelConditions.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -692,7 +670,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				FEC5387A2BBDE4E6006BDBDA /* PBXTargetDependency */,
 			);
 			name = "MiniHistory Watch App";
 			packageProductDependencies = (
@@ -700,23 +677,6 @@
 			productName = "MiniHistory Watch App";
 			productReference = FE4F7BB62BA7D7E60041CB6A /* Aspire Watch.app */;
 			productType = "com.apple.product-type.application";
-		};
-		FEC5386B2BBDE4E5006BDBDA /* ShortcutExtension */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = FEC5387C2BBDE4E6006BDBDA /* Build configuration list for PBXNativeTarget "ShortcutExtension" */;
-			buildPhases = (
-				FEC538682BBDE4E5006BDBDA /* Sources */,
-				FEC538692BBDE4E5006BDBDA /* Frameworks */,
-				FEC5386A2BBDE4E5006BDBDA /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = ShortcutExtension;
-			productName = ShortcutExtension;
-			productReference = FEC5386C2BBDE4E5006BDBDA /* ShortcutExtension.appex */;
-			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -732,9 +692,6 @@
 						CreatedOnToolsVersion = 15.2;
 					};
 					FE4F7BB52BA7D7E60041CB6A = {
-						CreatedOnToolsVersion = 15.2;
-					};
-					FEC5386B2BBDE4E5006BDBDA = {
 						CreatedOnToolsVersion = 15.2;
 					};
 				};
@@ -757,7 +714,6 @@
 			targets = (
 				FE4F7B9E2BA7D79E0041CB6A /* History */,
 				FE4F7BB52BA7D7E60041CB6A /* MiniHistory Watch App */,
-				FEC5386B2BBDE4E5006BDBDA /* ShortcutExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -778,14 +734,6 @@
 			files = (
 				FE4F7BC02BA7D7E70041CB6A /* Preview Assets.xcassets in Resources */,
 				FE4F7BBD2BA7D7E70041CB6A /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		FEC5386A2BBDE4E5006BDBDA /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				FEC538772BBDE4E6006BDBDA /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -824,6 +772,7 @@
 				FE71B3882BD07BCE008F7D1A /* AudioRecorder.swift in Sources */,
 				FE4AB3952C51F03300A07749 /* ActionModel.swift in Sources */,
 				FE129BE62BCB87B9004058EA /* LocationManager.swift in Sources */,
+				FEE6D79E2C58822300E65367 /* ActionModelConditions.swift in Sources */,
 				FE4F7BB12BA7D7C80041CB6A /* WatchCommunicator.swift in Sources */,
 				FE9E18BB2C02DE4000611CE8 /* EventRow.swift in Sources */,
 				FEC7849E2C064EAE007C38F1 /* PersonView.swift in Sources */,
@@ -907,15 +856,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FEC538682BBDE4E5006BDBDA /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				FEC538732BBDE4E5006BDBDA /* Shortcut.swift in Sources */,
-				FEC538752BBDE4E5006BDBDA /* AppIntent.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -923,11 +863,6 @@
 			isa = PBXTargetDependency;
 			target = FE4F7BB52BA7D7E60041CB6A /* MiniHistory Watch App */;
 			targetProxy = FE4F7BC12BA7D7E70041CB6A /* PBXContainerItemProxy */;
-		};
-		FEC5387A2BBDE4E6006BDBDA /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = FEC5386B2BBDE4E5006BDBDA /* ShortcutExtension */;
-			targetProxy = FEC538792BBDE4E6006BDBDA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1062,7 +997,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_ASSET_PATHS = "\"History/Preview Content\"";
-				DEVELOPMENT_TEAM = C22W55L7FR;
+				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = History/Info.plist;
@@ -1087,7 +1022,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History;
+				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1111,7 +1046,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_ASSET_PATHS = "\"History/Preview Content\"";
-				DEVELOPMENT_TEAM = C22W55L7FR;
+				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = History/Info.plist;
@@ -1136,7 +1071,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History;
+				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1158,18 +1093,18 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_ASSET_PATHS = "\"MiniHistory Watch App/Preview Content\"";
-				DEVELOPMENT_TEAM = C22W55L7FR;
+				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "For listening to user command";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.evol.History;
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.snow.aspire;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire.watchapp;
 				PRODUCT_NAME = "Aspire Watch";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -1189,79 +1124,19 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_ASSET_PATHS = "\"MiniHistory Watch App/Preview Content\"";
-				DEVELOPMENT_TEAM = C22W55L7FR;
+				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "For listening to user command";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.evol.History;
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.snow.aspire;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire.watchapp;
 				PRODUCT_NAME = "Aspire Watch";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 10.2;
-			};
-			name = Release;
-		};
-		FEC5387D2BBDE4E6006BDBDA /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = C22W55L7FR;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Shortcut/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Shortcut;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-					"@executable_path/../../../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History.watchkitapp.Shortcut;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 10.2;
-			};
-			name = Debug;
-		};
-		FEC5387E2BBDE4E6006BDBDA /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = C22W55L7FR;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Shortcut/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Shortcut;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-					"@executable_path/../../../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History.watchkitapp.Shortcut;
-				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1297,15 +1172,6 @@
 			buildConfigurations = (
 				FE4F7BC52BA7D7E70041CB6A /* Debug */,
 				FE4F7BC62BA7D7E70041CB6A /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		FEC5387C2BBDE4E6006BDBDA /* Build configuration list for PBXNativeTarget "ShortcutExtension" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				FEC5387D2BBDE4E6006BDBDA /* Debug */,
-				FEC5387E2BBDE4E6006BDBDA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

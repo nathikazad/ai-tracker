@@ -23,6 +23,31 @@ enum DataType: String, CaseIterable, Codable {
     case image = "Image"
 }
 
+func getDataType(from string: String) -> DataType? {
+    let lowercasedString = string.lowercased()
+    return DataType.allCases.first { $0.rawValue.lowercased() == lowercasedString }
+}
+
+extension AnyCodable {
+    func toType<T>(_ type: T.Type) -> T? {
+        switch type {
+        case is Duration.Type:
+            return value as? T
+        case is Unit.Type:
+            return value as? T
+        case is Currency.Type:
+            return value as? T
+        case is TimeStampedString.Type:
+            return value as? T
+        case is Date.Type:
+            return (value as? String)?.getDate as? T
+        default:
+            return nil
+        }
+    }
+}
+
+
 let allDataTypeStrings = DataType.allCases.map { $0.rawValue }
 
 class Duration {
@@ -35,7 +60,9 @@ class Duration {
     
     var durationType: DurationType
     
-    init(durationInSeconds: Int, durationType: DurationType) {
+    static let defaultDuration = Duration()
+    
+    init(durationInSeconds: Int = 0, durationType: DurationType = .seconds) {
         self.durationInSeconds = durationInSeconds
         self.durationType = durationType
     }
@@ -72,8 +99,10 @@ class Unit {
         case tablespoons
         case teaspoons
     }
+    
+    static let defaultUnit = Unit()
 
-    init(value: Int, unitType: UnitType, unitMeasure: UnitMeasure) {
+    init(value: Int = 0, unitType: UnitType = .count, unitMeasure: UnitMeasure = .none) {
         self.value = value
         self.unitType = unitType
         self.unitMeasure = unitMeasure
@@ -125,8 +154,10 @@ class Unit {
 class Currency {
     var value: Int
     var currencyType: String
+    
+    static let defaultCurrency = Currency()
 
-    init(value: Int, currencyType: String) {
+    init(value: Int = 0, currencyType: String = "dollars") {
         self.value = value
         self.currencyType = currencyType
     }
@@ -135,8 +166,10 @@ class Currency {
 class TimeStampedString {
     var value: String
     var timestamp: Date
+    
+    static let defaultTimeStampedString = TimeStampedString()
 
-    init(value: String, timestamp: Date) {
+    init(value: String = "", timestamp: Date = Date()) {
         self.value = value
         self.timestamp = timestamp
     }

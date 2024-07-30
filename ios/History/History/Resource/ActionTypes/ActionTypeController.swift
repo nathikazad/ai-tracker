@@ -187,10 +187,10 @@ class ActionTypesController {
 // finished: put action action into database and then fetch it
 // finished: formatting short view
 // finished: tabs: timeline, data navigator
-// working: time stamped string
+// SKIPPED: time stamped string
 // RELEASE
 
-// work on aggregates, computed duration
+// work on aggregates
 // RELASE
 // work on goals incl tabs
 // RELASE
