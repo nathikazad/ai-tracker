@@ -16,33 +16,33 @@ export async function parseUserRequest(text: string, userId: number, parentEvent
         debugInfo["parentEventId"] = parentEventId
     }
     let interactionId = await insertInteraction(userId, text, "event", debugInfo);
-    if(userId == 1 || userId == 2) {
-        let timezone = await getUserTimeZone(userId)
-        let interaction:Interaction = {
-            id: interactionId,
-            userId,
-            statement: text,
-            recordedAt: new Date().toISOString(),
-            timezone,
-        }
-        console.log(`Interaction(${interaction.id}) at  ${toPST(interaction.recordedAt)}: \n ${JSON.stringify(interaction, null, 4)}`)
-        if(parentEventId) {
-            let event = await getEvent(parentEventId)
-            if(event != null) {
-                if(event.event_type == Category.Stay) {
-                    await interactionToEvent(interaction, parentEventId)
-                } else {
-                    event.metadata = event.metadata ?? {}
-                    event.metadata.notes = event.metadata.notes ?? {}
-                    event.metadata.notes[new Date().toISOString()] = text
-                    await updateEvent(parentEventId, undefined, undefined, event.metadata, interaction)
-                    // also check for feeling or expense
-                }    
-            }
-        } else {
-            await interactionToEvent(interaction)
-        }
-    }
+    // if(userId == 1 || userId == 2) {
+    //     let timezone = await getUserTimeZone(userId)
+    //     let interaction:Interaction = {
+    //         id: interactionId,
+    //         userId,
+    //         statement: text,
+    //         recordedAt: new Date().toISOString(),
+    //         timezone,
+    //     }
+    //     console.log(`Interaction(${interaction.id}) at  ${toPST(interaction.recordedAt)}: \n ${JSON.stringify(interaction, null, 4)}`)
+    //     if(parentEventId) {
+    //         let event = await getEvent(parentEventId)
+    //         if(event != null) {
+    //             if(event.event_type == Category.Stay) {
+    //                 await interactionToEvent(interaction, parentEventId)
+    //             } else {
+    //                 event.metadata = event.metadata ?? {}
+    //                 event.metadata.notes = event.metadata.notes ?? {}
+    //                 event.metadata.notes[new Date().toISOString()] = text
+    //                 await updateEvent(parentEventId, undefined, undefined, event.metadata, interaction)
+    //                 // also check for feeling or expense
+    //             }    
+    //         }
+    //     } else {
+    //         await interactionToEvent(interaction)
+    //     }
+    // }
 }
 
 export async function parseEvent(event: string, user_id: number, interaction_id: number) {
