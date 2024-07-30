@@ -1060,7 +1060,7 @@
 				CODE_SIGN_ENTITLEMENTS = History/History.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 31;
+				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_ASSET_PATHS = "\"History/Preview Content\"";
 				DEVELOPMENT_TEAM = C22W55L7FR;
 				ENABLE_PREVIEWS = YES;
@@ -1086,7 +1086,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.31;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1109,7 +1109,7 @@
 				CODE_SIGN_ENTITLEMENTS = History/History.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 31;
+				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_ASSET_PATHS = "\"History/Preview Content\"";
 				DEVELOPMENT_TEAM = C22W55L7FR;
 				ENABLE_PREVIEWS = YES;
@@ -1135,7 +1135,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.31;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1156,7 +1156,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 31;
+				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_ASSET_PATHS = "\"MiniHistory Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = C22W55L7FR;
 				ENABLE_PREVIEWS = YES;
@@ -1168,7 +1168,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.31;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History.watchkitapp;
 				PRODUCT_NAME = "Aspire Watch";
 				SDKROOT = watchos;
@@ -1187,7 +1187,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 31;
+				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_ASSET_PATHS = "\"MiniHistory Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = C22W55L7FR;
 				ENABLE_PREVIEWS = YES;
@@ -1199,7 +1199,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.31;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.evol.History.watchkitapp;
 				PRODUCT_NAME = "Aspire Watch";
 				SDKROOT = watchos;

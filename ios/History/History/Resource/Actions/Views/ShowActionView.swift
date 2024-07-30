@@ -42,19 +42,27 @@ struct ShowActionView: View {
                 }
             }
             
-            Section(header: Text("Dynamic Fields")) {
-                ForEach(Array(action.actionTypeModel.dynamicFields.keys), id: \.self) { key in
-                    if let field = action.actionTypeModel.dynamicFields[key] {
-                        Group {
-                            switch field.dataType {
-                            case "LongString":
-                                LongStringComponent(fieldName: field.name, value: bindingFor(key))
-                            case "ShortString":
-                                ShortStringComponent(fieldName: field.name, value: bindingFor(key))
-                            case "Enum":
-                                EnumComponent(fieldName: field.name, value: bindingFor(key), enumValues: field.getEnums)
-                            default:
-                                EmptyView()
+            if(Array(action.actionTypeModel.dynamicFields.keys).count > 0) {
+                Section(header: Text("Dynamic Fields")) {
+                    ForEach(Array(action.actionTypeModel.dynamicFields.keys), id: \.self) { key in
+                        if let field = action.actionTypeModel.dynamicFields[key] {
+                            Group {
+                                switch field.dataType {
+                                case "LongString":
+                                    LongStringComponent(fieldName: field.name, value: bindingFor(key))
+                                case "ShortString":
+                                    ShortStringComponent(fieldName: field.name, value: bindingFor(key), isArray:field.array)
+                                case "Enum":
+                                    EnumComponent(fieldName: field.name, value: bindingFor(key), enumValues: field.getEnums)
+                                case "Unit":
+                                    UnitComponent(fieldName: field.name, value: bindingFor(key))
+                                case "Currency":
+                                    CurrencyComponent(fieldName: field.name, value: bindingFor(key))
+                                case "Duration":
+                                    DurationComponent(fieldName: field.name, value: bindingFor(key))
+                                default:
+                                    EmptyView()
+                                }
                             }
                         }
                     }
@@ -68,6 +76,15 @@ struct ShowActionView: View {
             }
         }
         .navigationTitle(action.id == nil ?  "Create \(action.actionTypeModel.name) Action": "Edit Action")
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                NavigationLink(destination: ActionTypeView(
+                    model: action.actionTypeModel
+                )) {
+                    Image(systemName: "gear")
+                }
+            }
+        }
         .onAppear {
             Task {
                 if (action.id != nil) {

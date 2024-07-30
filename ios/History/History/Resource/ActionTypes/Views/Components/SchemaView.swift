@@ -25,7 +25,10 @@ struct SchemaView: View {
     var body: some View {
         HStack {
             Text("Name:")
+                .frame(alignment: .leading)
+            Spacer()
             TextField("Name", text: $schema.name)
+                        .multilineTextAlignment(.trailing)
         }
         
         HStack {

@@ -186,12 +186,11 @@ class ActionTypesController {
 // finished: on create/modify/delete action
 // finished: put action action into database and then fetch it
 // finished: formatting short view
-//  working: tabs: timeline, data navigator
-// internal object edit, time stamped string
+// finished: tabs: timeline, data navigator
+// working: time stamped string
 // RELEASE
 
-
-// work on aggregates
+// work on aggregates, computed duration
 // RELASE
 // work on goals incl tabs
 // RELASE
@@ -200,6 +199,7 @@ class ActionTypesController {
 // work on shared goals incl tabs for groups
 // RELEASE
 
+// internal objects
 
 // RELATIONAL DB
 // work on object view
@@ -216,7 +216,7 @@ class ActionTypesController {
 // RELEASE
 
 
-// work on reminders
+// work on reminders, schedules
 // RELASE
 
 
