@@ -49,7 +49,7 @@ export function verifyAppleJwt(token: string): Promise<jwt.JwtPayload | undefine
 
 export async function convertAppleJWTtoHasuraJWT(appleJWT: string, username: string | null, language: string | null) {
     const decoded = await verifyAppleJwt(appleJWT)
-    if (decoded!["aud"] == 'com.evol.History') {
+    if (decoded!["aud"] == 'com.snow.aspire') {
         const userId = await getHasuraUserId(decoded, username, language);
         const token = generateJWT(userId);
         return token;
