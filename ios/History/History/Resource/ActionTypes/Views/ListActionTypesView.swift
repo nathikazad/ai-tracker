@@ -13,8 +13,14 @@ struct ListActionsTypesView: View {
     @State private var searchText = ""
     var clickAction: ((ActionTypeModel) -> Void)?
     @Environment(\.presentationMode) var presentationMode
+    var listActionType: ListActionType = .takeToActionListView
+
+    enum ListActionType {
+        case takeToActionView
+        case takeToActionListView
+        case forTemplate
+    }
     
-    // action to execute
     
     var body: some View {
         List {
@@ -24,30 +30,56 @@ struct ListActionsTypesView: View {
                 .background(Color.white)
                 .cornerRadius(8)
                 .padding(2)
-            
-            NavigationButton(destination: ActionTypeView(
-                model: ActionTypeModel(name: "", meta: ActionTypeMeta(), staticFields: ActionModelTypeStaticSchema()),
-                createAction: {
-                    action in
-                    actions.append(action)
+            if (listActionType != .forTemplate) {
+                NavigationButton(destination: ActionTypeView(
+                    model: ActionTypeModel(name: "", meta: ActionTypeMeta(), staticFields: ActionModelTypeStaticSchema()),
+                    createAction: {
+                        actionType in
+                        actions.append(actionType)
+                    }
+                )) {
+                    Text(" ")
+                    Spacer()
+                    Image(systemName: "plus.circle")
+                    Text("Add New Action Type")
+                        .padding(.leading, 5)
+                    // navigation link to create user with action to execute on creation
+                    Spacer()
                 }
-            )) {
-                Text(" ")
-                Spacer()
-                Image(systemName: "plus.circle")
-                Text("Add new action")
-                    .padding(.leading, 5)
-                // navigation link to create user with action to execute on creation
-                Spacer()
+            
+                NavigationButton(destination: ListActionsTypesView(
+                    clickAction: {
+                        actionType in
+                        print("Create new action type \(actionType)")
+                        Task {
+                            await ActionTypesController.createActionTypeModel(model: actionType)
+                            fetchActionTypes()
+                        }
+                    }, listActionType: .forTemplate
+                )) {
+                    Text(" ")
+                    Spacer()
+                    Image(systemName: "plus.circle")
+                    Text("Import from Template")
+                        .padding(.leading, 5)
+                    // navigation link to create user with action to execute on creation
+                    Spacer()
+                }
             }
             
             
             
             ForEach(filteredActions, id: \.name) { action in
-                if(clickAction != nil) {
+                if(listActionType == .forTemplate) {
+                    Button(action: {
+                        clickAction?(action)
+                        goBack()
+                    })
+                    {
+                        Text(action.name)
+                    }
+                } else if (listActionType == .takeToActionView) {
                     NavigationButton(destination: ShowActionView(actionType: action))
-                    // clickAction!(action)
-                    //     goBack()
                     {
                         Text(action.name)
                     }
@@ -72,7 +104,7 @@ struct ListActionsTypesView: View {
     
     func fetchActionTypes() {
         Task {
-            let resp = await ActionTypesController.fetchActionTypes(userId: Authentication.shared.userId!)
+            let resp = await ActionTypesController.fetchActionTypes(userId: listActionType == .forTemplate ? 1 : Authentication.shared.userId!)
             DispatchQueue.main.async {
                 actions = resp
             }
