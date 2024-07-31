@@ -43,6 +43,8 @@ struct ShortStringComponent: View {
             ))
             .frame(width: 150, alignment: .trailing)
             .multilineTextAlignment(.trailing)
+            .keyboardType(.default)
+            .submitLabel(.done)
         }
     }
 }
@@ -50,6 +52,7 @@ struct ShortStringComponent: View {
 struct LongStringComponent: View {
     let fieldName: String
     @Binding var value: String
+    @FocusState private var isFocused: Bool
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -64,6 +67,21 @@ struct LongStringComponent: View {
             .padding(4)
             .background(Color(UIColor.systemGray6))
             .cornerRadius(8)
+            .focused($isFocused)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button(action: {
+                        isFocused = false
+                    }) {
+                        HStack {
+                            Text("Dismiss Keyboard")
+                            Image(systemName: "chevron.down")
+                        }
+                    }
+                }
+            }
         }
     }
 }

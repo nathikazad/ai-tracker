@@ -12,44 +12,46 @@ import UserNotifications
 class TimerManager: ObservableObject {
     static let shared = TimerManager()
     
-    @Published var isTimerRunning = false
-    @Published var currentId: Int? = nil
-    @Published var remainingTime: TimeInterval = 0
+    @Published var isTimerRunning: [Int: Bool] = [:]
+    @Published var currentIds: [Int: TimeInterval] = [:]
     @Published var showCompletionAlert = false
     
-    private var timer: Timer?
-    private var endTime: Date?
+    private var timers: [Int: Timer] = [:]
+    private var endTimes: [Int: Date] = [:]
     
     private init() {}
     
-    func startTimer(duration: TimeInterval, timerId:Int) {
-        timer?.invalidate()
+    func startTimer(duration: TimeInterval, timerId: Int) {
+        timers[timerId]?.invalidate()
         requestNotificationPermission()
-        endTime = Date().addingTimeInterval(duration)
-        isTimerRunning = true
-        remainingTime = duration
-        scheduleNotification(for: duration)
-        currentId = timerId
+        endTimes[timerId] = Date().addingTimeInterval(duration)
+        isTimerRunning[timerId] = true
+        currentIds[timerId] = duration
+        scheduleNotification(for: duration, timerId: timerId)
         
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
-            self?.updateRemainingTime()
+        timers[timerId] = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+            self?.updateRemainingTime(for: timerId)
         }
     }
     
-    func cancelTimer() {
-        timer?.invalidate()
-        timer = nil
-        isTimerRunning = false
-        remainingTime = 0
-        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["timerNotification"])
+    func cancelTimer(timerId: Int) {
+        timers[timerId]?.invalidate()
+        timers.removeValue(forKey: timerId)
+        currentIds.removeValue(forKey: timerId)
+        endTimes.removeValue(forKey: timerId)
+        isTimerRunning[timerId] = false
+        
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["timerNotification_\(timerId)"])
     }
     
-    private func updateRemainingTime() {
-        guard let endTime = endTime else { return }
-        remainingTime = max(endTime.timeIntervalSinceNow, 0)
+    private func updateRemainingTime(for timerId: Int) {
+        guard let endTime = endTimes[timerId] else { return }
+        let remainingTime = max(endTime.timeIntervalSinceNow, 0)
+        currentIds[timerId] = remainingTime
+        
         if remainingTime == 0 {
             showCompletionAlert = true
-            cancelTimer()
+            cancelTimer(timerId: timerId)
         }
     }
     
@@ -63,7 +65,7 @@ class TimerManager: ObservableObject {
         }
     }
     
-    private func scheduleNotification(for duration: TimeInterval) {
+    private func scheduleNotification(for duration: TimeInterval, timerId: Int) {
         let content = UNMutableNotificationContent()
         content.title = "Timer Finished"
         content.body = "Your timer has completed!"
@@ -71,7 +73,7 @@ class TimerManager: ObservableObject {
         
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: duration, repeats: false)
         
-        let request = UNNotificationRequest(identifier: "timerNotification", content: content, trigger: trigger)
+        let request = UNNotificationRequest(identifier: "timerNotification_\(timerId)", content: content, trigger: trigger)
         
         UNUserNotificationCenter.current().add(request)
     }
@@ -85,21 +87,22 @@ struct TimerComponent: View {
     var body: some View {
         VStack {
             HStack {
-                if (timerManager.isTimerRunning && timerManager.currentId == timerId) {
+                if timerManager.isTimerRunning[timerId] == true,
+                   let remainingTime = timerManager.currentIds[timerId],
+                   remainingTime > 0 {
                     HStack {
                         Text("Time Left:")
                         Spacer()
-                        Text(timeString(from: timerManager.remainingTime))
+                        Text(timeString(from: remainingTime))
                         
                         Button(action: {
-                            timerManager.cancelTimer()
+                            timerManager.cancelTimer(timerId: timerId)
                         }) {
                             Image(systemName: "xmark.circle.fill")
                                 .foregroundColor(.red)
                         }
                     }
-                }
-                else {
+                } else {
                     Picker("Set Timer:", selection: $selectedDuration) {
                         Text("None").tag(TimeInterval(0))
                         Text("Test").tag(TimeInterval(5))

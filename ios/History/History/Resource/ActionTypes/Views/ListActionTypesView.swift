@@ -72,7 +72,7 @@ struct ListActionsTypesView: View {
     
     func fetchActionTypes() {
         Task {
-            let resp = await ActionTypesController.fetchActionTypes(userId: 1)
+            let resp = await ActionTypesController.fetchActionTypes(userId: Authentication.shared.userId!)
             DispatchQueue.main.async {
                 actions = resp
             }

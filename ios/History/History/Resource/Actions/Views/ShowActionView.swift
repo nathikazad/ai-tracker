@@ -73,6 +73,8 @@ struct ShowActionView: View {
                     Spacer()
                     Button("Save") {
                         saveChanges()
+                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                        self.changesToSave = false
                     }
                     .disabled(!self.changesToSave)
                     Spacer()
