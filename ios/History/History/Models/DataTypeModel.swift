@@ -41,6 +41,8 @@ extension AnyCodable {
             return value as? T
         case is Date.Type:
             return (value as? String)?.getDate as? T
+        case is String.Type:
+            return value as? T
         default:
             return nil
         }

@@ -81,9 +81,9 @@ struct ListActionsTypesView: View {
     
     var filteredActions: [ActionTypeModel] {
         if searchText.isEmpty {
-            return actions
+            return actions.sorted { $0.name < $1.name }
         } else {
-            return actions.filter { $0.name.contains(searchText) }
+            return actions.filter { $0.name.contains(searchText) }.sorted { $0.name < $1.name }
         }
     }
     

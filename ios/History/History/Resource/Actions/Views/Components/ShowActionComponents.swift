@@ -17,12 +17,7 @@ struct EnumComponent: View {
             Text("\(fieldName): ")
                 .frame(alignment: .leading)
             Spacer()
-            Picker("", selection: Binding(
-                get: { value },
-                set: { newValue in
-                    value = value
-                }
-            )) {
+            Picker("", selection: $value) {
                 ForEach(enumValues, id: \.self) { type in
                     Text(type).tag(type)
                 }
