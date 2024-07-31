@@ -41,7 +41,7 @@ struct ListActionsTypesView: View {
                     Text(" ")
                     Spacer()
                     Image(systemName: "plus.circle")
-                    Text("Add New Action Type")
+                    Text("Create New Action Type")
                         .padding(.leading, 5)
                     // navigation link to create user with action to execute on creation
                     Spacer()
@@ -60,7 +60,7 @@ struct ListActionsTypesView: View {
                     Text(" ")
                     Spacer()
                     Image(systemName: "plus.circle")
-                    Text("Import from Template")
+                    Text("Import From Templates")
                         .padding(.leading, 5)
                     // navigation link to create user with action to execute on creation
                     Spacer()
