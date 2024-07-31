@@ -9,7 +9,7 @@ import Foundation
 
 // ActionModel struct
 class ActionModel: ObservableObject {
-    var id: Int?
+    @Published var id: Int?
     @Published var actionTypeId: Int
     @Published var startTime: Date
     @Published var endTime: Date?

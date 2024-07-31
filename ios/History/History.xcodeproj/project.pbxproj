@@ -19,6 +19,8 @@
 		FE12C5EF2BC4B832002CDC60 /* MicrophoneButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE12C5EE2BC4B832002CDC60 /* MicrophoneButton.swift */; };
 		FE1C0EAE2BC0713B00FF56AB /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EAD2BC0713B00FF56AB /* Authentication.swift */; };
 		FE1C0EB12BC0A29300FF56AB /* Hasura.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EB02BC0A29300FF56AB /* Hasura.swift */; };
+		FE2074B62C5ACFFB00C58226 /* DynamicFieldsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE2074B52C5ACFFB00C58226 /* DynamicFieldsView.swift */; };
+		FE2074B82C5ADDCE00C58226 /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE2074B72C5ADDCE00C58226 /* Timer.swift */; };
 		FE20CA262BC5E4CD00863604 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE20CA252BC5E4CD00863604 /* SettingsView.swift */; };
 		FE3E9F662BC8ACAD008BD120 /* NavigationTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3E9F652BC8ACAD008BD120 /* NavigationTitle.swift */; };
 		FE4594272BD9E713002B163E /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4594262BD9E713002B163E /* HealthKitManager.swift */; };
@@ -166,6 +168,8 @@
 		FE1C0EAC2BC0583A00FF56AB /* History.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = History.entitlements; sourceTree = "<group>"; };
 		FE1C0EAD2BC0713B00FF56AB /* Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
 		FE1C0EB02BC0A29300FF56AB /* Hasura.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hasura.swift; sourceTree = "<group>"; };
+		FE2074B52C5ACFFB00C58226 /* DynamicFieldsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicFieldsView.swift; sourceTree = "<group>"; };
+		FE2074B72C5ADDCE00C58226 /* Timer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = "<group>"; };
 		FE20CA252BC5E4CD00863604 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		FE3E9F652BC8ACAD008BD120 /* NavigationTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationTitle.swift; sourceTree = "<group>"; };
 		FE4594262BD9E713002B163E /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
@@ -478,6 +482,7 @@
 				FE638F3E2C55E594001C34F0 /* MinActionComponent.swift */,
 				FE638F422C56FF4E001C34F0 /* ShowActionComponents.swift */,
 				FE638F472C571BDB001C34F0 /* ActionRow.swift */,
+				FE2074B52C5ACFFB00C58226 /* DynamicFieldsView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -537,6 +542,7 @@
 				FECA5EED2BE569F6007ADE17 /* Time.swift */,
 				FE8AB2AB2C079AB400131C13 /* StringHelper.swift */,
 				FE06FD072C0921C900E65D41 /* Image.swift */,
+				FE2074B72C5ADDCE00C58226 /* Timer.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -752,6 +758,7 @@
 				FE4AB3A22C51F2E000A07749 /* DynamicFieldView.swift in Sources */,
 				FE4F7BD22BA8FC600041CB6A /* BottomBar.swift in Sources */,
 				FE4AB38B2C4EF4E500A07749 /* ListActionsView.swift in Sources */,
+				FE2074B82C5ADDCE00C58226 /* Timer.swift in Sources */,
 				FE638F3F2C55E594001C34F0 /* MinActionComponent.swift in Sources */,
 				FE4AB39C2C51F26B00A07749 /* SchemaView.swift in Sources */,
 				FE4F7BA52BA7D79E0041CB6A /* ContentView.swift in Sources */,
@@ -763,6 +770,7 @@
 				FEA98C132BFFEC70006BB857 /* TwoDatePicker.swift in Sources */,
 				FEB366E62BDDF8F9000A48C0 /* Chart.swift in Sources */,
 				FE4AB3872C4EF43800A07749 /* ListActionTypesView.swift in Sources */,
+				FE2074B62C5ACFFB00C58226 /* DynamicFieldsView.swift in Sources */,
 				FE12C5EA2BC4B330002CDC60 /* GoalsView.swift in Sources */,
 				FE638F432C56FF4E001C34F0 /* ShowActionComponents.swift in Sources */,
 				FEDBC0672C050C3F00233EA0 /* EventButtons.swift in Sources */,

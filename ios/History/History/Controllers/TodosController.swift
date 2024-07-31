@@ -8,17 +8,17 @@
 import Foundation
 class TodosController: ObservableObject {
     
-    @Published var todos: [Todo] = []
+    @Published var todos: [TodoOld] = []
     let subscriptionId: String = "todos"
     
     struct TodosResponseData: Decodable {
         var data: TodosWrapper
         struct TodosWrapper: Decodable {
-            var todos: [Todo]
+            var todos: [TodoOld]
         }
     }
     
-    func sortAndAssign(_ newTodos: [Todo]) {
+    func sortAndAssign(_ newTodos: [TodoOld]) {
         DispatchQueue.main.async {
             self.todos = newTodos.sorted { (todo1, todo2) -> Bool in
                 let preferredHour1 = todo1.goal?.frequency.preferredHour() ?? "12:00"
@@ -119,7 +119,7 @@ class TodosController: ObservableObject {
     
 }
 
-struct Todo: Decodable, Equatable {
+struct TodoOld: Decodable, Equatable {
     var id: Int
     var name: String
     var status: String

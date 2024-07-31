@@ -6,39 +6,55 @@
 //
 
 import SwiftUI
+import UserNotifications
 
 struct ShowActionView: View {
     @StateObject private var action: ActionModel
-    
+    @State private var changesToSave:Bool
     init(actionModel: ActionModel) {
         _action = StateObject(wrappedValue: actionModel)
+        _changesToSave = State(initialValue: false)
     }
     
     init(actionType: ActionTypeModel) {
         _action = StateObject(wrappedValue:  ActionModel(actionTypeId: actionType.id!, startTime: Date().toUTCString, actionTypeModel: actionType))
+        _changesToSave = State(initialValue: true)
     }
     
     var body: some View {
         Form {
             Section(header: Text("Time Information")) {
+                let startTimeLabel = action.actionTypeModel.staticFields.startTime?.name ??
+                (action.actionTypeModel.meta.hasDuration ? "Start Time" : "Time")
                 DatePicker(
-                    action.actionTypeModel.staticFields.startTime?.name ?? "Start Time",
+                    "\(startTimeLabel):",
                     selection: Binding(
                         get: { self.action.startTime},
-                        set: { self.action.startTime = $0 }
+                        set: { 
+                            self.action.startTime = $0
+                            self.changesToSave = true
+                        }
                     ),
                     displayedComponents: [.date, .hourAndMinute]
                 )
                 
                 if action.actionTypeModel.meta.hasDuration {
+                    let endTimeLabel = action.actionTypeModel.staticFields.endTime?.name ??
+                    "End Time"
                     DatePicker(
-                        action.actionTypeModel.staticFields.endTime?.name ?? "End Time",
+                        "\(endTimeLabel):",
                         selection: Binding(
                             get: { self.action.endTime ?? Date() },
-                            set: { self.action.endTime = $0 }
+                            set: { 
+                                self.action.endTime = $0
+                                self.changesToSave = true
+                            }
                         ),
                         displayedComponents: [.date, .hourAndMinute]
                     )
+                    if (action.id != nil && action.endTime == nil) {
+                        TimerComponent(timerId: action.id!)
+                    }
                 }
             }
             
@@ -48,12 +64,18 @@ struct ShowActionView: View {
                     dynamicData: $action.dynamicData,
                     updateView: {
                         self.action.objectWillChange.send()
+                        self.changesToSave = true
                     })
             }
             
             Section {
-                Button("Save") {
-                    saveChanges()
+                HStack {
+                    Spacer()
+                    Button("Save") {
+                        saveChanges()
+                    }
+                    .disabled(!self.changesToSave)
+                    Spacer()
                 }
             }
         }
@@ -94,74 +116,3 @@ struct ShowActionView: View {
     }
 }
 
-
-
-struct DynamicFieldsView: View {
-    @Binding var dynamicFields: [String: Schema]
-    @Binding var dynamicData: [String: AnyCodable]
-    var updateView: (() -> Void)
-    var body: some View {
-        Section(header: Text("Dynamic Fields")) {
-            ForEach(Array(dynamicFields.keys), id: \.self) { key in
-                if let field = dynamicFields[key] {
-                    if let dataType = getDataType(from: field.dataType) {
-                        Group {
-                            switch dataType {
-                            case .longString:
-                                LongStringComponent(fieldName: field.name,
-                                                    value: bindingFor(key, "") as Binding<String>)
-                            case .shortString:
-                                ShortStringComponent(fieldName: field.name,
-                                                        value: bindingFor(key, "") as Binding<String>)
-                            case .enumerator:
-                                EnumComponent(fieldName: field.name,
-                                                value: bindingFor(key, field.getEnums.first!),
-                                                enumValues: field.getEnums)
-                            case .unit:
-                                UnitComponent(
-                                    fieldName: field.name,
-                                    unit: bindingFor(key, Unit.defaultUnit) as Binding<Unit>
-                                )
-                            case .currency:
-                                CurrencyComponent(
-                                    fieldName: field.name,
-                                    currency: bindingFor(key, Currency.defaultCurrency) as Binding<Currency>
-                                )
-                            case .duration:
-                                DurationComponent(
-                                    fieldName: field.name,
-                                    duration: bindingFor(key, Duration.defaultDuration) as Binding<Duration>
-                                )
-                            case .dateTime:
-                                TimeComponent(
-                                    fieldName: field.name,
-                                    time: bindingFor(key, Date()) as Binding<Date>
-                                )
-                            case .time:
-                                TimeComponent(
-                                    fieldName: field.name,
-                                    time: bindingFor(key, Date()) as Binding<Date>
-                                )
-                            default:
-                                EmptyView()
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-    }
-    
-    private func bindingFor<T>(_ key: String, _ defaultValue: T) -> Binding<T> {
-        return Binding(
-            get: {
-                (dynamicData[key]?.toType(T.self) as? T) ?? defaultValue
-            },
-            set: { newValue in
-                dynamicData[key] = AnyCodable(newValue)
-                updateView()
-            }
-        )
-    }
-}

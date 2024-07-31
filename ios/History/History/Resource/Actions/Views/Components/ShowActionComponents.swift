@@ -140,6 +140,24 @@ struct CurrencyComponent: View {
     }
 }
 
+struct TodoComponent: View {
+    let fieldName: String
+    @Binding var todo: Todo
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text("\(fieldName):")
+            HStack {
+                TextField("Name", text: $todo.name)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                
+                Toggle("", isOn: $todo.value)
+                    .labelsHidden()
+            }
+        }
+    }
+}
+
 struct TimeStampedStringComponent: View {
     let fieldName: String
     @Binding var timeStampedString: TimeStampedString

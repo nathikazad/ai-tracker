@@ -21,6 +21,7 @@ enum DataType: String, CaseIterable, Codable {
     case timeStampedString = "TimeStampedString"
     case location = "Location"
     case image = "Image"
+    case todo = "Todo"
 }
 
 func getDataType(from string: String) -> DataType? {
@@ -164,6 +165,21 @@ class Currency {
         self.currencyType = currencyType
     }
 }
+
+class Todo {
+    var name: String
+    var value: Bool
+    
+    static let defaultTodo = Todo()
+
+    init(name: String = "", value: Bool = false) {
+        self.name = name
+        self.value = value
+    }
+}
+
+
+
 
 class TimeStampedString {
     var value: String
