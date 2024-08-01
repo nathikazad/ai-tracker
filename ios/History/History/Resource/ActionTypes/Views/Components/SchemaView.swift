@@ -28,7 +28,9 @@ struct SchemaView: View {
                 .frame(alignment: .leading)
             Spacer()
             TextField("Name", text: $schema.name)
-                        .multilineTextAlignment(.trailing)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .multilineTextAlignment(.trailing)
+                    .frame(width: 100)
         }
         
         HStack {

@@ -33,7 +33,7 @@ struct ListActionsTypesView: View {
             if (listActionType != .forTemplate) {
                 NavigationButton(destination: ActionTypeView(
                     model: ActionTypeModel(name: "", meta: ActionTypeMeta(), staticFields: ActionModelTypeStaticSchema()),
-                    createAction: {
+                    updateActionTypeCallback: {
                         actionType in
                         actions.append(actionType)
                     }
@@ -79,7 +79,13 @@ struct ListActionsTypesView: View {
                         Text(action.name)
                     }
                 } else if (listActionType == .takeToActionView) {
-                    NavigationButton(destination: ShowActionView(actionType: action))
+                    NavigationButton(destination: ShowActionView(
+                        actionType: action,
+                        clickAction: {
+                            action in
+                            goBack()
+                        }
+                    ))
                     {
                         Text(action.name)
                     }

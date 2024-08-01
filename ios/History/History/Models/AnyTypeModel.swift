@@ -94,6 +94,8 @@ struct AnyCodable: Codable {
             return array.map { AnyCodable($0).toJSONCompatible() }
         case let dictionary as [String: Any]:
             return dictionary.mapValues { AnyCodable($0).toJSONCompatible() }
+        case let currency as Currency:
+            return currency.toJSONCompatible()
         case is AnyCodable:
             return (value as! AnyCodable).toJSONCompatible()
         case Optional<Any>.none:

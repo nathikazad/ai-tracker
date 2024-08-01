@@ -333,6 +333,15 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
+		FE2074B92C5B058B00C58226 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				FE4AB3962C51F05C00A07749 /* AggregateModel.swift */,
+				FE4AB3882C4EF46B00A07749 /* ActionTypeModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		FE4AB3852C4EF42500A07749 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -366,7 +375,7 @@
 		FE4AB3AA2C544D1E00A07749 /* ActionTypes */ = {
 			isa = PBXGroup;
 			children = (
-				FE4AB3882C4EF46B00A07749 /* ActionTypeModel.swift */,
+				FE2074B92C5B058B00C58226 /* Models */,
 				FE4AB38C2C4EF7B200A07749 /* ActionTypeController.swift */,
 				FE4AB3852C4EF42500A07749 /* Views */,
 				FE4AB3AC2C544D7C00A07749 /* ActionTypeForHasura.swift */,
@@ -566,7 +575,6 @@
 				FE6ED6D22C06A9F500E6A2A6 /* ASObjectModel.swift */,
 				FE6ED6D42C06AA5D00E6A2A6 /* EventModels.swift */,
 				FE6ED6D62C06AA9100E6A2A6 /* EventTypeModel.swift */,
-				FE4AB3962C51F05C00A07749 /* AggregateModel.swift */,
 				FE4AB3A32C5207C100A07749 /* DataTypeModel.swift */,
 				FE4AB3A72C52F99800A07749 /* AnyTypeModel.swift */,
 			);

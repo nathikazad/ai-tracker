@@ -113,9 +113,10 @@ class Schema: Codable {
     var array: Bool
     var enumValues: [String]
     var objectFields: [String: Schema]
+    var rank: Int = 0
     
     enum CodingKeys: String, CodingKey {
-        case name, dataType, description, array, enumValues, objectFields
+        case name, dataType, description, array, enumValues, objectFields, rank
     }
     
     var getEnums: [String] {
@@ -130,18 +131,21 @@ class Schema: Codable {
     init(name: String, dataType: String, description: String,
          array: Bool = false,
          enumValues: [String] = [],
-         objectFields: [String : Schema] = [:]) {
+         objectFields: [String : Schema] = [:],
+         rank: Int = 0) {
         self.name = name
         self.dataType = dataType
         self.description = description
         self.array = array
         self.enumValues = enumValues
         self.objectFields = objectFields
+        self.rank = rank
     }
     
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         name = try container.decode(String.self, forKey: .name)
+        rank = try container.decodeIfPresent(Int.self, forKey: .rank) ?? 0
         dataType = try container.decode(String.self, forKey: .dataType)
         description = try container.decode(String.self, forKey: .description)
         array = try container.decodeIfPresent(Bool.self, forKey: .array) ?? false

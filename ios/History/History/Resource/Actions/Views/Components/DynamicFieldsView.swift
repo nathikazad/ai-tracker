@@ -12,7 +12,9 @@ struct DynamicFieldsView: View {
     var updateView: (() -> Void)
     var body: some View {
         Section(header: Text("Dynamic Fields")) {
-            ForEach(Array(dynamicFields.keys), id: \.self) { key in
+            let dynamicFieldsArray = Array(dynamicFields.keys)
+            let sortedDynamicFieldsArray = dynamicFieldsArray.sorted { dynamicFields[$0]?.rank ?? 0 < dynamicFields[$1]?.rank ?? 0 }
+            ForEach(sortedDynamicFieldsArray, id: \.self) { key in
                 if let field = dynamicFields[key] {
                     if let dataType = getDataType(from: field.dataType) {
                         Group {
@@ -66,10 +68,10 @@ struct DynamicFieldsView: View {
     private func bindingFor<T>(_ key: String, _ defaultValue: T) -> Binding<T> {
         return Binding(
             get: {
-                (dynamicData[key]?.toType(T.self) as? T) ?? defaultValue
+                return (dynamicData[key]?.toType(T.self) as? T) ?? defaultValue
             },
             set: { newValue in
-                dynamicData[key] = AnyCodable(newValue)
+                dynamicData[key] = AnyCodable.fromType(newValue)
                 updateView()
             }
         )

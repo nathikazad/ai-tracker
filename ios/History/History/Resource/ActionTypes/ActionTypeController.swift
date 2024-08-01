@@ -21,7 +21,9 @@ class ActionTypesController {
         hasuraStruct.addParameter(name: "description", type: .string, value: model.meta.description)
         let metadata: ActionTypeMetadataForHasura = ActionTypeMetadataForHasura(
             staticFields: model.staticFields,
-            internalObjects: model.internalObjects, aggregates: model.aggregates,
+            dynamicFields: model.dynamicFields,
+            internalObjects: model.internalObjects,
+            aggregates: model.aggregates,
             computed: model.computed)
         hasuraStruct.addParameter(name: "metadata", type: .jsonb, value: metadata.toJSONDictionary())
         

@@ -8,15 +8,24 @@ import SwiftUI
 
 import Foundation
 struct ActionTypeView: View {
+    @State private var changesToSave:Bool = false
     @StateObject var model: ActionTypeModel = ActionTypeModel(name: "", meta: ActionTypeMeta(), staticFields: ActionModelTypeStaticSchema())
-    var createAction: ((ActionTypeModel) -> Void)?
+    var updateActionTypeCallback: ((ActionTypeModel) -> Void)?
+    var deleteActionTypeCallback: ((Int) -> Void)?
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         Form {
             Section {
                 HStack {
                     Text("Name:")
-                    TextField("Name", text: $model.name)
+                    TextField("Name", text: Binding(
+                        get: { model.name },
+                        set: {
+                            newValue in model.name = newValue
+                            changesToSave = true
+                        }
+                    ))
                 }
             }
             
@@ -37,13 +46,17 @@ struct ActionTypeView: View {
                             model.staticFields.time = Schema(
                                 name:"Time", dataType: "String", description: "Time of the action")
                         }
+                        changesToSave = true
                     }
                 
                 VStack(alignment: .leading) {
                     Text("Description:")
                     TextEditor(text: Binding(
                         get: { model.meta.description ?? "" },
-                        set: { newValue in model.meta.description = newValue }
+                        set: {
+                            newValue in model.meta.description = newValue
+                            changesToSave = true
+                        }
                     ))
                     .frame(height: 100)  // Adjust this value to approximate 4 lines
                     .padding(4)
@@ -59,7 +72,10 @@ struct ActionTypeView: View {
                     SchemaView(schema: Binding(
                         get: { model.staticFields.startTime ?? Schema(
                             name:"Start Time", dataType: "DateTime", description: "") },
-                        set: { newValue in model.staticFields.startTime = newValue }
+                        set: {
+                            newValue in model.staticFields.startTime = newValue
+                            changesToSave = true
+                        }
                     ), dataType: "DateTime")
                 } label: {
                     Text("Start Time").font(.headline)
@@ -69,7 +85,10 @@ struct ActionTypeView: View {
                     SchemaView(schema: Binding(
                         get: { model.staticFields.endTime ?? Schema(
                             name:"End Time", dataType: "DateTime", description: "") },
-                        set: { newValue in model.staticFields.endTime = newValue }
+                        set: {
+                            newValue in model.staticFields.endTime = newValue
+                            changesToSave = true
+                        }
                     ), dataType: "DateTime")
                 } label: {
                     Text("End Time").font(.headline)
@@ -81,7 +100,10 @@ struct ActionTypeView: View {
                     SchemaView(schema: Binding(
                         get: { model.staticFields.time ?? Schema(
                             name:"Time", dataType: "DateTime", description: "") },
-                        set: { newValue in model.staticFields.time = newValue }
+                        set: {
+                            newValue in model.staticFields.time = newValue
+                            changesToSave = true
+                        }
                     ), dataType: "DateTime")
                 } label: {
                     Text("Time").font(.headline)
@@ -89,11 +111,17 @@ struct ActionTypeView: View {
             }
             
             Section(header: Text("Dynamic Fields")) {
-                ForEach(Array(model.dynamicFields.keys), id: \.self) { originalKey in
-                    DynamicFieldView(model: model, originalKey: originalKey)
+                let sortedDynamicFields = Array(model.dynamicFields.keys).sorted(by: { model.dynamicFields[$0]?.rank ?? 0 < model.dynamicFields[$1]?.rank ?? 0 })
+                ForEach(sortedDynamicFields, id: \.self) { originalKey in
+                    DynamicFieldView(
+                        model: model,
+                        changesToSave: $changesToSave, 
+                        originalKey: originalKey
+                    )
                 }
                 Button(action: {
-                    model.dynamicFields[generateRandomString()] = Schema(name: "New Field", dataType: "ShortString", description: "")
+                    let existingMaxRank = model.dynamicFields.values.max(by: { $0.rank < $1.rank })?.rank ?? 0
+                    model.dynamicFields[generateRandomString()] = Schema(name: "New Field", dataType: "ShortString", description: "", rank: existingMaxRank + 1)
                 }) {
                     Label("Add Dynamic Field", systemImage: "plus")
                 }
@@ -114,10 +142,24 @@ struct ActionTypeView: View {
                 Button(action: {
                     Task {
                         await ActionTypesController.updateActionTypeModel(model: model)
-                        createAction?(model)
+                        updateActionTypeCallback?(model)
+                        changesToSave = false
                     }
                 }) {
                     Label("Update \(model.name)", systemImage: "square.and.arrow.up")
+                        .frame(maxWidth: .infinity, alignment: .center)
+                }
+                .disabled(!changesToSave)
+
+                Button(role: .destructive, action: {
+                    Task {
+                        await ActionTypesController.deleteActionTypeModel(id: model.id!)
+                        self.presentationMode.wrappedValue.dismiss()
+                        deleteActionTypeCallback?(model.id!)
+                    }
+                }) {
+                    Label("Delete \(model.name)", systemImage: "trash")
+                        .foregroundColor(.red)
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
             } else {
@@ -126,12 +168,15 @@ struct ActionTypeView: View {
                         if let id = await ActionTypesController.createActionTypeModel(model: model) {
                             model.id = id
                         }
-                        createAction?(model)
+                        changesToSave = false
+                        updateActionTypeCallback?(model)
+                        self.presentationMode.wrappedValue.dismiss()
                     }
                 }) {
                     Text("Create \(model.name) Action")
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
+                .disabled(!changesToSave)
             }
         }
         .navigationTitle(model.name)

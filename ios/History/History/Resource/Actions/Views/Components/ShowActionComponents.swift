@@ -143,17 +143,34 @@ struct CurrencyComponent: View {
     let fieldName: String
     @Binding var currency: Currency
     
+    private let formatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 2
+        return formatter
+    }()
+    
     var body: some View {
-        VStack(alignment: .leading) {
+        HStack (spacing: 0) {
             Text("\(fieldName):")
-            HStack {
-                TextField("Value", value: $currency.value, formatter: NumberFormatter())
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .frame(width: 100)
-                
-                TextField("Currency Type", text: $currency.currencyType)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
+            Spacer()
+            TextField("", value: $currency.value, formatter: formatter)
+                .multilineTextAlignment(.trailing)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .frame(width: 80)
+                .padding(.horizontal, 0)
+            
+            Picker("", selection: $currency.currencyType) {
+                ForEach(Currency.CurrencyType.allCases, id: \.self) { type in
+                    Text(type.rawValue).tag(type)
+                        .padding(.horizontal, 0)
+                }
             }
+            .pickerStyle(MenuPickerStyle())
+            .frame(width: 75)
+            .padding(.horizontal, 0)
+            
         }
     }
 }

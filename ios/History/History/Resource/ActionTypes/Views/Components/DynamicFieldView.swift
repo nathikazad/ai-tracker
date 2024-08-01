@@ -9,6 +9,7 @@ import SwiftUI
 
 struct DynamicFieldView: View {
     @ObservedObject var model: ActionTypeModel
+    @Binding var changesToSave:Bool
     let originalKey: String
     
     var body: some View {
@@ -21,11 +22,13 @@ struct DynamicFieldView: View {
                     set: { newValue in
                         model.dynamicFields[originalKey] = newValue
                         model.objectWillChange.send()
+                        changesToSave = true
                     }
                 ), validDataTypes: model.internalDataTypes + externalDataTypes)
                 
                 Button(action: {
                     model.dynamicFields.removeValue(forKey: originalKey)
+                    changesToSave = true
                 }) {
                     Label("Delete", systemImage: "trash")
                         .foregroundColor(.red)

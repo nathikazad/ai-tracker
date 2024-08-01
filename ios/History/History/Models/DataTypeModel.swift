@@ -37,13 +37,32 @@ extension AnyCodable {
         case is Unit.Type:
             return value as? T
         case is Currency.Type:
-            return value as? T
+            return Currency(data: value as? [String: Any]) as? T
         case is TimeStampedString.Type:
             return value as? T
         case is Date.Type:
             return (value as? String)?.getDate as? T
         case is String.Type:
             return value as? T
+        default:
+            return nil
+        }
+    }
+    
+    static func fromType<T>(_ value: T) -> AnyCodable? {
+        switch value {
+        case is Duration:
+            return AnyCodable(value)
+        case is Unit:
+            return AnyCodable(value)
+        case let currency as Currency:
+            return currency.toAnyCodable()
+        case let timeStampedString as TimeStampedString:
+            return AnyCodable(timeStampedString)
+        case let date as Date:
+            return AnyCodable(date.toUTCString)
+        case is String:
+            return AnyCodable(value)
         default:
             return nil
         }
@@ -155,14 +174,68 @@ class Unit {
 }
 
 class Currency {
-    var value: Int
-    var currencyType: String
-    
-    static let defaultCurrency = Currency()
+    var value: Double
+    var currencyType: CurrencyType
 
-    init(value: Int = 0, currencyType: String = "dollars") {
+    enum CurrencyType: String, CaseIterable {
+        case usd = "USD"
+        case mxn = "MXN"
+        case tnd = "TND"
+        case inr = "INR"
+    }
+
+    static func convertStringToCurrencyType(_ string: String) -> CurrencyType? {
+        return CurrencyType.allCases.first { $0.rawValue.lowercased() == string.lowercased() }
+    }
+
+    init(value: Double = 0, currencyType: CurrencyType? = nil) {
+        if currencyType == nil {
+            switch Authentication.shared.user?.timezone {
+            case "America/Mexico_City":
+                self.currencyType = .mxn
+            default:
+                self.currencyType = .usd
+            }
+        } else {
+            self.currencyType = currencyType!
+        }
         self.value = value
-        self.currencyType = currencyType
+    }
+    
+    convenience init(data: [String: Any]?) {
+        let value = data?["value"] as? Double ?? 0
+        let typeString = data?["currencyType"] as? String
+        let type = CurrencyType.allCases.first { $0.rawValue.lowercased() == typeString?.lowercased() }
+        self.init(value: value, currencyType: type ?? .usd)
+    }
+
+
+    static let defaultCurrency = Currency()
+    
+    var formattedValue: String {
+        let currencySymbol: String
+        switch currencyType {
+        case .usd:
+            currencySymbol = "$"
+        case .mxn:
+            currencySymbol = "$"
+        case .tnd:
+            currencySymbol = "TND"
+        case .inr:
+            currencySymbol = "₹"
+        }
+        return "\(currencySymbol)\(value)"
+    }
+
+    func toAnyCodable() -> AnyCodable {
+        return AnyCodable([
+            "value": value,
+            "currencyType": currencyType.rawValue
+        ])
+    }
+    
+    func toJSONCompatible() -> Any {
+        return ["value": value, "currencyType": currencyType.rawValue]
     }
 }
 

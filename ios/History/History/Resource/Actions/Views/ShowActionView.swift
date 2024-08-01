@@ -11,14 +11,18 @@ import UserNotifications
 struct ShowActionView: View {
     @StateObject private var action: ActionModel
     @State private var changesToSave:Bool
+    var clickAction: ((ActionModel) -> Void)?
+    @Environment(\.presentationMode) var presentationMode
+    
     init(actionModel: ActionModel) {
         _action = StateObject(wrappedValue: actionModel)
         _changesToSave = State(initialValue: false)
     }
     
-    init(actionType: ActionTypeModel) {
+    init(actionType: ActionTypeModel, clickAction: ((ActionModel) -> Void)? = nil) {
         _action = StateObject(wrappedValue:  ActionModel(actionTypeId: actionType.id!, startTime: Date().toUTCString, actionTypeModel: actionType))
         _changesToSave = State(initialValue: true)
+        self.clickAction = clickAction
     }
     
     var body: some View {
@@ -85,7 +89,15 @@ struct ShowActionView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink(destination: ActionTypeView(
-                    model: action.actionTypeModel
+                    model: action.actionTypeModel,
+                    updateActionTypeCallback: {
+                        model in
+                        action.actionTypeModel = model
+                    },
+                    deleteActionTypeCallback: {
+                        actionTypeId in
+                        self.presentationMode.wrappedValue.dismiss()
+                    }
                 )) {
                     Image(systemName: "gear")
                 }
@@ -105,14 +117,13 @@ struct ShowActionView: View {
 
     private func saveChanges() {
         Task {
-//            print(action.id)
             if action.id != nil {
-                print("updating")
                 await ActionController.updateActionModel(model: action)
             } else {
-                print("creating")
                 let actionId = await ActionController.createActionModel(model: action)
                 action.id = actionId
+                self.presentationMode.wrappedValue.dismiss()
+                clickAction?(action)
             }
         }
     }

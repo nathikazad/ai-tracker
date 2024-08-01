@@ -75,7 +75,8 @@ struct MainView: View {
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
                         NavigationLink(destination: ListActionsTypesView(
-                            listActionType: .takeToActionView)) {
+                            listActionType: .takeToActionView
+                        )) {
                             Image(systemName: "plus")
                                 .foregroundColor(.primary)
                         }
