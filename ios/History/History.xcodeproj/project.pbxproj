@@ -40,7 +40,7 @@
 		FE4AB38D2C4EF7B200A07749 /* ActionTypeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB38C2C4EF7B200A07749 /* ActionTypeController.swift */; };
 		FE4AB38F2C51830600A07749 /* ActionTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB38E2C51830600A07749 /* ActionTypeView.swift */; };
 		FE4AB3952C51F03300A07749 /* ActionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3942C51F03300A07749 /* ActionModel.swift */; };
-		FE4AB3972C51F05C00A07749 /* AggregateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3962C51F05C00A07749 /* AggregateModel.swift */; };
+		FE4AB3972C51F05C00A07749 /* ModelAggregate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3962C51F05C00A07749 /* ModelAggregate.swift */; };
 		FE4AB39C2C51F26B00A07749 /* SchemaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB39B2C51F26B00A07749 /* SchemaView.swift */; };
 		FE4AB39E2C51F29C00A07749 /* InternalObjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB39D2C51F29C00A07749 /* InternalObjectView.swift */; };
 		FE4AB3A02C51F2C500A07749 /* EnumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB39F2C51F2C500A07749 /* EnumView.swift */; };
@@ -48,7 +48,6 @@
 		FE4AB3A42C5207C100A07749 /* DataTypeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3A32C5207C100A07749 /* DataTypeModel.swift */; };
 		FE4AB3A62C52F76B00A07749 /* ActionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3A52C52F76B00A07749 /* ActionController.swift */; };
 		FE4AB3A82C52F99800A07749 /* AnyTypeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3A72C52F99800A07749 /* AnyTypeModel.swift */; };
-		FE4AB3AD2C544D7C00A07749 /* ActionTypeForHasura.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3AC2C544D7C00A07749 /* ActionTypeForHasura.swift */; };
 		FE4AB3B12C5551BA00A07749 /* TestAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3B02C5551BA00A07749 /* TestAction.swift */; };
 		FE4F7BA32BA7D79E0041CB6A /* HistoryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BA22BA7D79E0041CB6A /* HistoryApp.swift */; };
 		FE4F7BA52BA7D79E0041CB6A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BA42BA7D79E0041CB6A /* ContentView.swift */; };
@@ -66,7 +65,6 @@
 		FE4F7BDC2BA957780041CB6A /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */; };
 		FE5264812BA99AF700502521 /* ServerCommunicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5264802BA99AF700502521 /* ServerCommunicator.swift */; };
 		FE5264822BA99AF700502521 /* ServerCommunicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5264802BA99AF700502521 /* ServerCommunicator.swift */; };
-		FE638F3A2C55A7D3001C34F0 /* ActionForHasura.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE638F392C55A7D3001C34F0 /* ActionForHasura.swift */; };
 		FE638F3C2C55E2A2001C34F0 /* ShowActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE638F3B2C55E2A2001C34F0 /* ShowActionView.swift */; };
 		FE638F3F2C55E594001C34F0 /* MinActionComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE638F3E2C55E594001C34F0 /* MinActionComponent.swift */; };
 		FE638F432C56FF4E001C34F0 /* ShowActionComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE638F422C56FF4E001C34F0 /* ShowActionComponents.swift */; };
@@ -123,6 +121,7 @@
 		FEDBC0652C0509AC00233EA0 /* EventDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEDBC0642C0509AC00233EA0 /* EventDestination.swift */; };
 		FEDBC0672C050C3F00233EA0 /* EventButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEDBC0662C050C3F00233EA0 /* EventButtons.swift */; };
 		FEDBC0692C053A2800233EA0 /* EventList.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEDBC0682C053A2800233EA0 /* EventList.swift */; };
+		FEE29E082C5C1F1E00A27C44 /* ControllerAggregate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE29E072C5C1F1E00A27C44 /* ControllerAggregate.swift */; };
 		FEE6D79E2C58822300E65367 /* ActionModelConditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE6D79D2C58822300E65367 /* ActionModelConditions.swift */; };
 /* End PBXBuildFile section */
 
@@ -201,7 +200,7 @@
 		FE4AB38C2C4EF7B200A07749 /* ActionTypeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionTypeController.swift; sourceTree = "<group>"; };
 		FE4AB38E2C51830600A07749 /* ActionTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionTypeView.swift; sourceTree = "<group>"; };
 		FE4AB3942C51F03300A07749 /* ActionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionModel.swift; sourceTree = "<group>"; };
-		FE4AB3962C51F05C00A07749 /* AggregateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AggregateModel.swift; sourceTree = "<group>"; };
+		FE4AB3962C51F05C00A07749 /* ModelAggregate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelAggregate.swift; sourceTree = "<group>"; };
 		FE4AB39B2C51F26B00A07749 /* SchemaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemaView.swift; sourceTree = "<group>"; };
 		FE4AB39D2C51F29C00A07749 /* InternalObjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternalObjectView.swift; sourceTree = "<group>"; };
 		FE4AB39F2C51F2C500A07749 /* EnumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnumView.swift; sourceTree = "<group>"; };
@@ -209,7 +208,6 @@
 		FE4AB3A32C5207C100A07749 /* DataTypeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTypeModel.swift; sourceTree = "<group>"; };
 		FE4AB3A52C52F76B00A07749 /* ActionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionController.swift; sourceTree = "<group>"; };
 		FE4AB3A72C52F99800A07749 /* AnyTypeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyTypeModel.swift; sourceTree = "<group>"; };
-		FE4AB3AC2C544D7C00A07749 /* ActionTypeForHasura.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionTypeForHasura.swift; sourceTree = "<group>"; };
 		FE4AB3B02C5551BA00A07749 /* TestAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAction.swift; sourceTree = "<group>"; };
 		FE4F7B9F2BA7D79E0041CB6A /* History.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = History.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE4F7BA22BA7D79E0041CB6A /* HistoryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryApp.swift; sourceTree = "<group>"; };
@@ -229,7 +227,6 @@
 		FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
 		FE5264802BA99AF700502521 /* ServerCommunicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommunicator.swift; sourceTree = "<group>"; };
 		FE5264832BA9A1A400502521 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		FE638F392C55A7D3001C34F0 /* ActionForHasura.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionForHasura.swift; sourceTree = "<group>"; };
 		FE638F3B2C55E2A2001C34F0 /* ShowActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowActionView.swift; sourceTree = "<group>"; };
 		FE638F3E2C55E594001C34F0 /* MinActionComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinActionComponent.swift; sourceTree = "<group>"; };
 		FE638F422C56FF4E001C34F0 /* ShowActionComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowActionComponents.swift; sourceTree = "<group>"; };
@@ -285,6 +282,7 @@
 		FEDBC0642C0509AC00233EA0 /* EventDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDestination.swift; sourceTree = "<group>"; };
 		FEDBC0662C050C3F00233EA0 /* EventButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventButtons.swift; sourceTree = "<group>"; };
 		FEDBC0682C053A2800233EA0 /* EventList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventList.swift; sourceTree = "<group>"; };
+		FEE29E072C5C1F1E00A27C44 /* ControllerAggregate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControllerAggregate.swift; sourceTree = "<group>"; };
 		FEE6D79D2C58822300E65367 /* ActionModelConditions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionModelConditions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -360,7 +358,6 @@
 		FE2074B92C5B058B00C58226 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				FE4AB3962C51F05C00A07749 /* AggregateModel.swift */,
 				FE4AB3882C4EF46B00A07749 /* ActionTypeModel.swift */,
 			);
 			path = Models;
@@ -401,6 +398,7 @@
 		FE4AB3A92C544D0700A07749 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				FEE29E062C5C1EEC00A27C44 /* Aggregates */,
 				FE4AB3AE2C544E3F00A07749 /* Actions */,
 				FE4AB3AA2C544D1E00A07749 /* ActionTypes */,
 			);
@@ -413,7 +411,6 @@
 				FE2074B92C5B058B00C58226 /* Models */,
 				FE4AB38C2C4EF7B200A07749 /* ActionTypeController.swift */,
 				FE4AB3852C4EF42500A07749 /* Views */,
-				FE4AB3AC2C544D7C00A07749 /* ActionTypeForHasura.swift */,
 			);
 			path = ActionTypes;
 			sourceTree = "<group>";
@@ -536,7 +533,6 @@
 			isa = PBXGroup;
 			children = (
 				FE4AB3942C51F03300A07749 /* ActionModel.swift */,
-				FE638F392C55A7D3001C34F0 /* ActionForHasura.swift */,
 				FE638F452C571840001C34F0 /* ActionModels.swift */,
 				FEE6D79D2C58822300E65367 /* ActionModelConditions.swift */,
 			);
@@ -670,6 +666,15 @@
 				FE96B5442BF8505D000BD8E1 /* BookView.swift */,
 			);
 			path = Objects;
+			sourceTree = "<group>";
+		};
+		FEE29E062C5C1EEC00A27C44 /* Aggregates */ = {
+			isa = PBXGroup;
+			children = (
+				FE4AB3962C51F05C00A07749 /* ModelAggregate.swift */,
+				FEE29E072C5C1F1E00A27C44 /* ControllerAggregate.swift */,
+			);
+			path = Aggregates;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -837,7 +842,7 @@
 				FE4AB39C2C51F26B00A07749 /* SchemaView.swift in Sources */,
 				FE4F7BA52BA7D79E0041CB6A /* ContentView.swift in Sources */,
 				FECA5EEC2BE56970007ADE17 /* EventsComponents.swift in Sources */,
-				FE4AB3972C51F05C00A07749 /* AggregateModel.swift in Sources */,
+				FE4AB3972C51F05C00A07749 /* ModelAggregate.swift in Sources */,
 				FE8811EB2BC799BF00B112A8 /* GoalsController.swift in Sources */,
 				FEA98C112BFFC96C006BB857 /* QuickComponents.swift in Sources */,
 				FECA5EEE2BE569F6007ADE17 /* Time.swift in Sources */,
@@ -862,7 +867,6 @@
 				FEDBC0632C04FB2F00233EA0 /* Notes.swift in Sources */,
 				FE4AB3892C4EF46B00A07749 /* ActionTypeModel.swift in Sources */,
 				FE4AB3A42C5207C100A07749 /* DataTypeModel.swift in Sources */,
-				FE4AB3AD2C544D7C00A07749 /* ActionTypeForHasura.swift in Sources */,
 				FE4F7BA32BA7D79E0041CB6A /* HistoryApp.swift in Sources */,
 				FE6ED6D12C06A3E300E6A2A6 /* NavigationButton.swift in Sources */,
 				FEB366E32BDDEC5D000A48C0 /* SendBar.swift in Sources */,
@@ -873,6 +877,7 @@
 				FE12C5EC2BC4B359002CDC60 /* GraphsView.swift in Sources */,
 				FE06FD062C09140500E65D41 /* PeopleView.swift in Sources */,
 				FEA549A52BD34D290058E7D8 /* LocationView.swift in Sources */,
+				FEE29E082C5C1F1E00A27C44 /* ControllerAggregate.swift in Sources */,
 				FE9EAE512BC042260082DE87 /* ChatView.swift in Sources */,
 				FE4594272BD9E713002B163E /* HealthKitManager.swift in Sources */,
 				FE8811EC2BC799BF00B112A8 /* InteractionsController.swift in Sources */,
@@ -896,7 +901,6 @@
 				FE9BA2E52BF6998600AE25A9 /* PrayerView.swift in Sources */,
 				FE9477C02BFECF20003AD03A /* StayView.swift in Sources */,
 				FE1C0EB12BC0A29300FF56AB /* Hasura.swift in Sources */,
-				FE638F3A2C55A7D3001C34F0 /* ActionForHasura.swift in Sources */,
 				FEDBC0652C0509AC00233EA0 /* EventDestination.swift in Sources */,
 				FE8965AA2BC7B31D00E9D633 /* UserController.swift in Sources */,
 				FE638F3C2C55E2A2001C34F0 /* ShowActionView.swift in Sources */,

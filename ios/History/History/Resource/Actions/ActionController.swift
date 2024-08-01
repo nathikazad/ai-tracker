@@ -112,11 +112,11 @@ class ActionController {
     static func fetchActions(userId: Int, actionId: Int? = nil, actionTypeId: Int? = nil) async -> [ActionModel] {
         let (graphqlQuery, variables) = generateQueryForActions(userId: userId, actionId: actionId, actionTypeId: actionTypeId)
         struct ActionData: GraphQLData {
-            var v2_actions: [ActionForHasura]
+            var v2_actions: [ActionModel]
         }
         do {
             let responseData: GraphQLResponse<ActionData> = try await Hasura.shared.sendGraphQL(query: graphqlQuery, variables: variables, responseType: GraphQLResponse<ActionData>.self)
-            return responseData.data.v2_actions.map { $0.toActionModel() }
+            return responseData.data.v2_actions
         } catch {
             print(error)
             print("Failed to fetch actions: \(error.localizedDescription)")
@@ -130,13 +130,13 @@ class ActionController {
         print(subscriptionQuery)
         print(variables)
         struct ActionData: GraphQLData {
-            var v2_actions: [ActionForHasura]
+            var v2_actions: [ActionModel]
         }
         
         Hasura.shared.startListening(subscriptionId: subscriptionId, subscriptionQuery: subscriptionQuery, responseType: GraphQLResponse<ActionData>.self, variables: variables) { result in
             switch result {
             case .success(let responseData):
-                let actions = responseData.data.v2_actions.map { $0.toActionModel() }
+                let actions = responseData.data.v2_actions
                 actionUpdateCallback(actions)
             case .failure(let error):
                 print("Error processing action update: \(error.localizedDescription)")
@@ -165,11 +165,11 @@ class ActionController {
         if let actionTypeId = actionTypeId {
             hasuraStruct.addWhereClause(name: "action_type_id", type: .int, value: actionTypeId, op: .equals)
         }
-        hasuraStruct.setSelections(selections: actionSelections)
+        hasuraStruct.setSelections(selections: actionSelections())
         return hasuraStruct.getQueryAndVariables
     }
     
-    static private var actionSelections: String {
+    static private func actionSelections(includeActionType: Bool = false, includeAggregates:Bool = false) -> String {
         return """
             id
             created_at
@@ -183,6 +183,12 @@ class ActionController {
             action_type {
                 \(ActionTypesController.actionTypeSelections)
             }
+        \(includeAggregates ? """
+            aggregates {
+                \(AggregateController.aggregateSelections)
+            }
+            """: "")
+            
         """
     }
 }

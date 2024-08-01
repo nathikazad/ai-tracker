@@ -19,13 +19,7 @@ class ActionTypesController {
         hasuraStruct.addParameter(name: "name", type: .string, value: model.name)
         hasuraStruct.addParameter(name: "hasDuration", type: .bool, value: model.meta.hasDuration)
         hasuraStruct.addParameter(name: "description", type: .string, value: model.meta.description)
-        let metadata: ActionTypeMetadataForHasura = ActionTypeMetadataForHasura(
-            staticFields: model.staticFields,
-            dynamicFields: model.dynamicFields,
-            internalObjects: model.internalObjects,
-            aggregates: model.aggregates,
-            computed: model.computed)
-        hasuraStruct.addParameter(name: "metadata", type: .jsonb, value: metadata.toJSONDictionary())
+        hasuraStruct.addParameter(name: "metadata", type: .jsonb, value: model.getMetadataJson)
         
         let (graphqlQuery, variables) = hasuraStruct.getMutationAndVariables
         struct CreateActionTypeResponse: GraphQLData {
@@ -59,14 +53,8 @@ class ActionTypesController {
         hasuraMutation.addParameter(name: "hasDuration", type: .bool, value: model.meta.hasDuration)
         hasuraMutation.addParameter(name: "description", type: .string, value: model.meta.description)
         
-        let metadata: ActionTypeMetadataForHasura = ActionTypeMetadataForHasura(
-            staticFields: model.staticFields,
-            dynamicFields: model.dynamicFields,
-            internalObjects: model.internalObjects,
-            aggregates: model.aggregates,
-            computed: model.computed
-        )
-        hasuraMutation.addParameter(name: "metadata", type: .jsonb, value: metadata.toJSONDictionary())
+
+        hasuraMutation.addParameter(name: "metadata", type: .jsonb, value: model.getMetadataJson)
         
         let (graphqlQuery, variables) = hasuraMutation.getMutationAndVariables
         struct UpdateActionTypeResponse: GraphQLData {
@@ -122,11 +110,11 @@ class ActionTypesController {
     static func fetchActionTypes(userId: Int, actionTypeId: Int? = nil) async -> [ActionTypeModel] {
         let (graphqlQuery, variables) = generateQueryForActionTypes(userId: userId, actionTypeId: actionTypeId)
         struct ActionTypeData: GraphQLData {
-            var v2_action_types: [ActionTypeForHasura]
+            var v2_action_types: [ActionTypeModel]
         }
         do {
             let responseData: GraphQLResponse<ActionTypeData> = try await Hasura.shared.sendGraphQL(query: graphqlQuery, variables: variables, responseType: GraphQLResponse<ActionTypeData>.self)
-            return responseData.data.v2_action_types.map { $0.toActionTypeModel() }
+            return responseData.data.v2_action_types
         } catch {
             print(graphqlQuery)
             print(variables)
@@ -139,11 +127,11 @@ class ActionTypesController {
     static func fetchActionType(userId: Int, actionTypeId: Int) async -> ActionTypeModel? {
         let (graphqlQuery, variables) = generateQueryForActionTypes(userId: userId, actionTypeId: actionTypeId)
         struct ActionTypeData: GraphQLData {
-            var v2_action_types: [ActionTypeForHasura]
+            var v2_action_types: [ActionTypeModel]
         }
         do {
             let responseData: GraphQLResponse<ActionTypeData> = try await Hasura.shared.sendGraphQL(query: graphqlQuery, variables: variables, responseType: GraphQLResponse<ActionTypeData>.self)
-            return responseData.data.v2_action_types.first?.toActionTypeModel()
+            return responseData.data.v2_action_types.first
         } catch {
             print(graphqlQuery)
             print(variables)
@@ -168,7 +156,7 @@ class ActionTypesController {
             id
             created_at
             description
-            hasDuration
+            has_duration
             metadata
             name
             updated_at

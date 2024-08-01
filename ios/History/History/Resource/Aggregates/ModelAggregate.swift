@@ -7,7 +7,33 @@
 
 import Foundation
 
-class Aggregate: Codable {
+struct AggregateModel: Codable {
+    let id: Int?
+    let goalTypeId: Int
+    let metadata: AggregateMetaData
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case goalTypeId = "goal_type_id"
+        case metadata
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(Int.self, forKey: .id)
+        goalTypeId = try container.decode(Int.self, forKey: .goalTypeId)
+        metadata = try container.decode(AggregateMetaData.self, forKey: .metadata)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(goalTypeId, forKey: .goalTypeId)
+        try container.encode(metadata, forKey: .metadata)
+    }
+}
+
+class AggregateMetaData: Codable {
     var field: String
     var window: Window
     var dataType: DataType
@@ -19,7 +45,6 @@ class Aggregate: Codable {
     enum CodingKeys: String, CodingKey {
         case field, window, dataType, aggregatorType, conditions, goals, description
     }
-    
     
     init(field: String, window: Window, dataType: DataType, aggregatorType: AggregatorType, conditions: [Condition], goals: [Goal], description: String? = nil) {
         self.field = field
@@ -51,6 +76,16 @@ class Aggregate: Codable {
         try container.encode(conditions, forKey: .conditions)
         try container.encode(goals, forKey: .goals)
         try container.encodeIfPresent(description, forKey: .description)
+    }
+    
+    var toJson: [String: Any] {
+        let encoder = JSONEncoder()
+        if let metadataJson = try? encoder.encode(self),
+           let metadataDict = try? JSONSerialization.jsonObject(with: metadataJson, options: []) as? [String: Any] {
+            return metadataDict
+        } else {
+            return [:]
+        }
     }
 }
 

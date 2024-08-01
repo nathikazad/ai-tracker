@@ -8,14 +8,33 @@
 import Foundation
 
 // ActionModel struct
-class ActionModel: ObservableObject {
+import Foundation
+
+class ActionModel: ObservableObject, Codable {
     @Published var id: Int?
     @Published var actionTypeId: Int
     @Published var startTime: Date
     @Published var endTime: Date?
     var parentId: Int?
+    @Published var aggregates: [AggregateModel]
     @Published var dynamicData: [String: AnyCodable]
     @Published var actionTypeModel: ActionTypeModel
+    let createdAt: Date
+    let updatedAt: Date
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case actionTypeId = "action_type_id"
+        case startTime = "start_time"
+        case endTime = "end_time"
+        case parentId = "parent_id"
+        case dynamicData = "dynamic_data"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case userId = "user_id"
+        case actionType = "action_type"
+        case aggregates = "aggregates"
+    }
     
     var duration: String {
         guard let endTime = endTime else { return "00:00" }
@@ -27,18 +46,57 @@ class ActionModel: ObservableObject {
         return String(format: "%02d:%02d", hours, minutes)
     }
 
-
-    init(id: Int? = nil, actionTypeId: Int, startTime: String, endTime: String? = nil, parentId: Int? = nil, dynamicData: [String: AnyCodable] = [:], actionTypeModel: ActionTypeModel) {
+    init(id: Int? = nil, actionTypeId: Int, startTime: Date, endTime: Date? = nil, parentId: Int? = nil, dynamicData: [String: AnyCodable] = [:], actionTypeModel: ActionTypeModel, createdAt: Date = Date(), updatedAt: Date = Date()) {
         self.id = id
         self.actionTypeId = actionTypeId
-        self.startTime = startTime.getDate ?? Date()
-        self.endTime = endTime?.getDate
+        self.startTime = startTime
+        self.endTime = endTime
         self.parentId = parentId
         self.dynamicData = dynamicData
         self.actionTypeModel = actionTypeModel
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+        self.aggregates = []
     }
     
-    func copy(_ newModel:ActionModel) {
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decodeIfPresent(Int.self, forKey: .id)
+        actionTypeId = try container.decode(Int.self, forKey: .actionTypeId)
+        let startTimeString = try container.decode(String.self, forKey: .startTime)
+        startTime = startTimeString.getDate ?? Date()
+        if let endTimeString = try container.decodeIfPresent(String.self, forKey: .endTime) {
+            endTime = endTimeString.getDate
+        } else {
+            endTime = nil
+        }
+        if let aggregates = try container.decodeIfPresent([AggregateModel].self, forKey: .aggregates) {
+            self.aggregates = aggregates
+        } else {
+            aggregates = []
+        }
+        parentId = try container.decodeIfPresent(Int.self, forKey: .parentId)
+        dynamicData = try container.decode([String: AnyCodable].self, forKey: .dynamicData)
+        let createdAtString = try container.decode(String.self, forKey: .createdAt)
+        createdAt = createdAtString.getDate!
+        let updatedAtString = try container.decode(String.self, forKey: .updatedAt)
+        updatedAt = updatedAtString.getDate!
+        actionTypeModel = try container.decode(ActionTypeModel.self, forKey: .actionType)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encodeIfPresent(id, forKey: .id)
+        try container.encode(actionTypeId, forKey: .actionTypeId)
+        try container.encode(startTime.toUTCString, forKey: .startTime)
+        try container.encodeIfPresent(endTime?.toUTCString, forKey: .endTime)
+        try container.encodeIfPresent(parentId, forKey: .parentId)
+        try container.encode(dynamicData, forKey: .dynamicData)
+        try container.encode(createdAt.toUTCString, forKey: .createdAt)
+        try container.encode(updatedAt.toUTCString, forKey: .updatedAt)
+    }
+    
+    func copy(_ newModel: ActionModel) {
         self.id = newModel.id
         self.actionTypeId = newModel.actionTypeId
         self.startTime = newModel.startTime
@@ -46,6 +104,7 @@ class ActionModel: ObservableObject {
         self.parentId = newModel.parentId
         self.dynamicData = newModel.dynamicData
         self.actionTypeModel = newModel.actionTypeModel
+        self.aggregates = newModel.aggregates
     }
     
     var toString: String? {

@@ -20,7 +20,7 @@ struct ShowActionView: View {
     }
     
     init(actionType: ActionTypeModel, clickAction: ((ActionModel) -> Void)? = nil) {
-        _action = StateObject(wrappedValue:  ActionModel(actionTypeId: actionType.id!, startTime: Date().toUTCString, actionTypeModel: actionType))
+        _action = StateObject(wrappedValue:  ActionModel(actionTypeId: actionType.id!, startTime: Date(), actionTypeModel: actionType))
         _changesToSave = State(initialValue: true)
         self.clickAction = clickAction
     }
