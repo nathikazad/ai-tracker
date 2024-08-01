@@ -21,6 +21,13 @@
 		FE1C0EB12BC0A29300FF56AB /* Hasura.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EB02BC0A29300FF56AB /* Hasura.swift */; };
 		FE2074B62C5ACFFB00C58226 /* DynamicFieldsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE2074B52C5ACFFB00C58226 /* DynamicFieldsView.swift */; };
 		FE2074B82C5ADDCE00C58226 /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE2074B72C5ADDCE00C58226 /* Timer.swift */; };
+		FE2074D42C5B3FD100C58226 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEC5386D2BBDE4E5006BDBDA /* WidgetKit.framework */; };
+		FE2074D52C5B3FD100C58226 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEC5386F2BBDE4E5006BDBDA /* SwiftUI.framework */; };
+		FE2074D82C5B3FD100C58226 /* Shortcut_Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE2074D72C5B3FD100C58226 /* Shortcut_Extension.swift */; };
+		FE2074DA2C5B3FD100C58226 /* AppIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE2074D92C5B3FD100C58226 /* AppIntent.swift */; };
+		FE2074DC2C5B3FD200C58226 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE2074DB2C5B3FD200C58226 /* Assets.xcassets */; };
+		FE2074E02C5B3FD200C58226 /* Shortcut ExtensionExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FE2074D32C5B3FD100C58226 /* Shortcut ExtensionExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FE2074EB2C5B426B00C58226 /* WrappingHStack in Frameworks */ = {isa = PBXBuildFile; productRef = FE2074EA2C5B426B00C58226 /* WrappingHStack */; };
 		FE20CA262BC5E4CD00863604 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE20CA252BC5E4CD00863604 /* SettingsView.swift */; };
 		FE3E9F662BC8ACAD008BD120 /* NavigationTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3E9F652BC8ACAD008BD120 /* NavigationTitle.swift */; };
 		FE4594272BD9E713002B163E /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4594262BD9E713002B163E /* HealthKitManager.swift */; };
@@ -32,7 +39,6 @@
 		FE4AB38B2C4EF4E500A07749 /* ListActionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB38A2C4EF4E500A07749 /* ListActionsView.swift */; };
 		FE4AB38D2C4EF7B200A07749 /* ActionTypeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB38C2C4EF7B200A07749 /* ActionTypeController.swift */; };
 		FE4AB38F2C51830600A07749 /* ActionTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB38E2C51830600A07749 /* ActionTypeView.swift */; };
-		FE4AB3932C51D95D00A07749 /* WrappingHStack in Frameworks */ = {isa = PBXBuildFile; productRef = FE4AB3922C51D95D00A07749 /* WrappingHStack */; };
 		FE4AB3952C51F03300A07749 /* ActionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3942C51F03300A07749 /* ActionModel.swift */; };
 		FE4AB3972C51F05C00A07749 /* AggregateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3962C51F05C00A07749 /* AggregateModel.swift */; };
 		FE4AB39C2C51F26B00A07749 /* SchemaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB39B2C51F26B00A07749 /* SchemaView.swift */; };
@@ -121,6 +127,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		FE2074DE2C5B3FD200C58226 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FE4F7B972BA7D79E0041CB6A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FE2074D22C5B3FD100C58226;
+			remoteInfo = "Shortcut ExtensionExtension";
+		};
 		FE4F7BC12BA7D7E70041CB6A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FE4F7B972BA7D79E0041CB6A /* Project object */;
@@ -148,6 +161,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				FE2074E02C5B3FD200C58226 /* Shortcut ExtensionExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -170,6 +184,11 @@
 		FE1C0EB02BC0A29300FF56AB /* Hasura.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hasura.swift; sourceTree = "<group>"; };
 		FE2074B52C5ACFFB00C58226 /* DynamicFieldsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicFieldsView.swift; sourceTree = "<group>"; };
 		FE2074B72C5ADDCE00C58226 /* Timer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = "<group>"; };
+		FE2074D32C5B3FD100C58226 /* Shortcut ExtensionExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Shortcut ExtensionExtension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FE2074D72C5B3FD100C58226 /* Shortcut_Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shortcut_Extension.swift; sourceTree = "<group>"; };
+		FE2074D92C5B3FD100C58226 /* AppIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntent.swift; sourceTree = "<group>"; };
+		FE2074DB2C5B3FD200C58226 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FE2074DD2C5B3FD200C58226 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FE20CA252BC5E4CD00863604 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		FE3E9F652BC8ACAD008BD120 /* NavigationTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationTitle.swift; sourceTree = "<group>"; };
 		FE4594262BD9E713002B163E /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
@@ -257,10 +276,6 @@
 		FEBED4992C0AD79800DB2D5F /* PersonViewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonViewHelper.swift; sourceTree = "<group>"; };
 		FEC5386D2BBDE4E5006BDBDA /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		FEC5386F2BBDE4E5006BDBDA /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
-		FEC538722BBDE4E5006BDBDA /* Shortcut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shortcut.swift; sourceTree = "<group>"; };
-		FEC538742BBDE4E5006BDBDA /* AppIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntent.swift; sourceTree = "<group>"; };
-		FEC538762BBDE4E6006BDBDA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		FEC538782BBDE4E6006BDBDA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FEC538802BBDF8C7006BDBDA /* WidgetIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetIntent.swift; sourceTree = "<group>"; };
 		FEC7849D2C064EAE007C38F1 /* PersonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonView.swift; sourceTree = "<group>"; };
 		FECA5EEB2BE56970007ADE17 /* EventsComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsComponents.swift; sourceTree = "<group>"; };
@@ -274,11 +289,20 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		FE2074D02C5B3FD100C58226 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FE2074D52C5B3FD100C58226 /* SwiftUI.framework in Frameworks */,
+				FE2074D42C5B3FD100C58226 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FE4F7B9C2BA7D79E0041CB6A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FE4AB3932C51D95D00A07749 /* WrappingHStack in Frameworks */,
+				FE2074EB2C5B426B00C58226 /* WrappingHStack in Frameworks */,
 				FE4F7BCC2BA7DBB70041CB6A /* WatchConnectivity.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -340,6 +364,17 @@
 				FE4AB3882C4EF46B00A07749 /* ActionTypeModel.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		FE2074D62C5B3FD100C58226 /* Shortcut Extension */ = {
+			isa = PBXGroup;
+			children = (
+				FE2074D72C5B3FD100C58226 /* Shortcut_Extension.swift */,
+				FE2074D92C5B3FD100C58226 /* AppIntent.swift */,
+				FE2074DB2C5B3FD200C58226 /* Assets.xcassets */,
+				FE2074DD2C5B3FD200C58226 /* Info.plist */,
+			);
+			path = "Shortcut Extension";
 			sourceTree = "<group>";
 		};
 		FE4AB3852C4EF42500A07749 /* Views */ = {
@@ -410,7 +445,7 @@
 			children = (
 				FE4F7BA12BA7D79E0041CB6A /* History */,
 				FE4F7BB72BA7D7E60041CB6A /* MiniHistory Watch App */,
-				FEC538712BBDE4E5006BDBDA /* Shortcut */,
+				FE2074D62C5B3FD100C58226 /* Shortcut Extension */,
 				FE4F7BA02BA7D79E0041CB6A /* Products */,
 				FE4F7BCA2BA7DBB60041CB6A /* Frameworks */,
 			);
@@ -421,6 +456,7 @@
 			children = (
 				FE4F7B9F2BA7D79E0041CB6A /* History.app */,
 				FE4F7BB62BA7D7E60041CB6A /* Aspire Watch.app */,
+				FE2074D32C5B3FD100C58226 /* Shortcut ExtensionExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -614,17 +650,6 @@
 			path = HelperViews;
 			sourceTree = "<group>";
 		};
-		FEC538712BBDE4E5006BDBDA /* Shortcut */ = {
-			isa = PBXGroup;
-			children = (
-				FEC538722BBDE4E5006BDBDA /* Shortcut.swift */,
-				FEC538742BBDE4E5006BDBDA /* AppIntent.swift */,
-				FEC538762BBDE4E6006BDBDA /* Assets.xcassets */,
-				FEC538782BBDE4E6006BDBDA /* Info.plist */,
-			);
-			path = Shortcut;
-			sourceTree = "<group>";
-		};
 		FEDBC0612C04FB2100233EA0 /* Components */ = {
 			isa = PBXGroup;
 			children = (
@@ -650,6 +675,25 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		FE2074D22C5B3FD100C58226 /* Shortcut ExtensionExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FE2074E32C5B3FD200C58226 /* Build configuration list for PBXNativeTarget "Shortcut ExtensionExtension" */;
+			buildPhases = (
+				FE2074CF2C5B3FD100C58226 /* Sources */,
+				FE2074D02C5B3FD100C58226 /* Frameworks */,
+				FE2074D12C5B3FD100C58226 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Shortcut ExtensionExtension";
+			packageProductDependencies = (
+			);
+			productName = "Shortcut ExtensionExtension";
+			productReference = FE2074D32C5B3FD100C58226 /* Shortcut ExtensionExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		FE4F7B9E2BA7D79E0041CB6A /* History */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = FE4F7BAD2BA7D79F0041CB6A /* Build configuration list for PBXNativeTarget "History" */;
@@ -666,7 +710,7 @@
 			);
 			name = History;
 			packageProductDependencies = (
-				FE4AB3922C51D95D00A07749 /* WrappingHStack */,
+				FE2074EA2C5B426B00C58226 /* WrappingHStack */,
 			);
 			productName = History;
 			productReference = FE4F7B9F2BA7D79E0041CB6A /* History.app */;
@@ -684,6 +728,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				FE2074DF2C5B3FD200C58226 /* PBXTargetDependency */,
 			);
 			name = "MiniHistory Watch App";
 			packageProductDependencies = (
@@ -699,9 +744,12 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1520;
+				LastSwiftUpdateCheck = 1540;
 				LastUpgradeCheck = 1520;
 				TargetAttributes = {
+					FE2074D22C5B3FD100C58226 = {
+						CreatedOnToolsVersion = 15.4;
+					};
 					FE4F7B9E2BA7D79E0041CB6A = {
 						CreatedOnToolsVersion = 15.2;
 					};
@@ -728,11 +776,20 @@
 			targets = (
 				FE4F7B9E2BA7D79E0041CB6A /* History */,
 				FE4F7BB52BA7D7E60041CB6A /* MiniHistory Watch App */,
+				FE2074D22C5B3FD100C58226 /* Shortcut ExtensionExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		FE2074D12C5B3FD100C58226 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FE2074DC2C5B3FD200C58226 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FE4F7B9D2BA7D79E0041CB6A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -754,6 +811,15 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		FE2074CF2C5B3FD100C58226 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FE2074D82C5B3FD100C58226 /* Shortcut_Extension.swift in Sources */,
+				FE2074DA2C5B3FD100C58226 /* AppIntent.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FE4F7B9B2BA7D79E0041CB6A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -875,6 +941,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		FE2074DF2C5B3FD200C58226 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FE2074D22C5B3FD100C58226 /* Shortcut ExtensionExtension */;
+			targetProxy = FE2074DE2C5B3FD200C58226 /* PBXContainerItemProxy */;
+		};
 		FE4F7BC22BA7D7E70041CB6A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = FE4F7BB52BA7D7E60041CB6A /* MiniHistory Watch App */;
@@ -883,6 +954,66 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		FE2074E12C5B3FD200C58226 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F2W45BF2AV;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Shortcut Extension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Shortcut Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.snow.aspire.watchapp.Shortcut-Extension";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.5;
+			};
+			name = Debug;
+		};
+		FE2074E22C5B3FD200C58226 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F2W45BF2AV;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Shortcut Extension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Shortcut Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.snow.aspire.watchapp.Shortcut-Extension";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.5;
+			};
+			name = Release;
+		};
 		FE4F7BAB2BA7D79F0041CB6A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1165,6 +1296,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		FE2074E32C5B3FD200C58226 /* Build configuration list for PBXNativeTarget "Shortcut ExtensionExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FE2074E12C5B3FD200C58226 /* Debug */,
+				FE2074E22C5B3FD200C58226 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		FE4F7B9A2BA7D79E0041CB6A /* Build configuration list for PBXProject "History" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1206,7 +1346,7 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		FE4AB3922C51D95D00A07749 /* WrappingHStack */ = {
+		FE2074EA2C5B426B00C58226 /* WrappingHStack */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = FE4AB3912C51D94400A07749 /* XCRemoteSwiftPackageReference "WrappingHStack" */;
 			productName = WrappingHStack;

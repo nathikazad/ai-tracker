@@ -1,8 +1,8 @@
 //
 //  AppIntent.swift
-//  Shortcut
+//  Shortcut Extension
 //
-//  Created by Nathik Azad on 4/3/24.
+//  Created by Nathik Azad on 7/31/24.
 //
 
 import WidgetKit
