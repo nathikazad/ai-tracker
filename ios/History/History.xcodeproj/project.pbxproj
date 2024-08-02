@@ -122,6 +122,7 @@
 		FEDBC0672C050C3F00233EA0 /* EventButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEDBC0662C050C3F00233EA0 /* EventButtons.swift */; };
 		FEDBC0692C053A2800233EA0 /* EventList.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEDBC0682C053A2800233EA0 /* EventList.swift */; };
 		FEE29E082C5C1F1E00A27C44 /* ControllerAggregate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE29E072C5C1F1E00A27C44 /* ControllerAggregate.swift */; };
+		FEE29E0A2C5C35FB00A27C44 /* ViewAggregate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE29E092C5C35FA00A27C44 /* ViewAggregate.swift */; };
 		FEE6D79E2C58822300E65367 /* ActionModelConditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE6D79D2C58822300E65367 /* ActionModelConditions.swift */; };
 /* End PBXBuildFile section */
 
@@ -283,6 +284,7 @@
 		FEDBC0662C050C3F00233EA0 /* EventButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventButtons.swift; sourceTree = "<group>"; };
 		FEDBC0682C053A2800233EA0 /* EventList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventList.swift; sourceTree = "<group>"; };
 		FEE29E072C5C1F1E00A27C44 /* ControllerAggregate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControllerAggregate.swift; sourceTree = "<group>"; };
+		FEE29E092C5C35FA00A27C44 /* ViewAggregate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewAggregate.swift; sourceTree = "<group>"; };
 		FEE6D79D2C58822300E65367 /* ActionModelConditions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionModelConditions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -673,6 +675,7 @@
 			children = (
 				FE4AB3962C51F05C00A07749 /* ModelAggregate.swift */,
 				FEE29E072C5C1F1E00A27C44 /* ControllerAggregate.swift */,
+				FEE29E092C5C35FA00A27C44 /* ViewAggregate.swift */,
 			);
 			path = Aggregates;
 			sourceTree = "<group>";
@@ -876,6 +879,7 @@
 				FE12C5EF2BC4B832002CDC60 /* MicrophoneButton.swift in Sources */,
 				FE12C5EC2BC4B359002CDC60 /* GraphsView.swift in Sources */,
 				FE06FD062C09140500E65D41 /* PeopleView.swift in Sources */,
+				FEE29E0A2C5C35FB00A27C44 /* ViewAggregate.swift in Sources */,
 				FEA549A52BD34D290058E7D8 /* LocationView.swift in Sources */,
 				FEE29E082C5C1F1E00A27C44 /* ControllerAggregate.swift in Sources */,
 				FE9EAE512BC042260082DE87 /* ChatView.swift in Sources */,
@@ -1146,7 +1150,7 @@
 				CODE_SIGN_ENTITLEMENTS = History/History.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"History/Preview Content\"";
 				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
@@ -1172,7 +1176,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3;
+				MARKETING_VERSION = 0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1195,7 +1199,7 @@
 				CODE_SIGN_ENTITLEMENTS = History/History.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"History/Preview Content\"";
 				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
@@ -1221,7 +1225,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3;
+				MARKETING_VERSION = 0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1242,7 +1246,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"MiniHistory Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
@@ -1254,7 +1258,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3;
+				MARKETING_VERSION = 0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire.watchapp;
 				PRODUCT_NAME = "Aspire Watch";
 				SDKROOT = watchos;
@@ -1273,7 +1277,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"MiniHistory Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
@@ -1285,7 +1289,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3;
+				MARKETING_VERSION = 0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire.watchapp;
 				PRODUCT_NAME = "Aspire Watch";
 				SDKROOT = watchos;

@@ -17,7 +17,7 @@ class ActionTypesController {
             mutationType: .create)
         hasuraStruct.addParameter(name: "user_id", type: .int, value: Authentication.shared.userId!)
         hasuraStruct.addParameter(name: "name", type: .string, value: model.name)
-        hasuraStruct.addParameter(name: "hasDuration", type: .bool, value: model.meta.hasDuration)
+        hasuraStruct.addParameter(name: "has_duration", type: .bool, value: model.meta.hasDuration)
         hasuraStruct.addParameter(name: "description", type: .string, value: model.meta.description)
         hasuraStruct.addParameter(name: "metadata", type: .jsonb, value: model.getMetadataJson)
         
@@ -50,7 +50,7 @@ class ActionTypesController {
         )
         
         hasuraMutation.addParameter(name: "name", type: .string, value: model.name)
-        hasuraMutation.addParameter(name: "hasDuration", type: .bool, value: model.meta.hasDuration)
+        hasuraMutation.addParameter(name: "has_duration", type: .bool, value: model.meta.hasDuration)
         hasuraMutation.addParameter(name: "description", type: .string, value: model.meta.description)
         
 
@@ -124,8 +124,8 @@ class ActionTypesController {
         }
     }
 
-    static func fetchActionType(userId: Int, actionTypeId: Int) async -> ActionTypeModel? {
-        let (graphqlQuery, variables) = generateQueryForActionTypes(userId: userId, actionTypeId: actionTypeId)
+    static func fetchActionType(userId: Int, actionTypeId: Int, withAggregates:Bool = false) async -> ActionTypeModel? {
+        let (graphqlQuery, variables) = generateQueryForActionTypes(userId: userId, actionTypeId: actionTypeId, withAggregates: withAggregates)
         struct ActionTypeData: GraphQLData {
             var v2_action_types: [ActionTypeModel]
         }
@@ -141,17 +141,17 @@ class ActionTypesController {
         }
     }
     
-    static private func generateQueryForActionTypes(userId: Int, actionTypeId: Int?) -> (String, [String: Any]) {
+    static private func generateQueryForActionTypes(userId: Int, actionTypeId: Int?, withAggregates: Bool = false) -> (String, [String: Any]) {
         var hasuraStruct:HasuraQuery = HasuraQuery(queryFor: "v2_action_types", queryName: "ActionTypesQuery", queryType: .query)
         hasuraStruct.addWhereClause(name: "user_id", type: .int, value: userId, op: .equals)
         if (actionTypeId != nil) {
             hasuraStruct.addWhereClause(name: "id", type: .int, value: actionTypeId, op: .equals)
         }
-        hasuraStruct.setSelections(selections:actionTypeSelections)
+        hasuraStruct.setSelections(selections:actionTypeSelections(withAggregates: withAggregates))
         return hasuraStruct.getQueryAndVariables
     }
     
-    static var actionTypeSelections: String {
+    static func actionTypeSelections(withAggregates:Bool = false) -> String {
         return """
             id
             created_at
@@ -162,6 +162,11 @@ class ActionTypesController {
             updated_at
             user_id
             short_desc_syntax
+            \(withAggregates ? """
+                aggregates {
+                    \(AggregateController.aggregateSelections)
+                }
+                """: "")
         """
     }
 }

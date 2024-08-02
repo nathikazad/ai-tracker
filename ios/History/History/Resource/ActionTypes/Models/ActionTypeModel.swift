@@ -16,6 +16,7 @@ class ActionTypeModel: ObservableObject, Codable {
     var staticFields: ActionModelTypeStaticSchema
     @Published var dynamicFields: [String: Schema]
     @Published var internalObjects: [String: InternalObject]
+    @Published var aggregates: [AggregateModel]
     var computed: [String: Schema]
     var shortDescSyntax: String?
     let createdAt: Date
@@ -31,6 +32,7 @@ class ActionTypeModel: ObservableObject, Codable {
         case updatedAt = "updated_at"
         case hasDuration = "has_duration"
         case description = "description"
+        case aggregates = "aggregates"
     }
     
     init(id: Int? = nil,
@@ -40,6 +42,7 @@ class ActionTypeModel: ObservableObject, Codable {
          dynamicFields: [String: Schema] = [:],
          computed: [String: Schema] = [:],
          internalObjects: [String: InternalObject] = [:],
+         aggregates: [AggregateModel] = [],
          shortDescSyntax: String? = nil,
          createdAt: Date = Date(),
          updatedAt: Date = Date()) {
@@ -53,6 +56,7 @@ class ActionTypeModel: ObservableObject, Codable {
         self.shortDescSyntax = shortDescSyntax
         self.createdAt = createdAt
         self.updatedAt = updatedAt
+        self.aggregates = aggregates
     }
     
     required init(from decoder: Decoder) throws {
@@ -73,6 +77,7 @@ class ActionTypeModel: ObservableObject, Codable {
         createdAt = createdAtString.getDate!
         let updatedAtString = try container.decode(String.self, forKey: .updatedAt)
         updatedAt = updatedAtString.getDate!
+        self.aggregates = try container.decodeIfPresent([AggregateModel].self, forKey: .aggregates) ?? []
     }
     
     func encode(to encoder: Encoder) throws {
@@ -102,7 +107,7 @@ class ActionTypeModel: ObservableObject, Codable {
         self.internalObjects = m.internalObjects
         self.computed = m.computed
         self.shortDescSyntax = m.shortDescSyntax
-        // Note: We're not copying createdAt, updatedAt, and userId as they should remain constant
+        self.aggregates = m.aggregates
     }
     
     var getMetadataJson: [String: Any] {

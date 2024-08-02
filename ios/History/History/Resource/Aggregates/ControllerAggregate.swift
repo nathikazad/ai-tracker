@@ -14,7 +14,7 @@ class AggregateController {
             mutationName: "AggregateMutation",
             mutationType: .create)
         
-        hasuraStruct.addParameter(name: "goal_type_id", type: .int, value: aggregate.goalTypeId)
+        hasuraStruct.addParameter(name: "action_type_id", type: .int, value: aggregate.actionTypeId)
         hasuraStruct.addParameter(name: "metadata", type: .jsonb, value: aggregate.metadata.toJson)
         
         let (graphqlQuery, variables) = hasuraStruct.getMutationAndVariables
@@ -47,7 +47,7 @@ class AggregateController {
             id: id
         )
         
-        hasuraMutation.addParameter(name: "goal_type_id", type: .int, value: aggregate.goalTypeId)
+        hasuraMutation.addParameter(name: "action_type_id", type: .int, value: aggregate.actionTypeId)
         hasuraMutation.addParameter(name: "metadata", type: .jsonb, value: aggregate.metadata.toJson)
         
         let (graphqlQuery, variables) = hasuraMutation.getMutationAndVariables
@@ -97,8 +97,8 @@ class AggregateController {
         }
     }
     
-    static func fetchAggregates(goalTypeId: Int? = nil) async -> [AggregateModel] {
-        let (graphqlQuery, variables) = generateQueryForAggregates(goalTypeId: goalTypeId)
+    static func fetchAggregates(actionTypeId: Int? = nil) async -> [AggregateModel] {
+        let (graphqlQuery, variables) = generateQueryForAggregates(actionTypeId: actionTypeId)
         struct AggregateData: GraphQLData {
             var v2_aggregates: [AggregateModel]
         }
@@ -111,10 +111,10 @@ class AggregateController {
         }
     }
     
-    static private func generateQueryForAggregates(goalTypeId: Int?) -> (String, [String: Any]) {
+    static private func generateQueryForAggregates(actionTypeId: Int?) -> (String, [String: Any]) {
         var hasuraStruct: HasuraQuery = HasuraQuery(queryFor: "v2_aggregates", queryName: "AggregatesQuery", queryType: .query)
-        if let goalTypeId = goalTypeId {
-            hasuraStruct.addWhereClause(name: "goal_type_id", type: .int, value: goalTypeId, op: .equals)
+        if let actionTypeId = actionTypeId {
+            hasuraStruct.addWhereClause(name: "action_type_id", type: .int, value: actionTypeId, op: .equals)
         }
         hasuraStruct.setSelections(selections: aggregateSelections)
         return hasuraStruct.getQueryAndVariables
@@ -123,7 +123,7 @@ class AggregateController {
     static var aggregateSelections: String {
         return """
             id
-            goal_type_id
+            action_type_id
             metadata
         """
     }

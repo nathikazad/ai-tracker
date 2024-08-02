@@ -165,11 +165,11 @@ class ActionController {
         if let actionTypeId = actionTypeId {
             hasuraStruct.addWhereClause(name: "action_type_id", type: .int, value: actionTypeId, op: .equals)
         }
-        hasuraStruct.setSelections(selections: actionSelections())
+        hasuraStruct.setSelections(selections: actionSelections)
         return hasuraStruct.getQueryAndVariables
     }
     
-    static private func actionSelections(includeActionType: Bool = false, includeAggregates:Bool = false) -> String {
+    static var actionSelections: String {
         return """
             id
             created_at
@@ -181,14 +181,8 @@ class ActionController {
             parent_id
             dynamic_data
             action_type {
-                \(ActionTypesController.actionTypeSelections)
+                \(ActionTypesController.actionTypeSelections())
             }
-        \(includeAggregates ? """
-            aggregates {
-                \(AggregateController.aggregateSelections)
-            }
-            """: "")
-            
         """
     }
 }

@@ -7,64 +7,70 @@
 
 import Foundation
 
-struct AggregateModel: Codable {
-    let id: Int?
-    let goalTypeId: Int
-    let metadata: AggregateMetaData
+class AggregateModel: Codable, ObservableObject, Identifiable {
+    @Published var id: Int?
+    let actionTypeId: Int
+    @Published var metadata: AggregateMetaData
 
     enum CodingKeys: String, CodingKey {
         case id
-        case goalTypeId = "goal_type_id"
+        case actionTypeId = "action_type_id"
         case metadata
     }
+    
+    init(id: Int? = nil, actionTypeId: Int, metadata: AggregateMetaData = AggregateMetaData()) {
+        self.id = id
+        self.actionTypeId = actionTypeId
+        self.metadata = metadata
+    }
 
-    init(from decoder: Decoder) throws {
+    required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(Int.self, forKey: .id)
-        goalTypeId = try container.decode(Int.self, forKey: .goalTypeId)
+        actionTypeId = try container.decode(Int.self, forKey: .actionTypeId)
         metadata = try container.decode(AggregateMetaData.self, forKey: .metadata)
     }
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
-        try container.encode(goalTypeId, forKey: .goalTypeId)
+        try container.encode(actionTypeId, forKey: .actionTypeId)
         try container.encode(metadata, forKey: .metadata)
     }
 }
 
-class AggregateMetaData: Codable {
-    var field: String
-    var window: Window
-    var dataType: DataType
-    var aggregatorType: AggregatorType
-    var conditions: [Condition]
-    var goals: [Goal]
-    var description: String?
+class AggregateMetaData: Codable, ObservableObject {
+    @Published var field: String
+    @Published var window: ASWindow
+    @Published var dataType: DataType
+    @Published var aggregatorType: AggregatorType
+    @Published var conditions: [Condition]
+    @Published var goals: [Goal]
     
     enum CodingKeys: String, CodingKey {
-        case field, window, dataType, aggregatorType, conditions, goals, description
+        case field, window, dataType, aggregatorType, conditions, goals
     }
     
-    init(field: String, window: Window, dataType: DataType, aggregatorType: AggregatorType, conditions: [Condition], goals: [Goal], description: String? = nil) {
+    init(field: String = "Start Time", window: ASWindow = .daily, dataType: DataType = .dateTime, aggregatorType: AggregatorType = .count, conditions: [Condition] = [], goals: [Goal] = [], description: String? = nil) {
         self.field = field
         self.window = window
         self.dataType = dataType
         self.aggregatorType = aggregatorType
         self.conditions = conditions
         self.goals = goals
-        self.description = description
     }
     
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         field = try container.decode(String.self, forKey: .field)
-        window = try container.decode(Window.self, forKey: .window)
-        dataType = try container.decode(DataType.self, forKey: .dataType)
-        aggregatorType = try container.decode(AggregatorType.self, forKey: .aggregatorType)
-        conditions = try container.decode([Condition].self, forKey: .conditions)
-        goals = try container.decode([Goal].self, forKey: .goals)
-        description = try container.decodeIfPresent(String.self, forKey: .description)
+        let windowString = try container.decodeIfPresent(String.self, forKey: .window) ?? "daily"
+        window = ASWindow(rawValue: windowString) ?? .daily
+        let dataTypeString = try container.decodeIfPresent(String.self, forKey: .dataType) ?? "ShortString"
+        dataType = DataType(rawValue: dataTypeString) ?? .shortString
+        let aggregatorTypeString = try container.decodeIfPresent(String.self, forKey: .aggregatorType) ?? "sum"
+        aggregatorType = AggregatorType(rawValue: aggregatorTypeString) ?? .sum
+        conditions = try container.decodeIfPresent([Condition].self, forKey: .conditions) ?? []
+        goals = try container.decodeIfPresent([Goal].self, forKey: .goals) ?? []
     }
     
     func encode(to encoder: Encoder) throws {
@@ -75,7 +81,6 @@ class AggregateMetaData: Codable {
         try container.encode(aggregatorType, forKey: .aggregatorType)
         try container.encode(conditions, forKey: .conditions)
         try container.encode(goals, forKey: .goals)
-        try container.encodeIfPresent(description, forKey: .description)
     }
     
     var toJson: [String: Any] {
@@ -89,38 +94,46 @@ class AggregateMetaData: Codable {
     }
 }
 
-enum Window: String, Codable {
-    case daily = "Daily"
-    case weekly = "Weekly"
-    case monthly = "Monthly"
+enum ASWindow: String, Codable, CaseIterable, Hashable {
+    case daily = "daily"
+    case weekly = "weekly"
+    case monthly = "monthly"
 }
 
-enum AggregatorType: String, Codable {
-    case sum = "Sum"
-    case count = "Count"
-    case first = "First"
+enum AggregatorType: String, Codable, CaseIterable, Hashable {
+    case sum = "sum"
+    case count = "count"
+    case compare = "compare"
 }
 
 struct Condition: Codable {
     var field: String
-    var comparisonOperator: String
+    var comparisonOperator: ComparisonOperator
     var value: String
     
-    init(field: String, comparisonOperator: String, value: String) {
-        self.field = field
-        self.comparisonOperator = comparisonOperator
-        self.value = value
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        field = try container.decode(String.self, forKey: .field)
+        let comparisonOperatorString = try container.decode(String.self, forKey: .comparisonOperator)
+        comparisonOperator = ComparisonOperator(from: comparisonOperatorString)
+        value = try container.decode(String.self, forKey: .value)
     }
 }
 
-enum ComparisonOperator: String, Codable {
-    case greaterThan = "gt"
-    case lessThan = "lt"
-    case equalTo = "eq"
-    case notEqualTo = "neq"
-    case greaterThanOrEqualTo = "gte"
-    case lessThanOrEqualTo = "lte"
+
+enum ComparisonOperator: String, Codable, CaseIterable {
+    case greaterThan = "Greater Than"
+    case lessThan = "Less Than"
+    case equalTo = "Equal To"
+    case notEqualTo = "Not Equal To"
+    case greaterThanOrEqualTo = "Gt or Equal To"
+    case lessThanOrEqualTo = "Ls or Equal To"
+
+    init(from string: String) {
+        self = ComparisonOperator(rawValue: string) ?? .equalTo
+    }
 }
+
 
 struct Goal: Codable {
     var comparisonOperator: String

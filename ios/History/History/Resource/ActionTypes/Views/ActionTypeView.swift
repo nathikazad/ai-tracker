@@ -115,7 +115,7 @@ struct ActionTypeView: View {
                 ForEach(sortedDynamicFields, id: \.self) { originalKey in
                     DynamicFieldView(
                         model: model,
-                        changesToSave: $changesToSave, 
+                        changesToSave: $changesToSave,
                         originalKey: originalKey
                     )
                 }
@@ -138,6 +138,19 @@ struct ActionTypeView: View {
                 }
             }
             
+            if let actionTypeId = model.id {
+                Section(header: Text("Tracking")) {
+                    ForEach(Array(model.aggregates)) { aggregate in
+                        NavigationLink(destination: ShowAggregateView(aggregateModel: aggregate)) {
+                            Text("\(aggregate.metadata.field) \(aggregate.metadata.aggregatorType) \(aggregate.metadata.window)")
+                        }
+                    }
+                    NavigationLink(destination: ShowAggregateView(aggregateModel: AggregateModel(actionTypeId: actionTypeId))) {
+                        Label("Track Another Value", systemImage: "plus")
+                    }
+                }
+            }
+            
             if model.id != nil {
                 Button(action: {
                     Task {
@@ -150,7 +163,7 @@ struct ActionTypeView: View {
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
                 .disabled(!changesToSave)
-
+                
                 Button(role: .destructive, action: {
                     Task {
                         await ActionTypesController.deleteActionTypeModel(id: model.id!)
@@ -179,16 +192,12 @@ struct ActionTypeView: View {
                 .disabled(!changesToSave)
             }
         }
-        .navigationTitle(model.name)
+        .navigationTitle("\(model.name) \(model.aggregates.count)")
         .onAppear {
             Task {
-                if(self.model.id != nil) {
-                    let m:[ActionTypeModel] = await ActionTypesController.fetchActionTypes(userId: Authentication.shared.userId!, actionTypeId: model.id!)
-                    DispatchQueue.main.async {
-                        if !m.isEmpty {
-                            self.model.copy(m[0])
-                        }
-                    }
+                if let id = self.model.id,
+                   let m = await ActionTypesController.fetchActionType(userId: Authentication.shared.userId!, actionTypeId: id, withAggregates: true) {
+                    DispatchQueue.main.async { self.model.copy(m) }
                 }
             }
         }

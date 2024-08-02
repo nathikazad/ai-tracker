@@ -16,7 +16,6 @@ class ActionModel: ObservableObject, Codable {
     @Published var startTime: Date
     @Published var endTime: Date?
     var parentId: Int?
-    @Published var aggregates: [AggregateModel]
     @Published var dynamicData: [String: AnyCodable]
     @Published var actionTypeModel: ActionTypeModel
     let createdAt: Date
@@ -33,7 +32,6 @@ class ActionModel: ObservableObject, Codable {
         case updatedAt = "updated_at"
         case userId = "user_id"
         case actionType = "action_type"
-        case aggregates = "aggregates"
     }
     
     var duration: String {
@@ -56,7 +54,6 @@ class ActionModel: ObservableObject, Codable {
         self.actionTypeModel = actionTypeModel
         self.createdAt = createdAt
         self.updatedAt = updatedAt
-        self.aggregates = []
     }
     
     required init(from decoder: Decoder) throws {
@@ -69,11 +66,6 @@ class ActionModel: ObservableObject, Codable {
             endTime = endTimeString.getDate
         } else {
             endTime = nil
-        }
-        if let aggregates = try container.decodeIfPresent([AggregateModel].self, forKey: .aggregates) {
-            self.aggregates = aggregates
-        } else {
-            aggregates = []
         }
         parentId = try container.decodeIfPresent(Int.self, forKey: .parentId)
         dynamicData = try container.decode([String: AnyCodable].self, forKey: .dynamicData)
@@ -104,7 +96,6 @@ class ActionModel: ObservableObject, Codable {
         self.parentId = newModel.parentId
         self.dynamicData = newModel.dynamicData
         self.actionTypeModel = newModel.actionTypeModel
-        self.aggregates = newModel.aggregates
     }
     
     var toString: String? {
