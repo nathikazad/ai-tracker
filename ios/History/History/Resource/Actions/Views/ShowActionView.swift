@@ -85,7 +85,7 @@ struct ShowActionView: View {
                 }
             }
         }
-        .navigationTitle(action.id == nil ?  "Create \(action.actionTypeModel.name) Action": "Edit Action")
+        .navigationTitle(action.id == nil ?  "Create \(action.actionTypeModel.name) Action": "Edit \(action.actionTypeModel.name) Action")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink(destination: ActionTypeView(

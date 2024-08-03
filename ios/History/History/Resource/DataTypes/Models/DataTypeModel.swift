@@ -29,50 +29,9 @@ func getDataType(from string: String) -> DataType? {
     return DataType.allCases.first { $0.rawValue.lowercased() == lowercasedString }
 }
 
-extension AnyCodable {
-    func toType<T>(_ type: T.Type) -> T? {
-        switch type {
-        case is Duration.Type:
-            return value as? T
-        case is Unit.Type:
-            return value as? T
-        case is Currency.Type:
-            return Currency(data: value as? [String: Any]) as? T
-        case is TimeStampedString.Type:
-            return value as? T
-        case is Date.Type:
-            return (value as? String)?.getDate as? T
-        case is String.Type:
-            return value as? T
-        default:
-            return nil
-        }
-    }
-    
-    static func fromType<T>(_ value: T) -> AnyCodable? {
-        switch value {
-        case is Duration:
-            return AnyCodable(value)
-        case is Unit:
-            return AnyCodable(value)
-        case let currency as Currency:
-            return currency.toAnyCodable()
-        case let timeStampedString as TimeStampedString:
-            return AnyCodable(timeStampedString)
-        case let date as Date:
-            return AnyCodable(date.toUTCString)
-        case is String:
-            return AnyCodable(value)
-        default:
-            return nil
-        }
-    }
-}
-
-
 let allDataTypeStrings = DataType.allCases.map { $0.rawValue }
 
-class Duration {
+class Duration: AnyCodableConvertible {
     var durationInSeconds: Int
     enum DurationType: String, Codable, CaseIterable {
         case seconds
@@ -82,11 +41,28 @@ class Duration {
     
     var durationType: DurationType
     
+    required init(data: [String: Any]?) {
+        self.durationInSeconds = data?["durationInSeconds"] as? Int ?? 0
+        if let typeString = data?["durationType"] as? String,
+           let type = DurationType(rawValue: typeString) {
+            self.durationType = type
+        } else {
+            self.durationType = .seconds
+        }
+    }
+    
     static let defaultDuration = Duration()
     
     init(durationInSeconds: Int = 0, durationType: DurationType = .seconds) {
         self.durationInSeconds = durationInSeconds
         self.durationType = durationType
+    }
+    
+    func toAnyCodable() -> AnyCodable {
+        return AnyCodable([
+            "durationInSeconds": durationInSeconds,
+            "durationType": durationType.rawValue
+        ])
     }
     
     var formattedDuration: String {
@@ -101,7 +77,68 @@ class Duration {
     }
 }
 
-class Unit {
+class Currency: AnyCodableConvertible {
+    var value: Double
+    var currencyType: CurrencyType
+
+    enum CurrencyType: String, CaseIterable {
+        case usd = "USD"
+        case mxn = "MXN"
+        case tnd = "TND"
+        case inr = "INR"
+    }
+
+    static func convertStringToCurrencyType(_ string: String) -> CurrencyType? {
+        return CurrencyType.allCases.first { $0.rawValue.lowercased() == string.lowercased() }
+    }
+
+    init(value: Double = 0, currencyType: CurrencyType? = nil) {
+        if currencyType == nil {
+            switch Authentication.shared.user?.timezone {
+            case "America/Mexico_City":
+                self.currencyType = .mxn
+            default:
+                self.currencyType = .usd
+            }
+        } else {
+            self.currencyType = currencyType!
+        }
+        self.value = value
+    }
+    
+    required init(data: [String: Any]?) {
+        self.value = (data?["value"] as? NSNumber)?.doubleValue ?? 0
+        let typeString = data?["currencyType"] as? String
+        let type = CurrencyType.allCases.first { $0.rawValue.lowercased() == typeString?.lowercased() }
+        self.currencyType = type ?? .usd
+    }
+
+    static let defaultCurrency = Currency()
+    
+    var formattedValue: String {
+        let currencySymbol: String
+        switch currencyType {
+        case .usd:
+            currencySymbol = "$"
+        case .mxn:
+            currencySymbol = "$"
+        case .tnd:
+            currencySymbol = "TND"
+        case .inr:
+            currencySymbol = "₹"
+        }
+        return "\(currencySymbol)\(value)"
+    }
+
+    func toAnyCodable() -> AnyCodable {
+        return AnyCodable([
+            "value": value,
+            "currencyType": currencyType.rawValue
+        ])
+    }
+}
+
+class Unit: AnyCodableConvertible {
     var value: Int
     enum UnitType: String, Codable, CaseIterable {
         case count
@@ -123,6 +160,20 @@ class Unit {
     }
     
     static let defaultUnit = Unit()
+    
+    required init(data: [String: Any]?) {
+        self.value = data?["value"] as? Int ?? 0
+        self.unitType = UnitType(rawValue: data?["unitType"] as? String ?? "") ?? .count
+        self.unitMeasure = UnitMeasure(rawValue: data?["unitMeasure"] as? String ?? "") ?? .none
+    }
+    
+    func toAnyCodable() -> AnyCodable {
+        return AnyCodable([
+            "value": value,
+            "unitType": unitType.rawValue,
+            "unitMeasure": unitMeasure.rawValue
+        ])
+    }
 
     init(value: Int = 0, unitType: UnitType = .count, unitMeasure: UnitMeasure = .none) {
         self.value = value
@@ -173,86 +224,37 @@ class Unit {
     }
 }
 
-class Currency {
-    var value: Double
-    var currencyType: CurrencyType
-
-    enum CurrencyType: String, CaseIterable {
-        case usd = "USD"
-        case mxn = "MXN"
-        case tnd = "TND"
-        case inr = "INR"
-    }
-
-    static func convertStringToCurrencyType(_ string: String) -> CurrencyType? {
-        return CurrencyType.allCases.first { $0.rawValue.lowercased() == string.lowercased() }
-    }
-
-    init(value: Double = 0, currencyType: CurrencyType? = nil) {
-        if currencyType == nil {
-            switch Authentication.shared.user?.timezone {
-            case "America/Mexico_City":
-                self.currencyType = .mxn
-            default:
-                self.currencyType = .usd
-            }
-        } else {
-            self.currencyType = currencyType!
-        }
-        self.value = value
-    }
-    
-    convenience init(data: [String: Any]?) {
-        let value = data?["value"] as? Double ?? 0
-        let typeString = data?["currencyType"] as? String
-        let type = CurrencyType.allCases.first { $0.rawValue.lowercased() == typeString?.lowercased() }
-        self.init(value: value, currencyType: type ?? .usd)
-    }
-
-
-    static let defaultCurrency = Currency()
-    
-    var formattedValue: String {
-        let currencySymbol: String
-        switch currencyType {
-        case .usd:
-            currencySymbol = "$"
-        case .mxn:
-            currencySymbol = "$"
-        case .tnd:
-            currencySymbol = "TND"
-        case .inr:
-            currencySymbol = "₹"
-        }
-        return "\(currencySymbol)\(value)"
-    }
-
-    func toAnyCodable() -> AnyCodable {
-        return AnyCodable([
-            "value": value,
-            "currencyType": currencyType.rawValue
-        ])
-    }
-    
-    func toJSONCompatible() -> Any {
-        return ["value": value, "currencyType": currencyType.rawValue]
-    }
-}
-
-class Todo {
+class Todo: AnyCodableConvertible {
     var name: String
     var value: Bool
+    var timeFinished: Date?
     
     static let defaultTodo = Todo()
+    
+    required init(data: [String: Any]?) {
+        self.name = data?["name"] as? String ?? ""
+        self.value = data?["value"] as? Bool ?? false
+        self.timeFinished = data?["timeFinished"] as? Date ?? nil
+    }
+    
+    func toAnyCodable() -> AnyCodable {
+        var dict: [String: Any] = [
+            "name": name,
+            "value": value
+        ]
+        
+        if let timeFinished = timeFinished {
+            dict["timeFinished"] = timeFinished.toUTCString
+        }
+        
+        return AnyCodable(dict)
+    }
 
     init(name: String = "", value: Bool = false) {
         self.name = name
         self.value = value
     }
 }
-
-
-
 
 class TimeStampedString {
     var value: String
@@ -264,6 +266,19 @@ class TimeStampedString {
         self.value = value
         self.timestamp = timestamp
     }
+    
+    required init(data: [String: Any]?) {
+        self.value = data?["value"] as? String ?? ""
+        self.timestamp = (data?["timestamp"] as? String)?.getDate ?? Date()
+    }
+    
+    func toAnyCodable() -> AnyCodable {
+        return AnyCodable([
+            "value": value,
+            "timestamp": timestamp.toUTCString
+        ])
+    }
+
 }
 
 class Location {

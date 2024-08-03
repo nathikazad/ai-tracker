@@ -16,62 +16,27 @@ struct DynamicFieldsView: View {
             let sortedDynamicFieldsArray = dynamicFieldsArray.sorted { dynamicFields[$0]?.rank ?? 0 < dynamicFields[$1]?.rank ?? 0 }
             ForEach(sortedDynamicFieldsArray, id: \.self) { key in
                 if let field = dynamicFields[key] {
-                    if let dataType = getDataType(from: field.dataType) {
-                        Group {
-                            switch dataType {
-                            case .longString:
-                                LongStringComponent(fieldName: field.name,
-                                                    value: bindingFor(key, "") as Binding<String>)
-                            case .shortString:
-                                ShortStringComponent(fieldName: field.name,
-                                                        value: bindingFor(key, "") as Binding<String>)
-                            case .enumerator:
-                                EnumComponent(fieldName: field.name,
-                                                value: bindingFor(key, field.getEnums.first!),
-                                                enumValues: field.getEnums)
-                            case .unit:
-                                UnitComponent(
-                                    fieldName: field.name,
-                                    unit: bindingFor(key, Unit.defaultUnit) as Binding<Unit>
-                                )
-                            case .currency:
-                                CurrencyComponent(
-                                    fieldName: field.name,
-                                    currency: bindingFor(key, Currency.defaultCurrency) as Binding<Currency>
-                                )
-                            case .duration:
-                                DurationComponent(
-                                    fieldName: field.name,
-                                    duration: bindingFor(key, Duration.defaultDuration) as Binding<Duration>
-                                )
-                            case .dateTime:
-                                TimeComponent(
-                                    fieldName: field.name,
-                                    time: bindingFor(key, Date()) as Binding<Date>
-                                )
-                            case .time:
-                                TimeComponent(
-                                    fieldName: field.name,
-                                    time: bindingFor(key, Date()) as Binding<Date>
-                                )
-                            default:
-                                EmptyView()
-                            }
-                        }
-                    }
+                    ViewDataType(
+                        dataType: field.dataType,
+                        name: field.name,
+                        enums: field.getEnums,
+                        value: bindingFor(key),
+                        updateView: updateView
+                    )
                 }
             }
         }
-
     }
     
-    private func bindingFor<T>(_ key: String, _ defaultValue: T) -> Binding<T> {
+    private func bindingFor(_ key: String) -> Binding<AnyCodable?> {
         return Binding(
-            get: {
-                return (dynamicData[key]?.toType(T.self) as? T) ?? defaultValue
-            },
+            get: { dynamicData[key] },
             set: { newValue in
-                dynamicData[key] = AnyCodable.fromType(newValue)
+                if let newValue = newValue {
+                    dynamicData[key] = newValue
+                } else {
+                    dynamicData.removeValue(forKey: key)
+                }
                 updateView()
             }
         )

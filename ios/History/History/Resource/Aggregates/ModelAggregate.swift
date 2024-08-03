@@ -37,6 +37,10 @@ class AggregateModel: Codable, ObservableObject, Identifiable {
         try container.encode(actionTypeId, forKey: .actionTypeId)
         try container.encode(metadata, forKey: .metadata)
     }
+    
+    var toString: String {
+        return "\(metadata.window.rawValue.capitalized) \(metadata.aggregatorType) \(metadata.field != "" ? "of \(metadata.field)" : "")"
+    }
 }
 
 class AggregateMetaData: Codable, ObservableObject {
@@ -45,13 +49,13 @@ class AggregateMetaData: Codable, ObservableObject {
     @Published var dataType: DataType
     @Published var aggregatorType: AggregatorType
     @Published var conditions: [Condition]
-    @Published var goals: [Goal]
+    @Published var goals: [Condition]
     
     enum CodingKeys: String, CodingKey {
         case field, window, dataType, aggregatorType, conditions, goals
     }
     
-    init(field: String = "Start Time", window: ASWindow = .daily, dataType: DataType = .dateTime, aggregatorType: AggregatorType = .count, conditions: [Condition] = [], goals: [Goal] = [], description: String? = nil) {
+    init(field: String = "", window: ASWindow = .daily, dataType: DataType = .dateTime, aggregatorType: AggregatorType = .count, conditions: [Condition] = [], goals: [Condition] = [], description: String? = nil) {
         self.field = field
         self.window = window
         self.dataType = dataType
@@ -62,7 +66,7 @@ class AggregateMetaData: Codable, ObservableObject {
     
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        field = try container.decode(String.self, forKey: .field)
+        field = try container.decodeIfPresent(String.self, forKey: .field) ?? ""
         let windowString = try container.decodeIfPresent(String.self, forKey: .window) ?? "daily"
         window = ASWindow(rawValue: windowString) ?? .daily
         let dataTypeString = try container.decodeIfPresent(String.self, forKey: .dataType) ?? "ShortString"
@@ -70,12 +74,14 @@ class AggregateMetaData: Codable, ObservableObject {
         let aggregatorTypeString = try container.decodeIfPresent(String.self, forKey: .aggregatorType) ?? "sum"
         aggregatorType = AggregatorType(rawValue: aggregatorTypeString) ?? .sum
         conditions = try container.decodeIfPresent([Condition].self, forKey: .conditions) ?? []
-        goals = try container.decodeIfPresent([Goal].self, forKey: .goals) ?? []
+        goals = try container.decodeIfPresent([Condition].self, forKey: .goals) ?? []
     }
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(field, forKey: .field)
+        if aggregatorType != .count && field != "" {
+            try container.encode(field, forKey: .field)
+        }
         try container.encode(window, forKey: .window)
         try container.encode(dataType, forKey: .dataType)
         try container.encode(aggregatorType, forKey: .aggregatorType)
@@ -109,7 +115,13 @@ enum AggregatorType: String, Codable, CaseIterable, Hashable {
 struct Condition: Codable {
     var field: String
     var comparisonOperator: ComparisonOperator
-    var value: String
+    var value: String // make it any codable
+    
+    init(field: String = "Start Time", comparisonOperator: ComparisonOperator = .equalTo, value: String = "1") {
+        self.field = field
+        self.comparisonOperator = comparisonOperator
+        self.value = value
+    }
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -134,34 +146,6 @@ enum ComparisonOperator: String, Codable, CaseIterable {
     }
 }
 
-
-struct Goal: Codable {
-    var comparisonOperator: String
-    var value: Any
-    
-    enum CodingKeys: String, CodingKey {
-        case comparisonOperator, value
-    }
-    
-    init(comparisonOperator: String, value: Any) {
-        self.comparisonOperator = comparisonOperator
-        self.value = value
-    }
-    
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        comparisonOperator = try container.decode(String.self, forKey: .comparisonOperator)
-        let anyCodable = try container.decode(AnyCodable.self, forKey: .value)
-        value = anyCodable.value
-    }
-    
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(comparisonOperator, forKey: .comparisonOperator)
-        try container.encode(AnyCodable(value), forKey: .value)
-    }
-    
-}
 
 
 

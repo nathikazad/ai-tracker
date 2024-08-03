@@ -20,7 +20,7 @@ class ActionController {
             hasuraStruct.addParameter(name: "end_time", type: .timestamp, value: endTime.toUTCString)
         }
         hasuraStruct.addParameter(name: "parent_id", type: .int, value: model.parentId)
-        hasuraStruct.addParameter(name: "dynamic_data", type: .jsonb, value: model.dynamicData.toJson())
+        hasuraStruct.addParameter(name: "dynamic_data", type: .jsonb, value: model.dynamicData.toJson)
         
         let (graphqlQuery, variables) = hasuraStruct.getMutationAndVariables
         struct CreateActionResponse: GraphQLData {
@@ -59,7 +59,7 @@ class ActionController {
             hasuraMutation.addParameter(name: "end_time", type: .timestamp, value: endTime.toUTCString)
         }
         hasuraMutation.addParameter(name: "parent_id", type: .int, value: model.parentId)
-        hasuraMutation.addParameter(name: "dynamic_data", type: .jsonb, value: model.dynamicData.toJson())
+        hasuraMutation.addParameter(name: "dynamic_data", type: .jsonb, value: model.dynamicData.toJson)
         
         let (graphqlQuery, variables) = hasuraMutation.getMutationAndVariables
         struct UpdateActionResponse: GraphQLData {

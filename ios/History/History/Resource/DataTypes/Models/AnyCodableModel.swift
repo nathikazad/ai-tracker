@@ -82,32 +82,47 @@ struct AnyCodable: Codable {
         }
     }
     
-    func toJSONCompatible() -> Any {
-        switch value {
-        case let number as NSNumber:
-            return number
-        case let string as String:
-            return string
-        case let bool as Bool:
-            return bool
-        case let array as [Any]:
-            return array.map { AnyCodable($0).toJSONCompatible() }
-        case let dictionary as [String: Any]:
-            return dictionary.mapValues { AnyCodable($0).toJSONCompatible() }
-        case let currency as Currency:
-            return currency.toJSONCompatible()
-        case is AnyCodable:
-            return (value as! AnyCodable).toJSONCompatible()
-        case Optional<Any>.none:
-            return NSNull()
+    func toType<T>(_ type: T.Type) -> T? {
+        switch type {
+        case let convertibleType as AnyCodableConvertible.Type:
+            return convertibleType.init(data: value as? [String: Any]) as? T
+        case is Date.Type:
+            return (value as? String)?.getDate as? T
+        case is String.Type:
+            return value as? T
         default:
-            return String(describing: value)
+            return nil
+        }
+    }
+    
+    static func fromType<T>(_ value: T) -> AnyCodable? {
+        switch value {
+        case let convertible as AnyCodableConvertible:
+            return convertible.toAnyCodable()
+        case let date as Date:
+            return AnyCodable(date.toUTCString)
+        case is String:
+            return AnyCodable(value)
+        default:
+            return nil
         }
     }
 }
 
+protocol AnyCodableConvertible {
+    init(data: [String: Any]?)
+    func toAnyCodable() -> AnyCodable
+}
+
 extension Dictionary where Key == String, Value == AnyCodable {
-    func toJson() -> [String: Any] {
-        return self.mapValues { $0.toJSONCompatible() }
+    var toJson: [String: Any] {
+        return self.compactMapValues { anyCodable in
+            do {
+                let data = try JSONEncoder().encode(anyCodable)
+                return try JSONSerialization.jsonObject(with: data, options: [])
+            } catch {
+                return nil
+            }
+        }
     }
 }

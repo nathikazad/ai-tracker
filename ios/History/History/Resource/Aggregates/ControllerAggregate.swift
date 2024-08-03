@@ -18,6 +18,7 @@ class AggregateController {
         hasuraStruct.addParameter(name: "metadata", type: .jsonb, value: aggregate.metadata.toJson)
         
         let (graphqlQuery, variables) = hasuraStruct.getMutationAndVariables
+
         struct CreateAggregateResponse: GraphQLData {
             var insert_v2_aggregates_one: CreatedObject
             struct CreatedObject: Decodable {

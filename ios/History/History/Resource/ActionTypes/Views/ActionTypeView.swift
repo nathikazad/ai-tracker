@@ -142,11 +142,11 @@ struct ActionTypeView: View {
                 Section(header: Text("Tracking")) {
                     ForEach(Array(model.aggregates)) { aggregate in
                         NavigationLink(destination: ShowAggregateView(aggregateModel: aggregate)) {
-                            Text("\(aggregate.metadata.field) \(aggregate.metadata.aggregatorType) \(aggregate.metadata.window)")
+                            Text(aggregate.toString)
                         }
                     }
                     NavigationLink(destination: ShowAggregateView(aggregateModel: AggregateModel(actionTypeId: actionTypeId))) {
-                        Label("Track Another Value", systemImage: "plus")
+                        Label("Track Value", systemImage: "plus")
                     }
                 }
             }
@@ -192,7 +192,7 @@ struct ActionTypeView: View {
                 .disabled(!changesToSave)
             }
         }
-        .navigationTitle("\(model.name) \(model.aggregates.count)")
+        .navigationTitle("\(model.name)")
         .onAppear {
             Task {
                 if let id = self.model.id,

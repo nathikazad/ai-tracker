@@ -47,7 +47,7 @@
 		FE4AB3A22C51F2E000A07749 /* DynamicFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3A12C51F2E000A07749 /* DynamicFieldView.swift */; };
 		FE4AB3A42C5207C100A07749 /* DataTypeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3A32C5207C100A07749 /* DataTypeModel.swift */; };
 		FE4AB3A62C52F76B00A07749 /* ActionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3A52C52F76B00A07749 /* ActionController.swift */; };
-		FE4AB3A82C52F99800A07749 /* AnyTypeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3A72C52F99800A07749 /* AnyTypeModel.swift */; };
+		FE4AB3A82C52F99800A07749 /* AnyCodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3A72C52F99800A07749 /* AnyCodableModel.swift */; };
 		FE4AB3B12C5551BA00A07749 /* TestAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3B02C5551BA00A07749 /* TestAction.swift */; };
 		FE4F7BA32BA7D79E0041CB6A /* HistoryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BA22BA7D79E0041CB6A /* HistoryApp.swift */; };
 		FE4F7BA52BA7D79E0041CB6A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BA42BA7D79E0041CB6A /* ContentView.swift */; };
@@ -77,6 +77,7 @@
 		FE6ED6D52C06AA5D00E6A2A6 /* EventModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6ED6D42C06AA5D00E6A2A6 /* EventModels.swift */; };
 		FE6ED6D72C06AA9100E6A2A6 /* EventTypeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6ED6D62C06AA9100E6A2A6 /* EventTypeModel.swift */; };
 		FE71B3882BD07BCE008F7D1A /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */; };
+		FE759E122C5DE432001A0FF4 /* ViewDataType.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE759E112C5DE432001A0FF4 /* ViewDataType.swift */; };
 		FE7EBFC82C0A8F2200F720EB /* PersonAssociationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7EBFC72C0A8F2200F720EB /* PersonAssociationsView.swift */; };
 		FE8153722BD845B300D972C8 /* PolylineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8153712BD845B300D972C8 /* PolylineView.swift */; };
 		FE8811EB2BC799BF00B112A8 /* GoalsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8811E62BC799BE00B112A8 /* GoalsController.swift */; };
@@ -208,7 +209,7 @@
 		FE4AB3A12C51F2E000A07749 /* DynamicFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicFieldView.swift; sourceTree = "<group>"; };
 		FE4AB3A32C5207C100A07749 /* DataTypeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTypeModel.swift; sourceTree = "<group>"; };
 		FE4AB3A52C52F76B00A07749 /* ActionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionController.swift; sourceTree = "<group>"; };
-		FE4AB3A72C52F99800A07749 /* AnyTypeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyTypeModel.swift; sourceTree = "<group>"; };
+		FE4AB3A72C52F99800A07749 /* AnyCodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyCodableModel.swift; sourceTree = "<group>"; };
 		FE4AB3B02C5551BA00A07749 /* TestAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAction.swift; sourceTree = "<group>"; };
 		FE4F7B9F2BA7D79E0041CB6A /* History.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = History.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE4F7BA22BA7D79E0041CB6A /* HistoryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryApp.swift; sourceTree = "<group>"; };
@@ -239,6 +240,7 @@
 		FE6ED6D22C06A9F500E6A2A6 /* ASObjectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASObjectModel.swift; sourceTree = "<group>"; };
 		FE6ED6D42C06AA5D00E6A2A6 /* EventModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventModels.swift; sourceTree = "<group>"; };
 		FE6ED6D62C06AA9100E6A2A6 /* EventTypeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTypeModel.swift; sourceTree = "<group>"; };
+		FE759E112C5DE432001A0FF4 /* ViewDataType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewDataType.swift; sourceTree = "<group>"; };
 		FE7EBFC72C0A8F2200F720EB /* PersonAssociationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonAssociationsView.swift; sourceTree = "<group>"; };
 		FE8153712BD845B300D972C8 /* PolylineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolylineView.swift; sourceTree = "<group>"; };
 		FE8811E62BC799BE00B112A8 /* GoalsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoalsController.swift; sourceTree = "<group>"; };
@@ -400,6 +402,7 @@
 		FE4AB3A92C544D0700A07749 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				FE759E0F2C5DE40D001A0FF4 /* DataTypes */,
 				FEE29E062C5C1EEC00A27C44 /* Aggregates */,
 				FE4AB3AE2C544E3F00A07749 /* Actions */,
 				FE4AB3AA2C544D1E00A07749 /* ActionTypes */,
@@ -541,6 +544,24 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		FE759E0F2C5DE40D001A0FF4 /* DataTypes */ = {
+			isa = PBXGroup;
+			children = (
+				FE759E102C5DE41B001A0FF4 /* Models */,
+				FE759E112C5DE432001A0FF4 /* ViewDataType.swift */,
+			);
+			path = DataTypes;
+			sourceTree = "<group>";
+		};
+		FE759E102C5DE41B001A0FF4 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				FE4AB3A32C5207C100A07749 /* DataTypeModel.swift */,
+				FE4AB3A72C52F99800A07749 /* AnyCodableModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		FE7EF1DA2BBE0ECB00279E18 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -609,8 +630,6 @@
 				FE6ED6D22C06A9F500E6A2A6 /* ASObjectModel.swift */,
 				FE6ED6D42C06AA5D00E6A2A6 /* EventModels.swift */,
 				FE6ED6D62C06AA9100E6A2A6 /* EventTypeModel.swift */,
-				FE4AB3A32C5207C100A07749 /* DataTypeModel.swift */,
-				FE4AB3A72C52F99800A07749 /* AnyTypeModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -856,7 +875,7 @@
 				FE12C5EA2BC4B330002CDC60 /* GoalsView.swift in Sources */,
 				FE638F432C56FF4E001C34F0 /* ShowActionComponents.swift in Sources */,
 				FEDBC0672C050C3F00233EA0 /* EventButtons.swift in Sources */,
-				FE4AB3A82C52F99800A07749 /* AnyTypeModel.swift in Sources */,
+				FE4AB3A82C52F99800A07749 /* AnyCodableModel.swift in Sources */,
 				FEBED49A2C0AD79800DB2D5F /* PersonViewHelper.swift in Sources */,
 				FE4AB38F2C51830600A07749 /* ActionTypeView.swift in Sources */,
 				FE71B3882BD07BCE008F7D1A /* AudioRecorder.swift in Sources */,
@@ -900,6 +919,7 @@
 				FE8AB2AE2C07CA0600131C13 /* AssociationController.swift in Sources */,
 				FE96B5452BF8505D000BD8E1 /* BookView.swift in Sources */,
 				FE477D8F2BD5E3C8001FC341 /* EventsView.swift in Sources */,
+				FE759E122C5DE432001A0FF4 /* ViewDataType.swift in Sources */,
 				FE7EBFC82C0A8F2200F720EB /* PersonAssociationsView.swift in Sources */,
 				FE900C0A2BD363ED00F97050 /* LocationController.swift in Sources */,
 				FE9BA2E52BF6998600AE25A9 /* PrayerView.swift in Sources */,

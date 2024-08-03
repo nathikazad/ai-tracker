@@ -194,9 +194,8 @@ class ActionTypesController {
 // work on shared goals incl tabs for groups
 // RELEASE
 
-// internal objects
-
 // RELATIONAL DB
+// internal objects
 // work on object view
 // work on object create/edit
 // put object into database and then fetch it
