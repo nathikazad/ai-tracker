@@ -36,6 +36,9 @@ struct ShowActionView: View {
                     endTimeLabel: action.actionTypeModel.staticFields.endTime?.name ?? "End Time",
                     changesToSave: $changesToSave
                 )
+                if (action.actionTypeModel.meta.hasDuration && action.id != nil && action.endTime == nil) {
+                    TimerComponent(timerId: action.id!)
+                }
             }
             
             if(Array(action.actionTypeModel.dynamicFields.keys).count > 0) {
@@ -95,7 +98,6 @@ struct ShowActionView: View {
 
     private func saveChanges() {
         Task {
-            print(action.dynamicData.toJson)
             if action.id != nil {
                 await ActionController.updateActionModel(model: action)
                 self.presentationMode.wrappedValue.dismiss()
@@ -103,7 +105,7 @@ struct ShowActionView: View {
             } else {
                 let actionId = await ActionController.createActionModel(model: action)
                 action.id = actionId
-                if action.actionTypeModel.meta.hasDuration && action.actionTypeModel.staticFields.endTime == nil {
+                if action.actionTypeModel.meta.hasDuration && action.endTime == nil {
                     // stay here, maybe they want to start timer
                 } else {
                     // else go back

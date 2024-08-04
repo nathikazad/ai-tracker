@@ -130,11 +130,11 @@ struct TimerComponent: View {
             Alert(title: Text("Timer Completed"), message: Text("Your timer has finished!"), dismissButton: .default(Text("OK")))
         }
     }
-    
-    private func timeString(from timeInterval: TimeInterval) -> String {
-        let hours = Int(timeInterval) / 3600
-        let minutes = (Int(timeInterval) % 3600) / 60
-        let seconds = Int(timeInterval) % 60
-        return String(format: "%02d:%02d", minutes, seconds)
-    }
+}
+
+func timeString(from timeInterval: TimeInterval) -> String {
+    let hours = Int(timeInterval) / 3600
+    let minutes = (Int(timeInterval) % 3600) / 60
+    let seconds = Int(timeInterval) % 60
+    return String(format: "%02d:%02d", minutes, seconds)
 }

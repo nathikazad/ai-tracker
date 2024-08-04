@@ -44,7 +44,7 @@ struct ContentView: View {
 struct MainView: View {
     @State private var selectedTab: Tab = .timeline
     @ObservedObject var appState = state
-    
+    @ObservedObject private var timerManager = TimerManager.shared
     var sheetViewPresented: Binding<Bool> {
         Binding(
             get: { self.appState.sheetViewToShow != .none },
@@ -104,6 +104,9 @@ struct MainView: View {
 //                MicrophoneButton()
             }
             .edgesIgnoringSafeArea(.bottom)
+        }
+        .alert(isPresented: $timerManager.showCompletionAlert) {
+            Alert(title: Text("Timer Completed"), message: Text("Your timer has finished!"), dismissButton: .default(Text("OK")))
         }
     }
     

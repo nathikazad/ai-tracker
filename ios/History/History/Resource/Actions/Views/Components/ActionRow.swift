@@ -19,6 +19,7 @@ struct ActionRow: View {
     var dateClickedAction: ((ActionModel) -> Void)?
     var level: Int = 0
     var showTimeWithRespectToCurrentDate: Bool = false
+    @ObservedObject private var timerManager = TimerManager.shared
     
     var body: some View {
         HStack {
@@ -42,6 +43,9 @@ struct ActionRow: View {
                     Text("\(event.actionTypeModel.name) \(event.toString ?? "") (\(String(event.id ?? 0)))")
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .font(.subheadline)
+                    if let remaining = timerManager.currentIds[event.id!] {
+                        Text(timeString(from:remaining))
+                    }
                 }
                 ActionDestination(event: event)
             }
