@@ -153,7 +153,7 @@ app.post('/hasuraJWT', async (req, res) => {
 app.post('/deleteUser', async (req, res) => {
     try {
         const userId = authorize(req); 
-        let jwt = await deleteUser(userId)
+        let jwt = await deleteUser(req.body.userId)
         res.status(200).json({
             status: "success",
             jwt: jwt

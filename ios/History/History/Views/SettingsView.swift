@@ -137,7 +137,7 @@ private func deleteUser() async {
         return
     }
     let deleteUserEndpoint = getDeleteUserEndpoint
-    let body: [String: Any] = ["userId": userId]
+    let body: [String: Any] = ["userId": 5]
     do {
         guard let data = try await ServerCommunicator.sendPostRequestAsync(to: deleteUserEndpoint, body: body, token: nil, waitAndSendIfServerUnreachable: false) else {
             print("Failed to receive data")
