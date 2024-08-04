@@ -4,7 +4,7 @@ import { config } from "./config";
 import path from 'path';
 import { convertAudioToText } from './helper/audio';
 
-import { authorize, convertAppleJWTtoHasuraJWT } from './resources/authorization';
+import { authorize, convertAppleJWTtoHasuraJWT, deleteUser } from './resources/authorization';
 import { parseUserRequest } from './resources/logic';
 import { getUserLanguage } from './resources/user';
 // import { processMovement, setNameForLocation } from './helper/location';
@@ -145,6 +145,21 @@ app.post('/hasuraJWT', async (req, res) => {
         });
     } catch (error) {
         console.error('hasuraJWT:', error);
+        res.status(401).json({ error: error });
+    }
+    
+});
+
+app.post('/deleteUser', async (req, res) => {
+    try {
+        const userId = authorize(req); 
+        let jwt = await deleteUser(userId)
+        res.status(200).json({
+            status: "success",
+            jwt: jwt
+        });
+    } catch (error) {
+        console.error('deleting user:', error);
         res.status(401).json({ error: error });
     }
     

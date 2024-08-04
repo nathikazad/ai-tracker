@@ -71,6 +71,17 @@ struct SettingsView: View {
 //                        }
 //                    }
                     Button(action: {
+                        Task {
+                            await deleteUser()
+                            auth.signOutCallback()
+                            state.hideSheet()
+                            state.showChat(newChatViewToShow: .onBoard)
+                        }
+                    }) {
+                        Label("Delete User", systemImage: "trash.fill")
+                            .foregroundColor(.primary)
+                    }
+                    Button(action: {
                         auth.signOutCallback()
                         state.hideSheet()
                         state.showChat(newChatViewToShow: .onBoard)
@@ -119,3 +130,25 @@ func getName() -> String {
     }
 }
 
+private func deleteUser() async {
+    let userId = auth.userId
+    guard let userId = userId else {
+        print("No user id")
+        return
+    }
+    let deleteUserEndpoint = getDeleteUserEndpoint
+    let body: [String: Any] = ["userId": userId]
+    do {
+        guard let data = try await ServerCommunicator.sendPostRequestAsync(to: deleteUserEndpoint, body: body, token: nil, waitAndSendIfServerUnreachable: false) else {
+            print("Failed to receive data")
+            return
+        }
+        if let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any], let jwt = jsonResponse["jwt"] as? String {
+            print("User deleted")
+        } else {
+            print("Invalid response received from the server")
+        }
+    } catch {
+        print("Error deleting user: \(error)")
+    }
+}

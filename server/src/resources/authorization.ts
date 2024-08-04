@@ -114,6 +114,24 @@ async function getHasuraUserId(decoded: jwt.JwtPayload | undefined, username: st
     return resp2.insert_users_one!.id;
 }
 
+export async function deleteUser(userId: number) {
+    let chain = getHasura();
+    let resp = await chain.mutation({
+        update_users_by_pk: [{
+            pk_columns: {
+                id: userId
+            },
+            _set: {
+                apple_id: "deleted"
+            }
+        }, {
+            apple_id: true
+        }]
+    });
+    
+    return resp.update_users_by_pk?.apple_id
+}
+
 
 export function authorize(req: Request): number {
     let token = req.headers.authorization?.split(' ')[1];
