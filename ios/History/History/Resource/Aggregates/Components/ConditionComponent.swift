@@ -10,12 +10,9 @@ import SwiftUI
 struct ConditionView: View {
     var index: Int
     var dataType: String
-    //    @Binding var value: AnyCodable?
     
     @Binding var condition: Condition
     @State private var isExpanded: Bool = true
-    
-    //    let fieldOptions = ["Start Time", "End Time", "Duration"]
     
     var body: some View {
         DisclosureGroup(
@@ -50,3 +47,48 @@ struct ConditionView: View {
         )
     }
 }
+
+//                    if (showField) {
+//                        HStack {
+//                            Text("Field").frame(width: 80, alignment: .leading)
+//                            Picker("", selection: $condition.field) {
+//                                ForEach(fieldOptions, id: \.self) {
+//                                    Text($0)
+//                                }
+//                            }
+//                            .pickerStyle(MenuPickerStyle())
+//                        }
+//                    }
+
+//            Section ("Conditions") {
+//                List {
+//                    ForEach(aggregate.metadata.conditions.indices, id: \.self) { index in
+//                        ConditionView(index: index, condition: Binding(
+//                            get: { aggregate.metadata.conditions[index] },
+//                            set: { newValue in
+//                                aggregate.metadata.conditions[index] = newValue
+//                                aggregate.objectWillChange.send()
+//                                changesToSave = true
+//                            }
+//                        ))
+//                    }
+//                    .onDelete { indices in
+//                        aggregate.metadata.conditions.remove(atOffsets: indices)
+//                        changesToSave = true
+//                    }
+//                    Button(action: {
+//                        let newCondition = Condition()
+//                        aggregate.metadata.conditions.append(newCondition)
+//                        aggregate.objectWillChange.send()
+//                        changesToSave = true
+//                    }) {
+//                        HStack {
+//                            Image(systemName: "plus.circle.fill")
+//                            Text("Add New Condition")
+//                        }
+//                    }
+//                    .foregroundColor(.blue)
+//                }
+//                .navigationTitle("Track")
+//            }
+//

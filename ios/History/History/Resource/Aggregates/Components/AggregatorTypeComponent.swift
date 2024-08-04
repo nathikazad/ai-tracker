@@ -51,8 +51,7 @@ struct FieldPicker: View {
             if metadata.aggregatorType == .compare {
                 Text("Start Time").tag("Start Time")
                 Text("End Time").tag("End Time")
-            }
-            if metadata.aggregatorType == .sum {
+            } else if metadata.aggregatorType == .sum {
                 Text("Duration").tag("Duration")
             }
         }
@@ -69,9 +68,10 @@ struct WindowPicker: View {
     
     var body: some View {
         Picker("Window", selection: $metadata.window) {
-            ForEach(ASWindow.allCases, id: \.self) { window in
-                Text(window.rawValue.capitalized).tag(window)
-            }
+//            ForEach(ASWindow.allCases, id: \.self) { window in
+//                Text(window.rawValue.capitalized).tag(window)
+//            }
+            Text("Daily").tag("Daily")
         }
         .pickerStyle(MenuPickerStyle())
         .onChange(of: metadata.window) { _ in

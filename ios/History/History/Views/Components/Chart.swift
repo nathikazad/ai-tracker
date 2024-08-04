@@ -30,32 +30,34 @@ func configureXAxis(count: Int) -> AxisMarks<BuilderConditional<BuilderCondition
 }
 
 struct BarView: View {
-    var title: String
+    var title: String?
     var data: [(Date, Double)]
-
-    enum ShowY {
-        case hour
-        case minute
-    }
-
-    func getY(_ hour: Double) -> Double {
-        if showY == .hour {
-            return hour
-        } else {
-            return hour * 60
-        }
-    }
-
-    var showY: ShowY {
-        let totalHours = data.map { $0.1 }.reduce(0, +)
-        let average = totalHours / Double(data.count)
-        if average < 2 {
-            return .minute
-        } else {
-            return .hour
-        }
-    }
-
+    var yAxisLabel: String?
+    var yMark: Double?
+    
+//    enum ShowY {
+//        case hour
+//        case minute
+//    }
+//    
+//    func getY(_ hour: Double) -> Double {
+//        if showY == .hour {
+//            return hour
+//        } else {
+//            return hour * 60
+//        }
+//    }
+//    
+//    var showY: ShowY {
+//        let totalHours = data.map { $0.1 }.reduce(0, +)
+//        let average = totalHours / Double(data.count)
+//        if average < 2 {
+//            return .minute
+//        } else {
+//            return .hour
+//        }
+//    }
+    
     var numDays: Int {
         // get minimum date, maximum date, and then get the difference in days
         let minDate = data.min { $0.0 < $1.0 }?.0 ?? Date()
@@ -64,13 +66,28 @@ struct BarView: View {
     }
     
     var body: some View {
-        Section(header: Text(title)) {
-            Chart(data, id:\.0) {
-                BarMark(
-                    x: .value("Key", $0.0),
-                    y: .value("Value", getY($0.1))
-                )
-                .foregroundStyle(Color.gray)
+        Section {
+            Chart {
+                ForEach(data, id: \.0) { item in
+                    BarMark(
+                        x: .value("Key", item.0),
+                        y: .value("Value", item.1)
+                    )
+                    .foregroundStyle(Color.gray)
+                }
+                
+                if let yMark = yMark {
+                    RuleMark(
+                        y: .value("Target", yMark)
+                    )
+                    .lineStyle(StrokeStyle(lineWidth: 2, dash: [5, 5]))
+                    .foregroundStyle(Color.green)
+                }
+                //                .annotation(position: .trailing) {
+                //                    Text("")
+                //                        .font(.caption)
+                //                        .foregroundColor(.green)
+                //                }
             }
             .chartXAxis {
                 configureXAxis(count: numDays)
@@ -79,8 +96,13 @@ struct BarView: View {
             .chartYAxis {
                 AxisMarks(values: .automatic(desiredCount: 6))
             }
-            .chartYAxisLabel(content: { 
-                Text(showY == .hour ? "Hours" : "Minutes")
+            .chartYAxisLabel(content: {
+                if let yAxisLabel = yAxisLabel {
+                    Text(yAxisLabel)
+                } 
+//                else {
+//                    Text(showY == .hour ? "Hours" : "Minutes")
+//                }
             })
             .frame(height: 200)
             .padding()
@@ -150,34 +172,113 @@ struct CandleView: View {
     }
 }
 
+extension Date {
+    var toComponents: DateComponents {
+        let calendar = Calendar.current
+        var components = calendar.dateComponents([.hour, .minute, .second], from: self)
+        return components
+    }
+    
+    func adjustHoursWithinDay(by hours: Int) -> Date {
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: self)
+        let endOfDay = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: self)!
+        let adjustedDate = calendar.date(byAdding: .hour, value: hours, to: self)!
+        if adjustedDate < startOfDay {
+            return startOfDay
+        } else if adjustedDate > endOfDay {
+            return endOfDay
+        } else {
+            return adjustedDate
+        }
+    }
+}
+
 
 
 struct ScatterView: View {
     var title: String
     var data: [Date]
     var showLine: Bool = false
-
+    var mark: Date?
+    var range: Int?
+    
     var numDays: Int {
         let minDate = data.min() ?? Date()
         let maxDate = data.max() ?? Date()
         return Calendar.current.dateComponents([.day], from: minDate, to: maxDate).day ?? 0
     }
-
+    
     var body: some View {
-        
-        return Section(header: Text(title)) {
-            Chart(data, id:\.self) {
+        Section(header: Text(title)) {
+            Chart(data, id: \.self) { date in
                 PointMark(
-                    x: .value("x data", Calendar.current.startOfDay(for:$0)),
-                    y: .value("y data",  $0.dateWithHourAndMinute)
-                ).foregroundStyle(Color.gray)
-                
+                    x: .value("Date", Calendar.current.startOfDay(for: date)),
+                    y: .value("Time", timeToDouble(date))
+                )
+                .foregroundStyle(Color.gray)
+                if let mark = mark {
+                    RuleMark(
+                        y: .value("Mark", timeToDouble(mark))
+                    )
+                    .foregroundStyle(.red)
+                    .lineStyle(StrokeStyle(lineWidth: 2, dash: [5, 5]))
+                }
             }
             .chartXAxis {
                 configureXAxis(count: numDays)
             }
+            .if(mark != nil && range != nil) { view in
+                   view.chartYScale(domain: yAxisDomain())
+               }
+            .chartYAxis {
+                AxisMarks(values: .stride(by: 3600)) { value in
+                    AxisGridLine()
+                    AxisTick()
+                    AxisValueLabel {
+                        if let doubleValue = value.as(Double.self) {
+                            Text(formatTimeLabel(doubleValue))
+                        }
+                    }
+                }
+            }
             .frame(height: 200)
             .padding()
+        }
+    }
+    private func timeToDouble(_ date: Date) -> Double {
+        let components = Calendar.current.dateComponents([.hour, .minute, .second], from: date)
+        return Double(components.hour ?? 0) * 3600 +
+        Double(components.minute ?? 0) * 60 +
+        Double(components.second ?? 0)
+    }
+    
+    private func yAxisDomain() -> ClosedRange<Double> {
+        let minY = mark!.adjustHoursWithinDay(by: -range!).toComponents
+        let maxY = mark!.adjustHoursWithinDay(by: range!).toComponents
+        let minSeconds = timeToDouble(createDate(from: minY))
+        let maxSeconds = timeToDouble(createDate(from: maxY))
+        return minSeconds...maxSeconds
+    }
+    
+    private func createDate(from components: DateComponents) -> Date {
+        Calendar.current.date(from: components) ?? Date()
+    }
+    
+    private func formatTimeLabel(_ seconds: Double) -> String {
+        let hour = Int(seconds) / 3600
+        let isPM = hour >= 12
+        let hour12 = hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour)
+        return "\(hour12)\(isPM ? "PM" : "AM")"
+    }
+}
+
+extension View {
+    @ViewBuilder func `if`<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {
+        if condition {
+            transform(self)
+        } else {
+            self
         }
     }
 }
@@ -206,27 +307,6 @@ func linearRegression(data: [(Double, Double)]) -> [Double]? {
     return data.map { m * $0.0 + b }
 }
 
-
-//struct ScatterViewString: View {
-//    var title: String
-//    var data: [(String, Double)]
-//    var body: some View {
-//        Section(header: Text(title)) {
-//            Chart {
-//                ForEach(data, id: \.0) { x, y in
-//                    PointMark(
-//                        x: .value("x data", x),
-//                        y: .value("y data", y)
-//
-//                    ).foregroundStyle(Color.gray)
-//                }
-//            }
-//            .chartYScale(domain: getDomain(data: data.map{ $0.1 }))
-//            .frame(height: 200)
-//            .padding(.horizontal)
-//        }
-//    }
-//}
 
 func getDomain(data:[Double]) -> ClosedRange<Double>{
     return { ((data.min() ?? 0) - 2)...((data.max() ?? 24) + 2) }()

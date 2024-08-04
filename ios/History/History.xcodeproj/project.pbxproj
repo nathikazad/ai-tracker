@@ -116,6 +116,7 @@
 		FEBB197A2C5F0BC100ECAC85 /* GoalsComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB19792C5F0BC100ECAC85 /* GoalsComponent.swift */; };
 		FEBB197C2C5F0BFD00ECAC85 /* AggregatorTypeComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB197B2C5F0BFD00ECAC85 /* AggregatorTypeComponent.swift */; };
 		FEBB197E2C5F10BF00ECAC85 /* ConditionComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB197D2C5F10BF00ECAC85 /* ConditionComponent.swift */; };
+		FEBB19802C5F15D200ECAC85 /* ButtonsComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB197F2C5F15D200ECAC85 /* ButtonsComponent.swift */; };
 		FEBED49A2C0AD79800DB2D5F /* PersonViewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBED4992C0AD79800DB2D5F /* PersonViewHelper.swift */; };
 		FEC538812BBDF8C7006BDBDA /* WidgetIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEC538802BBDF8C7006BDBDA /* WidgetIntent.swift */; };
 		FEC7849E2C064EAE007C38F1 /* PersonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEC7849D2C064EAE007C38F1 /* PersonView.swift */; };
@@ -281,6 +282,7 @@
 		FEBB19792C5F0BC100ECAC85 /* GoalsComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsComponent.swift; sourceTree = "<group>"; };
 		FEBB197B2C5F0BFD00ECAC85 /* AggregatorTypeComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AggregatorTypeComponent.swift; sourceTree = "<group>"; };
 		FEBB197D2C5F10BF00ECAC85 /* ConditionComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionComponent.swift; sourceTree = "<group>"; };
+		FEBB197F2C5F15D200ECAC85 /* ButtonsComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonsComponent.swift; sourceTree = "<group>"; };
 		FEBED4992C0AD79800DB2D5F /* PersonViewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonViewHelper.swift; sourceTree = "<group>"; };
 		FEC5386D2BBDE4E5006BDBDA /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		FEC5386F2BBDE4E5006BDBDA /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -682,6 +684,7 @@
 				FEBB19792C5F0BC100ECAC85 /* GoalsComponent.swift */,
 				FEBB197B2C5F0BFD00ECAC85 /* AggregatorTypeComponent.swift */,
 				FEBB197D2C5F10BF00ECAC85 /* ConditionComponent.swift */,
+				FEBB197F2C5F15D200ECAC85 /* ButtonsComponent.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -888,6 +891,7 @@
 				FE8811EB2BC799BF00B112A8 /* GoalsController.swift in Sources */,
 				FEA98C112BFFC96C006BB857 /* QuickComponents.swift in Sources */,
 				FECA5EEE2BE569F6007ADE17 /* Time.swift in Sources */,
+				FEBB19802C5F15D200ECAC85 /* ButtonsComponent.swift in Sources */,
 				FEA98C132BFFEC70006BB857 /* TwoDatePicker.swift in Sources */,
 				FEB366E62BDDF8F9000A48C0 /* Chart.swift in Sources */,
 				FE4AB3872C4EF43800A07749 /* ListActionTypesView.swift in Sources */,

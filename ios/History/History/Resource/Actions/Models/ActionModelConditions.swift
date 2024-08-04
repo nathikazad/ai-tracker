@@ -44,7 +44,7 @@ extension ActionModel {
             
         case .duration:
             guard let comparisonDuration = parseTimeDuration(value) else { return false }
-            return compare(parseTimeDuration(duration)!, operationType, comparisonDuration)
+            return compare(durationInSeconds, operationType, comparisonDuration)
         }
     }
 
@@ -72,7 +72,7 @@ extension ActionModel {
             return duration == comparisonDuration
         }
     }
-
+    // extend this a function of String to Int as in Action Model
     private func parseTimeDuration(_ value: String) -> Int? {
         let components = value.split(separator: ":")
         guard components.count == 2,

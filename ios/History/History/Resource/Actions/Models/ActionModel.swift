@@ -10,6 +10,14 @@ import Foundation
 // ActionModel struct
 import Foundation
 
+extension Int {
+    var fromSecondsToHHMMString: String {
+        let hours = self / 3600
+        let minutes = (self % 3600) / 60
+        return String(format: "%02d:%02d", hours, minutes)
+    }
+}
+
 class ActionModel: ObservableObject, Codable {
     @Published var id: Int?
     @Published var actionTypeId: Int
@@ -34,14 +42,9 @@ class ActionModel: ObservableObject, Codable {
         case actionType = "action_type"
     }
     
-    var duration: String {
-        guard let endTime = endTime else { return "00:00" }
-        
-        let durationInSeconds = Int(endTime.timeIntervalSince(startTime))
-        let hours = durationInSeconds / 3600
-        let minutes = (durationInSeconds % 3600) / 60
-        
-        return String(format: "%02d:%02d", hours, minutes)
+    var durationInSeconds: Int {
+        guard let endTime = endTime else { return 0 }
+        return Int(endTime.timeIntervalSince(startTime))
     }
 
     init(id: Int? = nil, actionTypeId: Int, startTime: Date, endTime: Date? = nil, parentId: Int? = nil, dynamicData: [String: AnyCodable] = [:], actionTypeModel: ActionTypeModel, createdAt: Date = Date(), updatedAt: Date = Date()) {
@@ -104,11 +107,11 @@ class ActionModel: ObservableObject, Codable {
             description = self.dynamicData[shortDescSyntax]?.toString
         }
         
-        if actionTypeModel.meta.hasDuration, duration != "00:00" {
+        if actionTypeModel.meta.hasDuration, durationInSeconds > 0 {
             if let desc = description {
-                return "\(desc) (\(duration))"
+                return "\(desc) (\(durationInSeconds.fromSecondsToHHMMString))"
             } else {
-                return "(\(duration))"
+                return "(\(durationInSeconds.fromSecondsToHHMMString))"
             }
         } else {
             return description
