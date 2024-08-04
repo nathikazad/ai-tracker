@@ -10,6 +10,7 @@ import { getUserLanguage } from './resources/user';
 // import { processMovement, setNameForLocation } from './helper/location';
 import { uploadSleep } from './helper/sleep';
 import { addUserMovement, saveLocation } from './resources/location/location2';
+import { log } from 'console';
 const app: Express = express();
 
 app.use(express.static(path.join(__dirname, '../public')));
@@ -153,7 +154,7 @@ app.post('/hasuraJWT', async (req, res) => {
 app.post('/deleteUser', async (req, res) => {
     try {
         const userId = authorize(req); 
-        let jwt = await deleteUser(req.body.userId)
+        let jwt = await deleteUser(userId)
         res.status(200).json({
             status: "success",
             jwt: jwt
