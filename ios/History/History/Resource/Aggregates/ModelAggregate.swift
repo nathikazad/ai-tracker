@@ -115,9 +115,9 @@ enum AggregatorType: String, Codable, CaseIterable, Hashable {
 struct Condition: Codable {
     var field: String
     var comparisonOperator: ComparisonOperator
-    var value: String // make it any codable
+    var value: AnyCodable?
     
-    init(field: String = "Start Time", comparisonOperator: ComparisonOperator = .equalTo, value: String = "1") {
+    init(field: String = "Start Time", comparisonOperator: ComparisonOperator = .equalTo, value: AnyCodable? = nil) {
         self.field = field
         self.comparisonOperator = comparisonOperator
         self.value = value
@@ -128,7 +128,7 @@ struct Condition: Codable {
         field = try container.decode(String.self, forKey: .field)
         let comparisonOperatorString = try container.decode(String.self, forKey: .comparisonOperator)
         comparisonOperator = ComparisonOperator(from: comparisonOperatorString)
-        value = try container.decode(String.self, forKey: .value)
+        value = try container.decodeIfPresent(AnyCodable.self, forKey: .value)
     }
 }
 
@@ -138,8 +138,8 @@ enum ComparisonOperator: String, Codable, CaseIterable {
     case lessThan = "Less Than"
     case equalTo = "Equal To"
     case notEqualTo = "Not Equal To"
-    case greaterThanOrEqualTo = "Gt or Equal To"
-    case lessThanOrEqualTo = "Ls or Equal To"
+    case greaterThanOrEqualTo = "Greater or Equal To"
+    case lessThanOrEqualTo = "Less or Equal To"
 
     init(from string: String) {
         self = ComparisonOperator(rawValue: string) ?? .equalTo

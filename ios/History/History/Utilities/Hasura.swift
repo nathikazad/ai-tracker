@@ -225,10 +225,16 @@ class Hasura {
         let query: String
     }
     
-    private func decodeData<T: Decodable>(_ responseType: T.Type, _ data: Data) throws -> T {
+    private func decodeData<T: Decodable>(_ responseType: T.Type, _ data: Data, debug: Bool = false) throws -> T {
         // Decode the data to the specified responseType and return it.
         do {
             let decodedResponse = try JSONDecoder().decode(responseType, from: data)
+            if debug {
+                guard let jsonResult = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+                    throw URLError(.cannotParseResponse)
+                }
+                print(jsonResult)
+            }
             return decodedResponse
             //        } catch let DecodingError.dataCorrupted(context) {
             //            print("Data corrupted: \(context)")
@@ -258,8 +264,14 @@ class Hasura {
         return jsonResult
     }
     
-    func sendGraphQL<T: Decodable>(query: String, variables: [String: Any]? = nil, responseType: T.Type) async throws -> T {
+    func sendGraphQL<T: Decodable>(query: String, variables: [String: Any]? = nil, responseType: T.Type, debug: Bool = false) async throws -> T {
         let data = try await sendGraphQLRequest(query: query, variables: variables)
+        if debug {
+            guard let jsonResult = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+                throw URLError(.cannotParseResponse)
+            }
+            print(jsonResult)
+        }
         return try JSONDecoder().decode(T.self, from: data)
     }
     
@@ -335,7 +347,7 @@ class Hasura {
     }
     
     
-    func startListening<T: Decodable>(subscriptionId: String, subscriptionQuery: String, responseType: T.Type, variables: [String: Any]? = nil, callback: @escaping (Result<T, Error>) -> Void) {
+    func startListening<T: Decodable>(subscriptionId: String, subscriptionQuery: String, responseType: T.Type, variables: [String: Any]? = nil, callback: @escaping (Result<T, Error>) -> Void, debug: Bool = false) {
         if(socketStatus == .initialized) {
             print("calling setup because socket not initialized for listening")
             setup()
@@ -358,7 +370,7 @@ class Hasura {
             }
             
             do {
-                let decodedResponse = try self.decodeData(responseType, data)
+                let decodedResponse = try self.decodeData(responseType, data, debug: debug)
                 callback(.success(decodedResponse))
             } catch {
                 callback(.failure(error))

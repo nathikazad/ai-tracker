@@ -27,7 +27,8 @@ class ActionTypeModel: ObservableObject, Codable {
     }
     
     enum CodingKeys: String, CodingKey {
-        case id, name, metadata, staticFields, dynamicFields, internalObjects, computed, shortDescSyntax
+        case id, name, metadata, staticFields, dynamicFields, internalObjects, computed
+        case shortDescSyntax = "short_desc_syntax"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
         case hasDuration = "has_duration"

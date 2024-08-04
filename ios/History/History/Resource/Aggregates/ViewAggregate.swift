@@ -17,6 +17,14 @@ struct ShowAggregateView: View {
         _aggregate = StateObject(wrappedValue: aggregateModel)
     }
     
+    var dataType: String {
+         if aggregate.metadata.aggregatorType == .compare {
+            return "Time"
+        } else {
+            return "Number"
+        }
+    }
+    
     var body: some View {
         Form {
             Section {
@@ -28,11 +36,15 @@ struct ShowAggregateView: View {
                 }
                 .pickerStyle(MenuPickerStyle())
                 .onChange(of: aggregate.metadata.aggregatorType) { old, new in
-                    if new == .sum && aggregate.metadata.field == "" {
-                        aggregate.metadata.field = "Duration"
+                    if new == .sum {
+                        if aggregate.metadata.field == "" {
+                            aggregate.metadata.field = "Duration"
+                        }
                     }
-                    if new == .compare && aggregate.metadata.field == "" {
+                    if new == .compare {
+                        if aggregate.metadata.field == "" {
                         aggregate.metadata.field = "Start Time"
+                        }
                     }
                     changesToSave = true
                 }
@@ -99,10 +111,12 @@ struct ShowAggregateView: View {
 //                .navigationTitle("Track")
 //            }
 //            
-            Section ("Goals") {
+            Section {
                 List {
                     ForEach(aggregate.metadata.goals.indices, id: \.self) { index in
-                        ConditionView(index: index, showField: false, condition: Binding(
+                        ConditionView(index: index,
+                                      dataType: dataType,
+                                      condition: Binding(
                             get: { aggregate.metadata.goals[index] },
                             set: { newValue in
                                 aggregate.metadata.goals[index] = newValue
@@ -183,28 +197,30 @@ struct ShowAggregateView: View {
 
 struct ConditionView: View {
     var index: Int
-    var showField: Bool = true
+    var dataType: String
+//    @Binding var value: AnyCodable?
+    
     @Binding var condition: Condition
     @State private var isExpanded: Bool = true
     
-    let fieldOptions = ["Start Time", "End Time", "Duration"]
+    //    let fieldOptions = ["Start Time", "End Time", "Duration"]
     
     var body: some View {
         DisclosureGroup(
             isExpanded: $isExpanded,
             content: {
                 VStack(spacing: 10) {
-                    if (showField) {
-                        HStack {
-                            Text("Field").frame(width: 80, alignment: .leading)
-                            Picker("", selection: $condition.field) {
-                                ForEach(fieldOptions, id: \.self) {
-                                    Text($0)
-                                }
-                            }
-                            .pickerStyle(MenuPickerStyle())
-                        }
-                    }
+                    //                    if (showField) {
+                    //                        HStack {
+                    //                            Text("Field").frame(width: 80, alignment: .leading)
+                    //                            Picker("", selection: $condition.field) {
+                    //                                ForEach(fieldOptions, id: \.self) {
+                    //                                    Text($0)
+                    //                                }
+                    //                            }
+                    //                            .pickerStyle(MenuPickerStyle())
+                    //                        }
+                    //                    }
                     
                     HStack {
                         Text("Comparison").frame(width: 100, alignment: .leading)
@@ -220,32 +236,18 @@ struct ConditionView: View {
                         }
                     }
                     
-                    if condition.field == "Start Time" || condition.field == "End Time" {
-                        TimeComponent(fieldName: condition.field, time: Binding(
-                            get: {
-                                let formatter = DateFormatter()
-                                formatter.timeStyle = .short
-                                return formatter.date(from: condition.value) ?? Date()
-                            },
-                            set: { newValue in
-                                let formatter = DateFormatter()
-                                formatter.timeStyle = .short
-                                condition.value = formatter.string(from: newValue)
-                            }
-                        ))
-                    } else {
-                        HStack {
-                            Text("Value").frame(width: 150, alignment: .leading)
-                            TextField("", text: $condition.value)
-                                .multilineTextAlignment(.trailing)
-                                .keyboardType(.numberPad)
-                            
-                        }
-                    }
+                    ViewDataType(
+                        dataType: dataType,
+                        name: "Target",
+                        enums: [],
+                        value: $condition.value
+                    )
+                    
+                    
                 }
             },
             label: {
-                Text("\(showField ? "Condition \(index+1)" : "Goal")")
+                Text("Goal")
             })
     }
 }

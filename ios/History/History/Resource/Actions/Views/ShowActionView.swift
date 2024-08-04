@@ -28,48 +28,26 @@ struct ShowActionView: View {
     var body: some View {
         Form {
             Section(header: Text("Time Information")) {
-                let startTimeLabel = action.actionTypeModel.staticFields.startTime?.name ??
-                (action.actionTypeModel.meta.hasDuration ? "Start Time" : "Time")
-                DatePicker(
-                    "\(startTimeLabel):",
-                    selection: Binding(
-                        get: { self.action.startTime},
-                        set: { 
-                            self.action.startTime = $0
-                            self.changesToSave = true
-                        }
-                    ),
-                    displayedComponents: [.date, .hourAndMinute]
+                TimeInformationView(
+                    startTime: $action.startTime,
+                    endTime: $action.endTime,
+                    hasDuration: action.actionTypeModel.meta.hasDuration,
+                    startTimeLabel: action.actionTypeModel.staticFields.startTime?.name ?? "Start Time",
+                    endTimeLabel: action.actionTypeModel.staticFields.endTime?.name ?? "End Time",
+                    changesToSave: $changesToSave
                 )
-                
-                if action.actionTypeModel.meta.hasDuration {
-                    let endTimeLabel = action.actionTypeModel.staticFields.endTime?.name ??
-                    "End Time"
-                    DatePicker(
-                        "\(endTimeLabel):",
-                        selection: Binding(
-                            get: { self.action.endTime ?? Date() },
-                            set: { 
-                                self.action.endTime = $0
-                                self.changesToSave = true
-                            }
-                        ),
-                        displayedComponents: [.date, .hourAndMinute]
-                    )
-                    if (action.id != nil && action.endTime == nil) {
-                        TimerComponent(timerId: action.id!)
-                    }
-                }
             }
             
             if(Array(action.actionTypeModel.dynamicFields.keys).count > 0) {
                 DynamicFieldsView(
                     dynamicFields: $action.actionTypeModel.dynamicFields,
-                    dynamicData: $action.dynamicData,
-                    updateView: {
-                        self.action.objectWillChange.send()
-                        self.changesToSave = true
-                    })
+                    dynamicData: Binding(
+                        get: { self.action.dynamicData },
+                        set: { newValue in
+                            self.action.dynamicData = newValue
+                            self.changesToSave = true
+                        }
+                    ))
             }
             
             Section {
@@ -117,13 +95,21 @@ struct ShowActionView: View {
 
     private func saveChanges() {
         Task {
+            print(action.dynamicData.toJson)
             if action.id != nil {
                 await ActionController.updateActionModel(model: action)
+                self.presentationMode.wrappedValue.dismiss()
+                clickAction?(action)
             } else {
                 let actionId = await ActionController.createActionModel(model: action)
                 action.id = actionId
-                self.presentationMode.wrappedValue.dismiss()
-                clickAction?(action)
+                if action.actionTypeModel.meta.hasDuration && action.actionTypeModel.staticFields.endTime == nil {
+                    // stay here, maybe they want to start timer
+                } else {
+                    // else go back
+                    self.presentationMode.wrappedValue.dismiss()
+                    clickAction?(action)
+                }
             }
         }
     }

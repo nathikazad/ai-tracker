@@ -210,11 +210,15 @@ struct TimeStampedStringComponent: View {
 struct TimeComponent: View {
     let fieldName: String
     @Binding var time: Date
+    let onlyTime: Bool
     var body: some View {
-        VStack(alignment: .leading) {
+        HStack {
             Text(fieldName)
-                .font(.headline)
-            DatePicker("Timestamp", selection: $time, displayedComponents: [.date, .hourAndMinute])
+            Spacer()
+//                .font(.headline)
+            DatePicker("",
+                       selection: $time,
+                       displayedComponents: onlyTime ? .hourAndMinute : [.date, .hourAndMinute])
         }
     }
 }

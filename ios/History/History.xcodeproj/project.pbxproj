@@ -78,6 +78,7 @@
 		FE6ED6D72C06AA9100E6A2A6 /* EventTypeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6ED6D62C06AA9100E6A2A6 /* EventTypeModel.swift */; };
 		FE71B3882BD07BCE008F7D1A /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */; };
 		FE759E122C5DE432001A0FF4 /* ViewDataType.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE759E112C5DE432001A0FF4 /* ViewDataType.swift */; };
+		FE759E142C5ECA0A001A0FF4 /* TimeSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE759E132C5ECA0A001A0FF4 /* TimeSelector.swift */; };
 		FE7EBFC82C0A8F2200F720EB /* PersonAssociationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7EBFC72C0A8F2200F720EB /* PersonAssociationsView.swift */; };
 		FE8153722BD845B300D972C8 /* PolylineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8153712BD845B300D972C8 /* PolylineView.swift */; };
 		FE8811EB2BC799BF00B112A8 /* GoalsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8811E62BC799BE00B112A8 /* GoalsController.swift */; };
@@ -241,6 +242,7 @@
 		FE6ED6D42C06AA5D00E6A2A6 /* EventModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventModels.swift; sourceTree = "<group>"; };
 		FE6ED6D62C06AA9100E6A2A6 /* EventTypeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTypeModel.swift; sourceTree = "<group>"; };
 		FE759E112C5DE432001A0FF4 /* ViewDataType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewDataType.swift; sourceTree = "<group>"; };
+		FE759E132C5ECA0A001A0FF4 /* TimeSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSelector.swift; sourceTree = "<group>"; };
 		FE7EBFC72C0A8F2200F720EB /* PersonAssociationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonAssociationsView.swift; sourceTree = "<group>"; };
 		FE8153712BD845B300D972C8 /* PolylineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolylineView.swift; sourceTree = "<group>"; };
 		FE8811E62BC799BE00B112A8 /* GoalsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoalsController.swift; sourceTree = "<group>"; };
@@ -530,6 +532,7 @@
 				FE638F422C56FF4E001C34F0 /* ShowActionComponents.swift */,
 				FE638F472C571BDB001C34F0 /* ActionRow.swift */,
 				FE2074B52C5ACFFB00C58226 /* DynamicFieldsView.swift */,
+				FE759E132C5ECA0A001A0FF4 /* TimeSelector.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -927,6 +930,7 @@
 				FE1C0EB12BC0A29300FF56AB /* Hasura.swift in Sources */,
 				FEDBC0652C0509AC00233EA0 /* EventDestination.swift in Sources */,
 				FE8965AA2BC7B31D00E9D633 /* UserController.swift in Sources */,
+				FE759E142C5ECA0A001A0FF4 /* TimeSelector.swift in Sources */,
 				FE638F3C2C55E2A2001C34F0 /* ShowActionView.swift in Sources */,
 				FE6ED6D72C06AA9100E6A2A6 /* EventTypeModel.swift in Sources */,
 				FE477D912BD5E3E2001FC341 /* EventsController.swift in Sources */,

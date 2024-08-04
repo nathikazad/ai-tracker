@@ -13,7 +13,6 @@ struct ViewDataType: View {
     let name: String
     let enums: [String]
     @Binding var value: AnyCodable?
-    let updateView: () -> Void
     
     @ViewBuilder
     var body: some View {
@@ -23,6 +22,9 @@ struct ViewDataType: View {
                 LongStringComponent(fieldName: name,
                                     value: bindingFor(""))
             case .shortString:
+                ShortStringComponent(fieldName: name,
+                                     value: bindingFor(""))
+            case .number:
                 ShortStringComponent(fieldName: name,
                                      value: bindingFor(""))
             case .enumerator:
@@ -47,7 +49,8 @@ struct ViewDataType: View {
             case .dateTime, .time:
                 TimeComponent(
                     fieldName: name,
-                    time: bindingFor(Date())
+                    time: bindingFor(Date()),
+                    onlyTime: dataType == .time
                 )
             default:
                 EmptyView()
@@ -58,13 +61,15 @@ struct ViewDataType: View {
     }
     
     private func bindingFor<T>(_ defaultValue: T) -> Binding<T> {
+        if  value == nil && !(T.self is Date.Type) {
+            value = AnyCodable.fromType(defaultValue)
+        }
         return Binding(
             get: {
                 return (value?.toType(T.self) as? T) ?? defaultValue
             },
             set: { newValue in
                 value = AnyCodable.fromType(newValue)
-                updateView()
             }
         )
     }

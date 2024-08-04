@@ -107,6 +107,16 @@ struct AnyCodable: Codable {
             return nil
         }
     }
+    
+    var toJson: Any {
+        do {
+            let data = try JSONEncoder().encode(self)
+            return try JSONSerialization.jsonObject(with: data, options: .allowFragments)
+        } catch {
+            print("Error converting AnyCodable to JSON: \(error)")
+            return String(describing: value)
+        }
+    }
 }
 
 protocol AnyCodableConvertible {
@@ -117,12 +127,7 @@ protocol AnyCodableConvertible {
 extension Dictionary where Key == String, Value == AnyCodable {
     var toJson: [String: Any] {
         return self.compactMapValues { anyCodable in
-            do {
-                let data = try JSONEncoder().encode(anyCodable)
-                return try JSONSerialization.jsonObject(with: data, options: [])
-            } catch {
-                return nil
-            }
+            return anyCodable.toJson
         }
     }
 }

@@ -9,42 +9,23 @@ import SwiftUI
 
 
 class TwoDatePickerModel: ObservableObject {
-    @Published var startTime: Date = Date()
-    @Published var startTimeIsNull: Bool = false
-    @Published var endTime: Date =  Date()
-    @Published var endTimeIsNull: Bool = false
-    @Published private(set) var isShowingDatePicker = false
-    @Published private(set) var popupScreenFirst: Bool = true
     @Published private(set) var showPopupForId: Int?
+    var model: ActionModel = ActionModel(actionTypeId: 0, startTime: Date(), actionTypeModel: ActionTypeModel(name: "None"))
 
-    var getStartTime: Date? {
-        return startTimeIsNull ? nil : startTime
+    var getStartTime: Date {
+        return model.startTime
     }
 
     var getEndTime: Date? {
-        return endTimeIsNull ? nil : endTime
+        return model.endTime
     }
     
     func showPopupForEvent(event: EventModel) {
-        startTime = event.startTime ?? Date()
-        endTime = event.endTime ?? Date()
-        startTimeIsNull = event.startTime == nil
-        endTimeIsNull = event.endTime == nil
-        showPopupForId = event.id
-        popupScreenFirst = true
     }
     
     func showPopupForAction(event: ActionModel) {
-        startTime = event.startTime
-        endTime = event.endTime ?? Date()
-        startTimeIsNull = false
-        endTimeIsNull = event.endTime == nil
+        model = event
         showPopupForId = event.id
-        popupScreenFirst = true
-    }
-    
-    func showNextScreen() {
-        popupScreenFirst = false
     }
     
     func dismissPopup() {
@@ -55,50 +36,34 @@ class TwoDatePickerModel: ObservableObject {
 
 struct TwoDatePickerView: View {
     @StateObject var datePickerModel: TwoDatePickerModel
+    @State var changesToSave:Bool = false
     var body: some View {
         return Group {
             if datePickerModel.showPopupForId != nil {
                 VStack {
-                    if(datePickerModel.popupScreenFirst) {
-                        Text("Start Time")
-                        Toggle("Null", isOn: $datePickerModel.startTimeIsNull)
-                            .padding()
-                        if !datePickerModel.startTimeIsNull {
-                            DatePicker("Start Time", selection: $datePickerModel.startTime, displayedComponents:  [.date, .hourAndMinute])
-                                .datePickerStyle(WheelDatePickerStyle())
-                                .frame(maxHeight: 150)
-                                .padding()
-                        }
-                        
-                        
-                        
-                    } else {
-                        Text("End Time")
-                        Toggle("Null", isOn: $datePickerModel.endTimeIsNull)
-                            .padding()
-                        if !datePickerModel.endTimeIsNull {
-                            DatePicker("End Time", selection: $datePickerModel.endTime, displayedComponents:  [.date, .hourAndMinute])
-                                .datePickerStyle(WheelDatePickerStyle())
-                                .frame(maxHeight: 150)
-                                .padding()
-                        }
-                        
-                    }
+                    TimeInformationView(
+                        startTime: Binding(
+                            get: { datePickerModel.model.startTime },
+                            set: { datePickerModel.model.startTime = $0 }),
+                        endTime: Binding(
+                            get: { datePickerModel.model.endTime },
+                            set: { datePickerModel.model.endTime = $0 }),
+                        hasDuration: datePickerModel.model.actionTypeModel.meta.hasDuration,
+                        startTimeLabel: datePickerModel.model.actionTypeModel.staticFields.startTime?.name ?? "Start Time",
+                        endTimeLabel: datePickerModel.model.actionTypeModel.staticFields.endTime?.name ?? "End Time",
+                        changesToSave: $changesToSave
+                    )
                     
                     Button(action: {
-                        if(datePickerModel.popupScreenFirst) {
-                            datePickerModel.showNextScreen()
-                        } else {
-                            DispatchQueue.main.async {
-                                let startTime = datePickerModel.getStartTime
-                                let endTime = datePickerModel.getEndTime
-                                EventsController.editEvent(id: datePickerModel.showPopupForId!, startTime: startTime, endTime: endTime, passNullTimeValues: true)
-                                self.datePickerModel.dismissPopup()
+                        //
+                        DispatchQueue.main.async {
+                            Task {
+                                await ActionController.updateActionModel(model: datePickerModel.model)
                             }
-                            
+                            self.datePickerModel.dismissPopup()
                         }
                     }) {
-                        Text(datePickerModel.popupScreenFirst ? "Next" : "Save")
+                        Text("Save")
                             .foregroundColor(.primary)
                     }
                     .padding(.top, 5)
