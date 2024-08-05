@@ -154,8 +154,8 @@ struct ShowAggregateView: View {
     func convertDurationsToRightUnit(dateCounts: [(Date, Double)]) -> ([(Date, Double)], String) {
         let array = dateCounts.map { ($0, $1 / 60.0) }
         if !array.isEmpty {
-            let avg = array.reduce(0) { $0 + $1.1 } / Double(array.count)
-            if avg > 240 {
+            let max = array.max { $0.1 < $1.1 }?.1 ?? 0
+            if max > 120 {
                 let hourArray = array.map { ($0.0, $0.1 / 60.0) }
                 return (hourArray, "Hours")
             } else {

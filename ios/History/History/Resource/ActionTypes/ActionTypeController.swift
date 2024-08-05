@@ -185,13 +185,15 @@ class ActionTypesController {
 // SKIPPED: time stamped string
 // RELEASE
 
-// work on aggregates
+// finished: work on aggregates
 // RELASE
-// work on goals incl tabs
+// finished: work on goals 
+// RELASE
+// working: goal tab
 // RELASE
 
 // COMMUNITY
-// work on shared goals incl tabs for groups
+// work on sharing goals incl tabs for groups
 // RELEASE
 
 // RELATIONAL DB

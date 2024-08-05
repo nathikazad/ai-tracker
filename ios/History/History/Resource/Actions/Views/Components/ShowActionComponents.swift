@@ -52,36 +52,76 @@ struct ShortStringComponent: View {
 struct LongStringComponent: View {
     let fieldName: String
     @Binding var value: String
+    @State var isBeingEdited: Bool
     @FocusState private var isFocused: Bool
+    
+    init(fieldName: String, value: Binding<String>) {
+        self.fieldName = fieldName
+        self._value = value
+        print("is empty ", value.wrappedValue, value.wrappedValue.isEmpty)
+        self._isBeingEdited = State(initialValue: value.wrappedValue.isEmpty)
+    }
+    
+    var height: CGFloat {
+        print(value.filter { $0 == "\n" }.count + 100)
+        return CGFloat(integerLiteral: value.filter { $0 == "\n" }.count * 28 + 100)
+    }
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text("\(fieldName): ")
-            TextEditor(text: Binding(
-                get: { value },
-                set: { newValue in
-                    value = newValue
-                }
-            ))
-            .frame(height: 100)
-            .padding(4)
-            .background(Color(UIColor.systemGray6))
-            .cornerRadius(8)
-            .focused($isFocused)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItemGroup(placement: .keyboard) {
-                    Spacer()
+            HStack {
+                Text("\(fieldName): ")
+                Spacer()
+                if !isBeingEdited {
                     Button(action: {
-                        isFocused = false
+                        isBeingEdited = true
+                        isFocused = true
                     }) {
-                        HStack {
-                            Text("Dismiss Keyboard")
-                            Image(systemName: "chevron.down")
+                        Image(systemName: "pencil")
+                            .foregroundColor(.gray)
+                            .padding(8)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .background(Color(UIColor.systemGray6))
+                    .cornerRadius(8)
+                }
+            }
+                
+            if isBeingEdited {
+                TextEditor(text: Binding(
+                    get: { value },
+                    set: { newValue in
+                        value = newValue
+                    }
+                ))
+                .frame(height: height)
+                .padding(4)
+                .background(Color(UIColor.systemGray6))
+                .cornerRadius(8)
+                .focused($isFocused)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItemGroup(placement: .keyboard) {
+                        Spacer()
+                        Button(action: {
+                            isFocused = false
+                        }) {
+                            HStack {
+                                Text("Dismiss Keyboard")
+                                Image(systemName: "chevron.down")
+                            }
                         }
                     }
                 }
+            } else {
+                Text(value)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(8)
+                    .background(Color(UIColor.systemGray6))
+                    .cornerRadius(8)
             }
+            
+            
         }
     }
 }
@@ -209,16 +249,25 @@ struct TimeStampedStringComponent: View {
 
 struct TimeComponent: View {
     let fieldName: String
-    @Binding var time: Date
+    @Binding var time: Date?
     let onlyTime: Bool
+
     var body: some View {
         HStack {
             Text(fieldName)
             Spacer()
-//                .font(.headline)
-            DatePicker("",
-                       selection: $time,
-                       displayedComponents: onlyTime ? .hourAndMinute : [.date, .hourAndMinute])
+            if let boundTime = Binding($time) {
+                DatePicker("",
+                           selection: boundTime,
+                           displayedComponents: onlyTime ? .hourAndMinute : [.date, .hourAndMinute])
+            } else {
+                Button("Set") {
+                    time = Date()
+                }
+                .padding(6)
+                .background(Color.gray.opacity(0.2))
+                .cornerRadius(6)
+            }
         }
     }
 }

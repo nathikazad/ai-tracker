@@ -49,7 +49,7 @@ struct ViewDataType: View {
             case .dateTime, .time:
                 TimeComponent(
                     fieldName: name,
-                    time: bindingFor(Date()),
+                    time: bindingFor(Date.self),
                     onlyTime: dataType == .time
                 )
             default:
@@ -70,6 +70,21 @@ struct ViewDataType: View {
             },
             set: { newValue in
                 value = AnyCodable.fromType(newValue)
+            }
+        )
+    }
+    
+    private func bindingFor<T>(_ type: T.Type) -> Binding<T?> where T: Codable {
+        return Binding(
+            get: {
+                return self.value?.toType(T.self) ?? nil
+            },
+            set: { newValue in
+                if let newValue = newValue {
+                    self.value = AnyCodable.fromType(newValue)
+                } else {
+                    self.value = nil
+                }
             }
         )
     }
