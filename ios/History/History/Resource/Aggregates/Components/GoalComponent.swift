@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-struct ConditionView: View {
+struct GoalView: View {
     var index: Int
     var dataType: String
     
-    @Binding var condition: Condition
+    @Binding var goal: Goal
     @State private var isExpanded: Bool = true
     
     var body: some View {
@@ -22,23 +22,36 @@ struct ConditionView: View {
                     HStack {
                         Text("Comparison").frame(width: 100, alignment: .leading)
                         Spacer()
-                        Picker("", selection: $condition.comparisonOperator) {
+                        Picker("", selection: $goal.comparisonOperator) {
                             ForEach(ComparisonOperator.allCases, id: \.self) { op in
                                 Text(op.rawValue.capitalized).tag(op)
                             }
                         }
                         .pickerStyle(MenuPickerStyle())
-                        .onChange(of: condition.comparisonOperator) { _, newValue in
-                            print("New value: \(newValue)")
-                        }
                     }
                     
                     ViewDataType(
                         dataType: dataType,
                         name: "Target",
                         enums: [],
-                        value: $condition.value
+                        value: $goal.value
                     )
+                    
+                    WeekdaySelector(
+                        selectedDays: $goal.selectedDays
+                    )
+//                    .padding(.vertical)
+                    
+                    HStack {
+                        Text("Priority").frame(width: 100, alignment: .leading)
+                        Spacer()
+                        Picker("", selection: $goal.priority) {
+                            ForEach(GoalPriority.allCases, id: \.self) { op in
+                                Text(op.rawValue.capitalized).tag(op)
+                            }
+                        }
+                        .pickerStyle(MenuPickerStyle())
+                    }
                 }
             },
             label: {

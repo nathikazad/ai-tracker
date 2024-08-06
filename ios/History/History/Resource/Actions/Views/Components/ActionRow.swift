@@ -62,7 +62,13 @@ struct ActionRow: View {
                 Image(systemName: "trash.fill")
             }
             .tint(.red)
+            NavigationLink(destination: ActionTypeView(
+                model: event.actionTypeModel
+            )) {
+                Image(systemName: "gear")
+            }
         }
+        
     }
     
     struct ActionDestination: View {

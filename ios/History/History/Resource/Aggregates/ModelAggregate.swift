@@ -51,21 +51,23 @@ class AggregateMetaData: Codable, ObservableObject {
     @Published var field: String
     @Published var window: ASWindow
     @Published var dataType: DataType
+    @Published var name: String
     @Published var aggregatorType: AggregatorType
-    @Published var conditions: [Condition]
-    @Published var goals: [Condition]
+    @Published var conditions: [Goal]
+    @Published var goals: [Goal]
     
     enum CodingKeys: String, CodingKey {
-        case field, window, dataType, aggregatorType, conditions, goals
+        case field, window, dataType, aggregatorType, conditions, goals, name
     }
     
-    init(field: String = "", window: ASWindow = .daily, dataType: DataType = .dateTime, aggregatorType: AggregatorType = .count, conditions: [Condition] = [], goals: [Condition] = [], description: String? = nil) {
+    init(field: String = "", window: ASWindow = .daily, dataType: DataType = .dateTime, aggregatorType: AggregatorType = .count, conditions: [Goal] = [], goals: [Goal] = [], name: String = "") {
         self.field = field
         self.window = window
         self.dataType = dataType
         self.aggregatorType = aggregatorType
         self.conditions = conditions
         self.goals = goals
+        self.name = name
     }
     
     required init(from decoder: Decoder) throws {
@@ -77,8 +79,9 @@ class AggregateMetaData: Codable, ObservableObject {
         dataType = DataType(rawValue: dataTypeString) ?? .shortString
         let aggregatorTypeString = try container.decodeIfPresent(String.self, forKey: .aggregatorType) ?? "sum"
         aggregatorType = AggregatorType(rawValue: aggregatorTypeString) ?? .sum
-        conditions = try container.decodeIfPresent([Condition].self, forKey: .conditions) ?? []
-        goals = try container.decodeIfPresent([Condition].self, forKey: .goals) ?? []
+        conditions = try container.decodeIfPresent([Goal].self, forKey: .conditions) ?? []
+        goals = try container.decodeIfPresent([Goal].self, forKey: .goals) ?? []
+        name = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
     }
     
     func encode(to encoder: Encoder) throws {
@@ -87,6 +90,7 @@ class AggregateMetaData: Codable, ObservableObject {
             try container.encode(field, forKey: .field)
         }
         try container.encode(window, forKey: .window)
+        try container.encode(name, forKey: .name)
         try container.encode(dataType, forKey: .dataType)
         try container.encode(aggregatorType, forKey: .aggregatorType)
         try container.encode(conditions, forKey: .conditions)
@@ -116,15 +120,32 @@ enum AggregatorType: String, Codable, CaseIterable, Hashable {
     case compare = "compare"
 }
 
-struct Condition: Codable {
+enum GoalPriority: String, Codable, CaseIterable, Hashable {
+    case high = "high"
+    case low = "low"
+}
+
+struct Goal: Codable {
     var field: String
     var comparisonOperator: ComparisonOperator
+    var priority: GoalPriority
     var value: AnyCodable?
+    var selectedDays: [Int]
     
-    init(field: String = "Start Time", comparisonOperator: ComparisonOperator = .equalTo, value: AnyCodable? = nil) {
+    enum CodingKeys: String, CodingKey {
+        case field
+        case comparisonOperator
+        case priority
+        case value
+        case selectedDays = "selected_days"
+    }
+    
+    init(field: String = "Start Time", comparisonOperator: ComparisonOperator = .equalTo, value: AnyCodable? = nil, priority: GoalPriority = .high) {
         self.field = field
         self.comparisonOperator = comparisonOperator
         self.value = value
+        self.priority = priority
+        self.selectedDays = Array(0..<7)
     }
     
     init(from decoder: Decoder) throws {
@@ -133,6 +154,8 @@ struct Condition: Codable {
         let comparisonOperatorString = try container.decode(String.self, forKey: .comparisonOperator)
         comparisonOperator = ComparisonOperator(from: comparisonOperatorString)
         value = try container.decodeIfPresent(AnyCodable.self, forKey: .value)
+        priority = try container.decodeIfPresent(GoalPriority.self, forKey: .priority) ?? GoalPriority.high
+        self.selectedDays = try container.decodeIfPresent([Int].self, forKey: .selectedDays) ?? []
     }
 }
 

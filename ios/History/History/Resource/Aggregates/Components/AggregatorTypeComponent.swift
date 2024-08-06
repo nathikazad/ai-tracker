@@ -10,7 +10,14 @@ struct AggregatorTypeSection: View {
             if model.metadata.aggregatorType != .count {
                 FieldPicker(metadata: model.metadata, changesToSave: $changesToSave)
             }
-            WindowPicker(metadata: model.metadata, changesToSave: $changesToSave)
+            HStack {
+                ShortStringComponent(fieldName: "Name: ", value: $model.metadata.name)
+                    .onChange(of: model.metadata.name) {
+                        changesToSave = true
+                    }
+            }
+            //            WindowPicker(metadata: model.metadata, changesToSave: $changesToSave)
+            
         }
     }
 }
@@ -68,9 +75,9 @@ struct WindowPicker: View {
     
     var body: some View {
         Picker("Window", selection: $metadata.window) {
-//            ForEach(ASWindow.allCases, id: \.self) { window in
-//                Text(window.rawValue.capitalized).tag(window)
-//            }
+            //            ForEach(ASWindow.allCases, id: \.self) { window in
+            //                Text(window.rawValue.capitalized).tag(window)
+            //            }
             Text("Daily").tag("Daily")
         }
         .pickerStyle(MenuPickerStyle())

@@ -63,8 +63,7 @@ struct LongStringComponent: View {
     }
     
     var height: CGFloat {
-        print(value.filter { $0 == "\n" }.count + 100)
-        return CGFloat(integerLiteral: value.filter { $0 == "\n" }.count * 28 + 100)
+        return CGFloat(integerLiteral: max(100, value.filter { $0 == "\n" }.count * 28 + 50 + value.count/27 * 20))
     }
     
     var body: some View {
@@ -79,11 +78,11 @@ struct LongStringComponent: View {
                     }) {
                         Image(systemName: "pencil")
                             .foregroundColor(.gray)
-                            .padding(8)
                     }
                     .buttonStyle(PlainButtonStyle())
+                    .frame(width: 30, height: 30)
                     .background(Color(UIColor.systemGray6))
-                    .cornerRadius(8)
+                    .clipShape(Circle())
                 }
             }
                 
@@ -116,9 +115,6 @@ struct LongStringComponent: View {
             } else {
                 Text(value)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(8)
-                    .background(Color(UIColor.systemGray6))
-                    .cornerRadius(8)
             }
             
             

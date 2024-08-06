@@ -197,9 +197,12 @@ class ActionTypesController {
 // RELEASED
 
 // done: fix apple issues
-// add conditions (for Nivedh)
-// add names to aggregates
 // add candle sticks 
+// timezone for viewing across timezone
+// Add hour and minute when choosing duration
+// Make goals show by week and x/y value
+// Add objectives
+// add conditions (for Nivedh)
 // RELEASE
 
 // RELATIONAL DB

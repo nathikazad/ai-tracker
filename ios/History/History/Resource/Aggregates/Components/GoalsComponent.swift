@@ -8,7 +8,7 @@ struct GoalsSection: View {
         Section {
             List {
                 ForEach(aggregate.metadata.goals.indices, id: \.self) { index in
-                    ConditionView(index: index, dataType: dataType, condition: bindingForGoal(at: index))
+                    GoalView(index: index, dataType: dataType, goal: bindingForGoal(at: index))
                 }
                 .onDelete(perform: deleteGoals)
                 
@@ -16,11 +16,11 @@ struct GoalsSection: View {
                     AddNewGoalButton(aggregate: aggregate, changesToSave: $changesToSave)
                 }
             }
-            .navigationTitle("Track")
+//            .navigationTitle("Track")
         }
     }
     
-    private func bindingForGoal(at index: Int) -> Binding<Condition> {
+    private func bindingForGoal(at index: Int) -> Binding<Goal> {
         return Binding(
             get: { aggregate.metadata.goals[index] },
             set: { newValue in
@@ -52,7 +52,7 @@ struct AddNewGoalButton: View {
     }
     
     private func addNewGoal() {
-        let newGoal = Condition()
+        let newGoal = Goal()
         aggregate.metadata.goals.append(newGoal)
         aggregate.objectWillChange.send()
         changesToSave = true

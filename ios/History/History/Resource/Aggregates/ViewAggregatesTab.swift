@@ -14,7 +14,8 @@ struct AggregatesTabView: View {
     @State private var loading = true
     @State private var endDate: Date
     @State private var startDate: Date
-    @State private var selectedOption = 0
+    @State private var selectedUser = 0
+    @State private var selectedPriority: GoalPriority = .high
     let options = ["You", "Nathik"]
     init() {
         let endDate = Date()
@@ -22,10 +23,14 @@ struct AggregatesTabView: View {
         self.startDate = Calendar.current.date(byAdding: .day, value: -7, to: endDate) ?? Date()
     }
     
+    var filteredAggregates: [AggregateModel] {
+        aggregates.filter( {$0.metadata.goals.contains(where: {$0.priority == selectedPriority} ) } )
+    }
+    
     var body: some View {
         List {
             HStack {
-                Picker("", selection: $selectedOption) {
+                Picker("", selection: $selectedUser) {
                     Text("You")
                         .foregroundColor(.black)
                         .tag(0)
@@ -33,11 +38,22 @@ struct AggregatesTabView: View {
                         .foregroundColor(.black)
                         .tag(1)
                 }
-                .pickerStyle(SegmentedPickerStyle())
-                .onChange(of: selectedOption) { _, newValue in
+                .onChange(of: selectedUser) { _, newValue in
                     print(newValue)
                     loadData(userId: newValue == 1 ? newValue : auth.userId!)
                     loading = true
+                }
+                Picker("", selection: $selectedPriority) {
+                    Text("High")
+                        .foregroundColor(.black)
+                        .tag(GoalPriority.high)
+                    Text("Low")
+                        .foregroundColor(.black)
+                        .tag(GoalPriority.low)
+                }
+                .onChange(of: selectedPriority) { _, newValue in
+                    print(newValue)
+                    
                 }
             }
             if loading == true {
@@ -83,24 +99,30 @@ struct AggregatesTabView: View {
     
     private var graphs: some View {
         Group {
-            let groupedAggregates = Dictionary(grouping: aggregates) { aggregate in
-                aggregate.actionType?.name ?? "Unknown"
-            }
-            
-            ForEach(groupedAggregates.keys.sorted(), id: \.self) { actionTypeName in
-                Section(header: Text(actionTypeName)) {
-                    ForEach(groupedAggregates[actionTypeName] ?? [], id: \.id) { aggregate in
-                        DisclosureGroup {
-                            AggregateChartView(
-                                aggregate: aggregate,
-                                actionsParam: actions,
-                                startDate: startDate,
-                                endDate: endDate
-                            )
-                        } label: {
-                            Text(aggregate.toString)
-                        }
+            //            let groupedAggregates = Dictionary(grouping: filteredAggregates) { aggregate in
+            //                aggregate.actionType?.name ?? "Unknown"
+            //            }
+            //            
+            //            ForEach(groupedAggregates.keys.sorted(), id: \.self) { actionTypeName in
+            //                Section(header: Text(actionTypeName)) {
+            ForEach(filteredAggregates, id: \.id) { aggregate in
+                DisclosureGroup {
+                    AggregateChartView(
+                        aggregate: aggregate,
+                        actionsParam: actions,
+                        startDate: startDate,
+                        endDate: endDate
+                    )
+                } label: {
+                    Text(aggregate.metadata.name == "" ? aggregate.toString : aggregate.metadata.name)
+                    
+                }
+                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                    NavigationLink(destination: ShowAggregateView(aggregateModel: aggregate))
+                    {
+                        Image(systemName: "gear")
                     }
+                    .tint(.gray)
                 }
             }
         }

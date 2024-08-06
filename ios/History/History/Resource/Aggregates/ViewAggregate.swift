@@ -35,6 +35,11 @@ struct ShowAggregateView: View {
             })
     }
     
+    var title: String {
+        let name = aggregate.metadata.name == "" ? "\(aggregate.actionType?.name ?? "") Goal" : aggregate.metadata.name
+        return aggregate.id == nil ? "Create \(name)" : "Edit \(name)"
+    }
+    
     var body: some View {
         Form {
             AggregatorTypeSection(model: aggregate, changesToSave: changesToSaveBinding)
@@ -45,7 +50,7 @@ struct ShowAggregateView: View {
             ButtonsSection(aggregate: aggregate, changesToSave: $changesToSave, saveChanges: saveChanges, deleteAggregate: deleteAggregate)
             
         }
-        .navigationTitle(aggregate.id == nil ? "Create Aggregate" : "Edit Aggregate")
+        .navigationTitle(title)
         .onAppear {
             Task {
                 let actions = await ActionController.fetchActions(userId: Authentication.shared.userId!, actionTypeId: aggregate.actionTypeId)
@@ -55,7 +60,6 @@ struct ShowAggregateView: View {
     }
     
     private func saveChanges() {
-        print("Saving changes to Aggregate: \(aggregate)")
         Task {
             if aggregate.id != nil {
                 await AggregateController.updateAggregate(aggregate: aggregate)
