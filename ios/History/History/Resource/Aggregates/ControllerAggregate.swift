@@ -125,7 +125,7 @@ class AggregateController {
     }
     
     static func aggregateSelections(withAggregates:Bool = false) -> String {
-        var aggregateSelected = 
+        let aggregateSelected =
         """
         action_type {
             \(ActionTypesController.actionTypeSelections())

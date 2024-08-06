@@ -164,7 +164,7 @@ class ActionTypesController {
             short_desc_syntax
             \(withAggregates ? """
                 aggregates {
-                    \(AggregateController.aggregateSelections)
+                    \(AggregateController.aggregateSelections())
                 }
                 """: "")
         """
