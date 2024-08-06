@@ -52,7 +52,7 @@ struct GraphView: View {
         Section {
             CandleView(title: "Time", candles: events.dailyTimes(days: Int(selectedDays)).map { Candle(date: $0, start: $1, end: $2 ) }, offsetHours: offsetHours, automaticYAxis: automaticYAxis)
                 .padding(.bottom)
-            BarView(title: "Total Hours per day", data: events.dailyTotals( days: Int(selectedDays)))
+//            BarView(title: "Total Hours per day", data: events.dailyTotals( days: Int(selectedDays)))
                 .padding(.bottom)
             //            ScatterView(title: "Start time",  data: events.startTimes(days: Int(selectedDays), unique: true))
             //            ScatterView(title: "End time", data: events.endTimes(days: Int(selectedDays), unique: true))

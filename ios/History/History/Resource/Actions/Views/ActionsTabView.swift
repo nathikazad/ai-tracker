@@ -35,7 +35,7 @@ struct ActionsTabView: View {
                         Text("No Events Yet")
                             .foregroundColor(.primary)
                             .font(.title2)
-                        Text("Create an event by clicking the microphone below")
+                        Text("Create an event by clicking the plus button on top")
                             .foregroundColor(.gray)
                             .multilineTextAlignment(.center) // This will center-align the text horizontally
                             .padding(.horizontal, 20)

@@ -127,8 +127,6 @@ class ActionController {
     static func listenToActions(userId: Int, subscriptionId: String, actionId: Int? = nil, actionTypeId: Int? = nil, forDate: Date? = nil, actionUpdateCallback: @escaping ([ActionModel]) -> Void) {
         Hasura.shared.stopListening(subscriptionId: subscriptionId)
         let (subscriptionQuery, variables) = generateQueryForActions(userId: userId, actionId: actionId, actionTypeId: actionTypeId, isSubscription: true, forDate: forDate)
-        print(subscriptionQuery)
-        print(variables)
         struct ActionData: GraphQLData {
             var v2_actions: [ActionModel]
         }

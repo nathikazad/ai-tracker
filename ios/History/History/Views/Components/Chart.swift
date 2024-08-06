@@ -35,29 +35,6 @@ struct BarView: View {
     var yAxisLabel: String?
     var yMark: Double?
     
-//    enum ShowY {
-//        case hour
-//        case minute
-//    }
-//    
-//    func getY(_ hour: Double) -> Double {
-//        if showY == .hour {
-//            return hour
-//        } else {
-//            return hour * 60
-//        }
-//    }
-//    
-//    var showY: ShowY {
-//        let totalHours = data.map { $0.1 }.reduce(0, +)
-//        let average = totalHours / Double(data.count)
-//        if average < 2 {
-//            return .minute
-//        } else {
-//            return .hour
-//        }
-//    }
-    
     var numDays: Int {
         // get minimum date, maximum date, and then get the difference in days
         let minDate = data.min { $0.0 < $1.0 }?.0 ?? Date()
@@ -83,26 +60,26 @@ struct BarView: View {
                     .lineStyle(StrokeStyle(lineWidth: 2, dash: [5, 5]))
                     .foregroundStyle(Color.green)
                 }
-                //                .annotation(position: .trailing) {
-                //                    Text("")
-                //                        .font(.caption)
-                //                        .foregroundColor(.green)
-                //                }
             }
             .chartXAxis {
                 configureXAxis(count: numDays)
             }
-            
             .chartYAxis {
-                AxisMarks(values: .automatic(desiredCount: 6))
+                AxisMarks(values: .automatic(desiredCount: 6)) { value in
+                    if let doubleValue = value.as(Double.self),
+                       doubleValue.truncatingRemainder(dividingBy: 1) == 0 {
+                        AxisGridLine()
+                        AxisTick()
+                        AxisValueLabel {
+                            Text("\(Int(doubleValue))")
+                        }
+                    }
+                }
             }
             .chartYAxisLabel(content: {
                 if let yAxisLabel = yAxisLabel {
                     Text(yAxisLabel)
-                } 
-//                else {
-//                    Text(showY == .hour ? "Hours" : "Minutes")
-//                }
+                }
             })
             .frame(height: 200)
             .padding()
@@ -208,10 +185,30 @@ struct ScatterView: View {
         let maxDate = data.max() ?? Date()
         return Calendar.current.dateComponents([.day], from: minDate, to: maxDate).day ?? 0
     }
+    private func hourComponent(_ date: Date) -> Int {
+        Calendar.current.component(.hour, from: date)
+    }
+    
+    var filteredData: [Date] {
+        guard let mark = mark, let range = range else { return data }
+        
+        let markHour = hourComponent(mark)
+        let lowerBound = (markHour - range + 24) % 24
+        let upperBound = (markHour + range) % 24
+        
+        return data.filter { date in
+            let dateHour = hourComponent(date)
+            if lowerBound <= upperBound {
+                return dateHour >= lowerBound && dateHour <= upperBound
+            } else {
+                return dateHour >= lowerBound || dateHour <= upperBound
+            }
+        }
+    }
     
     var body: some View {
         Section(header: Text(title)) {
-            Chart(data, id: \.self) { date in
+            Chart(filteredData, id: \.self) { date in
                 PointMark(
                     x: .value("Date", Calendar.current.startOfDay(for: date)),
                     y: .value("Time", timeToDouble(date))
@@ -228,9 +225,12 @@ struct ScatterView: View {
             .chartXAxis {
                 configureXAxis(count: numDays)
             }
-            .if(mark != nil && range != nil) { view in
-                   view.chartYScale(domain: yAxisDomain())
-               }
+            //            .if(mark != nil && range != nil) { view in
+            //                   view.chartYScale(domain: yAxisDomain())
+            //               }
+            .chartYScale(
+                domain: .automatic(includesZero: false, reversed: true)
+            )
             .chartYAxis {
                 AxisMarks(values: .stride(by: 3600)) { value in
                     AxisGridLine()

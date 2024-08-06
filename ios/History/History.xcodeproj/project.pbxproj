@@ -117,6 +117,9 @@
 		FEBB197C2C5F0BFD00ECAC85 /* AggregatorTypeComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB197B2C5F0BFD00ECAC85 /* AggregatorTypeComponent.swift */; };
 		FEBB197E2C5F10BF00ECAC85 /* ConditionComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB197D2C5F10BF00ECAC85 /* ConditionComponent.swift */; };
 		FEBB19802C5F15D200ECAC85 /* ButtonsComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB197F2C5F15D200ECAC85 /* ButtonsComponent.swift */; };
+		FEBB19822C61934800ECAC85 /* ViewAggregatesTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB19812C61934800ECAC85 /* ViewAggregatesTab.swift */; };
+		FEBB19842C61958E00ECAC85 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB19832C61958E00ECAC85 /* ChartView.swift */; };
+		FEBB19862C61B80500ECAC85 /* LandingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB19852C61B80500ECAC85 /* LandingView.swift */; };
 		FEBED49A2C0AD79800DB2D5F /* PersonViewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBED4992C0AD79800DB2D5F /* PersonViewHelper.swift */; };
 		FEC538812BBDF8C7006BDBDA /* WidgetIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEC538802BBDF8C7006BDBDA /* WidgetIntent.swift */; };
 		FEC7849E2C064EAE007C38F1 /* PersonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEC7849D2C064EAE007C38F1 /* PersonView.swift */; };
@@ -283,6 +286,9 @@
 		FEBB197B2C5F0BFD00ECAC85 /* AggregatorTypeComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AggregatorTypeComponent.swift; sourceTree = "<group>"; };
 		FEBB197D2C5F10BF00ECAC85 /* ConditionComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionComponent.swift; sourceTree = "<group>"; };
 		FEBB197F2C5F15D200ECAC85 /* ButtonsComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonsComponent.swift; sourceTree = "<group>"; };
+		FEBB19812C61934800ECAC85 /* ViewAggregatesTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewAggregatesTab.swift; sourceTree = "<group>"; };
+		FEBB19832C61958E00ECAC85 /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
+		FEBB19852C61B80500ECAC85 /* LandingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingView.swift; sourceTree = "<group>"; };
 		FEBED4992C0AD79800DB2D5F /* PersonViewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonViewHelper.swift; sourceTree = "<group>"; };
 		FEC5386D2BBDE4E5006BDBDA /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		FEC5386F2BBDE4E5006BDBDA /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -583,6 +589,7 @@
 				FE9EAE502BC042260082DE87 /* ChatView.swift */,
 				FE20CA252BC5E4CD00863604 /* SettingsView.swift */,
 				FE9959532BC8B5B000F3187B /* RemindersView.swift */,
+				FEBB19852C61B80500ECAC85 /* LandingView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -685,6 +692,7 @@
 				FEBB197B2C5F0BFD00ECAC85 /* AggregatorTypeComponent.swift */,
 				FEBB197D2C5F10BF00ECAC85 /* ConditionComponent.swift */,
 				FEBB197F2C5F15D200ECAC85 /* ButtonsComponent.swift */,
+				FEBB19832C61958E00ECAC85 /* ChartView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -718,6 +726,7 @@
 				FE4AB3962C51F05C00A07749 /* ModelAggregate.swift */,
 				FEE29E072C5C1F1E00A27C44 /* ControllerAggregate.swift */,
 				FEE29E092C5C35FA00A27C44 /* ViewAggregate.swift */,
+				FEBB19812C61934800ECAC85 /* ViewAggregatesTab.swift */,
 			);
 			path = Aggregates;
 			sourceTree = "<group>";
@@ -881,6 +890,7 @@
 				FE9959542BC8B5B000F3187B /* RemindersView.swift in Sources */,
 				FE4AB3A22C51F2E000A07749 /* DynamicFieldView.swift in Sources */,
 				FE4F7BD22BA8FC600041CB6A /* BottomBar.swift in Sources */,
+				FEBB19842C61958E00ECAC85 /* ChartView.swift in Sources */,
 				FE4AB38B2C4EF4E500A07749 /* ListActionsView.swift in Sources */,
 				FE2074B82C5ADDCE00C58226 /* Timer.swift in Sources */,
 				FE638F3F2C55E594001C34F0 /* MinActionComponent.swift in Sources */,
@@ -965,6 +975,7 @@
 				FE5264812BA99AF700502521 /* ServerCommunicator.swift in Sources */,
 				FE8AB2B02C07DDCB00131C13 /* MetadataController.swift in Sources */,
 				FE06FD082C0921C900E65D41 /* Image.swift in Sources */,
+				FEBB19862C61B80500ECAC85 /* LandingView.swift in Sources */,
 				FE9477C42BFFB9E4003AD03A /* GenericEventView.swift in Sources */,
 				FE8811EF2BC799BF00B112A8 /* TodosController.swift in Sources */,
 				FED942102BE0767900F0B24C /* Investor.swift in Sources */,
@@ -974,6 +985,7 @@
 				FE4AB3A62C52F76B00A07749 /* ActionController.swift in Sources */,
 				FE3E9F662BC8ACAD008BD120 /* NavigationTitle.swift in Sources */,
 				FE4AB3B12C5551BA00A07749 /* TestAction.swift in Sources */,
+				FEBB19822C61934800ECAC85 /* ViewAggregatesTab.swift in Sources */,
 				FE12C5E82BC4B30B002CDC60 /* TodosView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1198,7 +1210,7 @@
 				CODE_SIGN_ENTITLEMENTS = History/History.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"History/Preview Content\"";
 				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
@@ -1206,15 +1218,7 @@
 				INFOPLIST_FILE = History/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Aspire;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
-				INFOPLIST_KEY_NSCameraUsageDescription = "This app needs camer information to capture bills";
 				INFOPLIST_KEY_NSContactsUsageDescription = "This app needs to capture images";
-				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "To keep track of sleep information";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "To keep track of sleep information";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "To keep track of sleep information";
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "For a user to trackk their movement";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "For a user to track their movements";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "To get audio to log an event";
-				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "To log an event";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1224,7 +1228,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.5;
+				MARKETING_VERSION = 0.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1247,7 +1251,7 @@
 				CODE_SIGN_ENTITLEMENTS = History/History.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"History/Preview Content\"";
 				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
@@ -1255,15 +1259,7 @@
 				INFOPLIST_FILE = History/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Aspire;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
-				INFOPLIST_KEY_NSCameraUsageDescription = "This app needs camer information to capture bills";
 				INFOPLIST_KEY_NSContactsUsageDescription = "This app needs to capture images";
-				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "To keep track of sleep information";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "To keep track of sleep information";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "To keep track of sleep information";
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "For a user to trackk their movement";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "For a user to track their movements";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "To get audio to log an event";
-				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "To log an event";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1273,7 +1269,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.5;
+				MARKETING_VERSION = 0.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1294,7 +1290,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"MiniHistory Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
@@ -1306,7 +1302,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.5;
+				MARKETING_VERSION = 0.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire.watchapp;
 				PRODUCT_NAME = "Aspire Watch";
 				SDKROOT = watchos;
@@ -1325,7 +1321,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"MiniHistory Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
@@ -1337,7 +1333,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.5;
+				MARKETING_VERSION = 0.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire.watchapp;
 				PRODUCT_NAME = "Aspire Watch";
 				SDKROOT = watchos;

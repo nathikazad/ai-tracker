@@ -25,9 +25,7 @@ struct ContentView: View {
             }
         }
         .fullScreenCover(isPresented: chatViewPresented) {
-            ChatView {
-                self.appState.hideChat()
-            }
+            LandingPageView()
         }
         .onAppear {
             DispatchQueue.main.async {
@@ -65,6 +63,7 @@ struct MainView: View {
                     ActionsTabView().tabItem { Label("Timeline", systemImage: "clock") }.tag(Tab.timeline)
 //                    GoalsView().tabItem { Label("Goals", systemImage: "target") }.tag(Tab.goals)
                     ListActionsTypesView().tabItem { Label("Explorer", systemImage: "globe") }.tag(Tab.explorer)
+                    AggregatesTabView().tabItem { Label("Graphs", systemImage: "chart.line.uptrend.xyaxis") }.tag(Tab.graphs)
 //                    GraphsView().tabItem { Label("Graphs", systemImage: "chart.line.uptrend.xyaxis") }.tag(Tab.graphs)
                 }
                 .toolbar {
