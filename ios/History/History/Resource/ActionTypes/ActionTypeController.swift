@@ -189,11 +189,17 @@ class ActionTypesController {
 // RELASE
 // finished: work on goals 
 // RELASE
-// working: goal tab
+// finished: goal tab
 // RELASE
 
 // COMMUNITY
-// work on sharing goals incl tabs for groups
+// finished: work on sharing goals incl tabs for groups
+// RELEASED
+
+// done: fix apple issues
+// add conditions (for Nivedh)
+// add names to aggregates
+// add candle sticks 
 // RELEASE
 
 // RELATIONAL DB
@@ -202,6 +208,9 @@ class ActionTypesController {
 // work on object create/edit
 // put object into database and then fetch it
 // RELASE
+
+// add arrays
+// add todos
 
 // THIRD PARTY
 // integrate location

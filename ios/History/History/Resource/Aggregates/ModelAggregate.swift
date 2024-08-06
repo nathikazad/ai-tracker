@@ -10,18 +10,21 @@ import Foundation
 class AggregateModel: Codable, ObservableObject, Identifiable {
     @Published var id: Int?
     let actionTypeId: Int
+    let actionType: ActionTypeModel?
     @Published var metadata: AggregateMetaData
 
     enum CodingKeys: String, CodingKey {
         case id
         case actionTypeId = "action_type_id"
         case metadata
+        case actionType = "action_type"
     }
     
     init(id: Int? = nil, actionTypeId: Int, metadata: AggregateMetaData = AggregateMetaData()) {
         self.id = id
         self.actionTypeId = actionTypeId
         self.metadata = metadata
+        self.actionType = nil
     }
 
     required init(from decoder: Decoder) throws {
@@ -29,6 +32,7 @@ class AggregateModel: Codable, ObservableObject, Identifiable {
         id = try container.decode(Int.self, forKey: .id)
         actionTypeId = try container.decode(Int.self, forKey: .actionTypeId)
         metadata = try container.decode(AggregateMetaData.self, forKey: .metadata)
+        actionType = try container.decodeIfPresent(ActionTypeModel.self, forKey: .actionType)
     }
 
     func encode(to encoder: Encoder) throws {

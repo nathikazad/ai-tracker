@@ -13,7 +13,7 @@ class AggregateController {
             mutationFor: "insert_v2_aggregates_one",
             mutationName: "AggregateMutation",
             mutationType: .create)
-        
+        hasuraStruct.addParameter(name: "user_id", type: .int, value: Authentication.shared.userId!)
         hasuraStruct.addParameter(name: "action_type_id", type: .int, value: aggregate.actionTypeId)
         hasuraStruct.addParameter(name: "metadata", type: .jsonb, value: aggregate.metadata.toJson)
         
@@ -98,8 +98,8 @@ class AggregateController {
         }
     }
     
-    static func fetchAggregates(actionTypeId: Int? = nil, userId: Int? = nil) async -> [AggregateModel] {
-        let (graphqlQuery, variables) = generateQueryForAggregates(actionTypeId: actionTypeId, userId: userId)
+    static func fetchAggregates(actionTypeId: Int? = nil, userId: Int? = nil, withAggregates:Bool = false) async -> [AggregateModel] {
+        let (graphqlQuery, variables) = generateQueryForAggregates(actionTypeId: actionTypeId, userId: userId, withAggregates: withAggregates)
         struct AggregateData: GraphQLData {
             var v2_aggregates: [AggregateModel]
         }
@@ -112,7 +112,7 @@ class AggregateController {
         }
     }
     
-    static private func generateQueryForAggregates(actionTypeId: Int?, userId: Int? = nil) -> (String, [String: Any]) {
+    static private func generateQueryForAggregates(actionTypeId: Int?, userId: Int? = nil, withAggregates:Bool = false) -> (String, [String: Any]) {
         var hasuraStruct: HasuraQuery = HasuraQuery(queryFor: "v2_aggregates", queryName: "AggregatesQuery", queryType: .query)
         if let actionTypeId = actionTypeId {
             hasuraStruct.addWhereClause(name: "action_type_id", type: .int, value: actionTypeId, op: .equals)
@@ -120,15 +120,23 @@ class AggregateController {
         if let userId = userId {
             hasuraStruct.addWhereClause(name: "user_id", type: .int, value: userId, op: .equals)
         }
-        hasuraStruct.setSelections(selections: aggregateSelections)
+        hasuraStruct.setSelections(selections: aggregateSelections(withAggregates: withAggregates))
         return hasuraStruct.getQueryAndVariables
     }
     
-    static var aggregateSelections: String {
+    static func aggregateSelections(withAggregates:Bool = false) -> String {
+        var aggregateSelected = 
+        """
+        action_type {
+            \(ActionTypesController.actionTypeSelections())
+        }
+        """
+        
         return """
             id
             action_type_id
             metadata
+            \(withAggregates ? aggregateSelected : "")
         """
     }
 }

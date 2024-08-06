@@ -23,8 +23,29 @@ struct AggregatesTabView: View {
     }
     
     var body: some View {
-        VStack {
-            Group {
+        List {
+            HStack {
+                Picker("", selection: $selectedOption) {
+                    Text("You")
+                        .foregroundColor(.black)
+                        .tag(0)
+                    Text("Nathik")
+                        .foregroundColor(.black)
+                        .tag(1)
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                .onChange(of: selectedOption) { _, newValue in
+                    print(newValue)
+                    loadData(userId: newValue == 1 ? newValue : auth.userId!)
+                    loading = true
+                }
+            }
+            if loading == true {
+                Text("Loading...")
+                    .foregroundColor(.gray)
+                    .multilineTextAlignment(.center) // This will center-align the text horizontally
+                    .padding(.horizontal, 20)
+            } else {
                 if aggregates.isEmpty {
                     VStack {
                         Spacer()
@@ -38,48 +59,24 @@ struct AggregatesTabView: View {
                         Spacer()
                     }
                 } else {
-                    List {
-                        HStack {
-                            Picker("", selection: $selectedOption) {
-                                Text("You")
-                                    .foregroundColor(.black)
-                                    .tag(0)
-                                Text("Nathik")
-                                    .foregroundColor(.black)
-                                    .tag(1)
-                            }
-                            .pickerStyle(SegmentedPickerStyle())
-                            .onChange(of: selectedOption) { _, newValue in
-                                print(newValue)
-                                loadData(userId: newValue == 1 ? newValue : auth.userId!)
-                                loading = true
-                            }
-                        }
-                        if loading == true {
-                            Text("Loading...")
-                                .foregroundColor(.gray)
-                                .multilineTextAlignment(.center) // This will center-align the text horizontally
-                                .padding(.horizontal, 20)
-                        } else {
-                            
-                            graphs
-                        }
-                    }
+                    graphs
                 }
             }
-            .onAppear {
-                print("EventsView: onAppear")
-                if(auth.areJwtSet) {
-                    loadData(userId: auth.userId!)
-                }
+        }
+        .onAppear {
+            print("EventsView: onAppear")
+            if(auth.areJwtSet) {
+                loadData(userId: auth.userId!)
             }
         }
     }
     
     private func loadData(userId: Int) {
         Task {
-            aggregates = await AggregateController.fetchAggregates(userId: userId)
+            print(userId)
+            aggregates = await AggregateController.fetchAggregates(userId: userId, withAggregates: true)
             actions = await ActionController.fetchActions(userId: userId)
+            print(aggregates.count)
             loading = false
         }
     }
@@ -87,7 +84,7 @@ struct AggregatesTabView: View {
     private var graphs: some View {
         Group {
             let groupedAggregates = Dictionary(grouping: aggregates) { aggregate in
-                actions.first { $0.actionTypeId == aggregate.actionTypeId }?.actionTypeModel.name ?? "Unknown"
+                aggregate.actionType?.name ?? "Unknown"
             }
             
             ForEach(groupedAggregates.keys.sorted(), id: \.self) { actionTypeName in
