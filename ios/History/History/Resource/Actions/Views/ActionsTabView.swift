@@ -107,7 +107,21 @@ struct ActionsTabView: View {
         return events
     }
     
-    private var listView: some View {
+    private  func scroll() {
+        if state.isItToday
+        {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                let last: ActionModel? = events.sorted { $0.startTime > $1.startTime }.first
+                if last != nil {
+                    withAnimation(.easeInOut(duration: 0.5)) {
+                        scrollProxy?.scrollTo(last?.id, anchor: .top)
+                    }
+                }
+            }
+        }
+    }
+    
+    var listView: some View {
         ScrollViewReader { proxy in
             VStack(spacing: 0) {
                 ZStack(alignment: .top) {
@@ -118,21 +132,8 @@ struct ActionsTabView: View {
                     }
                     .onAppear {
                         scrollProxy = proxy
+                        scroll()
                     }
-//                    .onChange(of: events) {
-//                        if state.isItToday
-//                        {
-//                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-//                                if let lastId = events.last?.id {
-//                                    withAnimation(.easeInOut(duration: 0.5)) { // Customize the animation style and duration here
-//                                        //                                    print("changed \(lastId) \(scrollProxy == nil)")
-//                                        scrollProxy?.scrollTo(lastId, anchor: .top)
-//                                    }
-//                                }
-//                            }
-//                        }
-//
-//                    }
                     .padding(.top, 15)
                     
                 }

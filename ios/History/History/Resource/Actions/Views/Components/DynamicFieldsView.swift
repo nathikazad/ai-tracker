@@ -9,6 +9,8 @@ import SwiftUI
 struct DynamicFieldsView: View {
     @Binding var dynamicFields: [String: Schema]
     @Binding var dynamicData: [String: AnyCodable]
+    var onSave: (( [String: AnyCodable]) -> Void)
+    
     var body: some View {
         Section(header: Text("Dynamic Fields")) {
             let dynamicFieldsArray = Array(dynamicFields.keys)
@@ -32,6 +34,7 @@ struct DynamicFieldsView: View {
             set: { newValue in
                 if let newValue = newValue {
                     dynamicData[key] = newValue
+                    onSave(dynamicData)
                 } else {
                     dynamicData.removeValue(forKey: key)
                 }

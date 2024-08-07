@@ -203,6 +203,7 @@ class ActionTypesController {
 // Make goals show by week and x/y value
 // Add objectives
 // add conditions (for Nivedh)
+// add preferred hours
 // RELEASE
 
 // RELATIONAL DB

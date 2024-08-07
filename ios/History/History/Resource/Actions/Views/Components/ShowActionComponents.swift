@@ -58,7 +58,6 @@ struct LongStringComponent: View {
     init(fieldName: String, value: Binding<String>) {
         self.fieldName = fieldName
         self._value = value
-        print("is empty ", value.wrappedValue, value.wrappedValue.isEmpty)
         self._isBeingEdited = State(initialValue: value.wrappedValue.isEmpty)
     }
     
@@ -73,6 +72,7 @@ struct LongStringComponent: View {
                 Spacer()
                 if !isBeingEdited {
                     Button(action: {
+                        value = value
                         isBeingEdited = true
                         isFocused = true
                     }) {
@@ -114,7 +114,10 @@ struct LongStringComponent: View {
                 }
             } else {
                 Text(value)
+                    .padding(.leading, 10)
+                    .padding(.bottom, 10)
                     .frame(maxWidth: .infinity, alignment: .leading)
+                
             }
             
             

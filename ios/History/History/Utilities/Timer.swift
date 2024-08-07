@@ -108,11 +108,12 @@ struct TimerComponent: View {
                         Text("Test").tag(TimeInterval(5))
                         Text("5 min").tag(TimeInterval(5 * 60))
                         Text("10 min").tag(TimeInterval(10 * 60))
-                        Text("15 min").tag(TimeInterval(20 * 60))
+                        Text("15 min").tag(TimeInterval(15 * 60))
                         Text("20 min").tag(TimeInterval(20 * 60))
                         Text("30 min").tag(TimeInterval(30 * 60))
                         Text("45 min").tag(TimeInterval(30 * 60))
-                        Text("60 hour").tag(TimeInterval(60 * 60))
+                        Text("1 hour").tag(TimeInterval(60 * 60))
+                        Text("2 hours").tag(TimeInterval(120 * 60))
                     }
                     .pickerStyle(MenuPickerStyle())
                     .onChange(of: selectedDuration) { oldValue, newValue in

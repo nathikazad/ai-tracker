@@ -44,13 +44,13 @@ struct ShowActionView: View {
             if(Array(action.actionTypeModel.dynamicFields.keys).count > 0) {
                 DynamicFieldsView(
                     dynamicFields: $action.actionTypeModel.dynamicFields,
-                    dynamicData: Binding(
-                        get: { self.action.dynamicData },
-                        set: { newValue in
-                            self.action.dynamicData = newValue
-                            self.changesToSave = true
-                        }
-                    ))
+                    dynamicData: $action.dynamicData,
+                    onSave: {
+                        newValue in
+                        self.action.dynamicData = newValue
+                        self.changesToSave = true
+                    }
+                )
             }
             
             Section {
