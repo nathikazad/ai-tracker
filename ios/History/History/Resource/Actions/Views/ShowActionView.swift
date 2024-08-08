@@ -45,18 +45,15 @@ struct ShowActionView: View {
                 DynamicFieldsView(
                     dynamicFields: $action.actionTypeModel.dynamicFields,
                     dynamicData: $action.dynamicData,
-                    onSave: {
-                        newValue in
-                        self.action.dynamicData = newValue
-                        self.changesToSave = true
-                    }
+                    changesToSave: $changesToSave
                 )
             }
             
             Section {
                 HStack {
                     Spacer()
-                    Button("Save") {
+                    let showStart = action.actionTypeModel.meta.hasDuration && action.endTime == nil
+                    Button(showStart ? "Start" : "Save") {
                         saveChanges()
                         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                         self.changesToSave = false

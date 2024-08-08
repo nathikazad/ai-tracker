@@ -9,7 +9,8 @@ import SwiftUI
 struct DynamicFieldsView: View {
     @Binding var dynamicFields: [String: Schema]
     @Binding var dynamicData: [String: AnyCodable]
-    var onSave: (( [String: AnyCodable]) -> Void)
+    @Binding var changesToSave: Bool
+//    var onSave: (( [String: AnyCodable]) -> Void)
     
     var body: some View {
         Section(header: Text("Dynamic Fields")) {
@@ -33,8 +34,10 @@ struct DynamicFieldsView: View {
             get: { dynamicData[key] },
             set: { newValue in
                 if let newValue = newValue {
-                    dynamicData[key] = newValue
-                    onSave(dynamicData)
+                    DispatchQueue.main.async {
+                        dynamicData[key] = newValue
+                        changesToSave = true
+                    }
                 } else {
                     dynamicData.removeValue(forKey: key)
                 }

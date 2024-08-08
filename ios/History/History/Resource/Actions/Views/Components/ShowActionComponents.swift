@@ -53,7 +53,7 @@ struct LongStringComponent: View {
     let fieldName: String
     @Binding var value: String
     @State var isBeingEdited: Bool
-    @FocusState private var isFocused: Bool
+//    @FocusState private var isFocused: Bool
     
     init(fieldName: String, value: Binding<String>) {
         self.fieldName = fieldName
@@ -74,7 +74,7 @@ struct LongStringComponent: View {
                     Button(action: {
                         value = value
                         isBeingEdited = true
-                        isFocused = true
+//                        isFocused = true
                     }) {
                         Image(systemName: "pencil")
                             .foregroundColor(.gray)
@@ -97,21 +97,8 @@ struct LongStringComponent: View {
                 .padding(4)
                 .background(Color(UIColor.systemGray6))
                 .cornerRadius(8)
-                .focused($isFocused)
+//                .focused($isFocused)
                 .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItemGroup(placement: .keyboard) {
-                        Spacer()
-                        Button(action: {
-                            isFocused = false
-                        }) {
-                            HStack {
-                                Text("Dismiss Keyboard")
-                                Image(systemName: "chevron.down")
-                            }
-                        }
-                    }
-                }
             } else {
                 Text(value)
                     .padding(.leading, 10)

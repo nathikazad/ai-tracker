@@ -87,65 +87,113 @@ struct BarView: View {
         }
     }
 }
-struct Candle: Hashable {
+
+struct Candle: Hashable, Identifiable {
+    let id = UUID()
     let date: String
     let start: Date
     let end: Date
+    let actionTypeModel: ActionTypeModel?
+    
+    init(date: String, start: Date, end: Date, actionTypeModel: ActionTypeModel? = nil) {
+        self.date = date
+        self.start = start
+        self.end = end
+        self.actionTypeModel = actionTypeModel
+    }
+    
+    var day: Date {
+        Calendar.current.startOfDay(for: start)
+    }
+    
+    static func == (lhs: Candle, rhs: Candle) -> Bool {
+        return lhs.date == rhs.date
+        && lhs.start == rhs.start
+        && lhs.end == rhs.end
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(date)
+        hasher.combine(start)
+        hasher.combine(end)
+    }
 }
 
-
+let offSetArray = [150, 150, 70, 45, 30, 23, 20, 15, 13]
 extension [Candle] {
     var numDays: Int {
         let minDate = self.min { $0.start < $1.start }?.start ?? Date()
         let maxDate = self.max { $0.start < $1.start }?.start ?? Date()
-        return Calendar.current.dateComponents([.day], from: minDate, to: maxDate).day ?? 0
+        let ret = Swift.max(1, Calendar.current.dateComponents([.day], from: minDate, to: maxDate).day ?? 1)
+        print(ret, offSetArray[ret])
+        return offSetArray[ret]
     }
 }
+
 
 struct CandleView: View {
     var title: String
     var candles: [Candle]
+    let hoursRange: ClosedRange<Int>
     var offsetHours: Int = 0
     var automaticYAxis: Bool = false
-    // let gradient = LinearGradient(
-    //         gradient: Gradient(colors: [Color.blue, Color.purple]),
-    //         startPoint: .top,
-    //         endPoint: .bottom
-    //     )
+    var val: Int
+    var redrawChart: Bool
+    
+    private var minHour: Int { hoursRange.lowerBound }
+    private var maxHour: Int { hoursRange.upperBound }
     
     
     var body: some View {
-        return Section(header: Text(title)) {
-            Chart(candles, id:\.date) {
-                RectangleMark(
-                    x: .value("date", Calendar.current.startOfDay(for:$0.start.addHours(offsetHours))),
-                    yStart: .value("start", $0.start.addHours(offsetHours).dateWithHourAndMinute),
-                    yEnd: .value("end", $0.end.addHours(offsetHours).dateWithHourAndMinute),
-                    width: 4
-                )
+        Chart(candles) { period in
+            RectangleMark(
+                x: .value("Day", period.start, unit: .day),
+                yStart: .value("Start", normalizedHours(period.start)),
+                yEnd: .value("End", normalizedHours(period.end)),
+                width: .ratio(0.6)
+            )
+            .foregroundStyle(period.actionTypeModel?.staticFields.color ?? Color.gray)
+        }
+        .chartXAxis {
+            AxisMarks(values: .stride(by: .day)) { value in
+                AxisGridLine()
+                AxisTick()
+                AxisValueLabel(format: .dateTime.weekday(.abbreviated))
+                    .offset(x: CGFloat(offSetArray[val]))
             }
-            .chartXAxis {
-                configureXAxis(count: candles.numDays)
-            }
-            .chartYAxis {
-                if(automaticYAxis) {
-                    AxisMarks(values: .automatic)
-                } else {
-                    AxisMarks(values: .stride(by: .hour, count: 1)) { value in
-                        if let date = value.as(Date.self) {
-                            let hour = Calendar.current.component(.hour, from: date)
-                            if hour % 2 == 0 {
-                                AxisValueLabel(date.addHours(-offsetHours).hourInAmPm)
-                            }
-                        }
-                        AxisGridLine()
-                        AxisTick()
+        }
+        .chartYAxis {
+            AxisMarks(position: .leading, values: .stride(by: 1)) { value in
+                AxisGridLine()
+                AxisTick()
+                if let hourValue = value.as(Int.self), hourValue % strideBy == 0 {
+                    AxisValueLabel {
+                        Text(formatHourLabel(hourValue))
                     }
                 }
             }
-            .frame(height: 200)
-            .padding()
         }
+        .chartYScale(domain: 0...Double(maxHour - minHour))
+        .frame(height: 300)
+        .padding()
+    }
+    
+    private var strideBy: Int {
+        let range = maxHour - minHour
+        return max(range / 5, 1)  // Ensure we have at most 6 labels
+    }
+    
+    func normalizedHours(_ date: Date) -> Double {
+        let hour = Calendar.current.component(.hour, from: date)
+        let minute = Calendar.current.component(.minute, from: date)
+        let totalHours = Double(hour) + Double(minute) / 60.0
+        return Double(maxHour) - totalHours
+    }
+    
+    func formatHourLabel(_ value: Int) -> String {
+        let hour = maxHour - value
+        let h = hour % 12
+        return String( h == 0 ? 12 : h )
     }
 }
 

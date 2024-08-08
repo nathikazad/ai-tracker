@@ -196,16 +196,52 @@ class ActionTypesController {
 // finished: work on sharing goals incl tabs for groups
 // RELEASED
 
-// done: fix apple issues
-// add candle sticks 
+// finished: fix apple issues
+// finished: add candle sticks
+
+// CANDLES
+// grouped by days or actionTypes with duration actions 
+// Add time info to candles
+// add preferred hours with marks
+// finshed: change color permanently from candle
+
+// GOALS
+// Make goals show by week and actual/expected value
+// duration min/sec goal
+// cumulative for week/month goal
+// LATER: Support conditions only for enum
+// LATER: create segments
+
+// ACTION VIEWS
+// delete action button
+// list actions
+// LATER: candle view
+
+// done: Add voice notes
+// Support dark mode
+
+// BUGS
+// prayers not showing in candle
+// color bug in action view
+// Yareni sleep problem
+// fill in missing days for candles
+// RELEASE & SELL SELL SELL
+// -----------------------------------------------------------
+// V2
 // timezone for viewing across timezone
-// Add hour and minute when choosing duration
-// Make goals show by week and x/y value
-// Add objectives
-// add conditions (for Nivedh)
-// add preferred hours
+// Add groups tab, list all groups, create group
+// break group view into four tabs
+// show messages, send message
+// goals view
+// timeline view
+// settings view 
+//     view members
+//     admin can add/delete members
+//     actiontypes and goals to share
 // RELEASE
 
+// -----------------------------------------------------------
+// V3
 // RELATIONAL DB
 // internal objects
 // work on object view
@@ -213,6 +249,8 @@ class ActionTypesController {
 // put object into database and then fetch it
 // RELASE
 
+// skipped: Add hour and minute when choosing duration
+// skipped: add conditions only for enums (for Nivedh)
 // add arrays
 // add todos
 

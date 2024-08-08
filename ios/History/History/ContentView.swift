@@ -39,7 +39,14 @@ struct ContentView: View {
 }
 
 
+enum SelectedTimeline: String, CodingKey {
+    case list
+    case bars
+}
+
 struct MainView: View {
+    @State private var selectedGraphs: SelectedTimeline = .list
+//                        CandleChartWithList(selectedGraph: $selectedGraphs)
     @State private var selectedTab: Tab = .timeline
     @ObservedObject var appState = state
     @ObservedObject private var timerManager = TimerManager.shared
@@ -60,10 +67,15 @@ struct MainView: View {
             ZStack(alignment: .bottom) {
                 TabView(selection: $selectedTab) {
 //                    TodosView().tabItem { Label("Todos", systemImage: "checklist") }.tag(Tab.todos)
-                    ActionsTabView().tabItem { Label("Timeline", systemImage: "clock") }.tag(Tab.timeline)
+                    if selectedGraphs == .bars {
+                        CandleChartWithList().tabItem { Label("Timeline", systemImage: "clock") }.tag(Tab.timeline)
+                    } else {
+                        ActionsTabView().tabItem { Label("Timeline", systemImage: "clock") }.tag(Tab.timeline)
+                        
+                    }
 //                    GoalsView().tabItem { Label("Goals", systemImage: "target") }.tag(Tab.goals)
                     ListActionsTypesView().tabItem { Label("Explorer", systemImage: "globe") }.tag(Tab.explorer)
-                    AggregatesTabView().tabItem { Label("Graphs", systemImage: "chart.line.uptrend.xyaxis") }.tag(Tab.graphs)
+                    AggregatesTabView().tabItem { Label("Goals", systemImage: "target") }.tag(Tab.graphs)
 //                    GraphsView().tabItem { Label("Graphs", systemImage: "chart.line.uptrend.xyaxis") }.tag(Tab.graphs)
                 }
                 .toolbar {
@@ -80,11 +92,21 @@ struct MainView: View {
                                 .foregroundColor(.primary)
                         }
                     }
+                    if selectedTab == .timeline {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button(action: {
+                                selectedGraphs = selectedGraphs == .list ? .bars : .list
+                            }) {
+                                Image(systemName: selectedGraphs == .list ? "list.dash" : "chart.bar.xaxis").foregroundColor(.primary)
+                            }
+                        }
+                    }
+
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {
                             appState.showSheet(newSheetToShow: .settings)
                         }) {
-                            Image(systemName: "line.horizontal.3").foregroundColor(.primary)
+                            Image(systemName: "gear").foregroundColor(.primary)
                         }
                     }
                 }

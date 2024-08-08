@@ -7,13 +7,13 @@
 
 import Foundation
 
-import Foundation
+import SwiftUI
 
 class ActionTypeModel: ObservableObject, Codable {
     @Published var id: Int?
     @Published var name: String
     @Published var meta: ActionTypeMeta
-    var staticFields: ActionModelTypeStaticSchema
+    @Published var staticFields: ActionModelTypeStaticSchema
     @Published var dynamicFields: [String: Schema]
     @Published var internalObjects: [String: InternalObject]
     @Published var aggregates: [AggregateModel]
@@ -177,7 +177,7 @@ class ActionTypeMeta: ObservableObject, Codable {
     var description: String?
     
     enum CodingKeys: String, CodingKey {
-        case hasDuration, description
+        case hasDuration, description, color
     }
     
     init(hasDuration: Bool = true, description: String? = nil) {
@@ -198,14 +198,15 @@ class ActionTypeMeta: ObservableObject, Codable {
     }
 }
 
-class ActionModelTypeStaticSchema: Codable {
+class ActionModelTypeStaticSchema: Observable, Codable {
     var startTime: Schema?
     var endTime: Schema?
     var time: Schema?
     var parentId: Schema?
+    @Published var color: Color
     
     enum CodingKeys: String, CodingKey {
-        case startTime, endTime, time, parentId
+        case startTime, endTime, time, parentId, color
     }
     
     init(startTime: Schema? = nil, endTime: Schema? = nil, time: Schema? = nil, parentId: Schema? = nil) {
@@ -213,6 +214,7 @@ class ActionModelTypeStaticSchema: Codable {
         self.endTime = endTime
         self.time = time
         self.parentId = parentId
+        self.color = ASColor.colors.randomElement()?.0 ?? Color.clear
     }
     
     required init(from decoder: Decoder) throws {
@@ -221,6 +223,17 @@ class ActionModelTypeStaticSchema: Codable {
         endTime = try container.decodeIfPresent(Schema.self, forKey: .endTime)
         time = try container.decodeIfPresent(Schema.self, forKey: .time)
         parentId = try container.decodeIfPresent(Schema.self, forKey: .parentId)
+        let colorName = try container.decodeIfPresent(String.self, forKey: .color) ?? "Clear"
+        color = ASColor.stringToColor(colorName)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(startTime, forKey: .startTime)
+        try container.encode(endTime, forKey: .endTime)
+        try container.encode(time, forKey: .time)
+        try container.encode(parentId, forKey: .parentId)
+        try container.encode(ASColor.colorToString(color), forKey: .color)
     }
 }
 

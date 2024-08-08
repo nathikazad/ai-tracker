@@ -16,6 +16,7 @@ struct AggregatesTabView: View {
     @State private var startDate: Date
     @State private var selectedUser = 0
     @State private var selectedPriority: GoalPriority = .high
+    @State private var openDisclosures: Set<Int> = []
     let options = ["You", "Nathik"]
     init() {
         let endDate = Date()
@@ -28,34 +29,7 @@ struct AggregatesTabView: View {
     }
     
     var body: some View {
-        List {
-            HStack {
-                Picker("", selection: $selectedUser) {
-                    Text("You")
-                        .foregroundColor(.black)
-                        .tag(0)
-                    Text("Nathik")
-                        .foregroundColor(.black)
-                        .tag(1)
-                }
-                .onChange(of: selectedUser) { _, newValue in
-                    print(newValue)
-                    loadData(userId: newValue == 1 ? newValue : auth.userId!)
-                    loading = true
-                }
-                Picker("", selection: $selectedPriority) {
-                    Text("High")
-                        .foregroundColor(.black)
-                        .tag(GoalPriority.high)
-                    Text("Low")
-                        .foregroundColor(.black)
-                        .tag(GoalPriority.low)
-                }
-                .onChange(of: selectedPriority) { _, newValue in
-                    print(newValue)
-                    
-                }
-            }
+        VStack {
             if loading == true {
                 Text("Loading...")
                     .foregroundColor(.gray)
@@ -75,7 +49,25 @@ struct AggregatesTabView: View {
                         Spacer()
                     }
                 } else {
-                    graphs
+                    //                    if (selectedGraphs == .goals) {
+                    List {
+                        HStack (spacing: 20) {
+                            Picker("Priority: ", selection: $selectedPriority) {
+                                Text("High")
+                                    .tag(GoalPriority.high)
+                                Text("Low")
+                                    .tag(GoalPriority.low)
+                            }
+                            
+                            .clipped()
+                            .contentShape(Rectangle())
+                            .onChange(of: selectedPriority) { _, newValue in
+                                print(newValue)
+                                
+                            }
+                        }
+                        graphs
+                    }
                 }
             }
         }
@@ -92,21 +84,27 @@ struct AggregatesTabView: View {
             print(userId)
             aggregates = await AggregateController.fetchAggregates(userId: userId, withAggregates: true)
             actions = await ActionController.fetchActions(userId: userId)
-            print(aggregates.count)
+            openDisclosures = Set(aggregates.prefix(2).map { $0.id! })
             loading = false
         }
     }
     
     private var graphs: some View {
         Group {
-            //            let groupedAggregates = Dictionary(grouping: filteredAggregates) { aggregate in
-            //                aggregate.actionType?.name ?? "Unknown"
-            //            }
-            //            
-            //            ForEach(groupedAggregates.keys.sorted(), id: \.self) { actionTypeName in
-            //                Section(header: Text(actionTypeName)) {
             ForEach(filteredAggregates, id: \.id) { aggregate in
-                DisclosureGroup {
+                DisclosureGroup (
+                    isExpanded: Binding(
+                        get: { openDisclosures.contains(aggregate.id!) },
+                        set: { isExpanded in
+                            if isExpanded {
+                                openDisclosures.insert(aggregate.id!)
+                            } else {
+                                openDisclosures.remove(aggregate.id!)
+                            }
+                        }
+                    )
+                ) {
+                    
                     AggregateChartView(
                         aggregate: aggregate,
                         actionsParam: actions,

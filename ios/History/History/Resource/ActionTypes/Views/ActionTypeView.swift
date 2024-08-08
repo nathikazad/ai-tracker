@@ -63,6 +63,14 @@ struct ActionTypeView: View {
                     .background(Color(UIColor.systemGray6))
                     .cornerRadius(8)
                 }
+                CompactColorPickerWithLabel(selectedColor: Binding(
+                    get: { model.staticFields.color }, set:
+                         { 
+                             model.staticFields.color = $0
+                             changesToSave = true
+                             print($0)
+                         }  ))
+                    
             } label: {
                 Text("Meta").font(.headline)
             }
@@ -203,7 +211,3 @@ struct ActionTypeView: View {
         }
     }
 }
-
-
-
-

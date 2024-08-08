@@ -9,14 +9,12 @@ import CoreLocation
 import HealthKit
 
 struct SettingsView: View {
-//    private var locationManager = LocationManager.shared
-//    private var healthManager = HealthKitManager.shared
-//    @State private var isTrackingLocation = LocationManager.shared.isTrackingLocation
-//    @State private var isTrackingSleep = HealthKitManager.shared.isTracking
+    
     @State private var currentUserName: String
+    @State private var showingDeleteConfirmation = false
+    
     
     init() {
-//        _isTrackingLocation = State(initialValue: LocationManager.shared.isTrackingLocation)
         _currentUserName = State(initialValue: getName())
     }
     
@@ -25,62 +23,32 @@ struct SettingsView: View {
         NavigationView {
             List {
                 Section(header: Text("Settings")) {
-//                    NavigationLink(destination: LocationsListView()) {
-//                        Label("Places", systemImage: "mappin.and.ellipse")
-//                            .foregroundColor(.primary)
-//                    };
-                    Button(action: changeUserId) {
-                        Label("Change User \(currentUserName)", systemImage: "person.2.fill")
-                            .foregroundColor(.primary)
-                    }
-                    
-//                    NavigationLink(destination: LocationsDebugView()) {
-//                        Label("Debug Locations \(LocationManager.shared.locationsReceivedCount) \(LocationManager.shared.locationsSentCount)  [\(LocationManager.shared.sentToServerCount)]", systemImage: "mappin.and.ellipse")
-//                            .foregroundColor(.primary)
-//                    };
-                    
-                    
-                    
-//                    Toggle(isOn: $isTrackingLocation) {
-//                        Label("Track Location", systemImage: "location.fill")
-//                    }
-//                    .foregroundColor(.primary)
-//                    .onChange(of: isTrackingLocation) { value in
-//                        print("onChange \(value)")
-//                        if value {
-//                            print("change to start")
-//                            locationManager.startMonitoringLocation()
-//                        } else {
-//                            print("change to stop")
-//                            locationManager.stopMonitoringLocation()
-//                        }
-//                    }
-//                    
-//                    Toggle(isOn: $isTrackingSleep) {
-//                        Label("Track Sleep", systemImage: "moon.zzz.fill")
-//                    }
-//                    .foregroundColor(.primary)
-//                    .onChange(of: isTrackingSleep) { value in
-//                        print("onChange \(value)")
-//                        if value {
-//                            print("change sleep to start")
-//                            healthManager.startTracking()
-//                        } else {
-//                            print("Stop Sleep Tracking")
-//                            healthManager.stopTracking()
-//                        }
-//                    }
-                    Button(action: {
-                        Task {
-                            await deleteUser()
-                            auth.signOutCallback()
-                            state.hideSheet()
-                            state.showChat(newChatViewToShow: .onBoard)
+                    if Authentication.shared.userId == 1 {
+                        Button(action: changeUserId) {
+                            Label("Change User \(currentUserName)", systemImage: "person.2.fill")
+                                .foregroundColor(.primary)
                         }
-                    }) {
-                        Label("Delete User", systemImage: "trash.fill")
-                            .foregroundColor(.primary)
                     }
+                    NavigationLink(destination: InteractionsView()) {
+                        Label {
+                            Text("Memos")
+                                .foregroundColor(.primary)
+                        } icon: {
+                            Image(systemName: "mic")
+                        }
+                    }
+                    Button(action: {
+                        showingDeleteConfirmation = true
+                    }) {
+                        Label {
+                            Text("Delete Your Account")
+                                .foregroundColor(.primary)
+                        } icon: {
+                            Image(systemName: "trash.fill")
+                                .foregroundColor(.red)
+                        }
+                    }
+                    
                     Button(action: {
                         auth.signOutCallback()
                         state.hideSheet()
@@ -90,6 +58,19 @@ struct SettingsView: View {
                             .foregroundColor(.primary)
                     }
                 }
+            }
+            .alert("Confirm Deletion", isPresented: $showingDeleteConfirmation) {
+                Button("Cancel", role: .cancel) { }
+                Button("Delete", role: .destructive) {
+                    Task {
+                        await deleteUser()
+                        auth.signOutCallback()
+                        state.hideSheet()
+                        state.showChat(newChatViewToShow: .onBoard)
+                    }
+                }
+            } message: {
+                Text("Are you sure you want to delete your account? This action cannot be undone.")
             }
         }
     }
@@ -132,12 +113,8 @@ func getName() -> String {
 
 private func deleteUser() async {
     let userId = auth.userId
-    guard let userId = userId else {
-        print("No user id")
-        return
-    }
     let deleteUserEndpoint = getDeleteUserEndpoint
-    let body: [String: Any] = ["userId": auth.userId]
+    let body: [String: Any] = ["userId": auth.userId!]
     do {
         guard let data = try await ServerCommunicator.sendPostRequestAsync(to: deleteUserEndpoint, body: body, token: Authentication.shared.hasuraJwt!, waitAndSendIfServerUnreachable: false) else {
             print("Failed to receive data")

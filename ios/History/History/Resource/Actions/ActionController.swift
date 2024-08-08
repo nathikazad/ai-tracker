@@ -109,8 +109,8 @@ class ActionController {
         }
     }
     
-    static func fetchActions(userId: Int, actionId: Int? = nil, actionTypeId: Int? = nil) async -> [ActionModel] {
-        let (graphqlQuery, variables) = generateQueryForActions(userId: userId, actionId: actionId, actionTypeId: actionTypeId)
+    static func fetchActions(userId: Int, actionId: Int? = nil, actionTypeId: Int? = nil, startDate: Date? = nil, endDate: Date? = nil) async -> [ActionModel] {
+        let (graphqlQuery, variables) = generateQueryForActions(userId: userId, actionId: actionId, actionTypeId: actionTypeId, startDate: startDate, endDate: endDate)
         struct ActionData: GraphQLData {
             var v2_actions: [ActionModel]
         }
@@ -142,7 +142,7 @@ class ActionController {
         }
     }
     
-    static private func generateQueryForActions(userId: Int, actionId: Int?, actionTypeId: Int? = nil, isSubscription:Bool = false, forDate: Date? = nil) -> (String, [String: Any]) {
+    static private func generateQueryForActions(userId: Int, actionId: Int?, actionTypeId: Int? = nil, isSubscription:Bool = false, forDate: Date? = nil, startDate: Date? = nil, endDate: Date? = nil) -> (String, [String: Any]) {
         var hasuraStruct: HasuraQuery = HasuraQuery(queryFor: "v2_actions", queryName: "ActionsQuery", queryType: isSubscription ? .subscription : .query)
         hasuraStruct.addWhereClause(name: "user_id", type: .int, value: userId, op: .equals)
         if let actionId = actionId {
@@ -159,6 +159,12 @@ class ActionController {
             hasuraStruct.addWhereClause(clause: combinedConditions)
             hasuraStruct.addParameter(name: "start_time", type: .timestamp, value: startOfTodayUTCString)
             hasuraStruct.addParameter(name: "end_time", type: .timestamp, value: dayAfterUTCString)
+        }
+        if let startDate = startDate {
+            hasuraStruct.addWhereClause(name: "start_time", type: .timestamp, value: startDate.toUTCString, op: .greaterThan)
+        }
+        if let endDate = endDate {
+            hasuraStruct.addWhereClause(name: "end_time", type: .timestamp, value: endDate.toUTCString, op: .lessThan)
         }
         if let actionTypeId = actionTypeId {
             hasuraStruct.addWhereClause(name: "action_type_id", type: .int, value: actionTypeId, op: .equals)

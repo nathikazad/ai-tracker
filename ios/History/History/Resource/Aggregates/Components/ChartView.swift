@@ -91,19 +91,19 @@ struct AggregateChartView: View {
         return dateCounts
     }
     
-    func getDateTotalDurationsPerDay(actions: [ActionModel], timezone: String) -> [(Date, Double)] {
+    func getDateTotalDurationsPerDay(actions: [ActionModel], timezone: String) -> [(Date, Int)] {
         guard let (calendar, startDate, endDate) = getDateRange(from: actions.map { $0.startTime }, timezone: timezone) else {
             return []
         }
         
         var currentDate = startDate
-        var dateTotalDurations: [(Date, Double)] = []
+        var dateTotalDurations: [(Date, Int)] = []
         
         while currentDate <= endDate {
             let totalDuration = actions
                 .filter { calendar.isDate($0.startTime, inSameDayAs: currentDate) }
-                .reduce(0.0) { sum, action in
-                    sum + Double(action.durationInSeconds)
+                .reduce(0) { sum, action in
+                    sum + Int(action.durationInSeconds)
                 }
             
             dateTotalDurations.append((currentDate, totalDuration))
@@ -113,8 +113,8 @@ struct AggregateChartView: View {
         return dateTotalDurations
     }
     
-    func convertDurationsToRightUnit(dateCounts: [(Date, Double)]) -> ([(Date, Double)], String) {
-        let array = dateCounts.map { ($0, $1 / 60.0) }
+    func convertDurationsToRightUnit(dateCounts: [(Date, Int)]) -> ([(Date, Double)], String) {
+        let array = dateCounts.map { ($0, Double($1) / 60.0) }
         if !array.isEmpty {
             let max = array.max { $0.1 < $1.1 }?.1 ?? 0
             if max > 120 {
