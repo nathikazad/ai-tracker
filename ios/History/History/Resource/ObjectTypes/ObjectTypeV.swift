@@ -2,15 +2,15 @@
 import Foundation
 import SwiftUI
 
-struct InternalObjectView: View {
+struct ObjectTypeView: View {
     @ObservedObject var model: ActionTypeModel
     let objectKey: String
-    @State private var object: InternalObject
+    @State private var object: ObjectType
     
     init(model: ActionTypeModel, objectKey: String) {
         self._model = ObservedObject(wrappedValue: model)
         self.objectKey = objectKey
-        self._object = State(initialValue: model.internalObjects[objectKey] ?? InternalObject(name: "", description: "", fields: [:]))
+        self._object = State(initialValue: model.internalObjects[objectKey] ?? ObjectType(name: "", description: "", fields: [:]))
     }
     
     var body: some View {

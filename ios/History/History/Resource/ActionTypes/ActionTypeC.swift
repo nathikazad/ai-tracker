@@ -206,7 +206,7 @@ class ActionTypesController {
 // finshed: change color permanently from candle
 
 // GOALS
-// Make goals show by week and actual/expected value
+// Make goals show by week and actual/expected value and streak
 // duration min/sec goal
 // cumulative for week/month goal
 // LATER: Support conditions only for enum
@@ -215,14 +215,12 @@ class ActionTypesController {
 // ACTION VIEWS
 // delete action button
 // list actions
-// LATER: candle view
 
 // done: Add voice notes
 // Support dark mode
 
 // BUGS
 // prayers not showing in candle
-// color bug in action view
 // Yareni sleep problem
 // fill in missing days for candles
 // RELEASE & SELL SELL SELL

@@ -45,8 +45,7 @@ enum SelectedTimeline: String, CodingKey {
 }
 
 struct MainView: View {
-    @State private var selectedGraphs: SelectedTimeline = .list
-//                        CandleChartWithList(selectedGraph: $selectedGraphs)
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
     @State private var selectedTab: Tab = .timeline
     @ObservedObject var appState = state
     @ObservedObject private var timerManager = TimerManager.shared
@@ -66,42 +65,62 @@ struct MainView: View {
         NavigationStack {
             ZStack(alignment: .bottom) {
                 TabView(selection: $selectedTab) {
-//                    TodosView().tabItem { Label("Todos", systemImage: "checklist") }.tag(Tab.todos)
-                    if selectedGraphs == .bars {
-                        CandleChartWithList().tabItem { Label("Timeline", systemImage: "clock") }.tag(Tab.timeline)
-                    } else {
-                        ActionsTabView().tabItem { Label("Timeline", systemImage: "clock") }.tag(Tab.timeline)
-                        
-                    }
-//                    GoalsView().tabItem { Label("Goals", systemImage: "target") }.tag(Tab.goals)
-                    ListActionsTypesView().tabItem { Label("Explorer", systemImage: "globe") }.tag(Tab.explorer)
-                    AggregatesTabView().tabItem { Label("Goals", systemImage: "target") }.tag(Tab.graphs)
-//                    GraphsView().tabItem { Label("Graphs", systemImage: "chart.line.uptrend.xyaxis") }.tag(Tab.graphs)
+                    CandleChartWithList()
+                        .tabItem { Label("History", systemImage: "clock.arrow.circlepath") }
+                        .tag(Tab.history)
+                    
+                    ActionsTabView()
+                        .tabItem { Label("Timeline", systemImage: "list.dash") }
+                        .tag(Tab.timeline)
+                    
+                    Color.clear
+                        .tabItem {
+                            Image(systemName: "plus.circle")
+                        }
+                        .tag(Tab.timeline) // Use an existing tag to prevent selection
+                    
+                    AggregatesTabView()
+                        .tabItem { Label("Goals", systemImage: "target") }
+                        .tag(Tab.goals)
+                    
+                    ListActionsTypesView()
+                        .tabItem { Label("Explorer", systemImage: "globe") }
+                        .tag(Tab.explorer)
                 }
+                let buttonSize: CGFloat = verticalSizeClass == .compact ? 40 : 60
+                
+                    NavigationLink(destination: ListActionsTypesView(
+                        listActionType: .takeToActionView
+                    )) {
+                            ZStack {
+                                // Gradient background
+                                LinearGradient(
+                                    gradient: Gradient(colors: [
+                                        Color(red: 178/255, green: 72/255, blue: 49/255),
+                                        Color(red: 222/255, green: 152/255, blue: 64/255)
+                                    ]),
+                                    startPoint: .topTrailing,
+                                    endPoint: .bottomLeading
+                                )
+                                .clipShape(Circle())
+                                
+                                // Plus icon
+                                Image(systemName: "plus")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .padding(buttonSize * 0.3)
+                                    .foregroundColor(.white)
+                            }
+                            .frame(width: buttonSize, height: buttonSize)
+                            .shadow(radius: 4)
+                        }
+                .offset(y: verticalSizeClass == .compact ? -15 : -30)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         NavigationTitle(title: titleForTab(selectedTab)) {
                             appState.showSheet(newSheetToShow: .dailyQuotes)
                         }
                     }
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        NavigationLink(destination: ListActionsTypesView(
-                            listActionType: .takeToActionView
-                        )) {
-                            Image(systemName: "plus")
-                                .foregroundColor(.primary)
-                        }
-                    }
-                    if selectedTab == .timeline {
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            Button(action: {
-                                selectedGraphs = selectedGraphs == .list ? .bars : .list
-                            }) {
-                                Image(systemName: selectedGraphs == .list ? "list.dash" : "chart.bar.xaxis").foregroundColor(.primary)
-                            }
-                        }
-                    }
-
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {
                             appState.showSheet(newSheetToShow: .settings)
@@ -133,26 +152,22 @@ struct MainView: View {
     
     private func titleForTab(_ tab: Tab) -> String {
         switch tab {
-        case .todos:
-            return "Todos"
         case .timeline:
             return "Timeline"
+        case .history:
+            return "History"
         case .goals:
             return "Goals"
         case .explorer:
             return "Explorer"
-        case .graphs:
-            return "Graphs"
-            
         }
     }
     
     enum Tab {
-        case todos
         case timeline
+        case history
         case goals
         case explorer
-        case graphs
     }
 }
 

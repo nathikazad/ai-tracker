@@ -19,18 +19,19 @@ struct CandleChartWithList: View {
     @State var daysRange: ClosedRange<Int> = 6...7
     @State var showColorPickerForActionTypeId: Int? = nil
     @State var redrawChart: Bool = true
+    var timeZone: String = "America/Los_Angeles"
     
     var numOfDays: Int {
         daysRange.upperBound - daysRange.lowerBound
     }
     
     var candles: [Candle] {
-        let filteredCandles = convertActionsToCandles(actions, timeZone: "America/Los_Angeles")
+        let filteredCandles = convertActionsToCandles(actions, timeZone: timeZone, daysRange: daysRange)
         return filteredCandles
     }
     
     var truncatedCandles: [Candle] {
-        truncateCandles(candles, startHour: hoursRange.lowerBound, endHour: hoursRange.upperBound, timeZone: "America/Los_Angeles")
+        truncateCandles(candles, startHour: hoursRange.lowerBound, endHour: hoursRange.upperBound, timeZone: timeZone)
     }
     
     var filteredCandles: [Candle] {
@@ -44,120 +45,30 @@ struct CandleChartWithList: View {
     var actionTypeModels: [ActionTypeModel] {
         return getUniqueActionTypeIds(candles: truncatedCandles).sorted(by: { a, b in a.name < b.name})
     }
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
     
     var body: some View {
-        VStack(spacing: 0) {
-            
-            CandleView(title: "", candles: filteredCandles, hoursRange: hoursRange, offsetHours: offsetHours, automaticYAxis: true, val: numOfDays, redrawChart: redrawChart)
-            .zIndex(1)
-            
-            ZStack(alignment: .top) {
-                List {
-                    HStack {
-                        Text("Days: \(daysRange.lowerBound)")
-                        RangedSliderView(value: $daysRange, bounds: 0...7)
-                            .onChange(of: daysRange) {
-                                fetchActions()
-                            }
-                        Text("\(daysRange.upperBound)")
-                    }
-                    HStack {
-                        Text("Hours: \(hoursRange.lowerBound)")
-                        RangedSliderView(value: $hoursRange, bounds: 0...24)
-                        Text("\(hoursRange.upperBound)")
-                    }
-                    HStack {
-                        Spacer()
-//                        if (daysRange.count > 2) {
-//                            Button("Days") {
-//                                unselectedModels = []
-//                            }
-//                            .padding(.horizontal, 10)
-//                            .padding(.vertical, 6)
-//                            .background(Color.gray.opacity(0.2))
-//                            .cornerRadius(6)
-//                            .buttonStyle(PlainButtonStyle())
-//                        }
-                        Button("All") {
-                            unselectedModels = []
-                        }
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 6)
-                        .background(Color.gray.opacity(0.2))
-                        .cornerRadius(6)
-                        .buttonStyle(PlainButtonStyle())
-                        Button("Clear") {
-                            unselectedModels = actionTypeModels.compactMap { $0.id }
-                        }
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 6)
-                        .background(Color.gray.opacity(0.2))
-                        .cornerRadius(6)
-                        .buttonStyle(PlainButtonStyle())
-                        Spacer()
-                    }
-                    ForEach(actionTypeModels, id: \.name) { actionTypeModel in
-                        HStack {
-                            ZStack {
-                                Circle()
-                                    .fill(actionTypeModel.staticFields.color)
-                                    .frame(width: 20, height: 20)
-                                    .onTapGesture {
-                                        withAnimation {
-                                            showColorPickerForActionTypeId = actionTypeModel.id
-                                        }
-                                    }
-                                
-                                if actionTypeModel.id == showColorPickerForActionTypeId {
-                                    CompactColorPicker(selectedColor:
-                                                        Binding(
-                                                            get: { actionTypeModel.staticFields.color },
-                                                            set: {
-                                                                newValue in
-                                                                actionTypeModel.staticFields.color = newValue
-                                                            }
-                                                        ),
-                                    isPickerVisible: Binding(
-                                        get: { 
-                                            actionTypeModel.id == showColorPickerForActionTypeId },
-                                        set: {
-                                            newValue in
-                                            Task {
-                                                await ActionTypesController.updateActionTypeModel(model:actionTypeModel)
-                                                fetchActions()
-                                            }
-                                            showColorPickerForActionTypeId = nil
-                                        }
-                                    ))
-                                    
-                                }
-                            }
-                            if actionTypeModel.id != showColorPickerForActionTypeId {
-                                Text(actionTypeModel.name)
-                                Spacer()
-                                RadioButton(
-                                    isSelected: !unselectedModels.contains(where: { $0 == actionTypeModel.id }),
-                                    action: {
-                                        if unselectedModels.contains(where: { $0 == actionTypeModel.id }) {
-                                            unselectedModels.removeAll(where: { $0 == actionTypeModel.id })
-                                        } else {
-                                            unselectedModels.append(actionTypeModel.id!)
-                                        }
-                                    }
-                                )
-                            }
-                        }
-                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                            NavigationLink(destination: ActionTypeView(model: actionTypeModel))
-                            {
-                                Image(systemName: "gear")
-                            }
-                            .tint(.gray)
-                        }
+        GeometryReader { geometry in
+            Group {
+                if verticalSizeClass == .compact {
+                    // Landscape orientation
+                    HStack(spacing: 0) {
+                        CandleView(title: "", candles: filteredCandles, hoursRange: hoursRange, offsetHours: offsetHours, automaticYAxis: true, val: numOfDays, redrawChart: redrawChart)
+                            .frame(width: geometry.size.width * 0.5)
                         
+                        list
+                            .frame(width: geometry.size.width * 0.5)
+                    }
+                } else {
+                    // Portrait orientation
+                    VStack(spacing: 0) {
+                        CandleView(title: "", candles: filteredCandles, hoursRange: hoursRange, offsetHours: offsetHours, automaticYAxis: true, val: numOfDays, redrawChart: redrawChart)
+                            .frame(height: geometry.size.height * 0.5)
+                        
+                        list
+                            .frame(height: geometry.size.height * 0.5)
                     }
                 }
-                .padding(.top, 15)
             }
         }
         .onAppear {
@@ -167,12 +78,12 @@ struct CandleChartWithList: View {
     
     func fetchActions() {
         let calendar = Calendar.current
-        let timeZone = TimeZone.current
+        let timezone = TimeZone(identifier: timeZone) ?? TimeZone.current
         
         print( daysRange.lowerBound - 7, daysRange.upperBound - 7)
         let startDate = calendar.date(
             byAdding: .day,
-            value: daysRange.lowerBound - 7 + 1,
+            value: daysRange.lowerBound - 7,
             to: calendar.startOfDay(for: Date())
         )!
         
@@ -191,6 +102,113 @@ struct CandleChartWithList: View {
             }
         }
     }
+    
+    var list: some View {
+        List {
+            HStack {
+                Text("Days: \(daysRange.lowerBound)")
+                RangedSliderView(value: $daysRange, bounds: 0...7)
+                    .onChange(of: daysRange) {
+                        fetchActions()
+                    }
+                Text("\(daysRange.upperBound)")
+            }
+            HStack {
+                Text("Hours: \(hoursRange.lowerBound)")
+                RangedSliderView(value: $hoursRange, bounds: 0...24)
+                Text("\(hoursRange.upperBound)")
+            }
+            HStack {
+                Spacer()
+                //                        if (daysRange.count > 2) {
+                //                            Button("Days") {
+                //                            }
+                //                            .padding(.horizontal, 10)
+                //                            .padding(.vertical, 6)
+                //                            .background(Color.gray.opacity(0.2))
+                //                            .cornerRadius(6)
+                //                            .buttonStyle(PlainButtonStyle())
+                //                        }
+                Button("All") {
+                    unselectedModels = []
+                }
+                .padding(.horizontal, 10)
+                .padding(.vertical, 6)
+                .background(Color.gray.opacity(0.2))
+                .cornerRadius(6)
+                .buttonStyle(PlainButtonStyle())
+                Button("Clear") {
+                    unselectedModels = actionTypeModels.compactMap { $0.id }
+                }
+                .padding(.horizontal, 10)
+                .padding(.vertical, 6)
+                .background(Color.gray.opacity(0.2))
+                .cornerRadius(6)
+                .buttonStyle(PlainButtonStyle())
+                Spacer()
+            }
+            ForEach(actionTypeModels, id: \.name) { actionTypeModel in
+                HStack {
+                    ZStack {
+                        Circle()
+                            .fill(actionTypeModel.staticFields.color)
+                            .frame(width: 20, height: 20)
+                            .onTapGesture {
+                                withAnimation {
+                                    showColorPickerForActionTypeId = actionTypeModel.id
+                                }
+                            }
+                        
+                        if actionTypeModel.id == showColorPickerForActionTypeId {
+                            CompactColorPicker(selectedColor:
+                                                Binding(
+                                                    get: { actionTypeModel.staticFields.color },
+                                                    set: {
+                                                        newValue in
+                                                        actionTypeModel.staticFields.color = newValue
+                                                    }
+                                                ),
+                                               isPickerVisible: Binding(
+                                                get: {
+                                                    actionTypeModel.id == showColorPickerForActionTypeId },
+                                                set: {
+                                                    newValue in
+                                                    Task {
+                                                        await ActionTypesController.updateActionTypeModel(model:actionTypeModel)
+                                                        fetchActions()
+                                                    }
+                                                    showColorPickerForActionTypeId = nil
+                                                }
+                                               ))
+                            
+                        }
+                    }
+                    if actionTypeModel.id != showColorPickerForActionTypeId {
+                        Text(actionTypeModel.name)
+                        Spacer()
+                        RadioButton(
+                            isSelected: !unselectedModels.contains(where: { $0 == actionTypeModel.id }),
+                            action: {
+                                if unselectedModels.contains(where: { $0 == actionTypeModel.id }) {
+                                    unselectedModels.removeAll(where: { $0 == actionTypeModel.id })
+                                } else {
+                                    unselectedModels.append(actionTypeModel.id!)
+                                }
+                            }
+                        )
+                    }
+                }
+                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                    NavigationLink(destination: ActionTypeView(model: actionTypeModel))
+                    {
+                        Image(systemName: "gear")
+                    }
+                    .tint(.gray)
+                }
+                
+            }
+        }
+    }
 }
 
 extension Date {
@@ -201,8 +219,9 @@ extension Date {
     }
 }
 
-func convertActionsToCandles(_ actions: [ActionModel], timeZone: String) -> [Candle] {
+func convertActionsToCandles(_ actions: [ActionModel], timeZone: String, daysRange: ClosedRange<Int>) -> [Candle] {
     let dateFormatter = DateFormatter()
+    let calendar = Calendar.current
     dateFormatter.dateFormat = "yyyy-MM-dd"
     
     guard let timezone = TimeZone(identifier: timeZone) else {
@@ -210,7 +229,11 @@ func convertActionsToCandles(_ actions: [ActionModel], timeZone: String) -> [Can
     }
     dateFormatter.timeZone = timezone
     
-    
+    let startDateOfRange = calendar.date(
+        byAdding: .day,
+        value: daysRange.lowerBound - 7 + 1,
+        to: calendar.startOfDay(for: Date())
+    )!
     
     var candles: [Candle] = []
     
@@ -224,15 +247,17 @@ func convertActionsToCandles(_ actions: [ActionModel], timeZone: String) -> [Can
         
         if let midnight = calendar.date(bySettingHour: 23, minute: 59, second: 59, of:  startDate) {
             if (startDate < midnight && endDate > midnight) {
-
-                // Action crosses midnight, split into two candles
-                let firstCandle = Candle(
-                    date: dateFormatter.string(from: startDate),
-                    start: startDate,
-                    end: midnight,
-                    actionTypeModel: action.actionTypeModel
-                )
-                candles.append(firstCandle)
+                
+                
+                if startDate > startDateOfRange {
+                    let firstCandle = Candle(
+                        date: dateFormatter.string(from: startDate),
+                        start: startDate,
+                        end: midnight,
+                        actionTypeModel: action.actionTypeModel
+                    )
+                    candles.append(firstCandle)
+                }
                 
                 let secondCandle = Candle(
                     date: dateFormatter.string(from: midnight.addMinute(2)),
@@ -249,14 +274,15 @@ func convertActionsToCandles(_ actions: [ActionModel], timeZone: String) -> [Can
                     calendar.date(bySettingHour: 23, minute: 59, second: 59, of: startDate)!
                 )
                 : endDate
-                // Action doesn't cross midnight, create a single candle
-                let candle = Candle(
-                    date: dateFormatter.string(from: startDate),
-                    start: startDate,
-                    end: endDate,
-                    actionTypeModel: action.actionTypeModel
-                )
-                candles.append(candle)
+                if startDate > startDateOfRange {
+                    let candle = Candle(
+                        date: dateFormatter.string(from: startDate),
+                        start: startDate,
+                        end: endDate,
+                        actionTypeModel: action.actionTypeModel
+                    )
+                    candles.append(candle)
+                }
             }
         }
     }
@@ -341,7 +367,7 @@ struct RangedSliderView: View {
         }
     }
     
-        
+    
     @ViewBuilder private func sliderView(sliderSize: CGSize) -> some View {
         let sliderViewYCenter = sliderSize.height / 2
         ZStack {
@@ -354,8 +380,8 @@ struct RangedSliderView: View {
                 
                 // Calculate Left Thumb initial position
                 let leftThumbLocation: CGFloat = currentValue.wrappedValue.lowerBound == Int(sliderBounds.lowerBound)
-                    ? 0
-                    : CGFloat(currentValue.wrappedValue.lowerBound - Int(sliderBounds.lowerBound)) * stepWidthInPixel
+                ? 0
+                : CGFloat(currentValue.wrappedValue.lowerBound - Int(sliderBounds.lowerBound)) * stepWidthInPixel
                 
                 // Calculate right thumb initial position
                 let rightThumbLocation = CGFloat(currentValue.wrappedValue.upperBound) * stepWidthInPixel
@@ -406,9 +432,9 @@ struct RangedSliderView: View {
     
     @ViewBuilder func thumbView(position: CGPoint, value: Int) -> some View {
         ZStack {
-//            Text(String(value))
-//                .font(.secondaryFont(weight: .semibold, size: 10))
-//                .offset(y: -20)
+            //            Text(String(value))
+            //                .font(.secondaryFont(weight: .semibold, size: 10))
+            //                .offset(y: -20)
             Circle()
                 .frame(width: 24, height: 24)
                 .foregroundColor(Color.white)
@@ -422,7 +448,7 @@ struct RangedSliderView: View {
 struct RadioButton: View {
     let isSelected: Bool
     let action: () -> Void
-
+    
     var body: some View {
         Button(action: action) {
             ZStack {

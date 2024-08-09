@@ -52,7 +52,7 @@ struct ShowActionView: View {
             Section {
                 HStack {
                     Spacer()
-                    let showStart = action.actionTypeModel.meta.hasDuration && action.endTime == nil
+                    let showStart = action.actionTypeModel.meta.hasDuration && action.endTime == nil && action.id == nil
                     Button(showStart ? "Start" : "Save") {
                         saveChanges()
                         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)

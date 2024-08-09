@@ -31,21 +31,21 @@ struct ViewDataType: View {
                 EnumComponent(fieldName: name,
                               value: bindingFor(enums.first!),
                               enumValues: enums)
-            case .unit:
-                UnitComponent(
-                    fieldName: name,
-                    unit: bindingFor(Unit.defaultUnit)
-                )
+//            case .unit:
+//                UnitComponent(
+//                    fieldName: name,
+//                    unit: bindingFor(Unit.defaultUnit)
+//                )
             case .currency:
                 CurrencyComponent(
                     fieldName: name,
                     currency: bindingFor(Currency.defaultCurrency)
                 )
-            case .duration:
-                DurationComponent(
-                    fieldName: name,
-                    duration: bindingFor(Duration.defaultDuration)
-                )
+//            case .duration:
+//                DurationComponent(
+//                    fieldName: name,
+//                    duration: bindingFor(Duration.defaultDuration)
+//                )
             case .dateTime, .time:
                 TimeComponent(
                     fieldName: name,

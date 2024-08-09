@@ -17,21 +17,22 @@ import SwiftUI
 struct ActionRow: View {
     var event: ActionModel
     var dateClickedAction: ((ActionModel) -> Void)?
-    var level: Int = 0
+//    var level: Int = 0
     var showTimeWithRespectToCurrentDate: Bool = false
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
     @ObservedObject private var timerManager = TimerManager.shared
     
     var body: some View {
         HStack {
-            if(level > 0) {
-                Rectangle()
-                    .frame(width: 4)
-                    .foregroundColor(Color.gray)
-                    .padding(.leading, CGFloat((level - 1) * 10))
-            }
+//            if(level > 0) {
+//                Rectangle()
+//                    .frame(width: 4)
+//                    .foregroundColor(Color.gray)
+//                    .padding(.leading, CGFloat((level - 1) * 10))
+//            }
             Text(formatTime(event))
                 .font(.headline)
-                .frame(width: 100, alignment: .leading)
+                .frame(width: verticalSizeClass == .compact ? 200 : 100, alignment: .leading)
                 .onTapGesture {
                     print("tapped")
                     dateClickedAction?(event)

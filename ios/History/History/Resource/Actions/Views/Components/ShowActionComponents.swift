@@ -52,12 +52,14 @@ struct ShortStringComponent: View {
 struct LongStringComponent: View {
     let fieldName: String
     @Binding var value: String
+    @State var valueCopy: String = ""
     @State var isBeingEdited: Bool
 //    @FocusState private var isFocused: Bool
     
     init(fieldName: String, value: Binding<String>) {
         self.fieldName = fieldName
         self._value = value
+        self._valueCopy = State(wrappedValue: value.wrappedValue)
         self._isBeingEdited = State(initialValue: value.wrappedValue.isEmpty)
     }
     
@@ -88,8 +90,9 @@ struct LongStringComponent: View {
                 
             if isBeingEdited {
                 TextEditor(text: Binding(
-                    get: { value },
+                    get: { valueCopy },
                     set: { newValue in
+                        valueCopy = newValue
                         value = newValue
                     }
                 ))

@@ -147,7 +147,6 @@ struct ActionsTabView: View {
             dateClickedAction: { event in
                 datePickerModel.showPopupForAction(event: event)
             },
-            level: level,
             showTimeWithRespectToCurrentDate: true)
     }
 }

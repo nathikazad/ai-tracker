@@ -8,20 +8,20 @@
 import Foundation
 
 enum DataType: String, CaseIterable, Codable {
-    case duration = "Duration"
+    // case duration = "Duration"
     case time = "Time"
-    case date = "Date"
+    // case date = "Date"
     case dateTime = "DateTime"
     case number = "Number"
-    case unit = "Unit"
+    // case unit = "Unit"
     case currency = "Currency"
     case enumerator = "Enum"
     case shortString = "ShortString"
     case longString = "LongString"
-    case timeStampedString = "TimeStampedString"
-    case location = "Location"
-    case image = "Image"
-    case todo = "Todo"
+    // case timeStampedString = "TimeStampedString"
+    // case location = "Location"
+    // case image = "Image"
+    // case todo = "Todo"
 }
 
 func getDataType(from string: String) -> DataType? {

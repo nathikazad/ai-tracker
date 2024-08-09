@@ -137,10 +137,10 @@ struct ActionTypeView: View {
             
             Section(header: Text("Internal Objects")) {
                 ForEach(Array(model.internalObjects.keys), id: \.self) { objectKey in
-                    InternalObjectView(model: model, objectKey: objectKey)
+                    ObjectTypeView(model: model, objectKey: objectKey)
                 }
                 Button(action: {
-                    model.internalObjects[generateRandomString()] = InternalObject(name: "New Field", description: "", fields: [:])
+                    model.internalObjects[generateRandomString()] = ObjectType(name: "New Field", description: "", fields: [:])
                 }) {
                     Label("Add Internal Object", systemImage: "plus")
                 }
