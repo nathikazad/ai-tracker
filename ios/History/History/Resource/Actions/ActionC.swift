@@ -109,8 +109,8 @@ class ActionController {
         }
     }
     
-    static func fetchActions(userId: Int, actionId: Int? = nil, actionTypeId: Int? = nil, startDate: Date? = nil, endDate: Date? = nil) async -> [ActionModel] {
-        let (graphqlQuery, variables) = generateQueryForActions(userId: userId, actionId: actionId, actionTypeId: actionTypeId, startDate: startDate, endDate: endDate)
+    static func fetchActions(userId: Int, actionId: Int? = nil, actionTypeId: Int? = nil, startDate: Date? = nil, endDate: Date? = nil, forDate: Date? = nil) async -> [ActionModel] {
+        let (graphqlQuery, variables) = generateQueryForActions(userId: userId, actionId: actionId, actionTypeId: actionTypeId, forDate: forDate, startDate: startDate, endDate: endDate)
         struct ActionData: GraphQLData {
             var v2_actions: [ActionModel]
         }

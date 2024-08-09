@@ -13,16 +13,9 @@ import Combine
 struct ActionsTabView: View {
     @StateObject private var datePickerModel: TwoDatePickerModel = TwoDatePickerModel()
     @State private var events: [ActionModel] = []
-    @State private var coreStateSubcription: AnyCancellable?
     
     var eventId: Int?
     var eventType: EventType?
-    
-    var subscriptionId: String {
-        var id = eventId != nil ? "/\(eventId!)" : ""
-        id += eventType != nil ? "/\(eventType!)" : ""
-        return "events\(id)"
-    }
     
     @State private var scrollProxy: ScrollViewProxy?
     var body: some View {
@@ -48,20 +41,8 @@ struct ActionsTabView: View {
             .onAppear {
                 print("EventsView: onAppear")
                 if(auth.areJwtSet) {
-                    listenToEvents()
-                    coreStateSubcription?.cancel()
-                    coreStateSubcription = state.subscribeToCoreStateChanges {
-                        print("Core state occurred")
-                        listenToEvents()
-                    }
-
+                    fetchEvents()
                 }
-            }
-            .onDisappear {
-                print("EventsView: onDisappear")
-                EventsController.cancelListener(subscriptionId: subscriptionId)
-                coreStateSubcription?.cancel()
-                coreStateSubcription = nil
             }
         }
         .overlay(
@@ -77,15 +58,10 @@ struct ActionsTabView: View {
         }
     }
     
-    private func listenToEvents() {
-        ActionController.listenToActions(userId: auth.userId!, subscriptionId: subscriptionId, forDate: state.currentDate) {
-            events in
-            
-            print("EventsView: listenToEvents: new event")
-            DispatchQueue.main.async {
-                self.events = []
-                self.events = events
-            }
+    private func fetchEvents() {
+        Task {
+            let events = await ActionController.fetchActions(userId: auth.userId!, forDate: state.currentDate)
+            self.events = events
         }
     }
     

@@ -19,20 +19,18 @@ class InteractionsController: ObservableObject {
         }
     }
     
-//    static func fetchInteractions(userId: Int) {
-//        Task {
-//            let graphqlQuery = InteractionsController.generateQuery(userId: userId, gte: auth.currentDate)
-//            do {
-//                // Directly get the decoded ResponseData object from sendGraphQL
-//                let responseData: InteractionsResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, responseType: InteractionsResponseData.self)
-//                DispatchQueue.main.async {
-//                    self.interactions = responseData.data.interactions
-//                }
-//            } catch {
-//                print("Error: \(error.localizedDescription)")
-//            }
-//        }
-//    }
+    static func fetchInteractions(userId: Int) async -> [InteractionModel] {
+        
+        let graphqlQuery = InteractionsController.generateQuery(userId: userId, gte: state.currentDate)
+        do {
+            let responseData: InteractionsResponseData = try await Hasura.shared.sendGraphQL(query: graphqlQuery, responseType: InteractionsResponseData.self)
+            
+            return responseData.data.interactions
+        } catch {
+            print("Error: \(error.localizedDescription)")
+        }
+        return []
+    }
     
     static func editInteraction(
         id: Int,

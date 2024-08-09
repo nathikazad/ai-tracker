@@ -99,9 +99,9 @@ struct InteractionsView: View {
     }
     
     private func listenToInteractions() {
-        InteractionsController.listenToInteractions(userId: auth.userId!) { interactions in
+        Task {
+            let interactions = await InteractionsController.fetchInteractions(userId:auth.userId!)
             DispatchQueue.main.async {
-                self.interactions = []
                 self.interactions = interactions
             }
         }
