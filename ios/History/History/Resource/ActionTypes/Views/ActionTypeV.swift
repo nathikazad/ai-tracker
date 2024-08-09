@@ -135,26 +135,31 @@ struct ActionTypeView: View {
                 }
             }
             
-            Section(header: Text("Internal Objects")) {
-                ForEach(Array(model.internalObjects.keys), id: \.self) { objectKey in
-                    ObjectTypeView(model: model, objectKey: objectKey)
-                }
-                Button(action: {
-                    model.internalObjects[generateRandomString()] = ObjectType(name: "New Field", description: "", fields: [:])
-                }) {
-                    Label("Add Internal Object", systemImage: "plus")
-                }
-            }
+//            Section(header: Text("Internal Objects")) {
+//                ForEach(Array(model.internalObjects.keys), id: \.self) { objectKey in
+//                    ObjectTypeView(objectType: Binding(
+//                        get: { model.internalObjects[objectKey] ?? ObjectType(name: "", description: "", fields: [:])},
+//                       set: {
+//                            newValue in
+//                            model.internalObjects[objectKey] = newValue
+//                        }))
+//                }
+//                Button(action: {
+//                    model.internalObjects[generateRandomString()] = ObjectType(name: "New Field", description: "", fields: [:])
+//                }) {
+//                    Label("Add Internal Object", systemImage: "plus")
+//                }
+//            }
             
             if let actionTypeId = model.id {
-                Section(header: Text("Tracking")) {
+                Section(header: Text("Goals")) {
                     ForEach(Array(model.aggregates)) { aggregate in
                         NavigationLink(destination: ShowAggregateView(aggregateModel: aggregate)) {
                             Text(aggregate.toString)
                         }
                     }
                     NavigationLink(destination: ShowAggregateView(aggregateModel: AggregateModel(actionTypeId: actionTypeId))) {
-                        Label("Track Value", systemImage: "plus")
+                        Label("Add Goal", systemImage: "plus")
                     }
                 }
             }

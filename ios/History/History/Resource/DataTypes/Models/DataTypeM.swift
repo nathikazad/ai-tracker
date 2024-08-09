@@ -29,7 +29,7 @@ func getDataType(from string: String) -> DataType? {
     return DataType.allCases.first { $0.rawValue.lowercased() == lowercasedString }
 }
 
-let allDataTypeStrings = DataType.allCases.map { $0.rawValue }
+let primitiveDataTypes = DataType.allCases.map { $0.rawValue }
 
 class Duration: AnyCodableConvertible {
     var durationInSeconds: Int

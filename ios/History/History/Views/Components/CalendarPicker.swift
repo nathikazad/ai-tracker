@@ -30,7 +30,6 @@ extension AppState {
     }
     
     var isItToday: Bool {
-        print("isItToday \(state.currentDate.toUTCString) \(Calendar.current.startOfDay(for: Date()).toUTCString) \(state.currentDate == Calendar.current.startOfDay(for: Date()))")
         return state.currentDate == Calendar.current.startOfDay(for: Date())
     }
 }

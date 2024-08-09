@@ -17,7 +17,7 @@ class ActionTypeModel: ObservableObject, Codable {
     @Published var dynamicFields: [String: Schema]
     @Published var internalObjects: [String: ObjectType]
     @Published var aggregates: [AggregateModel]
-    var computed: [String: Schema]
+    
     var shortDescSyntax: String?
     let createdAt: Date
     let updatedAt: Date
@@ -27,7 +27,7 @@ class ActionTypeModel: ObservableObject, Codable {
     }
     
     enum CodingKeys: String, CodingKey {
-        case id, name, metadata, staticFields, dynamicFields, internalObjects, computed
+        case id, name, metadata, staticFields, dynamicFields, internalObjects
         case shortDescSyntax = "short_desc_syntax"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
@@ -41,7 +41,6 @@ class ActionTypeModel: ObservableObject, Codable {
          meta: ActionTypeMeta = ActionTypeMeta(),
          staticFields: ActionModelTypeStaticSchema = ActionModelTypeStaticSchema(),
          dynamicFields: [String: Schema] = [:],
-         computed: [String: Schema] = [:],
          internalObjects: [String: ObjectType] = [:],
          aggregates: [AggregateModel] = [],
          shortDescSyntax: String? = nil,
@@ -52,7 +51,6 @@ class ActionTypeModel: ObservableObject, Codable {
         self.meta = meta
         self.staticFields = staticFields
         self.dynamicFields = dynamicFields
-        self.computed = computed
         self.internalObjects = internalObjects
         self.shortDescSyntax = shortDescSyntax
         self.createdAt = createdAt
@@ -72,7 +70,6 @@ class ActionTypeModel: ObservableObject, Codable {
         staticFields = metadata.staticFields
         dynamicFields = metadata.dynamicFields
         internalObjects = metadata.internalObjects
-        computed = metadata.computed
         shortDescSyntax = try container.decodeIfPresent(String.self, forKey: .shortDescSyntax)
         let createdAtString = try container.decode(String.self, forKey: .createdAt)
         createdAt = createdAtString.getDate!
@@ -90,8 +87,7 @@ class ActionTypeModel: ObservableObject, Codable {
         let metadata = ActionTypeMetadataForHasura(
             staticFields: staticFields,
             dynamicFields: dynamicFields,
-            internalObjects: internalObjects,
-            computed: computed
+            internalObjects: internalObjects
         )
         try container.encode(metadata, forKey: .metadata)
         try container.encodeIfPresent(shortDescSyntax, forKey: .shortDescSyntax)
@@ -106,7 +102,6 @@ class ActionTypeModel: ObservableObject, Codable {
         self.staticFields = m.staticFields
         self.dynamicFields = m.dynamicFields
         self.internalObjects = m.internalObjects
-        self.computed = m.computed
         self.shortDescSyntax = m.shortDescSyntax
         self.aggregates = m.aggregates
     }
@@ -115,8 +110,7 @@ class ActionTypeModel: ObservableObject, Codable {
         let metadata: ActionTypeMetadataForHasura = ActionTypeMetadataForHasura(
             staticFields: staticFields,
             dynamicFields: dynamicFields,
-            internalObjects: internalObjects,
-            computed: computed
+            internalObjects: internalObjects
         )
         do {
             let encoder = JSONEncoder()
@@ -138,21 +132,18 @@ struct ActionTypeMetadataForHasura: Codable {
     var staticFields: ActionModelTypeStaticSchema
     var dynamicFields: [String: Schema]
     var internalObjects: [String: ObjectType]
-    var computed: [String: Schema]
     
     enum CodingKeys: String, CodingKey {
-        case staticFields, dynamicFields, internalObjects, aggregates, computed
+        case staticFields, dynamicFields, internalObjects, aggregates
     }
     
     init(staticFields: ActionModelTypeStaticSchema = ActionModelTypeStaticSchema(),
          dynamicFields: [String : Schema] = [:],
-         internalObjects: [String : ObjectType] = [:],
-         computed: [String : Schema]  = [:]
+         internalObjects: [String : ObjectType] = [:]
     ) {
         self.staticFields = staticFields
         self.dynamicFields = dynamicFields
         self.internalObjects = internalObjects
-        self.computed = computed
     }
     
     init(from decoder: Decoder) throws {
@@ -160,7 +151,6 @@ struct ActionTypeMetadataForHasura: Codable {
         staticFields = try container.decode(ActionModelTypeStaticSchema.self, forKey: .staticFields)
         dynamicFields = try container.decodeIfPresent([String: Schema].self, forKey: .dynamicFields) ?? [:]
         internalObjects = (try? container.decode([String: ObjectType].self, forKey: .internalObjects)) ?? [:]
-        computed = (try? container.decode([String: Schema].self, forKey: .computed)) ?? [:]
     }
     
     func encode(to encoder: Encoder) throws {
@@ -168,7 +158,6 @@ struct ActionTypeMetadataForHasura: Codable {
         try container.encode(staticFields, forKey: .staticFields)
         try container.encode(dynamicFields, forKey: .dynamicFields)
         try container.encode(internalObjects, forKey: .internalObjects)
-        try container.encode(computed, forKey: .computed)
     }
 }
 

@@ -29,7 +29,7 @@ struct SettingsView: View {
                                 .foregroundColor(.primary)
                         }
                     }
-                    NavigationLink(destination: InteractionsView()) {
+                    NavigationLink(destination: ObjectTypeListView()) {
                         Label {
                             Text("Memos")
                                 .foregroundColor(.primary)

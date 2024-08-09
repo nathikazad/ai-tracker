@@ -7,7 +7,7 @@
 
 import Foundation
 
-let externalDataTypes: [String] = ["Expense", "Organization", "Item"]
+let externalDataTypes: [String] = [] //["Expense", "Organization", "Item"]
 
 class ActionTypesController {
     static func createActionTypeModel(model: ActionTypeModel) async -> Int? {

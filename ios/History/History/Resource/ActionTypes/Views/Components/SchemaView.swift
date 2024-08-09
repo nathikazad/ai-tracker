@@ -15,7 +15,7 @@ struct SchemaView: View {
     init(schema: Binding<Schema>, dataType: String? = nil, validDataTypes: [String]? = nil) {
         self._schema = schema
         self.dataType = dataType
-        self.validDataTypes = allDataTypeStrings + (validDataTypes ?? [])
+        self.validDataTypes = validDataTypes ?? []
         
         if let dataType = dataType {
             self._schema.wrappedValue.dataType = dataType

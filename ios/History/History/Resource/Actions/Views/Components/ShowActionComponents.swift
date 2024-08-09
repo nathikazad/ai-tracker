@@ -30,14 +30,23 @@ struct EnumComponent: View {
 struct ShortStringComponent: View {
     let fieldName: String
     @Binding var value: String
+    @State var valueCopy: String = ""
+    
+    init(fieldName: String, value: Binding<String>) {
+        self.fieldName = fieldName
+        self._value = value
+        self._valueCopy = State(wrappedValue: value.wrappedValue)
+    }
+    
     var body: some View {
         HStack {
             Text("\(fieldName): ")
                 .frame(alignment: .leading)
             Spacer()
             TextField(fieldName, text: Binding(
-                get: { value },
+                get: { valueCopy },
                 set: { newValue in
+                    valueCopy = newValue
                     value = newValue
                 }
             ))
@@ -54,7 +63,6 @@ struct LongStringComponent: View {
     @Binding var value: String
     @State var valueCopy: String = ""
     @State var isBeingEdited: Bool
-//    @FocusState private var isFocused: Bool
     
     init(fieldName: String, value: Binding<String>) {
         self.fieldName = fieldName
