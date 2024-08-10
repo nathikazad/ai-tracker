@@ -91,7 +91,7 @@ struct ObjectView: View {
         }
 
 //        .listSectionSpacing(0)
-        .navigationTitle(object.id == nil ?  "Create \(object.name) Object": "Edit \(object.name) Object")
+        .navigationTitle("\(object.id == nil ?  "Create": "Edit") the \(object.objectTypeModel.name) \(object.name)")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink(destination: ObjectTypeView(

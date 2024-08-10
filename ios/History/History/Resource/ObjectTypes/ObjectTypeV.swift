@@ -10,14 +10,11 @@ struct ObjectTypeView: View {
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
-        List {
-            HStack {
-                Text("Name:")
-                TextField("Name", text: $objectType.name)
-                    .onChange(of: objectType.name) {
-                        changesToSave = true
-                    }
-            }
+        Form {
+            ShortStringComponent(fieldName: "Name", value: $objectType.name)
+                .onChange(of: objectType.name) {
+                    changesToSave = true
+                }
             .alignmentGuide(.listRowSeparatorLeading) { _ in
                 -20
             }

@@ -114,6 +114,7 @@ class ActionController {
         struct ActionData: GraphQLData {
             var v2_actions: [ActionModel]
         }
+//        print(actionTypeId, graphqlQuery, variables)
         do {
             let responseData: GraphQLResponse<ActionData> = try await Hasura.shared.sendGraphQL(query: graphqlQuery, variables: variables, responseType: GraphQLResponse<ActionData>.self)
             return responseData.data.v2_actions

@@ -11,8 +11,9 @@ import Combine
 
 // Define your custom views for each tab
 struct ActionsTabView: View {
-    @StateObject private var datePickerModel: TwoDatePickerModel = TwoDatePickerModel()
     @State private var events: [ActionModel] = []
+    @StateObject var datePickerModel: TwoDatePickerModel
+    @State private var coreStateSubcription: AnyCancellable?
     
     var eventId: Int?
     var eventType: EventType?
@@ -20,7 +21,6 @@ struct ActionsTabView: View {
     @State private var scrollProxy: ScrollViewProxy?
     var body: some View {
         VStack {
-            CalendarButton()
             Group {
                 if events.isEmpty {
                     VStack {
@@ -42,18 +42,15 @@ struct ActionsTabView: View {
                 print("EventsView: onAppear")
                 if(auth.areJwtSet) {
                     fetchEvents()
+                    coreStateSubcription?.cancel()
+                    coreStateSubcription = state.subscribeToCoreStateChanges {
+                        print("Core state occurred")
+                        fetchEvents()
+                    }
                 }
             }
-        }
-        .overlay(
-            popupView
-        )
-    }
-    
-    private var popupView: some View {
-        Group {
-            if datePickerModel.showPopupForId != nil {
-                TwoDatePickerView(datePickerModel: datePickerModel)
+            .onDisappear {
+                coreStateSubcription?.cancel()
             }
         }
     }
@@ -61,7 +58,9 @@ struct ActionsTabView: View {
     private func fetchEvents() {
         Task {
             let events = await ActionController.fetchActions(userId: auth.userId!, forDate: state.currentDate)
-            self.events = events
+            await MainActor.run {
+                self.events = events
+            }
         }
     }
     
@@ -113,8 +112,6 @@ struct ActionsTabView: View {
                         scrollProxy = proxy
                         scroll()
                     }
-                    .padding(.top, 15)
-                    
                 }
             }
         }

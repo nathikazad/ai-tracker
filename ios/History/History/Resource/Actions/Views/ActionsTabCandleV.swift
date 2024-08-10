@@ -6,20 +6,20 @@
 //
 
 import SwiftUI
-
+import Combine
 
 struct CandleChartWithList: View {
     @State private var actions: [ActionModel] = []
     @State private var unselectedModels: [Int] = []
-    //    let candles: [Candle] = []
     var offsetHours: Int = 0
-    @State private var fetchTask: Task<Void, Never>?
     
-    @State var hoursRange: ClosedRange<Int> = 6...18
-    @State var daysRange: ClosedRange<Int> = 6...7
+    @State var hoursRange: ClosedRange<Int> = 5...22
+    @State var daysRange: ClosedRange<Int> = 5...6
     @State var showColorPickerForActionTypeId: Int? = nil
     @State var redrawChart: Bool = true
     var timeZone: String = "America/Los_Angeles"
+    @State private var coreStateSubcription: AnyCancellable?
+    
     
     var numOfDays: Int {
         daysRange.upperBound - daysRange.lowerBound
@@ -62,6 +62,7 @@ struct CandleChartWithList: View {
                 } else {
                     // Portrait orientation
                     VStack(spacing: 0) {
+                        
                         CandleView(title: "", candles: filteredCandles, hoursRange: hoursRange, offsetHours: offsetHours, automaticYAxis: true, val: numOfDays, redrawChart: redrawChart)
                             .frame(height: geometry.size.height * 0.5)
                         
@@ -72,50 +73,65 @@ struct CandleChartWithList: View {
             }
         }
         .onAppear {
-            fetchActions()
+            if(auth.areJwtSet) {
+                fetchActions()
+                coreStateSubcription?.cancel()
+                coreStateSubcription = state.subscribeToCoreStateChanges {
+                    print("Core state occurred")
+                    fetchActions()
+                }
+                
+            }
+        }
+        .onDisappear {
+            coreStateSubcription?.cancel()
         }
     }
     
     func fetchActions() {
-        let calendar = Calendar.current
-        let timezone = TimeZone(identifier: timeZone) ?? TimeZone.current
-        
-        print( daysRange.lowerBound - 7, daysRange.upperBound - 7)
-        let startDate = calendar.date(
-            byAdding: .day,
-            value: daysRange.lowerBound - 7,
-            to: calendar.startOfDay(for: Date())
-        )!
-        
-        let endDate = calendar.date(
-            byAdding: .day,
-            value: daysRange.upperBound - 7 + 1,
-            to: calendar.startOfDay(for: Date()).addMinute(-1)
-        )!
-        fetchTask?.cancel()
-        fetchTask = Task { @MainActor in
-            let fetchedActions = await ActionController.fetchActions(userId: auth.userId!, startDate: startDate, endDate: endDate)
-            if !Task.isCancelled {
-                print("setting actions")
+        Task {
+            let fetchedActions = await ActionController.fetchActions(userId: auth.userId!, startDate: state.currentWeek.start, endDate: state.currentWeek.end)
+            await MainActor.run {
                 self.actions = fetchedActions
                 redrawChart.toggle()
             }
         }
     }
+    enum Weekday: Int, CaseIterable {
+        case monday = 1, tuesday, wednesday, thursday, friday, saturday, sunday
+        
+        var name: String {
+            switch self {
+            case .sunday: return "Sun"
+            case .monday: return "Mon"
+            case .tuesday: return "Tue"
+            case .wednesday: return "Wed"
+            case .thursday: return "Thu"
+            case .friday: return "Fri"
+            case .saturday: return "Sat"
+            }
+        }
+    }
+
+    func numberToWeekday(_ number: Int) -> Weekday? {
+        return Weekday(rawValue: number)
+    }
     
     var list: some View {
         List {
             HStack {
-                Text("Days: \(daysRange.lowerBound)")
-                RangedSliderView(value: $daysRange, bounds: 0...7)
+                Text("\(numberToWeekday(daysRange.lowerBound + 1)?.name ?? "Sun")")
+                RangedSliderView(value: $daysRange, bounds: 0...6)
                     .onChange(of: daysRange) {
                         fetchActions()
                     }
-                Text("\(daysRange.upperBound)")
+                    .padding(.horizontal, 10)
+                Text("\(numberToWeekday(daysRange.upperBound)?.name ?? "Sun" )")
             }
             HStack {
                 Text("Hours: \(hoursRange.lowerBound)")
                 RangedSliderView(value: $hoursRange, bounds: 0...24)
+                    .padding(.horizontal, 10)
                 Text("\(hoursRange.upperBound)")
             }
             HStack {
@@ -145,7 +161,12 @@ struct CandleChartWithList: View {
                 .background(Color.gray.opacity(0.2))
                 .cornerRadius(6)
                 .buttonStyle(PlainButtonStyle())
-                Spacer()
+            }
+            .alignmentGuide(.listRowSeparatorLeading) { _ in
+                -20
+            }
+            let totalTimeOfAll = truncatedCandles.reduce(0) { (result, candle) -> Int in
+                return result + Int(candle.end.timeIntervalSince(candle.start))
             }
             ForEach(actionTypeModels, id: \.name) { actionTypeModel in
                 HStack {
@@ -184,7 +205,14 @@ struct CandleChartWithList: View {
                         }
                     }
                     if actionTypeModel.id != showColorPickerForActionTypeId {
-                        Text(actionTypeModel.name)
+                        let totalTime = truncatedCandles.reduce(0) { (result, candle) -> Int in
+                            if (candle.actionTypeModel?.id == actionTypeModel.id) {
+                                return result + Int(candle.end.timeIntervalSince(candle.start))
+                            }
+                            return result
+                        }
+                        let percentage =  (totalTime * 100)/totalTimeOfAll
+                        Text("\(actionTypeModel.name) (\(totalTime.fromSecondsToHHMMString)) \(percentage)%")
                         Spacer()
                         RadioButton(
                             isSelected: !unselectedModels.contains(where: { $0 == actionTypeModel.id }),
@@ -197,6 +225,9 @@ struct CandleChartWithList: View {
                             }
                         )
                     }
+                }
+                .alignmentGuide(.listRowSeparatorLeading) { _ in
+                    -20
                 }
                 .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                     NavigationLink(destination: ActionTypeView(model: actionTypeModel))
@@ -220,6 +251,7 @@ extension Date {
 }
 
 func convertActionsToCandles(_ actions: [ActionModel], timeZone: String, daysRange: ClosedRange<Int>) -> [Candle] {
+    
     let dateFormatter = DateFormatter()
     let calendar = Calendar.current
     dateFormatter.dateFormat = "yyyy-MM-dd"
@@ -228,27 +260,23 @@ func convertActionsToCandles(_ actions: [ActionModel], timeZone: String, daysRan
         fatalError("Invalid timezone identifier")
     }
     dateFormatter.timeZone = timezone
-    
+
     let startDateOfRange = calendar.date(
         byAdding: .day,
-        value: daysRange.lowerBound - 7 + 1,
-        to: calendar.startOfDay(for: Date())
+        value: daysRange.lowerBound + 1,
+        to: state.currentWeek.start
     )!
     
     var candles: [Candle] = []
     
     for action in actions {
-        
         let startDate = action.startTime
         let endDate = action.endTime ?? action.startTime
-        
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = timezone
         
         if let midnight = calendar.date(bySettingHour: 23, minute: 59, second: 59, of:  startDate) {
             if (startDate < midnight && endDate > midnight) {
-                
-                
                 if startDate > startDateOfRange {
                     let firstCandle = Candle(
                         date: dateFormatter.string(from: startDate),
@@ -258,22 +286,18 @@ func convertActionsToCandles(_ actions: [ActionModel], timeZone: String, daysRan
                     )
                     candles.append(firstCandle)
                 }
-                
-                let secondCandle = Candle(
-                    date: dateFormatter.string(from: midnight.addMinute(2)),
-                    start: midnight.addMinute(2),
-                    end: endDate,
-                    actionTypeModel: action.actionTypeModel
-                )
-                candles.append(secondCandle)
+                let secondDay = calendar.date(byAdding: .day, value: 1, to: startDate)!
+                if secondDay > startDateOfRange {
+                    let secondCandle = Candle(
+                        date: dateFormatter.string(from: midnight.addMinute(2)),
+                        start: midnight.addMinute(2),
+                        end: endDate,
+                        actionTypeModel: action.actionTypeModel
+                    )
+                    candles.append(secondCandle)
+                }
             }
             else {
-                let endDate = endDate == startDate
-                ? min(
-                    calendar.date(byAdding: .minute, value: 15, to: startDate)!,
-                    calendar.date(bySettingHour: 23, minute: 59, second: 59, of: startDate)!
-                )
-                : endDate
                 if startDate > startDateOfRange {
                     let candle = Candle(
                         date: dateFormatter.string(from: startDate),
@@ -286,10 +310,15 @@ func convertActionsToCandles(_ actions: [ActionModel], timeZone: String, daysRan
             }
         }
     }
-    
     return candles
 }
 
+//let endDate = endDate == startDate
+//? min(
+//    calendar.date(byAdding: .minute, value: 15, to: startDate)!,
+//    calendar.date(bySettingHour: 23, minute: 59, second: 59, of: startDate)!
+//)
+//: endDate
 
 func truncateCandles(_ candles: [Candle], startHour: Int, endHour: Int, timeZone: String) -> [Candle] {
     guard let timezone = TimeZone(identifier: timeZone) else {
@@ -348,119 +377,5 @@ func getUniqueActionTypeIds(candles: [Candle]) -> [ActionTypeModel] {
     
     return uniqueDict.map { (actionTypeId, value) in
         return value
-    }
-}
-
-
-struct RangedSliderView: View {
-    let currentValue: Binding<ClosedRange<Int>>
-    let sliderBounds: ClosedRange<Int>
-    
-    public init(value: Binding<ClosedRange<Int>>, bounds: ClosedRange<Int>) {
-        self.currentValue = value
-        self.sliderBounds = bounds
-    }
-    
-    var body: some View {
-        GeometryReader { geomentry in
-            sliderView(sliderSize: geomentry.size)
-        }
-    }
-    
-    
-    @ViewBuilder private func sliderView(sliderSize: CGSize) -> some View {
-        let sliderViewYCenter = sliderSize.height / 2
-        ZStack {
-            RoundedRectangle(cornerRadius: 2)
-                .fill(Color(UIColor.systemGray6))
-                .frame(height: 4)
-            ZStack {
-                let sliderBoundDifference = sliderBounds.count
-                let stepWidthInPixel = CGFloat(sliderSize.width) / CGFloat(sliderBoundDifference)
-                
-                // Calculate Left Thumb initial position
-                let leftThumbLocation: CGFloat = currentValue.wrappedValue.lowerBound == Int(sliderBounds.lowerBound)
-                ? 0
-                : CGFloat(currentValue.wrappedValue.lowerBound - Int(sliderBounds.lowerBound)) * stepWidthInPixel
-                
-                // Calculate right thumb initial position
-                let rightThumbLocation = CGFloat(currentValue.wrappedValue.upperBound) * stepWidthInPixel
-                
-                // Path between both handles
-                lineBetweenThumbs(from: .init(x: leftThumbLocation, y: sliderViewYCenter), to: .init(x: rightThumbLocation, y: sliderViewYCenter))
-                
-                // Left Thumb Handle
-                let leftThumbPoint = CGPoint(x: leftThumbLocation, y: sliderViewYCenter)
-                thumbView(position: leftThumbPoint, value: currentValue.wrappedValue.lowerBound)
-                    .highPriorityGesture(DragGesture().onChanged { dragValue in
-                        
-                        let dragLocation = dragValue.location
-                        let xThumbOffset = min(max(0, dragLocation.x), sliderSize.width)
-                        
-                        let newValue = Int(sliderBounds.lowerBound) + Int(xThumbOffset / stepWidthInPixel)
-                        
-                        // Stop the range thumbs from colliding each other
-                        if newValue < currentValue.wrappedValue.upperBound {
-                            currentValue.wrappedValue = newValue...currentValue.wrappedValue.upperBound
-                        }
-                    })
-                
-                // Right Thumb Handle
-                thumbView(position: CGPoint(x: rightThumbLocation, y: sliderViewYCenter), value: currentValue.wrappedValue.upperBound)
-                    .highPriorityGesture(DragGesture().onChanged { dragValue in
-                        let dragLocation = dragValue.location
-                        let xThumbOffset = min(max(CGFloat(leftThumbLocation), dragLocation.x), sliderSize.width)
-                        
-                        var newValue = Int(xThumbOffset / stepWidthInPixel) // convert back the value bound
-                        newValue = min(newValue, Int(sliderBounds.upperBound))
-                        
-                        // Stop the range thumbs from colliding each other
-                        if newValue > currentValue.wrappedValue.lowerBound {
-                            currentValue.wrappedValue = currentValue.wrappedValue.lowerBound...newValue
-                        }
-                    })
-            }
-        }
-    }
-    
-    @ViewBuilder func lineBetweenThumbs(from: CGPoint, to: CGPoint) -> some View {
-        Path { path in
-            path.move(to: from)
-            path.addLine(to: to)
-        }.stroke(Color.black, lineWidth: 4)
-    }
-    
-    @ViewBuilder func thumbView(position: CGPoint, value: Int) -> some View {
-        ZStack {
-            //            Text(String(value))
-            //                .font(.secondaryFont(weight: .semibold, size: 10))
-            //                .offset(y: -20)
-            Circle()
-                .frame(width: 24, height: 24)
-                .foregroundColor(Color.white)
-                .shadow(color: Color.black.opacity(0.16), radius: 8, x: 0, y: 2)
-                .contentShape(Rectangle())
-        }
-        .position(x: position.x, y: position.y)
-    }
-}
-
-struct RadioButton: View {
-    let isSelected: Bool
-    let action: () -> Void
-    
-    var body: some View {
-        Button(action: action) {
-            ZStack {
-                Circle()
-                    .stroke(Color.gray, lineWidth: 2)
-                    .frame(width: 20, height: 20)
-                if isSelected {
-                    Circle()
-                        .fill(Color.gray)
-                        .frame(width: 12, height: 12)
-                }
-            }
-        }
     }
 }

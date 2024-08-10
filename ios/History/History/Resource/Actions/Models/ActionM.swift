@@ -101,6 +101,12 @@ class ActionModel: ObservableObject, Codable {
         self.actionTypeModel = newModel.actionTypeModel
     }
     
+    var duplicate: ActionModel {
+        let actionTypeModel = ActionModel(actionTypeId: self.actionTypeId, startTime: self.startTime, actionTypeModel: self.actionTypeModel)
+        actionTypeModel.copy(self)
+        return actionTypeModel
+    }
+    
     var toString: String? {
         var description: String?
         if let shortDescSyntax = actionTypeModel.shortDescSyntax {

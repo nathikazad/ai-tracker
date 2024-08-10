@@ -12,16 +12,13 @@ struct AggregatesTabView: View {
     @State private var aggregates: [AggregateModel] = []
     @State private var actions: [ActionModel] = []
     @State private var loading = true
-    @State private var endDate: Date
-    @State private var startDate: Date
+    @State private var weekBoundary: WeekBoundary
     @State private var selectedUser = 0
     @State private var selectedPriority: GoalPriority = .high
     @State private var openDisclosures: Set<Int> = []
-    let options = ["You", "Nathik"]
+    @State private var coreStateSubcription: AnyCancellable?
     init() {
-        let endDate = Date()
-        self.endDate = endDate
-        self.startDate = Calendar.current.date(byAdding: .day, value: -7, to: endDate) ?? Date()
+        weekBoundary = Date().getWeekBoundary
     }
     
     var filteredAggregates: [AggregateModel] {
@@ -71,21 +68,33 @@ struct AggregatesTabView: View {
                 }
             }
         }
+
         .onAppear {
-            print("EventsView: onAppear")
             if(auth.areJwtSet) {
                 loadData(userId: auth.userId!)
+                coreStateSubcription?.cancel()
+                coreStateSubcription = state.subscribeToCoreStateChanges {
+                    print("AggregatesTab Core state occurred")
+                    loadData(userId: auth.userId!)
+                }
             }
+        }
+        .onDisappear {
+            coreStateSubcription?.cancel()
         }
     }
     
     private func loadData(userId: Int) {
         Task {
+            loading = true
             print(userId)
-            aggregates = await AggregateController.fetchAggregates(userId: userId, withAggregates: true)
-            actions = await ActionController.fetchActions(userId: userId)
-            openDisclosures = Set(aggregates.prefix(2).map { $0.id! })
-            loading = false
+            let aggregates = await AggregateController.fetchAggregates(userId: userId, withAggregates: true)
+            let actions = await ActionController.fetchActions(userId: userId, startDate: state.currentWeek.start, endDate: state.currentWeek.end)
+            await MainActor.run {
+                self.aggregates = aggregates
+                self.actions = actions
+                loading = false
+            }
         }
     }
     
@@ -104,12 +113,10 @@ struct AggregatesTabView: View {
                         }
                     )
                 ) {
-                    
                     AggregateChartView(
                         aggregate: aggregate,
                         actionsParam: actions,
-                        startDate: startDate,
-                        endDate: endDate
+                        weekBoundary: weekBoundary
                     )
                 } label: {
                     Text(aggregate.metadata.name == "" ? aggregate.toString : aggregate.metadata.name)
@@ -126,5 +133,3 @@ struct AggregatesTabView: View {
         }
     }
 }
-
-

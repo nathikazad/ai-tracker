@@ -8,14 +8,14 @@
 import SwiftUI
 
 extension AppState {
+    
     func goToNextDay() {
-        print("next day")
+        
         currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
         notifyCoreStateChanged()
     }
     
     func goToPreviousDay() {
-        print("previous day")
         currentDate = Calendar.current.date(byAdding: .day, value: -1, to: currentDate)!
         notifyCoreStateChanged()
     }
@@ -26,6 +26,15 @@ extension AppState {
         } else {
             currentDate = Calendar.current.startOfDay(for: Date())
         }
+        notifyCoreStateChanged()
+    }
+    func goToNextWeek() {
+        currentWeek = currentWeek.nextWeek()
+        notifyCoreStateChanged()
+    }
+    
+    func goToPreviousWeek() {
+        currentWeek = currentWeek.previousWeek()
         notifyCoreStateChanged()
     }
     
@@ -87,5 +96,96 @@ struct CalendarPickerView: View {
                 })
             
         }
+    }
+}
+
+
+struct WeekNavigator: View {
+    @ObservedObject var appState = state
+    var body: some View {
+        HStack {
+            Spacer()
+            Button(action: {
+                appState.goToPreviousWeek()
+            }) {
+                Image(systemName: "chevron.left.circle.fill")
+                    .resizable()
+                    .frame(width: 20, height: 20)
+            }
+            .buttonStyle(PlainButtonStyle())
+            
+            HStack {
+                Text(appState.currentWeek.formatString)
+                    .font(.headline)
+            }.frame(minWidth: 130)
+            
+            Button(action: {
+                appState.goToNextWeek()
+            }) {
+                Image(systemName: "chevron.right.circle.fill")
+                    .resizable()
+                    .frame(width: 20, height: 20)
+            }
+            .buttonStyle(PlainButtonStyle())
+            Spacer()
+        }
+        .padding()
+    }
+}
+
+
+struct DateNavigator: View {
+    @ObservedObject var appState = state
+    
+    var body: some View {
+        HStack {
+            Spacer()
+            Button(action: {
+                appState.goToPreviousDay()
+            }) {
+                Image(systemName: "chevron.left.circle.fill")
+                    .resizable()
+                    .frame(width: 20, height: 20)
+            }
+            .buttonStyle(PlainButtonStyle())
+            
+            HStack {
+                if !appState.isItToday {
+                    Button(action: {
+                        state.goToDay()
+                    }) {
+                        Image(systemName: "arrow.clockwise.circle")
+                    }
+                }
+                Button(action: {
+                    state.showSheet(newSheetToShow: .calendar)
+                }) {
+                    if (state.isItToday) {
+                        Text("Today")
+                            .font(.title3)
+                    } else {
+                        Text(dateString)
+                            .font(.headline)
+                    }
+                }
+            }
+            .frame(minWidth: 130)
+            Button(action: {
+                appState.goToNextDay()
+            }) {
+                Image(systemName: "chevron.right.circle.fill")
+                    .resizable()
+                    .frame(width: 20, height: 20)
+            }
+            .buttonStyle(PlainButtonStyle())
+            Spacer()
+        }
+        .padding()
+    }
+    
+    private var dateString: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMMM d"
+        return dateFormatter.string(from: appState.currentDate)
     }
 }

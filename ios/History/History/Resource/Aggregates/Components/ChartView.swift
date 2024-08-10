@@ -10,14 +10,12 @@ import SwiftUI
 struct AggregateChartView: View {
     let aggregate: AggregateModel
     let actionsParam: [ActionModel]
-    let startDate: Date?
-    let endDate: Date?
+    let weekBoundary: WeekBoundary?
     
-    init(aggregate: AggregateModel, actionsParam: [ActionModel], startDate: Date? = nil, endDate: Date? = nil) {
+    init(aggregate: AggregateModel, actionsParam: [ActionModel], weekBoundary: WeekBoundary? = nil, endDate: Date? = nil) {
         self.aggregate = aggregate
         self.actionsParam = actionsParam
-        self.startDate = startDate
-        self.endDate = endDate
+        self.weekBoundary = weekBoundary
     }
  
     var actions: [ActionModel] {
@@ -62,7 +60,7 @@ struct AggregateChartView: View {
         let timeZone = TimeZone(identifier: timezone) ?? Calendar.current.timeZone
         calendar.timeZone = timeZone
         
-        if let startDate = startDate, let endDate = endDate {
+        if let startDate = weekBoundary?.start, let endDate = weekBoundary?.end {
             return (calendar, calendar.startOfDay(for: startDate), calendar.startOfDay(for: endDate))
         } else {
             guard let minDate = dates.min(),

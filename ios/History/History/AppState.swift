@@ -23,6 +23,7 @@ class AppState: ObservableObject, MicrophoneDelegate {
     
     static let shared = AppState()
     @Published var currentDate = Calendar.current.startOfDay(for: Date())
+    @Published var currentWeek = Date().getWeekBoundary
     @Published private(set) var chatViewToShow: ChatViewToShow = .none
     @Published private(set) var sheetViewToShow: SheetViewToShow = .none
     @Published private(set) var isRecording: Bool = false

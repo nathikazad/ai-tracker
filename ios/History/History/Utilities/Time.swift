@@ -173,7 +173,40 @@ extension Date {
     func addMinute(_ minute: Int) -> Date {
         return Calendar.currentInLocal.date(byAdding: .minute, value: minute, to: self)!
     }
+    
+    var getWeekBoundary: WeekBoundary {
+        let calendar = Calendar.current
+        
+        // Find the start of the week (Monday at 00:00)
+        let startOfWeek = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: self))!
+        let startHour = calendar.startOfDay(for: startOfWeek)
+        
+        // Find the end of the week (Sunday at 23:59:59)
+        let endOfWeek = calendar.date(byAdding: .day, value: 6, to: startOfWeek)!
+        let endHour = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: endOfWeek)!
+        print(endHour)
+        return WeekBoundary(start: startHour, end: endHour)
+    }
 }
+
+struct WeekBoundary: Equatable {
+    let start: Date
+    let end: Date
+    
+    func nextWeek() -> WeekBoundary {
+        return Calendar.current.date(byAdding: .day, value: 7, to: self.start)!.getWeekBoundary
+    }
+    
+    func previousWeek() -> WeekBoundary {
+        return Calendar.current.date(byAdding: .day, value: -7, to: self.start)!.getWeekBoundary
+    }
+    var formatString: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM d"
+        return "\(dateFormatter.string(from: self.start)) - \(dateFormatter.string(from: self.end))"
+    }
+}
+
 
 
 extension EventModel {

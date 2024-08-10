@@ -35,9 +35,7 @@ struct ContentView: View {
             }
         }
     }
-    
 }
-
 
 enum SelectedTimeline: String, CodingKey {
     case list
@@ -50,6 +48,16 @@ struct MainView: View {
     @ObservedObject var appState = state
     @ObservedObject private var timerManager = TimerManager.shared
     @State private var selectedExplorerType: ExplorerType = .actions
+    @StateObject private var datePickerModel: TwoDatePickerModel = TwoDatePickerModel()
+    
+    enum Tab {
+        case timeline, history, goals, explorer
+    }
+    
+    enum ExplorerType: String, CaseIterable {
+        case actions = "Actions"
+        case objects = "Objects"
+    }
     
     var sheetViewPresented: Binding<Bool> {
         Binding(
@@ -64,137 +72,96 @@ struct MainView: View {
         )
     }
     
-    enum ExplorerType: String, CaseIterable {
-        case actions = "Actions"
-        case objects = "Objects"
-    }
-    
     var body: some View {
         NavigationStack {
-            if selectedTab == Tab.explorer {
-                Picker("", selection: $selectedExplorerType) {
-                    ForEach(ExplorerType.allCases, id: \.self) { viewType in
-                        Text(viewType.rawValue).tag(viewType)
-                    }
-                }
-                .pickerStyle(SegmentedPickerStyle())
-                .padding()
-            }
             ZStack(alignment: .bottom) {
-
-                TabView(selection: $selectedTab) {
-                    CandleChartWithList()
-                        .tabItem { Label("History", systemImage: "clock.arrow.circlepath") }
-                        .tag(Tab.history)
-                    
-                    ActionsTabView()
-                        .tabItem { Label("Timeline", systemImage: "list.dash") }
-                        .tag(Tab.timeline)
-                    
-                    Color.clear
-                        .tabItem {
-                            Image(systemName: "plus.circle")
-                        }
-                        .tag(Tab.timeline) // Use an existing tag to prevent selection
-                    
-                    AggregatesTabView()
-                        .tabItem { Label("Goals", systemImage: "target") }
-                        .tag(Tab.goals)
-                    if selectedExplorerType == .actions {
-                        ListActionsTypesView()
-                            .tabItem { Label("Explorer", systemImage: "globe") }
-                            .tag(Tab.explorer)
-                    } else {
-                         ObjectTypeListView(listType: .takeToObjects)
-                            .tabItem { Label("Explorer", systemImage: "globe") }
-                            .tag(Tab.explorer)
-                    }
-                }
-                let buttonSize: CGFloat = verticalSizeClass == .compact ? 40 : 60
-                
-                    NavigationLink(destination: ListActionsTypesView(
-                        listActionType: .takeToActionView
-                    )) {
-                            ZStack {
-                                // Gradient background
-                                LinearGradient(
-                                    gradient: Gradient(colors: [
-                                        Color(red: 178/255, green: 72/255, blue: 49/255),
-                                        Color(red: 222/255, green: 152/255, blue: 64/255)
-                                    ]),
-                                    startPoint: .topTrailing,
-                                    endPoint: .bottomLeading
-                                )
-                                .clipShape(Circle())
-                                
-                                // Plus icon
-                                Image(systemName: "plus")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .padding(buttonSize * 0.3)
-                                    .foregroundColor(.white)
+                VStack(spacing: 0) {
+                    NavigationBar {
+                        if selectedTab == Tab.explorer {
+                            HStack {
+                                Text("Explorer")
+                                    .font(.title)
+                                    .foregroundColor(.primary)
+                                    .padding(.horizontal, 10)
+                                Spacer()
                             }
-                            .frame(width: buttonSize, height: buttonSize)
-                            .shadow(radius: 4)
-                        }
-                .offset(y: verticalSizeClass == .compact ? -15 : -30)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        NavigationTitle(title: titleForTab(selectedTab)) {
-                            appState.showSheet(newSheetToShow: .dailyQuotes)
+                        } else if selectedTab == Tab.timeline {
+                            DateNavigator()
+                        } else {
+                            WeekNavigator()
                         }
                     }
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: {
-                            appState.showSheet(newSheetToShow: .settings)
-                        }) {
-                            Image(systemName: "gear").foregroundColor(.primary)
+                    if selectedTab == Tab.explorer {
+                        Picker("", selection: $selectedExplorerType) {
+                            ForEach(ExplorerType.allCases, id: \.self) { viewType in
+                                Text(viewType.rawValue).tag(viewType)
+                            }
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                        .padding()
+                        Divider()
+                    } else {
+                        
+                    }
+                    
+                    TabView(selection: $selectedTab) {
+                        CandleChartWithList()
+                            .tabItem { Label("History", systemImage: "clock.arrow.circlepath") }
+                            .tag(Tab.history)
+                        
+                        ActionsTabView(datePickerModel: datePickerModel)
+                            .tabItem { Label("Timeline", systemImage: "list.dash") }
+                            .tag(Tab.timeline)
+                        
+                        Color.clear
+                            .tabItem { Label("", systemImage: "plus.circle") }
+                            .tag(Tab.timeline) // Use an existing tag to prevent selection
+                        
+                        AggregatesTabView()
+                            .tabItem { Label("Goals", systemImage: "target") }
+                            .tag(Tab.goals)
+                        
+                        if selectedExplorerType == .actions {
+                            ListActionsTypesView()
+                                .tabItem { Label("Explorer", systemImage: "globe") }
+                                .tag(Tab.explorer)
+                        } else {
+                            ObjectTypeListView(listType: .takeToObjects)
+                                .tabItem { Label("Explorer", systemImage: "globe") }
+                                .tag(Tab.explorer)
                         }
                     }
+                    .sheet(isPresented: sheetViewPresented) {
+                        if appState.sheetViewToShow == .settings {
+                            SettingsView()
+                        } else if appState.sheetViewToShow == .dailyQuotes {
+                            RemindersView()
+                        } else if appState.sheetViewToShow == .calendar {
+                            CalendarPickerView { selectedDate in
+                                appState.goToDay(newDay: selectedDate)
+                                appState.hideSheet()
+                            }
+                        }
+                    }
+                    .overlay(popupView)
                 }
-                .sheet(isPresented: sheetViewPresented) {
-                    if appState.sheetViewToShow == .settings {
-                        SettingsView()
-                    } else if appState.sheetViewToShow == .dailyQuotes {
-                        RemindersView()
-                    } else if appState.sheetViewToShow == .calendar {
-                        CalendarPickerView { selectedDate in
-                            appState.goToDay(newDay: selectedDate)
-                            appState.hideSheet()
-                        }
-                    }
-                }
-//                MicrophoneButton()
+                AddNewActionButton(verticalSizeClass: verticalSizeClass)
+                    .offset(y: verticalSizeClass == .compact ? 0 : 0)
             }
-            .edgesIgnoringSafeArea(.bottom)
         }
         .alert(isPresented: $timerManager.showCompletionAlert) {
             Alert(title: Text("Timer Completed"), message: Text("Your timer has finished!"), dismissButton: .default(Text("OK")))
         }
     }
     
-    private func titleForTab(_ tab: Tab) -> String {
-        switch tab {
-        case .timeline:
-            return "Timeline"
-        case .history:
-            return "History"
-        case .goals:
-            return "Goals"
-        case .explorer:
-            return "Explorer"
+    private var popupView: some View {
+        Group {
+            if datePickerModel.showPopupForId != nil {
+                TwoDatePickerView(datePickerModel: datePickerModel)
+            }
         }
     }
-    
-    enum Tab {
-        case timeline
-        case history
-        case goals
-        case explorer
-    }
 }
-
-
 
 #Preview {
     ContentView()
