@@ -15,7 +15,7 @@ class ActionTypeModel: ObservableObject, Codable {
     @Published var meta: ActionTypeMeta
     @Published var staticFields: ActionModelTypeStaticSchema
     @Published var dynamicFields: [String: Schema]
-    @Published var internalObjects: [String: ObjectType]
+    @Published var internalObjects: [String: ObjectTypeModel]
     @Published var aggregates: [AggregateModel]
     
     var shortDescSyntax: String?
@@ -41,7 +41,7 @@ class ActionTypeModel: ObservableObject, Codable {
          meta: ActionTypeMeta = ActionTypeMeta(),
          staticFields: ActionModelTypeStaticSchema = ActionModelTypeStaticSchema(),
          dynamicFields: [String: Schema] = [:],
-         internalObjects: [String: ObjectType] = [:],
+         internalObjects: [String: ObjectTypeModel] = [:],
          aggregates: [AggregateModel] = [],
          shortDescSyntax: String? = nil,
          createdAt: Date = Date(),
@@ -131,7 +131,7 @@ class ActionTypeModel: ObservableObject, Codable {
 struct ActionTypeMetadataForHasura: Codable {
     var staticFields: ActionModelTypeStaticSchema
     var dynamicFields: [String: Schema]
-    var internalObjects: [String: ObjectType]
+    var internalObjects: [String: ObjectTypeModel]
     
     enum CodingKeys: String, CodingKey {
         case staticFields, dynamicFields, internalObjects, aggregates
@@ -139,7 +139,7 @@ struct ActionTypeMetadataForHasura: Codable {
     
     init(staticFields: ActionModelTypeStaticSchema = ActionModelTypeStaticSchema(),
          dynamicFields: [String : Schema] = [:],
-         internalObjects: [String : ObjectType] = [:]
+         internalObjects: [String : ObjectTypeModel] = [:]
     ) {
         self.staticFields = staticFields
         self.dynamicFields = dynamicFields
@@ -150,7 +150,7 @@ struct ActionTypeMetadataForHasura: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         staticFields = try container.decode(ActionModelTypeStaticSchema.self, forKey: .staticFields)
         dynamicFields = try container.decodeIfPresent([String: Schema].self, forKey: .dynamicFields) ?? [:]
-        internalObjects = (try? container.decode([String: ObjectType].self, forKey: .internalObjects)) ?? [:]
+        internalObjects = (try? container.decode([String: ObjectTypeModel].self, forKey: .internalObjects)) ?? [:]
     }
     
     func encode(to encoder: Encoder) throws {

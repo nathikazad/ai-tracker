@@ -28,13 +28,20 @@ struct SettingsView: View {
                             Label("Change User \(currentUserName)", systemImage: "person.2.fill")
                                 .foregroundColor(.primary)
                         }
+                        .alignmentGuide(.listRowSeparatorLeading) { _ in
+                            -20
+                        }
                     }
-                    NavigationLink(destination: ObjectTypeListView()) {
+                    
+                    NavigationLink(destination: InteractionsView()) {
                         Label {
                             Text("Memos")
                                 .foregroundColor(.primary)
                         } icon: {
                             Image(systemName: "mic")
+                        }
+                        .alignmentGuide(.listRowSeparatorLeading) { _ in
+                            -20
                         }
                     }
                     Button(action: {
@@ -46,6 +53,9 @@ struct SettingsView: View {
                         } icon: {
                             Image(systemName: "trash.fill")
                                 .foregroundColor(.red)
+                        }
+                        .alignmentGuide(.listRowSeparatorLeading) { _ in
+                            -20
                         }
                     }
                     

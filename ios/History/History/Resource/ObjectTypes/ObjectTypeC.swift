@@ -8,7 +8,7 @@
 import Foundation
 
 class ObjectTypeController {
-    static func createObjectType(objectType: ObjectType) async -> Int? {
+    static func createObjectType(objectType: ObjectTypeModel) async -> Int? {
         var hasuraStruct = HasuraMutation(
             mutationFor: "insert_object_types_one",
             mutationName: "CreateObjectTypeMutation",
@@ -40,7 +40,7 @@ class ObjectTypeController {
         }
     }
     
-    static func updateObjectType(objectType: ObjectType) async {
+    static func updateObjectType(objectType: ObjectTypeModel) async {
         guard let id = objectType.id else {
             print("Cannot update object type without an ID")
             return
@@ -104,11 +104,11 @@ class ObjectTypeController {
         }
     }
     
-    static func fetchObjectTypes(userId: Int, objectTypeId: Int? = nil) async -> [ObjectType] {
+    static func fetchObjectTypes(userId: Int, objectTypeId: Int? = nil) async -> [ObjectTypeModel] {
         let (graphqlQuery, variables) = generateQueryForObjectTypes(userId: userId, objectTypeId: objectTypeId)
         
         struct ObjectTypeData: GraphQLData {
-            var object_types: [ObjectType]
+            var object_types: [ObjectTypeModel]
         }
         
         do {
@@ -124,11 +124,11 @@ class ObjectTypeController {
         }
     }
     
-    static func fetchObjectType(userId: Int, objectTypeId: Int) async -> ObjectType? {
+    static func fetchObjectType(userId: Int, objectTypeId: Int) async -> ObjectTypeModel? {
         let (graphqlQuery, variables) = generateQueryForObjectTypes(userId: userId, objectTypeId: objectTypeId)
         
         struct ObjectTypeData: GraphQLData {
-            var object_types: [ObjectType]
+            var object_types: [ObjectTypeModel]
         }
         
         do {
@@ -154,7 +154,7 @@ class ObjectTypeController {
         return hasuraStruct.getQueryAndVariables
     }
     
-    private static func objectTypeSelections() -> String {
+    static func objectTypeSelections() -> String {
         return """
             id
             created_at

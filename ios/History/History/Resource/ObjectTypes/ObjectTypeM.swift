@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ObjectType: Observable, Codable, ObservableObject {
+class ObjectTypeModel: Observable, Codable, ObservableObject {
     @Published var id: Int?
     @Published var name: String
     @Published var description: String
@@ -30,8 +30,6 @@ class ObjectType: Observable, Codable, ObservableObject {
         let metadata = try container.decode(ObjectTypeMetadataForHasura.self, forKey: .metadata)
         fields = metadata.dynamicFields
         description = metadata.description
-        description = ""
-        fields = [:]
     }
     
     func encode(to encoder: Encoder) throws {

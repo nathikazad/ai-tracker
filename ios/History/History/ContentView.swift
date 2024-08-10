@@ -49,6 +49,8 @@ struct MainView: View {
     @State private var selectedTab: Tab = .timeline
     @ObservedObject var appState = state
     @ObservedObject private var timerManager = TimerManager.shared
+    @State private var selectedExplorerType: ExplorerType = .actions
+    
     var sheetViewPresented: Binding<Bool> {
         Binding(
             get: { self.appState.sheetViewToShow != .none },
@@ -61,9 +63,25 @@ struct MainView: View {
             }
         )
     }
+    
+    enum ExplorerType: String, CaseIterable {
+        case actions = "Actions"
+        case objects = "Objects"
+    }
+    
     var body: some View {
         NavigationStack {
+            if selectedTab == Tab.explorer {
+                Picker("", selection: $selectedExplorerType) {
+                    ForEach(ExplorerType.allCases, id: \.self) { viewType in
+                        Text(viewType.rawValue).tag(viewType)
+                    }
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                .padding()
+            }
             ZStack(alignment: .bottom) {
+
                 TabView(selection: $selectedTab) {
                     CandleChartWithList()
                         .tabItem { Label("History", systemImage: "clock.arrow.circlepath") }
@@ -82,10 +100,15 @@ struct MainView: View {
                     AggregatesTabView()
                         .tabItem { Label("Goals", systemImage: "target") }
                         .tag(Tab.goals)
-                    
-                    ListActionsTypesView()
-                        .tabItem { Label("Explorer", systemImage: "globe") }
-                        .tag(Tab.explorer)
+                    if selectedExplorerType == .actions {
+                        ListActionsTypesView()
+                            .tabItem { Label("Explorer", systemImage: "globe") }
+                            .tag(Tab.explorer)
+                    } else {
+                         ObjectTypeListView(listType: .takeToObjects)
+                            .tabItem { Label("Explorer", systemImage: "globe") }
+                            .tag(Tab.explorer)
+                    }
                 }
                 let buttonSize: CGFloat = verticalSizeClass == .compact ? 40 : 60
                 

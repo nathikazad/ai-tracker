@@ -3,9 +3,9 @@ import Foundation
 import SwiftUI
 
 struct ObjectTypeView: View {
-    @StateObject var objectType: ObjectType
-    var updateObjectTypeCallback: ((ObjectType) -> Void)?
-    var deleteObjectTypeCallback: ((ObjectType) -> Void)?
+    @StateObject var objectType: ObjectTypeModel
+    var updateObjectTypeCallback: ((ObjectTypeModel) -> Void)?
+    var deleteObjectTypeCallback: ((ObjectTypeModel) -> Void)?
     @State private var changesToSave:Bool = false
     @Environment(\.presentationMode) var presentationMode
     
@@ -18,10 +18,16 @@ struct ObjectTypeView: View {
                         changesToSave = true
                     }
             }
+            .alignmentGuide(.listRowSeparatorLeading) { _ in
+                -20
+            }
 
             LongStringComponent(fieldName: "Description", value: $objectType.description)
                 .onChange(of: objectType.description) {
                     changesToSave = true
+            }
+            .alignmentGuide(.listRowSeparatorLeading) { _ in
+                -20
             }
             
             ForEach(Array(objectType.fields.keys.sorted()), id: \.self) { fieldKey in
@@ -32,9 +38,15 @@ struct ObjectTypeView: View {
                         objectType.fields.removeValue(forKey: fieldKey)
                     }
                 )
+                .alignmentGuide(.listRowSeparatorLeading) { _ in
+                    -20
+                }
             }
             Button(action: addNewField) {
                 Label("Add New Field To \(objectType.name)", systemImage: "plus")
+            }
+            .alignmentGuide(.listRowSeparatorLeading) { _ in
+                -20
             }
             
             
@@ -48,6 +60,9 @@ struct ObjectTypeView: View {
                 }) {
                     Label("Update \(objectType.name)", systemImage: "square.and.arrow.up")
                         .frame(maxWidth: .infinity, alignment: .center)
+                }
+                .alignmentGuide(.listRowSeparatorLeading) { _ in
+                    -20
                 }
                 .disabled(!changesToSave)
                 
@@ -76,6 +91,9 @@ struct ObjectTypeView: View {
                     Text("Create \(objectType.name) Object")
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
+                .alignmentGuide(.listRowSeparatorLeading) { _ in
+                    -50
+                }
                 .disabled(!changesToSave)
             }
         }
@@ -95,7 +113,7 @@ struct ObjectTypeView: View {
 }
 
 struct InternalObjectFieldView: View {
-    @ObservedObject var objectType: ObjectType
+    @ObservedObject var objectType: ObjectTypeModel
     let fieldKey: String
     var deleteField: (() -> Void)
     
@@ -111,6 +129,7 @@ struct InternalObjectFieldView: View {
                         objectType.objectWillChange.send()
                     }
                 ), validDataTypes:  ["DateTime", "ShortString", "LongString", "Enum"] + externalDataTypes)
+                
                 
                 Button(action: deleteField) {
                     Label("Delete", systemImage: "trash")

@@ -9,15 +9,16 @@ import Foundation
 import SwiftUI
 
 struct ObjectTypeListView: View {
-    @State private var objectTypes: [ObjectType] = []
+    @State private var objectTypes: [ObjectTypeModel] = []
     @State private var searchText = ""
-    var selectionAction: ((ObjectType) -> Void)?
+    var selectionAction: ((ObjectTypeModel) -> Void)?
     @Environment(\.presentationMode) var presentationMode
-    var listType: ListType = .normal
+    var listType: ListType = .takeToObjectTypes
 
     enum ListType {
-        case normal
+        case takeToObjectTypes
         case forTemplate
+        case takeToObjects
     }
     
     var body: some View {
@@ -28,16 +29,22 @@ struct ObjectTypeListView: View {
                 .background(Color.white)
                 .cornerRadius(8)
                 .padding(2)
+                .alignmentGuide(.listRowSeparatorLeading) { _ in
+                    -20
+                }
             
             if listType != .forTemplate {
                 NavigationButton(destination: ObjectTypeView(
                     
-                    objectType: ObjectType(name: "", description: "", fields: [:]),
+                    objectType: ObjectTypeModel(name: "", description: "", fields: [:]),
                     updateObjectTypeCallback: { newObjectType in
                         objectTypes.append(newObjectType)
                     }
                 )) {
                     Label("Create New Object Type", systemImage: "plus.circle")
+                }
+                .alignmentGuide(.listRowSeparatorLeading) { _ in
+                    -20
                 }
                 
                 NavigationButton(destination: ObjectTypeListView(
@@ -51,6 +58,9 @@ struct ObjectTypeListView: View {
                 )) {
                     Label("Import From Templates", systemImage: "plus.circle")
                 }
+                .alignmentGuide(.listRowSeparatorLeading) { _ in
+                    -20
+                }
             }
             
             ForEach(filteredObjectTypes, id: \.name) { objectType in
@@ -61,9 +71,22 @@ struct ObjectTypeListView: View {
                     }) {
                         Text(objectType.name)
                     }
-                } else {
+                    .alignmentGuide(.listRowSeparatorLeading) { _ in
+                        -20
+                    }
+                } else if listType == .takeToObjectTypes {
                     NavigationButton(destination: ObjectTypeView(objectType: objectType)) {
                         Text(objectType.name)
+                    }
+                    .alignmentGuide(.listRowSeparatorLeading) { _ in
+                        -20
+                    }
+                } else {
+                    NavigationButton(destination: ObjectListView(objectType: objectType)) {
+                        Text(objectType.name)
+                    }
+                    .alignmentGuide(.listRowSeparatorLeading) { _ in
+                        -20
                     }
                 }
             }
@@ -82,7 +105,7 @@ struct ObjectTypeListView: View {
         }
     }
     
-    private var filteredObjectTypes: [ObjectType] {
+    private var filteredObjectTypes: [ObjectTypeModel] {
         if searchText.isEmpty {
             return objectTypes.sorted { $0.name < $1.name }
         } else {

@@ -7,26 +7,51 @@
 
 import Foundation
 
+// case duration = "Duration"
+// case date = "Date"
+// case unit = "Unit"
+// case timeStampedString = "TimeStampedString"
+// case location = "Location"
+// case image = "Image"
+// case todo = "Todo"
+
 enum DataType: String, CaseIterable, Codable {
-    // case duration = "Duration"
     case time = "Time"
-    // case date = "Date"
     case dateTime = "DateTime"
     case number = "Number"
-    // case unit = "Unit"
     case currency = "Currency"
     case enumerator = "Enum"
     case shortString = "ShortString"
     case longString = "LongString"
-    // case timeStampedString = "TimeStampedString"
-    // case location = "Location"
-    // case image = "Image"
-    // case todo = "Todo"
 }
 
 func getDataType(from string: String) -> DataType? {
     let lowercasedString = string.lowercased()
     return DataType.allCases.first { $0.rawValue.lowercased() == lowercasedString }
+}
+
+extension String {
+    func getInitAnyCodable(value: String? = nil) -> AnyCodable? {
+        let dataType = getDataType(from: self)
+        switch dataType {
+        case .currency:
+            return Currency(value: 0).toAnyCodable()
+        
+        case .time, .dateTime:
+            return AnyCodable(Date())
+        
+        case .number:
+            return AnyCodable(Double(0))
+        
+        case .enumerator:
+            return AnyCodable(value ?? "None")
+        
+        case .shortString, .longString:
+            return AnyCodable("")
+        case .none:
+            return nil
+        }
+    }
 }
 
 let primitiveDataTypes = DataType.allCases.map { $0.rawValue }

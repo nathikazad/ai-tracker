@@ -104,6 +104,9 @@ struct ActionsTabView: View {
                     List {
                         ForEach(eventsToShow.sortEvents, id: \.id) { event in
                             eventRow(event)
+                                .alignmentGuide(.listRowSeparatorLeading) { _ in
+                                    -20
+                                }
                         }
                     }
                     .onAppear {

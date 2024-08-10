@@ -30,6 +30,9 @@ struct ListActionsTypesView: View {
                 .background(Color.white)
                 .cornerRadius(8)
                 .padding(2)
+                .alignmentGuide(.listRowSeparatorLeading) { _ in
+                    -20
+                }
             if (listActionType != .forTemplate) {
                 NavigationButton(destination: ActionTypeView(
                     model: ActionTypeModel(name: "", meta: ActionTypeMeta(), staticFields: ActionModelTypeStaticSchema()),
@@ -45,6 +48,9 @@ struct ListActionsTypesView: View {
                         .padding(.leading, 5)
                     // navigation link to create user with action to execute on creation
                     Spacer()
+                }
+                .alignmentGuide(.listRowSeparatorLeading) { _ in
+                    -20
                 }
             
                 NavigationButton(destination: ListActionsTypesView(
@@ -65,6 +71,9 @@ struct ListActionsTypesView: View {
                     // navigation link to create user with action to execute on creation
                     Spacer()
                 }
+                .alignmentGuide(.listRowSeparatorLeading) { _ in
+                    -20
+                }
             }
             
             
@@ -78,6 +87,9 @@ struct ListActionsTypesView: View {
                     {
                         Text(action.name)
                     }
+                    .alignmentGuide(.listRowSeparatorLeading) { _ in
+                        -20
+                    }
                 } else if (listActionType == .takeToActionView) {
                     NavigationButton(destination: ShowActionView(
                         actionType: action,
@@ -89,6 +101,9 @@ struct ListActionsTypesView: View {
                     {
                         Text(action.name)
                     }
+                    .alignmentGuide(.listRowSeparatorLeading) { _ in
+                        -20
+                    }
                 } else {
                     NavigationButton(destination: ListActionsView(
                         actionType: action,
@@ -99,6 +114,9 @@ struct ListActionsTypesView: View {
                         })
                     ) {
                         Text(action.name)
+                    }
+                    .alignmentGuide(.listRowSeparatorLeading) { _ in
+                        -20
                     }
                 }
             }
