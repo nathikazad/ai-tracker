@@ -129,6 +129,10 @@
 		FEBB19992C66DB6900ECAC85 /* ObjectC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB19982C66DB6900ECAC85 /* ObjectC.swift */; };
 		FEBB199B2C66E02100ECAC85 /* ObjectV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB199A2C66E02100ECAC85 /* ObjectV.swift */; };
 		FEBB199D2C66E2F900ECAC85 /* ObjectsListV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB199C2C66E2F900ECAC85 /* ObjectsListV.swift */; };
+		FEBB19A22C681DDF00ECAC85 /* RadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB19A12C681DDF00ECAC85 /* RadioButton.swift */; };
+		FEBB19A42C681DF900ECAC85 /* RangedSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB19A32C681DF900ECAC85 /* RangedSlider.swift */; };
+		FEBB19A62C682CE400ECAC85 /* AddNewActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB19A52C682CE400ECAC85 /* AddNewActionButton.swift */; };
+		FEBB19A82C682CF600ECAC85 /* NavigatorBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB19A72C682CF600ECAC85 /* NavigatorBar.swift */; };
 		FEBED49A2C0AD79800DB2D5F /* PersonViewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBED4992C0AD79800DB2D5F /* PersonViewHelper.swift */; };
 		FEC538812BBDF8C7006BDBDA /* WidgetIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEC538802BBDF8C7006BDBDA /* WidgetIntent.swift */; };
 		FEC7849E2C064EAE007C38F1 /* PersonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEC7849D2C064EAE007C38F1 /* PersonView.swift */; };
@@ -307,6 +311,10 @@
 		FEBB19982C66DB6900ECAC85 /* ObjectC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectC.swift; sourceTree = "<group>"; };
 		FEBB199A2C66E02100ECAC85 /* ObjectV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectV.swift; sourceTree = "<group>"; };
 		FEBB199C2C66E2F900ECAC85 /* ObjectsListV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectsListV.swift; sourceTree = "<group>"; };
+		FEBB19A12C681DDF00ECAC85 /* RadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioButton.swift; sourceTree = "<group>"; };
+		FEBB19A32C681DF900ECAC85 /* RangedSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RangedSlider.swift; sourceTree = "<group>"; };
+		FEBB19A52C682CE400ECAC85 /* AddNewActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewActionButton.swift; sourceTree = "<group>"; };
+		FEBB19A72C682CF600ECAC85 /* NavigatorBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigatorBar.swift; sourceTree = "<group>"; };
 		FEBED4992C0AD79800DB2D5F /* PersonViewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonViewHelper.swift; sourceTree = "<group>"; };
 		FEC5386D2BBDE4E5006BDBDA /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		FEC5386F2BBDE4E5006BDBDA /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -435,6 +443,7 @@
 		FE4AB3A92C544D0700A07749 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				FEBB199E2C681DC600ECAC85 /* Shared */,
 				FEBB19952C66D94400ECAC85 /* Objects */,
 				FEBB198D2C6580FE00ECAC85 /* ObjectTypes */,
 				FE759E0F2C5DE40D001A0FF4 /* DataTypes */,
@@ -740,6 +749,33 @@
 			path = Objects;
 			sourceTree = "<group>";
 		};
+		FEBB199E2C681DC600ECAC85 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				FEBB19A02C681DD400ECAC85 /* Components */,
+				FEBB199F2C681DCF00ECAC85 /* Views */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		FEBB199F2C681DCF00ECAC85 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		FEBB19A02C681DD400ECAC85 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				FEBB19A12C681DDF00ECAC85 /* RadioButton.swift */,
+				FEBB19A32C681DF900ECAC85 /* RangedSlider.swift */,
+				FEBB19A52C682CE400ECAC85 /* AddNewActionButton.swift */,
+				FEBB19A72C682CF600ECAC85 /* NavigatorBar.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
 		FEDBC0612C04FB2100233EA0 /* Components */ = {
 			isa = PBXGroup;
 			children = (
@@ -955,6 +991,7 @@
 				FE638F432C56FF4E001C34F0 /* ShowActionComponents.swift in Sources */,
 				FEDBC0672C050C3F00233EA0 /* EventButtons.swift in Sources */,
 				FE4AB3A82C52F99800A07749 /* AnyCodableM.swift in Sources */,
+				FEBB19A82C682CF600ECAC85 /* NavigatorBar.swift in Sources */,
 				FEBED49A2C0AD79800DB2D5F /* PersonViewHelper.swift in Sources */,
 				FE4AB38F2C51830600A07749 /* ActionTypeV.swift in Sources */,
 				FE71B3882BD07BCE008F7D1A /* AudioRecorder.swift in Sources */,
@@ -965,6 +1002,7 @@
 				FE4F7BB12BA7D7C80041CB6A /* WatchCommunicator.swift in Sources */,
 				FE9E18BB2C02DE4000611CE8 /* EventRow.swift in Sources */,
 				FEC7849E2C064EAE007C38F1 /* PersonView.swift in Sources */,
+				FEBB19A42C681DF900ECAC85 /* RangedSlider.swift in Sources */,
 				FE4AB3A02C51F2C500A07749 /* EnumView.swift in Sources */,
 				FEDBC0632C04FB2F00233EA0 /* Notes.swift in Sources */,
 				FE4AB3892C4EF46B00A07749 /* ActionTypeM.swift in Sources */,
@@ -985,6 +1023,7 @@
 				FEBB199D2C66E2F900ECAC85 /* ObjectsListV.swift in Sources */,
 				FE12C5EC2BC4B359002CDC60 /* GraphsView.swift in Sources */,
 				FE06FD062C09140500E65D41 /* PeopleView.swift in Sources */,
+				FEBB19A62C682CE400ECAC85 /* AddNewActionButton.swift in Sources */,
 				FEE29E0A2C5C35FB00A27C44 /* AggregateV.swift in Sources */,
 				FEA549A52BD34D290058E7D8 /* LocationView.swift in Sources */,
 				FEE29E082C5C1F1E00A27C44 /* AggregateC.swift in Sources */,
@@ -1007,6 +1046,7 @@
 				FEBB198C2C65639300ECAC85 /* ColorHelper.swift in Sources */,
 				FE96B5452BF8505D000BD8E1 /* BookView.swift in Sources */,
 				FE477D8F2BD5E3C8001FC341 /* EventsView.swift in Sources */,
+				FEBB19A22C681DDF00ECAC85 /* RadioButton.swift in Sources */,
 				FE759E122C5DE432001A0FF4 /* DataTypeV.swift in Sources */,
 				FEBB19972C66D96100ECAC85 /* ObjectM.swift in Sources */,
 				FE7EBFC82C0A8F2200F720EB /* PersonAssociationsView.swift in Sources */,
@@ -1262,7 +1302,7 @@
 				CODE_SIGN_ENTITLEMENTS = History/History.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 12;
 				DEVELOPMENT_ASSET_PATHS = "\"History/Preview Content\"";
 				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
@@ -1281,7 +1321,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.11;
+				MARKETING_VERSION = 0.12;
 				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1304,7 +1344,7 @@
 				CODE_SIGN_ENTITLEMENTS = History/History.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 12;
 				DEVELOPMENT_ASSET_PATHS = "\"History/Preview Content\"";
 				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
@@ -1323,7 +1363,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.11;
+				MARKETING_VERSION = 0.12;
 				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1344,7 +1384,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 12;
 				DEVELOPMENT_ASSET_PATHS = "\"MiniHistory Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
@@ -1356,7 +1396,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.11;
+				MARKETING_VERSION = 0.12;
 				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire.watchapp;
 				PRODUCT_NAME = "Aspire Watch";
 				SDKROOT = watchos;
@@ -1375,7 +1415,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 12;
 				DEVELOPMENT_ASSET_PATHS = "\"MiniHistory Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
@@ -1387,7 +1427,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.11;
+				MARKETING_VERSION = 0.12;
 				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire.watchapp;
 				PRODUCT_NAME = "Aspire Watch";
 				SDKROOT = watchos;

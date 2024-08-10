@@ -17,7 +17,6 @@ struct CandleChartWithList: View {
     @State var daysRange: ClosedRange<Int> = 5...6
     @State var showColorPickerForActionTypeId: Int? = nil
     @State var redrawChart: Bool = true
-    var timeZone: String = "America/Los_Angeles"
     @State private var coreStateSubcription: AnyCancellable?
     
     
@@ -26,12 +25,12 @@ struct CandleChartWithList: View {
     }
     
     var candles: [Candle] {
-        let filteredCandles = convertActionsToCandles(actions, timeZone: timeZone, daysRange: daysRange)
+        let filteredCandles = convertActionsToCandles(actions, daysRange: daysRange)
         return filteredCandles
     }
     
     var truncatedCandles: [Candle] {
-        truncateCandles(candles, startHour: hoursRange.lowerBound, endHour: hoursRange.upperBound, timeZone: timeZone)
+        truncateCandles(candles, startHour: hoursRange.lowerBound, endHour: hoursRange.upperBound)
     }
     
     var filteredCandles: [Candle] {
@@ -250,16 +249,16 @@ extension Date {
     }
 }
 
-func convertActionsToCandles(_ actions: [ActionModel], timeZone: String, daysRange: ClosedRange<Int>) -> [Candle] {
+func convertActionsToCandles(_ actions: [ActionModel], daysRange: ClosedRange<Int>) -> [Candle] {
     
     let dateFormatter = DateFormatter()
     let calendar = Calendar.current
     dateFormatter.dateFormat = "yyyy-MM-dd"
     
-    guard let timezone = TimeZone(identifier: timeZone) else {
-        fatalError("Invalid timezone identifier")
-    }
-    dateFormatter.timeZone = timezone
+//    guard let timezone = TimeZone(identifier: timeZone) else {
+//        fatalError("Invalid timezone identifier")
+//    }
+//    dateFormatter.timeZone = timezone
 
     let startDateOfRange = calendar.date(
         byAdding: .day,
@@ -273,7 +272,7 @@ func convertActionsToCandles(_ actions: [ActionModel], timeZone: String, daysRan
         let startDate = action.startTime
         let endDate = action.endTime ?? action.startTime
         var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = timezone
+//        calendar.timeZone = timezone
         
         if let midnight = calendar.date(bySettingHour: 23, minute: 59, second: 59, of:  startDate) {
             if (startDate < midnight && endDate > midnight) {
@@ -320,13 +319,13 @@ func convertActionsToCandles(_ actions: [ActionModel], timeZone: String, daysRan
 //)
 //: endDate
 
-func truncateCandles(_ candles: [Candle], startHour: Int, endHour: Int, timeZone: String) -> [Candle] {
-    guard let timezone = TimeZone(identifier: timeZone) else {
-        fatalError("Invalid timezone identifier")
-    }
-    
+func truncateCandles(_ candles: [Candle], startHour: Int, endHour: Int) -> [Candle] {
+//    guard let timezone = TimeZone(identifier: timeZone) else {
+//        fatalError("Invalid timezone identifier")
+//    }
+//    
     var calendar = Calendar(identifier: .gregorian)
-    calendar.timeZone = timezone
+//    calendar.timeZone = timezone
     
     let adjustedEndHour = endHour == 24 ? 0 : endHour
     let dayOffset = endHour == 24 ? 1 : 0
