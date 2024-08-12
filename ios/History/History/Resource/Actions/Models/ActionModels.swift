@@ -23,6 +23,16 @@ extension [ActionModel] {
             return date1 < date2
         }
     }
+    
+    func filterEvents(startDate: Date, endDate: Date) -> [ActionModel] {
+        let ret = self.filter { event in
+            let startInRange = event.startTime >= startDate && event.startTime <= endDate
+            let endInRange = event.endTime.map { $0 >= startDate && $0 <= endDate } ?? false
+            let spansRange = event.startTime <= startDate && (event.endTime ?? event.startTime) >= endDate
+            return startInRange || endInRange || spansRange
+        }
+        return ret
+    }
 
     enum AggregateType {
         case sum

@@ -44,6 +44,13 @@ extension Date {
         dateFormatter.timeZone = TimeZone.current // Local time zone
         return dateFormatter.string(from: self).replacingOccurrences(of: ".", with: "").lowercased() // a.m. -> am
     }
+    
+    var formattedTimeWithoutMeridian: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "hh:mm" // 12-hour format with AM/PM
+        dateFormatter.timeZone = TimeZone.current // Local time zone
+        return dateFormatter.string(from: self).replacingOccurrences(of: ".", with: "").lowercased() // a.m. -> am
+    }
 
     func formattedTimeWithReferenceDate(_ referenceDate: Date) -> String {
         let daysDifference = Calendar.currentInLocal.dateComponents([.day], from: referenceDate.startOfDay, to: self.startOfDay).day ?? 0
@@ -182,16 +189,24 @@ extension Date {
         let startHour = calendar.startOfDay(for: startOfWeek)
         
         // Find the end of the week (Sunday at 23:59:59)
-        let endOfWeek = calendar.date(byAdding: .day, value: 6, to: startOfWeek)!
+        let endOfWeek = calendar.date(byAdding: .day, value: 7, to: startOfWeek)!
         let endHour = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: endOfWeek)!
-        print(endHour)
+        print(startHour.formattedShortDateAndTime, endHour.formattedShortDateAndTime)
         return WeekBoundary(start: startHour, end: endHour)
+    }
+    
+    var getWeekday: Weekday {
+        let calendar = Calendar.current
+        let weekdayNumber = calendar.component(.weekday, from: self)
+        let adjustedWeekdayNumber = weekdayNumber == 1 ? 7 : weekdayNumber - 1
+        
+        return Weekday(rawValue: adjustedWeekdayNumber)!
     }
 }
 
 struct WeekBoundary: Equatable {
-    let start: Date
-    let end: Date
+    let start: Date //(Monday at 00:00)
+    let end: Date //(Sunday at 23:59:59)
     
     func nextWeek() -> WeekBoundary {
         return Calendar.current.date(byAdding: .day, value: 7, to: self.start)!.getWeekBoundary
@@ -204,6 +219,45 @@ struct WeekBoundary: Equatable {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM d"
         return "\(dateFormatter.string(from: self.start)) - \(dateFormatter.string(from: self.end))"
+    }
+}
+
+enum Weekday: Int, CaseIterable {
+    case monday = 1, tuesday, wednesday, thursday, friday, saturday, sunday
+    var name: String {
+        switch self {
+        case .sunday: return "Sun"
+        case .monday: return "Mon"
+        case .tuesday: return "Tue"
+        case .wednesday: return "Wed"
+        case .thursday: return "Thu"
+        case .friday: return "Fri"
+        case .saturday: return "Sat"
+        }
+    }
+    
+    static func getDays(_ range: ClosedRange<Int>) -> [Weekday] {
+        let start = range.lowerBound
+        let end = range.upperBound
+        
+        let adjustedEnd = end < start ? end + 7 : end
+        return ((start+1)...adjustedEnd).map { day in
+            Weekday(rawValue: ((day - 1) % 7) + 1)!
+        }
+    }
+}
+
+func numberToWeekday(_ number: Int) -> Weekday? {
+    return Weekday(rawValue: number)
+}
+
+extension WeekBoundary {
+    func getStartAndEnd(weekday: Weekday) -> (start: Date, end: Date) {
+        let calendar = Calendar.current
+        let weekdayOffset = weekday.rawValue
+        let startDate = calendar.date(byAdding: .day, value: weekdayOffset, to: start)!
+        let endDate = calendar.date(byAdding: .day, value: 1, to: startDate)!.addingTimeInterval(-1)
+        return (start: startDate, end: endDate)
     }
 }
 

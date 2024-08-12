@@ -24,7 +24,7 @@ struct ListActionsTypesView: View {
     
     var body: some View {
         List {
-            TextField("Search actions...", text: $searchText)
+            TextField("Search verbs...", text: $searchText)
                 .padding(7)
                 .foregroundColor(Color.black)
                 .background(Color.white)
@@ -44,7 +44,7 @@ struct ListActionsTypesView: View {
                     Text(" ")
                     Spacer()
                     Image(systemName: "plus.circle")
-                    Text("Create New Action Type")
+                    Text("Create New Verb")
                         .padding(.leading, 5)
                     // navigation link to create user with action to execute on creation
                     Spacer()
@@ -122,7 +122,7 @@ struct ListActionsTypesView: View {
             }
             
         }
-        .navigationBarTitle(Text(clickAction == nil ? "Select Action" : "Actions"), displayMode: .inline)
+        .navigationBarTitle(Text(clickAction == nil ? "Select Verb" : "Verbs"), displayMode: .inline)
         .onAppear(perform: fetchActionTypes)
     }
     

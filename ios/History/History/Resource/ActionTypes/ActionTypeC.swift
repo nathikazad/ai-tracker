@@ -200,28 +200,28 @@ class ActionTypesController {
 // finished: add candle sticks
 
 // CANDLES
-// grouped by days or actionTypes with duration actions 
-// Add time info to candles
-// add preferred hours with marks
+// finished: grouped by days or actionTypes with time actions 
+// finished: Add time info to candles
 // finshed: change color permanently from candle
 
 // GOALS
-// Make goals show by week and actual/expected value and streak
+// finished: Make goals show by week and 
+// actual/expected value and streak
+// add preferred hours with marks
 // duration min/sec goal
-// cumulative for week/month goal
-// LATER: Support conditions only for enum
-// LATER: create segments
+// cumulative for week goal
+// Support conditions only for enum
+// skipped: create segments
 
 // ACTION VIEWS
 // delete action button
-// list actions
+// list actions filter by enum
+// list objects filter by enum
 
-// done: Add voice notes
+// finished: Add voice notes
 // Support dark mode
 
 // BUGS
-// prayers not showing in candle
-// Yareni sleep problem
 // fill in missing days for candles
 // RELEASE & SELL SELL SELL
 // -----------------------------------------------------------
@@ -241,10 +241,12 @@ class ActionTypesController {
 // -----------------------------------------------------------
 // V3
 // RELATIONAL DB
-// internal objects
-// work on object view
-// work on object create/edit
-// put object into database and then fetch it
+// finished: internal objects
+// finished: work on object view
+// finished: work on object create/edit
+// finished: put object into database and then fetch it
+// create connections between objects and actions
+// integrate contacts
 // RELASE
 
 // skipped: Add hour and minute when choosing duration

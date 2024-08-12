@@ -114,7 +114,6 @@ class ActionController {
         struct ActionData: GraphQLData {
             var v2_actions: [ActionModel]
         }
-//        print(actionTypeId, graphqlQuery, variables)
         do {
             let responseData: GraphQLResponse<ActionData> = try await Hasura.shared.sendGraphQL(query: graphqlQuery, variables: variables, responseType: GraphQLResponse<ActionData>.self)
             return responseData.data.v2_actions
@@ -161,11 +160,18 @@ class ActionController {
             hasuraStruct.addParameter(name: "start_time", type: .timestamp, value: startOfTodayUTCString)
             hasuraStruct.addParameter(name: "end_time", type: .timestamp, value: dayAfterUTCString)
         }
-        if let startDate = startDate {
-            hasuraStruct.addWhereClause(name: "start_time", type: .timestamp, value: startDate.toUTCString, op: .greaterThan)
-        }
-        if let endDate = endDate {
-            hasuraStruct.addWhereClause(name: "end_time", type: .timestamp, value: endDate.toUTCString, op: .lessThan)
+        if let startDate = startDate, let endDate = endDate {
+            let startOfStartDateUTCString = startDate.toUTCString
+            let calendar = Calendar.current
+            let endOfEndDateUTCString = endDate.toUTCString
+            let startTimeConditions = "_and: {start_time: {_gte: $start_time, _lt: $end_time}}"
+            let endTimeConditions = "_and: {end_time: {_gt: $start_time, _lte: $end_time}}"
+            let nullEndTimeConditions = "_and: {start_time: {_lte: $end_time}, end_time: {_is_null: true}}"
+            let combinedConditions = "_or: [{\(startTimeConditions)},{\(endTimeConditions)},{\(nullEndTimeConditions)}]"
+            
+            hasuraStruct.addWhereClause(clause: combinedConditions)
+            hasuraStruct.addParameter(name: "start_time", type: .timestamp, value: startOfStartDateUTCString)
+            hasuraStruct.addParameter(name: "end_time", type: .timestamp, value: endOfEndDateUTCString)
         }
         if let actionTypeId = actionTypeId {
             hasuraStruct.addWhereClause(name: "action_type_id", type: .int, value: actionTypeId, op: .equals)

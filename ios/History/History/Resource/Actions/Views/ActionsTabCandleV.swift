@@ -8,17 +8,23 @@
 import SwiftUI
 import Combine
 
+enum SelectedGrouping: String, CodingKey {
+    case byActionType
+    case byDay
+}
+
 struct CandleChartWithList: View {
     @State private var actions: [ActionModel] = []
     @State private var unselectedModels: [Int] = []
     var offsetHours: Int = 0
     
     @State var hoursRange: ClosedRange<Int> = 5...22
-    @State var daysRange: ClosedRange<Int> = 5...6
+    @State var daysRange: ClosedRange<Int> = 0...7
     @State var showColorPickerForActionTypeId: Int? = nil
     @State var redrawChart: Bool = true
     @State private var coreStateSubcription: AnyCancellable?
-    
+    @State private var selectedGrouping: SelectedGrouping = .byActionType
+    @State private var selectedWeekday: Weekday = .saturday
     
     var numOfDays: Int {
         daysRange.upperBound - daysRange.lowerBound
@@ -33,12 +39,12 @@ struct CandleChartWithList: View {
         truncateCandles(candles, startHour: hoursRange.lowerBound, endHour: hoursRange.upperBound)
     }
     
-    var filteredCandles: [Candle] {
+    var filterCandlesByActionType: [Candle] {
         let candles = truncatedCandles.filter({
             candle in
             return !unselectedModels.contains(candle.actionTypeModel!.id!)
         })
-        return candles
+        return candles.sorted(by: { a, b in a.end.timeIntervalSince(a.start) > b.end.timeIntervalSince(b.start)})
     }
     
     var actionTypeModels: [ActionTypeModel] {
@@ -52,7 +58,7 @@ struct CandleChartWithList: View {
                 if verticalSizeClass == .compact {
                     // Landscape orientation
                     HStack(spacing: 0) {
-                        CandleView(title: "", candles: filteredCandles, hoursRange: hoursRange, offsetHours: offsetHours, automaticYAxis: true, val: numOfDays, redrawChart: redrawChart)
+                        CandleView(title: "", candles: filterCandlesByActionType, hoursRange: hoursRange, offsetHours: offsetHours, automaticYAxis: true, val: numOfDays, redrawChart: redrawChart)
                             .frame(width: geometry.size.width * 0.5)
                         
                         list
@@ -62,7 +68,7 @@ struct CandleChartWithList: View {
                     // Portrait orientation
                     VStack(spacing: 0) {
                         
-                        CandleView(title: "", candles: filteredCandles, hoursRange: hoursRange, offsetHours: offsetHours, automaticYAxis: true, val: numOfDays, redrawChart: redrawChart)
+                        CandleView(title: "", candles: filterCandlesByActionType, hoursRange: hoursRange, offsetHours: offsetHours, automaticYAxis: true, val: numOfDays, redrawChart: redrawChart)
                             .frame(height: geometry.size.height * 0.5)
                         
                         list
@@ -81,6 +87,7 @@ struct CandleChartWithList: View {
                 }
                 
             }
+            selectedWeekday = Date().getWeekday
         }
         .onDisappear {
             coreStateSubcription?.cancel()
@@ -96,148 +103,145 @@ struct CandleChartWithList: View {
             }
         }
     }
-    enum Weekday: Int, CaseIterable {
-        case monday = 1, tuesday, wednesday, thursday, friday, saturday, sunday
-        
-        var name: String {
-            switch self {
-            case .sunday: return "Sun"
-            case .monday: return "Mon"
-            case .tuesday: return "Tue"
-            case .wednesday: return "Wed"
-            case .thursday: return "Thu"
-            case .friday: return "Fri"
-            case .saturday: return "Sat"
-            }
-        }
-    }
-
-    func numberToWeekday(_ number: Int) -> Weekday? {
-        return Weekday(rawValue: number)
-    }
     
     var list: some View {
         List {
-            HStack {
-                Text("\(numberToWeekday(daysRange.lowerBound + 1)?.name ?? "Sun")")
-                RangedSliderView(value: $daysRange, bounds: 0...6)
-                    .onChange(of: daysRange) {
-                        fetchActions()
-                    }
-                    .padding(.horizontal, 10)
-                Text("\(numberToWeekday(daysRange.upperBound)?.name ?? "Sun" )")
+            DayRangeSelector(daysRange: $daysRange, fetchActions: fetchActions)
+            HourRangeSelector(hoursRange: $hoursRange)
+            ControlBar(selectedGrouping: $selectedGrouping, unselectedModels: $unselectedModels, actionTypeModels: actionTypeModels)
+            
+            if selectedGrouping == .byDay {
+                WeekdaySelectorForCandles(selectedDay: $selectedWeekday, daysRange: $daysRange)
+                    .alignmentGuide(.listRowSeparatorLeading) { _ in -20 }
             }
-            HStack {
-                Text("Hours: \(hoursRange.lowerBound)")
-                RangedSliderView(value: $hoursRange, bounds: 0...24)
-                    .padding(.horizontal, 10)
-                Text("\(hoursRange.upperBound)")
-            }
-            HStack {
-                Spacer()
-                //                        if (daysRange.count > 2) {
-                //                            Button("Days") {
-                //                            }
-                //                            .padding(.horizontal, 10)
-                //                            .padding(.vertical, 6)
-                //                            .background(Color.gray.opacity(0.2))
-                //                            .cornerRadius(6)
-                //                            .buttonStyle(PlainButtonStyle())
-                //                        }
-                Button("All") {
-                    unselectedModels = []
-                }
-                .padding(.horizontal, 10)
-                .padding(.vertical, 6)
-                .background(Color.gray.opacity(0.2))
-                .cornerRadius(6)
-                .buttonStyle(PlainButtonStyle())
-                Button("Clear") {
-                    unselectedModels = actionTypeModels.compactMap { $0.id }
-                }
-                .padding(.horizontal, 10)
-                .padding(.vertical, 6)
-                .background(Color.gray.opacity(0.2))
-                .cornerRadius(6)
-                .buttonStyle(PlainButtonStyle())
-            }
-            .alignmentGuide(.listRowSeparatorLeading) { _ in
-                -20
-            }
-            let totalTimeOfAll = truncatedCandles.reduce(0) { (result, candle) -> Int in
-                return result + Int(candle.end.timeIntervalSince(candle.start))
-            }
-            ForEach(actionTypeModels, id: \.name) { actionTypeModel in
-                HStack {
-                    ZStack {
-                        Circle()
-                            .fill(actionTypeModel.staticFields.color)
-                            .frame(width: 20, height: 20)
-                            .onTapGesture {
-                                withAnimation {
-                                    showColorPickerForActionTypeId = actionTypeModel.id
-                                }
-                            }
-                        
-                        if actionTypeModel.id == showColorPickerForActionTypeId {
-                            CompactColorPicker(selectedColor:
-                                                Binding(
-                                                    get: { actionTypeModel.staticFields.color },
-                                                    set: {
-                                                        newValue in
-                                                        actionTypeModel.staticFields.color = newValue
-                                                    }
-                                                ),
-                                               isPickerVisible: Binding(
-                                                get: {
-                                                    actionTypeModel.id == showColorPickerForActionTypeId },
-                                                set: {
-                                                    newValue in
-                                                    Task {
-                                                        await ActionTypesController.updateActionTypeModel(model:actionTypeModel)
-                                                        fetchActions()
-                                                    }
-                                                    showColorPickerForActionTypeId = nil
-                                                }
-                                               ))
-                            
+            
+            if selectedGrouping == .byActionType {
+                ActionTypeList(actionTypeModels: actionTypeModels, truncatedCandles: truncatedCandles, daysRange: daysRange, unselectedModels: $unselectedModels, showColorPickerForActionTypeId: $showColorPickerForActionTypeId, fetchActions: fetchActions)
+            } else {
+                let (start, end) = state.currentWeek.getStartAndEnd(weekday: selectedWeekday)
+                let selectedActions = actions.filterEvents(startDate: start, endDate: end).sortEvents
+                ForEach(selectedActions, id: \.id) { action in
+                    ActionRowForCandleView(actionModel: action, showColorPickerForActionTypeId: $showColorPickerForActionTypeId, unselectedModels: $unselectedModels, truncatedCandles: truncatedCandles, fetchActions: fetchActions)
+                        .alignmentGuide(.listRowSeparatorLeading) { _ in
+                            -20
                         }
-                    }
-                    if actionTypeModel.id != showColorPickerForActionTypeId {
-                        let totalTime = truncatedCandles.reduce(0) { (result, candle) -> Int in
-                            if (candle.actionTypeModel?.id == actionTypeModel.id) {
-                                return result + Int(candle.end.timeIntervalSince(candle.start))
+                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                            NavigationLink(destination: ShowActionView(actionModel: action))
+                            {
+                                Image(systemName: "gear")
                             }
-                            return result
+                            .tint(.gray)
                         }
-                        let percentage =  (totalTime * 100)/totalTimeOfAll
-                        Text("\(actionTypeModel.name) (\(totalTime.fromSecondsToHHMMString)) \(percentage)%")
-                        Spacer()
-                        RadioButton(
-                            isSelected: !unselectedModels.contains(where: { $0 == actionTypeModel.id }),
-                            action: {
-                                if unselectedModels.contains(where: { $0 == actionTypeModel.id }) {
-                                    unselectedModels.removeAll(where: { $0 == actionTypeModel.id })
-                                } else {
-                                    unselectedModels.append(actionTypeModel.id!)
-                                }
-                            }
-                        )
-                    }
                 }
-                .alignmentGuide(.listRowSeparatorLeading) { _ in
-                    -20
-                }
+            }
+        }
+    }
+}
+
+struct DayRangeSelector: View {
+    @Binding var daysRange: ClosedRange<Int>
+    var fetchActions: () -> Void
+    
+    var body: some View {
+        HStack {
+            Text("\(numberToWeekday(Int(daysRange.lowerBound) + 1)?.name ?? "Sun")")
+            RangedSliderView(value: $daysRange, bounds: 0...7)
+                .onChange(of: daysRange) { fetchActions() }
+                .padding(.horizontal, 10)
+            Text("\(numberToWeekday(Int(daysRange.upperBound))?.name ?? "Sun")")
+        }
+    }
+}
+
+struct HourRangeSelector: View {
+    @Binding var hoursRange: ClosedRange<Int>
+    
+    var body: some View {
+        HStack {
+            Text("Hours: \(Int(hoursRange.lowerBound))")
+            RangedSliderView(value: $hoursRange, bounds: 0...24)
+                .padding(.horizontal, 10)
+            Text("\(Int(hoursRange.upperBound))")
+        }
+    }
+}
+
+struct ControlBar: View {
+    @Binding var selectedGrouping: SelectedGrouping
+    @Binding var unselectedModels: [Int]
+    var actionTypeModels: [ActionTypeModel]
+    
+    var body: some View {
+        HStack {
+            Button(selectedGrouping == .byActionType ? "By Days" : "By Verbs") {
+                selectedGrouping = selectedGrouping == .byActionType ? .byDay : .byActionType
+            }
+            .buttonStyle(ControlBarButtonStyle())
+            Spacer()
+            if !unselectedModels.isEmpty {
+                Button("All") { unselectedModels = [] }
+                    .buttonStyle(ControlBarButtonStyle())
+            } else {
+                Button("Clear") { unselectedModels = actionTypeModels.compactMap { $0.id } }
+                    .buttonStyle(ControlBarButtonStyle())
+            }
+        }
+        .alignmentGuide(.listRowSeparatorLeading) { _ in -20 }
+    }
+}
+
+struct ActionTypeList: View {
+    var actionTypeModels: [ActionTypeModel]
+    var truncatedCandles: [Candle]
+    var daysRange: ClosedRange<Int>
+    @Binding var unselectedModels: [Int]
+    @Binding var showColorPickerForActionTypeId: Int?
+    var fetchActions: () -> Void
+    
+    var body: some View {
+        let totalTimeOfAll = (daysRange.upperBound - daysRange.lowerBound) * 24 * 60 * 60
+        let durationByActionType = calculateDurationByActionType(truncatedCandles)
+        let sortedActionTypes = sortActionTypes(actionTypeModels, durationByActionType)
+        
+        ForEach(sortedActionTypes, id: \.name) { actionTypeModel in
+            ActionTypeRowView(actionTypeModel: actionTypeModel, showColorPickerForActionTypeId: $showColorPickerForActionTypeId, unselectedModels: $unselectedModels, truncatedCandles: truncatedCandles, totalTimeOfAll: totalTimeOfAll, fetchActions: fetchActions)
+                .alignmentGuide(.listRowSeparatorLeading) { _ in -20 }
                 .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                    NavigationLink(destination: ActionTypeView(model: actionTypeModel))
-                    {
+                    NavigationLink(destination: ActionTypeView(model: actionTypeModel)) {
                         Image(systemName: "gear")
                     }
                     .tint(.gray)
                 }
-                
+        }
+    }
+    
+    private func calculateDurationByActionType(_ candles: [Candle]) -> [Int: Int] {
+        candles.reduce(into: [:]) { result, candle in
+            if let actionTypeId = candle.actionTypeModel?.id {
+                let duration = Int(candle.end.timeIntervalSince(candle.start))
+                result[actionTypeId, default: 0] += duration
             }
         }
+    }
+    
+    private func sortActionTypes(_ actionTypes: [ActionTypeModel], _ durations: [Int: Int]) -> [ActionTypeModel] {
+        actionTypes.sorted { (a1, a2) in
+            let duration1 = durations[a1.id!] ?? 0
+            let duration2 = durations[a2.id!] ?? 0
+            return duration1 > duration2
+        }
+    }
+}
+
+struct ControlBarButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .fontWeight(.medium)
+            .background(Color.gray.opacity(0.2))
+            .foregroundColor(.primary)
+            .cornerRadius(6)
     }
 }
 
@@ -249,119 +253,12 @@ extension Date {
     }
 }
 
-func convertActionsToCandles(_ actions: [ActionModel], daysRange: ClosedRange<Int>) -> [Candle] {
-    
-    let dateFormatter = DateFormatter()
-    let calendar = Calendar.current
-    dateFormatter.dateFormat = "yyyy-MM-dd"
-    
-//    guard let timezone = TimeZone(identifier: timeZone) else {
-//        fatalError("Invalid timezone identifier")
-//    }
-//    dateFormatter.timeZone = timezone
-
-    let startDateOfRange = calendar.date(
-        byAdding: .day,
-        value: daysRange.lowerBound + 1,
-        to: state.currentWeek.start
-    )!
-    
-    var candles: [Candle] = []
-    
-    for action in actions {
-        let startDate = action.startTime
-        let endDate = action.endTime ?? action.startTime
-        var calendar = Calendar(identifier: .gregorian)
-//        calendar.timeZone = timezone
-        
-        if let midnight = calendar.date(bySettingHour: 23, minute: 59, second: 59, of:  startDate) {
-            if (startDate < midnight && endDate > midnight) {
-                if startDate > startDateOfRange {
-                    let firstCandle = Candle(
-                        date: dateFormatter.string(from: startDate),
-                        start: startDate,
-                        end: midnight,
-                        actionTypeModel: action.actionTypeModel
-                    )
-                    candles.append(firstCandle)
-                }
-                let secondDay = calendar.date(byAdding: .day, value: 1, to: startDate)!
-                if secondDay > startDateOfRange {
-                    let secondCandle = Candle(
-                        date: dateFormatter.string(from: midnight.addMinute(2)),
-                        start: midnight.addMinute(2),
-                        end: endDate,
-                        actionTypeModel: action.actionTypeModel
-                    )
-                    candles.append(secondCandle)
-                }
-            }
-            else {
-                if startDate > startDateOfRange {
-                    let candle = Candle(
-                        date: dateFormatter.string(from: startDate),
-                        start: startDate,
-                        end: endDate,
-                        actionTypeModel: action.actionTypeModel
-                    )
-                    candles.append(candle)
-                }
-            }
-        }
-    }
-    return candles
-}
-
 //let endDate = endDate == startDate
 //? min(
 //    calendar.date(byAdding: .minute, value: 15, to: startDate)!,
 //    calendar.date(bySettingHour: 23, minute: 59, second: 59, of: startDate)!
 //)
 //: endDate
-
-func truncateCandles(_ candles: [Candle], startHour: Int, endHour: Int) -> [Candle] {
-//    guard let timezone = TimeZone(identifier: timeZone) else {
-//        fatalError("Invalid timezone identifier")
-//    }
-//    
-    var calendar = Calendar(identifier: .gregorian)
-//    calendar.timeZone = timezone
-    
-    let adjustedEndHour = endHour == 24 ? 0 : endHour
-    let dayOffset = endHour == 24 ? 1 : 0
-    
-    return candles.filter { candle in
-        guard let startDate = calendar.date(bySettingHour: startHour, minute: 0, second: 0, of: candle.start),
-              var endDate = calendar.date(bySettingHour: adjustedEndHour, minute: 0, second: 0, of: candle.end) else {
-            return false
-        }
-        
-        if dayOffset == 1 {
-            endDate = calendar.date(byAdding: .day, value: 1, to: endDate) ?? endDate
-        }
-        
-        return candle.end > startDate && candle.start < endDate
-    }.map { candle in
-        guard let startDate = calendar.date(bySettingHour: startHour, minute: 0, second: 0, of: candle.start),
-              var endDate = calendar.date(bySettingHour: adjustedEndHour, minute: 0, second: 0, of: candle.end) else {
-            return candle // This should never happen due to the filter, but we need to handle it
-        }
-        
-        if dayOffset == 1 {
-            endDate = calendar.date(byAdding: .day, value: 1, to: endDate) ?? endDate
-        }
-        
-        let truncatedStart = max(candle.start, startDate)
-        let truncatedEnd = min(candle.end, endDate)
-        
-        return Candle(
-            date: candle.date,
-            start: truncatedStart,
-            end: truncatedEnd,
-            actionTypeModel: candle.actionTypeModel
-        )
-    }
-}
 
 func getUniqueActionTypeIds(candles: [Candle]) -> [ActionTypeModel] {
     var uniqueDict: [Int: ActionTypeModel] = [:]

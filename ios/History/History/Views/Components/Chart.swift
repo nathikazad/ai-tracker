@@ -146,10 +146,11 @@ struct CandleView: View {
     
     var body: some View {
         Chart(candles) { period in
+            let end = period.start == period.end ? Calendar.currentInLocal.date(byAdding: .minute, value: 15, to: period.start)! : period.end
             RectangleMark(
                 x: .value("Day", period.start, unit: .day),
                 yStart: .value("Start", normalizedHours(period.start)),
-                yEnd: .value("End", normalizedHours(period.end)),
+                yEnd: .value("End", normalizedHours(end)),
                 width: .ratio(0.6)
             )
             .foregroundStyle(period.actionTypeModel?.staticFields.color ?? Color.gray)

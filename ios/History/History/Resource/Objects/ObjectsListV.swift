@@ -8,6 +8,23 @@
 import Foundation
 import SwiftUI
 
+extension String {
+    var pluralize: String {
+        guard count != 1 else { return self }
+        
+        if self.lowercased().hasSuffix("y") {
+            return String(self.dropLast()) + "ies"
+        } else if self.lowercased().hasSuffix("s") ||
+                  self.lowercased().hasSuffix("ch") ||
+                  self.lowercased().hasSuffix("sh") ||
+                  self.lowercased().hasSuffix("x") {
+            return self + "es"
+        } else {
+            return self + "s"
+        }
+    }
+}
+
 struct ObjectListView: View {
     @State var objectType: ObjectTypeModel
     @State private var objects: [ObjectModel] = []
@@ -17,7 +34,7 @@ struct ObjectListView: View {
     
     var body: some View {
         List {
-            TextField("Search \(objectType.name)s...", text: $searchText)
+            TextField("Search \(objectType.name.pluralize)...", text: $searchText)
                 .padding(7)
                 .foregroundColor(Color.black)
                 .background(Color.white)

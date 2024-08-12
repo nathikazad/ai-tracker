@@ -199,7 +199,7 @@ struct ActionTypeView: View {
                         self.presentationMode.wrappedValue.dismiss()
                     }
                 }) {
-                    Text("Create \(model.name) Action")
+                    Text("Create \(model.name) Verb")
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
                 .disabled(!changesToSave)

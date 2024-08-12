@@ -30,7 +30,9 @@ struct ActionRow: View {
 //                    .foregroundColor(Color.gray)
 //                    .padding(.leading, CGFloat((level - 1) * 10))
 //            }
-            Text(formatTime(event))
+            
+            var formattedString = event.formatTimeWithSubscripts(date: state.currentDate)
+            Text(showTimeWithRespectToCurrentDate ? formattedString : AttributedString(event.formattedTime))
                 .font(.headline)
                 .frame(width: verticalSizeClass == .compact ? 200 : 100, alignment: .leading)
                 .onTapGesture {
@@ -71,29 +73,27 @@ struct ActionRow: View {
         }
         
     }
-    
-    struct ActionDestination: View {
-        var event: ActionModel
-        var body: some View {
-            let destination = ShowActionView(actionModel: event)
-            return AnyView(
-                NavigationLink(destination: destination) {
-                    EmptyView()
-                }
-                    .padding(.horizontal, 10)
-                    .opacity(0)
-            )
-            
-        }
-    }
+}
 
-    
-    // super hacked up code to add subscripts
-    private func formatTime(_ event: ActionModel) -> AttributedString {
-        if !showTimeWithRespectToCurrentDate {
-            return AttributedString(event.formattedTime)
-        }
-        let time = event.formattedTimeWithReferenceDate(state.currentDate)
+struct ActionDestination: View {
+    var event: ActionModel
+    var body: some View {
+        let destination = ShowActionView(actionModel: event)
+        return AnyView(
+            NavigationLink(destination: destination) {
+                EmptyView()
+            }
+                .padding(.horizontal, 10)
+                .opacity(0)
+        )
+        
+    }
+}
+
+// super hacked up code to add subscripts
+extension ActionModel {
+    func formatTimeWithSubscripts(date: Date) -> AttributedString {
+        let time = self.formattedTimeWithReferenceDate(date)
         let pattern = "(\\+\\d+|-\\d+)"
         let regex = try! NSRegularExpression(pattern: pattern, options: [])
         let range = NSRange(time.startIndex..<time.endIndex, in: time)

@@ -61,10 +61,10 @@ class ActionTypeModel: ObservableObject, Codable {
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decodeIfPresent(Int.self, forKey: .id)
-        name = try container.decode(String.self, forKey: .name)
+        name = try container.decodeIfPresent(String.self, forKey: .name) ?? "Unknown Verb"
         meta = try ActionTypeMeta(
             hasDuration: container.decode(Bool.self, forKey: .hasDuration),
-            description: container.decode(String.self, forKey: .description)
+            description: container.decodeIfPresent(String.self, forKey: .description)
         )
         let metadata = try container.decode(ActionTypeMetadataForHasura.self, forKey: .metadata)
         staticFields = metadata.staticFields

@@ -55,8 +55,8 @@ struct MainView: View {
     }
     
     enum ExplorerType: String, CaseIterable {
-        case actions = "Actions"
-        case objects = "Objects"
+        case actions = "Verbs"
+        case objects = "Nouns"
     }
     
     var sheetViewPresented: Binding<Bool> {

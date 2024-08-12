@@ -23,7 +23,7 @@ struct ObjectTypeListView: View {
     
     var body: some View {
         List {
-            TextField("Search object types...", text: $searchText)
+            TextField("Search nouns...", text: $searchText)
                 .padding(7)
                 .foregroundColor(Color.black)
                 .background(Color.white)
@@ -41,7 +41,7 @@ struct ObjectTypeListView: View {
                         objectTypes.append(newObjectType)
                     }
                 )) {
-                    Label("Create New Object Type", systemImage: "plus.circle")
+                    Label("Create New Noun", systemImage: "plus.circle")
                 }
                 .alignmentGuide(.listRowSeparatorLeading) { _ in
                     -20
