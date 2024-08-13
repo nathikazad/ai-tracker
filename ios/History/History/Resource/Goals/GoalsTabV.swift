@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 
-struct AggregatesTabView: View {
+struct GoalsTabView: View {
     @State private var aggregates: [AggregateModel] = []
     @State private var actions: [ActionModel] = []
     @State private var loading = true
@@ -36,18 +36,21 @@ struct AggregatesTabView: View {
                 if aggregates.isEmpty {
                     VStack {
                         Spacer()
-                        Text("No Aggregates Yet")
+                        Text("No Goals Yet")
                             .foregroundColor(.primary)
                             .font(.title2)
-                        Text("Create an event by clicking the microphone below")
-                            .foregroundColor(.gray)
-                            .multilineTextAlignment(.center) // This will center-align the text horizontally
-                            .padding(.horizontal, 20)
+                        
+                        NavigationLink(destination: ListActionsTypesView(listActionType: .takeToAggregateCreateView)) {
+                            Label("Add Goal", systemImage: "plus")
+                        }
+                        .padding(.top, 10)
                         Spacer()
                     }
                 } else {
-                    //                    if (selectedGraphs == .goals) {
                     List {
+                        NavigationLink(destination: ListActionsTypesView(listActionType: .takeToAggregateCreateView)) {
+                            Label("Add New Goal", systemImage: "plus")
+                        }
                         HStack (spacing: 20) {
                             Picker("Priority: ", selection: $selectedPriority) {
                                 Text("High")
@@ -124,7 +127,7 @@ struct AggregatesTabView: View {
                     
                 }
                 .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                    NavigationLink(destination: ShowAggregateView(aggregateModel: aggregate))
+                    NavigationLink(destination: ShowGoalView(aggregateModel: aggregate))
                     {
                         Image(systemName: "gear")
                     }

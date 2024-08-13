@@ -8,14 +8,16 @@
 import Foundation
 import SwiftUI
 
-struct ShowAggregateView: View {
+struct ShowGoalView: View {
     @StateObject private var aggregate: AggregateModel
     @State private var actions: [ActionModel] = []
     @State private var changesToSave: Bool = false
+    var clickAction: (() -> Void)?
     @Environment(\.presentationMode) var presentationMode
     
-    init(aggregateModel: AggregateModel) {
+    init(aggregateModel: AggregateModel, clickAction: (() -> Void)? = nil) {
         _aggregate = StateObject(wrappedValue: aggregateModel)
+        self.clickAction = clickAction
     }
     
     var dataType: String {
@@ -67,6 +69,7 @@ struct ShowAggregateView: View {
                 await AggregateController.createAggregate(aggregate: aggregate)
             }
             self.presentationMode.wrappedValue.dismiss()
+            clickAction?()
         }
     }
     private func deleteAggregate() {

@@ -117,7 +117,7 @@ struct MainView: View {
                             .tabItem { Label("", systemImage: "plus.circle") }
                             .tag(Tab.timeline) // Use an existing tag to prevent selection
                         
-                        AggregatesTabView()
+                        GoalsTabView()
                             .tabItem { Label("Goals", systemImage: "target") }
                             .tag(Tab.goals)
                         

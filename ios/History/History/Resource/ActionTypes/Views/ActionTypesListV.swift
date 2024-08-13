@@ -18,6 +18,7 @@ struct ListActionsTypesView: View {
     enum ListActionType {
         case takeToActionView
         case takeToActionListView
+        case takeToAggregateCreateView
         case forTemplate
     }
     
@@ -76,54 +77,40 @@ struct ListActionsTypesView: View {
                 }
             }
             
-            
-            
             ForEach(filteredActions, id: \.name) { action in
-                if(listActionType == .forTemplate) {
-                    Button(action: {
-                        clickAction?(action)
-                        goBack()
-                    })
-                    {
-                        Text(action.name)
-                    }
-                    .alignmentGuide(.listRowSeparatorLeading) { _ in
-                        -20
-                    }
-                } else if (listActionType == .takeToActionView) {
-                    NavigationButton(destination: ShowActionView(
-                        actionType: action,
-                        clickAction: {
-                            action in
-                            goBack()
-                        }
-                    ))
-                    {
-                        Text(action.name)
-                    }
-                    .alignmentGuide(.listRowSeparatorLeading) { _ in
-                        -20
-                    }
-                } else {
-                    NavigationButton(destination: ListActionsView(
-                        actionType: action,
-                        actionTypeName: action.name,
-                        createAction: {
-                            action in
-                            actions.append(action)
-                        })
-                    ) {
-                        Text(action.name)
-                    }
-                    .alignmentGuide(.listRowSeparatorLeading) { _ in
-                        -20
-                    }
+                NavigationButton(destination: destinationView(for: action)) {
+                    Text(action.name)
                 }
+                .alignmentGuide(.listRowSeparatorLeading) { _ in -20 }
             }
             
         }
         .navigationBarTitle(Text(clickAction == nil ? "Select Verb" : "Verbs"), displayMode: .inline)
         .onAppear(perform: fetchActionTypes)
+    }
+    
+    
+    func destinationView(for action: ActionTypeModel) -> some View {
+        switch listActionType {
+        case .forTemplate:
+            return AnyView(Button(action: {
+                clickAction?(action)
+                goBack()
+            }) { EmptyView() })
+        case .takeToActionView:
+            return AnyView(ShowActionView(actionType: action, clickAction: { _ in goBack() }))
+        case .takeToAggregateCreateView:
+            return AnyView(ShowGoalView(
+                aggregateModel: AggregateModel(actionTypeId: action.id!),
+                clickAction: { goBack() }
+            ))
+        default:
+            return AnyView(ListActionsView(
+                actionType: action,
+                actionTypeName: action.name,
+                createAction: { action in actions.append(action) }
+            ))
+        }
     }
     
     func fetchActionTypes() {

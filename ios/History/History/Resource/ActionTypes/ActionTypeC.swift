@@ -192,12 +192,9 @@ class ActionTypesController {
 // finished: goal tab
 // RELASE
 
-// COMMUNITY
-// finished: work on sharing goals incl tabs for groups
-// RELEASED
-
 // finished: fix apple issues
 // finished: add candle sticks
+// finished: Add voice notes
 
 // CANDLES
 // finished: grouped by days or actionTypes with time actions 
@@ -211,31 +208,35 @@ class ActionTypesController {
 
 // finished: aggregate on daily too
 // finish: cumulative count for week
-// add goal button
-// actual/expected value and streak
-// goal field be currency, calorie, grams or number datatypes also
 
-// skip: Support conditions only for enum
-// skip: first and last to compare
-// skip: add preferred hours with marks
-// skip: create segments
+// finish: add goal button
+// HERE: actual/expected value and streak
+// HERE: goal field be currency, calorie, grams or other similar datatypes also
 
 // ACTION VIEWS
-// list actions, only events
-// delete action button
-// add object connection
-// skip three tabs, events, candles, aggregates
-// skip: list actions filter by enum
-// skip: list objects filter by enum
+// NEXT: list actions, only events, dropdown and short string
+// NEXT: delete action button
+// NEXT: add object connection
 
-// finished: Add voice notes
 // Support dark mode
-
 // BUGS
 // sleep into next day problem
+
 // RELEASE & SELL SELL SELL
+
+// goals
+//  skip: Support conditions only for enum
+//  skip: first and last to compare
+// routine
+//  skip: routine creator
+//  skip: add preferred hours with marks
+// actions list
+//  skip: three tabs, events, candles, aggregates
+//  skip: list actions filter by enum
+//  skip: list objects filter by enum
+// skip: create segments
 // -----------------------------------------------------------
-// V2
+// V2 COMMUNITIES
 // timezone for viewing across timezone
 // Add groups tab, list all groups, create group
 // break group view into four tabs

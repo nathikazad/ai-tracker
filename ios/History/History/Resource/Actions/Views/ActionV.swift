@@ -25,6 +25,9 @@ struct ShowActionView: View {
         self.clickAction = clickAction
     }
     
+    enum ActionState: String, CaseIterable { case start, save, schedule }
+
+    
     var body: some View {
         Form {
             Section(header: Text("Time Information")) {
@@ -52,8 +55,7 @@ struct ShowActionView: View {
             Section {
                 HStack {
                     Spacer()
-                    let showStart = action.actionTypeModel.meta.hasDuration && action.endTime == nil && action.id == nil
-                    Button(showStart ? "Start" : "Save") {
+                    Button(getActionState.rawValue.capitalized) {
                         saveChanges()
                         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                         self.changesToSave = false
@@ -92,6 +94,17 @@ struct ShowActionView: View {
             }
         }
     }
+    
+    private var getActionState: ActionState {
+        if action.actionTypeModel.meta.hasDuration && action.endTime == nil && action.id == nil {
+            if action.startTime.timeIntervalSince(Date()) > 300 {
+                return .schedule
+            } else {
+                return .start
+            }
+        }
+        return .save
+    }
 
     private func saveChanges() {
         Task {
@@ -102,10 +115,7 @@ struct ShowActionView: View {
             } else {
                 let actionId = await ActionController.createActionModel(model: action)
                 action.id = actionId
-                if action.actionTypeModel.meta.hasDuration && action.endTime == nil {
-                    // stay here, maybe they want to start timer
-                } else {
-                    // else go back
+                if getActionState != .start {
                     self.presentationMode.wrappedValue.dismiss()
                     clickAction?(action)
                 }

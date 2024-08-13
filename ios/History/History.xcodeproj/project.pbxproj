@@ -40,7 +40,7 @@
 		FE4AB38D2C4EF7B200A07749 /* ActionTypeC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB38C2C4EF7B200A07749 /* ActionTypeC.swift */; };
 		FE4AB38F2C51830600A07749 /* ActionTypeV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB38E2C51830600A07749 /* ActionTypeV.swift */; };
 		FE4AB3952C51F03300A07749 /* ActionM.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3942C51F03300A07749 /* ActionM.swift */; };
-		FE4AB3972C51F05C00A07749 /* AggregateM.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3962C51F05C00A07749 /* AggregateM.swift */; };
+		FE4AB3972C51F05C00A07749 /* GoalM.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3962C51F05C00A07749 /* GoalM.swift */; };
 		FE4AB39C2C51F26B00A07749 /* SchemaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB39B2C51F26B00A07749 /* SchemaView.swift */; };
 		FE4AB39E2C51F29C00A07749 /* ObjectTypeV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB39D2C51F29C00A07749 /* ObjectTypeV.swift */; };
 		FE4AB3A02C51F2C500A07749 /* EnumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB39F2C51F2C500A07749 /* EnumView.swift */; };
@@ -116,7 +116,7 @@
 		FEBB197C2C5F0BFD00ECAC85 /* AggregatorTypeComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB197B2C5F0BFD00ECAC85 /* AggregatorTypeComponent.swift */; };
 		FEBB197E2C5F10BF00ECAC85 /* GoalComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB197D2C5F10BF00ECAC85 /* GoalComponent.swift */; };
 		FEBB19802C5F15D200ECAC85 /* ButtonsComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB197F2C5F15D200ECAC85 /* ButtonsComponent.swift */; };
-		FEBB19822C61934800ECAC85 /* AggregatesTabV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB19812C61934800ECAC85 /* AggregatesTabV.swift */; };
+		FEBB19822C61934800ECAC85 /* GoalsTabV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB19812C61934800ECAC85 /* GoalsTabV.swift */; };
 		FEBB19842C61958E00ECAC85 /* AggChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB19832C61958E00ECAC85 /* AggChartView.swift */; };
 		FEBB19862C61B80500ECAC85 /* LandingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB19852C61B80500ECAC85 /* LandingView.swift */; };
 		FEBB19882C62CF8000ECAC85 /* WeekdaysComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB19872C62CF8000ECAC85 /* WeekdaysComponent.swift */; };
@@ -150,8 +150,8 @@
 		FEDBC0652C0509AC00233EA0 /* EventDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEDBC0642C0509AC00233EA0 /* EventDestination.swift */; };
 		FEDBC0672C050C3F00233EA0 /* EventButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEDBC0662C050C3F00233EA0 /* EventButtons.swift */; };
 		FEDBC0692C053A2800233EA0 /* EventList.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEDBC0682C053A2800233EA0 /* EventList.swift */; };
-		FEE29E082C5C1F1E00A27C44 /* AggregateC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE29E072C5C1F1E00A27C44 /* AggregateC.swift */; };
-		FEE29E0A2C5C35FB00A27C44 /* AggregateV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE29E092C5C35FA00A27C44 /* AggregateV.swift */; };
+		FEE29E082C5C1F1E00A27C44 /* GoalC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE29E072C5C1F1E00A27C44 /* GoalC.swift */; };
+		FEE29E0A2C5C35FB00A27C44 /* GoalV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE29E092C5C35FA00A27C44 /* GoalV.swift */; };
 		FEE6D79E2C58822300E65367 /* ActionModelConditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE6D79D2C58822300E65367 /* ActionModelConditions.swift */; };
 /* End PBXBuildFile section */
 
@@ -230,7 +230,7 @@
 		FE4AB38C2C4EF7B200A07749 /* ActionTypeC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionTypeC.swift; sourceTree = "<group>"; };
 		FE4AB38E2C51830600A07749 /* ActionTypeV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionTypeV.swift; sourceTree = "<group>"; };
 		FE4AB3942C51F03300A07749 /* ActionM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionM.swift; sourceTree = "<group>"; };
-		FE4AB3962C51F05C00A07749 /* AggregateM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AggregateM.swift; sourceTree = "<group>"; };
+		FE4AB3962C51F05C00A07749 /* GoalM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalM.swift; sourceTree = "<group>"; };
 		FE4AB39B2C51F26B00A07749 /* SchemaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemaView.swift; sourceTree = "<group>"; };
 		FE4AB39D2C51F29C00A07749 /* ObjectTypeV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectTypeV.swift; sourceTree = "<group>"; };
 		FE4AB39F2C51F2C500A07749 /* EnumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnumView.swift; sourceTree = "<group>"; };
@@ -305,7 +305,7 @@
 		FEBB197B2C5F0BFD00ECAC85 /* AggregatorTypeComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AggregatorTypeComponent.swift; sourceTree = "<group>"; };
 		FEBB197D2C5F10BF00ECAC85 /* GoalComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalComponent.swift; sourceTree = "<group>"; };
 		FEBB197F2C5F15D200ECAC85 /* ButtonsComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonsComponent.swift; sourceTree = "<group>"; };
-		FEBB19812C61934800ECAC85 /* AggregatesTabV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AggregatesTabV.swift; sourceTree = "<group>"; };
+		FEBB19812C61934800ECAC85 /* GoalsTabV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsTabV.swift; sourceTree = "<group>"; };
 		FEBB19832C61958E00ECAC85 /* AggChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AggChartView.swift; sourceTree = "<group>"; };
 		FEBB19852C61B80500ECAC85 /* LandingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingView.swift; sourceTree = "<group>"; };
 		FEBB19872C62CF8000ECAC85 /* WeekdaysComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekdaysComponent.swift; sourceTree = "<group>"; };
@@ -341,8 +341,8 @@
 		FEDBC0642C0509AC00233EA0 /* EventDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDestination.swift; sourceTree = "<group>"; };
 		FEDBC0662C050C3F00233EA0 /* EventButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventButtons.swift; sourceTree = "<group>"; };
 		FEDBC0682C053A2800233EA0 /* EventList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventList.swift; sourceTree = "<group>"; };
-		FEE29E072C5C1F1E00A27C44 /* AggregateC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AggregateC.swift; sourceTree = "<group>"; };
-		FEE29E092C5C35FA00A27C44 /* AggregateV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AggregateV.swift; sourceTree = "<group>"; };
+		FEE29E072C5C1F1E00A27C44 /* GoalC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalC.swift; sourceTree = "<group>"; };
+		FEE29E092C5C35FA00A27C44 /* GoalV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalV.swift; sourceTree = "<group>"; };
 		FEE6D79D2C58822300E65367 /* ActionModelConditions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionModelConditions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -453,7 +453,7 @@
 				FEBB19952C66D94400ECAC85 /* Objects */,
 				FEBB198D2C6580FE00ECAC85 /* ObjectTypes */,
 				FE759E0F2C5DE40D001A0FF4 /* DataTypes */,
-				FEE29E062C5C1EEC00A27C44 /* Aggregates */,
+				FEE29E062C5C1EEC00A27C44 /* Goals */,
 				FE4AB3AE2C544E3F00A07749 /* Actions */,
 				FE4AB3AA2C544D1E00A07749 /* ActionTypes */,
 			);
@@ -826,17 +826,17 @@
 			path = Objects;
 			sourceTree = "<group>";
 		};
-		FEE29E062C5C1EEC00A27C44 /* Aggregates */ = {
+		FEE29E062C5C1EEC00A27C44 /* Goals */ = {
 			isa = PBXGroup;
 			children = (
 				FEBB19B42C6AE86300ECAC85 /* Utilities */,
 				FEBB19782C5F0BAE00ECAC85 /* Components */,
-				FE4AB3962C51F05C00A07749 /* AggregateM.swift */,
-				FEE29E072C5C1F1E00A27C44 /* AggregateC.swift */,
-				FEE29E092C5C35FA00A27C44 /* AggregateV.swift */,
-				FEBB19812C61934800ECAC85 /* AggregatesTabV.swift */,
+				FE4AB3962C51F05C00A07749 /* GoalM.swift */,
+				FEE29E072C5C1F1E00A27C44 /* GoalC.swift */,
+				FEE29E092C5C35FA00A27C44 /* GoalV.swift */,
+				FEBB19812C61934800ECAC85 /* GoalsTabV.swift */,
 			);
-			path = Aggregates;
+			path = Goals;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1008,7 +1008,7 @@
 				FE4F7BA52BA7D79E0041CB6A /* ContentView.swift in Sources */,
 				FEBB19AA2C68334400ECAC85 /* ActionTypeRow.swift in Sources */,
 				FECA5EEC2BE56970007ADE17 /* EventsComponents.swift in Sources */,
-				FE4AB3972C51F05C00A07749 /* AggregateM.swift in Sources */,
+				FE4AB3972C51F05C00A07749 /* GoalM.swift in Sources */,
 				FE8811EB2BC799BF00B112A8 /* GoalsController.swift in Sources */,
 				FEA98C112BFFC96C006BB857 /* QuickComponents.swift in Sources */,
 				FECA5EEE2BE569F6007ADE17 /* Time.swift in Sources */,
@@ -1057,9 +1057,9 @@
 				FE12C5EC2BC4B359002CDC60 /* GraphsView.swift in Sources */,
 				FE06FD062C09140500E65D41 /* PeopleView.swift in Sources */,
 				FEBB19A62C682CE400ECAC85 /* AddNewActionButton.swift in Sources */,
-				FEE29E0A2C5C35FB00A27C44 /* AggregateV.swift in Sources */,
+				FEE29E0A2C5C35FB00A27C44 /* GoalV.swift in Sources */,
 				FEA549A52BD34D290058E7D8 /* LocationView.swift in Sources */,
-				FEE29E082C5C1F1E00A27C44 /* AggregateC.swift in Sources */,
+				FEE29E082C5C1F1E00A27C44 /* GoalC.swift in Sources */,
 				FE9EAE512BC042260082DE87 /* ChatView.swift in Sources */,
 				FE4594272BD9E713002B163E /* HealthKitManager.swift in Sources */,
 				FE8811EC2BC799BF00B112A8 /* InteractionsController.swift in Sources */,
@@ -1113,7 +1113,7 @@
 				FEA34E6D2BD0B83300CE2A12 /* LocationsDebugView.swift in Sources */,
 				FE4AB3A62C52F76B00A07749 /* ActionC.swift in Sources */,
 				FE3E9F662BC8ACAD008BD120 /* NavigationTitle.swift in Sources */,
-				FEBB19822C61934800ECAC85 /* AggregatesTabV.swift in Sources */,
+				FEBB19822C61934800ECAC85 /* GoalsTabV.swift in Sources */,
 				FE12C5E82BC4B30B002CDC60 /* TodosView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1338,7 +1338,7 @@
 				CODE_SIGN_ENTITLEMENTS = History/History.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_ASSET_PATHS = "\"History/Preview Content\"";
 				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
@@ -1357,7 +1357,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.13;
+				MARKETING_VERSION = 0.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1380,7 +1380,7 @@
 				CODE_SIGN_ENTITLEMENTS = History/History.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_ASSET_PATHS = "\"History/Preview Content\"";
 				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
@@ -1399,7 +1399,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.13;
+				MARKETING_VERSION = 0.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1420,7 +1420,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_ASSET_PATHS = "\"MiniHistory Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
@@ -1432,7 +1432,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.13;
+				MARKETING_VERSION = 0.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire.watchapp;
 				PRODUCT_NAME = "Aspire Watch";
 				SDKROOT = watchos;
@@ -1451,7 +1451,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_ASSET_PATHS = "\"MiniHistory Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
@@ -1463,7 +1463,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.13;
+				MARKETING_VERSION = 0.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire.watchapp;
 				PRODUCT_NAME = "Aspire Watch";
 				SDKROOT = watchos;

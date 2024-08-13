@@ -154,11 +154,11 @@ struct ActionTypeView: View {
             if let actionTypeId = model.id {
                 Section(header: Text("Goals")) {
                     ForEach(Array(model.aggregates)) { aggregate in
-                        NavigationLink(destination: ShowAggregateView(aggregateModel: aggregate)) {
+                        NavigationLink(destination: ShowGoalView(aggregateModel: aggregate)) {
                             Text(aggregate.toString)
                         }
                     }
-                    NavigationLink(destination: ShowAggregateView(aggregateModel: AggregateModel(actionTypeId: actionTypeId))) {
+                    NavigationLink(destination: ShowGoalView(aggregateModel: AggregateModel(actionTypeId: actionTypeId))) {
                         Label("Add Goal", systemImage: "plus")
                     }
                 }
