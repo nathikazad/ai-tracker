@@ -8,14 +8,23 @@ import SwiftUI
 import CoreLocation
 import HealthKit
 
+
+
+
 struct SettingsView: View {
-    
-    @State private var currentUserName: String
     @State private var showingDeleteConfirmation = false
-    
+    @State var isOriginalUser: Bool
     
     init() {
-        _currentUserName = State(initialValue: getName())
+        self.isOriginalUser = SettingsView.getIsOriginalUser()
+    }
+    
+    static func getIsOriginalUser() -> Bool {
+        if let originalJwt = auth.hasuraJwt, let currentUserId = auth.hasuraJWTObject?.userId {
+            let originalUser =  HasuraJWTObject(jwt: originalJwt)
+            return originalUser.userId == currentUserId
+        }
+        return false
     }
     
     
@@ -23,14 +32,12 @@ struct SettingsView: View {
         NavigationView {
             List {
                 Section(header: Text("Settings")) {
-                    if Authentication.shared.userId == 1 {
-                        Button(action: changeUserId) {
-                            Label("Change User \(currentUserName)", systemImage: "person.2.fill")
-                                .foregroundColor(.primary)
-                        }
-                        .alignmentGuide(.listRowSeparatorLeading) { _ in
-                            -20
-                        }
+                    Button(action: changeUserId) {
+                        Label("Change \(isOriginalUser ? "To Nathik" : "Back to You" )", systemImage: "person.2.fill")
+                            .foregroundColor(.primary)
+                    }
+                    .alignmentGuide(.listRowSeparatorLeading) { _ in
+                        -20
                     }
                     
                     NavigationLink(destination: InteractionsView()) {
@@ -86,43 +93,19 @@ struct SettingsView: View {
     }
     
     func changeUserId() {
-        let originalUser =  HasuraJWTObject(jwt: auth.hasuraJwt!)
-        guard var currentUserId = auth.hasuraJWTObject?.userId else { return }
-        
-        switch currentUserId {
-        case 1:
-            currentUserId = (originalUser.userId == 4) ? 4 : 3
-        case 3:
-            currentUserId = (originalUser.userId == 1) ? 4 : 1
-        case 4:
-            currentUserId = 1
-        default:
-            currentUserId = 1
+        if isOriginalUser {
+            auth.hasuraJWTObject?.userId = 1
+            isOriginalUser = false
+        } else {
+            let originalUser =  HasuraJWTObject(jwt: auth.hasuraJwt!)
+            auth.hasuraJWTObject?.userId = originalUser.userId
+            isOriginalUser = true
         }
-        
-        auth.hasuraJWTObject?.userId = currentUserId
-        print("User switched to \(currentUserId)")
-        self.currentUserName = getName()
         state.notifyCoreStateChanged()
     }
 }
 
-func getName() -> String {
-    guard var currentUserId = auth.hasuraJWTObject?.userId else { return "Unknown"}
-    switch currentUserId {
-    case 1:
-        return "Nathik"
-    case 3:
-        return "Yareni"
-    case 4:
-        return "Tito"
-    default:
-        return "Unknown"
-    }
-}
-
 private func deleteUser() async {
-    let userId = auth.userId
     let deleteUserEndpoint = getDeleteUserEndpoint
     let body: [String: Any] = ["userId": auth.userId!]
     do {

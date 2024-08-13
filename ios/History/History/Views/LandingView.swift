@@ -15,6 +15,12 @@ struct LandingPageView: View {
     
     var body: some View {
         VStack(spacing: 10) {
+            Image(uiImage: UIImage(named: "AppIcon") ?? UIImage())
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 150, height: 150)
+                .clipShape(Circle())
+                .padding(.bottom, 40)
             Text("Welcome to Aspire")
                 .font(.title2)
                 .padding(.horizontal)
@@ -28,8 +34,10 @@ struct LandingPageView: View {
                 request.requestedScopes = [.fullName]
             }, onCompletion: { result in
                 Task {
-                    await handleSignIn(result: result)
-                    AppState.shared.hideChat()
+                    let result = await handleSignIn(result: result)
+                    if result {
+                        AppState.shared.hideChat()
+                    }
                 }
             })
             .frame(width: 280, height: 45)

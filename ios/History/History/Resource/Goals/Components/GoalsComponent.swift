@@ -22,8 +22,10 @@ struct GoalsSection: View {
             get: { aggregate.metadata.goals[index] },
             set: { newValue in
                 aggregate.metadata.goals[index] = newValue
-                aggregate.objectWillChange.send()
                 changesToSave = true
+                Task { @MainActor in
+                    aggregate.objectWillChange.send()
+                }
             }
         )
     }

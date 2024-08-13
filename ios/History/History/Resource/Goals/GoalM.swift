@@ -66,7 +66,7 @@ class AggregateMetaData: Codable, ObservableObject {
         self.dataType = dataType
         self.aggregatorType = aggregatorType
         self.conditions = conditions
-        self.goals = goals
+        self.goals = [Goal()]
         self.name = name
     }
     

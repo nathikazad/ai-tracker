@@ -35,7 +35,9 @@ struct ShowGoalView: View {
         Binding(
             get: { changesToSave },
             set: {
-                aggregate.objectWillChange.send()
+                Task { @MainActor in
+                    aggregate.objectWillChange.send()
+                }
                 changesToSave = $0
             })
     }
