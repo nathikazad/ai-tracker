@@ -78,10 +78,18 @@ struct RangedSliderView: View {
     }
     
     @ViewBuilder func lineBetweenThumbs(from: CGPoint, to: CGPoint) -> some View {
+        let gradient = LinearGradient(
+            gradient: Gradient(colors: [
+                Color(red: 178/255, green: 72/255, blue: 49/255),
+                Color(red: 222/255, green: 152/255, blue: 64/255)
+            ]),
+            startPoint: .leading,
+            endPoint: .trailing
+        )
         Path { path in
             path.move(to: from)
             path.addLine(to: to)
-        }.stroke(Color.black, lineWidth: 4)
+        }.stroke(gradient, lineWidth: 4)
     }
     
     @ViewBuilder func thumbView(position: CGPoint, value: Int) -> some View {

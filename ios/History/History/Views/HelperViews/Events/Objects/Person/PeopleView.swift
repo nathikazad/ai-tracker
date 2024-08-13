@@ -18,8 +18,6 @@ struct PeopleView: View {
         List {
             TextField("Search people...", text: $searchText)
                 .padding(7)
-                .foregroundColor(Color.black)
-                .background(Color.white)
                 .cornerRadius(8)
                 .padding(2)
             

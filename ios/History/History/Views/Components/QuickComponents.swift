@@ -63,7 +63,6 @@ struct BlackBackgroundView: UIViewRepresentable {
     private class InnerView: UIView {
         override func didMoveToWindow() {
             super.didMoveToWindow()
-            
             superview?.superview?.backgroundColor = UIColor(Color.black)
         }
         

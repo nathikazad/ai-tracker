@@ -56,10 +56,22 @@ struct DayButton: View {
     
     var body: some View {
         Button(action: action) {
+            let gradient = LinearGradient(
+                gradient: Gradient(colors: [
+                    Color(red: 178/255, green: 72/255, blue: 49/255),
+                    Color(red: 222/255, green: 152/255, blue: 64/255)
+                ]),
+                startPoint: .leading,
+                endPoint: .trailing
+            )
             Text(day)
                 .font(.system(size: 14, weight: .medium))
                 .frame(width: 30, height: 30)
-                .background(isSelected ? Color(red: 178/255, green: 72/255, blue: 49/255) : Color.gray.opacity(0.2))
+                .background(
+                    isSelected
+                    ? AnyView(gradient)
+                    : AnyView(Color.gray.opacity(0.2))
+                )
                 .foregroundColor(isSelected ? .white : .black)
                 .clipShape(Circle())
         }

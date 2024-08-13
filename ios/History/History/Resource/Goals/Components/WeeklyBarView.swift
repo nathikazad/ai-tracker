@@ -42,9 +42,9 @@ struct WeeklyBarView: View {
                         showCumView.toggle()
                     }) {
                         Image(systemName: "arrow.left.arrow.right.square")
-                            .foregroundColor(.gray)
+                            .foregroundColor(Color.primary)
                             .padding(8)
-                            .background(Color.white.opacity(0.8))
+                            .background(Color.secondary.opacity(0.8))
                             .clipShape(Circle())
                     }
                     .buttonStyle(PlainButtonStyle())

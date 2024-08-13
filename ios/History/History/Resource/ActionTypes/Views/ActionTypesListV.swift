@@ -27,8 +27,6 @@ struct ListActionsTypesView: View {
         List {
             TextField("Search verbs...", text: $searchText)
                 .padding(7)
-                .foregroundColor(Color.black)
-                .background(Color.white)
                 .cornerRadius(8)
                 .padding(2)
                 .alignmentGuide(.listRowSeparatorLeading) { _ in

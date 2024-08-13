@@ -158,8 +158,6 @@ struct InteractionsView: View {
                                             Text(eventType.capitalized)
                                                 .font(.subheadline)
                                                 .padding(5)
-                                                .background(Color.black)
-                                                .foregroundColor(.white)
                                                 .cornerRadius(5)
                                         }
                                     }

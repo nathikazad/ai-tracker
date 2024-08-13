@@ -32,7 +32,8 @@ class ASColor {
     (.magenta, "Magenta"),
     (.black, "Black"),
     (.white, "White"),
-    (.gray, "Gray")
+    (.gray, "Gray"),
+    (.white, "White")
     ]
     
     static func colorToString(_ color: Color) -> String {
