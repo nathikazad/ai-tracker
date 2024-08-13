@@ -18,7 +18,7 @@ struct AggregatesTabView: View {
     @State private var openDisclosures: Set<Int> = []
     @State private var coreStateSubcription: AnyCancellable?
     init() {
-        weekBoundary = Date().getWeekBoundary
+        weekBoundary = state.currentWeek
     }
     
     var filteredAggregates: [AggregateModel] {
@@ -75,6 +75,7 @@ struct AggregatesTabView: View {
                 coreStateSubcription?.cancel()
                 coreStateSubcription = state.subscribeToCoreStateChanges {
                     print("AggregatesTab Core state occurred")
+                    weekBoundary = state.currentWeek
                     loadData(userId: auth.userId!)
                 }
             }
@@ -87,7 +88,6 @@ struct AggregatesTabView: View {
     private func loadData(userId: Int) {
         Task {
             loading = true
-            print(userId)
             let aggregates = await AggregateController.fetchAggregates(userId: userId, withAggregates: true)
             let actions = await ActionController.fetchActions(userId: userId, startDate: state.currentWeek.start, endDate: state.currentWeek.end)
             await MainActor.run {

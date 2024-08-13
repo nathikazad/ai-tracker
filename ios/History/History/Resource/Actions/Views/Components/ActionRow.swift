@@ -17,7 +17,7 @@ import SwiftUI
 struct ActionRow: View {
     var event: ActionModel
     var dateClickedAction: ((ActionModel) -> Void)?
-//    var level: Int = 0
+    var fetchActions: () -> Void?
     var showTimeWithRespectToCurrentDate: Bool = false
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @ObservedObject private var timerManager = TimerManager.shared
@@ -60,6 +60,7 @@ struct ActionRow: View {
                 print("Deleting \(event.id)")
                 Task {
                     await ActionController.deleteActionModel(id: event.id!)
+                    fetchActions()
                 }
             }) {
                 Image(systemName: "trash.fill")

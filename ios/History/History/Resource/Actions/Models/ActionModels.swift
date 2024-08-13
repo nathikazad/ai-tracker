@@ -24,7 +24,9 @@ extension [ActionModel] {
         }
     }
     
-    func filterEvents(startDate: Date, endDate: Date) -> [ActionModel] {
+    func filterEvents(weekBoundary: WeekBoundary) -> [ActionModel] {
+        let startDate = weekBoundary.start
+        let endDate = weekBoundary.end
         let ret = self.filter { event in
             let startInRange = event.startTime >= startDate && event.startTime <= endDate
             let endInRange = event.endTime.map { $0 >= startDate && $0 <= endDate } ?? false

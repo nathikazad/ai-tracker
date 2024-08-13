@@ -205,20 +205,26 @@ class ActionTypesController {
 // finshed: change color permanently from candle
 
 // GOALS
-// bug: Make goals show by week and 
+// fixed: Make goals show by week and 
 // finished: duration min/sec goal
 // finished: cumulative for week goal.
-// actual/expected value and streak
-// add goal button
-// goal field be currency or number datatypes also
-// Support conditions only for enum
 
+// finished: aggregate on daily too
+// finish: cumulative count for week
+// add goal button
+// actual/expected value and streak
+// goal field be currency, calorie, grams or number datatypes also
+
+// skip: Support conditions only for enum
+// skip: first and last to compare
 // skip: add preferred hours with marks
-// skipped: create segments
-// first and last to compare
+// skip: create segments
 
 // ACTION VIEWS
+// list actions, only events
 // delete action button
+// add object connection
+// skip three tabs, events, candles, aggregates
 // skip: list actions filter by enum
 // skip: list objects filter by enum
 
@@ -226,7 +232,7 @@ class ActionTypesController {
 // Support dark mode
 
 // BUGS
-// fill in missing days for candles
+// sleep into next day problem
 // RELEASE & SELL SELL SELL
 // -----------------------------------------------------------
 // V2

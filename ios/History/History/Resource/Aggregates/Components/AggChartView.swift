@@ -27,14 +27,21 @@ struct AggregateChartView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if aggregate.metadata.aggregatorType == .count {
-                let dateCounts = getDateCounts(actions: actions, timezone: Authentication.shared.user!.timezone!)
-                let mark: String? = aggregate.metadata.goals.first?.value?.toType(String.self)
-                BarView(data: Array(dateCounts.suffix(7)), yAxisLabel: "Count", yMark: mark == nil ? nil : Double(mark!))
-                    .id(aggregate.id)
+                let mark = aggregate.metadata.goals.first?.value?.toType(String.self)
+                if aggregate.metadata.window == .weekly {
+                    let dateCounts = getCumulativePerWeek(actions: actions, timezone: Authentication.shared.user!.timezone!, adder: {
+                        action in 1
+                    })
+                    WeeklyBarView(weeklyDurations: dateCounts, mark: mark == nil ? nil : Double(mark!), aggregate: aggregate, showWeekNavigator: showWeekNavigator)
+                } else {
+                    let dateCounts = getDateCounts(actions: actions, timezone: Authentication.shared.user!.timezone!)
+                    BarView(data: Array(dateCounts.suffix(7)), yAxisLabel: "Count", yMark: mark == nil ? nil : Double(mark!))
+                        .id(aggregate.id)
+                }
             } else if aggregate.metadata.aggregatorType == .compare {
                 let mark: Date? = aggregate.metadata.goals.first?.value?.toType(Date.self)
                 if aggregate.metadata.field == "Start Time" {
-                    let startTimes = minTimeForEachDay(actions: actions, timezone: Authentication.shared.user!.timezone!)
+                    let startTimes = minTimeForEachDay(actions: actions, timezone: Authentication.shared.user!.timezone!,  timeSelect: "Start Time")
                     ScatterView(title: "",
                                 data: startTimes,
                                 mark: mark,
@@ -49,15 +56,17 @@ struct AggregateChartView: View {
                     .id(aggregate.id)
                 }
             } else {
-                let mark = getMark
+                let mark =  aggregate.metadata.goals.first?.value?.toType(Duration.self)?.durationInSeconds
                 if aggregate.metadata.window == .monthly {
                     let dateCounts = getCumulativeDurationsPerMonth(actions: actions, timezone: Authentication.shared.user!.timezone!)
                     let (array, label) = convertDurationsToRightUnit(dateCounts: dateCounts, aggregate: aggregate)
                     BarView(data: array, yAxisLabel: label, yMark: mark == nil ? nil : Double(mark!))
                         .id(aggregate.id)
                 } else if aggregate.metadata.window == .weekly {
-                    let dateCounts = getCumulativeDurationsPerWeek(actions: actions, timezone: Authentication.shared.user!.timezone!)
-                    WeeklyBarView(weeklyDurations: dateCounts, mark: mark, aggregate: aggregate, showWeekNavigator: showWeekNavigator)
+                    let dateCounts = getCumulativePerWeek(actions: actions, timezone: Authentication.shared.user!.timezone!, adder: {
+                        action in Int(action.durationInSeconds)
+                    })
+                    WeeklyBarView(weeklyDurations: dateCounts, mark: mark == nil ? nil : Double(mark!), aggregate: aggregate, showWeekNavigator: showWeekNavigator)
                 } else {
                     let dateCounts = getDateTotalDurationsPerDay(actions: actions, timezone: Authentication.shared.user!.timezone!)
                     let (array, label) = convertDurationsToRightUnit(dateCounts: dateCounts, aggregate: aggregate)
@@ -66,13 +75,6 @@ struct AggregateChartView: View {
                 }
             }
         }
-    }
-    
-    private var getMark: Int? {
-        if let targetDuration: Duration = aggregate.metadata.goals.first?.value?.toType(Duration.self) {
-            return targetDuration.durationInSeconds
-        }
-        return nil
     }
     
     func getDateRange(from dates: [Date], timezone: String) -> (Calendar, Date, Date)? {
@@ -140,10 +142,8 @@ struct AggregateChartView: View {
 
         for action in actions {
             let startTimeString = formatter.string(from: action.startTime)
-            print("Start time: \(startTimeString)")
             if let endTime = action.endTime {
                 let endTimeString = formatter.string(from: endTime)
-                print("End time: \(endTimeString)")
             }
         }
         
@@ -166,20 +166,22 @@ struct AggregateChartView: View {
                 timeSelect == "Start Time" ? action.startTime : action.endTime
             }).min() {
                 minTimes.append(minTime)
-            } else {
-                // If there are no actions for a day, we'll use noon of that day as a placeholder
-                if let noonDate = calendar.date(bySettingHour: 12, minute: 0, second: 0, of: currentDate) {
-                    minTimes.append(noonDate)
-                }
-            }
+            } 
+//            else {
+//                // If there are no actions for a day, we'll use noon of that day as a placeholder
+//                if let noonDate = calendar.date(bySettingHour: 12, minute: 0, second: 0, of: currentDate) {
+//                    minTimes.append(noonDate)
+//                }
+//            }
             
             currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate)!
         }
-        
-        for minTime in minTimes {
-            let startTimeString = formatter.string(from: minTime)        
+        if timeSelect == "Start Time" {
+            minTimes = minTimes.filter { date in
+                let components = Calendar.current.dateComponents([.hour], from: date)
+                return components.hour! >= 20 // 20 is 8 PM in 24-hour format
+            }
         }
-        
         return minTimes
     }
 }

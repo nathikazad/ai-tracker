@@ -90,6 +90,10 @@ struct AnyCodable: Codable {
             return (value as? String)?.getDate as? T
         case is String.Type:
             return value as? T
+        case is Int.Type:
+            return (value as? String).flatMap { Int($0) } as? T
+        case is Double.Type:
+            return (value as? String).flatMap { Double($0) } as? T
         default:
             return nil
         }

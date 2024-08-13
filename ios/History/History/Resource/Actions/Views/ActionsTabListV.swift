@@ -55,7 +55,7 @@ struct ActionsTabView: View {
         }
     }
     
-    private func fetchEvents() {
+    func fetchEvents() {
         Task {
             let events = await ActionController.fetchActions(userId: auth.userId!, forDate: state.currentDate)
             await MainActor.run {
@@ -123,6 +123,7 @@ struct ActionsTabView: View {
             dateClickedAction: { event in
                 datePickerModel.showPopupForAction(event: event)
             },
+            fetchActions: fetchEvents,
             showTimeWithRespectToCurrentDate: true)
     }
 }

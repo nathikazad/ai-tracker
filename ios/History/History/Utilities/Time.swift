@@ -190,7 +190,7 @@ extension Date {
         let startHour = calendar.startOfDay(for: startOfWeek)
         
         // Find the end of the week (Sunday at 23:59:59)
-        let endOfWeek = calendar.date(byAdding: .day, value: 7, to: startOfWeek)!
+        let endOfWeek = calendar.date(byAdding: .day, value: 6, to: startOfWeek)!
         let endHour = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: endOfWeek)!
         return WeekBoundary(start: startHour, end: endHour)
     }
@@ -219,6 +219,14 @@ struct WeekBoundary: Equatable {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM d"
         return "\(dateFormatter.string(from: self.start)) - \(dateFormatter.string(from: self.end))"
+    }
+    
+    func getStartAndEnd(weekday: Weekday) -> WeekBoundary {
+        let calendar = Calendar.current
+        let weekdayOffset = weekday.rawValue
+        let startDate = calendar.date(byAdding: .day, value: weekdayOffset - 1, to: start)!
+        let endDate = calendar.date(byAdding: .day, value: 1, to: startDate)!.addingTimeInterval(-1)
+        return WeekBoundary(start: startDate, end: endDate)
     }
 }
 
@@ -249,16 +257,6 @@ enum Weekday: Int, CaseIterable {
 
 func numberToWeekday(_ number: Int) -> Weekday? {
     return Weekday(rawValue: number)
-}
-
-extension WeekBoundary {
-    func getStartAndEnd(weekday: Weekday) -> (start: Date, end: Date) {
-        let calendar = Calendar.current
-        let weekdayOffset = weekday.rawValue
-        let startDate = calendar.date(byAdding: .day, value: weekdayOffset, to: start)!
-        let endDate = calendar.date(byAdding: .day, value: 1, to: startDate)!.addingTimeInterval(-1)
-        return (start: startDate, end: endDate)
-    }
 }
 
 

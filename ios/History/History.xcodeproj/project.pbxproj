@@ -117,7 +117,7 @@
 		FEBB197E2C5F10BF00ECAC85 /* GoalComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB197D2C5F10BF00ECAC85 /* GoalComponent.swift */; };
 		FEBB19802C5F15D200ECAC85 /* ButtonsComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB197F2C5F15D200ECAC85 /* ButtonsComponent.swift */; };
 		FEBB19822C61934800ECAC85 /* AggregatesTabV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB19812C61934800ECAC85 /* AggregatesTabV.swift */; };
-		FEBB19842C61958E00ECAC85 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB19832C61958E00ECAC85 /* ChartView.swift */; };
+		FEBB19842C61958E00ECAC85 /* AggChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB19832C61958E00ECAC85 /* AggChartView.swift */; };
 		FEBB19862C61B80500ECAC85 /* LandingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB19852C61B80500ECAC85 /* LandingView.swift */; };
 		FEBB19882C62CF8000ECAC85 /* WeekdaysComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB19872C62CF8000ECAC85 /* WeekdaysComponent.swift */; };
 		FEBB198A2C63015D00ECAC85 /* ActionsTabCandleV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB19892C63015D00ECAC85 /* ActionsTabCandleV.swift */; };
@@ -306,7 +306,7 @@
 		FEBB197D2C5F10BF00ECAC85 /* GoalComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalComponent.swift; sourceTree = "<group>"; };
 		FEBB197F2C5F15D200ECAC85 /* ButtonsComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonsComponent.swift; sourceTree = "<group>"; };
 		FEBB19812C61934800ECAC85 /* AggregatesTabV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AggregatesTabV.swift; sourceTree = "<group>"; };
-		FEBB19832C61958E00ECAC85 /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
+		FEBB19832C61958E00ECAC85 /* AggChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AggChartView.swift; sourceTree = "<group>"; };
 		FEBB19852C61B80500ECAC85 /* LandingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingView.swift; sourceTree = "<group>"; };
 		FEBB19872C62CF8000ECAC85 /* WeekdaysComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekdaysComponent.swift; sourceTree = "<group>"; };
 		FEBB19892C63015D00ECAC85 /* ActionsTabCandleV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionsTabCandleV.swift; sourceTree = "<group>"; };
@@ -730,7 +730,7 @@
 				FEBB197B2C5F0BFD00ECAC85 /* AggregatorTypeComponent.swift */,
 				FEBB197D2C5F10BF00ECAC85 /* GoalComponent.swift */,
 				FEBB197F2C5F15D200ECAC85 /* ButtonsComponent.swift */,
-				FEBB19832C61958E00ECAC85 /* ChartView.swift */,
+				FEBB19832C61958E00ECAC85 /* AggChartView.swift */,
 				FEBB19872C62CF8000ECAC85 /* WeekdaysComponent.swift */,
 				FEBB19B22C6AE82300ECAC85 /* WeeklyBarView.swift */,
 			);
@@ -999,7 +999,7 @@
 				FE9959542BC8B5B000F3187B /* RemindersView.swift in Sources */,
 				FE4AB3A22C51F2E000A07749 /* DynamicFieldView.swift in Sources */,
 				FE4F7BD22BA8FC600041CB6A /* BottomBar.swift in Sources */,
-				FEBB19842C61958E00ECAC85 /* ChartView.swift in Sources */,
+				FEBB19842C61958E00ECAC85 /* AggChartView.swift in Sources */,
 				FEBB19AC2C6A83D500ECAC85 /* WeekdaySelector.swift in Sources */,
 				FE4AB38B2C4EF4E500A07749 /* ActionsListV.swift in Sources */,
 				FE2074B82C5ADDCE00C58226 /* Timer.swift in Sources */,

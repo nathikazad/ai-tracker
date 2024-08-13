@@ -13,13 +13,15 @@ struct ActionTypeRowView: View {
     let truncatedCandles: [Candle]
     let totalTimeOfAll: Int
     var fetchActions: () -> Void
+    @Binding var allSelected: Bool
+    @Binding var selectedWeekday: Weekday
 
     var body: some View {
         HStack {
             ActionTypeColorPicker(actionTypeModel: actionTypeModel, showColorPickerForActionTypeId: $showColorPickerForActionTypeId, fetchActions: fetchActions)
             
             if actionTypeModel.id != showColorPickerForActionTypeId {
-                let totalTime = truncatedCandles.reduce(0) { (result, candle) -> Int in
+                let totalTime = getCandles.reduce(0) { (result, candle) -> Int in
                     if (candle.actionTypeModel?.id == actionTypeModel.id) {
                         return result + Int(candle.end.timeIntervalSince(candle.start))
                     }
@@ -41,6 +43,29 @@ struct ActionTypeRowView: View {
                 )
             }
         }
+    }
+    
+    private var getCandles: [Candle] {
+        if !allSelected {
+            return truncatedCandles.filterByWeekday(selectedWeekday: selectedWeekday)
+        } else {
+            return truncatedCandles
+        }
+    }
+}
+
+extension [Candle] {
+    fileprivate func filterByWeekday(selectedWeekday: Weekday) -> [Candle] {
+        let weekBoundary: WeekBoundary = state.currentWeek.getStartAndEnd(weekday: selectedWeekday)
+        let startDate = weekBoundary.start
+        let endDate = weekBoundary.end
+        let ret = self.filter { candle in
+            let startInRange = candle.start >= startDate && candle.start <= endDate
+            let endInRange = candle.end >= startDate && candle.end <= endDate
+            let spansRange = candle.start <= startDate && candle.end >= endDate
+            return startInRange || endInRange || spansRange
+        }
+        return ret
     }
 }
 

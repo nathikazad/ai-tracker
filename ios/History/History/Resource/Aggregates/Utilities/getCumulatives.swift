@@ -8,7 +8,7 @@
 import Foundation
 
 extension AggregateChartView {
-    func getCumulativeDurationsPerWeek(actions: [ActionModel], timezone: String) -> [[(Date, Int, Int)]] {
+    func getCumulativePerWeek(actions: [ActionModel], timezone: String, adder: (ActionModel) -> Int) -> [[(Date, Int, Int)]] {
         guard let (calendar, startDate, endDate) = getDateRange(from: actions.map { $0.startTime }, timezone: timezone) else {
             return []
         }
@@ -19,7 +19,6 @@ extension AggregateChartView {
         while currentDate <= endDate {
             let weekBoundary = currentDate.getWeekBoundary
             let weekStartDate = weekBoundary.start
-            print(weekStartDate.formattedShortDateAndTime)
             let weekEndDate = weekBoundary.end
             
             var weekCumulative = 0
@@ -33,7 +32,7 @@ extension AggregateChartView {
                             calendar.isDate(action.startTime, inSameDayAs: dailyDate)
                         }
                         .reduce(0) { sum, action in
-                            sum + Int(action.durationInSeconds)
+                            sum + adder(action)
                         }
                     
                     weekCumulative += dailyDuration

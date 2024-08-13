@@ -9,8 +9,8 @@ import SwiftUI
 import Combine
 
 enum SelectedGrouping: String, CodingKey {
-    case byActionType
-    case byDay
+    case byPercentage
+    case byPeriod
 }
 
 struct CandleChartWithList: View {
@@ -23,8 +23,9 @@ struct CandleChartWithList: View {
     @State var showColorPickerForActionTypeId: Int? = nil
     @State var redrawChart: Bool = true
     @State private var coreStateSubcription: AnyCancellable?
-    @State private var selectedGrouping: SelectedGrouping = .byActionType
+    @State private var selectedGrouping: SelectedGrouping = .byPercentage
     @State private var selectedWeekday: Weekday = .saturday
+    @State private var allSelected: Bool = true
     
     var numOfDays: Int {
         daysRange.upperBound - daysRange.lowerBound
@@ -109,19 +110,28 @@ struct CandleChartWithList: View {
             DayRangeSelector(daysRange: $daysRange, fetchActions: fetchActions)
             HourRangeSelector(hoursRange: $hoursRange)
             ControlBar(selectedGrouping: $selectedGrouping, unselectedModels: $unselectedModels, actionTypeModels: actionTypeModels)
-            
-            if selectedGrouping == .byDay {
-                WeekdaySelectorForCandles(selectedDay: $selectedWeekday, daysRange: $daysRange)
-                    .alignmentGuide(.listRowSeparatorLeading) { _ in -20 }
-            }
-            
-            if selectedGrouping == .byActionType {
-                ActionTypeList(actionTypeModels: actionTypeModels, truncatedCandles: truncatedCandles, daysRange: daysRange, unselectedModels: $unselectedModels, showColorPickerForActionTypeId: $showColorPickerForActionTypeId, fetchActions: fetchActions)
+            WeekdaySelectorForCandles(selectedDay: $selectedWeekday, daysRange: $daysRange, selectedGrouping: $selectedGrouping, allSelected: $allSelected)
+                .alignmentGuide(.listRowSeparatorLeading) { _ in -20 }    
+            if selectedGrouping == .byPercentage {
+                ActionTypeList(
+                    actionTypeModels: actionTypeModels, 
+                    truncatedCandles: truncatedCandles,
+                    daysRange: daysRange,
+                    unselectedModels: $unselectedModels,
+                    showColorPickerForActionTypeId: $showColorPickerForActionTypeId,
+                    fetchActions: fetchActions,
+                    allSelected: $allSelected, 
+                    selectedWeekday: $selectedWeekday)
             } else {
-                let (start, end) = state.currentWeek.getStartAndEnd(weekday: selectedWeekday)
-                let selectedActions = actions.filterEvents(startDate: start, endDate: end).sortEvents
+                let weekBoundary = state.currentWeek.getStartAndEnd(weekday: selectedWeekday)
+                let selectedActions = actions.filterEvents(weekBoundary: weekBoundary).sortEvents
                 ForEach(selectedActions, id: \.id) { action in
-                    ActionRowForCandleView(actionModel: action, showColorPickerForActionTypeId: $showColorPickerForActionTypeId, unselectedModels: $unselectedModels, truncatedCandles: truncatedCandles, fetchActions: fetchActions)
+                    ActionRowForCandleView(
+                        actionModel: action,
+                        showColorPickerForActionTypeId: $showColorPickerForActionTypeId,
+                        unselectedModels: $unselectedModels,
+                        truncatedCandles: truncatedCandles,
+                        fetchActions: fetchActions)
                         .alignmentGuide(.listRowSeparatorLeading) { _ in
                             -20
                         }
@@ -173,8 +183,13 @@ struct ControlBar: View {
     
     var body: some View {
         HStack {
-            Button(selectedGrouping == .byActionType ? "By Days" : "By Verbs") {
-                selectedGrouping = selectedGrouping == .byActionType ? .byDay : .byActionType
+            Button(action: {
+                selectedGrouping = selectedGrouping == .byPercentage ? .byPeriod : .byPercentage
+            }) {
+                HStack(spacing: 8) {
+                    Image(systemName: "clock.arrow.2.circlepath")
+                    Text(selectedGrouping == .byPercentage ? "Percentages" : "Periods")
+                }
             }
             .buttonStyle(ControlBarButtonStyle())
             Spacer()
@@ -197,14 +212,18 @@ struct ActionTypeList: View {
     @Binding var unselectedModels: [Int]
     @Binding var showColorPickerForActionTypeId: Int?
     var fetchActions: () -> Void
+    @Binding var allSelected: Bool
+    @Binding var selectedWeekday: Weekday
     
     var body: some View {
-        let totalTimeOfAll = (daysRange.upperBound - daysRange.lowerBound) * 24 * 60 * 60
+        let numOfDays = allSelected ? (daysRange.upperBound - daysRange.lowerBound) : 1
+        let totalTimeOfAll = numOfDays * 24 * 60 * 60
         let durationByActionType = calculateDurationByActionType(truncatedCandles)
         let sortedActionTypes = sortActionTypes(actionTypeModels, durationByActionType)
         
         ForEach(sortedActionTypes, id: \.name) { actionTypeModel in
-            ActionTypeRowView(actionTypeModel: actionTypeModel, showColorPickerForActionTypeId: $showColorPickerForActionTypeId, unselectedModels: $unselectedModels, truncatedCandles: truncatedCandles, totalTimeOfAll: totalTimeOfAll, fetchActions: fetchActions)
+            ActionTypeRowView(actionTypeModel: actionTypeModel, showColorPickerForActionTypeId: $showColorPickerForActionTypeId, unselectedModels: $unselectedModels, truncatedCandles: truncatedCandles, totalTimeOfAll: totalTimeOfAll, fetchActions: fetchActions, allSelected: $allSelected,
+                              selectedWeekday: $selectedWeekday)
                 .alignmentGuide(.listRowSeparatorLeading) { _ in -20 }
                 .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                     NavigationLink(destination: ActionTypeView(model: actionTypeModel)) {

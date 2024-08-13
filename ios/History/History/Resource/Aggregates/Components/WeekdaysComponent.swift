@@ -59,7 +59,7 @@ struct DayButton: View {
             Text(day)
                 .font(.system(size: 14, weight: .medium))
                 .frame(width: 30, height: 30)
-                .background(isSelected ? Color.blue : Color.gray.opacity(0.2))
+                .background(isSelected ? Color(red: 178/255, green: 72/255, blue: 49/255) : Color.gray.opacity(0.2))
                 .foregroundColor(isSelected ? .white : .black)
                 .clipShape(Circle())
         }

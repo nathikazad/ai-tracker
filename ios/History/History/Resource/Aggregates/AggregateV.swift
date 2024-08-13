@@ -21,8 +21,11 @@ struct ShowAggregateView: View {
     var dataType: String {
         if aggregate.metadata.aggregatorType == .compare {
             return "Time"
-        } else {
+        } else if aggregate.metadata.aggregatorType == .count {
             return "Number"
+        } else {
+            // TODO check for the right data type
+            return "Duration"
         }
     }
     

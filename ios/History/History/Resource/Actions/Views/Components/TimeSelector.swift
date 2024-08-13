@@ -14,6 +14,16 @@ struct TimeInformationView: View {
     let startTimeLabel: String
     let endTimeLabel: String
     @Binding var changesToSave: Bool
+    
+    init(startTime: Binding<Date>, endTime: Binding<Date?>, hasDuration: Bool, startTimeLabel: String, endTimeLabel: String, changesToSave: Binding<Bool>) {
+        self._startTime = startTime
+        self._endTime = endTime
+        self.hasDuration = hasDuration
+        self.startTimeLabel = startTimeLabel
+        self.endTimeLabel = endTimeLabel
+        self._changesToSave = changesToSave
+        UIDatePicker.appearance().minuteInterval = 5
+    }
 
     var body: some View {
         VStack {
@@ -22,7 +32,9 @@ struct TimeInformationView: View {
                 selection: $startTime,
                 displayedComponents: [.date, .hourAndMinute]
             )
-            .onChange(of: startTime) { _ in changesToSave = true }
+            .onChange(of: startTime) {
+                changesToSave = true
+            }
 
             if hasDuration {
                 if endTime == nil {
