@@ -126,22 +126,23 @@ struct LongStringComponent: View {
 struct DurationComponent: View {
     let fieldName: String
     @Binding var duration: Duration
+    @State var valueCopy: Int = 0
     
     var body: some View {
-        VStack(alignment: .leading) {
+        HStack {
             Text("\(fieldName):")
-            HStack {
-                TextField("Duration", value: $duration.durationInSeconds, formatter: NumberFormatter())
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .frame(width: 100)
-                
-                Picker("Type", selection: $duration.durationType) {
-                    ForEach(Duration.DurationType.allCases, id: \.self) { type in
-                        Text(type.rawValue.capitalized).tag(type)
-                    }
+            Spacer()
+            TextField("Duration", value: $duration.durationInSeconds, formatter: NumberFormatter())
+                .multilineTextAlignment(.trailing)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .frame(width: 80)
+            Picker("", selection: $duration.durationType) {
+                ForEach(Duration.DurationType.allCases, id: \.self) { type in
+                    Text(type.rawValue.capitalized).tag(type)
                 }
-                .pickerStyle(SegmentedPickerStyle())
             }
+            .frame(width: Duration.DurationType.allCases.map { $0.rawValue.capitalized }.map { CGFloat($0.count * 15) }.max() ?? 100)
+            .clipped()
         }
     }
 }

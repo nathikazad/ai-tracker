@@ -41,11 +41,11 @@ struct ViewDataType: View {
                     fieldName: name,
                     currency: bindingFor(Currency.defaultCurrency)
                 )
-//            case .duration:
-//                DurationComponent(
-//                    fieldName: name,
-//                    duration: bindingFor(Duration.defaultDuration)
-//                )
+            case .duration:
+                DurationComponent(
+                    fieldName: name,
+                    duration: bindingFor(Duration.defaultDuration)
+                )
             case .dateTime, .time:
                 TimeComponent(
                     fieldName: name,

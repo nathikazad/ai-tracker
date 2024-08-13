@@ -1,23 +1,24 @@
 import SwiftUI
 
-struct AggregatorTypeSection: View {
+struct AggregatorFieldsSection: View {
     @ObservedObject var model: AggregateModel
     @Binding var changesToSave: Bool
+    let dataType: String
     
     var body: some View {
         Section {
-            AggregatorTypePicker(metadata: model.metadata, changesToSave: $changesToSave)
-            if model.metadata.aggregatorType != .count {
-                FieldPicker(metadata: model.metadata, changesToSave: $changesToSave)
-            }
             HStack {
                 ShortStringComponent(fieldName: "Name: ", value: $model.metadata.name)
                     .onChange(of: model.metadata.name) {
                         changesToSave = true
                     }
             }
-            //            WindowPicker(metadata: model.metadata, changesToSave: $changesToSave)
-            
+            WindowPicker(metadata: model.metadata, changesToSave: $changesToSave)
+            AggregatorTypePicker(metadata: model.metadata, changesToSave: $changesToSave)
+            if model.metadata.aggregatorType != .count {
+                FieldPicker(metadata: model.metadata, changesToSave: $changesToSave)
+            }
+            GoalsSection(aggregate: model, dataType: dataType, changesToSave: $changesToSave)
         }
     }
 }
@@ -63,7 +64,7 @@ struct FieldPicker: View {
             }
         }
         .pickerStyle(MenuPickerStyle())
-        .onChange(of: metadata.field) { _ in
+        .onChange(of: metadata.field) {
             changesToSave = true
         }
     }
@@ -75,13 +76,14 @@ struct WindowPicker: View {
     
     var body: some View {
         Picker("Window", selection: $metadata.window) {
-            //            ForEach(ASWindow.allCases, id: \.self) { window in
-            //                Text(window.rawValue.capitalized).tag(window)
-            //            }
-            Text("Daily").tag("Daily")
+            ForEach(ASWindow.allCases, id: \.self) { window in
+                if window != .monthly {
+                    Text(window.rawValue.capitalized).tag(window)
+                }
+            }
         }
         .pickerStyle(MenuPickerStyle())
-        .onChange(of: metadata.window) { _ in
+        .onChange(of: metadata.window) {
             changesToSave = true
         }
     }

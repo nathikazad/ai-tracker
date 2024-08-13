@@ -5,18 +5,15 @@ struct GoalsSection: View {
     @Binding var changesToSave: Bool
     
     var body: some View {
-        Section {
-            List {
-                ForEach(aggregate.metadata.goals.indices, id: \.self) { index in
-                    GoalView(index: index, dataType: dataType, goal: bindingForGoal(at: index))
-                }
-                .onDelete(perform: deleteGoals)
-                
-                if aggregate.metadata.goals.isEmpty {
-                    AddNewGoalButton(aggregate: aggregate, changesToSave: $changesToSave)
-                }
+        List {
+            ForEach(aggregate.metadata.goals.indices, id: \.self) { index in
+                GoalView(index: index, dataType: dataType, window: $aggregate.metadata.window, goal: bindingForGoal(at: index))
             }
-//            .navigationTitle("Track")
+            .onDelete(perform: deleteGoals)
+            
+            if aggregate.metadata.goals.isEmpty {
+                AddNewGoalButton(aggregate: aggregate, changesToSave: $changesToSave)
+            }
         }
     }
     

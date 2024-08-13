@@ -185,13 +185,13 @@ extension Date {
         let calendar = Calendar.current
         
         // Find the start of the week (Monday at 00:00)
-        let startOfWeek = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: self))!
+        let startOfWeek = calendar.date(byAdding: .day, value: 1,
+                                        to :calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: self))!)!
         let startHour = calendar.startOfDay(for: startOfWeek)
         
         // Find the end of the week (Sunday at 23:59:59)
         let endOfWeek = calendar.date(byAdding: .day, value: 7, to: startOfWeek)!
         let endHour = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: endOfWeek)!
-        print(startHour.formattedShortDateAndTime, endHour.formattedShortDateAndTime)
         return WeekBoundary(start: startHour, end: endHour)
     }
     

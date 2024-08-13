@@ -7,7 +7,7 @@
 
 import Foundation
 
-// case duration = "Duration"
+
 // case date = "Date"
 // case unit = "Unit"
 // case timeStampedString = "TimeStampedString"
@@ -23,6 +23,7 @@ enum DataType: String, CaseIterable, Codable {
     case enumerator = "Enum"
     case shortString = "ShortString"
     case longString = "LongString"
+     case duration = "Duration"
 }
 
 func getDataType(from string: String) -> DataType? {
@@ -48,6 +49,8 @@ extension String {
         
         case .shortString, .longString:
             return AnyCodable("")
+        case .duration:
+            return AnyCodable(Duration(durationInSeconds: 0))
         case .none:
             return nil
         }

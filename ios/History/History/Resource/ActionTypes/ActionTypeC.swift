@@ -205,18 +205,22 @@ class ActionTypesController {
 // finshed: change color permanently from candle
 
 // GOALS
-// finished: Make goals show by week and 
+// bug: Make goals show by week and 
+// finished: duration min/sec goal
+// finished: cumulative for week goal.
 // actual/expected value and streak
-// add preferred hours with marks
-// duration min/sec goal
-// cumulative for week goal
+// add goal button
+// goal field be currency or number datatypes also
 // Support conditions only for enum
+
+// skip: add preferred hours with marks
 // skipped: create segments
+// first and last to compare
 
 // ACTION VIEWS
 // delete action button
-// list actions filter by enum
-// list objects filter by enum
+// skip: list actions filter by enum
+// skip: list objects filter by enum
 
 // finished: Add voice notes
 // Support dark mode

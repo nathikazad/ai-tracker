@@ -116,7 +116,8 @@ struct AggregatesTabView: View {
                     AggregateChartView(
                         aggregate: aggregate,
                         actionsParam: actions,
-                        weekBoundary: weekBoundary
+                        weekBoundary: weekBoundary,
+                        showWeekNavigator: false
                     )
                 } label: {
                     Text(aggregate.metadata.name == "" ? aggregate.toString : aggregate.metadata.name)

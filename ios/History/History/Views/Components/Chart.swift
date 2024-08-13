@@ -34,6 +34,8 @@ struct BarView: View {
     var data: [(Date, Double)]
     var yAxisLabel: String?
     var yMark: Double?
+    var x1Mark: Date?
+    var x2Mark: Date?
     
     var numDays: Int {
         // get minimum date, maximum date, and then get the difference in days
@@ -54,11 +56,27 @@ struct BarView: View {
                 }
                 
                 if let yMark = yMark {
-                    RuleMark(
-                        y: .value("Target", yMark)
-                    )
-                    .lineStyle(StrokeStyle(lineWidth: 2, dash: [5, 5]))
-                    .foregroundStyle(Color.green)
+                    if let x1Mark = x1Mark, let x2Mark = x2Mark {
+                        let startDate = Calendar.current.date(byAdding: .day, value: -5, to: Date())!
+                        LineMark(
+                            x: .value("X", x1Mark),
+                            y: .value("Y", 0)
+                        )
+                        .lineStyle(StrokeStyle(lineWidth: 2, dash: [5, 5]))
+                        .foregroundStyle(Color.green)
+                        LineMark(
+                            x: .value("X", x2Mark),
+                            y: .value("Y", yMark)
+                        )
+                        .lineStyle(StrokeStyle(lineWidth: 2, dash: [5, 5]))
+                        .foregroundStyle(Color.green)
+                    } else {
+                        RuleMark(
+                            y: .value("Target", yMark)
+                        )
+                        .lineStyle(StrokeStyle(lineWidth: 2, dash: [5, 5]))
+                        .foregroundStyle(Color.green)
+                    }
                 }
             }
             .chartXAxis {
@@ -125,7 +143,6 @@ extension [Candle] {
         let minDate = self.min { $0.start < $1.start }?.start ?? Date()
         let maxDate = self.max { $0.start < $1.start }?.start ?? Date()
         let ret = Swift.max(1, Calendar.current.dateComponents([.day], from: minDate, to: maxDate).day ?? 1)
-        print(ret, offSetArray[ret])
         return offSetArray[ret]
     }
 }

@@ -137,6 +137,9 @@
 		FEBB19AC2C6A83D500ECAC85 /* WeekdaySelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB19AB2C6A83D500ECAC85 /* WeekdaySelector.swift */; };
 		FEBB19AF2C6A848900ECAC85 /* truncateCandles.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB19AE2C6A848900ECAC85 /* truncateCandles.swift */; };
 		FEBB19B12C6A84BF00ECAC85 /* actionsToCandles.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB19B02C6A84BF00ECAC85 /* actionsToCandles.swift */; };
+		FEBB19B32C6AE82300ECAC85 /* WeeklyBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB19B22C6AE82300ECAC85 /* WeeklyBarView.swift */; };
+		FEBB19B62C6AE87100ECAC85 /* convertDurations.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB19B52C6AE87100ECAC85 /* convertDurations.swift */; };
+		FEBB19B82C6AE8B200ECAC85 /* getCumulatives.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBB19B72C6AE8B200ECAC85 /* getCumulatives.swift */; };
 		FEBED49A2C0AD79800DB2D5F /* PersonViewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEBED4992C0AD79800DB2D5F /* PersonViewHelper.swift */; };
 		FEC538812BBDF8C7006BDBDA /* WidgetIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEC538802BBDF8C7006BDBDA /* WidgetIntent.swift */; };
 		FEC7849E2C064EAE007C38F1 /* PersonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEC7849D2C064EAE007C38F1 /* PersonView.swift */; };
@@ -323,6 +326,9 @@
 		FEBB19AB2C6A83D500ECAC85 /* WeekdaySelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekdaySelector.swift; sourceTree = "<group>"; };
 		FEBB19AE2C6A848900ECAC85 /* truncateCandles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = truncateCandles.swift; sourceTree = "<group>"; };
 		FEBB19B02C6A84BF00ECAC85 /* actionsToCandles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = actionsToCandles.swift; sourceTree = "<group>"; };
+		FEBB19B22C6AE82300ECAC85 /* WeeklyBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyBarView.swift; sourceTree = "<group>"; };
+		FEBB19B52C6AE87100ECAC85 /* convertDurations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = convertDurations.swift; sourceTree = "<group>"; };
+		FEBB19B72C6AE8B200ECAC85 /* getCumulatives.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = getCumulatives.swift; sourceTree = "<group>"; };
 		FEBED4992C0AD79800DB2D5F /* PersonViewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonViewHelper.swift; sourceTree = "<group>"; };
 		FEC5386D2BBDE4E5006BDBDA /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		FEC5386F2BBDE4E5006BDBDA /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -726,6 +732,7 @@
 				FEBB197F2C5F15D200ECAC85 /* ButtonsComponent.swift */,
 				FEBB19832C61958E00ECAC85 /* ChartView.swift */,
 				FEBB19872C62CF8000ECAC85 /* WeekdaysComponent.swift */,
+				FEBB19B22C6AE82300ECAC85 /* WeeklyBarView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -788,6 +795,15 @@
 			path = Utilities;
 			sourceTree = "<group>";
 		};
+		FEBB19B42C6AE86300ECAC85 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				FEBB19B52C6AE87100ECAC85 /* convertDurations.swift */,
+				FEBB19B72C6AE8B200ECAC85 /* getCumulatives.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
 		FEDBC0612C04FB2100233EA0 /* Components */ = {
 			isa = PBXGroup;
 			children = (
@@ -813,6 +829,7 @@
 		FEE29E062C5C1EEC00A27C44 /* Aggregates */ = {
 			isa = PBXGroup;
 			children = (
+				FEBB19B42C6AE86300ECAC85 /* Utilities */,
 				FEBB19782C5F0BAE00ECAC85 /* Components */,
 				FE4AB3962C51F05C00A07749 /* AggregateM.swift */,
 				FEE29E072C5C1F1E00A27C44 /* AggregateC.swift */,
@@ -995,6 +1012,7 @@
 				FE8811EB2BC799BF00B112A8 /* GoalsController.swift in Sources */,
 				FEA98C112BFFC96C006BB857 /* QuickComponents.swift in Sources */,
 				FECA5EEE2BE569F6007ADE17 /* Time.swift in Sources */,
+				FEBB19B82C6AE8B200ECAC85 /* getCumulatives.swift in Sources */,
 				FEBB19802C5F15D200ECAC85 /* ButtonsComponent.swift in Sources */,
 				FEBB19902C65811700ECAC85 /* ObjectTypeM.swift in Sources */,
 				FEA98C132BFFEC70006BB857 /* TwoDatePicker.swift in Sources */,
@@ -1029,6 +1047,7 @@
 				FEBB198A2C63015D00ECAC85 /* ActionsTabCandleV.swift in Sources */,
 				FEB366E32BDDEC5D000A48C0 /* SendBar.swift in Sources */,
 				FE20CA262BC5E4CD00863604 /* SettingsView.swift in Sources */,
+				FEBB19B32C6AE82300ECAC85 /* WeeklyBarView.swift in Sources */,
 				FE96B5422BF81A8A000BD8E1 /* EventModel.swift in Sources */,
 				FE977B0F2BD9C2A6008E743C /* EventTypeView.swift in Sources */,
 				FEBB197C2C5F0BFD00ECAC85 /* AggregatorTypeComponent.swift in Sources */,
@@ -1052,6 +1071,7 @@
 				FE638F462C571840001C34F0 /* ActionModels.swift in Sources */,
 				FE4AB39E2C51F29C00A07749 /* ObjectTypeV.swift in Sources */,
 				FE8153722BD845B300D972C8 /* PolylineView.swift in Sources */,
+				FEBB19B62C6AE87100ECAC85 /* convertDurations.swift in Sources */,
 				FE9452F22BF2CC0900B28918 /* InteractionView.swift in Sources */,
 				FE06FD042C0913E800E65D41 /* MinPeopleViewForEventView.swift in Sources */,
 				FE12C5E62BC4B2A5002CDC60 /* InteractionsView.swift in Sources */,

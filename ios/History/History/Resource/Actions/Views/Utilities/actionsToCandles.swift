@@ -19,13 +19,13 @@ func convertActionsToCandles(_ actions: [ActionModel], daysRange: ClosedRange<In
 
     let startDateOfRange = calendar.date(
         byAdding: .day,
-        value: daysRange.lowerBound + 1,
+        value: daysRange.lowerBound,
         to: state.currentWeek.start
     )!
     
     let endDateOfRange = calendar.date(
         byAdding: .day,
-        value: daysRange.upperBound + 1,
+        value: daysRange.upperBound,
         to: state.currentWeek.start
     )!
     

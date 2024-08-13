@@ -42,11 +42,8 @@ struct ShowAggregateView: View {
     
     var body: some View {
         Form {
-            AggregatorTypeSection(model: aggregate, changesToSave: changesToSaveBinding)
-            GoalsSection(aggregate: aggregate, dataType: dataType, changesToSave: changesToSaveBinding)
-            
+            AggregatorFieldsSection(model: aggregate, changesToSave: changesToSaveBinding, dataType: dataType)
             AggregateChartView(aggregate: aggregate, actionsParam: actions)
-
             ButtonsSection(aggregate: aggregate, changesToSave: $changesToSave, saveChanges: saveChanges, deleteAggregate: deleteAggregate)
             
         }

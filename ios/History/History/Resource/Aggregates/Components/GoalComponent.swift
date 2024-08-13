@@ -10,56 +10,58 @@ import SwiftUI
 struct GoalView: View {
     var index: Int
     var dataType: String
-    
+    @Binding var window: ASWindow
     @Binding var goal: Goal
     @State private var isExpanded: Bool = true
     
     var body: some View {
-        DisclosureGroup(
-            isExpanded: $isExpanded,
-            content: {
-                VStack(spacing: 10) {
-                    HStack {
-                        Text("Comparison").frame(width: 100, alignment: .leading)
-                        Spacer()
-                        Picker("", selection: $goal.comparisonOperator) {
-                            ForEach(ComparisonOperator.allCases, id: \.self) { op in
-                                Text(op.rawValue.capitalized).tag(op)
-                            }
-                        }
-                        .pickerStyle(MenuPickerStyle())
-                    }
-                    
-                    ViewDataType(
-                        dataType: dataType,
-                        name: "Target",
-                        enums: [],
-                        value: $goal.value
-                    )
-                    
-                    WeekdaySelector(
-                        selectedDays: $goal.selectedDays
-                    )
-//                    .padding(.vertical)
-                    
-                    HStack {
-                        Text("Priority").frame(width: 100, alignment: .leading)
-                        Spacer()
-                        Picker("", selection: $goal.priority) {
-                            ForEach(GoalPriority.allCases, id: \.self) { op in
-                                Text(op.rawValue.capitalized).tag(op)
-                            }
-                        }
-                        .pickerStyle(MenuPickerStyle())
+        //        DisclosureGroup(
+        //            isExpanded: $isExpanded,
+        //            content:
+        //                {
+        VStack(spacing: 10) {
+            if window == .daily {
+                WeekdaySelector(
+                    selectedDays: $goal.selectedDays
+                )
+            }
+            HStack {
+                Text("Comparison").frame(width: 100, alignment: .leading)
+                Spacer()
+                Picker("", selection: $goal.comparisonOperator) {
+                    ForEach(ComparisonOperator.allCases, id: \.self) { op in
+                        Text(op.rawValue.capitalized).tag(op)
                     }
                 }
-            },
-            label: {
-                Text("Goal")
+                .pickerStyle(MenuPickerStyle())
             }
-        )
+            
+            ViewDataType(
+                dataType: dataType,
+                name: "Target",
+                enums: [],
+                value: $goal.value
+            )
+            //                    .padding(.vertical)
+            
+            HStack {
+                Text("Priority").frame(width: 100, alignment: .leading)
+                Spacer()
+                Picker("", selection: $goal.priority) {
+                    ForEach(GoalPriority.allCases, id: \.self) { op in
+                        Text(op.rawValue.capitalized).tag(op)
+                    }
+                }
+                .pickerStyle(MenuPickerStyle())
+            }
+        }
     }
 }
+//    ,
+//            label: {
+//                Text("Goal")
+//            }
+//        )
 
 //                    if (showField) {
 //                        HStack {
