@@ -226,6 +226,14 @@ class ActionModelTypeStaticSchema: Observable, Codable {
     }
 }
 
+extension [String: Schema] {
+    var filterNumericTypes: [String: Schema] {
+        return self.filter { (_, schema) in
+            schema.dataType == "Currency" || schema.dataType == "Number"
+        }
+    }
+}
+
 class Schema: Codable {
     var name: String
     var dataType: String

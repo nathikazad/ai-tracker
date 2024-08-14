@@ -155,7 +155,7 @@ struct ActionTypeView: View {
                 Section(header: Text("Goals")) {
                     ForEach(Array(model.aggregates)) { aggregate in
                         NavigationLink(destination: ShowGoalView(aggregateModel: aggregate)) {
-                            Text(aggregate.toString)
+                            Text(aggregate.metadata.name)
                         }
                     }
                     NavigationLink(destination: ShowGoalView(aggregateModel: AggregateModel(actionTypeId: actionTypeId))) {

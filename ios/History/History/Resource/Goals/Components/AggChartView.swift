@@ -9,15 +9,17 @@ import Foundation
 import SwiftUI
 struct AggregateChartView: View {
     @ObservedObject var aggregate: AggregateModel
+    @ObservedObject var actionTypeModel: ActionTypeModel
     let actionsParam: [ActionModel]
     let weekBoundary: WeekBoundary?
     let showWeekNavigator: Bool
     
-    init(aggregate: AggregateModel, actionsParam: [ActionModel], weekBoundary: WeekBoundary? = nil, endDate: Date? = nil, showWeekNavigator:Bool = true) {
+    init(aggregate: AggregateModel, actionsParam: [ActionModel], weekBoundary: WeekBoundary? = nil, endDate: Date? = nil, showWeekNavigator:Bool = true, actionTypeModel: ActionTypeModel) {
         self.aggregate = aggregate
         self.actionsParam = actionsParam
         self.weekBoundary = weekBoundary
         self.showWeekNavigator = showWeekNavigator
+        self.actionTypeModel = actionTypeModel
     }
  
     var actions: [ActionModel] {
@@ -26,163 +28,77 @@ struct AggregateChartView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            if aggregate.metadata.aggregatorType == .count {
-                let mark = aggregate.metadata.goals.first?.value?.toType(String.self)
-                if aggregate.metadata.window == .weekly {
-                    let dateCounts = getCumulativePerWeek(actions: actions, timezone: Authentication.shared.user!.timezone!, adder: {
-                        action in 1
-                    })
-                    WeeklyBarView(weeklyDurations: dateCounts, mark: mark == nil ? nil : Double(mark!), aggregate: aggregate, showWeekNavigator: showWeekNavigator)
-                } else {
-                    let dateCounts = getDateCounts(actions: actions, timezone: Authentication.shared.user!.timezone!)
-                    BarView(data: Array(dateCounts.suffix(7)), yAxisLabel: "Count", yMark: mark == nil ? nil : Double(mark!))
-                        .id(aggregate.id)
-                }
-            } else if aggregate.metadata.aggregatorType == .compare {
+            if aggregate.metadata.aggregatorType == .compare {
                 let mark: Date? = aggregate.metadata.goals.first?.value?.toType(Date.self)
-                if aggregate.metadata.field == "Start Time" {
-                    let startTimes = minTimeForEachDay(actions: actions, timezone: Authentication.shared.user!.timezone!,  timeSelect: "Start Time")
-                    ScatterView(title: "",
-                                data: startTimes,
+                let times = minTimeForEachDay(actions: actions, timezone: Authentication.shared.user!.timezone!, timeSelect: aggregate.metadata.field)
+                    ScatterView(title: "", data: times,
                                 mark: mark,
                                 range: 2)
                     .id(aggregate.id)
-                    .frame(height: 80)
-                } else if aggregate.metadata.field == "End Time" {
-                    let endTimes = minTimeForEachDay(actions: actions, timezone: Authentication.shared.user!.timezone!, timeSelect: "End Time")
-                    ScatterView(title: "", data: endTimes,
-                                mark: mark,
-                                range: 2)
-                    .id(aggregate.id)
-                }
+            } else  {
+                let dateCounts = getCumulativePerWeek(actions: actions, timezone: Authentication.shared.user!.timezone!, adder: adder)
+                WeeklyBarView(weeklyDurations: dateCounts, aggregate: aggregate, showWeekNavigator: showWeekNavigator, mark: mark, units: units)
+            }
+        }
+    }
+    
+    var mark: Double? {
+        if aggregate.metadata.field == "Duration" {
+            let duration = aggregate.metadata.goals.first?.value?.toType(Duration.self)
+            return Double(duration?.durationInSeconds ?? 0)
+        } else {
+            let schema = aggregate.actionType?.dynamicFields[aggregate.metadata.field]
+            if schema?.dataType == "Currency" {
+                return Double(aggregate.metadata.goal.value?.toType(Currency.self)?.value ?? 0)
+            }
+        }
+        return aggregate.metadata.goals.first?.value?.toType(Double.self) ?? 0.0
+    }
+    
+    var units: String {
+        if aggregate.metadata.aggregatorType == .count {
+            return "Count"
+        } else if aggregate.metadata.field == "Duration" {
+            return "Seconds"
+        } else {
+            let schema = aggregate.actionType?.dynamicFields[aggregate.metadata.field]
+            if schema?.dataType == "Currency" {
+                let curr = aggregate.metadata.goal.value?.toType(Currency.self)
+                return curr?.currencyType.rawValue ?? "USD"
+            }
+        }
+        return ""
+    }
+    
+    func adder(action: ActionModel) -> Int {
+        if aggregate.metadata.aggregatorType == .count {
+            return 1
+        } else if aggregate.metadata.field == "Duration" {
+            return Int(action.durationInSeconds)
+        } else {
+            let schema = aggregate.actionType?.dynamicFields[aggregate.metadata.field]
+            if schema?.dataType == "Currency" {
+                return Int(action.dynamicData[aggregate.metadata.field]?.toType(Currency.self)?.value ?? 0)
             } else {
-                let mark =  aggregate.metadata.goals.first?.value?.toType(Duration.self)?.durationInSeconds
-                if aggregate.metadata.window == .monthly {
-                    let dateCounts = getCumulativeDurationsPerMonth(actions: actions, timezone: Authentication.shared.user!.timezone!)
-                    let (array, label) = convertDurationsToRightUnit(dateCounts: dateCounts, aggregate: aggregate)
-                    BarView(data: array, yAxisLabel: label, yMark: mark == nil ? nil : Double(mark!))
-                        .id(aggregate.id)
-                } else if aggregate.metadata.window == .weekly {
-                    let dateCounts = getCumulativePerWeek(actions: actions, timezone: Authentication.shared.user!.timezone!, adder: {
-                        action in Int(action.durationInSeconds)
-                    })
-                    WeeklyBarView(weeklyDurations: dateCounts, mark: mark == nil ? nil : Double(mark!), aggregate: aggregate, showWeekNavigator: showWeekNavigator)
-                } else {
-                    let dateCounts = getDateTotalDurationsPerDay(actions: actions, timezone: Authentication.shared.user!.timezone!)
-                    let (array, label) = convertDurationsToRightUnit(dateCounts: dateCounts, aggregate: aggregate)
-                    BarView(data: array, yAxisLabel: label, yMark: mark == nil ? nil : Double(mark!))
-                        .id(aggregate.id)
-                }
+                return Int(action.dynamicData[aggregate.metadata.field]?.toType(Double.self) ?? 0)
             }
         }
     }
     
     func getDateRange(from dates: [Date], timezone: String) -> (Calendar, Date, Date)? {
-    var calendar = Calendar.current
-    let timeZone = TimeZone(identifier: timezone) ?? Calendar.current.timeZone
-    calendar.timeZone = timeZone
-    
-    if let startDate = weekBoundary?.start, let endDate = weekBoundary?.end {
-        return (calendar, calendar.startOfDay(for: startDate), calendar.startOfDay(for: endDate))
-    } else {
-        guard let minDate = dates.min(),
-                let maxDate = dates.max() else {
-            return nil
-        }
+        var calendar = Calendar.current
+        let timeZone = TimeZone(identifier: timezone) ?? Calendar.current.timeZone
+        calendar.timeZone = timeZone
         
-        return (calendar, calendar.startOfDay(for: minDate), calendar.startOfDay(for: maxDate))
-    }
-}
-
-    func getDateCounts(actions: [ActionModel], timezone: String) -> [(Date, Double)] {
-        guard let (calendar, startDate, endDate) = getDateRange(from: actions.map { $0.startTime }, timezone: timezone) else {
-            return []
-        }
-        
-        var currentDate = startDate
-        var dateCounts: [(Date, Double)] = []
-        
-        while currentDate <= endDate {
-            let count = actions.filter { calendar.isDate($0.startTime, inSameDayAs: currentDate) }.count
-            dateCounts.append((currentDate, Double(count)))
-            currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate)!
-        }
-        
-        return dateCounts
-    }
-    
-    func getDateTotalDurationsPerDay(actions: [ActionModel], timezone: String) -> [(Date, Int)] {
-        guard let (calendar, startDate, endDate) = getDateRange(from: actions.map { $0.startTime }, timezone: timezone) else {
-            return []
-        }
-        
-        var currentDate = startDate
-        var dateTotalDurations: [(Date, Int)] = []
-        
-        while currentDate <= endDate {
-            let totalDuration = actions
-                .filter { calendar.isDate($0.startTime, inSameDayAs: currentDate) }
-                .reduce(0) { sum, action in
-                    sum + Int(action.durationInSeconds)
-                }
-            
-            dateTotalDurations.append((currentDate, totalDuration))
-            currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate)!
-        }
-        
-        return dateTotalDurations
-    }
-
-    
-    func minTimeForEachDay(actions: [ActionModel], timezone: String, timeSelect: String = "Start Time") -> [Date] {
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        formatter.timeZone = TimeZone(identifier: timezone) ?? TimeZone.current
-
-        for action in actions {
-            let startTimeString = formatter.string(from: action.startTime)
-            if let endTime = action.endTime {
-                let endTimeString = formatter.string(from: endTime)
+        if let startDate = weekBoundary?.start, let endDate = weekBoundary?.end {
+            return (calendar, calendar.startOfDay(for: startDate), calendar.startOfDay(for: endDate))
+        } else {
+            guard let minDate = dates.min(),
+                  let maxDate = dates.max() else {
+                return nil
             }
+            return (calendar, calendar.startOfDay(for: minDate), calendar.startOfDay(for: maxDate))
         }
-        
-        let relevantDates = timeSelect == "Start Time" ? actions.map { $0.startTime } : actions.compactMap { $0.endTime }
-        
-        guard let (calendar, startDate, endDate) = getDateRange(from: relevantDates, timezone: timezone) else {
-            return []
-        }
-        
-        var currentDate = startDate
-        var minTimes: [Date] = []
-        
-        while currentDate <= endDate {
-            let actionsForDay = actions.filter { action in
-                let actionDate = timeSelect == "Start Time" ? action.startTime : action.endTime
-                return actionDate.map { calendar.isDate($0, inSameDayAs: currentDate) } ?? false
-            }
-            
-            if let minTime = actionsForDay.compactMap({ action -> Date? in
-                timeSelect == "Start Time" ? action.startTime : action.endTime
-            }).min() {
-                minTimes.append(minTime)
-            } 
-//            else {
-//                // If there are no actions for a day, we'll use noon of that day as a placeholder
-//                if let noonDate = calendar.date(bySettingHour: 12, minute: 0, second: 0, of: currentDate) {
-//                    minTimes.append(noonDate)
-//                }
-//            }
-            
-            currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate)!
-        }
-        if timeSelect == "Start Time" {
-            minTimes = minTimes.filter { date in
-                let components = Calendar.current.dateComponents([.hour], from: date)
-                return components.hour! >= 20 // 20 is 8 PM in 24-hour format
-            }
-        }
-        return minTimes
     }
 }
 

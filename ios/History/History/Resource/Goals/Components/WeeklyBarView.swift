@@ -8,53 +8,99 @@
 import SwiftUI
 struct WeeklyBarView: View {
     let weeklyDurations: [[(Date, Int, Int)]]
-    let mark: Double?
     let aggregate: AggregateModel
     let showWeekNavigator: Bool
-    @State var showCumView: Bool = true
+    let mark: Double?
+    let units: String
+    @State var cumSwitchOn: Bool = true
     @State private var currentWeekIndex = 0
 
+    var showCum: Bool {
+        return aggregate.metadata.window == .weekly && cumSwitchOn
+    }
+    
     var body: some View {
         if !weeklyDurations.isEmpty {
             VStack {
                 if showWeekNavigator {
                     WeekNavigatorForBarGraph(currentWeekIndex: $currentWeekIndex, weeklyDurations: weeklyDurations)
                 }
-
-                let (array, label) = convertCumDurationsToRightUnit(dateCounts: weeklyDurations[currentWeekIndex], aggregate: aggregate, cumulative: showCumView)
+                let xyVals = flatYValues(dateCounts: weeklyDurations[currentWeekIndex], cumulative: showCum)
+                let (array, label) = getDataAndUnit(xyVals: xyVals)
                 
                 ZStack(alignment: .topLeading) {
-                    if showCumView {
-                        BarView(data: array, yAxisLabel: "Cumulative \(label)", yMark: mark,
-                                x1Mark: weeklyDurations[currentWeekIndex].first!.0,
-                                x2Mark: weeklyDurations[currentWeekIndex].last!.0)
-                        .id("week_\(currentWeekIndex)")
+                    if !showCum {
+                        BarView(data: array, yAxisLabel: "Daily \(label)", yMark: mark == nil ? 0 : mark!/(aggregate.metadata.window == .weekly ? 7 : 1 ))
+                            .id("week_\(aggregate.id ?? 0)")
                         .transition(.opacity)
                         .animation(.default, value: currentWeekIndex)
                     } else {
-                        BarView(data: array, yAxisLabel: "Daily \(label)", yMark: mark == 0 ? nil : mark!/7)
-                        .id("week_\(currentWeekIndex)")
+                        BarView(data: array, yAxisLabel: "Cumulative \(label)", yMark: mark,
+                                x1Mark: weeklyDurations[currentWeekIndex].first!.0,
+                                x2Mark: weeklyDurations[currentWeekIndex].last!.0)
+                        .id("week_\(aggregate.id ?? 0)")
                         .transition(.opacity)
                         .animation(.default, value: currentWeekIndex)
                     }
-                    
-                    Button(action: {
-                        showCumView.toggle()
-                    }) {
-                        Image(systemName: "arrow.left.arrow.right.square")
-                            .foregroundColor(Color.primary)
-                            .padding(8)
-                            .background(Color.secondary.opacity(0.8))
-                            .clipShape(Circle())
+                        
+                    if aggregate.metadata.window == .weekly {
+                        Button(action: {
+                            cumSwitchOn.toggle()
+                        }) {
+                            Image(systemName: "arrow.left.arrow.right.square")
+                                .foregroundColor(Color.primary)
+                                .padding(8)
+                                .background(Color.secondary.opacity(0.8))
+                                .clipShape(Circle())
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        .padding(8)
                     }
-                    .buttonStyle(PlainButtonStyle())
-                    .padding(8)
                 }
+                
             }
         } else {
             Text("No data available")
         }
     }
+    
+    func getDataAndUnit(xyVals: [(Date, Int)]) -> ([(Date, Double)], String) {
+        let array = xyVals.map { ($0, Double($1)) }
+        if aggregate.metadata.field == "Duration" {
+            if let targetDuration: Duration = aggregate.metadata.goals.first?.value?.toType(Duration.self) {
+                return convertDurationsToRightUnit(dateCounts: xyVals, targetDuration: targetDuration)
+            } else {
+                return (array, "Seconds")
+            }
+        } else {
+            return (array, units)
+        }
+        
+    }
+}
+
+func convertDurationsToRightUnit(dateCounts: [(Date, Int)], targetDuration: Duration) -> ([(Date, Double)], String) {
+    let array = dateCounts.map { ($0, Double($1)) }
+    if !array.isEmpty {
+        if targetDuration.durationType == .hours {
+            let hourArray = array.map { ($0.0, $0.1 / 3600) }
+            return (hourArray, "Hours")
+        } else if targetDuration.durationType == .minutes {
+            let hourArray = array.map { ($0.0, $0.1 / 60) }
+            return (hourArray, "Minutes")
+        } else {
+            let hourArray = array.map { ($0.0, $0.1) }
+            return (hourArray, "Seconds")
+        }
+    }
+    return (array, "Minutes")
+}
+
+func flatYValues(dateCounts: [(Date, Int, Int)], cumulative: Bool) -> [(Date, Int)] {
+    let modifiedDateCounts = dateCounts.map { (date, cumValue, incValue) in
+        (date, cumulative ? cumValue : incValue)
+    }
+    return modifiedDateCounts
 }
 
 

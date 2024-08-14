@@ -10,6 +10,7 @@ import SwiftUI
 
 struct ShowGoalView: View {
     @StateObject private var aggregate: AggregateModel
+    @StateObject private var actionType: ActionTypeModel
     @State private var actions: [ActionModel] = []
     @State private var changesToSave: Bool = false
     var clickAction: (() -> Void)?
@@ -17,18 +18,13 @@ struct ShowGoalView: View {
     
     init(aggregateModel: AggregateModel, clickAction: (() -> Void)? = nil) {
         _aggregate = StateObject(wrappedValue: aggregateModel)
+        _actionType = StateObject(wrappedValue:aggregateModel.actionType ?? ActionTypeModel(id: aggregateModel.actionTypeId, name: "Unknown"))
         self.clickAction = clickAction
     }
     
-    var dataType: String {
-        if aggregate.metadata.aggregatorType == .compare {
-            return "Time"
-        } else if aggregate.metadata.aggregatorType == .count {
-            return "Number"
-        } else {
-            // TODO check for the right data type
-            return "Duration"
-        }
+    init(actionTypeId: Int) {
+        _aggregate = StateObject(wrappedValue: AggregateModel(actionTypeId: actionTypeId))
+        _actionType = StateObject(wrappedValue: ActionTypeModel(id: actionTypeId, name: "Unknown"))
     }
     
     var changesToSaveBinding: Binding<Bool> {
@@ -49,8 +45,8 @@ struct ShowGoalView: View {
     
     var body: some View {
         Form {
-            AggregatorFieldsSection(model: aggregate, changesToSave: changesToSaveBinding, dataType: dataType)
-            AggregateChartView(aggregate: aggregate, actionsParam: actions)
+            AggregatorFieldsSection(model: aggregate, actionTypeModel: actionType, changesToSave: changesToSaveBinding)
+            AggregateChartView(aggregate: aggregate, actionsParam: actions, actionTypeModel: actionType)
             ButtonsSection(aggregate: aggregate, changesToSave: $changesToSave, saveChanges: saveChanges, deleteAggregate: deleteAggregate)
             
         }
@@ -59,6 +55,11 @@ struct ShowGoalView: View {
             Task {
                 let actions = await ActionController.fetchActions(userId: Authentication.shared.userId!, actionTypeId: aggregate.actionTypeId)
                 self.actions = actions
+                if let actionTypeId = actionType.id {
+                    if let actionType = await ActionTypesController.fetchActionType(userId: Authentication.shared.userId!, actionTypeId: actionTypeId) {
+                        self.actionType.copy(actionType)
+                    }
+                }
             }
         }
     }

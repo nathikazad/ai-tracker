@@ -60,6 +60,10 @@ class AggregateMetaData: Codable, ObservableObject {
         case field, window, dataType, aggregatorType, conditions, goals, name
     }
     
+    var goal: Goal {
+        return goals.first ?? Goal()
+    }
+    
     init(field: String = "", window: ASWindow = .daily, dataType: DataType = .dateTime, aggregatorType: AggregatorType = .count, conditions: [Goal] = [], goals: [Goal] = [], name: String = "") {
         self.field = field
         self.window = window

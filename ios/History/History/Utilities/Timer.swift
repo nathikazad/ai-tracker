@@ -111,7 +111,7 @@ struct TimerComponent: View {
                         Text("15 min").tag(TimeInterval(15 * 60))
                         Text("20 min").tag(TimeInterval(20 * 60))
                         Text("30 min").tag(TimeInterval(30 * 60))
-                        Text("45 min").tag(TimeInterval(30 * 60))
+                        Text("45 min").tag(TimeInterval(45 * 60))
                         Text("1 hour").tag(TimeInterval(60 * 60))
                         Text("2 hours").tag(TimeInterval(120 * 60))
                     }

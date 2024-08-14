@@ -49,8 +49,8 @@ struct TwoDatePickerView: View {
                             get: { datePickerModel.model.endTime },
                             set: { datePickerModel.model.endTime = $0 }),
                         hasDuration: datePickerModel.model.actionTypeModel.meta.hasDuration,
-                        startTimeLabel: datePickerModel.model.actionTypeModel.staticFields.startTime?.name ?? "Start Time",
-                        endTimeLabel: datePickerModel.model.actionTypeModel.staticFields.endTime?.name ?? "End Time",
+                        startTimeLabel: /*datePickerModel.model.actionTypeModel.staticFields.startTime?.name ??*/ "Start:",
+                        endTimeLabel: /*datePickerModel.model.actionTypeModel.staticFields.endTime?.name ??*/ "End:",
                         changesToSave: $changesToSave
                     )
                     
@@ -72,7 +72,7 @@ struct TwoDatePickerView: View {
                 .background(Color("OppositeColor"))
                 .cornerRadius(10)
                 .shadow(radius: 5)
-                .frame(width: 300)
+                .frame(width: 320)
                 .overlay(
                     Button(action: {
                         datePickerModel.dismissPopup()

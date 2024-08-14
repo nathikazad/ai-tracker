@@ -2,8 +2,19 @@ import SwiftUI
 
 struct AggregatorFieldsSection: View {
     @ObservedObject var model: AggregateModel
+    @ObservedObject var actionTypeModel: ActionTypeModel
     @Binding var changesToSave: Bool
-    let dataType: String
+    @State var selectedDataType: String = "Duration"
+    
+    var dataType: String {
+        if model.metadata.aggregatorType == .compare {
+            return "Time"
+        } else if model.metadata.aggregatorType == .count {
+            return "Number"
+        } else {
+            return selectedDataType
+        }
+    }
     
     var body: some View {
         Section {
@@ -16,7 +27,7 @@ struct AggregatorFieldsSection: View {
             WindowPicker(metadata: model.metadata, changesToSave: $changesToSave)
             AggregatorTypePicker(metadata: model.metadata, changesToSave: $changesToSave)
             if model.metadata.aggregatorType != .count {
-                FieldPicker(metadata: model.metadata, changesToSave: $changesToSave)
+                FieldPicker(metadata: model.metadata, changesToSave: $changesToSave, dynamicFields: actionTypeModel.dynamicFields.filterNumericTypes, dataType: $selectedDataType)
             }
             GoalsSection(aggregate: model, dataType: dataType, changesToSave: $changesToSave)
         }
@@ -53,6 +64,8 @@ struct AggregatorTypePicker: View {
 struct FieldPicker: View {
     @ObservedObject var metadata: AggregateMetaData
     @Binding var changesToSave: Bool
+    var dynamicFields: [String: Schema]
+    @Binding var dataType: String
     
     var body: some View {
         Picker("Field", selection: $metadata.field) {
@@ -61,10 +74,18 @@ struct FieldPicker: View {
                 Text("End Time").tag("End Time")
             } else if metadata.aggregatorType == .sum {
                 Text("Duration").tag("Duration")
+                ForEach(Array(dynamicFields.keys.sorted()), id: \.self) { key in
+                    Text(dynamicFields[key]?.name ?? key).tag(key)
+                }
             }
         }
         .pickerStyle(MenuPickerStyle())
         .onChange(of: metadata.field) {
+            if metadata.field != "Duration" {
+                dataType = dynamicFields[metadata.field]?.dataType ?? "Duration"
+            } else {
+                dataType = "Duration"
+            }
             changesToSave = true
         }
     }

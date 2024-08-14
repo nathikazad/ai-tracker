@@ -60,7 +60,7 @@ struct BarView: View {
                         let startDate = Calendar.current.date(byAdding: .day, value: -5, to: Date())!
                         LineMark(
                             x: .value("X", x1Mark),
-                            y: .value("Y", 0)
+                            y: .value("Y", yMark/7)
                         )
                         .lineStyle(StrokeStyle(lineWidth: 2, dash: [5, 5]))
                         .foregroundStyle(Color.green)

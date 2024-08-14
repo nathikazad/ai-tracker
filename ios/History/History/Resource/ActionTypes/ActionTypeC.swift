@@ -208,33 +208,20 @@ class ActionTypesController {
 
 // finished: aggregate on daily too
 // finish: cumulative count for week
+// finished: Support dark mode
+// finished: add goal button
 
-// finish: add goal button
-// HERE: actual/expected value and streak
-// HERE: goal field be currency, calorie, grams or other similar datatypes also
+// HERE: goal field be currency, number
 
 // ACTION VIEWS
+// NEXT: add object connection
 // NEXT: list actions, only events, dropdown and short string
 // NEXT: delete action button
-// NEXT: add object connection
 
-// Support dark mode
 // BUGS
 // sleep into next day problem
-
 // RELEASE & SELL SELL SELL
 
-// goals
-//  skip: Support conditions only for enum
-//  skip: first and last to compare
-// routine
-//  skip: routine creator
-//  skip: add preferred hours with marks
-// actions list
-//  skip: three tabs, events, candles, aggregates
-//  skip: list actions filter by enum
-//  skip: list objects filter by enum
-// skip: create segments
 // -----------------------------------------------------------
 // V2 COMMUNITIES
 // timezone for viewing across timezone
@@ -248,6 +235,20 @@ class ActionTypesController {
 //     admin can add/delete members
 //     actiontypes and goals to share
 // RELEASE
+
+// goals
+//  skip: goal field be unit or other similar datatypes also
+//  skip: actual/expected value and streak
+//  skip: Support conditions only for enum
+//  skip: first and last to compare
+// routine
+//  skip: routine creator
+//  skip: add preferred hours with marks
+// actions list
+//  skip: three tabs, events, candles, aggregates
+//  skip: list actions filter by enum
+//  skip: list objects filter by enum
+// skip: create segments
 
 // -----------------------------------------------------------
 // V3

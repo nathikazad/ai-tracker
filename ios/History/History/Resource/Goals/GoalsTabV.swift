@@ -120,7 +120,8 @@ struct GoalsTabView: View {
                         aggregate: aggregate,
                         actionsParam: actions,
                         weekBoundary: weekBoundary,
-                        showWeekNavigator: false
+                        showWeekNavigator: false,
+                        actionTypeModel: aggregate.actionType ?? ActionTypeModel(name: "Unknown")
                     )
                 } label: {
                     Text(aggregate.metadata.name == "" ? aggregate.toString : aggregate.metadata.name)
