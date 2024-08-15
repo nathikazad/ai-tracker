@@ -9,7 +9,7 @@ import SwiftUI
 
 struct GoalView: View {
     var index: Int
-    var dataType: String
+    var dataType: DataType
     @Binding var window: ASWindow
     @Binding var goal: Goal
     @State private var isExpanded: Bool = true

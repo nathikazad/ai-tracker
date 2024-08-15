@@ -210,8 +210,7 @@ class ActionTypesController {
 // finish: cumulative count for week
 // finished: Support dark mode
 // finished: add goal button
-
-// HERE: goal field be currency, number
+// finished: goal field be currency, number
 
 // ACTION VIEWS
 // NEXT: add object connection
@@ -219,7 +218,7 @@ class ActionTypesController {
 // NEXT: delete action button
 
 // BUGS
-// sleep into next day problem
+// sleep into next day problem, add a custom cut off
 // RELEASE & SELL SELL SELL
 
 // -----------------------------------------------------------

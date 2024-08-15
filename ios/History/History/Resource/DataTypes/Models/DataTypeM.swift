@@ -31,28 +31,21 @@ func getDataType(from string: String) -> DataType? {
     return DataType.allCases.first { $0.rawValue.lowercased() == lowercasedString }
 }
 
-extension String {
-    func getInitAnyCodable(value: String? = nil) -> AnyCodable? {
-        let dataType = getDataType(from: self)
-        switch dataType {
+extension DataType {
+    func getInitAnyCodable(initEnum: String? = nil) -> AnyCodable? {
+        switch self {
         case .currency:
             return Currency(value: 0).toAnyCodable()
-        
         case .time, .dateTime:
             return AnyCodable(Date())
-        
         case .number:
             return AnyCodable(Double(0))
-        
         case .enumerator:
-            return AnyCodable(value ?? "None")
-        
+            return AnyCodable(initEnum ?? "None")
         case .shortString, .longString:
             return AnyCodable("")
         case .duration:
             return AnyCodable(Duration(durationInSeconds: 0))
-        case .none:
-            return nil
         }
     }
 }

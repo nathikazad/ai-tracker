@@ -35,16 +35,16 @@ struct ActionTypeView: View {
                         print("Has Duration changed to: \( model.meta.hasDuration)")
                         if (model.meta.hasDuration) {
                             model.staticFields.startTime = Schema(
-                                name: "Start Time", dataType: "String", description: "Start time of the action")
+                                name: "Start Time", dataType: .dateTime, description: "Start time of the action")
                             model.staticFields.endTime = Schema(
-                                name: "End Time", dataType: "String", description: "End time of the action")
+                                name: "End Time", dataType: .dateTime, description: "End time of the action")
                             model.staticFields.time = nil
                             
                         } else {
                             model.staticFields.startTime = nil
                             model.staticFields.endTime = nil
                             model.staticFields.time = Schema(
-                                name:"Time", dataType: "String", description: "Time of the action")
+                                name:"Time", dataType: .dateTime, description: "Time of the action")
                         }
                         changesToSave = true
                     }
@@ -79,12 +79,12 @@ struct ActionTypeView: View {
                 DisclosureGroup {
                     SchemaView(schema: Binding(
                         get: { model.staticFields.startTime ?? Schema(
-                            name:"Start Time", dataType: "DateTime", description: "") },
+                            name:"Start Time", dataType: .dateTime, description: "") },
                         set: {
                             newValue in model.staticFields.startTime = newValue
                             changesToSave = true
                         }
-                    ), dataType: "DateTime")
+                    ), dataType: .dateTime)
                 } label: {
                     Text("Start Time").font(.headline)
                 }
@@ -92,12 +92,12 @@ struct ActionTypeView: View {
                 DisclosureGroup {
                     SchemaView(schema: Binding(
                         get: { model.staticFields.endTime ?? Schema(
-                            name:"End Time", dataType: "DateTime", description: "") },
+                            name:"End Time", dataType: .dateTime, description: "") },
                         set: {
                             newValue in model.staticFields.endTime = newValue
                             changesToSave = true
                         }
-                    ), dataType: "DateTime")
+                    ), dataType: .dateTime)
                 } label: {
                     Text("End Time").font(.headline)
                 }
@@ -107,12 +107,12 @@ struct ActionTypeView: View {
                 DisclosureGroup {
                     SchemaView(schema: Binding(
                         get: { model.staticFields.time ?? Schema(
-                            name:"Time", dataType: "DateTime", description: "") },
+                            name:"Time", dataType: .dateTime, description: "") },
                         set: {
                             newValue in model.staticFields.time = newValue
                             changesToSave = true
                         }
-                    ), dataType: "DateTime")
+                    ), dataType: .dateTime)
                 } label: {
                     Text("Time").font(.headline)
                 }
@@ -129,7 +129,7 @@ struct ActionTypeView: View {
                 }
                 Button(action: {
                     let existingMaxRank = model.dynamicFields.values.max(by: { $0.rank < $1.rank })?.rank ?? 0
-                    model.dynamicFields[generateRandomString()] = Schema(name: "New Field", dataType: "ShortString", description: "", rank: existingMaxRank + 1)
+                    model.dynamicFields[generateRandomString()] = Schema(name: "New Field", dataType: .shortString, description: "", rank: existingMaxRank + 1)
                 }) {
                     Label("Add Dynamic Field", systemImage: "plus")
                 }

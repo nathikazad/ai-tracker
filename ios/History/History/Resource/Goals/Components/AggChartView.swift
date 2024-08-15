@@ -48,7 +48,7 @@ struct AggregateChartView: View {
             return Double(duration?.durationInSeconds ?? 0)
         } else {
             let schema = aggregate.actionType?.dynamicFields[aggregate.metadata.field]
-            if schema?.dataType == "Currency" {
+            if schema?.dataType == .currency {
                 return Double(aggregate.metadata.goal.value?.toType(Currency.self)?.value ?? 0)
             }
         }
@@ -62,7 +62,7 @@ struct AggregateChartView: View {
             return "Seconds"
         } else {
             let schema = aggregate.actionType?.dynamicFields[aggregate.metadata.field]
-            if schema?.dataType == "Currency" {
+            if schema?.dataType == .currency {
                 let curr = aggregate.metadata.goal.value?.toType(Currency.self)
                 return curr?.currencyType.rawValue ?? "USD"
             }
@@ -77,7 +77,7 @@ struct AggregateChartView: View {
             return Int(action.durationInSeconds)
         } else {
             let schema = aggregate.actionType?.dynamicFields[aggregate.metadata.field]
-            if schema?.dataType == "Currency" {
+            if schema?.dataType == .currency {
                 return Int(action.dynamicData[aggregate.metadata.field]?.toType(Currency.self)?.value ?? 0)
             } else {
                 return Int(action.dynamicData[aggregate.metadata.field]?.toType(Double.self) ?? 0)

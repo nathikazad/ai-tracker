@@ -17,14 +17,14 @@ struct DynamicFieldView: View {
             VStack(alignment: .leading) {
                 SchemaView(schema: Binding(
                     get: {
-                        model.dynamicFields[originalKey] ?? Schema(name: "", dataType: "String", description: "")
+                        model.dynamicFields[originalKey] ?? Schema(name: "", dataType: .shortString, description: "")
                     },
                     set: { newValue in
                         model.dynamicFields[originalKey] = newValue
                         model.objectWillChange.send()
                         changesToSave = true
                     }
-                ), validDataTypes:  primitiveDataTypes + model.internalDataTypes + externalDataTypes)
+                ), validDataTypes:  primitiveDataTypes)
                 
                 Button(action: {
                     model.dynamicFields.removeValue(forKey: originalKey)

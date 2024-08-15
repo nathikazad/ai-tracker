@@ -9,10 +9,10 @@ import Foundation
 import SwiftUI
 struct SchemaView: View {
     @Binding var schema: Schema
-    var dataType: String?
+    var dataType: DataType?
     var validDataTypes: [String] = []
     
-    init(schema: Binding<Schema>, dataType: String? = nil, validDataTypes: [String]? = nil) {
+    init(schema: Binding<Schema>, dataType: DataType? = nil, validDataTypes: [String]? = nil) {
         self._schema = schema
         self.dataType = dataType
         self.validDataTypes = validDataTypes ?? []
@@ -43,7 +43,7 @@ struct SchemaView: View {
                 }
                 .pickerStyle(MenuPickerStyle())
             } else {
-                Text(schema.dataType)
+                Text(schema.dataType.rawValue)
             }
         }
         
@@ -56,7 +56,7 @@ struct SchemaView: View {
                 .cornerRadius(8)
         }
         
-        if schema.dataType == "Enum" {
+        if schema.dataType == .enumerator {
             EnumView(items: $schema.enumValues)
         }
     }

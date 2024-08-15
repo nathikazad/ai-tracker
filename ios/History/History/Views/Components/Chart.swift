@@ -159,12 +159,17 @@ struct CandleView: View {
     
     private var minHour: Int { hoursRange.lowerBound }
     private var maxHour: Int { hoursRange.upperBound }
-    private var shortDuration: Int { ((maxHour - minHour) * 60)/100  }
+    private func shortDuration(_ start: Date) -> Date {
+        let duration = ((maxHour - minHour) * 60)/100
+        let endOfDay = Calendar.currentInLocal.date(bySettingHour: 23, minute: 59, second: 59, of: start)!
+        let calculatedDate = Calendar.currentInLocal.date(byAdding: .minute, value: duration, to: start)!
+        return min(calculatedDate, endOfDay)
+    }
     
     
     var body: some View {
         Chart(candles) { period in
-            let end = period.start == period.end ? Calendar.currentInLocal.date(byAdding: .minute, value: shortDuration, to: period.start)! : period.end
+            let end = period.start == period.end ? shortDuration(period.start) : period.end
             RectangleMark(
                 x: .value("Day", period.start, unit: .day),
                 yStart: .value("Start", normalizedHours(period.start)),

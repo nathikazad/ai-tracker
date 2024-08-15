@@ -1,7 +1,7 @@
 import SwiftUI
 struct GoalsSection: View {
     @ObservedObject var aggregate: AggregateModel
-    let dataType: String
+    let dataType: DataType
     @Binding var changesToSave: Bool
     
     var body: some View {

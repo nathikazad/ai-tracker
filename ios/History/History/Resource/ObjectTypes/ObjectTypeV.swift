@@ -98,7 +98,7 @@ struct ObjectTypeView: View {
     
     private func addNewField() {
         let newKey = generateRandomString()
-        objectType.fields[newKey] = Schema(name: "New Field", dataType: "ShortString", description: "")
+        objectType.fields[newKey] = Schema(name: "New Field", dataType: .shortString, description: "")
         print(objectType.fields.count)
     }
     
@@ -119,13 +119,13 @@ struct InternalObjectFieldView: View {
             VStack(alignment: .leading) {
                 SchemaView(schema: Binding(
                     get: {
-                        objectType.fields[fieldKey] ?? Schema(name: "", dataType: "ShortString", description: "")
+                        objectType.fields[fieldKey] ?? Schema(name: "", dataType: .shortString, description: "")
                     },
                     set: { newValue in
                         objectType.fields[fieldKey] = newValue
                         objectType.objectWillChange.send()
                     }
-                ), validDataTypes:  ["DateTime", "ShortString", "LongString", "Enum"] + externalDataTypes)
+                ), validDataTypes: primitiveDataTypes)
                 
                 
                 Button(action: deleteField) {

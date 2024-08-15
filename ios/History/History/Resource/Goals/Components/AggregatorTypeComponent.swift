@@ -4,13 +4,13 @@ struct AggregatorFieldsSection: View {
     @ObservedObject var model: AggregateModel
     @ObservedObject var actionTypeModel: ActionTypeModel
     @Binding var changesToSave: Bool
-    @State var selectedDataType: String = "Duration"
+    @State var selectedDataType: DataType = .duration
     
-    var dataType: String {
+    var dataType: DataType {
         if model.metadata.aggregatorType == .compare {
-            return "Time"
+            return .time
         } else if model.metadata.aggregatorType == .count {
-            return "Number"
+            return .number
         } else {
             return selectedDataType
         }
@@ -65,7 +65,7 @@ struct FieldPicker: View {
     @ObservedObject var metadata: AggregateMetaData
     @Binding var changesToSave: Bool
     var dynamicFields: [String: Schema]
-    @Binding var dataType: String
+    @Binding var dataType: DataType
     
     var body: some View {
         Picker("Field", selection: $metadata.field) {
@@ -82,9 +82,9 @@ struct FieldPicker: View {
         .pickerStyle(MenuPickerStyle())
         .onChange(of: metadata.field) {
             if metadata.field != "Duration" {
-                dataType = dynamicFields[metadata.field]?.dataType ?? "Duration"
+                dataType = dynamicFields[metadata.field]?.dataType ?? .duration
             } else {
-                dataType = "Duration"
+                dataType = .duration
             }
             changesToSave = true
         }

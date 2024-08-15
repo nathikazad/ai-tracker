@@ -15,16 +15,11 @@ class ActionTypeModel: ObservableObject, Codable {
     @Published var meta: ActionTypeMeta
     @Published var staticFields: ActionModelTypeStaticSchema
     @Published var dynamicFields: [String: Schema]
-    @Published var internalObjects: [String: ObjectTypeModel]
     @Published var aggregates: [AggregateModel]
     
     var shortDescSyntax: String?
     let createdAt: Date
     let updatedAt: Date
-    
-    var internalDataTypes: [String] {
-        internalObjects.values.compactMap { $0.name }.sorted()
-    }
     
     enum CodingKeys: String, CodingKey {
         case id, name, metadata, staticFields, dynamicFields, internalObjects
@@ -41,7 +36,6 @@ class ActionTypeModel: ObservableObject, Codable {
          meta: ActionTypeMeta = ActionTypeMeta(),
          staticFields: ActionModelTypeStaticSchema = ActionModelTypeStaticSchema(),
          dynamicFields: [String: Schema] = [:],
-         internalObjects: [String: ObjectTypeModel] = [:],
          aggregates: [AggregateModel] = [],
          shortDescSyntax: String? = nil,
          createdAt: Date = Date(),
@@ -51,7 +45,6 @@ class ActionTypeModel: ObservableObject, Codable {
         self.meta = meta
         self.staticFields = staticFields
         self.dynamicFields = dynamicFields
-        self.internalObjects = internalObjects
         self.shortDescSyntax = shortDescSyntax
         self.createdAt = createdAt
         self.updatedAt = updatedAt
@@ -69,7 +62,6 @@ class ActionTypeModel: ObservableObject, Codable {
         let metadata = try container.decode(ActionTypeMetadataForHasura.self, forKey: .metadata)
         staticFields = metadata.staticFields
         dynamicFields = metadata.dynamicFields
-        internalObjects = metadata.internalObjects
         shortDescSyntax = try container.decodeIfPresent(String.self, forKey: .shortDescSyntax)
         let createdAtString = try container.decode(String.self, forKey: .createdAt)
         createdAt = createdAtString.getDate!
@@ -86,8 +78,7 @@ class ActionTypeModel: ObservableObject, Codable {
         try container.encode(meta.description, forKey: .description)
         let metadata = ActionTypeMetadataForHasura(
             staticFields: staticFields,
-            dynamicFields: dynamicFields,
-            internalObjects: internalObjects
+            dynamicFields: dynamicFields
         )
         try container.encode(metadata, forKey: .metadata)
         try container.encodeIfPresent(shortDescSyntax, forKey: .shortDescSyntax)
@@ -101,7 +92,6 @@ class ActionTypeModel: ObservableObject, Codable {
         self.meta = m.meta
         self.staticFields = m.staticFields
         self.dynamicFields = m.dynamicFields
-        self.internalObjects = m.internalObjects
         self.shortDescSyntax = m.shortDescSyntax
         self.aggregates = m.aggregates
     }
@@ -109,8 +99,7 @@ class ActionTypeModel: ObservableObject, Codable {
     var getMetadataJson: [String: Any] {
         let metadata: ActionTypeMetadataForHasura = ActionTypeMetadataForHasura(
             staticFields: staticFields,
-            dynamicFields: dynamicFields,
-            internalObjects: internalObjects
+            dynamicFields: dynamicFields
         )
         do {
             let encoder = JSONEncoder()
@@ -229,14 +218,14 @@ class ActionModelTypeStaticSchema: Observable, Codable {
 extension [String: Schema] {
     var filterNumericTypes: [String: Schema] {
         return self.filter { (_, schema) in
-            schema.dataType == "Currency" || schema.dataType == "Number"
+            schema.dataType == .currency || schema.dataType == .number
         }
     }
 }
 
 class Schema: Codable {
     var name: String
-    var dataType: String
+    var dataType: DataType
     var description: String
     var array: Bool
     var enumValues: [String]
@@ -256,7 +245,9 @@ class Schema: Codable {
     }
     
     
-    init(name: String, dataType: String, description: String,
+    init(name: String, 
+         dataType: DataType,
+         description: String,
          array: Bool = false,
          enumValues: [String] = [],
          objectFields: [String : Schema] = [:],
@@ -274,7 +265,8 @@ class Schema: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         name = try container.decode(String.self, forKey: .name)
         rank = try container.decodeIfPresent(Int.self, forKey: .rank) ?? 0
-        dataType = try container.decode(String.self, forKey: .dataType)
+        var dataTypeAsString = try container.decodeIfPresent(String.self, forKey: .dataType) ?? "ShortString"
+        dataType = getDataType(from: dataTypeAsString) ?? .shortString
         description = try container.decode(String.self, forKey: .description)
         array = try container.decodeIfPresent(Bool.self, forKey: .array) ?? false
         enumValues = try container.decodeIfPresent([String].self, forKey: .enumValues) ?? []

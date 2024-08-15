@@ -9,53 +9,49 @@ import Foundation
 import SwiftUI
 
 struct ViewDataType: View {
-    let dataType: String
+    let dataType: DataType
     let name: String
     let enums: [String]
     @Binding var value: AnyCodable?
     
     @ViewBuilder
     var body: some View {
-        if let dataType = getDataType(from: dataType) {
-            switch dataType {
-            case .longString:
-                LongStringComponent(fieldName: name,
-                                    value: bindingFor(""))
-            case .shortString:
-                ShortStringComponent(fieldName: name,
-                                     value: bindingFor(""))
-            case .number:
-                ShortStringComponent(fieldName: name,
-                                     value: bindingFor(""))
-            case .enumerator:
-                EnumComponent(fieldName: name,
-                              value: bindingFor(enums.first!),
-                              enumValues: enums)
-//            case .unit:
-//                UnitComponent(
-//                    fieldName: name,
-//                    unit: bindingFor(Unit.defaultUnit)
-//                )
-            case .currency:
-                CurrencyComponent(
-                    fieldName: name,
-                    currency: bindingFor(Currency.defaultCurrency)
-                )
-            case .duration:
-                DurationComponent(
-                    fieldName: name,
-                    duration: bindingFor(Duration.defaultDuration)
-                )
-            case .dateTime, .time:
-                TimeComponent(
-                    fieldName: name,
-                    time: bindingFor(Date.self),
-                    onlyTime: dataType == .time
-                )
-            default:
-                EmptyView()
-            }
-        } else {
+        switch dataType {
+        case .longString:
+            LongStringComponent(fieldName: name,
+                                value: bindingFor(""))
+        case .shortString:
+            ShortStringComponent(fieldName: name,
+                                 value: bindingFor(""))
+        case .number:
+            ShortStringComponent(fieldName: name,
+                                 value: bindingFor(""))
+        case .enumerator:
+            EnumComponent(fieldName: name,
+                          value: bindingFor(enums.first!),
+                          enumValues: enums)
+            //            case .unit:
+            //                UnitComponent(
+            //                    fieldName: name,
+            //                    unit: bindingFor(Unit.defaultUnit)
+            //                )
+        case .currency:
+            CurrencyComponent(
+                fieldName: name,
+                currency: bindingFor(Currency.defaultCurrency)
+            )
+        case .duration:
+            DurationComponent(
+                fieldName: name,
+                duration: bindingFor(Duration.defaultDuration)
+            )
+        case .dateTime, .time:
+            TimeComponent(
+                fieldName: name,
+                time: bindingFor(Date.self),
+                onlyTime: dataType == .time
+            )
+        default:
             EmptyView()
         }
     }
