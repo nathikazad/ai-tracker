@@ -8,6 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		FE04A7B12C6D57A5000F5C24 /* getMinOrMax.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7B02C6D57A5000F5C24 /* getMinOrMax.swift */; };
+		FE04A7B42C6D909D000F5C24 /* ActionTObjectTConnM.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7B32C6D909D000F5C24 /* ActionTObjectTConnM.swift */; };
+		FE04A7B62C6D91A8000F5C24 /* SchemaM.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7B52C6D91A8000F5C24 /* SchemaM.swift */; };
+		FE04A7B82C6D91DC000F5C24 /* StaticSchemaM.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7B72C6D91DC000F5C24 /* StaticSchemaM.swift */; };
+		FE04A7BA2C6D91FC000F5C24 /* ActionTypeHasuraM.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7B92C6D91FC000F5C24 /* ActionTypeHasuraM.swift */; };
+		FE04A7BC2C6D96C6000F5C24 /* ObjectConnectionV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7BB2C6D96C6000F5C24 /* ObjectConnectionV.swift */; };
+		FE04A7BF2C6E4D4D000F5C24 /* ActionTypeObjectTypeC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7BE2C6E4D4D000F5C24 /* ActionTypeObjectTypeC.swift */; };
 		FE06FD042C0913E800E65D41 /* MinPeopleViewForEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE06FD032C0913E800E65D41 /* MinPeopleViewForEventView.swift */; };
 		FE06FD062C09140500E65D41 /* PeopleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE06FD052C09140500E65D41 /* PeopleView.swift */; };
 		FE06FD082C0921C900E65D41 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE06FD072C0921C900E65D41 /* Image.swift */; };
@@ -42,10 +48,10 @@
 		FE4AB38F2C51830600A07749 /* ActionTypeV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB38E2C51830600A07749 /* ActionTypeV.swift */; };
 		FE4AB3952C51F03300A07749 /* ActionM.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3942C51F03300A07749 /* ActionM.swift */; };
 		FE4AB3972C51F05C00A07749 /* GoalM.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3962C51F05C00A07749 /* GoalM.swift */; };
-		FE4AB39C2C51F26B00A07749 /* SchemaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB39B2C51F26B00A07749 /* SchemaView.swift */; };
+		FE4AB39C2C51F26B00A07749 /* SchemaV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB39B2C51F26B00A07749 /* SchemaV.swift */; };
 		FE4AB39E2C51F29C00A07749 /* ObjectTypeV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB39D2C51F29C00A07749 /* ObjectTypeV.swift */; };
-		FE4AB3A02C51F2C500A07749 /* EnumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB39F2C51F2C500A07749 /* EnumView.swift */; };
-		FE4AB3A22C51F2E000A07749 /* DynamicFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3A12C51F2E000A07749 /* DynamicFieldView.swift */; };
+		FE4AB3A02C51F2C500A07749 /* EnumV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB39F2C51F2C500A07749 /* EnumV.swift */; };
+		FE4AB3A22C51F2E000A07749 /* DynamicFieldV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3A12C51F2E000A07749 /* DynamicFieldV.swift */; };
 		FE4AB3A42C5207C100A07749 /* DataTypeM.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3A32C5207C100A07749 /* DataTypeM.swift */; };
 		FE4AB3A62C52F76B00A07749 /* ActionC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3A52C52F76B00A07749 /* ActionC.swift */; };
 		FE4AB3A82C52F99800A07749 /* AnyCodableM.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4AB3A72C52F99800A07749 /* AnyCodableM.swift */; };
@@ -199,6 +205,12 @@
 
 /* Begin PBXFileReference section */
 		FE04A7B02C6D57A5000F5C24 /* getMinOrMax.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = getMinOrMax.swift; sourceTree = "<group>"; };
+		FE04A7B32C6D909D000F5C24 /* ActionTObjectTConnM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionTObjectTConnM.swift; sourceTree = "<group>"; };
+		FE04A7B52C6D91A8000F5C24 /* SchemaM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemaM.swift; sourceTree = "<group>"; };
+		FE04A7B72C6D91DC000F5C24 /* StaticSchemaM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticSchemaM.swift; sourceTree = "<group>"; };
+		FE04A7B92C6D91FC000F5C24 /* ActionTypeHasuraM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionTypeHasuraM.swift; sourceTree = "<group>"; };
+		FE04A7BB2C6D96C6000F5C24 /* ObjectConnectionV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectConnectionV.swift; sourceTree = "<group>"; };
+		FE04A7BE2C6E4D4D000F5C24 /* ActionTypeObjectTypeC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionTypeObjectTypeC.swift; sourceTree = "<group>"; };
 		FE06FD032C0913E800E65D41 /* MinPeopleViewForEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinPeopleViewForEventView.swift; sourceTree = "<group>"; };
 		FE06FD052C09140500E65D41 /* PeopleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleView.swift; sourceTree = "<group>"; };
 		FE06FD072C0921C900E65D41 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
@@ -232,10 +244,10 @@
 		FE4AB38E2C51830600A07749 /* ActionTypeV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionTypeV.swift; sourceTree = "<group>"; };
 		FE4AB3942C51F03300A07749 /* ActionM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionM.swift; sourceTree = "<group>"; };
 		FE4AB3962C51F05C00A07749 /* GoalM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalM.swift; sourceTree = "<group>"; };
-		FE4AB39B2C51F26B00A07749 /* SchemaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemaView.swift; sourceTree = "<group>"; };
+		FE4AB39B2C51F26B00A07749 /* SchemaV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemaV.swift; sourceTree = "<group>"; };
 		FE4AB39D2C51F29C00A07749 /* ObjectTypeV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectTypeV.swift; sourceTree = "<group>"; };
-		FE4AB39F2C51F2C500A07749 /* EnumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnumView.swift; sourceTree = "<group>"; };
-		FE4AB3A12C51F2E000A07749 /* DynamicFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicFieldView.swift; sourceTree = "<group>"; };
+		FE4AB39F2C51F2C500A07749 /* EnumV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnumV.swift; sourceTree = "<group>"; };
+		FE4AB3A12C51F2E000A07749 /* DynamicFieldV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicFieldV.swift; sourceTree = "<group>"; };
 		FE4AB3A32C5207C100A07749 /* DataTypeM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTypeM.swift; sourceTree = "<group>"; };
 		FE4AB3A52C52F76B00A07749 /* ActionC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionC.swift; sourceTree = "<group>"; };
 		FE4AB3A72C52F99800A07749 /* AnyCodableM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyCodableM.swift; sourceTree = "<group>"; };
@@ -375,6 +387,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		FE04A7B22C6D907D000F5C24 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				FE4AB3882C4EF46B00A07749 /* ActionTypeM.swift */,
+				FE04A7B32C6D909D000F5C24 /* ActionTObjectTConnM.swift */,
+				FE04A7B52C6D91A8000F5C24 /* SchemaM.swift */,
+				FE04A7B72C6D91DC000F5C24 /* StaticSchemaM.swift */,
+				FE04A7B92C6D91FC000F5C24 /* ActionTypeHasuraM.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		FE04A7BD2C6E4D1E000F5C24 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				FE4AB38C2C4EF7B200A07749 /* ActionTypeC.swift */,
+				FE04A7BE2C6E4D4D000F5C24 /* ActionTypeObjectTypeC.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
 		FE06FD022C0913D500E65D41 /* Person */ = {
 			isa = PBXGroup;
 			children = (
@@ -439,9 +472,10 @@
 		FE4AB39A2C51F23100A07749 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				FE4AB39B2C51F26B00A07749 /* SchemaView.swift */,
-				FE4AB39F2C51F2C500A07749 /* EnumView.swift */,
-				FE4AB3A12C51F2E000A07749 /* DynamicFieldView.swift */,
+				FE4AB39B2C51F26B00A07749 /* SchemaV.swift */,
+				FE4AB39F2C51F2C500A07749 /* EnumV.swift */,
+				FE4AB3A12C51F2E000A07749 /* DynamicFieldV.swift */,
+				FE04A7BB2C6D96C6000F5C24 /* ObjectConnectionV.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -463,8 +497,8 @@
 		FE4AB3AA2C544D1E00A07749 /* ActionTypes */ = {
 			isa = PBXGroup;
 			children = (
-				FE4AB3882C4EF46B00A07749 /* ActionTypeM.swift */,
-				FE4AB38C2C4EF7B200A07749 /* ActionTypeC.swift */,
+				FE04A7BD2C6E4D1E000F5C24 /* Controllers */,
+				FE04A7B22C6D907D000F5C24 /* Models */,
 				FE4AB3852C4EF42500A07749 /* Views */,
 			);
 			path = ActionTypes;
@@ -997,14 +1031,15 @@
 				FE6ED6D52C06AA5D00E6A2A6 /* EventModels.swift in Sources */,
 				FE69D76A2BF6CFEE0061E2E6 /* LearnView.swift in Sources */,
 				FE9959542BC8B5B000F3187B /* RemindersView.swift in Sources */,
-				FE4AB3A22C51F2E000A07749 /* DynamicFieldView.swift in Sources */,
+				FE4AB3A22C51F2E000A07749 /* DynamicFieldV.swift in Sources */,
 				FE4F7BD22BA8FC600041CB6A /* BottomBar.swift in Sources */,
 				FEBB19842C61958E00ECAC85 /* AggChartView.swift in Sources */,
 				FEBB19AC2C6A83D500ECAC85 /* WeekdaySelector.swift in Sources */,
+				FE04A7B62C6D91A8000F5C24 /* SchemaM.swift in Sources */,
 				FE4AB38B2C4EF4E500A07749 /* ActionsListV.swift in Sources */,
 				FE2074B82C5ADDCE00C58226 /* Timer.swift in Sources */,
 				FE638F3F2C55E594001C34F0 /* MinActionComponent.swift in Sources */,
-				FE4AB39C2C51F26B00A07749 /* SchemaView.swift in Sources */,
+				FE4AB39C2C51F26B00A07749 /* SchemaV.swift in Sources */,
 				FE4F7BA52BA7D79E0041CB6A /* ContentView.swift in Sources */,
 				FEBB19AA2C68334400ECAC85 /* ActionTypeRow.swift in Sources */,
 				FECA5EEC2BE56970007ADE17 /* EventsComponents.swift in Sources */,
@@ -1018,12 +1053,15 @@
 				FEA98C132BFFEC70006BB857 /* TwoDatePicker.swift in Sources */,
 				FEB366E62BDDF8F9000A48C0 /* Chart.swift in Sources */,
 				FE4AB3872C4EF43800A07749 /* ActionTypesListV.swift in Sources */,
+				FE04A7BC2C6D96C6000F5C24 /* ObjectConnectionV.swift in Sources */,
 				FE2074B62C5ACFFB00C58226 /* DynamicFieldsView.swift in Sources */,
 				FE12C5EA2BC4B330002CDC60 /* GoalsView.swift in Sources */,
 				FE638F432C56FF4E001C34F0 /* ShowActionComponents.swift in Sources */,
 				FEDBC0672C050C3F00233EA0 /* EventButtons.swift in Sources */,
 				FE4AB3A82C52F99800A07749 /* AnyCodableM.swift in Sources */,
+				FE04A7B82C6D91DC000F5C24 /* StaticSchemaM.swift in Sources */,
 				FEBB19A82C682CF600ECAC85 /* NavigatorBar.swift in Sources */,
+				FE04A7BA2C6D91FC000F5C24 /* ActionTypeHasuraM.swift in Sources */,
 				FEBED49A2C0AD79800DB2D5F /* PersonViewHelper.swift in Sources */,
 				FE4AB38F2C51830600A07749 /* ActionTypeV.swift in Sources */,
 				FE71B3882BD07BCE008F7D1A /* AudioRecorder.swift in Sources */,
@@ -1035,7 +1073,7 @@
 				FE9E18BB2C02DE4000611CE8 /* EventRow.swift in Sources */,
 				FEC7849E2C064EAE007C38F1 /* PersonView.swift in Sources */,
 				FEBB19A42C681DF900ECAC85 /* RangedSlider.swift in Sources */,
-				FE4AB3A02C51F2C500A07749 /* EnumView.swift in Sources */,
+				FE4AB3A02C51F2C500A07749 /* EnumV.swift in Sources */,
 				FEDBC0632C04FB2F00233EA0 /* Notes.swift in Sources */,
 				FE4AB3892C4EF46B00A07749 /* ActionTypeM.swift in Sources */,
 				FE4AB3A42C5207C100A07749 /* DataTypeM.swift in Sources */,
@@ -1084,6 +1122,7 @@
 				FEBB19972C66D96100ECAC85 /* ObjectM.swift in Sources */,
 				FE7EBFC82C0A8F2200F720EB /* PersonAssociationsView.swift in Sources */,
 				FE900C0A2BD363ED00F97050 /* LocationController.swift in Sources */,
+				FE04A7B42C6D909D000F5C24 /* ActionTObjectTConnM.swift in Sources */,
 				FE9BA2E52BF6998600AE25A9 /* PrayerView.swift in Sources */,
 				FE9477C02BFECF20003AD03A /* StayView.swift in Sources */,
 				FE1C0EB12BC0A29300FF56AB /* Hasura.swift in Sources */,
@@ -1094,6 +1133,7 @@
 				FEBB19B12C6A84BF00ECAC85 /* actionsToCandles.swift in Sources */,
 				FE6ED6D72C06AA9100E6A2A6 /* EventTypeModel.swift in Sources */,
 				FE477D912BD5E3E2001FC341 /* EventsController.swift in Sources */,
+				FE04A7BF2C6E4D4D000F5C24 /* ActionTypeObjectTypeC.swift in Sources */,
 				FE950F202C011BE00022EA64 /* AppState.swift in Sources */,
 				FE4AB38D2C4EF7B200A07749 /* ActionTypeC.swift in Sources */,
 				FE9E18B92C02933400611CE8 /* Popup.swift in Sources */,

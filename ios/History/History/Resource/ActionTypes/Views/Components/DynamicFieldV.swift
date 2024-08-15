@@ -24,7 +24,7 @@ struct DynamicFieldView: View {
                         model.objectWillChange.send()
                         changesToSave = true
                     }
-                ), validDataTypes:  primitiveDataTypes)
+                ))
                 
                 Button(action: {
                     model.dynamicFields.removeValue(forKey: originalKey)

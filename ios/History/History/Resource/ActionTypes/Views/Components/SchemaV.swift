@@ -10,12 +10,10 @@ import SwiftUI
 struct SchemaView: View {
     @Binding var schema: Schema
     var dataType: DataType?
-    var validDataTypes: [String] = []
     
     init(schema: Binding<Schema>, dataType: DataType? = nil, validDataTypes: [String]? = nil) {
         self._schema = schema
         self.dataType = dataType
-        self.validDataTypes = validDataTypes ?? []
         
         if let dataType = dataType {
             self._schema.wrappedValue.dataType = dataType
@@ -37,8 +35,8 @@ struct SchemaView: View {
             Text("Type:")
             if dataType == nil {
                 Picker("", selection: $schema.dataType) {
-                    ForEach(validDataTypes, id: \.self) { type in
-                        Text(type).tag(type)
+                    ForEach(DataType.allCases, id: \.self) { type in
+                        Text(type.rawValue.capitalized).tag(type)
                     }
                 }
                 .pickerStyle(MenuPickerStyle())
@@ -47,14 +45,14 @@ struct SchemaView: View {
             }
         }
         
-        VStack(alignment: .leading) {
-            Text("Description:")
-            TextEditor(text: $schema.description)
-                .frame(height: 100)  // Adjust this value to approximate 4 lines
-                .padding(4)
-                .background(Color(UIColor.systemGray6))
-                .cornerRadius(8)
-        }
+//        VStack(alignment: .leading) {
+//            Text("Description:")
+//            TextEditor(text: $schema.description)
+//                .frame(height: 100)  // Adjust this value to approximate 4 lines
+//                .padding(4)
+//                .background(Color(UIColor.systemGray6))
+//                .cornerRadius(8)
+//        }
         
         if schema.dataType == .enumerator {
             EnumView(items: $schema.enumValues)

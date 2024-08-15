@@ -15,7 +15,7 @@ import Foundation
 // case image = "Image"
 // case todo = "Todo"
 
-enum DataType: String, CaseIterable, Codable {
+enum DataType: String, Codable, CaseIterable, Hashable {
     case time = "Time"
     case dateTime = "DateTime"
     case number = "Number"
@@ -49,9 +49,6 @@ extension DataType {
         }
     }
 }
-
-let primitiveDataTypes = DataType.allCases.map { $0.rawValue }
-
 class Duration: AnyCodableConvertible {
     var durationInSeconds: Int
     enum DurationType: String, Codable, CaseIterable {

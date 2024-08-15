@@ -19,6 +19,7 @@ struct ObjectTypeListView: View {
         case takeToObjectTypes
         case forTemplate
         case takeToObjects
+        case forObjectConnection
     }
     
     var body: some View {
@@ -33,7 +34,6 @@ struct ObjectTypeListView: View {
             
             if listType != .forTemplate {
                 NavigationButton(destination: ObjectTypeView(
-                    
                     objectType: ObjectTypeModel(name: "", description: "", fields: [:]),
                     updateObjectTypeCallback: { newObjectType in
                         objectTypes.append(newObjectType)
@@ -62,35 +62,41 @@ struct ObjectTypeListView: View {
             }
             
             ForEach(filteredObjectTypes, id: \.name) { objectType in
-                if listType == .forTemplate {
-                    Button(action: {
-                        selectionAction?(objectType)
-                        goBack()
-                    }) {
-                        Text(objectType.name)
-                    }
-                    .alignmentGuide(.listRowSeparatorLeading) { _ in
-                        -20
-                    }
-                } else if listType == .takeToObjectTypes {
-                    NavigationButton(destination: ObjectTypeView(objectType: objectType)) {
-                        Text(objectType.name)
-                    }
-                    .alignmentGuide(.listRowSeparatorLeading) { _ in
-                        -20
-                    }
-                } else {
-                    NavigationButton(destination: ObjectListView(objectType: objectType)) {
-                        Text(objectType.name)
-                    }
-                    .alignmentGuide(.listRowSeparatorLeading) { _ in
-                        -20
-                    }
+                destinationView(
+                    objectType: objectType
+                ) {
+                    Text(objectType.name)
                 }
+                .alignmentGuide(.listRowSeparatorLeading) { _ in -20 }
             }
         }
         .navigationBarTitle(Text(selectionAction == nil ? "Object Types" : "Select Object Type"), displayMode: .inline)
         .onAppear(perform: fetchObjectTypes)
+    }
+    
+    func destinationView<Content: View>(
+        objectType: ObjectTypeModel,
+        @ViewBuilder content: @escaping () -> Content
+    ) -> some View {
+        Group {
+            switch listType {
+            case .forTemplate, .forObjectConnection:
+                Button(action: {
+                    selectionAction?(objectType)
+                    goBack()
+                }) {
+                    content()
+                }
+            case .takeToObjectTypes:
+                NavigationLink(destination: ObjectTypeView(objectType: objectType)) {
+                    content()
+                }
+            default:
+                NavigationLink(destination: ObjectListView(objectType: objectType)) {
+                    content()
+                }
+            }
+        }
     }
     
     private func fetchObjectTypes() {

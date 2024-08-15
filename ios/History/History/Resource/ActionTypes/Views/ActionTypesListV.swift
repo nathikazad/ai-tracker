@@ -76,7 +76,7 @@ struct ListActionsTypesView: View {
             }
             
             ForEach(filteredActions, id: \.name) { action in
-                NavigationButton(destination: destinationView(for: action)) {
+                 destinationView(for: action) {
                     Text(action.name)
                 }
                 .alignmentGuide(.listRowSeparatorLeading) { _ in -20 }
@@ -87,27 +87,41 @@ struct ListActionsTypesView: View {
         .onAppear(perform: fetchActionTypes)
     }
     
-    
-    func destinationView(for action: ActionTypeModel) -> some View {
-        switch listActionType {
-        case .forTemplate:
-            return AnyView(Button(action: {
-                clickAction?(action)
-                goBack()
-            }) { EmptyView() })
-        case .takeToActionView:
-            return AnyView(ShowActionView(actionType: action, clickAction: { _ in goBack() }))
-        case .takeToAggregateCreateView:
-            return AnyView(ShowGoalView(
-                aggregateModel: AggregateModel(actionTypeId: action.id!),
-                clickAction: { goBack() }
-            ))
-        default:
-            return AnyView(ListActionsView(
-                actionType: action,
-                actionTypeName: action.name,
-                createAction: { action in actions.append(action) }
-            ))
+    func destinationView<Content: View>(
+        for action: ActionTypeModel,
+        @ViewBuilder content: @escaping () -> Content
+    ) -> some View {
+        Group {
+            switch listActionType {
+            case .forTemplate:
+                Button(action: {
+                    clickAction?(action)
+                    goBack()
+                }) {
+                    EmptyView()
+                }
+            case .takeToActionView:
+                NavigationLink(destination: 
+                                ShowActionView(actionType: action,
+                                               clickAction: { _ in goBack() })) {
+                    content()
+                }
+            case .takeToAggregateCreateView:
+                NavigationLink(destination: ShowGoalView(
+                    aggregateModel: AggregateModel(actionTypeId: action.id!),
+                    clickAction: { goBack() }
+                )) {
+                    content()
+                }
+            default:
+                NavigationLink(destination: ListActionsView(
+                    actionType: action,
+                    actionTypeName: action.name,
+                    createAction: { action in actions.append(action) }
+                )) {
+                    content()
+                }
+            }
         }
     }
     

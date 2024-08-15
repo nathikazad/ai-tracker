@@ -135,21 +135,33 @@ struct ActionTypeView: View {
                 }
             }
             
-//            Section(header: Text("Internal Objects")) {
-//                ForEach(Array(model.internalObjects.keys), id: \.self) { objectKey in
-//                    ObjectTypeView(objectType: Binding(
-//                        get: { model.internalObjects[objectKey] ?? ObjectType(name: "", description: "", fields: [:])},
-//                       set: {
-//                            newValue in
-//                            model.internalObjects[objectKey] = newValue
-//                        }))
-//                }
-//                Button(action: {
-//                    model.internalObjects[generateRandomString()] = ObjectType(name: "New Field", description: "", fields: [:])
-//                }) {
-//                    Label("Add Internal Object", systemImage: "plus")
-//                }
-//            }
+            if model.id != nil {
+                Section(header: Text("Objects Relations")) {
+                    ForEach(Array(model.objectConnections.keys), id: \.self) { objectKey in
+                        ObjectConnectionView(
+                            model: model.objectConnections[objectKey]!,
+                            deleteActionTypeCallback: {
+                                id in
+                                model.objectConnections.removeValue(forKey: String(id))
+                            })
+                    }
+                    
+                    NavigationLink(destination: ObjectTypeListView(
+                        selectionAction: {
+                            objectType in
+                            Task {
+                                if let id = await ActionTypeObjectTypeController.createActionTypeObjectType(actionTypeId: model.id!, objectTypeId: objectType.id!, metadata: ActionTypeConnectionMetadataForHasura(name: objectType.name)) {
+                                    model.objectConnections[String(id)] = ObjectConnection(id: id, name: objectType.name, objectTypeId: objectType.id!, actionTypeId: model.id!)
+                                }
+                            }
+                        }, listType: .forObjectConnection
+                    )) {
+                        Label("Add Object Relationship", systemImage: "plus")
+                    }
+                    .alignmentGuide(.listRowSeparatorLeading) { _ in -20 }
+                    
+                }
+            }
             
             if let actionTypeId = model.id {
                 Section(header: Text("Goals")) {
@@ -209,7 +221,12 @@ struct ActionTypeView: View {
         .onAppear {
             Task {
                 if let id = self.model.id,
-                   let m = await ActionTypesController.fetchActionType(userId: Authentication.shared.userId!, actionTypeId: id, withAggregates: true) {
+                   let m = await ActionTypesController.fetchActionType(
+                    userId: Authentication.shared.userId!,
+                    actionTypeId: id,
+                    withAggregates: true,
+                    withObjectConnections: true
+                   ) {
                     DispatchQueue.main.async { self.model.copy(m) }
                 }
             }

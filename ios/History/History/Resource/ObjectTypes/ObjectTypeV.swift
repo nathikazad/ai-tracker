@@ -125,7 +125,7 @@ struct InternalObjectFieldView: View {
                         objectType.fields[fieldKey] = newValue
                         objectType.objectWillChange.send()
                     }
-                ), validDataTypes: primitiveDataTypes)
+                ))
                 
                 
                 Button(action: deleteField) {

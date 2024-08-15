@@ -124,8 +124,8 @@ class ActionTypesController {
         }
     }
 
-    static func fetchActionType(userId: Int, actionTypeId: Int, withAggregates:Bool = false) async -> ActionTypeModel? {
-        let (graphqlQuery, variables) = generateQueryForActionTypes(userId: userId, actionTypeId: actionTypeId, withAggregates: withAggregates)
+    static func fetchActionType(userId: Int, actionTypeId: Int, withAggregates:Bool = false, withObjectConnections: Bool = false) async -> ActionTypeModel? {
+        let (graphqlQuery, variables) = generateQueryForActionTypes(userId: userId, actionTypeId: actionTypeId, withAggregates: withAggregates, withObjectConnections: withObjectConnections)
         struct ActionTypeData: GraphQLData {
             var v2_action_types: [ActionTypeModel]
         }
@@ -141,17 +141,17 @@ class ActionTypesController {
         }
     }
     
-    static private func generateQueryForActionTypes(userId: Int, actionTypeId: Int?, withAggregates: Bool = false) -> (String, [String: Any]) {
+    static private func generateQueryForActionTypes(userId: Int, actionTypeId: Int?, withAggregates: Bool = false, withObjectConnections: Bool = false) -> (String, [String: Any]) {
         var hasuraStruct:HasuraQuery = HasuraQuery(queryFor: "v2_action_types", queryName: "ActionTypesQuery", queryType: .query)
         hasuraStruct.addWhereClause(name: "user_id", type: .int, value: userId, op: .equals)
         if (actionTypeId != nil) {
             hasuraStruct.addWhereClause(name: "id", type: .int, value: actionTypeId, op: .equals)
         }
-        hasuraStruct.setSelections(selections:actionTypeSelections(withAggregates: withAggregates))
+        hasuraStruct.setSelections(selections:actionTypeSelections(withAggregates: withAggregates, withObjectConnections: withObjectConnections))
         return hasuraStruct.getQueryAndVariables
     }
     
-    static func actionTypeSelections(withAggregates:Bool = false) -> String {
+    static func actionTypeSelections(withAggregates:Bool = false, withObjectConnections: Bool = false) -> String {
         return """
             id
             created_at
@@ -165,6 +165,11 @@ class ActionTypesController {
             \(withAggregates ? """
                 aggregates {
                     \(AggregateController.aggregateSelections())
+                }
+                """: "")
+            \(withObjectConnections ? """
+                object_t_action_ts {
+                    \(ActionTypeObjectTypeController.actionTypeObjectTypeSelections())
                 }
                 """: "")
         """
@@ -207,12 +212,13 @@ class ActionTypesController {
 // finished: cumulative for week goal.
 
 // finished: aggregate on daily too
-// finish: cumulative count for week
+// finished: cumulative count for week
 // finished: Support dark mode
 // finished: add goal button
 // finished: goal field be currency, number
 
 // ACTION VIEWS
+// max out candles and cumulatives at todays date
 // NEXT: add object connection
 // NEXT: list actions, only events, dropdown and short string
 // NEXT: delete action button
