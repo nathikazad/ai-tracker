@@ -19,6 +19,7 @@ struct ActionRow: View {
     var dateClickedAction: ((ActionModel) -> Void)?
     var fetchActions: () -> Void?
     var showTimeWithRespectToCurrentDate: Bool = false
+    var includeActionName: Bool
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @ObservedObject private var timerManager = TimerManager.shared
     
@@ -43,7 +44,9 @@ struct ActionRow: View {
             
             ZStack(alignment: .leading) {
                 HStack {
-                    Text("\(event.actionTypeModel.name) \(event.toString ?? "") (\(String(event.id ?? 0)))")
+                    let name = event.toString
+                    let duration =  event.actionTypeModel.meta.hasDuration && event.durationInSeconds > 0 ? "[\(event.durationInSeconds.fromSecondsToHHMMString)]" : ""                       
+                    Text("\(includeActionName || name.count == 0 ? event.actionTypeModel.name : "") \(name)\(duration) (\(String(event.id ?? 0)))")
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .font(.subheadline)
                     if let remaining = timerManager.currentIds[event.id!] {

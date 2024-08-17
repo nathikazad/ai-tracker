@@ -23,6 +23,12 @@ class ObjectTypeModel: Observable, Codable, ObservableObject {
         self.fields = fields
     }
     
+    init() {
+        self.name = ""
+        self.description = ""
+        self.fields = [:]
+    }
+ 
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decodeIfPresent(Int.self, forKey: .id)

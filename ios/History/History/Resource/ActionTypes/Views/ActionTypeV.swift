@@ -84,7 +84,7 @@ struct ActionTypeView: View {
                             newValue in model.staticFields.startTime = newValue
                             changesToSave = true
                         }
-                    ), dataType: .dateTime)
+                    ), changesToSave: $changesToSave, dataType: .dateTime)
                 } label: {
                     Text("Start Time").font(.headline)
                 }
@@ -97,7 +97,7 @@ struct ActionTypeView: View {
                             newValue in model.staticFields.endTime = newValue
                             changesToSave = true
                         }
-                    ), dataType: .dateTime)
+                    ), changesToSave: $changesToSave, dataType: .dateTime)
                 } label: {
                     Text("End Time").font(.headline)
                 }
@@ -112,7 +112,7 @@ struct ActionTypeView: View {
                             newValue in model.staticFields.time = newValue
                             changesToSave = true
                         }
-                    ), dataType: .dateTime)
+                    ), changesToSave: $changesToSave, dataType: .dateTime)
                 } label: {
                     Text("Time").font(.headline)
                 }

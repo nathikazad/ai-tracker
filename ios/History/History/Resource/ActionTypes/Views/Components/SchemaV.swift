@@ -9,10 +9,12 @@ import Foundation
 import SwiftUI
 struct SchemaView: View {
     @Binding var schema: Schema
+    @Binding var changesToSave: Bool
     var dataType: DataType?
     
-    init(schema: Binding<Schema>, dataType: DataType? = nil, validDataTypes: [String]? = nil) {
+    init(schema: Binding<Schema>, changesToSave: Binding<Bool>, dataType: DataType? = nil, validDataTypes: [String]? = nil) {
         self._schema = schema
+        self._changesToSave = changesToSave
         self.dataType = dataType
         
         if let dataType = dataType {
@@ -55,7 +57,7 @@ struct SchemaView: View {
 //        }
         
         if schema.dataType == .enumerator {
-            EnumView(items: $schema.enumValues)
+            EnumView(items: $schema.enumValues, changesToSave: $changesToSave)
         }
     }
 }

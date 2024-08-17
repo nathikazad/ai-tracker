@@ -338,13 +338,10 @@ extension EventModel {
 
 extension ActionModel {
     private func _formattedTime(fillWithX: Bool = false) -> String {
-        let filler = fillWithX ? "XX:XX" : ""
-        let formattedStartTime = startTime
-        let formattedEndTime = endTime?.formattedTime ?? filler
-         if (endTime != nil) {
-            return  "\(formattedEndTime)"
+        if let endTime = endTime  {
+            return "\(startTime.formattedTime) - \(endTime.formattedTime)"
         } else {
-            return "\(formattedStartTime) - \(formattedEndTime)"
+            return  "\(startTime.formattedTime)"
         }
     }
     

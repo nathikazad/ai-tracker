@@ -18,7 +18,7 @@ struct CandleChartWithList: View {
     @State private var unselectedModels: [Int] = []
     var offsetHours: Int = 0
     
-    @State var hoursRange: ClosedRange<Int> = 5...22
+    @State var hoursRange: ClosedRange<Int> = 0...24
     @State var daysRange: ClosedRange<Int> = 0...7
     @State var showColorPickerForActionTypeId: Int? = nil
     @State var redrawChart: Bool = true
@@ -155,9 +155,12 @@ struct DayRangeSelector: View {
     var body: some View {
         HStack {
             Text("\(numberToWeekday(Int(daysRange.lowerBound) + 1)?.name ?? "Sun")")
+            Spacer()
             RangedSliderView(value: $daysRange, bounds: 0...7)
                 .onChange(of: daysRange) { fetchActions() }
+                .frame(width: 150)
                 .padding(.horizontal, 10)
+            Spacer()
             Text("\(numberToWeekday(Int(daysRange.upperBound))?.name ?? "Sun")")
         }
     }
@@ -168,10 +171,15 @@ struct HourRangeSelector: View {
     
     var body: some View {
         HStack {
-            Text("Hours: \(Int(hoursRange.lowerBound))")
+            let lower = hoursRange.lowerBound%12 == 0 ? 12 : hoursRange.lowerBound%12
+            Text("\(Int(lower)) \(hoursRange.lowerBound/12 >= 1 ? "pm" : "am")")
+            Spacer()
             RangedSliderView(value: $hoursRange, bounds: 0...24)
+                .frame(width: 150)
                 .padding(.horizontal, 10)
-            Text("\(Int(hoursRange.upperBound))")
+                Spacer()
+            let upper = hoursRange.upperBound%12 == 0 ? 12 : hoursRange.upperBound%12
+            Text("\(Int(upper)) \(hoursRange.upperBound/12 == 1 ? "pm" : "am")")
         }
     }
 }

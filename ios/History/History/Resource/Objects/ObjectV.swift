@@ -19,6 +19,11 @@ struct ObjectView: View {
         _changesToSave = State(initialValue: false)
     }
     
+    init(objectId: Int) {
+        _object = StateObject(wrappedValue:  ObjectModel(id: objectId))
+        _changesToSave = State(initialValue: true)
+    }
+    
     init(objectType: ObjectTypeModel, clickObject: ((ObjectModel) -> Void)? = nil) {
         _object = StateObject(wrappedValue:  ObjectModel(objectTypeId: objectType.id!, objectType: objectType))
         _changesToSave = State(initialValue: true)
@@ -79,9 +84,10 @@ struct ObjectView: View {
                             }
                             changesToSave = false
                             self.presentationMode.wrappedValue.dismiss()
+                            clickObject?(object)
                         }
                     }) {
-                        Text("Create the \(object.objectTypeModel.name) \(object.name)")
+                        Text("Create \(object.name)")
                             .frame(maxWidth: .infinity, alignment: .center)
                     }
                     .disabled(!changesToSave)
@@ -91,7 +97,7 @@ struct ObjectView: View {
         }
 
 //        .listSectionSpacing(0)
-        .navigationTitle("\(object.id == nil ?  "Create": "Edit") the \(object.objectTypeModel.name) \(object.name)")
+        .navigationTitle(object.id == nil ?  "Create \(object.objectTypeModel.name)": "Edit \(object.name)")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink(destination: ObjectTypeView(
@@ -117,20 +123,6 @@ struct ObjectView: View {
                         self.object.copy(objects[0])
                     }
                 }
-            }
-        }
-    }
-
-    private func saveChanges() {
-        Task {
-            if object.id != nil {
-                
-            } else {
-                let objectId = await ObjectV2Controller.createObjectModel(model: object)
-                object.id = objectId
-
-                self.presentationMode.wrappedValue.dismiss()
-//                clickObject?(object)
             }
         }
     }

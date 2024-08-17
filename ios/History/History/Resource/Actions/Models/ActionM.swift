@@ -26,6 +26,8 @@ class ActionModel: ObservableObject, Codable {
     var parentId: Int?
     @Published var dynamicData: [String: AnyCodable]
     @Published var actionTypeModel: ActionTypeModel
+    var objectConnections: [Int:[ObjectAction]] = [:] //Int is the actionTypeObjectTypeId
+    
     let createdAt: Date
     let updatedAt: Date
     
@@ -40,6 +42,7 @@ class ActionModel: ObservableObject, Codable {
         case updatedAt = "updated_at"
         case userId = "user_id"
         case actionType = "action_type"
+        case objectActions = "object_actions"
     }
     
     var durationInSeconds: Int {
@@ -77,6 +80,8 @@ class ActionModel: ObservableObject, Codable {
         let updatedAtString = try container.decode(String.self, forKey: .updatedAt)
         updatedAt = updatedAtString.getDate!
         actionTypeModel = try container.decode(ActionTypeModel.self, forKey: .actionType)
+        let connections = try container.decodeIfPresent([ObjectAction].self, forKey: .objectActions) ?? []
+        objectConnections = Dictionary(grouping: connections, by: { $0.objectTypeActionTypeId })
     }
     
     func encode(to encoder: Encoder) throws {
@@ -99,6 +104,7 @@ class ActionModel: ObservableObject, Codable {
         self.parentId = newModel.parentId
         self.dynamicData = newModel.dynamicData
         self.actionTypeModel = newModel.actionTypeModel
+        self.objectConnections = newModel.objectConnections
     }
     
     var duplicate: ActionModel {
@@ -107,21 +113,17 @@ class ActionModel: ObservableObject, Codable {
         return actionTypeModel
     }
     
-    var toString: String? {
-        var description: String?
-        if let shortDescSyntax = actionTypeModel.shortDescSyntax {
-            description = self.dynamicData[shortDescSyntax]?.toString
+    var toString: String {
+        var description: String = ""
+        if let name = objectConnections.first?.value.first?.objectName {
+            description = name
+        } else if let shortDescSyntax = actionTypeModel.shortDescSyntax {
+            description = self.dynamicData[shortDescSyntax]?.toString ?? ""
         }
         
-        if actionTypeModel.meta.hasDuration, durationInSeconds > 0 {
-            if let desc = description {
-                return "\(desc) (\(durationInSeconds.fromSecondsToHHMMString))"
-            } else {
-                return "(\(durationInSeconds.fromSecondsToHHMMString))"
-            }
-        } else {
-            return description
-        }
+        
+        
+        return description
     }
 }
 

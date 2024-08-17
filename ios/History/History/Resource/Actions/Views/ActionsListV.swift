@@ -12,13 +12,29 @@ struct ListActionsView: View {
     var actionTypeName: String
     @State var actions: [ActionModel] = []
     var createAction: ((ActionTypeModel) -> Void)?
+    var withDate: Bool = true
     var body: some View {
+        let groupedEvents = Dictionary(grouping: actions) { $0.formattedDate }
+        
+        let sortedDates = groupedEvents.keys.sorted(by: { (date1, date2) -> Bool in
+            let date1Components = date1.split(separator: " ")
+            let date2Components = date2.split(separator: " ")
+            
+            guard !date1Components.isEmpty, !date2Components.isEmpty, date1Components.count == 2, date2Components.count == 2 else {
+                return false
+            }
+            
+            return date1Components[1] > date2Components[1]
+        })
+        
         List {
-            ForEach(actions, id: \.id) { action in
-                NavigationButton(destination: ShowActionView(actionModel: action))
-                {
-                    Section {
-                        MinActionComponent(action: action)
+            ForEach(sortedDates, id: \.self) { date in
+                Section(header: Text(date)) {
+                    let events = groupedEvents[date]?.sorted(by: { $0.startTime < $1.startTime }) ?? []
+                    ForEach(events, id: \.id) { action in
+                        ActionRow(event: action, fetchActions: {
+                            // Implement your fetch logic here
+                        }, includeActionName: false)
                     }
                 }
             }
@@ -41,50 +57,75 @@ struct ListActionsView: View {
         }
         .onAppear {
             Task {
-                self.actions = await ActionController.fetchActions(userId: Authentication.shared.userId!, actionTypeId: actionType.id)
+                self.actions = await ActionController.fetchActions(userId: Authentication.shared.userId!, actionTypeId: actionType.id, withObjectConnections: true)
                 print(self.actions.count)
             }
         }
     }
 }
 
-//func getDate(_ dateString: String) -> String {
-//    return formatDateString(dateString, toFormat: "MM-dd-yy")
-//}
-//
-//func getTime(_ dateString: String) -> String {
-//    return formatDateString(dateString, toFormat: "h:mm a")
-//}
-//
-//func getDateTime(_ dateString: String) -> String {
-//    return formatDateString(dateString, toFormat: "MM-dd-yy h:mm a")
-//}
-//
-//func formatDateString(_ dateString: String, toFormat outputFormat: String) -> String {
-//        func getTimeZoneOffset(from dateString: String) -> TimeZone? {
-//        let regex = try! NSRegularExpression(pattern: "[+-]\\d{2}:\\d{2}", options: [])
-//        if let match = regex.firstMatch(in: dateString, options: [], range: NSRange(location: 0, length: dateString.count)) {
-//            let offsetString = (dateString as NSString).substring(with: match.range)
-//            return TimeZone(identifier: "GMT" + offsetString)
+
+
+//var body: some View {
+    // Group events by their formatted date
+    
+    
+//    ForEach(sortedDates, id: \.self) { date in
+//        Section(header:
+//            HStack
+//            {
+//            if withDate {
+//                Text(date)
+//                Spacer()
+//                let dateIds = Set(groupedEvents[date]!.withChildrenOrNotes.map { $0.id })
+//                if(dateIds.count > 1) {
+//                    Button(action: {
+//                        if expandedEventIds.intersection(dateIds).isEmpty {
+//                            expandedEventIds.formUnion(dateIds)
+//                        } else {
+//                            expandedEventIds.subtract(dateIds)
+//                        }
+//                        print(expandedEventIds)
+//                    }) {
+//                        if expandedEventIds.intersection(dateIds).isEmpty {
+//                            Image(systemName: "plus.circle")
+//                        } else {
+//                            Image(systemName: "minus.circle")
+//                        }
+//                    }
+//                }
+//            }
 //        }
-//        return nil
-//    }
-//    
-//    let dateFormatter = DateFormatter()
-//    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssXXXXX"
-//    dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
-//    
-//    // Convert the string to a Date object
-//    if let date = dateFormatter.date(from: dateString) {
-//        // Create another DateFormatter instance for the desired output format
-//        let outputFormatter = DateFormatter()
-//        outputFormatter.timeZone = getTimeZoneOffset(from: dateString)!
-//        outputFormatter.dateFormat =  outputFormat// 12-hour format with AM/PM
-//        
-//        // Convert the Date object to the desired output format string
-//        let formattedDateString = outputFormatter.string(from: date)
-//        return formattedDateString // Output: 10:30 PM
-//    } else {
-//        return "Invalid time"
+//        ) {
+//            ForEach(groupedEvents[date]!) { event in
+//                eventRow(event)
+//                if expandedEventIds.contains(event.id) {
+//                    MinimizedNoteView(notes: event.metadata!.notes, level: 1)
+//                    ForEach(event.children.sortEvents, id: \.id) { child in
+//                        eventRow(child, level: 1)
+//                        if expandedEventIds.contains(child.id) {
+//                            MinimizedNoteView(notes: child.metadata!.notes, level:2)
+//                            ForEach(child.children.sortEvents, id: \.id) { grandChild in
+//                                eventRow(grandChild, level: 2)
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
 //    }
 //}
+//private func eventRow(_ event: EventModel, level: Int = 0) -> EventRow {
+//    return EventRow(
+//        event: event,
+//        reassignParentForId: $reassignParentForId,
+//        expandedEventIds: $expandedEventIds,
+//        dateClickedAction: { event in
+//            
+//        },
+//        level: level)
+//}
+//}
+
+
+

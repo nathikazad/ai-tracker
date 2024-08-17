@@ -109,8 +109,8 @@ class ActionController {
         }
     }
     
-    static func fetchActions(userId: Int, actionId: Int? = nil, actionTypeId: Int? = nil, startDate: Date? = nil, endDate: Date? = nil, forDate: Date? = nil) async -> [ActionModel] {
-        let (graphqlQuery, variables) = generateQueryForActions(userId: userId, actionId: actionId, actionTypeId: actionTypeId, forDate: forDate, startDate: startDate, endDate: endDate)
+    static func fetchActions(userId: Int, actionId: Int? = nil, actionTypeId: Int? = nil, startDate: Date? = nil, endDate: Date? = nil, forDate: Date? = nil, withObjectConnections: Bool = false) async -> [ActionModel] {
+        let (graphqlQuery, variables) = generateQueryForActions(userId: userId, actionId: actionId, actionTypeId: actionTypeId, forDate: forDate, startDate: startDate, endDate: endDate, withObjectConnections: withObjectConnections)
         struct ActionData: GraphQLData {
             var v2_actions: [ActionModel]
         }
@@ -142,7 +142,7 @@ class ActionController {
         }
     }
     
-    static private func generateQueryForActions(userId: Int, actionId: Int?, actionTypeId: Int? = nil, isSubscription:Bool = false, forDate: Date? = nil, startDate: Date? = nil, endDate: Date? = nil) -> (String, [String: Any]) {
+    static private func generateQueryForActions(userId: Int, actionId: Int?, actionTypeId: Int? = nil, isSubscription:Bool = false, forDate: Date? = nil, startDate: Date? = nil, endDate: Date? = nil, withObjectConnections: Bool = false) -> (String, [String: Any]) {
         var hasuraStruct: HasuraQuery = HasuraQuery(queryFor: "v2_actions", queryName: "ActionsQuery", queryType: isSubscription ? .subscription : .query)
         hasuraStruct.addWhereClause(name: "user_id", type: .int, value: userId, op: .equals)
         if let actionId = actionId {
@@ -176,11 +176,11 @@ class ActionController {
         if let actionTypeId = actionTypeId {
             hasuraStruct.addWhereClause(name: "action_type_id", type: .int, value: actionTypeId, op: .equals)
         }
-        hasuraStruct.setSelections(selections: actionSelections)
+        hasuraStruct.setSelections(selections: actionSelections(withObjectConnections: withObjectConnections))
         return hasuraStruct.getQueryAndVariables
     }
     
-    static var actionSelections: String {
+    static func actionSelections(withObjectConnections: Bool = false) -> String {
         return """
             id
             created_at
@@ -192,8 +192,13 @@ class ActionController {
             parent_id
             dynamic_data
             action_type {
-                \(ActionTypesController.actionTypeSelections())
+                \(ActionTypesController.actionTypeSelections(withObjectConnections: withObjectConnections))
             }
+            \(withObjectConnections ? """
+                object_actions {
+                    \(ObjectActionController.objectActionSelections())
+                }
+            """ : "")
         """
     }
 }

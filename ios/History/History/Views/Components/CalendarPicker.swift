@@ -150,13 +150,6 @@ struct DateNavigator: View {
             .buttonStyle(PlainButtonStyle())
             
             HStack {
-                if !appState.isItToday {
-                    Button(action: {
-                        state.goToDay()
-                    }) {
-                        Image(systemName: "arrow.clockwise.circle")
-                    }
-                }
                 Button(action: {
                     state.showSheet(newSheetToShow: .calendar)
                 }) {
@@ -166,6 +159,13 @@ struct DateNavigator: View {
                     } else {
                         Text(dateString)
                             .font(.headline)
+                    }
+                }
+                if !appState.isItToday {
+                    Button(action: {
+                        state.goToDay()
+                    }) {
+                        Image(systemName: "arrow.clockwise.circle")
                     }
                 }
             }
@@ -185,7 +185,7 @@ struct DateNavigator: View {
     
     private var dateString: String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMMM d"
+        dateFormatter.dateFormat = "E MMM d"
         return dateFormatter.string(from: appState.currentDate)
     }
 }

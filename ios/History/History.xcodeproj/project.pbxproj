@@ -14,6 +14,8 @@
 		FE04A7BA2C6D91FC000F5C24 /* ActionTypeHasuraM.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7B92C6D91FC000F5C24 /* ActionTypeHasuraM.swift */; };
 		FE04A7BC2C6D96C6000F5C24 /* ObjectConnectionV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7BB2C6D96C6000F5C24 /* ObjectConnectionV.swift */; };
 		FE04A7BF2C6E4D4D000F5C24 /* ActionTypeObjectTypeC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7BE2C6E4D4D000F5C24 /* ActionTypeObjectTypeC.swift */; };
+		FE04A7C22C6FDDA0000F5C24 /* ObjectConnectionC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7C12C6FDDA0000F5C24 /* ObjectConnectionC.swift */; };
+		FE04A7C42C6FDDAD000F5C24 /* ObjectConnectionM.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7C32C6FDDAD000F5C24 /* ObjectConnectionM.swift */; };
 		FE06FD042C0913E800E65D41 /* MinPeopleViewForEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE06FD032C0913E800E65D41 /* MinPeopleViewForEventView.swift */; };
 		FE06FD062C09140500E65D41 /* PeopleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE06FD052C09140500E65D41 /* PeopleView.swift */; };
 		FE06FD082C0921C900E65D41 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE06FD072C0921C900E65D41 /* Image.swift */; };
@@ -211,6 +213,8 @@
 		FE04A7B92C6D91FC000F5C24 /* ActionTypeHasuraM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionTypeHasuraM.swift; sourceTree = "<group>"; };
 		FE04A7BB2C6D96C6000F5C24 /* ObjectConnectionV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectConnectionV.swift; sourceTree = "<group>"; };
 		FE04A7BE2C6E4D4D000F5C24 /* ActionTypeObjectTypeC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionTypeObjectTypeC.swift; sourceTree = "<group>"; };
+		FE04A7C12C6FDDA0000F5C24 /* ObjectConnectionC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectConnectionC.swift; sourceTree = "<group>"; };
+		FE04A7C32C6FDDAD000F5C24 /* ObjectConnectionM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectConnectionM.swift; sourceTree = "<group>"; };
 		FE06FD032C0913E800E65D41 /* MinPeopleViewForEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinPeopleViewForEventView.swift; sourceTree = "<group>"; };
 		FE06FD052C09140500E65D41 /* PeopleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleView.swift; sourceTree = "<group>"; };
 		FE06FD072C0921C900E65D41 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
@@ -408,6 +412,15 @@
 			path = Controllers;
 			sourceTree = "<group>";
 		};
+		FE04A7C02C6FDD85000F5C24 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				FE4AB3A52C52F76B00A07749 /* ActionC.swift */,
+				FE04A7C12C6FDDA0000F5C24 /* ObjectConnectionC.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
 		FE06FD022C0913D500E65D41 /* Person */ = {
 			isa = PBXGroup;
 			children = (
@@ -507,9 +520,9 @@
 		FE4AB3AE2C544E3F00A07749 /* Actions */ = {
 			isa = PBXGroup;
 			children = (
+				FE04A7C02C6FDD85000F5C24 /* Controllers */,
 				FE638F442C571823001C34F0 /* Models */,
 				FE4AB3AF2C544E5D00A07749 /* Views */,
-				FE4AB3A52C52F76B00A07749 /* ActionC.swift */,
 			);
 			path = Actions;
 			sourceTree = "<group>";
@@ -628,6 +641,7 @@
 				FE4AB3942C51F03300A07749 /* ActionM.swift */,
 				FE638F452C571840001C34F0 /* ActionModels.swift */,
 				FEE6D79D2C58822300E65367 /* ActionModelConditions.swift */,
+				FE04A7C32C6FDDAD000F5C24 /* ObjectConnectionM.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1104,6 +1118,7 @@
 				FEB8FD1F2BAA253100EE9B68 /* Intents.swift in Sources */,
 				FE1C0EAE2BC0713B00FF56AB /* Authentication.swift in Sources */,
 				FE900C082BD363D200F97050 /* LocationListView.swift in Sources */,
+				FE04A7C22C6FDDA0000F5C24 /* ObjectConnectionC.swift in Sources */,
 				FE638F482C571BDB001C34F0 /* ActionRow.swift in Sources */,
 				FE477D932BD8122B001FC341 /* CalendarPicker.swift in Sources */,
 				FE638F462C571840001C34F0 /* ActionModels.swift in Sources */,
@@ -1134,6 +1149,7 @@
 				FE6ED6D72C06AA9100E6A2A6 /* EventTypeModel.swift in Sources */,
 				FE477D912BD5E3E2001FC341 /* EventsController.swift in Sources */,
 				FE04A7BF2C6E4D4D000F5C24 /* ActionTypeObjectTypeC.swift in Sources */,
+				FE04A7C42C6FDDAD000F5C24 /* ObjectConnectionM.swift in Sources */,
 				FE950F202C011BE00022EA64 /* AppState.swift in Sources */,
 				FE4AB38D2C4EF7B200A07749 /* ActionTypeC.swift in Sources */,
 				FE9E18B92C02933400611CE8 /* Popup.swift in Sources */,

@@ -219,9 +219,13 @@ class ActionTypesController {
 
 // ACTION VIEWS
 // max out candles and cumulatives at todays date
-// NEXT: add object connection
-// NEXT: list actions, only events, dropdown and short string
+// finished: add object connection
+// here: list actions(inside object), only events, dropdown and short string, conditions for actions and objects, only enum and bool?
 // NEXT: delete action button
+
+// traction, super simple, messages, settings(which goals to share) and goals
+// cool demo
+// How much have I slept last week? how much have I spent on Amazon? 
 
 // BUGS
 // sleep into next day problem, add a custom cut off
@@ -229,7 +233,7 @@ class ActionTypesController {
 
 // -----------------------------------------------------------
 // V2 COMMUNITIES
-// timezone for viewing across timezone
+// timezone support for viewing across timezone
 // Add groups tab, list all groups, create group
 // break group view into four tabs
 // show messages, send message
@@ -249,7 +253,7 @@ class ActionTypesController {
 // routine
 //  skip: routine creator
 //  skip: add preferred hours with marks
-// actions list
+
 //  skip: three tabs, events, candles, aggregates
 //  skip: list actions filter by enum
 //  skip: list objects filter by enum

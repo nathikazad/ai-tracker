@@ -7,7 +7,7 @@ import WrappingHStack
 struct EnumView: View {
     @State private var newItem = ""
     @Binding var items: [String]
-    
+    @Binding var changesToSave: Bool
     var body: some View {
         VStack {
             HStack {
@@ -62,6 +62,7 @@ struct EnumView: View {
         DispatchQueue.main.async {
             if !newItem.isEmpty {
                 items.append(newItem)
+                changesToSave = true
                 newItem = ""
             }
         }
@@ -70,6 +71,7 @@ struct EnumView: View {
     private func deleteItem(_ item: String) {
         DispatchQueue.main.async {
             items.removeAll { $0 == item }
+            changesToSave = true
         }
     }
 }

@@ -27,6 +27,14 @@ class ObjectModel: Observable, Codable, ObservableObject {
         self.objectTypeModel = objectType
     }
     
+    init(id:Int) {
+        self.id = id
+        self.name = ""
+        self.fields = [:]
+        self.objectTypeId = 0
+        self.objectTypeModel = ObjectTypeModel()
+    }
+    
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decodeIfPresent(Int.self, forKey: .id)

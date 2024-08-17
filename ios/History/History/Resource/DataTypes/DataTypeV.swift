@@ -17,15 +17,15 @@ struct ViewDataType: View {
     @ViewBuilder
     var body: some View {
         switch dataType {
-        case .longString:
-            LongStringComponent(fieldName: name,
-                                value: bindingFor(""))
         case .shortString:
             ShortStringComponent(fieldName: name,
                                  value: bindingFor(""))
+        case .longString:
+            LongStringComponent(fieldName: name,
+                                 value: bindingFor(""))
         case .number:
             ShortStringComponent(fieldName: name,
-                                 value: bindingFor(""))
+                                 value: bindingFor(""), isNumeric: true)
         case .enumerator:
             EnumComponent(fieldName: name,
                           value: bindingFor(enums.first!),
@@ -51,8 +51,6 @@ struct ViewDataType: View {
                 time: bindingFor(Date.self),
                 onlyTime: dataType == .time
             )
-        default:
-            EmptyView()
         }
     }
     

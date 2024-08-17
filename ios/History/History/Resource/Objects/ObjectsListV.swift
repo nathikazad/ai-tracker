@@ -31,6 +31,12 @@ struct ObjectListView: View {
     @State private var searchText = ""
     var selectionAction: ((ObjectModel) -> Void)?
     @Environment(\.presentationMode) var presentationMode
+    var listActionType: ListActionType = .takeToObjectView
+
+    enum ListActionType {
+        case takeToObjectView
+        case returnToActionView
+    }
     
     var body: some View {
         List {
@@ -46,7 +52,12 @@ struct ObjectListView: View {
             NavigationButton(destination: ObjectView(
                 objectType: objectType,
                 clickObject: { newObject in
-                    objects.append(newObject)
+                    if listActionType == .returnToActionView {
+                        selectionAction?(newObject)
+                        goBack()
+                    } else {
+                        objects.append(newObject)
+                    }
                 }
             )) {
                 Label("Create New \(objectType.name)", systemImage: "plus.circle")
@@ -56,11 +67,23 @@ struct ObjectListView: View {
             }
             
             ForEach(filteredObjects, id: \.name) { object in
-                NavigationButton(destination: ObjectView(objectModel: object)) {
-                    Text(object.name)
-                }
-                .alignmentGuide(.listRowSeparatorLeading) { _ in
-                    -20
+                if listActionType == .returnToActionView {
+                    Button(action: {
+                        selectionAction?(object)
+                        goBack()
+                    }) {
+                        Text(object.name)
+                    }
+                    .alignmentGuide(.listRowSeparatorLeading) { _ in
+                        -20
+                    }
+                } else {
+                    NavigationButton(destination: ObjectView(objectModel: object)) {
+                        Text(object.name)
+                    }
+                    .alignmentGuide(.listRowSeparatorLeading) { _ in
+                        -20
+                    }
                 }
             }
         }

@@ -33,7 +33,8 @@ struct ObjectTypeView: View {
                     fieldKey: fieldKey,
                     deleteField:  {
                         objectType.fields.removeValue(forKey: fieldKey)
-                    }
+                    },
+                    changesToSave: $changesToSave
                 )
                 .alignmentGuide(.listRowSeparatorLeading) { _ in
                     -20
@@ -113,6 +114,7 @@ struct InternalObjectFieldView: View {
     @ObservedObject var objectType: ObjectTypeModel
     let fieldKey: String
     var deleteField: (() -> Void)
+    @Binding var changesToSave: Bool
     
     var body: some View {
         DisclosureGroup {
@@ -125,7 +127,7 @@ struct InternalObjectFieldView: View {
                         objectType.fields[fieldKey] = newValue
                         objectType.objectWillChange.send()
                     }
-                ))
+                ), changesToSave: $changesToSave)
                 
                 
                 Button(action: deleteField) {
