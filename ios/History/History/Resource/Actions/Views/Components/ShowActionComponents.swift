@@ -18,6 +18,7 @@ struct EnumComponent: View {
                 .frame(alignment: .leading)
             Spacer()
             Picker("", selection: $value) {
+                Text("None").tag("None")
                 ForEach(enumValues, id: \.self) { type in
                     Text(type).tag(type)
                 }
@@ -31,11 +32,21 @@ struct ShortStringComponent: View {
     let fieldName: String
     @Binding var value: String
     @State var valueCopy: String = ""
+    @State private var isBeingEdited: Bool
+    let isNumeric: Bool
     
-    init(fieldName: String, value: Binding<String>) {
+    init(fieldName: String, value: Binding<String>, isNumeric: Bool = false) {
         self.fieldName = fieldName
         self._value = value
         self._valueCopy = State(wrappedValue: value.wrappedValue)
+        self.isNumeric = isNumeric
+        self._isBeingEdited = State(initialValue: value.wrappedValue.isEmpty)
+    }
+    
+    private var numberFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        return formatter
     }
     
     var body: some View {
@@ -43,17 +54,60 @@ struct ShortStringComponent: View {
             Text("\(fieldName): ")
                 .frame(alignment: .leading)
             Spacer()
-            TextField(fieldName, text: Binding(
-                get: { valueCopy },
-                set: { newValue in
-                    valueCopy = newValue
-                    value = newValue
+            if isBeingEdited {
+                if isNumeric {
+                    TextField(fieldName, text: Binding(
+                        get: { valueCopy },
+                        set: { newValue in
+                            if let _ = Double(newValue) {
+                                valueCopy = newValue
+                                value = newValue
+                            }
+                        }
+                    ))
+                    .keyboardType(.decimalPad)
+                } else {
+                    TextField(fieldName, text: Binding(
+                        get: { valueCopy },
+                        set: { newValue in
+                            valueCopy = newValue
+                            value = newValue
+                        }
+                    ))
+                    .keyboardType(.default)
                 }
-            ))
-            .frame(width: 150, alignment: .trailing)
-            .multilineTextAlignment(.trailing)
-            .keyboardType(.default)
-            .submitLabel(.done)
+            } else {
+                if isNumeric, let number = numberFormatter.number(from: value) {
+                    Text(numberFormatter.string(from: number) ?? value)
+                } else if let url = URL(string: value), UIApplication.shared.canOpenURL(url) {
+                    Link(destination: url) {
+                        Text("Link")
+                            .foregroundColor(.blue)
+                            .underline()
+                    }
+                } else {
+                    Text(value)
+                }
+                Button(action: {
+                    if !isBeingEdited {
+                        valueCopy = value
+                    }
+                    isBeingEdited = true
+                }) {
+                    Image(systemName: "pencil")
+                        .foregroundColor(.gray)
+                }
+                .buttonStyle(PlainButtonStyle())
+                .frame(width: 30, height: 30)
+                .background(Color(UIColor.systemGray6))
+                .clipShape(Circle())
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .multilineTextAlignment(.trailing)
+        .submitLabel(.done)
+        .onSubmit {
+            isBeingEdited = false
         }
     }
 }
@@ -95,6 +149,7 @@ struct LongStringComponent: View {
                     .clipShape(Circle())
                 }
             }
+            .padding(.leading, -10)
                 
             if isBeingEdited {
                 TextEditor(text: Binding(
@@ -108,18 +163,52 @@ struct LongStringComponent: View {
                 .padding(4)
                 .background(Color(UIColor.systemGray6))
                 .cornerRadius(8)
-//                .focused($isFocused)
                 .navigationBarTitleDisplayMode(.inline)
             } else {
-                Text(value)
-                    .padding(.leading, 10)
-                    .padding(.bottom, 10)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                let (textWithoutLinks, urls) = extractTextAndURLs(from: value)
                 
+                Text(textWithoutLinks)
+                    .padding(.bottom, 8)
+                    .padding(.leading, -10)
+                if !urls.isEmpty {
+                    Text("Links:")
+                        .padding(.top, 4)
+                    ForEach(urls, id: \.self) { url in
+                        Link(destination: url) {
+                            Text(url.absoluteString)
+                                .foregroundColor(.blue)
+                                .underline()
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    }
+                }
+            }
+        }
+        .padding(.leading, 10)
+        .padding(.bottom, 10)
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    
+    private func extractTextAndURLs(from text: String) -> (String, [URL]) {
+        let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
+        let matches = detector?.matches(in: text, options: [], range: NSRange(location: 0, length: text.utf16.count)) ?? []
+        
+        var textWithoutLinks = text
+        let urls = matches.compactMap { match -> URL? in
+            guard let range = Range(match.range, in: text),
+                  let url = URL(string: String(text[range])) else {
+                return nil
             }
             
-            
+            // Remove the URL from the text
+            textWithoutLinks = textWithoutLinks.replacingOccurrences(of: String(text[range]), with: "")
+            return url
         }
+        
+        // Trim any extra whitespace and newlines
+        textWithoutLinks = textWithoutLinks.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        return (textWithoutLinks, urls)
     }
 }
 

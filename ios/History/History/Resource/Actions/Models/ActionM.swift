@@ -26,7 +26,7 @@ class ActionModel: ObservableObject, Codable {
     var parentId: Int?
     @Published var dynamicData: [String: AnyCodable]
     @Published var actionTypeModel: ActionTypeModel
-    var objectConnections: [Int:[ObjectAction]] = [:] //Int is the actionTypeObjectTypeId
+    @Published var objectConnections: [Int:[ObjectAction]] = [:] //Int is the actionTypeObjectTypeId
     
     let createdAt: Date
     let updatedAt: Date

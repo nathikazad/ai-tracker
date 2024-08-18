@@ -12,6 +12,7 @@ struct ShowActionView: View {
     @StateObject private var action: ActionModel
     @State private var changesToSave:Bool
     var clickAction: ((ActionModel) -> Void)?
+    @State var objectConnectionsToAdd: [(Int, Int)] = []
     @Environment(\.presentationMode) var presentationMode
     
     init(actionModel: ActionModel) {
@@ -26,7 +27,16 @@ struct ShowActionView: View {
     }
     
     enum ActionState: String, CaseIterable { case start, save, schedule }
-
+    
+    
+    func fetchAction() {
+        Task {
+            let actions = await ActionController.fetchActions(userId: Authentication.shared.userId!, actionId: action.id, withObjectConnections: true)
+            if (!actions.isEmpty) {
+                self.action.copy(actions[0])
+            }
+        }
+    }
     
     var body: some View {
         Form {
@@ -50,6 +60,65 @@ struct ShowActionView: View {
                     dynamicData: $action.dynamicData,
                     changesToSave: $changesToSave
                 )
+            }
+            
+            if(Array(action.actionTypeModel.objectConnections.keys).count > 0) {
+                //                let sortedDynamicFieldsArray = dynamicFieldsArray.sorted { dynamicFields[$0]?.rank ?? 0 < dynamicFields[$1]?.rank ?? 0 }
+                ForEach(Array(action.actionTypeModel.objectConnections), id: \.key) { objectConnectionId, objectConnection in
+                    Section(objectConnection.name) {
+                        if let connections = action.objectConnections[objectConnection.id] {
+                            ForEach(connections, id: \.objectId) { connection in
+                                NavigationLink(destination: ObjectView(objectId: connection.objectId)) {
+                                    Text("\(connection.objectName)")
+                                }
+                                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                    Button(action: {
+                                        if let connectionId = connection.id {
+                                            print("connection exists")
+                                            Task {
+                                                await ObjectActionController.deleteObjectAction(id: connectionId)
+                                                fetchAction()
+                                            }
+                                        } else {
+                                            print("connection does not exist")
+                                            action.objectConnections.removeObjectAction(objectId: connection.objectId, forId: objectConnection.id)
+                                        }
+                                    }) {
+                                        Image(systemName: "trash.fill")
+                                    }
+                                    .tint(.red)
+                                }
+                            }
+                        }
+                        //                    } else {
+                        if let objectType = objectConnection.objectType {
+                            NavigationLink(destination: ObjectListView(
+                                objectType: objectType,
+                                selectionAction: {
+                                    object in
+                                    if (action.id != nil) {
+                                        Task {
+                                            await ObjectActionController.createObjectAction(objectTypeActionTypeId: objectConnection.id, objectId: object.id!, actionId: action.id!)
+                                            fetchAction()
+                                        }
+                                    } else {
+                                        action.objectConnections.addObjectAction(
+                                            ObjectAction(
+                                                objectTypeActionTypeId: objectConnection.id,
+                                                objectId: object.id!,
+                                                objectName: object.name),
+                                            forId: objectConnection.id)
+                                        objectConnectionsToAdd.append((objectConnection.id, object.id!))
+                                    }
+                                }, listActionType: .returnToActionView
+                            )) {
+                                Label("Add \(objectType.name)", systemImage: "plus")
+                                
+                            }
+                        }
+                        
+                    }
+                }
             }
             
             Section {
@@ -86,9 +155,14 @@ struct ShowActionView: View {
         .onAppear {
             Task {
                 if (action.id != nil) {
-                    let actions = await ActionController.fetchActions(userId: Authentication.shared.userId!, actionId: action.id)
-                    if (!actions.isEmpty) {
-                        self.action.copy(actions[0])
+                    print("ActionV onAppear")
+                    fetchAction()
+                } else {
+                    if let actionType = await ActionTypesController.fetchActionType(
+                        userId: Authentication.shared.userId!,
+                        actionTypeId: action.actionTypeId,
+                        withObjectConnections: true) {
+                        action.actionTypeModel = actionType
                     }
                 }
             }
@@ -105,7 +179,7 @@ struct ShowActionView: View {
         }
         return .save
     }
-
+    
     private func saveChanges() {
         Task {
             if action.id != nil {
@@ -115,12 +189,27 @@ struct ShowActionView: View {
             } else {
                 let actionId = await ActionController.createActionModel(model: action)
                 action.id = actionId
+                if let actionId = actionId {
+                    await createPendingObjectActions(actionId: actionId)
+                }
                 if getActionState != .start {
                     self.presentationMode.wrappedValue.dismiss()
                     clickAction?(action)
                 }
             }
         }
+    }
+    
+    private func createPendingObjectActions(actionId: Int) async {
+        for (objectTypeActionTypeId, objectId) in objectConnectionsToAdd {
+            try await ObjectActionController.createObjectAction(
+                objectTypeActionTypeId: objectTypeActionTypeId,
+                objectId: objectId,
+                actionId: actionId
+            )
+        }
+        objectConnectionsToAdd.removeAll()
+        await fetchAction()
     }
 }
 

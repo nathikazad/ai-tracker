@@ -218,9 +218,11 @@ class ActionTypesController {
 // finished: goal field be currency, number
 
 // ACTION VIEWS
-// max out candles and cumulatives at todays date
 // finished: add object connection
-// here: list actions(inside object), only events, dropdown and short string, conditions for actions and objects, only enum and bool?
+// here: list actions(inside object) 
+// here: children
+// dropdown and short string, 
+// conditions for actions and objects, only enum and bool?
 // NEXT: delete action button
 
 // traction, super simple, messages, settings(which goals to share) and goals

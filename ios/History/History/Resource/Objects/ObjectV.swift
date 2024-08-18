@@ -10,23 +10,20 @@ import UserNotifications
 
 struct ObjectView: View {
     @StateObject private var object: ObjectModel
-    @State private var changesToSave:Bool
+    @State private var changesToSave:Bool = false
     var clickObject: ((ObjectModel) -> Void)?
     @Environment(\.presentationMode) var presentationMode
     
     init(objectModel: ObjectModel) {
         _object = StateObject(wrappedValue: objectModel)
-        _changesToSave = State(initialValue: false)
     }
     
     init(objectId: Int) {
         _object = StateObject(wrappedValue:  ObjectModel(id: objectId))
-        _changesToSave = State(initialValue: true)
     }
     
     init(objectType: ObjectTypeModel, clickObject: ((ObjectModel) -> Void)? = nil) {
         _object = StateObject(wrappedValue:  ObjectModel(objectTypeId: objectType.id!, objectType: objectType))
-        _changesToSave = State(initialValue: true)
         self.clickObject = clickObject
     }
     
@@ -122,6 +119,9 @@ struct ObjectView: View {
                     if (!objects.isEmpty) {
                         self.object.copy(objects[0])
                     }
+                }
+                DispatchQueue.main.async {
+                    changesToSave = false
                 }
             }
         }
