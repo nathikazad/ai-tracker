@@ -27,6 +27,8 @@ class ActionModel: ObservableObject, Codable {
     @Published var dynamicData: [String: AnyCodable]
     @Published var actionTypeModel: ActionTypeModel
     @Published var objectConnections: [Int:[ObjectAction]] = [:] //Int is the actionTypeObjectTypeId
+    @Published var children: [Int:[ActionModel]] = [:]
+    @Published var parent: ActionModel? = nil
     
     let createdAt: Date
     let updatedAt: Date
@@ -43,6 +45,8 @@ class ActionModel: ObservableObject, Codable {
         case userId = "user_id"
         case actionType = "action_type"
         case objectActions = "object_actions"
+        case children = "children"
+        case parent = "parent"
     }
     
     var durationInSeconds: Int {
@@ -50,7 +54,7 @@ class ActionModel: ObservableObject, Codable {
         return Int(endTime.timeIntervalSince(startTime))
     }
 
-    init(id: Int? = nil, actionTypeId: Int, startTime: Date, endTime: Date? = nil, parentId: Int? = nil, dynamicData: [String: AnyCodable] = [:], actionTypeModel: ActionTypeModel, createdAt: Date = Date(), updatedAt: Date = Date()) {
+    init(id: Int? = nil, actionTypeId: Int, startTime: Date = Date(), endTime: Date? = nil, parentId: Int? = nil, dynamicData: [String: AnyCodable] = [:], actionTypeModel: ActionTypeModel = ActionTypeModel(name: "Unknown"), createdAt: Date = Date(), updatedAt: Date = Date()) {
         self.id = id
         self.actionTypeId = actionTypeId
         self.startTime = startTime
@@ -82,6 +86,10 @@ class ActionModel: ObservableObject, Codable {
         actionTypeModel = try container.decode(ActionTypeModel.self, forKey: .actionType)
         let connections = try container.decodeIfPresent([ObjectAction].self, forKey: .objectActions) ?? []
         objectConnections = Dictionary(grouping: connections, by: { $0.objectTypeActionTypeId })
+        
+        let childrenNode = try container.decodeIfPresent([ActionModel].self, forKey: .children) ?? []
+        children = Dictionary(grouping: childrenNode, by: { $0.actionTypeId })
+        parent = try container.decodeIfPresent(ActionModel.self, forKey: .parent)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -105,6 +113,8 @@ class ActionModel: ObservableObject, Codable {
         self.dynamicData = newModel.dynamicData
         self.actionTypeModel = newModel.actionTypeModel
         self.objectConnections = newModel.objectConnections
+        self.children = newModel.children
+        self.parent = newModel.parent
     }
     
     var duplicate: ActionModel {
@@ -128,3 +138,22 @@ class ActionModel: ObservableObject, Codable {
 }
 
 
+extension Dictionary where Key == Int, Value == [ActionModel] {
+    mutating func addChild(_ child: ActionModel, forId id: Int) {
+        if self[id] != nil {
+            // Entry exists, append the action
+            self[id]?.append(child)
+        } else {
+            // No entry exists, create a new array with the action
+            self[id] = [child]
+        }
+    }
+    
+    mutating func removeChild(childId: Int, forId id: Int) {
+        guard var actions = self[id] else {
+            return
+        }
+        actions.removeAll { $0.id == childId }
+        self[id] = actions
+    }
+}

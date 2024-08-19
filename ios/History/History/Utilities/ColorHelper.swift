@@ -13,27 +13,45 @@ extension Color {
     static let lavender = Color(red: 230 / 255, green: 230 / 255, blue: 250 / 255)
     static let silver = Color(red: 192 / 255, green: 192 / 255, blue: 192 / 255)
     static let magenta = Color(red: 255 / 255, green: 0 / 255, blue: 255 / 255)
+    
+    // New distinct colors
+    static let teal = Color(red: 0 / 255, green: 128 / 255, blue: 128 / 255)
+    static let coral = Color(red: 255 / 255, green: 127 / 255, blue: 80 / 255)
+    static let indigo = Color(red: 75 / 255, green: 0 / 255, blue: 130 / 255)
+    static let turquoise = Color(red: 64 / 255, green: 224 / 255, blue: 208 / 255)
+    static let crimson = Color(red: 220 / 255, green: 20 / 255, blue: 60 / 255)
+    static let gold = Color(red: 255 / 255, green: 215 / 255, blue: 0 / 255)
+    static let emerald = Color(red: 80 / 255, green: 200 / 255, blue: 120 / 255)
+    static let plum = Color(red: 221 / 255, green: 160 / 255, blue: 221 / 255)
 }
 
 class ASColor {
     static let colors: [(Color, String)] = [
-    (.red, "Red"),
-    (.blue, "Blue"),
-    (.green, "Green"),
-    (.orange, "Orange"),
-    (.purple, "Purple"),
-    (.yellow, "Yellow"),
-    (.cyan, "Cyan"),
-    (.brown, "Brown"),
-    (.maroon, "Maroon"),
-    (.olive, "Olive"),
-    (.lavender, "Lavender"),
-    (.silver, "Silver"),
-    (.magenta, "Magenta"),
-    (.black, "Black"),
-    (.white, "White"),
-    (.gray, "Gray"),
-    (.white, "White")
+        (.red, "Red"),
+        (.blue, "Blue"),
+        (.green, "Green"),
+        (.orange, "Orange"),
+        (.purple, "Purple"),
+        (.yellow, "Yellow"),
+        (.cyan, "Cyan"),
+        (.brown, "Brown"),
+        (.maroon, "Maroon"),
+        (.olive, "Olive"),
+        (.lavender, "Lavender"),
+        (.silver, "Silver"),
+        (.magenta, "Magenta"),
+        (.black, "Black"),
+        (.white, "White"),
+        (.gray, "Gray"),
+        // New distinct colors
+        (.teal, "Teal"),
+        (.coral, "Coral"),
+        (.indigo, "Indigo"),
+        (.turquoise, "Turquoise"),
+        (.crimson, "Crimson"),
+        (.gold, "Gold"),
+        (.emerald, "Emerald"),
+        (.plum, "Plum")
     ]
     
     static func colorToString(_ color: Color) -> String {

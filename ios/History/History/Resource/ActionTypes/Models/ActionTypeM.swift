@@ -17,6 +17,7 @@ class ActionTypeModel: ObservableObject, Codable {
     @Published var dynamicFields: [String: Schema]
     @Published var objectConnections: [String: ObjectConnection]
     @Published var aggregates: [AggregateModel]
+    @Published var childConnections: [Int: String]
     
     var shortDescSyntax: String?
     let createdAt: Date
@@ -39,6 +40,7 @@ class ActionTypeModel: ObservableObject, Codable {
          staticFields: ActionModelTypeStaticSchema = ActionModelTypeStaticSchema(),
          dynamicFields: [String: Schema] = [:],
          objectConnections: [String: ObjectConnection] = [:],
+         childConnections: [Int: String] = [:],
          aggregates: [AggregateModel] = [],
          shortDescSyntax: String? = nil,
          createdAt: Date = Date(),
@@ -53,6 +55,7 @@ class ActionTypeModel: ObservableObject, Codable {
         self.updatedAt = updatedAt
         self.aggregates = aggregates
         self.objectConnections = objectConnections
+        self.childConnections = childConnections
     }
     
     required init(from decoder: Decoder) throws {
@@ -66,6 +69,7 @@ class ActionTypeModel: ObservableObject, Codable {
         let metadata = try container.decode(ActionTypeMetadataForHasura.self, forKey: .metadata)
         staticFields = metadata.staticFields
         dynamicFields = metadata.dynamicFields
+        childConnections = metadata.childConnections
         shortDescSyntax = try container.decodeIfPresent(String.self, forKey: .shortDescSyntax)
         let createdAtString = try container.decode(String.self, forKey: .createdAt)
         createdAt = createdAtString.getDate!
@@ -106,7 +110,8 @@ class ActionTypeModel: ObservableObject, Codable {
     var getMetadataJson: [String: Any] {
         let metadata: ActionTypeMetadataForHasura = ActionTypeMetadataForHasura(
             staticFields: staticFields,
-            dynamicFields: dynamicFields
+            dynamicFields: dynamicFields,
+            childConnections: childConnections
         )
         do {
             let encoder = JSONEncoder()

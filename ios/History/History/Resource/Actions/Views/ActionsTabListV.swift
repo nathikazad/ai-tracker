@@ -14,7 +14,6 @@ struct ActionsTabView: View {
     @State private var events: [ActionModel] = []
     @StateObject var datePickerModel: TwoDatePickerModel
     @State private var coreStateSubcription: AnyCancellable?
-    
     var eventId: Int?
     var eventType: EventType?
     
@@ -101,16 +100,25 @@ struct ActionsTabView: View {
             VStack(spacing: 0) {
                 ZStack(alignment: .top) {
                     List {
-                        ForEach(eventsToShow.sortEvents, id: \.id) { event in
+                        ForEach(eventsToShow.rootNodes.sortEvents, id: \.id) { event in
                             eventRow(event)
                                 .alignmentGuide(.listRowSeparatorLeading) { _ in
                                     -20
                                 }
+                            let childEvents = eventsToShow.filter { child in
+                                child.parentId == event.id
+                            }
+                            ForEach(childEvents, id: \.id) { child in
+                                eventRow(child, level: 1)
+                                    .alignmentGuide(.listRowSeparatorLeading) { _ in
+                                        -20
+                                    }
+                            }
                         }
                     }
                     .onAppear {
                         scrollProxy = proxy
-                        scroll()
+                        //scroll()
                     }
                 }
             }
@@ -125,7 +133,8 @@ struct ActionsTabView: View {
             },
             fetchActions: fetchEvents,
             showTimeWithRespectToCurrentDate: true,
-            includeActionName: true
+            includeActionName: true,
+            level: level
         )
     }
 }

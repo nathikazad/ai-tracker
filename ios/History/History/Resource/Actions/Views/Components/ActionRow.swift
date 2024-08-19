@@ -20,17 +20,18 @@ struct ActionRow: View {
     var fetchActions: () -> Void?
     var showTimeWithRespectToCurrentDate: Bool = false
     var includeActionName: Bool
+    var level: Int = 0
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @ObservedObject private var timerManager = TimerManager.shared
     
     var body: some View {
         HStack {
-//            if(level > 0) {
-//                Rectangle()
-//                    .frame(width: 4)
-//                    .foregroundColor(Color.gray)
-//                    .padding(.leading, CGFloat((level - 1) * 10))
-//            }
+            if(level > 0) {
+                Rectangle()
+                    .frame(width: 4)
+                    .foregroundColor(Color.gray)
+                    .padding(.leading, CGFloat((level - 1) * 10))
+            }
             
             var formattedString = event.formatTimeWithSubscripts(date: state.currentDate)
             Text(showTimeWithRespectToCurrentDate ? formattedString : AttributedString(event.formattedTime))

@@ -42,7 +42,7 @@ struct ListActionsView: View {
         .navigationTitle( "\(actionTypeName)")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                NavigationLink(destination: ShowActionView(actionType: actionType)) {
+                NavigationLink(destination: ShowActionView(actionTypeId: actionType.id!)) {
                     Image(systemName: "plus")
                         .foregroundColor(.primary)
                 }

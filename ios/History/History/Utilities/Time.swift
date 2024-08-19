@@ -183,16 +183,14 @@ extension Date {
     
     var getWeekBoundary: WeekBoundary {
         let calendar = Calendar.current
+        var modifiedCalendar = calendar
+        modifiedCalendar.firstWeekday = 2
+        let mondayOfCurrentWeek = modifiedCalendar.date(from: modifiedCalendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: self))!
+        let startOfWeek = modifiedCalendar.startOfDay(for: mondayOfCurrentWeek)
         
-        // Find the start of the week (Monday at 00:00)
-        let startOfWeek = calendar.date(byAdding: .day, value: 1,
-                                        to :calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: self))!)!
-        let startHour = calendar.startOfDay(for: startOfWeek)
-        
-        // Find the end of the week (Sunday at 23:59:59)
-        let endOfWeek = calendar.date(byAdding: .day, value: 6, to: startOfWeek)!
-        let endHour = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: endOfWeek)!
-        return WeekBoundary(start: startHour, end: endHour)
+        let endOfWeek = modifiedCalendar.date(byAdding: .day, value: 6, to: startOfWeek)!
+        let endHour = modifiedCalendar.date(bySettingHour: 23, minute: 59, second: 59, of: endOfWeek)!
+        return WeekBoundary(start: startOfWeek, end: endHour)
     }
     
     var getWeekday: Weekday {

@@ -220,12 +220,12 @@ class ActionTypesController {
 // ACTION VIEWS
 // finished: add object connection
 // here: list actions(inside object) 
-// here: children
-// dropdown and short string, 
-// conditions for actions and objects, only enum and bool?
+// finished: children
+// skipped: dropdown and short string, 
+// skipped: filter for actions and objects, only enum, bool and object connection.name
 // NEXT: delete action button
 
-// traction, super simple, messages, settings(which goals to share) and goals
+// traction, super simple, messages, settings(which 3 goals to share) and goals
 // cool demo
 // How much have I slept last week? how much have I spent on Amazon? 
 

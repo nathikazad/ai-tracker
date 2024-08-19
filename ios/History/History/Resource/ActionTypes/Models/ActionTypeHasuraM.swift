@@ -10,18 +10,21 @@ struct ActionTypeMetadataForHasura: Codable {
     var staticFields: ActionModelTypeStaticSchema
     var dynamicFields: [String: Schema]
     var internalObjects: [String: ObjectTypeModel]
+    var childConnections: [Int: String]
     
     enum CodingKeys: String, CodingKey {
-        case staticFields, dynamicFields, internalObjects, aggregates
+        case staticFields, dynamicFields, internalObjects, aggregates, childConnections
     }
     
     init(staticFields: ActionModelTypeStaticSchema = ActionModelTypeStaticSchema(),
          dynamicFields: [String : Schema] = [:],
-         internalObjects: [String : ObjectTypeModel] = [:]
+         internalObjects: [String : ObjectTypeModel] = [:],
+         childConnections: [Int: String] = [:]
     ) {
         self.staticFields = staticFields
         self.dynamicFields = dynamicFields
         self.internalObjects = internalObjects
+        self.childConnections = childConnections
     }
     
     init(from decoder: Decoder) throws {
@@ -29,6 +32,7 @@ struct ActionTypeMetadataForHasura: Codable {
         staticFields = try container.decode(ActionModelTypeStaticSchema.self, forKey: .staticFields)
         dynamicFields = try container.decodeIfPresent([String: Schema].self, forKey: .dynamicFields) ?? [:]
         internalObjects = (try? container.decode([String: ObjectTypeModel].self, forKey: .internalObjects)) ?? [:]
+        childConnections = (try? container.decode([Int: String].self, forKey: .childConnections)) ?? [:]
     }
     
     func encode(to encoder: Encoder) throws {
@@ -36,6 +40,7 @@ struct ActionTypeMetadataForHasura: Codable {
         try container.encode(staticFields, forKey: .staticFields)
         try container.encode(dynamicFields, forKey: .dynamicFields)
         try container.encode(internalObjects, forKey: .internalObjects)
+        try container.encode(childConnections, forKey: .childConnections)
     }
 }
 

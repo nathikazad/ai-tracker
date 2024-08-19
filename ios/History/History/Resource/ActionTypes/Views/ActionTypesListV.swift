@@ -20,6 +20,7 @@ struct ListActionsTypesView: View {
         case takeToActionListView
         case takeToAggregateCreateView
         case forTemplate
+        case returnToActionType
     }
     
     
@@ -34,7 +35,6 @@ struct ListActionsTypesView: View {
                 }
             if (listActionType != .forTemplate) {
                 NavigationButton(destination: ActionTypeView(
-                    model: ActionTypeModel(name: "", meta: ActionTypeMeta(), staticFields: ActionModelTypeStaticSchema()),
                     updateActionTypeCallback: {
                         actionType in
                         actions.append(actionType)
@@ -93,16 +93,16 @@ struct ListActionsTypesView: View {
     ) -> some View {
         Group {
             switch listActionType {
-            case .forTemplate:
+            case .forTemplate, .returnToActionType:
                 Button(action: {
                     clickAction?(action)
                     goBack()
                 }) {
-                    EmptyView()
+                    content()
                 }
             case .takeToActionView:
                 NavigationLink(destination: 
-                                ShowActionView(actionType: action,
+                                ShowActionView(actionTypeId: action.id!,
                                                clickAction: { _ in goBack() })) {
                     content()
                 }

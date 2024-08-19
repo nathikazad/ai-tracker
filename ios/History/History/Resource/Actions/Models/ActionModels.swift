@@ -24,6 +24,18 @@ extension [ActionModel] {
         }
     }
     
+    var rootNodes: [ActionModel] {
+        return self.filter { event in
+            event.parentId == nil
+        }
+    }
+    
+    func childrenOf(_ parentId: Int) ->  [ActionModel] {
+        return self.filter { event in
+            event.parentId == parentId
+        }
+    }
+    
     func filterEvents(weekBoundary: WeekBoundary) -> [ActionModel] {
         let startDate = weekBoundary.start
         let endDate = weekBoundary.end
