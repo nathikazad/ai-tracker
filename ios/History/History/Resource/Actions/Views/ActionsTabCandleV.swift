@@ -61,7 +61,6 @@ struct CandleChartWithList: View {
                     HStack(spacing: 0) {
                         CandleView(title: "", candles: filterCandlesByActionType, hoursRange: hoursRange, offsetHours: offsetHours, automaticYAxis: true, val: numOfDays, redrawChart: redrawChart)
                             .frame(width: geometry.size.width * 0.5)
-                        
                         list
                             .frame(width: geometry.size.width * 0.5)
                     }

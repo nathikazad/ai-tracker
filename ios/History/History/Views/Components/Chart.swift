@@ -166,7 +166,7 @@ struct CandleView: View {
         return min(calculatedDate, endOfDay)
     }
     
-    
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
     var body: some View {
         Chart(candles) { period in
             let end = period.start == period.end ? shortDuration(period.start) : period.end
@@ -198,7 +198,7 @@ struct CandleView: View {
             }
         }
         .chartYScale(domain: 0...Double(maxHour - minHour))
-        .frame(height: 300)
+        .frame(height: verticalSizeClass == .compact ? 250 : 300)
         .padding()
     }
     

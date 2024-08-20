@@ -14,6 +14,7 @@ struct ActionsTabView: View {
     @State private var events: [ActionModel] = []
     @StateObject var datePickerModel: TwoDatePickerModel
     @State private var coreStateSubcription: AnyCancellable?
+    @Binding var cameFromAnotherTab: Bool
     var eventId: Int?
     var eventType: EventType?
     
@@ -82,9 +83,10 @@ struct ActionsTabView: View {
     }
     
     private  func scroll() {
-        if state.isItToday
-        {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+            if state.isItToday && cameFromAnotherTab
+            {
+                
                 let last: ActionModel? = events.sorted { $0.startTime > $1.startTime }.first
                 if last != nil {
                     withAnimation(.easeInOut(duration: 0.5)) {
@@ -92,6 +94,7 @@ struct ActionsTabView: View {
                     }
                 }
             }
+            cameFromAnotherTab = false
         }
     }
     
@@ -118,7 +121,7 @@ struct ActionsTabView: View {
                     }
                     .onAppear {
                         scrollProxy = proxy
-                        //scroll()
+                        scroll()
                     }
                 }
             }

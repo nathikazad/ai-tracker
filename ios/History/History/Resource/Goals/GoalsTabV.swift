@@ -51,6 +51,9 @@ struct GoalsTabView: View {
                         NavigationLink(destination: ListActionsTypesView(listActionType: .takeToAggregateCreateView)) {
                             Label("Add New Goal", systemImage: "plus")
                         }
+                        .alignmentGuide(.listRowSeparatorLeading) { _ in
+                            -20
+                        }
                         HStack (spacing: 20) {
                             Picker("Priority: ", selection: $selectedPriority) {
                                 Text("High")
@@ -65,6 +68,9 @@ struct GoalsTabView: View {
                                 print(newValue)
                                 
                             }
+                        }
+                        .alignmentGuide(.listRowSeparatorLeading) { _ in
+                            -20
                         }
                         graphs
                     }
@@ -126,6 +132,9 @@ struct GoalsTabView: View {
                 } label: {
                     Text(aggregate.metadata.name == "" ? aggregate.toString : aggregate.metadata.name)
                     
+                }
+                .alignmentGuide(.listRowSeparatorLeading) { _ in
+                    -20
                 }
                 .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                     NavigationLink(destination: ShowGoalView(aggregateModel: aggregate))

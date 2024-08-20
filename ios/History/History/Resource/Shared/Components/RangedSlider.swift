@@ -66,7 +66,6 @@ struct RangedSliderView: View {
                         let xThumbOffset = min(max(CGFloat(leftThumbLocation), dragLocation.x), sliderSize.width)
                         
                         var newValue = Int(min(xThumbOffset / stepWidthInPixel, Double(sliderBounds.upperBound)).rounded())
-                        print(newValue, min(xThumbOffset / stepWidthInPixel, Double(sliderBounds.upperBound)).rounded())
                         
                         // Stop the range thumbs from colliding each other
                         if newValue > currentValue.wrappedValue.lowerBound {

@@ -236,15 +236,16 @@ class ActionTypesController {
 // -----------------------------------------------------------
 // V2 COMMUNITIES
 // timezone support for viewing across timezone
-// Add groups tab, list all groups, create group
-// break group view into four tabs
-// show messages, send message
+// finished: Add groups tab, list all groups, create group
+// finished: break group view into three tabs
+// finished: show messages, send message
 // goals view
-// timeline view
 // settings view 
 //     view members
 //     admin can add/delete members
-//     actiontypes and goals to share
+//     goals to share
+// notifications
+// auto scroll only if already in bottom, other wise show smtn with down arrow
 // RELEASE
 
 // goals

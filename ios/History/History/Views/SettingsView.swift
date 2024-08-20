@@ -94,7 +94,8 @@ struct SettingsView: View {
     
     func changeUserId() {
         if isOriginalUser {
-            auth.hasuraJWTObject?.userId = 1
+            let newUser = auth.hasuraJWTObject?.userId == 1 ? 3 : 1
+            auth.hasuraJWTObject?.userId = newUser
             isOriginalUser = false
         } else {
             let originalUser =  HasuraJWTObject(jwt: auth.hasuraJwt!)

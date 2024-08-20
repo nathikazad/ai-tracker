@@ -42,22 +42,32 @@ enum SelectedTimeline: String, CodingKey {
     case bars
 }
 
+enum TimelineType: String, CaseIterable {
+    case week = "Week"
+    case day = "Day"
+}
+
+enum Tab {
+    case history, goals, squads, explorer
+}
+
 struct MainView: View {
     @Environment(\.verticalSizeClass) private var verticalSizeClass
-    @State private var selectedTab: Tab = .timeline
+    @State private var selectedTab: Tab = .history
     @ObservedObject var appState = state
     @ObservedObject private var timerManager = TimerManager.shared
     @State private var selectedExplorerType: ExplorerType = .actions
+    @State private var selectedTimelineType: TimelineType = .day
     @StateObject private var datePickerModel: TwoDatePickerModel = TwoDatePickerModel()
+    @State var enteringTimelineDayTab: Bool = true
     
-    enum Tab {
-        case timeline, history, goals, explorer
-    }
     
     enum ExplorerType: String, CaseIterable {
         case actions = "Verbs"
         case objects = "Nouns"
     }
+    
+    
     
     var sheetViewPresented: Binding<Bool> {
         Binding(
@@ -76,7 +86,10 @@ struct MainView: View {
         NavigationStack {
             ZStack(alignment: .bottom) {
                 VStack(spacing: 0) {
-                    NavigationBar {
+                    NavigationBar(
+                        selectedTab: $selectedTab,
+                        selectedTimelineType: $selectedTimelineType
+                    )  {
                         if selectedTab == Tab.explorer {
                             HStack {
                                 Text("Explorer")
@@ -85,10 +98,22 @@ struct MainView: View {
                                     .padding(.horizontal, 10)
                                 Spacer()
                             }
-                        } else if selectedTab == Tab.timeline {
-                            DateNavigator()
-                        } else {
+                        } else if selectedTab == Tab.history {
+                            if selectedTimelineType == .day   {
+                                DateNavigator()
+                            } else {
+                                WeekNavigator()
+                            }
+                        } else if selectedTab == Tab.goals {
                             WeekNavigator()
+                        } else if selectedTab == Tab.squads {
+                            HStack {
+                                Text("Squads")
+                                    .font(.title)
+                                    .foregroundColor(.primary)
+                                    .padding(.horizontal, 10)
+                                Spacer()
+                            }
                         }
                     }
                     if selectedTab == Tab.explorer {
@@ -105,21 +130,26 @@ struct MainView: View {
                     }
                     
                     TabView(selection: $selectedTab) {
-                        CandleChartWithList()
-                            .tabItem { Label("History", systemImage: "clock.arrow.circlepath") }
-                            .tag(Tab.history)
-                        
-                        ActionsTabView(datePickerModel: datePickerModel)
-                            .tabItem { Label("Timeline", systemImage: "list.dash") }
-                            .tag(Tab.timeline)
-                        
-                        Color.clear
-                            .tabItem { Label("", systemImage: "plus.circle") }
-                            .tag(Tab.timeline) // Use an existing tag to prevent selection
-                        
+                        if selectedTimelineType == .week {
+                            CandleChartWithList()
+                                .tabItem { Label("History", systemImage: "clock.arrow.circlepath") }
+                                .tag(Tab.history)
+                        } else {
+                            ActionsTabView(datePickerModel: datePickerModel, cameFromAnotherTab: $enteringTimelineDayTab)
+                                .tabItem { Label("Timeline", systemImage: "list.dash") }
+                                .tag(Tab.history)
+                        }
                         GoalsTabView()
                             .tabItem { Label("Goals", systemImage: "target") }
                             .tag(Tab.goals)
+                        
+                        Color.clear
+                            .tabItem { Label("", systemImage: "plus.circle") }
+                            .tag(Tab.history) // Use an existing tag to prevent selection
+                        
+                        SquadsTabView()
+                            .tabItem { Label("Squads", systemImage: "person.3.fill") }
+                            .tag(Tab.squads)
                         
                         if selectedExplorerType == .actions {
                             ListActionsTypesView()
@@ -129,6 +159,12 @@ struct MainView: View {
                             ObjectTypeListView(listType: .takeToObjects)
                                 .tabItem { Label("Explorer", systemImage: "globe") }
                                 .tag(Tab.explorer)
+                        }
+                    }
+                    .onChange(of: selectedTab) {
+                        old, new in
+                        if new == .history {
+                            enteringTimelineDayTab = true
                         }
                     }
                     .sheet(isPresented: sheetViewPresented) {
@@ -146,7 +182,7 @@ struct MainView: View {
                     .overlay(popupView)
                 }
                 AddNewActionButton(verticalSizeClass: verticalSizeClass)
-                    .offset(y: verticalSizeClass == .compact ? 0 : 0)
+                    .offset(x: verticalSizeClass == .compact ? -15 : 0)
             }
         }
         .alert(isPresented: $timerManager.showCompletionAlert) {
