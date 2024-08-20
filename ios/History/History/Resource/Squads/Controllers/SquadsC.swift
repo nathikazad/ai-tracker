@@ -161,7 +161,7 @@ class SquadController {
                 metadata
             }
             \(includeMessages ? """
-                messages(order_by: {time: desc}, limit: 10) {
+                messages(order_by: {time: desc}, limit: 20) {
                     \(SquadMessagesController.messageSelection)
             }
             """: "")

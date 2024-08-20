@@ -18,7 +18,7 @@ struct SquadsTabView: View {
         NavigationView {
             List {
                 ForEach(squads, id: \.id) { squad in
-                    NavigationLink(destination: SquadChatView(squadName: squad.name, squadId: squad.id, squad: squad)) {
+                    NavigationLink(destination: SquadView(squadName: squad.name, squadId: squad.id, squad: squad)) {
                         Text(squad.name)
                     }
                 }

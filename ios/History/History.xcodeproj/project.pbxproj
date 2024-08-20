@@ -28,10 +28,13 @@
 		FE04A7DA2C73C3F0000F5C24 /* AVObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7D92C73C3F0000F5C24 /* AVObjects.swift */; };
 		FE04A7DD2C73F8FB000F5C24 /* SquadsTabV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7DC2C73F8FB000F5C24 /* SquadsTabV.swift */; };
 		FE04A7DF2C7419B8000F5C24 /* SquadsC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7DE2C7419B8000F5C24 /* SquadsC.swift */; };
-		FE04A7E12C7424E6000F5C24 /* SquadChatV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7E02C7424E6000F5C24 /* SquadChatV.swift */; };
+		FE04A7E12C7424E6000F5C24 /* SquadV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7E02C7424E6000F5C24 /* SquadV.swift */; };
 		FE04A7E32C742FAC000F5C24 /* SquadM.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7E22C742FAC000F5C24 /* SquadM.swift */; };
 		FE04A7E52C745A83000F5C24 /* SquadMessagesC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7E42C745A83000F5C24 /* SquadMessagesC.swift */; };
 		FE04A7E72C745ABA000F5C24 /* SquadMembersC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7E62C745ABA000F5C24 /* SquadMembersC.swift */; };
+		FE04A7EB2C751FF5000F5C24 /* SquadMessagesV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7EA2C751FF5000F5C24 /* SquadMessagesV.swift */; };
+		FE04A7ED2C752014000F5C24 /* SquadSettingsV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7EC2C752014000F5C24 /* SquadSettingsV.swift */; };
+		FE04A7EF2C752040000F5C24 /* SquadGraphV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7EE2C752040000F5C24 /* SquadGraphV.swift */; };
 		FE06FD042C0913E800E65D41 /* MinPeopleViewForEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE06FD032C0913E800E65D41 /* MinPeopleViewForEventView.swift */; };
 		FE06FD062C09140500E65D41 /* PeopleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE06FD052C09140500E65D41 /* PeopleView.swift */; };
 		FE06FD082C0921C900E65D41 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE06FD072C0921C900E65D41 /* Image.swift */; };
@@ -243,10 +246,13 @@
 		FE04A7D92C73C3F0000F5C24 /* AVObjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVObjects.swift; sourceTree = "<group>"; };
 		FE04A7DC2C73F8FB000F5C24 /* SquadsTabV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquadsTabV.swift; sourceTree = "<group>"; };
 		FE04A7DE2C7419B8000F5C24 /* SquadsC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquadsC.swift; sourceTree = "<group>"; };
-		FE04A7E02C7424E6000F5C24 /* SquadChatV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquadChatV.swift; sourceTree = "<group>"; };
+		FE04A7E02C7424E6000F5C24 /* SquadV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquadV.swift; sourceTree = "<group>"; };
 		FE04A7E22C742FAC000F5C24 /* SquadM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquadM.swift; sourceTree = "<group>"; };
 		FE04A7E42C745A83000F5C24 /* SquadMessagesC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquadMessagesC.swift; sourceTree = "<group>"; };
 		FE04A7E62C745ABA000F5C24 /* SquadMembersC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquadMembersC.swift; sourceTree = "<group>"; };
+		FE04A7EA2C751FF5000F5C24 /* SquadMessagesV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquadMessagesV.swift; sourceTree = "<group>"; };
+		FE04A7EC2C752014000F5C24 /* SquadSettingsV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquadSettingsV.swift; sourceTree = "<group>"; };
+		FE04A7EE2C752040000F5C24 /* SquadGraphV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquadGraphV.swift; sourceTree = "<group>"; };
 		FE06FD032C0913E800E65D41 /* MinPeopleViewForEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinPeopleViewForEventView.swift; sourceTree = "<group>"; };
 		FE06FD052C09140500E65D41 /* PeopleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleView.swift; sourceTree = "<group>"; };
 		FE06FD072C0921C900E65D41 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
@@ -501,7 +507,10 @@
 			isa = PBXGroup;
 			children = (
 				FE04A7DC2C73F8FB000F5C24 /* SquadsTabV.swift */,
-				FE04A7E02C7424E6000F5C24 /* SquadChatV.swift */,
+				FE04A7E02C7424E6000F5C24 /* SquadV.swift */,
+				FE04A7EA2C751FF5000F5C24 /* SquadMessagesV.swift */,
+				FE04A7EC2C752014000F5C24 /* SquadSettingsV.swift */,
+				FE04A7EE2C752040000F5C24 /* SquadGraphV.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1159,7 +1168,7 @@
 				FEB366E62BDDF8F9000A48C0 /* Chart.swift in Sources */,
 				FE4AB3872C4EF43800A07749 /* ActionTypesListV.swift in Sources */,
 				FE04A7BC2C6D96C6000F5C24 /* ObjectConnectionV.swift in Sources */,
-				FE04A7E12C7424E6000F5C24 /* SquadChatV.swift in Sources */,
+				FE04A7E12C7424E6000F5C24 /* SquadV.swift in Sources */,
 				FE04A7D12C73C2F7000F5C24 /* ATVChildren.swift in Sources */,
 				FE2074B62C5ACFFB00C58226 /* DynamicFieldsView.swift in Sources */,
 				FE12C5EA2BC4B330002CDC60 /* GoalsView.swift in Sources */,
@@ -1182,6 +1191,7 @@
 				FE9E18BB2C02DE4000611CE8 /* EventRow.swift in Sources */,
 				FEC7849E2C064EAE007C38F1 /* PersonView.swift in Sources */,
 				FEBB19A42C681DF900ECAC85 /* RangedSlider.swift in Sources */,
+				FE04A7EB2C751FF5000F5C24 /* SquadMessagesV.swift in Sources */,
 				FE4AB3A02C51F2C500A07749 /* EnumV.swift in Sources */,
 				FEDBC0632C04FB2F00233EA0 /* Notes.swift in Sources */,
 				FE04A7E52C745A83000F5C24 /* SquadMessagesC.swift in Sources */,
@@ -1224,6 +1234,7 @@
 				FE477D932BD8122B001FC341 /* CalendarPicker.swift in Sources */,
 				FE638F462C571840001C34F0 /* ActionModels.swift in Sources */,
 				FE4AB39E2C51F29C00A07749 /* ObjectTypeV.swift in Sources */,
+				FE04A7ED2C752014000F5C24 /* SquadSettingsV.swift in Sources */,
 				FE8153722BD845B300D972C8 /* PolylineView.swift in Sources */,
 				FE9452F22BF2CC0900B28918 /* InteractionView.swift in Sources */,
 				FE06FD042C0913E800E65D41 /* MinPeopleViewForEventView.swift in Sources */,
@@ -1241,6 +1252,7 @@
 				FE04A7B42C6D909D000F5C24 /* ActionTObjectTConnM.swift in Sources */,
 				FE04A7D82C73C3E6000F5C24 /* AVChildren.swift in Sources */,
 				FE9BA2E52BF6998600AE25A9 /* PrayerView.swift in Sources */,
+				FE04A7EF2C752040000F5C24 /* SquadGraphV.swift in Sources */,
 				FE9477C02BFECF20003AD03A /* StayView.swift in Sources */,
 				FE1C0EB12BC0A29300FF56AB /* Hasura.swift in Sources */,
 				FEDBC0652C0509AC00233EA0 /* EventDestination.swift in Sources */,

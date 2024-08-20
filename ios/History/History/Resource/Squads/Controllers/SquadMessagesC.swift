@@ -38,9 +38,9 @@ class SquadMessagesController {
         }
     }
     
-    static func listenToMessages(subscriptionId: String,groupId: Int, messagesReceivedCallback: @escaping ([MessageModel]) -> Void) {
+    static func listenToMessages(subscriptionId: String, squadId: Int, messagesReceivedCallback: @escaping ([MessageModel]) -> Void) {
         Hasura.shared.stopListening(subscriptionId: subscriptionId)
-        let (subscriptionQuery, variables) = generateQueryForMessages(groupId: groupId, onlyNew: true, isSubscription: true)
+        let (subscriptionQuery, variables) = generateQueryForMessages(squadId: squadId, onlyNew: true, isSubscription: true)
         struct GroupData: GraphQLData {
             var group_messages: [MessageModel]
         }
@@ -57,9 +57,28 @@ class SquadMessagesController {
         }
     }
     
-    static private func generateQueryForMessages(groupId: Int, onlyNew: Bool, isSubscription: Bool = false) -> (String, [String: Any]) {
+    static func fetchMesssages(squadId: Int, offset: Int) async -> [MessageModel] {
+        var (graphqlQuery, variables) = generateQueryForMessages(squadId: squadId)
+        
+        // hack
+        graphqlQuery = graphqlQuery.replacingOccurrences(of: "$chat_id}})", with: "$chat_id}}, order_by: {time: desc}, offset: \(offset), limit: 5)")
+        
+        struct GroupData: GraphQLData {
+            var group_messages: [MessageModel]
+        }
+        do {
+            let responseData: GraphQLResponse<GroupData> = try await Hasura.shared.sendGraphQL(query: graphqlQuery, variables: variables, responseType: GraphQLResponse<GroupData>.self)
+            return responseData.data.group_messages
+        } catch {
+            print(graphqlQuery, variables)
+            print("Failed to fetch Squad: \(error.localizedDescription)")
+            return []
+        }
+    }
+    
+    static private func generateQueryForMessages(squadId: Int, onlyNew: Bool = false, isSubscription: Bool = false) -> (String, [String: Any]) {
         var hasuraStruct: HasuraQuery = HasuraQuery(queryFor: "group_messages", queryName: "GroupsQuery", queryType: isSubscription ? .subscription : .query)
-        hasuraStruct.addWhereClause(name: "chat_id", type: .int, value: groupId, op: .equals)
+        hasuraStruct.addWhereClause(name: "chat_id", type: .int, value: squadId, op: .equals)
         if onlyNew {
             hasuraStruct.addWhereClause(name: "time", type: .timestamp, value: Date().toUTCString, op: .greaterThan)
         }
