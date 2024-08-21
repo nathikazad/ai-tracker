@@ -98,8 +98,8 @@ class AggregateController {
         }
     }
     
-    static func fetchAggregates(actionTypeId: Int? = nil, userId: Int? = nil, withAggregates:Bool = false) async -> [AggregateModel] {
-        let (graphqlQuery, variables) = generateQueryForAggregates(actionTypeId: actionTypeId, userId: userId, withActionTypes: withAggregates)
+    static func fetchAggregates(actionTypeId: Int? = nil, userId: Int? = nil, withActionTypes:Bool = false, ids: [Int]? = nil) async -> [AggregateModel] {
+        let (graphqlQuery, variables) = generateQueryForAggregates(actionTypeId: actionTypeId, userId: userId, withActionTypes: withActionTypes, ids: ids)
         struct AggregateData: GraphQLData {
             var v2_aggregates: [AggregateModel]
         }
@@ -126,7 +126,7 @@ class AggregateController {
         }
     }
     
-    static private func generateQueryForAggregates(actionTypeId: Int? = nil, aggregateId: Int? = nil, userId: Int? = nil, withActionTypes:Bool = false) -> (String, [String: Any]) {
+    static private func generateQueryForAggregates(actionTypeId: Int? = nil, aggregateId: Int? = nil, userId: Int? = nil, withActionTypes:Bool = false, ids: [Int]? = nil) -> (String, [String: Any]) {
         var hasuraStruct: HasuraQuery = HasuraQuery(queryFor: "v2_aggregates", queryName: "AggregatesQuery", queryType: .query)
         if let actionTypeId = actionTypeId {
             hasuraStruct.addWhereClause(name: "action_type_id", type: .int, value: actionTypeId, op: .equals)
@@ -136,6 +136,9 @@ class AggregateController {
         }
         if let userId = userId {
             hasuraStruct.addWhereClause(name: "user_id", type: .int, value: userId, op: .equals)
+        }
+        if let ids = ids {
+            hasuraStruct.addWhereClause(name: "id", type: .intArray, value: ids, op: .inArray)
         }
         hasuraStruct.setSelections(selections: aggregateSelections(withActionTypes: withActionTypes))
         return hasuraStruct.getQueryAndVariables

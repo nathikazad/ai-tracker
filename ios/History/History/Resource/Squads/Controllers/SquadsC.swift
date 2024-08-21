@@ -111,7 +111,7 @@ class SquadController {
         }
     }
     
-    static func listenToSquads(subscriptionId: String, userId: Int? = nil, squadId: Int? = nil, squadUpdateCallback: @escaping ([SquadModel]) -> Void) {
+    static func listenToSquad(subscriptionId: String, userId: Int? = nil, squadId: Int? = nil, squadUpdateCallback: @escaping ([SquadModel]) -> Void) {
         Hasura.shared.stopListening(subscriptionId: subscriptionId)
         let (subscriptionQuery, variables) = generateQueryForSquads(userId: userId, squadId: squadId, isSubscription: true)
         struct SquadData: GraphQLData {
@@ -153,12 +153,7 @@ class SquadController {
             name
             owner_id
             members {
-                id
-                user {
-                    id
-                    name
-                }
-                metadata
+                \(SquadMembersController.memberSelections())
             }
             \(includeMessages ? """
                 messages(order_by: {time: desc}, limit: 20) {

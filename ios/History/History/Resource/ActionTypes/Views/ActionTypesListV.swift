@@ -9,7 +9,7 @@ import Foundation
 
 import SwiftUI
 struct ListActionsTypesView: View {
-    @State var actions: [ActionTypeModel] = []
+    @State var actionsTypes: [ActionTypeModel] = []
     @State private var searchText = ""
     var clickAction: ((ActionTypeModel) -> Void)?
     @Environment(\.presentationMode) var presentationMode
@@ -37,7 +37,7 @@ struct ListActionsTypesView: View {
                 NavigationButton(destination: ActionTypeView(
                     updateActionTypeCallback: {
                         actionType in
-                        actions.append(actionType)
+                        actionsTypes.append(actionType)
                     }
                 )) {
                     Text(" ")
@@ -57,7 +57,7 @@ struct ListActionsTypesView: View {
                         actionType in
                         print("Create new action type \(actionType)")
                         Task {
-                            await ActionTypesController.createActionTypeModel(model: actionType)
+                            let _ = await ActionTypesController.createActionTypeModel(model: actionType)
                             fetchActionTypes()
                         }
                     }, listActionType: .forTemplate
@@ -88,36 +88,36 @@ struct ListActionsTypesView: View {
     }
     
     func destinationView<Content: View>(
-        for action: ActionTypeModel,
+        for actionTypeModel: ActionTypeModel,
         @ViewBuilder content: @escaping () -> Content
     ) -> some View {
         Group {
             switch listActionType {
             case .forTemplate, .returnToActionType:
                 Button(action: {
-                    clickAction?(action)
+                    clickAction?(actionTypeModel)
                     goBack()
                 }) {
                     content()
                 }
             case .takeToActionView:
                 NavigationLink(destination: 
-                                ShowActionView(actionTypeId: action.id!,
+                                ShowActionView(actionTypeId: actionTypeModel.id!,
                                                clickAction: { _ in goBack() })) {
                     content()
                 }
             case .takeToAggregateCreateView:
                 NavigationLink(destination: ShowGoalView(
-                    aggregateModel: AggregateModel(actionTypeId: action.id!),
+                    aggregateModel: AggregateModel(actionTypeId: actionTypeModel.id!),
                     clickAction: { goBack() }
                 )) {
                     content()
                 }
             default:
                 NavigationLink(destination: ListActionsView(
-                    actionType: action,
-                    actionTypeName: action.name,
-                    createAction: { action in actions.append(action) }
+                    actionType: actionTypeModel,
+                    actionTypeName: actionTypeModel.name,
+                    createAction: { action in actionsTypes.append(actionTypeModel) }
                 )) {
                     content()
                 }
@@ -129,16 +129,16 @@ struct ListActionsTypesView: View {
         Task {
             let resp = await ActionTypesController.fetchActionTypes(userId: listActionType == .forTemplate ? 1 : Authentication.shared.userId!)
             DispatchQueue.main.async {
-                actions = resp
+                actionsTypes = resp
             }
         }
     }
     
     var filteredActions: [ActionTypeModel] {
         if searchText.isEmpty {
-            return actions.sorted { $0.name < $1.name }
+            return actionsTypes.sorted { $0.name < $1.name }
         } else {
-            return actions.filter { $0.name.contains(searchText) }.sorted { $0.name < $1.name }
+            return actionsTypes.filter { $0.name.contains(searchText) }.sorted { $0.name < $1.name }
         }
     }
     

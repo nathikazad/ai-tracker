@@ -72,7 +72,15 @@ struct GoalsTabView: View {
                         .alignmentGuide(.listRowSeparatorLeading) { _ in
                             -20
                         }
-                        graphs
+                        GoalsGraphsView(
+                            aggregates: Binding(
+                                get: { self.filteredAggregates },
+                                set: { _ in }
+                            ),
+                            actions: $actions,
+                            weekBoundary: $weekBoundary,
+                            openDisclosures: $openDisclosures
+                        )
                     }
                 }
             }
@@ -97,7 +105,7 @@ struct GoalsTabView: View {
     private func loadData(userId: Int) {
         Task {
             loading = true
-            let aggregates = await AggregateController.fetchAggregates(userId: userId, withAggregates: true)
+            let aggregates = await AggregateController.fetchAggregates(userId: userId, withActionTypes: true)
             let actions = await ActionController.fetchActions(userId: userId, startDate: state.currentWeek.start, endDate: state.currentWeek.end)
             await MainActor.run {
                 self.aggregates = aggregates
@@ -106,39 +114,45 @@ struct GoalsTabView: View {
             }
         }
     }
-    
-    private var graphs: some View {
-        Group {
-            ForEach(filteredAggregates, id: \.id) { aggregate in
-                DisclosureGroup (
-                    isExpanded: Binding(
-                        get: { openDisclosures.contains(aggregate.id!) },
-                        set: { isExpanded in
-                            if isExpanded {
-                                openDisclosures.insert(aggregate.id!)
-                            } else {
-                                openDisclosures.remove(aggregate.id!)
-                            }
+}
+
+struct GoalsGraphsView: View {
+    @Binding var aggregates: [AggregateModel]
+    @Binding var actions: [ActionModel]
+    @Binding var weekBoundary: WeekBoundary
+    @Binding var openDisclosures: Set<Int>
+    var goalEditable: Bool = true
+
+    var body: some View {
+        ForEach(aggregates, id: \.id) { aggregate in
+            DisclosureGroup(
+                isExpanded: Binding(
+                    get: { openDisclosures.contains(aggregate.id!) },
+                    set: { isExpanded in
+                        if isExpanded {
+                            openDisclosures.insert(aggregate.id!)
+                        } else {
+                            openDisclosures.remove(aggregate.id!)
                         }
-                    )
-                ) {
-                    AggregateChartView(
-                        aggregate: aggregate,
-                        actionsParam: actions,
-                        weekBoundary: weekBoundary,
-                        showWeekNavigator: false,
-                        actionTypeModel: aggregate.actionType ?? ActionTypeModel(name: "Unknown")
-                    )
-                } label: {
-                    Text(aggregate.metadata.name == "" ? aggregate.toString : aggregate.metadata.name)
-                    
-                }
-                .alignmentGuide(.listRowSeparatorLeading) { _ in
-                    -20
-                }
-                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                    NavigationLink(destination: ShowGoalView(aggregateModel: aggregate))
-                    {
+                    }
+                )
+            ) {
+                AggregateChartView(
+                    aggregate: aggregate,
+                    actionsParam: actions,
+                    weekBoundary: weekBoundary,
+                    showWeekNavigator: false,
+                    actionTypeModel: aggregate.actionType ?? ActionTypeModel(name: "Unknown")
+                )
+            } label: {
+                Text(aggregate.metadata.name == "" ? aggregate.toString : aggregate.metadata.name)
+            }
+            .alignmentGuide(.listRowSeparatorLeading) { _ in
+                -20
+            }
+            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                if goalEditable {
+                    NavigationLink(destination: ShowGoalView(aggregateModel: aggregate)) {
                         Image(systemName: "gear")
                     }
                     .tint(.gray)

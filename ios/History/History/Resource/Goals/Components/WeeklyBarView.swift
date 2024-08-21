@@ -13,7 +13,11 @@ struct WeeklyBarView: View {
     let mark: Double?
     let units: String
     @State var cumSwitchOn: Bool = true
-    @State private var currentWeekIndex = 0
+    @State var index = 0
+    
+    var currentWeekIndex: Int {
+        weeklyDurations.count - 1 - index
+    }
 
     var showCum: Bool {
         return aggregate.metadata.window == .weekly && cumSwitchOn
@@ -23,7 +27,10 @@ struct WeeklyBarView: View {
         if !weeklyDurations.isEmpty {
             VStack {
                 if showWeekNavigator {
-                    WeekNavigatorForBarGraph(currentWeekIndex: $currentWeekIndex, weeklyDurations: weeklyDurations)
+                    WeekNavigatorForBarGraph(currentWeekIndex:
+                                                Binding(get: { currentWeekIndex},
+                                                        set: { i in index = weeklyDurations.count - i - 1 }),
+                                             weeklyDurations: weeklyDurations)
                 }
                 let xyVals = flatYValues(dateCounts: weeklyDurations[currentWeekIndex], cumulative: showCum)
                 let (array, label) = getDataAndUnit(xyVals: xyVals)

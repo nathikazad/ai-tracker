@@ -50,6 +50,7 @@ enum ParameterType: String {
     case double = "Float8"
     case timestamp = "timestamptz"
     case jsonb = "jsonb"
+    case intArray = " [Int!]"
     
     var graphQLType: String {
         return self.rawValue

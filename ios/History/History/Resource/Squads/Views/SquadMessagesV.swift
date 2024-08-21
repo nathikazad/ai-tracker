@@ -8,7 +8,7 @@
 import SwiftUI
 struct SquadMessagesTab: View {
     @ObservedObject var squad: SquadModel
-    @Binding var newSquadMessage: String
+    @State private var newSquadMessage = ""
     @FocusState private var isTextFieldFocused: Bool
     @State private var lastContentOffset: CGFloat = 0
     @State private var lastUpdateTime = Date()

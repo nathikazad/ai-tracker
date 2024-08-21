@@ -109,8 +109,18 @@ class ActionController {
         }
     }
     
-    static func fetchActions(userId: Int, actionId: Int? = nil, actionTypeId: Int? = nil, startDate: Date? = nil, endDate: Date? = nil, forDate: Date? = nil, withObjectConnections: Bool = false, withChildren: Bool = false, withParent: Bool = false) async -> [ActionModel] {
-        let (graphqlQuery, variables) = generateQueryForActions(userId: userId, actionId: actionId, actionTypeId: actionTypeId, forDate: forDate, startDate: startDate, endDate: endDate, withObjectConnections: withObjectConnections, withChildren: withChildren, withParent: withParent)
+    static func fetchActions(
+        userId: Int,
+        actionId: Int? = nil,
+        actionTypeId: Int? = nil,
+        startDate: Date? = nil,
+        endDate: Date? = nil,
+        forDate: Date? = nil,
+        withObjectConnections: Bool = false,
+        withChildren: Bool = false,
+        withParent: Bool = false,
+        actionTypeIds: [Int]? = nil) async -> [ActionModel] {
+        let (graphqlQuery, variables) = generateQueryForActions(userId: userId, actionId: actionId, actionTypeId: actionTypeId, forDate: forDate, startDate: startDate, endDate: endDate, withObjectConnections: withObjectConnections, withChildren: withChildren, withParent: withParent, actionTypeIds: actionTypeIds)
         struct ActionData: GraphQLData {
             var v2_actions: [ActionModel]
         }
@@ -152,7 +162,8 @@ class ActionController {
         endDate: Date? = nil,
         withObjectConnections: Bool = false,
         withChildren: Bool = false,
-        withParent: Bool = false) -> (String, [String: Any]) {
+        withParent: Bool = false,
+        actionTypeIds: [Int]? = nil) -> (String, [String: Any]) {
         var hasuraStruct: HasuraQuery = HasuraQuery(queryFor: "v2_actions", queryName: "ActionsQuery", queryType: isSubscription ? .subscription : .query)
         hasuraStruct.addWhereClause(name: "user_id", type: .int, value: userId, op: .equals)
         if let actionId = actionId {
@@ -172,7 +183,6 @@ class ActionController {
         }
         if let startDate = startDate, let endDate = endDate {
             let startOfStartDateUTCString = startDate.toUTCString
-            let calendar = Calendar.current
             let endOfEndDateUTCString = endDate.toUTCString
             let startTimeConditions = "_and: {start_time: {_gte: $start_time, _lt: $end_time}}"
             let endTimeConditions = "_and: {end_time: {_gt: $start_time, _lte: $end_time}}"
@@ -186,7 +196,10 @@ class ActionController {
         if let actionTypeId = actionTypeId {
             hasuraStruct.addWhereClause(name: "action_type_id", type: .int, value: actionTypeId, op: .equals)
         }
-            hasuraStruct.setSelections(selections: actionSelections(withObjectConnections: withObjectConnections, withChildren: withChildren, withParent: withParent))
+        if let actionTypeIds = actionTypeIds {
+            hasuraStruct.addWhereClause(name: "action_type_id", type: .intArray, value: actionTypeIds, op: .inArray)
+        }
+        hasuraStruct.setSelections(selections: actionSelections(withObjectConnections: withObjectConnections, withChildren: withChildren, withParent: withParent))
         return hasuraStruct.getQueryAndVariables
     }
     

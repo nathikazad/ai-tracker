@@ -44,7 +44,6 @@ class SquadMessagesController {
         struct GroupData: GraphQLData {
             var group_messages: [MessageModel]
         }
-        print(subscriptionQuery, variables)
         
         Hasura.shared.startListening(subscriptionId: subscriptionId, subscriptionQuery: subscriptionQuery, responseType: GraphQLResponse<GroupData>.self, variables: variables) { result in
             switch result {
