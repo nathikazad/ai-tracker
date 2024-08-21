@@ -1,17 +1,17 @@
-import apn from 'apn';
 import express, { Express, Request, Response, NextFunction } from 'express';
 import { config } from "./config";
 import path from 'path';
 import { convertAudioToText } from './helper/audio';
 
-import { authorize, convertAppleJWTtoHasuraJWT, deleteUser, getHasuraUserDeviceToken } from './resources/authorization';
+import { authorize, convertAppleJWTtoHasuraJWT, deleteUser } from './resources/authorization';
 import { parseUserRequest } from './resources/logic';
 import { getUserLanguage } from './resources/user';
 // import { processMovement, setNameForLocation } from './helper/location';
 import { uploadSleep } from './helper/sleep';
 import { addUserMovement, saveLocation } from './resources/location/location2';
 import { log } from 'console';
-import { ApnsNotificationSender } from './helper/notification';
+import { notifyOtherMembers } from './helper/notification';
+
 const app: Express = express();
 
 app.use(express.static(path.join(__dirname, '../public')));
@@ -166,35 +166,24 @@ app.post('/deleteUser', async (req, res) => {
     }
 });
 
+// "chat_id": 1,
+// "id": 75,
+// "member_id": 1,
+// "payload": {
+//     "message": "Test"
+// },
+// "time": "2024-08-21T21:50:28.361207+00:00"
 app.post('/notifyParticipants', async (req, res) => {
-    console.log(req.headers['secret-key'])
-    console.log(JSON.stringify(req.headers));
-    console.log()
-    console.log(JSON.stringify(req.body));
-    if (req.headers['secret-key'] != "iloveyareni") {
+    if (req.headers['secret_key'] != "iloveyareni") {
         console.log("Incorrect key")
         res.status(401).json({ error: "Incorrect key" });
+        return
     }
-    console.log("Correct key")
-    let deviceToken = await getHasuraUserDeviceToken(1)
-    if (deviceToken) {
-        const sender = new ApnsNotificationSender();
-        const notification = new apn.Notification();
-
-        notification.alert = {
-            title: 'Hello',
-            body: 'This is a test notification'
-        };
-        notification.topic = 'com.snow.aspire';
-
-        try {
-            await sender.sendNotification(deviceToken, notification);
-        } catch (error) {
-            console.error('Failed to send notification:', error);
-        } finally {
-            sender.shutdown();
-        }
-    }
+    let message = req.body.event.data.new
+    notifyOtherMembers(message.chat_id, message.member_id, message.payload.message)
+    res.status(200).json({
+        status: "success"
+    });
 });
 
 app.get('/ping', (req, res) => {
