@@ -446,6 +446,7 @@ class Hasura {
             switch result {
             case .failure(let error):
                 print("Error in receiving message: \(error)")
+                self.setup()
             case .success(let message):
                 if case .string(let text) = message {
                     self.handleMessage(text: text)

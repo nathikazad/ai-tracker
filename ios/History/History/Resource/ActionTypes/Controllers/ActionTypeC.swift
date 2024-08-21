@@ -239,13 +239,13 @@ class ActionTypesController {
 // finished: Add groups tab, list all groups, create group
 // finished: break group view into three tabs
 // finished: show messages, send message
-// goals view
+// finished: goals view
 // settings view 
-//     view members
+//     finished: view members
 //     admin can add/delete members
-//     goals to share
+//     finished: goals to share
 // notifications
-// auto scroll only if already in bottom, other wise show smtn with down arrow
+// finished: auto scroll only if already in bottom, other wise show smtn with down arrow
 // RELEASE
 
 // goals
