@@ -168,7 +168,7 @@ app.post('/deleteUser', async (req, res) => {
 
 app.post('/notifyParticipants', async (req, res) => {
     console.log(req.headers['secret-key'])
-    console.log(JSON.stringify(req.body.event, null, 2));
+    console.log(JSON.stringify(req));
     if (req.headers['secret-key'] != "iloveyareni") {
         console.log("Incorrect key")
         res.status(401).json({ error: "Incorrect key" });
