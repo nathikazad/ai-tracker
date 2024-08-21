@@ -167,6 +167,7 @@ app.post('/deleteUser', async (req, res) => {
 });
 
 app.post('/notifyParticipants', async (req, res) => {
+    console.log(req)
     let deviceToken = await getHasuraUserDeviceToken(1)
     if (deviceToken) {
         const sender = new ApnsNotificationSender();
