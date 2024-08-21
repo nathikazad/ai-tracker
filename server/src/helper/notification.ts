@@ -16,9 +16,9 @@ export class ApnsNotificationSender {
       token: {
         key: 'apns.p8',
         keyId: 'S38YKJK244',
-        teamId: 'F2W45BF2AV',
+        teamId: 'F2W45BF2AV'
       },
-      production: false // Set to true for production environment
+      production: true
     };
     this.provider = new apn.Provider(options);
   }
