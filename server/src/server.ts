@@ -1,4 +1,4 @@
-
+import apn from 'apn';
 import express, { Express, Request, Response, NextFunction } from 'express';
 import { config } from "./config";
 import path from 'path';
@@ -11,6 +11,7 @@ import { getUserLanguage } from './resources/user';
 import { uploadSleep } from './helper/sleep';
 import { addUserMovement, saveLocation } from './resources/location/location2';
 import { log } from 'console';
+import { ApnsNotificationSender } from './helper/notification';
 const app: Express = express();
 
 app.use(express.static(path.join(__dirname, '../public')));
@@ -22,7 +23,7 @@ app.post('/parseUserRequestFromAudio', async (req: Request, res: Response, next:
     console.log(req.headers.parse)
     console.log(req.headers.parenteventid)
     try {
-        const userId = authorize(req); 
+        const userId = authorize(req);
         console.log(`userId: ${userId}`)
 
         let userLanguage = await getUserLanguage(userId)
@@ -32,7 +33,7 @@ app.post('/parseUserRequestFromAudio', async (req: Request, res: Response, next:
                 if (req.headers.parse) {
                     console.log(`parsing text: ${text}`)
                     let parentEventId = req.headers.parenteventid ? parseInt(req.headers.parenteventid as string) : undefined;
-                    parseUserRequest(text.replace(/"/g, '').trim(), userId, parentEventId); 
+                    parseUserRequest(text.replace(/"/g, '').trim(), userId, parentEventId);
                 }
                 res.status(200).json({
                     status: "success",
@@ -53,12 +54,12 @@ app.post('/parseUserRequestFromAudio', async (req: Request, res: Response, next:
 
 app.post('/parseUserRequestFromText', async (req: Request, res: Response) => {
     try {
-        const userId = authorize(req); 
+        const userId = authorize(req);
         const text = req.body["text"]
-        const parentEventId = req.body["parentEventId"]  ? parseInt(req.body["parentEventId"] as string) : undefined;
+        const parentEventId = req.body["parentEventId"] ? parseInt(req.body["parentEventId"] as string) : undefined;
         console.log(parentEventId)
         try {
-            await parseUserRequest(text, userId, parentEventId); 
+            await parseUserRequest(text, userId, parentEventId);
             res.status(200).json({
                 status: "success",
                 text: text
@@ -76,7 +77,7 @@ app.post('/parseUserRequestFromText', async (req: Request, res: Response) => {
 
 app.post('/updateLocation', async (req: Request, res: Response) => {
     try {
-        const userId = authorize(req); 
+        const userId = authorize(req);
         try {
             console.log(`🦵🏻🦵🏻🦵🏻🦵🏻 ${userId} ${req.body}`)
             console.log(req.body)
@@ -97,7 +98,7 @@ app.post('/updateLocation', async (req: Request, res: Response) => {
 
 app.post('/uploadSleep', async (req: Request, res: Response) => {
     try {
-        const userId = authorize(req); 
+        const userId = authorize(req);
         try {
             console.log(`uploadSleep ${userId}`)
             console.log(JSON.stringify(req.body.sleepData))
@@ -117,10 +118,10 @@ app.post('/uploadSleep', async (req: Request, res: Response) => {
 
 app.post('/createLocation', async (req: Request, res: Response) => {
     try {
-        const userId = authorize(req); 
+        const userId = authorize(req);
         try {
             console.log(`Set location ${userId} ${req.body}`)
-            let id = await saveLocation(userId, {lat: req.body!.lat, lon: req.body!.lon}, req.body!.name)
+            let id = await saveLocation(userId, { lat: req.body!.lat, lon: req.body!.lon }, req.body!.name)
             // console.log("success")
             res.status(200).json({
                 status: "success",
@@ -148,12 +149,12 @@ app.post('/hasuraJWT', async (req, res) => {
         console.error('hasuraJWT:', error);
         res.status(401).json({ error: error });
     }
-    
+
 });
 
 app.post('/deleteUser', async (req, res) => {
     try {
-        const userId = authorize(req); 
+        const userId = authorize(req);
         let jwt = await deleteUser(userId)
         res.status(200).json({
             status: "success",
@@ -163,7 +164,38 @@ app.post('/deleteUser', async (req, res) => {
         console.error('deleting user:', error);
         res.status(401).json({ error: error });
     }
-    
+});
+
+app.post('/notifyParticipants', async (req, res) => {
+    const sender = new ApnsNotificationSender();
+
+    const deviceToken = 'a3a83883236bcb6141fdcaf85da0f8f9687b6ecb6a33a7fe4d6348c7734aa397';
+    const notification = new apn.Notification();
+
+    notification.alert = {
+        title: 'Hello',
+        body: 'This is a test notification'
+    };
+    notification.topic = 'com.snow.aspire';
+
+    try {
+        await sender.sendNotification(deviceToken, notification);
+    } catch (error) {
+        console.error('Failed to send notification:', error);
+    } finally {
+        sender.shutdown();
+    }
+    // try {
+    //     const userId = authorize(req); 
+    //     let jwt = await deleteUser(userId)
+    //     res.status(200).json({
+    //         status: "success",
+    //         jwt: jwt
+    //     });
+    // } catch (error) {
+    //     console.error('deleting user:', error);
+    //     res.status(401).json({ error: error });
+    // }
 });
 
 app.get('/ping', (req, res) => {

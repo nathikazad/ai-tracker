@@ -14,6 +14,7 @@ export const config = {
     graphqlUrl: process.env.GRAPHQL_URL,
     hasuraAdminSecret: process.env.HASURA_ADMIN_SECRET,
     hasuraPrivateKey: process.env.HASURA_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+    apnsKey: process.env.APNS_KEY,
     testing:process.env.TEST
 };
 
