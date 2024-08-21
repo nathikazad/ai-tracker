@@ -4,6 +4,11 @@ heroku git:remote -a <app-name> --remote heroku-server
 git subtree push --prefix server heroku-server master
 ```
 
+If there is overwrite issue
+```
+git subtree split --prefix=server -b temp-branch
+git push heroku-server temp-branch:main --force
+```
 
 To generate hasura mappings from server
 ```

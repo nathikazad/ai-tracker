@@ -114,6 +114,19 @@ async function getHasuraUserId(decoded: jwt.JwtPayload | undefined, username: st
     return resp2.insert_users_one!.id;
 }
 
+export async function getHasuraUserDeviceToken(id: number): Promise<string | undefined> {
+    let chain = getHasura();
+    let resp = await chain.query({
+        users_by_pk: [
+        {
+            id: id
+        }, {
+            apns_token: true
+        }]
+    });
+    return resp.users_by_pk?.apns_token
+}
+
 export async function deleteUser(userId: number) {
     let chain = getHasura();
     let resp = await chain.mutation({

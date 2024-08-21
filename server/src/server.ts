@@ -4,7 +4,7 @@ import { config } from "./config";
 import path from 'path';
 import { convertAudioToText } from './helper/audio';
 
-import { authorize, convertAppleJWTtoHasuraJWT, deleteUser } from './resources/authorization';
+import { authorize, convertAppleJWTtoHasuraJWT, deleteUser, getHasuraUserDeviceToken } from './resources/authorization';
 import { parseUserRequest } from './resources/logic';
 import { getUserLanguage } from './resources/user';
 // import { processMovement, setNameForLocation } from './helper/location';
@@ -167,35 +167,25 @@ app.post('/deleteUser', async (req, res) => {
 });
 
 app.post('/notifyParticipants', async (req, res) => {
-    const sender = new ApnsNotificationSender();
+    let deviceToken = await getHasuraUserDeviceToken(1)
+    if (deviceToken) {
+        const sender = new ApnsNotificationSender();
+        const notification = new apn.Notification();
 
-    const deviceToken = 'a3a83883236bcb6141fdcaf85da0f8f9687b6ecb6a33a7fe4d6348c7734aa397';
-    const notification = new apn.Notification();
+        notification.alert = {
+            title: 'Hello',
+            body: 'This is a test notification'
+        };
+        notification.topic = 'com.snow.aspire';
 
-    notification.alert = {
-        title: 'Hello',
-        body: 'This is a test notification'
-    };
-    notification.topic = 'com.snow.aspire';
-
-    try {
-        await sender.sendNotification(deviceToken, notification);
-    } catch (error) {
-        console.error('Failed to send notification:', error);
-    } finally {
-        sender.shutdown();
+        try {
+            await sender.sendNotification(deviceToken, notification);
+        } catch (error) {
+            console.error('Failed to send notification:', error);
+        } finally {
+            sender.shutdown();
+        }
     }
-    // try {
-    //     const userId = authorize(req); 
-    //     let jwt = await deleteUser(userId)
-    //     res.status(200).json({
-    //         status: "success",
-    //         jwt: jwt
-    //     });
-    // } catch (error) {
-    //     console.error('deleting user:', error);
-    //     res.status(401).json({ error: error });
-    // }
 });
 
 app.get('/ping', (req, res) => {

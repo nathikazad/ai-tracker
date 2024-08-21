@@ -1422,6 +1422,855 @@ the end). throws an error if top level container is not an array */
 	user_id?:true,
 		__typename?: true
 }>;
+	/** columns and relationships of "group.chat" */
+["group_chat"]: AliasType<{
+	id?:true,
+members?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["group_members_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["group_members_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["group_members_bool_exp"]},ValueTypes["group_members"]],
+members_aggregate?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["group_members_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["group_members_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["group_members_bool_exp"]},ValueTypes["group_members_aggregate"]],
+messages?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["group_messages_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["group_messages_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["group_messages_bool_exp"]},ValueTypes["group_messages"]],
+messages_aggregate?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["group_messages_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["group_messages_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["group_messages_bool_exp"]},ValueTypes["group_messages_aggregate"]],
+	name?:true,
+	/** An object relationship */
+	owner?:ValueTypes["users"],
+	owner_id?:true,
+		__typename?: true
+}>;
+	/** aggregated selection of "group.chat" */
+["group_chat_aggregate"]: AliasType<{
+	aggregate?:ValueTypes["group_chat_aggregate_fields"],
+	nodes?:ValueTypes["group_chat"],
+		__typename?: true
+}>;
+	/** aggregate fields of "group.chat" */
+["group_chat_aggregate_fields"]: AliasType<{
+	avg?:ValueTypes["group_chat_avg_fields"],
+count?: [{	columns?:ValueTypes["group_chat_select_column"][],	distinct?:boolean},true],
+	max?:ValueTypes["group_chat_max_fields"],
+	min?:ValueTypes["group_chat_min_fields"],
+	stddev?:ValueTypes["group_chat_stddev_fields"],
+	stddev_pop?:ValueTypes["group_chat_stddev_pop_fields"],
+	stddev_samp?:ValueTypes["group_chat_stddev_samp_fields"],
+	sum?:ValueTypes["group_chat_sum_fields"],
+	var_pop?:ValueTypes["group_chat_var_pop_fields"],
+	var_samp?:ValueTypes["group_chat_var_samp_fields"],
+	variance?:ValueTypes["group_chat_variance_fields"],
+		__typename?: true
+}>;
+	/** aggregate avg on columns */
+["group_chat_avg_fields"]: AliasType<{
+	id?:true,
+	owner_id?:true,
+		__typename?: true
+}>;
+	/** Boolean expression to filter rows from the table "group.chat". All fields are combined with a logical 'AND'. */
+["group_chat_bool_exp"]: {
+	_and?:ValueTypes["group_chat_bool_exp"][],
+	_not?:ValueTypes["group_chat_bool_exp"],
+	_or?:ValueTypes["group_chat_bool_exp"][],
+	id?:ValueTypes["Int_comparison_exp"],
+	members?:ValueTypes["group_members_bool_exp"],
+	members_aggregate?:ValueTypes["group_members_aggregate_bool_exp"],
+	messages?:ValueTypes["group_messages_bool_exp"],
+	messages_aggregate?:ValueTypes["group_messages_aggregate_bool_exp"],
+	name?:ValueTypes["String_comparison_exp"],
+	owner?:ValueTypes["users_bool_exp"],
+	owner_id?:ValueTypes["Int_comparison_exp"]
+};
+	/** unique or primary key constraints on table "group.chat" */
+["group_chat_constraint"]:group_chat_constraint;
+	/** input type for incrementing numeric columns in table "group.chat" */
+["group_chat_inc_input"]: {
+	id?:number,
+	owner_id?:number
+};
+	/** input type for inserting data into table "group.chat" */
+["group_chat_insert_input"]: {
+	id?:number,
+	members?:ValueTypes["group_members_arr_rel_insert_input"],
+	messages?:ValueTypes["group_messages_arr_rel_insert_input"],
+	name?:string,
+	owner?:ValueTypes["users_obj_rel_insert_input"],
+	owner_id?:number
+};
+	/** aggregate max on columns */
+["group_chat_max_fields"]: AliasType<{
+	id?:true,
+	name?:true,
+	owner_id?:true,
+		__typename?: true
+}>;
+	/** aggregate min on columns */
+["group_chat_min_fields"]: AliasType<{
+	id?:true,
+	name?:true,
+	owner_id?:true,
+		__typename?: true
+}>;
+	/** response of any mutation on the table "group.chat" */
+["group_chat_mutation_response"]: AliasType<{
+	/** number of rows affected by the mutation */
+	affected_rows?:true,
+	/** data from the rows affected by the mutation */
+	returning?:ValueTypes["group_chat"],
+		__typename?: true
+}>;
+	/** input type for inserting object relation for remote table "group.chat" */
+["group_chat_obj_rel_insert_input"]: {
+	data:ValueTypes["group_chat_insert_input"],
+	/** upsert condition */
+	on_conflict?:ValueTypes["group_chat_on_conflict"]
+};
+	/** on_conflict condition type for table "group.chat" */
+["group_chat_on_conflict"]: {
+	constraint:ValueTypes["group_chat_constraint"],
+	update_columns:ValueTypes["group_chat_update_column"][],
+	where?:ValueTypes["group_chat_bool_exp"]
+};
+	/** Ordering options when selecting data from "group.chat". */
+["group_chat_order_by"]: {
+	id?:ValueTypes["order_by"],
+	members_aggregate?:ValueTypes["group_members_aggregate_order_by"],
+	messages_aggregate?:ValueTypes["group_messages_aggregate_order_by"],
+	name?:ValueTypes["order_by"],
+	owner?:ValueTypes["users_order_by"],
+	owner_id?:ValueTypes["order_by"]
+};
+	/** primary key columns input for table: group.chat */
+["group_chat_pk_columns_input"]: {
+	id:number
+};
+	/** select columns of table "group.chat" */
+["group_chat_select_column"]:group_chat_select_column;
+	/** input type for updating data in table "group.chat" */
+["group_chat_set_input"]: {
+	id?:number,
+	name?:string,
+	owner_id?:number
+};
+	/** aggregate stddev on columns */
+["group_chat_stddev_fields"]: AliasType<{
+	id?:true,
+	owner_id?:true,
+		__typename?: true
+}>;
+	/** aggregate stddev_pop on columns */
+["group_chat_stddev_pop_fields"]: AliasType<{
+	id?:true,
+	owner_id?:true,
+		__typename?: true
+}>;
+	/** aggregate stddev_samp on columns */
+["group_chat_stddev_samp_fields"]: AliasType<{
+	id?:true,
+	owner_id?:true,
+		__typename?: true
+}>;
+	/** Streaming cursor of the table "group_chat" */
+["group_chat_stream_cursor_input"]: {
+	/** Stream column input with initial value */
+	initial_value:ValueTypes["group_chat_stream_cursor_value_input"],
+	/** cursor ordering */
+	ordering?:ValueTypes["cursor_ordering"]
+};
+	/** Initial value of the column from where the streaming should start */
+["group_chat_stream_cursor_value_input"]: {
+	id?:number,
+	name?:string,
+	owner_id?:number
+};
+	/** aggregate sum on columns */
+["group_chat_sum_fields"]: AliasType<{
+	id?:true,
+	owner_id?:true,
+		__typename?: true
+}>;
+	/** update columns of table "group.chat" */
+["group_chat_update_column"]:group_chat_update_column;
+	["group_chat_updates"]: {
+	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["group_chat_inc_input"],
+	/** sets the columns of the filtered rows to the given values */
+	_set?:ValueTypes["group_chat_set_input"],
+	/** filter the rows which have to be updated */
+	where:ValueTypes["group_chat_bool_exp"]
+};
+	/** aggregate var_pop on columns */
+["group_chat_var_pop_fields"]: AliasType<{
+	id?:true,
+	owner_id?:true,
+		__typename?: true
+}>;
+	/** aggregate var_samp on columns */
+["group_chat_var_samp_fields"]: AliasType<{
+	id?:true,
+	owner_id?:true,
+		__typename?: true
+}>;
+	/** aggregate variance on columns */
+["group_chat_variance_fields"]: AliasType<{
+	id?:true,
+	owner_id?:true,
+		__typename?: true
+}>;
+	/** columns and relationships of "group.members" */
+["group_members"]: AliasType<{
+	/** An object relationship */
+	chat?:ValueTypes["group_chat"],
+	chat_id?:true,
+	id?:true,
+metadata?: [{	/** JSON select path */
+	path?:string},true],
+	/** An object relationship */
+	user?:ValueTypes["users"],
+	user_id?:true,
+		__typename?: true
+}>;
+	/** aggregated selection of "group.members" */
+["group_members_aggregate"]: AliasType<{
+	aggregate?:ValueTypes["group_members_aggregate_fields"],
+	nodes?:ValueTypes["group_members"],
+		__typename?: true
+}>;
+	["group_members_aggregate_bool_exp"]: {
+	count?:ValueTypes["group_members_aggregate_bool_exp_count"]
+};
+	["group_members_aggregate_bool_exp_count"]: {
+	arguments?:ValueTypes["group_members_select_column"][],
+	distinct?:boolean,
+	filter?:ValueTypes["group_members_bool_exp"],
+	predicate:ValueTypes["Int_comparison_exp"]
+};
+	/** aggregate fields of "group.members" */
+["group_members_aggregate_fields"]: AliasType<{
+	avg?:ValueTypes["group_members_avg_fields"],
+count?: [{	columns?:ValueTypes["group_members_select_column"][],	distinct?:boolean},true],
+	max?:ValueTypes["group_members_max_fields"],
+	min?:ValueTypes["group_members_min_fields"],
+	stddev?:ValueTypes["group_members_stddev_fields"],
+	stddev_pop?:ValueTypes["group_members_stddev_pop_fields"],
+	stddev_samp?:ValueTypes["group_members_stddev_samp_fields"],
+	sum?:ValueTypes["group_members_sum_fields"],
+	var_pop?:ValueTypes["group_members_var_pop_fields"],
+	var_samp?:ValueTypes["group_members_var_samp_fields"],
+	variance?:ValueTypes["group_members_variance_fields"],
+		__typename?: true
+}>;
+	/** order by aggregate values of table "group.members" */
+["group_members_aggregate_order_by"]: {
+	avg?:ValueTypes["group_members_avg_order_by"],
+	count?:ValueTypes["order_by"],
+	max?:ValueTypes["group_members_max_order_by"],
+	min?:ValueTypes["group_members_min_order_by"],
+	stddev?:ValueTypes["group_members_stddev_order_by"],
+	stddev_pop?:ValueTypes["group_members_stddev_pop_order_by"],
+	stddev_samp?:ValueTypes["group_members_stddev_samp_order_by"],
+	sum?:ValueTypes["group_members_sum_order_by"],
+	var_pop?:ValueTypes["group_members_var_pop_order_by"],
+	var_samp?:ValueTypes["group_members_var_samp_order_by"],
+	variance?:ValueTypes["group_members_variance_order_by"]
+};
+	/** append existing jsonb value of filtered columns with new jsonb value */
+["group_members_append_input"]: {
+	metadata?:ValueTypes["jsonb"]
+};
+	/** input type for inserting array relation for remote table "group.members" */
+["group_members_arr_rel_insert_input"]: {
+	data:ValueTypes["group_members_insert_input"][],
+	/** upsert condition */
+	on_conflict?:ValueTypes["group_members_on_conflict"]
+};
+	/** aggregate avg on columns */
+["group_members_avg_fields"]: AliasType<{
+	chat_id?:true,
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by avg() on columns of table "group.members" */
+["group_members_avg_order_by"]: {
+	chat_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** Boolean expression to filter rows from the table "group.members". All fields are combined with a logical 'AND'. */
+["group_members_bool_exp"]: {
+	_and?:ValueTypes["group_members_bool_exp"][],
+	_not?:ValueTypes["group_members_bool_exp"],
+	_or?:ValueTypes["group_members_bool_exp"][],
+	chat?:ValueTypes["group_chat_bool_exp"],
+	chat_id?:ValueTypes["Int_comparison_exp"],
+	id?:ValueTypes["Int_comparison_exp"],
+	metadata?:ValueTypes["jsonb_comparison_exp"],
+	user?:ValueTypes["users_bool_exp"],
+	user_id?:ValueTypes["Int_comparison_exp"]
+};
+	/** unique or primary key constraints on table "group.members" */
+["group_members_constraint"]:group_members_constraint;
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+["group_members_delete_at_path_input"]: {
+	metadata?:string[]
+};
+	/** delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array */
+["group_members_delete_elem_input"]: {
+	metadata?:number
+};
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+["group_members_delete_key_input"]: {
+	metadata?:string
+};
+	/** input type for incrementing numeric columns in table "group.members" */
+["group_members_inc_input"]: {
+	chat_id?:number,
+	id?:number,
+	user_id?:number
+};
+	/** input type for inserting data into table "group.members" */
+["group_members_insert_input"]: {
+	chat?:ValueTypes["group_chat_obj_rel_insert_input"],
+	chat_id?:number,
+	id?:number,
+	metadata?:ValueTypes["jsonb"],
+	user?:ValueTypes["users_obj_rel_insert_input"],
+	user_id?:number
+};
+	/** aggregate max on columns */
+["group_members_max_fields"]: AliasType<{
+	chat_id?:true,
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by max() on columns of table "group.members" */
+["group_members_max_order_by"]: {
+	chat_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** aggregate min on columns */
+["group_members_min_fields"]: AliasType<{
+	chat_id?:true,
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by min() on columns of table "group.members" */
+["group_members_min_order_by"]: {
+	chat_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** response of any mutation on the table "group.members" */
+["group_members_mutation_response"]: AliasType<{
+	/** number of rows affected by the mutation */
+	affected_rows?:true,
+	/** data from the rows affected by the mutation */
+	returning?:ValueTypes["group_members"],
+		__typename?: true
+}>;
+	/** input type for inserting object relation for remote table "group.members" */
+["group_members_obj_rel_insert_input"]: {
+	data:ValueTypes["group_members_insert_input"],
+	/** upsert condition */
+	on_conflict?:ValueTypes["group_members_on_conflict"]
+};
+	/** on_conflict condition type for table "group.members" */
+["group_members_on_conflict"]: {
+	constraint:ValueTypes["group_members_constraint"],
+	update_columns:ValueTypes["group_members_update_column"][],
+	where?:ValueTypes["group_members_bool_exp"]
+};
+	/** Ordering options when selecting data from "group.members". */
+["group_members_order_by"]: {
+	chat?:ValueTypes["group_chat_order_by"],
+	chat_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	metadata?:ValueTypes["order_by"],
+	user?:ValueTypes["users_order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** primary key columns input for table: group.members */
+["group_members_pk_columns_input"]: {
+	id:number
+};
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+["group_members_prepend_input"]: {
+	metadata?:ValueTypes["jsonb"]
+};
+	/** select columns of table "group.members" */
+["group_members_select_column"]:group_members_select_column;
+	/** input type for updating data in table "group.members" */
+["group_members_set_input"]: {
+	chat_id?:number,
+	id?:number,
+	metadata?:ValueTypes["jsonb"],
+	user_id?:number
+};
+	/** aggregate stddev on columns */
+["group_members_stddev_fields"]: AliasType<{
+	chat_id?:true,
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by stddev() on columns of table "group.members" */
+["group_members_stddev_order_by"]: {
+	chat_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** aggregate stddev_pop on columns */
+["group_members_stddev_pop_fields"]: AliasType<{
+	chat_id?:true,
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by stddev_pop() on columns of table "group.members" */
+["group_members_stddev_pop_order_by"]: {
+	chat_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** aggregate stddev_samp on columns */
+["group_members_stddev_samp_fields"]: AliasType<{
+	chat_id?:true,
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by stddev_samp() on columns of table "group.members" */
+["group_members_stddev_samp_order_by"]: {
+	chat_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** Streaming cursor of the table "group_members" */
+["group_members_stream_cursor_input"]: {
+	/** Stream column input with initial value */
+	initial_value:ValueTypes["group_members_stream_cursor_value_input"],
+	/** cursor ordering */
+	ordering?:ValueTypes["cursor_ordering"]
+};
+	/** Initial value of the column from where the streaming should start */
+["group_members_stream_cursor_value_input"]: {
+	chat_id?:number,
+	id?:number,
+	metadata?:ValueTypes["jsonb"],
+	user_id?:number
+};
+	/** aggregate sum on columns */
+["group_members_sum_fields"]: AliasType<{
+	chat_id?:true,
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by sum() on columns of table "group.members" */
+["group_members_sum_order_by"]: {
+	chat_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** update columns of table "group.members" */
+["group_members_update_column"]:group_members_update_column;
+	["group_members_updates"]: {
+	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:ValueTypes["group_members_append_input"],
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:ValueTypes["group_members_delete_at_path_input"],
+	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:ValueTypes["group_members_delete_elem_input"],
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:ValueTypes["group_members_delete_key_input"],
+	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["group_members_inc_input"],
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:ValueTypes["group_members_prepend_input"],
+	/** sets the columns of the filtered rows to the given values */
+	_set?:ValueTypes["group_members_set_input"],
+	/** filter the rows which have to be updated */
+	where:ValueTypes["group_members_bool_exp"]
+};
+	/** aggregate var_pop on columns */
+["group_members_var_pop_fields"]: AliasType<{
+	chat_id?:true,
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by var_pop() on columns of table "group.members" */
+["group_members_var_pop_order_by"]: {
+	chat_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** aggregate var_samp on columns */
+["group_members_var_samp_fields"]: AliasType<{
+	chat_id?:true,
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by var_samp() on columns of table "group.members" */
+["group_members_var_samp_order_by"]: {
+	chat_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** aggregate variance on columns */
+["group_members_variance_fields"]: AliasType<{
+	chat_id?:true,
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by variance() on columns of table "group.members" */
+["group_members_variance_order_by"]: {
+	chat_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** columns and relationships of "group.messages" */
+["group_messages"]: AliasType<{
+	chat_id?:true,
+	id?:true,
+	member_id?:true,
+payload?: [{	/** JSON select path */
+	path?:string},true],
+	/** An object relationship */
+	sender?:ValueTypes["group_members"],
+	time?:true,
+		__typename?: true
+}>;
+	/** aggregated selection of "group.messages" */
+["group_messages_aggregate"]: AliasType<{
+	aggregate?:ValueTypes["group_messages_aggregate_fields"],
+	nodes?:ValueTypes["group_messages"],
+		__typename?: true
+}>;
+	["group_messages_aggregate_bool_exp"]: {
+	count?:ValueTypes["group_messages_aggregate_bool_exp_count"]
+};
+	["group_messages_aggregate_bool_exp_count"]: {
+	arguments?:ValueTypes["group_messages_select_column"][],
+	distinct?:boolean,
+	filter?:ValueTypes["group_messages_bool_exp"],
+	predicate:ValueTypes["Int_comparison_exp"]
+};
+	/** aggregate fields of "group.messages" */
+["group_messages_aggregate_fields"]: AliasType<{
+	avg?:ValueTypes["group_messages_avg_fields"],
+count?: [{	columns?:ValueTypes["group_messages_select_column"][],	distinct?:boolean},true],
+	max?:ValueTypes["group_messages_max_fields"],
+	min?:ValueTypes["group_messages_min_fields"],
+	stddev?:ValueTypes["group_messages_stddev_fields"],
+	stddev_pop?:ValueTypes["group_messages_stddev_pop_fields"],
+	stddev_samp?:ValueTypes["group_messages_stddev_samp_fields"],
+	sum?:ValueTypes["group_messages_sum_fields"],
+	var_pop?:ValueTypes["group_messages_var_pop_fields"],
+	var_samp?:ValueTypes["group_messages_var_samp_fields"],
+	variance?:ValueTypes["group_messages_variance_fields"],
+		__typename?: true
+}>;
+	/** order by aggregate values of table "group.messages" */
+["group_messages_aggregate_order_by"]: {
+	avg?:ValueTypes["group_messages_avg_order_by"],
+	count?:ValueTypes["order_by"],
+	max?:ValueTypes["group_messages_max_order_by"],
+	min?:ValueTypes["group_messages_min_order_by"],
+	stddev?:ValueTypes["group_messages_stddev_order_by"],
+	stddev_pop?:ValueTypes["group_messages_stddev_pop_order_by"],
+	stddev_samp?:ValueTypes["group_messages_stddev_samp_order_by"],
+	sum?:ValueTypes["group_messages_sum_order_by"],
+	var_pop?:ValueTypes["group_messages_var_pop_order_by"],
+	var_samp?:ValueTypes["group_messages_var_samp_order_by"],
+	variance?:ValueTypes["group_messages_variance_order_by"]
+};
+	/** append existing jsonb value of filtered columns with new jsonb value */
+["group_messages_append_input"]: {
+	payload?:ValueTypes["jsonb"]
+};
+	/** input type for inserting array relation for remote table "group.messages" */
+["group_messages_arr_rel_insert_input"]: {
+	data:ValueTypes["group_messages_insert_input"][],
+	/** upsert condition */
+	on_conflict?:ValueTypes["group_messages_on_conflict"]
+};
+	/** aggregate avg on columns */
+["group_messages_avg_fields"]: AliasType<{
+	chat_id?:true,
+	id?:true,
+	member_id?:true,
+		__typename?: true
+}>;
+	/** order by avg() on columns of table "group.messages" */
+["group_messages_avg_order_by"]: {
+	chat_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	member_id?:ValueTypes["order_by"]
+};
+	/** Boolean expression to filter rows from the table "group.messages". All fields are combined with a logical 'AND'. */
+["group_messages_bool_exp"]: {
+	_and?:ValueTypes["group_messages_bool_exp"][],
+	_not?:ValueTypes["group_messages_bool_exp"],
+	_or?:ValueTypes["group_messages_bool_exp"][],
+	chat_id?:ValueTypes["Int_comparison_exp"],
+	id?:ValueTypes["Int_comparison_exp"],
+	member_id?:ValueTypes["Int_comparison_exp"],
+	payload?:ValueTypes["jsonb_comparison_exp"],
+	sender?:ValueTypes["group_members_bool_exp"],
+	time?:ValueTypes["timestamptz_comparison_exp"]
+};
+	/** unique or primary key constraints on table "group.messages" */
+["group_messages_constraint"]:group_messages_constraint;
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+["group_messages_delete_at_path_input"]: {
+	payload?:string[]
+};
+	/** delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array */
+["group_messages_delete_elem_input"]: {
+	payload?:number
+};
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+["group_messages_delete_key_input"]: {
+	payload?:string
+};
+	/** input type for incrementing numeric columns in table "group.messages" */
+["group_messages_inc_input"]: {
+	chat_id?:number,
+	id?:number,
+	member_id?:number
+};
+	/** input type for inserting data into table "group.messages" */
+["group_messages_insert_input"]: {
+	chat_id?:number,
+	id?:number,
+	member_id?:number,
+	payload?:ValueTypes["jsonb"],
+	sender?:ValueTypes["group_members_obj_rel_insert_input"],
+	time?:ValueTypes["timestamptz"]
+};
+	/** aggregate max on columns */
+["group_messages_max_fields"]: AliasType<{
+	chat_id?:true,
+	id?:true,
+	member_id?:true,
+	time?:true,
+		__typename?: true
+}>;
+	/** order by max() on columns of table "group.messages" */
+["group_messages_max_order_by"]: {
+	chat_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	member_id?:ValueTypes["order_by"],
+	time?:ValueTypes["order_by"]
+};
+	/** aggregate min on columns */
+["group_messages_min_fields"]: AliasType<{
+	chat_id?:true,
+	id?:true,
+	member_id?:true,
+	time?:true,
+		__typename?: true
+}>;
+	/** order by min() on columns of table "group.messages" */
+["group_messages_min_order_by"]: {
+	chat_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	member_id?:ValueTypes["order_by"],
+	time?:ValueTypes["order_by"]
+};
+	/** response of any mutation on the table "group.messages" */
+["group_messages_mutation_response"]: AliasType<{
+	/** number of rows affected by the mutation */
+	affected_rows?:true,
+	/** data from the rows affected by the mutation */
+	returning?:ValueTypes["group_messages"],
+		__typename?: true
+}>;
+	/** on_conflict condition type for table "group.messages" */
+["group_messages_on_conflict"]: {
+	constraint:ValueTypes["group_messages_constraint"],
+	update_columns:ValueTypes["group_messages_update_column"][],
+	where?:ValueTypes["group_messages_bool_exp"]
+};
+	/** Ordering options when selecting data from "group.messages". */
+["group_messages_order_by"]: {
+	chat_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	member_id?:ValueTypes["order_by"],
+	payload?:ValueTypes["order_by"],
+	sender?:ValueTypes["group_members_order_by"],
+	time?:ValueTypes["order_by"]
+};
+	/** primary key columns input for table: group.messages */
+["group_messages_pk_columns_input"]: {
+	id:number
+};
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+["group_messages_prepend_input"]: {
+	payload?:ValueTypes["jsonb"]
+};
+	/** select columns of table "group.messages" */
+["group_messages_select_column"]:group_messages_select_column;
+	/** input type for updating data in table "group.messages" */
+["group_messages_set_input"]: {
+	chat_id?:number,
+	id?:number,
+	member_id?:number,
+	payload?:ValueTypes["jsonb"],
+	time?:ValueTypes["timestamptz"]
+};
+	/** aggregate stddev on columns */
+["group_messages_stddev_fields"]: AliasType<{
+	chat_id?:true,
+	id?:true,
+	member_id?:true,
+		__typename?: true
+}>;
+	/** order by stddev() on columns of table "group.messages" */
+["group_messages_stddev_order_by"]: {
+	chat_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	member_id?:ValueTypes["order_by"]
+};
+	/** aggregate stddev_pop on columns */
+["group_messages_stddev_pop_fields"]: AliasType<{
+	chat_id?:true,
+	id?:true,
+	member_id?:true,
+		__typename?: true
+}>;
+	/** order by stddev_pop() on columns of table "group.messages" */
+["group_messages_stddev_pop_order_by"]: {
+	chat_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	member_id?:ValueTypes["order_by"]
+};
+	/** aggregate stddev_samp on columns */
+["group_messages_stddev_samp_fields"]: AliasType<{
+	chat_id?:true,
+	id?:true,
+	member_id?:true,
+		__typename?: true
+}>;
+	/** order by stddev_samp() on columns of table "group.messages" */
+["group_messages_stddev_samp_order_by"]: {
+	chat_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	member_id?:ValueTypes["order_by"]
+};
+	/** Streaming cursor of the table "group_messages" */
+["group_messages_stream_cursor_input"]: {
+	/** Stream column input with initial value */
+	initial_value:ValueTypes["group_messages_stream_cursor_value_input"],
+	/** cursor ordering */
+	ordering?:ValueTypes["cursor_ordering"]
+};
+	/** Initial value of the column from where the streaming should start */
+["group_messages_stream_cursor_value_input"]: {
+	chat_id?:number,
+	id?:number,
+	member_id?:number,
+	payload?:ValueTypes["jsonb"],
+	time?:ValueTypes["timestamptz"]
+};
+	/** aggregate sum on columns */
+["group_messages_sum_fields"]: AliasType<{
+	chat_id?:true,
+	id?:true,
+	member_id?:true,
+		__typename?: true
+}>;
+	/** order by sum() on columns of table "group.messages" */
+["group_messages_sum_order_by"]: {
+	chat_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	member_id?:ValueTypes["order_by"]
+};
+	/** update columns of table "group.messages" */
+["group_messages_update_column"]:group_messages_update_column;
+	["group_messages_updates"]: {
+	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:ValueTypes["group_messages_append_input"],
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:ValueTypes["group_messages_delete_at_path_input"],
+	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:ValueTypes["group_messages_delete_elem_input"],
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:ValueTypes["group_messages_delete_key_input"],
+	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["group_messages_inc_input"],
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:ValueTypes["group_messages_prepend_input"],
+	/** sets the columns of the filtered rows to the given values */
+	_set?:ValueTypes["group_messages_set_input"],
+	/** filter the rows which have to be updated */
+	where:ValueTypes["group_messages_bool_exp"]
+};
+	/** aggregate var_pop on columns */
+["group_messages_var_pop_fields"]: AliasType<{
+	chat_id?:true,
+	id?:true,
+	member_id?:true,
+		__typename?: true
+}>;
+	/** order by var_pop() on columns of table "group.messages" */
+["group_messages_var_pop_order_by"]: {
+	chat_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	member_id?:ValueTypes["order_by"]
+};
+	/** aggregate var_samp on columns */
+["group_messages_var_samp_fields"]: AliasType<{
+	chat_id?:true,
+	id?:true,
+	member_id?:true,
+		__typename?: true
+}>;
+	/** order by var_samp() on columns of table "group.messages" */
+["group_messages_var_samp_order_by"]: {
+	chat_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	member_id?:ValueTypes["order_by"]
+};
+	/** aggregate variance on columns */
+["group_messages_variance_fields"]: AliasType<{
+	chat_id?:true,
+	id?:true,
+	member_id?:true,
+		__typename?: true
+}>;
+	/** order by variance() on columns of table "group.messages" */
+["group_messages_variance_order_by"]: {
+	chat_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	member_id?:ValueTypes["order_by"]
+};
 	/** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
 ["Int_comparison_exp"]: {
 	_eq?:number,
@@ -2042,6 +2891,15 @@ delete_events_by_pk?: [{	id:number},ValueTypes["events"]],
 delete_goals?: [{	/** filter the rows which have to be deleted */
 	where:ValueTypes["goals_bool_exp"]},ValueTypes["goals_mutation_response"]],
 delete_goals_by_pk?: [{	id:number},ValueTypes["goals"]],
+delete_group_chat?: [{	/** filter the rows which have to be deleted */
+	where:ValueTypes["group_chat_bool_exp"]},ValueTypes["group_chat_mutation_response"]],
+delete_group_chat_by_pk?: [{	id:number},ValueTypes["group_chat"]],
+delete_group_members?: [{	/** filter the rows which have to be deleted */
+	where:ValueTypes["group_members_bool_exp"]},ValueTypes["group_members_mutation_response"]],
+delete_group_members_by_pk?: [{	id:number},ValueTypes["group_members"]],
+delete_group_messages?: [{	/** filter the rows which have to be deleted */
+	where:ValueTypes["group_messages_bool_exp"]},ValueTypes["group_messages_mutation_response"]],
+delete_group_messages_by_pk?: [{	id:number},ValueTypes["group_messages"]],
 delete_interactions?: [{	/** filter the rows which have to be deleted */
 	where:ValueTypes["interactions_bool_exp"]},ValueTypes["interactions_mutation_response"]],
 delete_interactions_by_pk?: [{	id:number},ValueTypes["interactions"]],
@@ -2050,7 +2908,7 @@ delete_locations?: [{	/** filter the rows which have to be deleted */
 delete_locations_by_pk?: [{	id:number},ValueTypes["locations"]],
 delete_object_types?: [{	/** filter the rows which have to be deleted */
 	where:ValueTypes["object_types_bool_exp"]},ValueTypes["object_types_mutation_response"]],
-delete_object_types_by_pk?: [{	id:string},ValueTypes["object_types"]],
+delete_object_types_by_pk?: [{	id:number},ValueTypes["object_types"]],
 delete_objects?: [{	/** filter the rows which have to be deleted */
 	where:ValueTypes["objects_bool_exp"]},ValueTypes["objects_mutation_response"]],
 delete_objects_by_pk?: [{	id:number},ValueTypes["objects"]],
@@ -2063,6 +2921,21 @@ delete_user_movements_by_pk?: [{	id:number},ValueTypes["user_movements"]],
 delete_users?: [{	/** filter the rows which have to be deleted */
 	where:ValueTypes["users_bool_exp"]},ValueTypes["users_mutation_response"]],
 delete_users_by_pk?: [{	id:number},ValueTypes["users"]],
+delete_v2_action_types?: [{	/** filter the rows which have to be deleted */
+	where:ValueTypes["v2_action_types_bool_exp"]},ValueTypes["v2_action_types_mutation_response"]],
+delete_v2_action_types_by_pk?: [{	id:number},ValueTypes["v2_action_types"]],
+delete_v2_actions?: [{	/** filter the rows which have to be deleted */
+	where:ValueTypes["v2_actions_bool_exp"]},ValueTypes["v2_actions_mutation_response"]],
+delete_v2_actions_by_pk?: [{	id:number},ValueTypes["v2_actions"]],
+delete_v2_aggregates?: [{	/** filter the rows which have to be deleted */
+	where:ValueTypes["v2_aggregates_bool_exp"]},ValueTypes["v2_aggregates_mutation_response"]],
+delete_v2_aggregates_by_pk?: [{	id:number},ValueTypes["v2_aggregates"]],
+delete_v2_object_action?: [{	/** filter the rows which have to be deleted */
+	where:ValueTypes["v2_object_action_bool_exp"]},ValueTypes["v2_object_action_mutation_response"]],
+delete_v2_object_action_by_pk?: [{	id:number},ValueTypes["v2_object_action"]],
+delete_v2_object_t_action_t?: [{	/** filter the rows which have to be deleted */
+	where:ValueTypes["v2_object_t_action_t_bool_exp"]},ValueTypes["v2_object_t_action_t_mutation_response"]],
+delete_v2_object_t_action_t_by_pk?: [{	id:number},ValueTypes["v2_object_t_action_t"]],
 insert_associations?: [{	/** the rows to be inserted */
 	objects:ValueTypes["associations_insert_input"][],	/** upsert condition */
 	on_conflict?:ValueTypes["associations_on_conflict"]},ValueTypes["associations_mutation_response"]],
@@ -2087,6 +2960,24 @@ insert_goals?: [{	/** the rows to be inserted */
 insert_goals_one?: [{	/** the row to be inserted */
 	object:ValueTypes["goals_insert_input"],	/** upsert condition */
 	on_conflict?:ValueTypes["goals_on_conflict"]},ValueTypes["goals"]],
+insert_group_chat?: [{	/** the rows to be inserted */
+	objects:ValueTypes["group_chat_insert_input"][],	/** upsert condition */
+	on_conflict?:ValueTypes["group_chat_on_conflict"]},ValueTypes["group_chat_mutation_response"]],
+insert_group_chat_one?: [{	/** the row to be inserted */
+	object:ValueTypes["group_chat_insert_input"],	/** upsert condition */
+	on_conflict?:ValueTypes["group_chat_on_conflict"]},ValueTypes["group_chat"]],
+insert_group_members?: [{	/** the rows to be inserted */
+	objects:ValueTypes["group_members_insert_input"][],	/** upsert condition */
+	on_conflict?:ValueTypes["group_members_on_conflict"]},ValueTypes["group_members_mutation_response"]],
+insert_group_members_one?: [{	/** the row to be inserted */
+	object:ValueTypes["group_members_insert_input"],	/** upsert condition */
+	on_conflict?:ValueTypes["group_members_on_conflict"]},ValueTypes["group_members"]],
+insert_group_messages?: [{	/** the rows to be inserted */
+	objects:ValueTypes["group_messages_insert_input"][],	/** upsert condition */
+	on_conflict?:ValueTypes["group_messages_on_conflict"]},ValueTypes["group_messages_mutation_response"]],
+insert_group_messages_one?: [{	/** the row to be inserted */
+	object:ValueTypes["group_messages_insert_input"],	/** upsert condition */
+	on_conflict?:ValueTypes["group_messages_on_conflict"]},ValueTypes["group_messages"]],
 insert_interactions?: [{	/** the rows to be inserted */
 	objects:ValueTypes["interactions_insert_input"][],	/** upsert condition */
 	on_conflict?:ValueTypes["interactions_on_conflict"]},ValueTypes["interactions_mutation_response"]],
@@ -2129,6 +3020,36 @@ insert_users?: [{	/** the rows to be inserted */
 insert_users_one?: [{	/** the row to be inserted */
 	object:ValueTypes["users_insert_input"],	/** upsert condition */
 	on_conflict?:ValueTypes["users_on_conflict"]},ValueTypes["users"]],
+insert_v2_action_types?: [{	/** the rows to be inserted */
+	objects:ValueTypes["v2_action_types_insert_input"][],	/** upsert condition */
+	on_conflict?:ValueTypes["v2_action_types_on_conflict"]},ValueTypes["v2_action_types_mutation_response"]],
+insert_v2_action_types_one?: [{	/** the row to be inserted */
+	object:ValueTypes["v2_action_types_insert_input"],	/** upsert condition */
+	on_conflict?:ValueTypes["v2_action_types_on_conflict"]},ValueTypes["v2_action_types"]],
+insert_v2_actions?: [{	/** the rows to be inserted */
+	objects:ValueTypes["v2_actions_insert_input"][],	/** upsert condition */
+	on_conflict?:ValueTypes["v2_actions_on_conflict"]},ValueTypes["v2_actions_mutation_response"]],
+insert_v2_actions_one?: [{	/** the row to be inserted */
+	object:ValueTypes["v2_actions_insert_input"],	/** upsert condition */
+	on_conflict?:ValueTypes["v2_actions_on_conflict"]},ValueTypes["v2_actions"]],
+insert_v2_aggregates?: [{	/** the rows to be inserted */
+	objects:ValueTypes["v2_aggregates_insert_input"][],	/** upsert condition */
+	on_conflict?:ValueTypes["v2_aggregates_on_conflict"]},ValueTypes["v2_aggregates_mutation_response"]],
+insert_v2_aggregates_one?: [{	/** the row to be inserted */
+	object:ValueTypes["v2_aggregates_insert_input"],	/** upsert condition */
+	on_conflict?:ValueTypes["v2_aggregates_on_conflict"]},ValueTypes["v2_aggregates"]],
+insert_v2_object_action?: [{	/** the rows to be inserted */
+	objects:ValueTypes["v2_object_action_insert_input"][],	/** upsert condition */
+	on_conflict?:ValueTypes["v2_object_action_on_conflict"]},ValueTypes["v2_object_action_mutation_response"]],
+insert_v2_object_action_one?: [{	/** the row to be inserted */
+	object:ValueTypes["v2_object_action_insert_input"],	/** upsert condition */
+	on_conflict?:ValueTypes["v2_object_action_on_conflict"]},ValueTypes["v2_object_action"]],
+insert_v2_object_t_action_t?: [{	/** the rows to be inserted */
+	objects:ValueTypes["v2_object_t_action_t_insert_input"][],	/** upsert condition */
+	on_conflict?:ValueTypes["v2_object_t_action_t_on_conflict"]},ValueTypes["v2_object_t_action_t_mutation_response"]],
+insert_v2_object_t_action_t_one?: [{	/** the row to be inserted */
+	object:ValueTypes["v2_object_t_action_t_insert_input"],	/** upsert condition */
+	on_conflict?:ValueTypes["v2_object_t_action_t_on_conflict"]},ValueTypes["v2_object_t_action_t"]],
 update_associations?: [{	/** increments the numeric columns with given value of the filtered values */
 	_inc?:ValueTypes["associations_inc_input"],	/** sets the columns of the filtered rows to the given values */
 	_set?:ValueTypes["associations_set_input"],	/** filter the rows which have to be updated */
@@ -2199,6 +3120,57 @@ the end). throws an error if top level container is not an array */
 	_set?:ValueTypes["goals_set_input"],	pk_columns:ValueTypes["goals_pk_columns_input"]},ValueTypes["goals"]],
 update_goals_many?: [{	/** updates to execute, in order */
 	updates:ValueTypes["goals_updates"][]},ValueTypes["goals_mutation_response"]],
+update_group_chat?: [{	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["group_chat_inc_input"],	/** sets the columns of the filtered rows to the given values */
+	_set?:ValueTypes["group_chat_set_input"],	/** filter the rows which have to be updated */
+	where:ValueTypes["group_chat_bool_exp"]},ValueTypes["group_chat_mutation_response"]],
+update_group_chat_by_pk?: [{	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["group_chat_inc_input"],	/** sets the columns of the filtered rows to the given values */
+	_set?:ValueTypes["group_chat_set_input"],	pk_columns:ValueTypes["group_chat_pk_columns_input"]},ValueTypes["group_chat"]],
+update_group_chat_many?: [{	/** updates to execute, in order */
+	updates:ValueTypes["group_chat_updates"][]},ValueTypes["group_chat_mutation_response"]],
+update_group_members?: [{	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:ValueTypes["group_members_append_input"],	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:ValueTypes["group_members_delete_at_path_input"],	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:ValueTypes["group_members_delete_elem_input"],	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:ValueTypes["group_members_delete_key_input"],	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["group_members_inc_input"],	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:ValueTypes["group_members_prepend_input"],	/** sets the columns of the filtered rows to the given values */
+	_set?:ValueTypes["group_members_set_input"],	/** filter the rows which have to be updated */
+	where:ValueTypes["group_members_bool_exp"]},ValueTypes["group_members_mutation_response"]],
+update_group_members_by_pk?: [{	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:ValueTypes["group_members_append_input"],	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:ValueTypes["group_members_delete_at_path_input"],	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:ValueTypes["group_members_delete_elem_input"],	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:ValueTypes["group_members_delete_key_input"],	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["group_members_inc_input"],	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:ValueTypes["group_members_prepend_input"],	/** sets the columns of the filtered rows to the given values */
+	_set?:ValueTypes["group_members_set_input"],	pk_columns:ValueTypes["group_members_pk_columns_input"]},ValueTypes["group_members"]],
+update_group_members_many?: [{	/** updates to execute, in order */
+	updates:ValueTypes["group_members_updates"][]},ValueTypes["group_members_mutation_response"]],
+update_group_messages?: [{	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:ValueTypes["group_messages_append_input"],	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:ValueTypes["group_messages_delete_at_path_input"],	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:ValueTypes["group_messages_delete_elem_input"],	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:ValueTypes["group_messages_delete_key_input"],	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["group_messages_inc_input"],	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:ValueTypes["group_messages_prepend_input"],	/** sets the columns of the filtered rows to the given values */
+	_set?:ValueTypes["group_messages_set_input"],	/** filter the rows which have to be updated */
+	where:ValueTypes["group_messages_bool_exp"]},ValueTypes["group_messages_mutation_response"]],
+update_group_messages_by_pk?: [{	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:ValueTypes["group_messages_append_input"],	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:ValueTypes["group_messages_delete_at_path_input"],	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:ValueTypes["group_messages_delete_elem_input"],	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:ValueTypes["group_messages_delete_key_input"],	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["group_messages_inc_input"],	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:ValueTypes["group_messages_prepend_input"],	/** sets the columns of the filtered rows to the given values */
+	_set?:ValueTypes["group_messages_set_input"],	pk_columns:ValueTypes["group_messages_pk_columns_input"]},ValueTypes["group_messages"]],
+update_group_messages_many?: [{	/** updates to execute, in order */
+	updates:ValueTypes["group_messages_updates"][]},ValueTypes["group_messages_mutation_response"]],
 update_interactions?: [{	/** append existing jsonb value of filtered columns with new jsonb value */
 	_append?:ValueTypes["interactions_append_input"],	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
 	_delete_at_path?:ValueTypes["interactions_delete_at_path_input"],	/** delete the array element with specified index (negative integers count from
@@ -2234,7 +3206,8 @@ update_object_types?: [{	/** append existing jsonb value of filtered columns wit
 	_delete_at_path?:ValueTypes["object_types_delete_at_path_input"],	/** delete the array element with specified index (negative integers count from
 the end). throws an error if top level container is not an array */
 	_delete_elem?:ValueTypes["object_types_delete_elem_input"],	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
-	_delete_key?:ValueTypes["object_types_delete_key_input"],	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_delete_key?:ValueTypes["object_types_delete_key_input"],	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["object_types_inc_input"],	/** prepend existing jsonb value of filtered columns with new jsonb value */
 	_prepend?:ValueTypes["object_types_prepend_input"],	/** sets the columns of the filtered rows to the given values */
 	_set?:ValueTypes["object_types_set_input"],	/** filter the rows which have to be updated */
 	where:ValueTypes["object_types_bool_exp"]},ValueTypes["object_types_mutation_response"]],
@@ -2243,17 +3216,30 @@ update_object_types_by_pk?: [{	/** append existing jsonb value of filtered colum
 	_delete_at_path?:ValueTypes["object_types_delete_at_path_input"],	/** delete the array element with specified index (negative integers count from
 the end). throws an error if top level container is not an array */
 	_delete_elem?:ValueTypes["object_types_delete_elem_input"],	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
-	_delete_key?:ValueTypes["object_types_delete_key_input"],	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_delete_key?:ValueTypes["object_types_delete_key_input"],	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["object_types_inc_input"],	/** prepend existing jsonb value of filtered columns with new jsonb value */
 	_prepend?:ValueTypes["object_types_prepend_input"],	/** sets the columns of the filtered rows to the given values */
 	_set?:ValueTypes["object_types_set_input"],	pk_columns:ValueTypes["object_types_pk_columns_input"]},ValueTypes["object_types"]],
 update_object_types_many?: [{	/** updates to execute, in order */
 	updates:ValueTypes["object_types_updates"][]},ValueTypes["object_types_mutation_response"]],
-update_objects?: [{	/** increments the numeric columns with given value of the filtered values */
-	_inc?:ValueTypes["objects_inc_input"],	/** sets the columns of the filtered rows to the given values */
+update_objects?: [{	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:ValueTypes["objects_append_input"],	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:ValueTypes["objects_delete_at_path_input"],	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:ValueTypes["objects_delete_elem_input"],	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:ValueTypes["objects_delete_key_input"],	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["objects_inc_input"],	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:ValueTypes["objects_prepend_input"],	/** sets the columns of the filtered rows to the given values */
 	_set?:ValueTypes["objects_set_input"],	/** filter the rows which have to be updated */
 	where:ValueTypes["objects_bool_exp"]},ValueTypes["objects_mutation_response"]],
-update_objects_by_pk?: [{	/** increments the numeric columns with given value of the filtered values */
-	_inc?:ValueTypes["objects_inc_input"],	/** sets the columns of the filtered rows to the given values */
+update_objects_by_pk?: [{	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:ValueTypes["objects_append_input"],	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:ValueTypes["objects_delete_at_path_input"],	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:ValueTypes["objects_delete_elem_input"],	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:ValueTypes["objects_delete_key_input"],	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["objects_inc_input"],	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:ValueTypes["objects_prepend_input"],	/** sets the columns of the filtered rows to the given values */
 	_set?:ValueTypes["objects_set_input"],	pk_columns:ValueTypes["objects_pk_columns_input"]},ValueTypes["objects"]],
 update_objects_many?: [{	/** updates to execute, in order */
 	updates:ValueTypes["objects_updates"][]},ValueTypes["objects_mutation_response"]],
@@ -2308,13 +3294,121 @@ the end). throws an error if top level container is not an array */
 	_set?:ValueTypes["users_set_input"],	pk_columns:ValueTypes["users_pk_columns_input"]},ValueTypes["users"]],
 update_users_many?: [{	/** updates to execute, in order */
 	updates:ValueTypes["users_updates"][]},ValueTypes["users_mutation_response"]],
+update_v2_action_types?: [{	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:ValueTypes["v2_action_types_append_input"],	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:ValueTypes["v2_action_types_delete_at_path_input"],	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:ValueTypes["v2_action_types_delete_elem_input"],	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:ValueTypes["v2_action_types_delete_key_input"],	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["v2_action_types_inc_input"],	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:ValueTypes["v2_action_types_prepend_input"],	/** sets the columns of the filtered rows to the given values */
+	_set?:ValueTypes["v2_action_types_set_input"],	/** filter the rows which have to be updated */
+	where:ValueTypes["v2_action_types_bool_exp"]},ValueTypes["v2_action_types_mutation_response"]],
+update_v2_action_types_by_pk?: [{	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:ValueTypes["v2_action_types_append_input"],	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:ValueTypes["v2_action_types_delete_at_path_input"],	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:ValueTypes["v2_action_types_delete_elem_input"],	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:ValueTypes["v2_action_types_delete_key_input"],	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["v2_action_types_inc_input"],	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:ValueTypes["v2_action_types_prepend_input"],	/** sets the columns of the filtered rows to the given values */
+	_set?:ValueTypes["v2_action_types_set_input"],	pk_columns:ValueTypes["v2_action_types_pk_columns_input"]},ValueTypes["v2_action_types"]],
+update_v2_action_types_many?: [{	/** updates to execute, in order */
+	updates:ValueTypes["v2_action_types_updates"][]},ValueTypes["v2_action_types_mutation_response"]],
+update_v2_actions?: [{	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:ValueTypes["v2_actions_append_input"],	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:ValueTypes["v2_actions_delete_at_path_input"],	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:ValueTypes["v2_actions_delete_elem_input"],	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:ValueTypes["v2_actions_delete_key_input"],	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["v2_actions_inc_input"],	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:ValueTypes["v2_actions_prepend_input"],	/** sets the columns of the filtered rows to the given values */
+	_set?:ValueTypes["v2_actions_set_input"],	/** filter the rows which have to be updated */
+	where:ValueTypes["v2_actions_bool_exp"]},ValueTypes["v2_actions_mutation_response"]],
+update_v2_actions_by_pk?: [{	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:ValueTypes["v2_actions_append_input"],	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:ValueTypes["v2_actions_delete_at_path_input"],	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:ValueTypes["v2_actions_delete_elem_input"],	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:ValueTypes["v2_actions_delete_key_input"],	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["v2_actions_inc_input"],	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:ValueTypes["v2_actions_prepend_input"],	/** sets the columns of the filtered rows to the given values */
+	_set?:ValueTypes["v2_actions_set_input"],	pk_columns:ValueTypes["v2_actions_pk_columns_input"]},ValueTypes["v2_actions"]],
+update_v2_actions_many?: [{	/** updates to execute, in order */
+	updates:ValueTypes["v2_actions_updates"][]},ValueTypes["v2_actions_mutation_response"]],
+update_v2_aggregates?: [{	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:ValueTypes["v2_aggregates_append_input"],	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:ValueTypes["v2_aggregates_delete_at_path_input"],	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:ValueTypes["v2_aggregates_delete_elem_input"],	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:ValueTypes["v2_aggregates_delete_key_input"],	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["v2_aggregates_inc_input"],	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:ValueTypes["v2_aggregates_prepend_input"],	/** sets the columns of the filtered rows to the given values */
+	_set?:ValueTypes["v2_aggregates_set_input"],	/** filter the rows which have to be updated */
+	where:ValueTypes["v2_aggregates_bool_exp"]},ValueTypes["v2_aggregates_mutation_response"]],
+update_v2_aggregates_by_pk?: [{	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:ValueTypes["v2_aggregates_append_input"],	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:ValueTypes["v2_aggregates_delete_at_path_input"],	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:ValueTypes["v2_aggregates_delete_elem_input"],	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:ValueTypes["v2_aggregates_delete_key_input"],	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["v2_aggregates_inc_input"],	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:ValueTypes["v2_aggregates_prepend_input"],	/** sets the columns of the filtered rows to the given values */
+	_set?:ValueTypes["v2_aggregates_set_input"],	pk_columns:ValueTypes["v2_aggregates_pk_columns_input"]},ValueTypes["v2_aggregates"]],
+update_v2_aggregates_many?: [{	/** updates to execute, in order */
+	updates:ValueTypes["v2_aggregates_updates"][]},ValueTypes["v2_aggregates_mutation_response"]],
+update_v2_object_action?: [{	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["v2_object_action_inc_input"],	/** sets the columns of the filtered rows to the given values */
+	_set?:ValueTypes["v2_object_action_set_input"],	/** filter the rows which have to be updated */
+	where:ValueTypes["v2_object_action_bool_exp"]},ValueTypes["v2_object_action_mutation_response"]],
+update_v2_object_action_by_pk?: [{	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["v2_object_action_inc_input"],	/** sets the columns of the filtered rows to the given values */
+	_set?:ValueTypes["v2_object_action_set_input"],	pk_columns:ValueTypes["v2_object_action_pk_columns_input"]},ValueTypes["v2_object_action"]],
+update_v2_object_action_many?: [{	/** updates to execute, in order */
+	updates:ValueTypes["v2_object_action_updates"][]},ValueTypes["v2_object_action_mutation_response"]],
+update_v2_object_t_action_t?: [{	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:ValueTypes["v2_object_t_action_t_append_input"],	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:ValueTypes["v2_object_t_action_t_delete_at_path_input"],	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:ValueTypes["v2_object_t_action_t_delete_elem_input"],	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:ValueTypes["v2_object_t_action_t_delete_key_input"],	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["v2_object_t_action_t_inc_input"],	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:ValueTypes["v2_object_t_action_t_prepend_input"],	/** sets the columns of the filtered rows to the given values */
+	_set?:ValueTypes["v2_object_t_action_t_set_input"],	/** filter the rows which have to be updated */
+	where:ValueTypes["v2_object_t_action_t_bool_exp"]},ValueTypes["v2_object_t_action_t_mutation_response"]],
+update_v2_object_t_action_t_by_pk?: [{	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:ValueTypes["v2_object_t_action_t_append_input"],	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:ValueTypes["v2_object_t_action_t_delete_at_path_input"],	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:ValueTypes["v2_object_t_action_t_delete_elem_input"],	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:ValueTypes["v2_object_t_action_t_delete_key_input"],	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["v2_object_t_action_t_inc_input"],	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:ValueTypes["v2_object_t_action_t_prepend_input"],	/** sets the columns of the filtered rows to the given values */
+	_set?:ValueTypes["v2_object_t_action_t_set_input"],	pk_columns:ValueTypes["v2_object_t_action_t_pk_columns_input"]},ValueTypes["v2_object_t_action_t"]],
+update_v2_object_t_action_t_many?: [{	/** updates to execute, in order */
+	updates:ValueTypes["v2_object_t_action_t_updates"][]},ValueTypes["v2_object_t_action_t_mutation_response"]],
 		__typename?: true
 }>;
 	/** columns and relationships of "object_types" */
 ["object_types"]: AliasType<{
+	created_at?:true,
 	id?:true,
 metadata?: [{	/** JSON select path */
 	path?:string},true],
+	name?:true,
+objects?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["objects_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["objects_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["objects_bool_exp"]},ValueTypes["objects"]],
+objects_aggregate?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["objects_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["objects_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["objects_bool_exp"]},ValueTypes["objects_aggregate"]],
+	user_id?:true,
 		__typename?: true
 }>;
 	/** aggregated selection of "object_types" */
@@ -2325,22 +3419,41 @@ metadata?: [{	/** JSON select path */
 }>;
 	/** aggregate fields of "object_types" */
 ["object_types_aggregate_fields"]: AliasType<{
+	avg?:ValueTypes["object_types_avg_fields"],
 count?: [{	columns?:ValueTypes["object_types_select_column"][],	distinct?:boolean},true],
 	max?:ValueTypes["object_types_max_fields"],
 	min?:ValueTypes["object_types_min_fields"],
+	stddev?:ValueTypes["object_types_stddev_fields"],
+	stddev_pop?:ValueTypes["object_types_stddev_pop_fields"],
+	stddev_samp?:ValueTypes["object_types_stddev_samp_fields"],
+	sum?:ValueTypes["object_types_sum_fields"],
+	var_pop?:ValueTypes["object_types_var_pop_fields"],
+	var_samp?:ValueTypes["object_types_var_samp_fields"],
+	variance?:ValueTypes["object_types_variance_fields"],
 		__typename?: true
 }>;
 	/** append existing jsonb value of filtered columns with new jsonb value */
 ["object_types_append_input"]: {
 	metadata?:ValueTypes["jsonb"]
 };
+	/** aggregate avg on columns */
+["object_types_avg_fields"]: AliasType<{
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
 	/** Boolean expression to filter rows from the table "object_types". All fields are combined with a logical 'AND'. */
 ["object_types_bool_exp"]: {
 	_and?:ValueTypes["object_types_bool_exp"][],
 	_not?:ValueTypes["object_types_bool_exp"],
 	_or?:ValueTypes["object_types_bool_exp"][],
-	id?:ValueTypes["String_comparison_exp"],
-	metadata?:ValueTypes["jsonb_comparison_exp"]
+	created_at?:ValueTypes["timestamptz_comparison_exp"],
+	id?:ValueTypes["Int_comparison_exp"],
+	metadata?:ValueTypes["jsonb_comparison_exp"],
+	name?:ValueTypes["String_comparison_exp"],
+	objects?:ValueTypes["objects_bool_exp"],
+	objects_aggregate?:ValueTypes["objects_aggregate_bool_exp"],
+	user_id?:ValueTypes["Int_comparison_exp"]
 };
 	/** unique or primary key constraints on table "object_types" */
 ["object_types_constraint"]:object_types_constraint;
@@ -2357,19 +3470,34 @@ end). throws an error if top level container is not an array */
 ["object_types_delete_key_input"]: {
 	metadata?:string
 };
+	/** input type for incrementing numeric columns in table "object_types" */
+["object_types_inc_input"]: {
+	id?:number,
+	user_id?:number
+};
 	/** input type for inserting data into table "object_types" */
 ["object_types_insert_input"]: {
-	id?:string,
-	metadata?:ValueTypes["jsonb"]
+	created_at?:ValueTypes["timestamptz"],
+	id?:number,
+	metadata?:ValueTypes["jsonb"],
+	name?:string,
+	objects?:ValueTypes["objects_arr_rel_insert_input"],
+	user_id?:number
 };
 	/** aggregate max on columns */
 ["object_types_max_fields"]: AliasType<{
+	created_at?:true,
 	id?:true,
+	name?:true,
+	user_id?:true,
 		__typename?: true
 }>;
 	/** aggregate min on columns */
 ["object_types_min_fields"]: AliasType<{
+	created_at?:true,
 	id?:true,
+	name?:true,
+	user_id?:true,
 		__typename?: true
 }>;
 	/** response of any mutation on the table "object_types" */
@@ -2380,6 +3508,12 @@ end). throws an error if top level container is not an array */
 	returning?:ValueTypes["object_types"],
 		__typename?: true
 }>;
+	/** input type for inserting object relation for remote table "object_types" */
+["object_types_obj_rel_insert_input"]: {
+	data:ValueTypes["object_types_insert_input"],
+	/** upsert condition */
+	on_conflict?:ValueTypes["object_types_on_conflict"]
+};
 	/** on_conflict condition type for table "object_types" */
 ["object_types_on_conflict"]: {
 	constraint:ValueTypes["object_types_constraint"],
@@ -2388,12 +3522,16 @@ end). throws an error if top level container is not an array */
 };
 	/** Ordering options when selecting data from "object_types". */
 ["object_types_order_by"]: {
+	created_at?:ValueTypes["order_by"],
 	id?:ValueTypes["order_by"],
-	metadata?:ValueTypes["order_by"]
+	metadata?:ValueTypes["order_by"],
+	name?:ValueTypes["order_by"],
+	objects_aggregate?:ValueTypes["objects_aggregate_order_by"],
+	user_id?:ValueTypes["order_by"]
 };
 	/** primary key columns input for table: object_types */
 ["object_types_pk_columns_input"]: {
-	id:string
+	id:number
 };
 	/** prepend existing jsonb value of filtered columns with new jsonb value */
 ["object_types_prepend_input"]: {
@@ -2403,9 +3541,30 @@ end). throws an error if top level container is not an array */
 ["object_types_select_column"]:object_types_select_column;
 	/** input type for updating data in table "object_types" */
 ["object_types_set_input"]: {
-	id?:string,
-	metadata?:ValueTypes["jsonb"]
+	created_at?:ValueTypes["timestamptz"],
+	id?:number,
+	metadata?:ValueTypes["jsonb"],
+	name?:string,
+	user_id?:number
 };
+	/** aggregate stddev on columns */
+["object_types_stddev_fields"]: AliasType<{
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** aggregate stddev_pop on columns */
+["object_types_stddev_pop_fields"]: AliasType<{
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** aggregate stddev_samp on columns */
+["object_types_stddev_samp_fields"]: AliasType<{
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
 	/** Streaming cursor of the table "object_types" */
 ["object_types_stream_cursor_input"]: {
 	/** Stream column input with initial value */
@@ -2415,9 +3574,18 @@ end). throws an error if top level container is not an array */
 };
 	/** Initial value of the column from where the streaming should start */
 ["object_types_stream_cursor_value_input"]: {
-	id?:string,
-	metadata?:ValueTypes["jsonb"]
+	created_at?:ValueTypes["timestamptz"],
+	id?:number,
+	metadata?:ValueTypes["jsonb"],
+	name?:string,
+	user_id?:number
 };
+	/** aggregate sum on columns */
+["object_types_sum_fields"]: AliasType<{
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
 	/** update columns of table "object_types" */
 ["object_types_update_column"]:object_types_update_column;
 	["object_types_updates"]: {
@@ -2430,6 +3598,8 @@ the end). throws an error if top level container is not an array */
 	_delete_elem?:ValueTypes["object_types_delete_elem_input"],
 	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
 	_delete_key?:ValueTypes["object_types_delete_key_input"],
+	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["object_types_inc_input"],
 	/** prepend existing jsonb value of filtered columns with new jsonb value */
 	_prepend?:ValueTypes["object_types_prepend_input"],
 	/** sets the columns of the filtered rows to the given values */
@@ -2437,6 +3607,24 @@ the end). throws an error if top level container is not an array */
 	/** filter the rows which have to be updated */
 	where:ValueTypes["object_types_bool_exp"]
 };
+	/** aggregate var_pop on columns */
+["object_types_var_pop_fields"]: AliasType<{
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** aggregate var_samp on columns */
+["object_types_var_samp_fields"]: AliasType<{
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** aggregate variance on columns */
+["object_types_variance_fields"]: AliasType<{
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
 	/** columns and relationships of "objects" */
 ["objects"]: AliasType<{
 events?: [{	/** distinct select on columns */
@@ -2445,9 +3633,21 @@ events?: [{	/** distinct select on columns */
 	offset?:number,	/** sort the rows by one or more columns */
 	order_by?:ValueTypes["events_order_by"][],	/** filter the rows returned */
 	where?:ValueTypes["events_bool_exp"]},ValueTypes["events"]],
+fields?: [{	/** JSON select path */
+	path?:string},true],
 	id?:true,
+metadata?: [{	/** JSON select path */
+	path?:string},true],
 	name?:true,
-	object_type?:true,
+	/** An object relationship */
+	object_type?:ValueTypes["object_types"],
+	object_type_id?:true,
+parent_events?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["events_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["events_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["events_bool_exp"]},ValueTypes["events"]],
 	user_id?:true,
 		__typename?: true
 }>;
@@ -2457,6 +3657,15 @@ events?: [{	/** distinct select on columns */
 	nodes?:ValueTypes["objects"],
 		__typename?: true
 }>;
+	["objects_aggregate_bool_exp"]: {
+	count?:ValueTypes["objects_aggregate_bool_exp_count"]
+};
+	["objects_aggregate_bool_exp_count"]: {
+	arguments?:ValueTypes["objects_select_column"][],
+	distinct?:boolean,
+	filter?:ValueTypes["objects_bool_exp"],
+	predicate:ValueTypes["Int_comparison_exp"]
+};
 	/** aggregate fields of "objects" */
 ["objects_aggregate_fields"]: AliasType<{
 	avg?:ValueTypes["objects_avg_fields"],
@@ -2486,15 +3695,28 @@ count?: [{	columns?:ValueTypes["objects_select_column"][],	distinct?:boolean},tr
 	var_samp?:ValueTypes["objects_var_samp_order_by"],
 	variance?:ValueTypes["objects_variance_order_by"]
 };
+	/** append existing jsonb value of filtered columns with new jsonb value */
+["objects_append_input"]: {
+	fields?:ValueTypes["jsonb"],
+	metadata?:ValueTypes["jsonb"]
+};
+	/** input type for inserting array relation for remote table "objects" */
+["objects_arr_rel_insert_input"]: {
+	data:ValueTypes["objects_insert_input"][],
+	/** upsert condition */
+	on_conflict?:ValueTypes["objects_on_conflict"]
+};
 	/** aggregate avg on columns */
 ["objects_avg_fields"]: AliasType<{
 	id?:true,
+	object_type_id?:true,
 	user_id?:true,
 		__typename?: true
 }>;
 	/** order by avg() on columns of table "objects" */
 ["objects_avg_order_by"]: {
 	id?:ValueTypes["order_by"],
+	object_type_id?:ValueTypes["order_by"],
 	user_id?:ValueTypes["order_by"]
 };
 	/** Boolean expression to filter rows from the table "objects". All fields are combined with a logical 'AND'. */
@@ -2503,30 +3725,54 @@ count?: [{	columns?:ValueTypes["objects_select_column"][],	distinct?:boolean},tr
 	_not?:ValueTypes["objects_bool_exp"],
 	_or?:ValueTypes["objects_bool_exp"][],
 	events?:ValueTypes["events_bool_exp"],
+	fields?:ValueTypes["jsonb_comparison_exp"],
 	id?:ValueTypes["Int_comparison_exp"],
+	metadata?:ValueTypes["jsonb_comparison_exp"],
 	name?:ValueTypes["String_comparison_exp"],
-	object_type?:ValueTypes["String_comparison_exp"],
+	object_type?:ValueTypes["object_types_bool_exp"],
+	object_type_id?:ValueTypes["Int_comparison_exp"],
+	parent_events?:ValueTypes["events_bool_exp"],
 	user_id?:ValueTypes["Int_comparison_exp"]
 };
 	/** unique or primary key constraints on table "objects" */
 ["objects_constraint"]:objects_constraint;
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+["objects_delete_at_path_input"]: {
+	fields?:string[],
+	metadata?:string[]
+};
+	/** delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array */
+["objects_delete_elem_input"]: {
+	fields?:number,
+	metadata?:number
+};
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+["objects_delete_key_input"]: {
+	fields?:string,
+	metadata?:string
+};
 	/** input type for incrementing numeric columns in table "objects" */
 ["objects_inc_input"]: {
 	id?:number,
+	object_type_id?:number,
 	user_id?:number
 };
 	/** input type for inserting data into table "objects" */
 ["objects_insert_input"]: {
+	fields?:ValueTypes["jsonb"],
 	id?:number,
+	metadata?:ValueTypes["jsonb"],
 	name?:string,
-	object_type?:string,
+	object_type?:ValueTypes["object_types_obj_rel_insert_input"],
+	object_type_id?:number,
 	user_id?:number
 };
 	/** aggregate max on columns */
 ["objects_max_fields"]: AliasType<{
 	id?:true,
 	name?:true,
-	object_type?:true,
+	object_type_id?:true,
 	user_id?:true,
 		__typename?: true
 }>;
@@ -2534,14 +3780,14 @@ count?: [{	columns?:ValueTypes["objects_select_column"][],	distinct?:boolean},tr
 ["objects_max_order_by"]: {
 	id?:ValueTypes["order_by"],
 	name?:ValueTypes["order_by"],
-	object_type?:ValueTypes["order_by"],
+	object_type_id?:ValueTypes["order_by"],
 	user_id?:ValueTypes["order_by"]
 };
 	/** aggregate min on columns */
 ["objects_min_fields"]: AliasType<{
 	id?:true,
 	name?:true,
-	object_type?:true,
+	object_type_id?:true,
 	user_id?:true,
 		__typename?: true
 }>;
@@ -2549,7 +3795,7 @@ count?: [{	columns?:ValueTypes["objects_select_column"][],	distinct?:boolean},tr
 ["objects_min_order_by"]: {
 	id?:ValueTypes["order_by"],
 	name?:ValueTypes["order_by"],
-	object_type?:ValueTypes["order_by"],
+	object_type_id?:ValueTypes["order_by"],
 	user_id?:ValueTypes["order_by"]
 };
 	/** response of any mutation on the table "objects" */
@@ -2560,6 +3806,12 @@ count?: [{	columns?:ValueTypes["objects_select_column"][],	distinct?:boolean},tr
 	returning?:ValueTypes["objects"],
 		__typename?: true
 }>;
+	/** input type for inserting object relation for remote table "objects" */
+["objects_obj_rel_insert_input"]: {
+	data:ValueTypes["objects_insert_input"],
+	/** upsert condition */
+	on_conflict?:ValueTypes["objects_on_conflict"]
+};
 	/** on_conflict condition type for table "objects" */
 ["objects_on_conflict"]: {
 	constraint:ValueTypes["objects_constraint"],
@@ -2569,55 +3821,72 @@ count?: [{	columns?:ValueTypes["objects_select_column"][],	distinct?:boolean},tr
 	/** Ordering options when selecting data from "objects". */
 ["objects_order_by"]: {
 	events_aggregate?:ValueTypes["events_aggregate_order_by"],
+	fields?:ValueTypes["order_by"],
 	id?:ValueTypes["order_by"],
+	metadata?:ValueTypes["order_by"],
 	name?:ValueTypes["order_by"],
-	object_type?:ValueTypes["order_by"],
+	object_type?:ValueTypes["object_types_order_by"],
+	object_type_id?:ValueTypes["order_by"],
+	parent_events_aggregate?:ValueTypes["events_aggregate_order_by"],
 	user_id?:ValueTypes["order_by"]
 };
 	/** primary key columns input for table: objects */
 ["objects_pk_columns_input"]: {
 	id:number
 };
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+["objects_prepend_input"]: {
+	fields?:ValueTypes["jsonb"],
+	metadata?:ValueTypes["jsonb"]
+};
 	/** select columns of table "objects" */
 ["objects_select_column"]:objects_select_column;
 	/** input type for updating data in table "objects" */
 ["objects_set_input"]: {
+	fields?:ValueTypes["jsonb"],
 	id?:number,
+	metadata?:ValueTypes["jsonb"],
 	name?:string,
-	object_type?:string,
+	object_type_id?:number,
 	user_id?:number
 };
 	/** aggregate stddev on columns */
 ["objects_stddev_fields"]: AliasType<{
 	id?:true,
+	object_type_id?:true,
 	user_id?:true,
 		__typename?: true
 }>;
 	/** order by stddev() on columns of table "objects" */
 ["objects_stddev_order_by"]: {
 	id?:ValueTypes["order_by"],
+	object_type_id?:ValueTypes["order_by"],
 	user_id?:ValueTypes["order_by"]
 };
 	/** aggregate stddev_pop on columns */
 ["objects_stddev_pop_fields"]: AliasType<{
 	id?:true,
+	object_type_id?:true,
 	user_id?:true,
 		__typename?: true
 }>;
 	/** order by stddev_pop() on columns of table "objects" */
 ["objects_stddev_pop_order_by"]: {
 	id?:ValueTypes["order_by"],
+	object_type_id?:ValueTypes["order_by"],
 	user_id?:ValueTypes["order_by"]
 };
 	/** aggregate stddev_samp on columns */
 ["objects_stddev_samp_fields"]: AliasType<{
 	id?:true,
+	object_type_id?:true,
 	user_id?:true,
 		__typename?: true
 }>;
 	/** order by stddev_samp() on columns of table "objects" */
 ["objects_stddev_samp_order_by"]: {
 	id?:ValueTypes["order_by"],
+	object_type_id?:ValueTypes["order_by"],
 	user_id?:ValueTypes["order_by"]
 };
 	/** Streaming cursor of the table "objects" */
@@ -2629,27 +3898,42 @@ count?: [{	columns?:ValueTypes["objects_select_column"][],	distinct?:boolean},tr
 };
 	/** Initial value of the column from where the streaming should start */
 ["objects_stream_cursor_value_input"]: {
+	fields?:ValueTypes["jsonb"],
 	id?:number,
+	metadata?:ValueTypes["jsonb"],
 	name?:string,
-	object_type?:string,
+	object_type_id?:number,
 	user_id?:number
 };
 	/** aggregate sum on columns */
 ["objects_sum_fields"]: AliasType<{
 	id?:true,
+	object_type_id?:true,
 	user_id?:true,
 		__typename?: true
 }>;
 	/** order by sum() on columns of table "objects" */
 ["objects_sum_order_by"]: {
 	id?:ValueTypes["order_by"],
+	object_type_id?:ValueTypes["order_by"],
 	user_id?:ValueTypes["order_by"]
 };
 	/** update columns of table "objects" */
 ["objects_update_column"]:objects_update_column;
 	["objects_updates"]: {
+	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:ValueTypes["objects_append_input"],
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:ValueTypes["objects_delete_at_path_input"],
+	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:ValueTypes["objects_delete_elem_input"],
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:ValueTypes["objects_delete_key_input"],
 	/** increments the numeric columns with given value of the filtered values */
 	_inc?:ValueTypes["objects_inc_input"],
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:ValueTypes["objects_prepend_input"],
 	/** sets the columns of the filtered rows to the given values */
 	_set?:ValueTypes["objects_set_input"],
 	/** filter the rows which have to be updated */
@@ -2658,34 +3942,40 @@ count?: [{	columns?:ValueTypes["objects_select_column"][],	distinct?:boolean},tr
 	/** aggregate var_pop on columns */
 ["objects_var_pop_fields"]: AliasType<{
 	id?:true,
+	object_type_id?:true,
 	user_id?:true,
 		__typename?: true
 }>;
 	/** order by var_pop() on columns of table "objects" */
 ["objects_var_pop_order_by"]: {
 	id?:ValueTypes["order_by"],
+	object_type_id?:ValueTypes["order_by"],
 	user_id?:ValueTypes["order_by"]
 };
 	/** aggregate var_samp on columns */
 ["objects_var_samp_fields"]: AliasType<{
 	id?:true,
+	object_type_id?:true,
 	user_id?:true,
 		__typename?: true
 }>;
 	/** order by var_samp() on columns of table "objects" */
 ["objects_var_samp_order_by"]: {
 	id?:ValueTypes["order_by"],
+	object_type_id?:ValueTypes["order_by"],
 	user_id?:ValueTypes["order_by"]
 };
 	/** aggregate variance on columns */
 ["objects_variance_fields"]: AliasType<{
 	id?:true,
+	object_type_id?:true,
 	user_id?:true,
 		__typename?: true
 }>;
 	/** order by variance() on columns of table "objects" */
 ["objects_variance_order_by"]: {
 	id?:ValueTypes["order_by"],
+	object_type_id?:ValueTypes["order_by"],
 	user_id?:ValueTypes["order_by"]
 };
 	/** column ordering options */
@@ -2771,6 +4061,45 @@ goals_aggregate?: [{	/** distinct select on columns */
 	order_by?:ValueTypes["goals_order_by"][],	/** filter the rows returned */
 	where?:ValueTypes["goals_bool_exp"]},ValueTypes["goals_aggregate"]],
 goals_by_pk?: [{	id:number},ValueTypes["goals"]],
+group_chat?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["group_chat_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["group_chat_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["group_chat_bool_exp"]},ValueTypes["group_chat"]],
+group_chat_aggregate?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["group_chat_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["group_chat_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["group_chat_bool_exp"]},ValueTypes["group_chat_aggregate"]],
+group_chat_by_pk?: [{	id:number},ValueTypes["group_chat"]],
+group_members?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["group_members_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["group_members_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["group_members_bool_exp"]},ValueTypes["group_members"]],
+group_members_aggregate?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["group_members_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["group_members_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["group_members_bool_exp"]},ValueTypes["group_members_aggregate"]],
+group_members_by_pk?: [{	id:number},ValueTypes["group_members"]],
+group_messages?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["group_messages_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["group_messages_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["group_messages_bool_exp"]},ValueTypes["group_messages"]],
+group_messages_aggregate?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["group_messages_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["group_messages_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["group_messages_bool_exp"]},ValueTypes["group_messages_aggregate"]],
+group_messages_by_pk?: [{	id:number},ValueTypes["group_messages"]],
 interactions?: [{	/** distinct select on columns */
 	distinct_on?:ValueTypes["interactions_select_column"][],	/** limit the number of rows returned */
 	limit?:number,	/** skip the first n rows. Use only with order_by */
@@ -2823,7 +4152,7 @@ object_types_aggregate?: [{	/** distinct select on columns */
 	offset?:number,	/** sort the rows by one or more columns */
 	order_by?:ValueTypes["object_types_order_by"][],	/** filter the rows returned */
 	where?:ValueTypes["object_types_bool_exp"]},ValueTypes["object_types_aggregate"]],
-object_types_by_pk?: [{	id:string},ValueTypes["object_types"]],
+object_types_by_pk?: [{	id:number},ValueTypes["object_types"]],
 objects?: [{	/** distinct select on columns */
 	distinct_on?:ValueTypes["objects_select_column"][],	/** limit the number of rows returned */
 	limit?:number,	/** skip the first n rows. Use only with order_by */
@@ -2876,6 +4205,71 @@ users_aggregate?: [{	/** distinct select on columns */
 	order_by?:ValueTypes["users_order_by"][],	/** filter the rows returned */
 	where?:ValueTypes["users_bool_exp"]},ValueTypes["users_aggregate"]],
 users_by_pk?: [{	id:number},ValueTypes["users"]],
+v2_action_types?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_action_types_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_action_types_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_action_types_bool_exp"]},ValueTypes["v2_action_types"]],
+v2_action_types_aggregate?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_action_types_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_action_types_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_action_types_bool_exp"]},ValueTypes["v2_action_types_aggregate"]],
+v2_action_types_by_pk?: [{	id:number},ValueTypes["v2_action_types"]],
+v2_actions?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_actions_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_actions_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_actions_bool_exp"]},ValueTypes["v2_actions"]],
+v2_actions_aggregate?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_actions_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_actions_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_actions_bool_exp"]},ValueTypes["v2_actions_aggregate"]],
+v2_actions_by_pk?: [{	id:number},ValueTypes["v2_actions"]],
+v2_aggregates?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_aggregates_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_aggregates_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_aggregates_bool_exp"]},ValueTypes["v2_aggregates"]],
+v2_aggregates_aggregate?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_aggregates_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_aggregates_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_aggregates_bool_exp"]},ValueTypes["v2_aggregates_aggregate"]],
+v2_aggregates_by_pk?: [{	id:number},ValueTypes["v2_aggregates"]],
+v2_object_action?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_object_action_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_object_action_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_object_action_bool_exp"]},ValueTypes["v2_object_action"]],
+v2_object_action_aggregate?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_object_action_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_object_action_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_object_action_bool_exp"]},ValueTypes["v2_object_action_aggregate"]],
+v2_object_action_by_pk?: [{	id:number},ValueTypes["v2_object_action"]],
+v2_object_t_action_t?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_object_t_action_t_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_object_t_action_t_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_object_t_action_t_bool_exp"]},ValueTypes["v2_object_t_action_t"]],
+v2_object_t_action_t_aggregate?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_object_t_action_t_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_object_t_action_t_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_object_t_action_t_bool_exp"]},ValueTypes["v2_object_t_action_t_aggregate"]],
+v2_object_t_action_t_by_pk?: [{	id:number},ValueTypes["v2_object_t_action_t"]],
 		__typename?: true
 }>;
 	["st_d_within_geography_input"]: {
@@ -3016,6 +4410,57 @@ goals_stream?: [{	/** maximum number of rows returned in a single batch */
 	batch_size:number,	/** cursor to stream the results returned by the query */
 	cursor?:ValueTypes["goals_stream_cursor_input"][],	/** filter the rows returned */
 	where?:ValueTypes["goals_bool_exp"]},ValueTypes["goals"]],
+group_chat?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["group_chat_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["group_chat_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["group_chat_bool_exp"]},ValueTypes["group_chat"]],
+group_chat_aggregate?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["group_chat_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["group_chat_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["group_chat_bool_exp"]},ValueTypes["group_chat_aggregate"]],
+group_chat_by_pk?: [{	id:number},ValueTypes["group_chat"]],
+group_chat_stream?: [{	/** maximum number of rows returned in a single batch */
+	batch_size:number,	/** cursor to stream the results returned by the query */
+	cursor?:ValueTypes["group_chat_stream_cursor_input"][],	/** filter the rows returned */
+	where?:ValueTypes["group_chat_bool_exp"]},ValueTypes["group_chat"]],
+group_members?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["group_members_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["group_members_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["group_members_bool_exp"]},ValueTypes["group_members"]],
+group_members_aggregate?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["group_members_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["group_members_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["group_members_bool_exp"]},ValueTypes["group_members_aggregate"]],
+group_members_by_pk?: [{	id:number},ValueTypes["group_members"]],
+group_members_stream?: [{	/** maximum number of rows returned in a single batch */
+	batch_size:number,	/** cursor to stream the results returned by the query */
+	cursor?:ValueTypes["group_members_stream_cursor_input"][],	/** filter the rows returned */
+	where?:ValueTypes["group_members_bool_exp"]},ValueTypes["group_members"]],
+group_messages?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["group_messages_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["group_messages_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["group_messages_bool_exp"]},ValueTypes["group_messages"]],
+group_messages_aggregate?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["group_messages_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["group_messages_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["group_messages_bool_exp"]},ValueTypes["group_messages_aggregate"]],
+group_messages_by_pk?: [{	id:number},ValueTypes["group_messages"]],
+group_messages_stream?: [{	/** maximum number of rows returned in a single batch */
+	batch_size:number,	/** cursor to stream the results returned by the query */
+	cursor?:ValueTypes["group_messages_stream_cursor_input"][],	/** filter the rows returned */
+	where?:ValueTypes["group_messages_bool_exp"]},ValueTypes["group_messages"]],
 interactions?: [{	/** distinct select on columns */
 	distinct_on?:ValueTypes["interactions_select_column"][],	/** limit the number of rows returned */
 	limit?:number,	/** skip the first n rows. Use only with order_by */
@@ -3076,7 +4521,7 @@ object_types_aggregate?: [{	/** distinct select on columns */
 	offset?:number,	/** sort the rows by one or more columns */
 	order_by?:ValueTypes["object_types_order_by"][],	/** filter the rows returned */
 	where?:ValueTypes["object_types_bool_exp"]},ValueTypes["object_types_aggregate"]],
-object_types_by_pk?: [{	id:string},ValueTypes["object_types"]],
+object_types_by_pk?: [{	id:number},ValueTypes["object_types"]],
 object_types_stream?: [{	/** maximum number of rows returned in a single batch */
 	batch_size:number,	/** cursor to stream the results returned by the query */
 	cursor?:ValueTypes["object_types_stream_cursor_input"][],	/** filter the rows returned */
@@ -3149,6 +4594,91 @@ users_stream?: [{	/** maximum number of rows returned in a single batch */
 	batch_size:number,	/** cursor to stream the results returned by the query */
 	cursor?:ValueTypes["users_stream_cursor_input"][],	/** filter the rows returned */
 	where?:ValueTypes["users_bool_exp"]},ValueTypes["users"]],
+v2_action_types?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_action_types_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_action_types_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_action_types_bool_exp"]},ValueTypes["v2_action_types"]],
+v2_action_types_aggregate?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_action_types_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_action_types_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_action_types_bool_exp"]},ValueTypes["v2_action_types_aggregate"]],
+v2_action_types_by_pk?: [{	id:number},ValueTypes["v2_action_types"]],
+v2_action_types_stream?: [{	/** maximum number of rows returned in a single batch */
+	batch_size:number,	/** cursor to stream the results returned by the query */
+	cursor?:ValueTypes["v2_action_types_stream_cursor_input"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_action_types_bool_exp"]},ValueTypes["v2_action_types"]],
+v2_actions?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_actions_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_actions_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_actions_bool_exp"]},ValueTypes["v2_actions"]],
+v2_actions_aggregate?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_actions_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_actions_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_actions_bool_exp"]},ValueTypes["v2_actions_aggregate"]],
+v2_actions_by_pk?: [{	id:number},ValueTypes["v2_actions"]],
+v2_actions_stream?: [{	/** maximum number of rows returned in a single batch */
+	batch_size:number,	/** cursor to stream the results returned by the query */
+	cursor?:ValueTypes["v2_actions_stream_cursor_input"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_actions_bool_exp"]},ValueTypes["v2_actions"]],
+v2_aggregates?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_aggregates_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_aggregates_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_aggregates_bool_exp"]},ValueTypes["v2_aggregates"]],
+v2_aggregates_aggregate?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_aggregates_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_aggregates_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_aggregates_bool_exp"]},ValueTypes["v2_aggregates_aggregate"]],
+v2_aggregates_by_pk?: [{	id:number},ValueTypes["v2_aggregates"]],
+v2_aggregates_stream?: [{	/** maximum number of rows returned in a single batch */
+	batch_size:number,	/** cursor to stream the results returned by the query */
+	cursor?:ValueTypes["v2_aggregates_stream_cursor_input"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_aggregates_bool_exp"]},ValueTypes["v2_aggregates"]],
+v2_object_action?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_object_action_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_object_action_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_object_action_bool_exp"]},ValueTypes["v2_object_action"]],
+v2_object_action_aggregate?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_object_action_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_object_action_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_object_action_bool_exp"]},ValueTypes["v2_object_action_aggregate"]],
+v2_object_action_by_pk?: [{	id:number},ValueTypes["v2_object_action"]],
+v2_object_action_stream?: [{	/** maximum number of rows returned in a single batch */
+	batch_size:number,	/** cursor to stream the results returned by the query */
+	cursor?:ValueTypes["v2_object_action_stream_cursor_input"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_object_action_bool_exp"]},ValueTypes["v2_object_action"]],
+v2_object_t_action_t?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_object_t_action_t_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_object_t_action_t_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_object_t_action_t_bool_exp"]},ValueTypes["v2_object_t_action_t"]],
+v2_object_t_action_t_aggregate?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_object_t_action_t_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_object_t_action_t_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_object_t_action_t_bool_exp"]},ValueTypes["v2_object_t_action_t_aggregate"]],
+v2_object_t_action_t_by_pk?: [{	id:number},ValueTypes["v2_object_t_action_t"]],
+v2_object_t_action_t_stream?: [{	/** maximum number of rows returned in a single batch */
+	batch_size:number,	/** cursor to stream the results returned by the query */
+	cursor?:ValueTypes["v2_object_t_action_t_stream_cursor_input"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_object_t_action_t_bool_exp"]},ValueTypes["v2_object_t_action_t"]],
 		__typename?: true
 }>;
 	["timestamp"]:unknown;
@@ -3640,7 +5170,32 @@ the end). throws an error if top level container is not an array */
 }>;
 	/** columns and relationships of "users" */
 ["users"]: AliasType<{
+actions?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_actions_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_actions_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_actions_bool_exp"]},ValueTypes["v2_actions"]],
+actions_aggregate?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_actions_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_actions_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_actions_bool_exp"]},ValueTypes["v2_actions_aggregate"]],
+	apns_token?:true,
 	apple_id?:true,
+chats?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["group_members_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["group_members_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["group_members_bool_exp"]},ValueTypes["group_members"]],
+chats_aggregate?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["group_members_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["group_members_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["group_members_bool_exp"]},ValueTypes["group_members_aggregate"]],
 closest_user_location?: [{	/** input parameters for computed field "closest_user_location" defined on table "users" */
 	args:ValueTypes["closest_user_location_users_args"],	/** distinct select on columns */
 	distinct_on?:ValueTypes["locations_select_column"][],	/** limit the number of rows returned */
@@ -3715,7 +5270,12 @@ count?: [{	columns?:ValueTypes["users_select_column"][],	distinct?:boolean},true
 	_and?:ValueTypes["users_bool_exp"][],
 	_not?:ValueTypes["users_bool_exp"],
 	_or?:ValueTypes["users_bool_exp"][],
+	actions?:ValueTypes["v2_actions_bool_exp"],
+	actions_aggregate?:ValueTypes["v2_actions_aggregate_bool_exp"],
+	apns_token?:ValueTypes["String_comparison_exp"],
 	apple_id?:ValueTypes["String_comparison_exp"],
+	chats?:ValueTypes["group_members_bool_exp"],
+	chats_aggregate?:ValueTypes["group_members_aggregate_bool_exp"],
 	config?:ValueTypes["jsonb_comparison_exp"],
 	events?:ValueTypes["events_bool_exp"],
 	events_aggregate?:ValueTypes["events_aggregate_bool_exp"],
@@ -3747,7 +5307,10 @@ end). throws an error if top level container is not an array */
 };
 	/** input type for inserting data into table "users" */
 ["users_insert_input"]: {
+	actions?:ValueTypes["v2_actions_arr_rel_insert_input"],
+	apns_token?:string,
 	apple_id?:string,
+	chats?:ValueTypes["group_members_arr_rel_insert_input"],
 	config?:ValueTypes["jsonb"],
 	events?:ValueTypes["events_arr_rel_insert_input"],
 	id?:number,
@@ -3758,6 +5321,7 @@ end). throws an error if top level container is not an array */
 };
 	/** aggregate max on columns */
 ["users_max_fields"]: AliasType<{
+	apns_token?:true,
 	apple_id?:true,
 	id?:true,
 	language?:true,
@@ -3767,6 +5331,7 @@ end). throws an error if top level container is not an array */
 }>;
 	/** aggregate min on columns */
 ["users_min_fields"]: AliasType<{
+	apns_token?:true,
 	apple_id?:true,
 	id?:true,
 	language?:true,
@@ -3796,7 +5361,10 @@ end). throws an error if top level container is not an array */
 };
 	/** Ordering options when selecting data from "users". */
 ["users_order_by"]: {
+	actions_aggregate?:ValueTypes["v2_actions_aggregate_order_by"],
+	apns_token?:ValueTypes["order_by"],
 	apple_id?:ValueTypes["order_by"],
+	chats_aggregate?:ValueTypes["group_members_aggregate_order_by"],
 	config?:ValueTypes["order_by"],
 	events_aggregate?:ValueTypes["events_aggregate_order_by"],
 	id?:ValueTypes["order_by"],
@@ -3818,6 +5386,7 @@ end). throws an error if top level container is not an array */
 ["users_select_column"]:users_select_column;
 	/** input type for updating data in table "users" */
 ["users_set_input"]: {
+	apns_token?:string,
 	apple_id?:string,
 	config?:ValueTypes["jsonb"],
 	id?:number,
@@ -3849,6 +5418,7 @@ end). throws an error if top level container is not an array */
 };
 	/** Initial value of the column from where the streaming should start */
 ["users_stream_cursor_value_input"]: {
+	apns_token?:string,
 	apple_id?:string,
 	config?:ValueTypes["jsonb"],
 	id?:number,
@@ -3897,6 +5467,1643 @@ the end). throws an error if top level container is not an array */
 	id?:true,
 		__typename?: true
 }>;
+	/** columns and relationships of "v2.action_types" */
+["v2_action_types"]: AliasType<{
+aggregates?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_aggregates_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_aggregates_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_aggregates_bool_exp"]},ValueTypes["v2_aggregates"]],
+aggregates_aggregate?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_aggregates_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_aggregates_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_aggregates_bool_exp"]},ValueTypes["v2_aggregates_aggregate"]],
+	created_at?:true,
+	description?:true,
+	has_duration?:true,
+	id?:true,
+metadata?: [{	/** JSON select path */
+	path?:string},true],
+	name?:true,
+object_t_action_ts?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_object_t_action_t_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_object_t_action_t_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_object_t_action_t_bool_exp"]},ValueTypes["v2_object_t_action_t"]],
+object_t_action_ts_aggregate?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_object_t_action_t_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_object_t_action_t_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_object_t_action_t_bool_exp"]},ValueTypes["v2_object_t_action_t_aggregate"]],
+	short_desc_syntax?:true,
+	updated_at?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** aggregated selection of "v2.action_types" */
+["v2_action_types_aggregate"]: AliasType<{
+	aggregate?:ValueTypes["v2_action_types_aggregate_fields"],
+	nodes?:ValueTypes["v2_action_types"],
+		__typename?: true
+}>;
+	/** aggregate fields of "v2.action_types" */
+["v2_action_types_aggregate_fields"]: AliasType<{
+	avg?:ValueTypes["v2_action_types_avg_fields"],
+count?: [{	columns?:ValueTypes["v2_action_types_select_column"][],	distinct?:boolean},true],
+	max?:ValueTypes["v2_action_types_max_fields"],
+	min?:ValueTypes["v2_action_types_min_fields"],
+	stddev?:ValueTypes["v2_action_types_stddev_fields"],
+	stddev_pop?:ValueTypes["v2_action_types_stddev_pop_fields"],
+	stddev_samp?:ValueTypes["v2_action_types_stddev_samp_fields"],
+	sum?:ValueTypes["v2_action_types_sum_fields"],
+	var_pop?:ValueTypes["v2_action_types_var_pop_fields"],
+	var_samp?:ValueTypes["v2_action_types_var_samp_fields"],
+	variance?:ValueTypes["v2_action_types_variance_fields"],
+		__typename?: true
+}>;
+	/** append existing jsonb value of filtered columns with new jsonb value */
+["v2_action_types_append_input"]: {
+	metadata?:ValueTypes["jsonb"]
+};
+	/** aggregate avg on columns */
+["v2_action_types_avg_fields"]: AliasType<{
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** Boolean expression to filter rows from the table "v2.action_types". All fields are combined with a logical 'AND'. */
+["v2_action_types_bool_exp"]: {
+	_and?:ValueTypes["v2_action_types_bool_exp"][],
+	_not?:ValueTypes["v2_action_types_bool_exp"],
+	_or?:ValueTypes["v2_action_types_bool_exp"][],
+	aggregates?:ValueTypes["v2_aggregates_bool_exp"],
+	aggregates_aggregate?:ValueTypes["v2_aggregates_aggregate_bool_exp"],
+	created_at?:ValueTypes["timestamptz_comparison_exp"],
+	description?:ValueTypes["String_comparison_exp"],
+	has_duration?:ValueTypes["Boolean_comparison_exp"],
+	id?:ValueTypes["Int_comparison_exp"],
+	metadata?:ValueTypes["jsonb_comparison_exp"],
+	name?:ValueTypes["String_comparison_exp"],
+	object_t_action_ts?:ValueTypes["v2_object_t_action_t_bool_exp"],
+	object_t_action_ts_aggregate?:ValueTypes["v2_object_t_action_t_aggregate_bool_exp"],
+	short_desc_syntax?:ValueTypes["String_comparison_exp"],
+	updated_at?:ValueTypes["timestamptz_comparison_exp"],
+	user_id?:ValueTypes["Int_comparison_exp"]
+};
+	/** unique or primary key constraints on table "v2.action_types" */
+["v2_action_types_constraint"]:v2_action_types_constraint;
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+["v2_action_types_delete_at_path_input"]: {
+	metadata?:string[]
+};
+	/** delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array */
+["v2_action_types_delete_elem_input"]: {
+	metadata?:number
+};
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+["v2_action_types_delete_key_input"]: {
+	metadata?:string
+};
+	/** input type for incrementing numeric columns in table "v2.action_types" */
+["v2_action_types_inc_input"]: {
+	id?:number,
+	user_id?:number
+};
+	/** input type for inserting data into table "v2.action_types" */
+["v2_action_types_insert_input"]: {
+	aggregates?:ValueTypes["v2_aggregates_arr_rel_insert_input"],
+	created_at?:ValueTypes["timestamptz"],
+	description?:string,
+	has_duration?:boolean,
+	id?:number,
+	metadata?:ValueTypes["jsonb"],
+	name?:string,
+	object_t_action_ts?:ValueTypes["v2_object_t_action_t_arr_rel_insert_input"],
+	short_desc_syntax?:string,
+	updated_at?:ValueTypes["timestamptz"],
+	user_id?:number
+};
+	/** aggregate max on columns */
+["v2_action_types_max_fields"]: AliasType<{
+	created_at?:true,
+	description?:true,
+	id?:true,
+	name?:true,
+	short_desc_syntax?:true,
+	updated_at?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** aggregate min on columns */
+["v2_action_types_min_fields"]: AliasType<{
+	created_at?:true,
+	description?:true,
+	id?:true,
+	name?:true,
+	short_desc_syntax?:true,
+	updated_at?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** response of any mutation on the table "v2.action_types" */
+["v2_action_types_mutation_response"]: AliasType<{
+	/** number of rows affected by the mutation */
+	affected_rows?:true,
+	/** data from the rows affected by the mutation */
+	returning?:ValueTypes["v2_action_types"],
+		__typename?: true
+}>;
+	/** input type for inserting object relation for remote table "v2.action_types" */
+["v2_action_types_obj_rel_insert_input"]: {
+	data:ValueTypes["v2_action_types_insert_input"],
+	/** upsert condition */
+	on_conflict?:ValueTypes["v2_action_types_on_conflict"]
+};
+	/** on_conflict condition type for table "v2.action_types" */
+["v2_action_types_on_conflict"]: {
+	constraint:ValueTypes["v2_action_types_constraint"],
+	update_columns:ValueTypes["v2_action_types_update_column"][],
+	where?:ValueTypes["v2_action_types_bool_exp"]
+};
+	/** Ordering options when selecting data from "v2.action_types". */
+["v2_action_types_order_by"]: {
+	aggregates_aggregate?:ValueTypes["v2_aggregates_aggregate_order_by"],
+	created_at?:ValueTypes["order_by"],
+	description?:ValueTypes["order_by"],
+	has_duration?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	metadata?:ValueTypes["order_by"],
+	name?:ValueTypes["order_by"],
+	object_t_action_ts_aggregate?:ValueTypes["v2_object_t_action_t_aggregate_order_by"],
+	short_desc_syntax?:ValueTypes["order_by"],
+	updated_at?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** primary key columns input for table: v2.action_types */
+["v2_action_types_pk_columns_input"]: {
+	id:number
+};
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+["v2_action_types_prepend_input"]: {
+	metadata?:ValueTypes["jsonb"]
+};
+	/** select columns of table "v2.action_types" */
+["v2_action_types_select_column"]:v2_action_types_select_column;
+	/** input type for updating data in table "v2.action_types" */
+["v2_action_types_set_input"]: {
+	created_at?:ValueTypes["timestamptz"],
+	description?:string,
+	has_duration?:boolean,
+	id?:number,
+	metadata?:ValueTypes["jsonb"],
+	name?:string,
+	short_desc_syntax?:string,
+	updated_at?:ValueTypes["timestamptz"],
+	user_id?:number
+};
+	/** aggregate stddev on columns */
+["v2_action_types_stddev_fields"]: AliasType<{
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** aggregate stddev_pop on columns */
+["v2_action_types_stddev_pop_fields"]: AliasType<{
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** aggregate stddev_samp on columns */
+["v2_action_types_stddev_samp_fields"]: AliasType<{
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** Streaming cursor of the table "v2_action_types" */
+["v2_action_types_stream_cursor_input"]: {
+	/** Stream column input with initial value */
+	initial_value:ValueTypes["v2_action_types_stream_cursor_value_input"],
+	/** cursor ordering */
+	ordering?:ValueTypes["cursor_ordering"]
+};
+	/** Initial value of the column from where the streaming should start */
+["v2_action_types_stream_cursor_value_input"]: {
+	created_at?:ValueTypes["timestamptz"],
+	description?:string,
+	has_duration?:boolean,
+	id?:number,
+	metadata?:ValueTypes["jsonb"],
+	name?:string,
+	short_desc_syntax?:string,
+	updated_at?:ValueTypes["timestamptz"],
+	user_id?:number
+};
+	/** aggregate sum on columns */
+["v2_action_types_sum_fields"]: AliasType<{
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** update columns of table "v2.action_types" */
+["v2_action_types_update_column"]:v2_action_types_update_column;
+	["v2_action_types_updates"]: {
+	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:ValueTypes["v2_action_types_append_input"],
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:ValueTypes["v2_action_types_delete_at_path_input"],
+	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:ValueTypes["v2_action_types_delete_elem_input"],
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:ValueTypes["v2_action_types_delete_key_input"],
+	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["v2_action_types_inc_input"],
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:ValueTypes["v2_action_types_prepend_input"],
+	/** sets the columns of the filtered rows to the given values */
+	_set?:ValueTypes["v2_action_types_set_input"],
+	/** filter the rows which have to be updated */
+	where:ValueTypes["v2_action_types_bool_exp"]
+};
+	/** aggregate var_pop on columns */
+["v2_action_types_var_pop_fields"]: AliasType<{
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** aggregate var_samp on columns */
+["v2_action_types_var_samp_fields"]: AliasType<{
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** aggregate variance on columns */
+["v2_action_types_variance_fields"]: AliasType<{
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** columns and relationships of "v2.actions" */
+["v2_actions"]: AliasType<{
+	/** An object relationship */
+	action_type?:ValueTypes["v2_action_types"],
+	action_type_id?:true,
+children?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_actions_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_actions_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_actions_bool_exp"]},ValueTypes["v2_actions"]],
+children_aggregate?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_actions_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_actions_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_actions_bool_exp"]},ValueTypes["v2_actions_aggregate"]],
+	created_at?:true,
+dynamic_data?: [{	/** JSON select path */
+	path?:string},true],
+	end_time?:true,
+	id?:true,
+object_actions?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_object_action_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_object_action_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_object_action_bool_exp"]},ValueTypes["v2_object_action"]],
+object_actions_aggregate?: [{	/** distinct select on columns */
+	distinct_on?:ValueTypes["v2_object_action_select_column"][],	/** limit the number of rows returned */
+	limit?:number,	/** skip the first n rows. Use only with order_by */
+	offset?:number,	/** sort the rows by one or more columns */
+	order_by?:ValueTypes["v2_object_action_order_by"][],	/** filter the rows returned */
+	where?:ValueTypes["v2_object_action_bool_exp"]},ValueTypes["v2_object_action_aggregate"]],
+	/** An object relationship */
+	parent?:ValueTypes["v2_actions"],
+	parent_id?:true,
+	start_time?:true,
+	updated_at?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** aggregated selection of "v2.actions" */
+["v2_actions_aggregate"]: AliasType<{
+	aggregate?:ValueTypes["v2_actions_aggregate_fields"],
+	nodes?:ValueTypes["v2_actions"],
+		__typename?: true
+}>;
+	["v2_actions_aggregate_bool_exp"]: {
+	count?:ValueTypes["v2_actions_aggregate_bool_exp_count"]
+};
+	["v2_actions_aggregate_bool_exp_count"]: {
+	arguments?:ValueTypes["v2_actions_select_column"][],
+	distinct?:boolean,
+	filter?:ValueTypes["v2_actions_bool_exp"],
+	predicate:ValueTypes["Int_comparison_exp"]
+};
+	/** aggregate fields of "v2.actions" */
+["v2_actions_aggregate_fields"]: AliasType<{
+	avg?:ValueTypes["v2_actions_avg_fields"],
+count?: [{	columns?:ValueTypes["v2_actions_select_column"][],	distinct?:boolean},true],
+	max?:ValueTypes["v2_actions_max_fields"],
+	min?:ValueTypes["v2_actions_min_fields"],
+	stddev?:ValueTypes["v2_actions_stddev_fields"],
+	stddev_pop?:ValueTypes["v2_actions_stddev_pop_fields"],
+	stddev_samp?:ValueTypes["v2_actions_stddev_samp_fields"],
+	sum?:ValueTypes["v2_actions_sum_fields"],
+	var_pop?:ValueTypes["v2_actions_var_pop_fields"],
+	var_samp?:ValueTypes["v2_actions_var_samp_fields"],
+	variance?:ValueTypes["v2_actions_variance_fields"],
+		__typename?: true
+}>;
+	/** order by aggregate values of table "v2.actions" */
+["v2_actions_aggregate_order_by"]: {
+	avg?:ValueTypes["v2_actions_avg_order_by"],
+	count?:ValueTypes["order_by"],
+	max?:ValueTypes["v2_actions_max_order_by"],
+	min?:ValueTypes["v2_actions_min_order_by"],
+	stddev?:ValueTypes["v2_actions_stddev_order_by"],
+	stddev_pop?:ValueTypes["v2_actions_stddev_pop_order_by"],
+	stddev_samp?:ValueTypes["v2_actions_stddev_samp_order_by"],
+	sum?:ValueTypes["v2_actions_sum_order_by"],
+	var_pop?:ValueTypes["v2_actions_var_pop_order_by"],
+	var_samp?:ValueTypes["v2_actions_var_samp_order_by"],
+	variance?:ValueTypes["v2_actions_variance_order_by"]
+};
+	/** append existing jsonb value of filtered columns with new jsonb value */
+["v2_actions_append_input"]: {
+	dynamic_data?:ValueTypes["jsonb"]
+};
+	/** input type for inserting array relation for remote table "v2.actions" */
+["v2_actions_arr_rel_insert_input"]: {
+	data:ValueTypes["v2_actions_insert_input"][],
+	/** upsert condition */
+	on_conflict?:ValueTypes["v2_actions_on_conflict"]
+};
+	/** aggregate avg on columns */
+["v2_actions_avg_fields"]: AliasType<{
+	action_type_id?:true,
+	id?:true,
+	parent_id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by avg() on columns of table "v2.actions" */
+["v2_actions_avg_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	parent_id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** Boolean expression to filter rows from the table "v2.actions". All fields are combined with a logical 'AND'. */
+["v2_actions_bool_exp"]: {
+	_and?:ValueTypes["v2_actions_bool_exp"][],
+	_not?:ValueTypes["v2_actions_bool_exp"],
+	_or?:ValueTypes["v2_actions_bool_exp"][],
+	action_type?:ValueTypes["v2_action_types_bool_exp"],
+	action_type_id?:ValueTypes["Int_comparison_exp"],
+	children?:ValueTypes["v2_actions_bool_exp"],
+	children_aggregate?:ValueTypes["v2_actions_aggregate_bool_exp"],
+	created_at?:ValueTypes["timestamptz_comparison_exp"],
+	dynamic_data?:ValueTypes["jsonb_comparison_exp"],
+	end_time?:ValueTypes["timestamptz_comparison_exp"],
+	id?:ValueTypes["Int_comparison_exp"],
+	object_actions?:ValueTypes["v2_object_action_bool_exp"],
+	object_actions_aggregate?:ValueTypes["v2_object_action_aggregate_bool_exp"],
+	parent?:ValueTypes["v2_actions_bool_exp"],
+	parent_id?:ValueTypes["Int_comparison_exp"],
+	start_time?:ValueTypes["timestamptz_comparison_exp"],
+	updated_at?:ValueTypes["timestamptz_comparison_exp"],
+	user_id?:ValueTypes["Int_comparison_exp"]
+};
+	/** unique or primary key constraints on table "v2.actions" */
+["v2_actions_constraint"]:v2_actions_constraint;
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+["v2_actions_delete_at_path_input"]: {
+	dynamic_data?:string[]
+};
+	/** delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array */
+["v2_actions_delete_elem_input"]: {
+	dynamic_data?:number
+};
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+["v2_actions_delete_key_input"]: {
+	dynamic_data?:string
+};
+	/** input type for incrementing numeric columns in table "v2.actions" */
+["v2_actions_inc_input"]: {
+	action_type_id?:number,
+	id?:number,
+	parent_id?:number,
+	user_id?:number
+};
+	/** input type for inserting data into table "v2.actions" */
+["v2_actions_insert_input"]: {
+	action_type?:ValueTypes["v2_action_types_obj_rel_insert_input"],
+	action_type_id?:number,
+	children?:ValueTypes["v2_actions_arr_rel_insert_input"],
+	created_at?:ValueTypes["timestamptz"],
+	dynamic_data?:ValueTypes["jsonb"],
+	end_time?:ValueTypes["timestamptz"],
+	id?:number,
+	object_actions?:ValueTypes["v2_object_action_arr_rel_insert_input"],
+	parent?:ValueTypes["v2_actions_obj_rel_insert_input"],
+	parent_id?:number,
+	start_time?:ValueTypes["timestamptz"],
+	updated_at?:ValueTypes["timestamptz"],
+	user_id?:number
+};
+	/** aggregate max on columns */
+["v2_actions_max_fields"]: AliasType<{
+	action_type_id?:true,
+	created_at?:true,
+	end_time?:true,
+	id?:true,
+	parent_id?:true,
+	start_time?:true,
+	updated_at?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by max() on columns of table "v2.actions" */
+["v2_actions_max_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	created_at?:ValueTypes["order_by"],
+	end_time?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	parent_id?:ValueTypes["order_by"],
+	start_time?:ValueTypes["order_by"],
+	updated_at?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** aggregate min on columns */
+["v2_actions_min_fields"]: AliasType<{
+	action_type_id?:true,
+	created_at?:true,
+	end_time?:true,
+	id?:true,
+	parent_id?:true,
+	start_time?:true,
+	updated_at?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by min() on columns of table "v2.actions" */
+["v2_actions_min_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	created_at?:ValueTypes["order_by"],
+	end_time?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	parent_id?:ValueTypes["order_by"],
+	start_time?:ValueTypes["order_by"],
+	updated_at?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** response of any mutation on the table "v2.actions" */
+["v2_actions_mutation_response"]: AliasType<{
+	/** number of rows affected by the mutation */
+	affected_rows?:true,
+	/** data from the rows affected by the mutation */
+	returning?:ValueTypes["v2_actions"],
+		__typename?: true
+}>;
+	/** input type for inserting object relation for remote table "v2.actions" */
+["v2_actions_obj_rel_insert_input"]: {
+	data:ValueTypes["v2_actions_insert_input"],
+	/** upsert condition */
+	on_conflict?:ValueTypes["v2_actions_on_conflict"]
+};
+	/** on_conflict condition type for table "v2.actions" */
+["v2_actions_on_conflict"]: {
+	constraint:ValueTypes["v2_actions_constraint"],
+	update_columns:ValueTypes["v2_actions_update_column"][],
+	where?:ValueTypes["v2_actions_bool_exp"]
+};
+	/** Ordering options when selecting data from "v2.actions". */
+["v2_actions_order_by"]: {
+	action_type?:ValueTypes["v2_action_types_order_by"],
+	action_type_id?:ValueTypes["order_by"],
+	children_aggregate?:ValueTypes["v2_actions_aggregate_order_by"],
+	created_at?:ValueTypes["order_by"],
+	dynamic_data?:ValueTypes["order_by"],
+	end_time?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	object_actions_aggregate?:ValueTypes["v2_object_action_aggregate_order_by"],
+	parent?:ValueTypes["v2_actions_order_by"],
+	parent_id?:ValueTypes["order_by"],
+	start_time?:ValueTypes["order_by"],
+	updated_at?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** primary key columns input for table: v2.actions */
+["v2_actions_pk_columns_input"]: {
+	id:number
+};
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+["v2_actions_prepend_input"]: {
+	dynamic_data?:ValueTypes["jsonb"]
+};
+	/** select columns of table "v2.actions" */
+["v2_actions_select_column"]:v2_actions_select_column;
+	/** input type for updating data in table "v2.actions" */
+["v2_actions_set_input"]: {
+	action_type_id?:number,
+	created_at?:ValueTypes["timestamptz"],
+	dynamic_data?:ValueTypes["jsonb"],
+	end_time?:ValueTypes["timestamptz"],
+	id?:number,
+	parent_id?:number,
+	start_time?:ValueTypes["timestamptz"],
+	updated_at?:ValueTypes["timestamptz"],
+	user_id?:number
+};
+	/** aggregate stddev on columns */
+["v2_actions_stddev_fields"]: AliasType<{
+	action_type_id?:true,
+	id?:true,
+	parent_id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by stddev() on columns of table "v2.actions" */
+["v2_actions_stddev_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	parent_id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** aggregate stddev_pop on columns */
+["v2_actions_stddev_pop_fields"]: AliasType<{
+	action_type_id?:true,
+	id?:true,
+	parent_id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by stddev_pop() on columns of table "v2.actions" */
+["v2_actions_stddev_pop_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	parent_id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** aggregate stddev_samp on columns */
+["v2_actions_stddev_samp_fields"]: AliasType<{
+	action_type_id?:true,
+	id?:true,
+	parent_id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by stddev_samp() on columns of table "v2.actions" */
+["v2_actions_stddev_samp_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	parent_id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** Streaming cursor of the table "v2_actions" */
+["v2_actions_stream_cursor_input"]: {
+	/** Stream column input with initial value */
+	initial_value:ValueTypes["v2_actions_stream_cursor_value_input"],
+	/** cursor ordering */
+	ordering?:ValueTypes["cursor_ordering"]
+};
+	/** Initial value of the column from where the streaming should start */
+["v2_actions_stream_cursor_value_input"]: {
+	action_type_id?:number,
+	created_at?:ValueTypes["timestamptz"],
+	dynamic_data?:ValueTypes["jsonb"],
+	end_time?:ValueTypes["timestamptz"],
+	id?:number,
+	parent_id?:number,
+	start_time?:ValueTypes["timestamptz"],
+	updated_at?:ValueTypes["timestamptz"],
+	user_id?:number
+};
+	/** aggregate sum on columns */
+["v2_actions_sum_fields"]: AliasType<{
+	action_type_id?:true,
+	id?:true,
+	parent_id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by sum() on columns of table "v2.actions" */
+["v2_actions_sum_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	parent_id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** update columns of table "v2.actions" */
+["v2_actions_update_column"]:v2_actions_update_column;
+	["v2_actions_updates"]: {
+	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:ValueTypes["v2_actions_append_input"],
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:ValueTypes["v2_actions_delete_at_path_input"],
+	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:ValueTypes["v2_actions_delete_elem_input"],
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:ValueTypes["v2_actions_delete_key_input"],
+	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["v2_actions_inc_input"],
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:ValueTypes["v2_actions_prepend_input"],
+	/** sets the columns of the filtered rows to the given values */
+	_set?:ValueTypes["v2_actions_set_input"],
+	/** filter the rows which have to be updated */
+	where:ValueTypes["v2_actions_bool_exp"]
+};
+	/** aggregate var_pop on columns */
+["v2_actions_var_pop_fields"]: AliasType<{
+	action_type_id?:true,
+	id?:true,
+	parent_id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by var_pop() on columns of table "v2.actions" */
+["v2_actions_var_pop_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	parent_id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** aggregate var_samp on columns */
+["v2_actions_var_samp_fields"]: AliasType<{
+	action_type_id?:true,
+	id?:true,
+	parent_id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by var_samp() on columns of table "v2.actions" */
+["v2_actions_var_samp_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	parent_id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** aggregate variance on columns */
+["v2_actions_variance_fields"]: AliasType<{
+	action_type_id?:true,
+	id?:true,
+	parent_id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by variance() on columns of table "v2.actions" */
+["v2_actions_variance_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	parent_id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** columns and relationships of "v2.aggregates" */
+["v2_aggregates"]: AliasType<{
+	/** An object relationship */
+	action_type?:ValueTypes["v2_action_types"],
+	action_type_id?:true,
+	id?:true,
+metadata?: [{	/** JSON select path */
+	path?:string},true],
+	user_id?:true,
+		__typename?: true
+}>;
+	/** aggregated selection of "v2.aggregates" */
+["v2_aggregates_aggregate"]: AliasType<{
+	aggregate?:ValueTypes["v2_aggregates_aggregate_fields"],
+	nodes?:ValueTypes["v2_aggregates"],
+		__typename?: true
+}>;
+	["v2_aggregates_aggregate_bool_exp"]: {
+	count?:ValueTypes["v2_aggregates_aggregate_bool_exp_count"]
+};
+	["v2_aggregates_aggregate_bool_exp_count"]: {
+	arguments?:ValueTypes["v2_aggregates_select_column"][],
+	distinct?:boolean,
+	filter?:ValueTypes["v2_aggregates_bool_exp"],
+	predicate:ValueTypes["Int_comparison_exp"]
+};
+	/** aggregate fields of "v2.aggregates" */
+["v2_aggregates_aggregate_fields"]: AliasType<{
+	avg?:ValueTypes["v2_aggregates_avg_fields"],
+count?: [{	columns?:ValueTypes["v2_aggregates_select_column"][],	distinct?:boolean},true],
+	max?:ValueTypes["v2_aggregates_max_fields"],
+	min?:ValueTypes["v2_aggregates_min_fields"],
+	stddev?:ValueTypes["v2_aggregates_stddev_fields"],
+	stddev_pop?:ValueTypes["v2_aggregates_stddev_pop_fields"],
+	stddev_samp?:ValueTypes["v2_aggregates_stddev_samp_fields"],
+	sum?:ValueTypes["v2_aggregates_sum_fields"],
+	var_pop?:ValueTypes["v2_aggregates_var_pop_fields"],
+	var_samp?:ValueTypes["v2_aggregates_var_samp_fields"],
+	variance?:ValueTypes["v2_aggregates_variance_fields"],
+		__typename?: true
+}>;
+	/** order by aggregate values of table "v2.aggregates" */
+["v2_aggregates_aggregate_order_by"]: {
+	avg?:ValueTypes["v2_aggregates_avg_order_by"],
+	count?:ValueTypes["order_by"],
+	max?:ValueTypes["v2_aggregates_max_order_by"],
+	min?:ValueTypes["v2_aggregates_min_order_by"],
+	stddev?:ValueTypes["v2_aggregates_stddev_order_by"],
+	stddev_pop?:ValueTypes["v2_aggregates_stddev_pop_order_by"],
+	stddev_samp?:ValueTypes["v2_aggregates_stddev_samp_order_by"],
+	sum?:ValueTypes["v2_aggregates_sum_order_by"],
+	var_pop?:ValueTypes["v2_aggregates_var_pop_order_by"],
+	var_samp?:ValueTypes["v2_aggregates_var_samp_order_by"],
+	variance?:ValueTypes["v2_aggregates_variance_order_by"]
+};
+	/** append existing jsonb value of filtered columns with new jsonb value */
+["v2_aggregates_append_input"]: {
+	metadata?:ValueTypes["jsonb"]
+};
+	/** input type for inserting array relation for remote table "v2.aggregates" */
+["v2_aggregates_arr_rel_insert_input"]: {
+	data:ValueTypes["v2_aggregates_insert_input"][],
+	/** upsert condition */
+	on_conflict?:ValueTypes["v2_aggregates_on_conflict"]
+};
+	/** aggregate avg on columns */
+["v2_aggregates_avg_fields"]: AliasType<{
+	action_type_id?:true,
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by avg() on columns of table "v2.aggregates" */
+["v2_aggregates_avg_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** Boolean expression to filter rows from the table "v2.aggregates". All fields are combined with a logical 'AND'. */
+["v2_aggregates_bool_exp"]: {
+	_and?:ValueTypes["v2_aggregates_bool_exp"][],
+	_not?:ValueTypes["v2_aggregates_bool_exp"],
+	_or?:ValueTypes["v2_aggregates_bool_exp"][],
+	action_type?:ValueTypes["v2_action_types_bool_exp"],
+	action_type_id?:ValueTypes["Int_comparison_exp"],
+	id?:ValueTypes["Int_comparison_exp"],
+	metadata?:ValueTypes["jsonb_comparison_exp"],
+	user_id?:ValueTypes["Int_comparison_exp"]
+};
+	/** unique or primary key constraints on table "v2.aggregates" */
+["v2_aggregates_constraint"]:v2_aggregates_constraint;
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+["v2_aggregates_delete_at_path_input"]: {
+	metadata?:string[]
+};
+	/** delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array */
+["v2_aggregates_delete_elem_input"]: {
+	metadata?:number
+};
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+["v2_aggregates_delete_key_input"]: {
+	metadata?:string
+};
+	/** input type for incrementing numeric columns in table "v2.aggregates" */
+["v2_aggregates_inc_input"]: {
+	action_type_id?:number,
+	id?:number,
+	user_id?:number
+};
+	/** input type for inserting data into table "v2.aggregates" */
+["v2_aggregates_insert_input"]: {
+	action_type?:ValueTypes["v2_action_types_obj_rel_insert_input"],
+	action_type_id?:number,
+	id?:number,
+	metadata?:ValueTypes["jsonb"],
+	user_id?:number
+};
+	/** aggregate max on columns */
+["v2_aggregates_max_fields"]: AliasType<{
+	action_type_id?:true,
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by max() on columns of table "v2.aggregates" */
+["v2_aggregates_max_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** aggregate min on columns */
+["v2_aggregates_min_fields"]: AliasType<{
+	action_type_id?:true,
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by min() on columns of table "v2.aggregates" */
+["v2_aggregates_min_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** response of any mutation on the table "v2.aggregates" */
+["v2_aggregates_mutation_response"]: AliasType<{
+	/** number of rows affected by the mutation */
+	affected_rows?:true,
+	/** data from the rows affected by the mutation */
+	returning?:ValueTypes["v2_aggregates"],
+		__typename?: true
+}>;
+	/** on_conflict condition type for table "v2.aggregates" */
+["v2_aggregates_on_conflict"]: {
+	constraint:ValueTypes["v2_aggregates_constraint"],
+	update_columns:ValueTypes["v2_aggregates_update_column"][],
+	where?:ValueTypes["v2_aggregates_bool_exp"]
+};
+	/** Ordering options when selecting data from "v2.aggregates". */
+["v2_aggregates_order_by"]: {
+	action_type?:ValueTypes["v2_action_types_order_by"],
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	metadata?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** primary key columns input for table: v2.aggregates */
+["v2_aggregates_pk_columns_input"]: {
+	id:number
+};
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+["v2_aggregates_prepend_input"]: {
+	metadata?:ValueTypes["jsonb"]
+};
+	/** select columns of table "v2.aggregates" */
+["v2_aggregates_select_column"]:v2_aggregates_select_column;
+	/** input type for updating data in table "v2.aggregates" */
+["v2_aggregates_set_input"]: {
+	action_type_id?:number,
+	id?:number,
+	metadata?:ValueTypes["jsonb"],
+	user_id?:number
+};
+	/** aggregate stddev on columns */
+["v2_aggregates_stddev_fields"]: AliasType<{
+	action_type_id?:true,
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by stddev() on columns of table "v2.aggregates" */
+["v2_aggregates_stddev_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** aggregate stddev_pop on columns */
+["v2_aggregates_stddev_pop_fields"]: AliasType<{
+	action_type_id?:true,
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by stddev_pop() on columns of table "v2.aggregates" */
+["v2_aggregates_stddev_pop_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** aggregate stddev_samp on columns */
+["v2_aggregates_stddev_samp_fields"]: AliasType<{
+	action_type_id?:true,
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by stddev_samp() on columns of table "v2.aggregates" */
+["v2_aggregates_stddev_samp_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** Streaming cursor of the table "v2_aggregates" */
+["v2_aggregates_stream_cursor_input"]: {
+	/** Stream column input with initial value */
+	initial_value:ValueTypes["v2_aggregates_stream_cursor_value_input"],
+	/** cursor ordering */
+	ordering?:ValueTypes["cursor_ordering"]
+};
+	/** Initial value of the column from where the streaming should start */
+["v2_aggregates_stream_cursor_value_input"]: {
+	action_type_id?:number,
+	id?:number,
+	metadata?:ValueTypes["jsonb"],
+	user_id?:number
+};
+	/** aggregate sum on columns */
+["v2_aggregates_sum_fields"]: AliasType<{
+	action_type_id?:true,
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by sum() on columns of table "v2.aggregates" */
+["v2_aggregates_sum_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** update columns of table "v2.aggregates" */
+["v2_aggregates_update_column"]:v2_aggregates_update_column;
+	["v2_aggregates_updates"]: {
+	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:ValueTypes["v2_aggregates_append_input"],
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:ValueTypes["v2_aggregates_delete_at_path_input"],
+	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:ValueTypes["v2_aggregates_delete_elem_input"],
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:ValueTypes["v2_aggregates_delete_key_input"],
+	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["v2_aggregates_inc_input"],
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:ValueTypes["v2_aggregates_prepend_input"],
+	/** sets the columns of the filtered rows to the given values */
+	_set?:ValueTypes["v2_aggregates_set_input"],
+	/** filter the rows which have to be updated */
+	where:ValueTypes["v2_aggregates_bool_exp"]
+};
+	/** aggregate var_pop on columns */
+["v2_aggregates_var_pop_fields"]: AliasType<{
+	action_type_id?:true,
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by var_pop() on columns of table "v2.aggregates" */
+["v2_aggregates_var_pop_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** aggregate var_samp on columns */
+["v2_aggregates_var_samp_fields"]: AliasType<{
+	action_type_id?:true,
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by var_samp() on columns of table "v2.aggregates" */
+["v2_aggregates_var_samp_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** aggregate variance on columns */
+["v2_aggregates_variance_fields"]: AliasType<{
+	action_type_id?:true,
+	id?:true,
+	user_id?:true,
+		__typename?: true
+}>;
+	/** order by variance() on columns of table "v2.aggregates" */
+["v2_aggregates_variance_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	user_id?:ValueTypes["order_by"]
+};
+	/** columns and relationships of "v2.object_action" */
+["v2_object_action"]: AliasType<{
+	/** An object relationship */
+	action?:ValueTypes["v2_actions"],
+	action_id?:true,
+	id?:true,
+	/** An object relationship */
+	object?:ValueTypes["objects"],
+	object_id?:true,
+	/** An object relationship */
+	object_t_action_t?:ValueTypes["v2_object_t_action_t"],
+	object_t_action_t_id?:true,
+		__typename?: true
+}>;
+	/** aggregated selection of "v2.object_action" */
+["v2_object_action_aggregate"]: AliasType<{
+	aggregate?:ValueTypes["v2_object_action_aggregate_fields"],
+	nodes?:ValueTypes["v2_object_action"],
+		__typename?: true
+}>;
+	["v2_object_action_aggregate_bool_exp"]: {
+	count?:ValueTypes["v2_object_action_aggregate_bool_exp_count"]
+};
+	["v2_object_action_aggregate_bool_exp_count"]: {
+	arguments?:ValueTypes["v2_object_action_select_column"][],
+	distinct?:boolean,
+	filter?:ValueTypes["v2_object_action_bool_exp"],
+	predicate:ValueTypes["Int_comparison_exp"]
+};
+	/** aggregate fields of "v2.object_action" */
+["v2_object_action_aggregate_fields"]: AliasType<{
+	avg?:ValueTypes["v2_object_action_avg_fields"],
+count?: [{	columns?:ValueTypes["v2_object_action_select_column"][],	distinct?:boolean},true],
+	max?:ValueTypes["v2_object_action_max_fields"],
+	min?:ValueTypes["v2_object_action_min_fields"],
+	stddev?:ValueTypes["v2_object_action_stddev_fields"],
+	stddev_pop?:ValueTypes["v2_object_action_stddev_pop_fields"],
+	stddev_samp?:ValueTypes["v2_object_action_stddev_samp_fields"],
+	sum?:ValueTypes["v2_object_action_sum_fields"],
+	var_pop?:ValueTypes["v2_object_action_var_pop_fields"],
+	var_samp?:ValueTypes["v2_object_action_var_samp_fields"],
+	variance?:ValueTypes["v2_object_action_variance_fields"],
+		__typename?: true
+}>;
+	/** order by aggregate values of table "v2.object_action" */
+["v2_object_action_aggregate_order_by"]: {
+	avg?:ValueTypes["v2_object_action_avg_order_by"],
+	count?:ValueTypes["order_by"],
+	max?:ValueTypes["v2_object_action_max_order_by"],
+	min?:ValueTypes["v2_object_action_min_order_by"],
+	stddev?:ValueTypes["v2_object_action_stddev_order_by"],
+	stddev_pop?:ValueTypes["v2_object_action_stddev_pop_order_by"],
+	stddev_samp?:ValueTypes["v2_object_action_stddev_samp_order_by"],
+	sum?:ValueTypes["v2_object_action_sum_order_by"],
+	var_pop?:ValueTypes["v2_object_action_var_pop_order_by"],
+	var_samp?:ValueTypes["v2_object_action_var_samp_order_by"],
+	variance?:ValueTypes["v2_object_action_variance_order_by"]
+};
+	/** input type for inserting array relation for remote table "v2.object_action" */
+["v2_object_action_arr_rel_insert_input"]: {
+	data:ValueTypes["v2_object_action_insert_input"][],
+	/** upsert condition */
+	on_conflict?:ValueTypes["v2_object_action_on_conflict"]
+};
+	/** aggregate avg on columns */
+["v2_object_action_avg_fields"]: AliasType<{
+	action_id?:true,
+	id?:true,
+	object_id?:true,
+	object_t_action_t_id?:true,
+		__typename?: true
+}>;
+	/** order by avg() on columns of table "v2.object_action" */
+["v2_object_action_avg_order_by"]: {
+	action_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	object_id?:ValueTypes["order_by"],
+	object_t_action_t_id?:ValueTypes["order_by"]
+};
+	/** Boolean expression to filter rows from the table "v2.object_action". All fields are combined with a logical 'AND'. */
+["v2_object_action_bool_exp"]: {
+	_and?:ValueTypes["v2_object_action_bool_exp"][],
+	_not?:ValueTypes["v2_object_action_bool_exp"],
+	_or?:ValueTypes["v2_object_action_bool_exp"][],
+	action?:ValueTypes["v2_actions_bool_exp"],
+	action_id?:ValueTypes["Int_comparison_exp"],
+	id?:ValueTypes["Int_comparison_exp"],
+	object?:ValueTypes["objects_bool_exp"],
+	object_id?:ValueTypes["Int_comparison_exp"],
+	object_t_action_t?:ValueTypes["v2_object_t_action_t_bool_exp"],
+	object_t_action_t_id?:ValueTypes["Int_comparison_exp"]
+};
+	/** unique or primary key constraints on table "v2.object_action" */
+["v2_object_action_constraint"]:v2_object_action_constraint;
+	/** input type for incrementing numeric columns in table "v2.object_action" */
+["v2_object_action_inc_input"]: {
+	action_id?:number,
+	id?:number,
+	object_id?:number,
+	object_t_action_t_id?:number
+};
+	/** input type for inserting data into table "v2.object_action" */
+["v2_object_action_insert_input"]: {
+	action?:ValueTypes["v2_actions_obj_rel_insert_input"],
+	action_id?:number,
+	id?:number,
+	object?:ValueTypes["objects_obj_rel_insert_input"],
+	object_id?:number,
+	object_t_action_t?:ValueTypes["v2_object_t_action_t_obj_rel_insert_input"],
+	object_t_action_t_id?:number
+};
+	/** aggregate max on columns */
+["v2_object_action_max_fields"]: AliasType<{
+	action_id?:true,
+	id?:true,
+	object_id?:true,
+	object_t_action_t_id?:true,
+		__typename?: true
+}>;
+	/** order by max() on columns of table "v2.object_action" */
+["v2_object_action_max_order_by"]: {
+	action_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	object_id?:ValueTypes["order_by"],
+	object_t_action_t_id?:ValueTypes["order_by"]
+};
+	/** aggregate min on columns */
+["v2_object_action_min_fields"]: AliasType<{
+	action_id?:true,
+	id?:true,
+	object_id?:true,
+	object_t_action_t_id?:true,
+		__typename?: true
+}>;
+	/** order by min() on columns of table "v2.object_action" */
+["v2_object_action_min_order_by"]: {
+	action_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	object_id?:ValueTypes["order_by"],
+	object_t_action_t_id?:ValueTypes["order_by"]
+};
+	/** response of any mutation on the table "v2.object_action" */
+["v2_object_action_mutation_response"]: AliasType<{
+	/** number of rows affected by the mutation */
+	affected_rows?:true,
+	/** data from the rows affected by the mutation */
+	returning?:ValueTypes["v2_object_action"],
+		__typename?: true
+}>;
+	/** on_conflict condition type for table "v2.object_action" */
+["v2_object_action_on_conflict"]: {
+	constraint:ValueTypes["v2_object_action_constraint"],
+	update_columns:ValueTypes["v2_object_action_update_column"][],
+	where?:ValueTypes["v2_object_action_bool_exp"]
+};
+	/** Ordering options when selecting data from "v2.object_action". */
+["v2_object_action_order_by"]: {
+	action?:ValueTypes["v2_actions_order_by"],
+	action_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	object?:ValueTypes["objects_order_by"],
+	object_id?:ValueTypes["order_by"],
+	object_t_action_t?:ValueTypes["v2_object_t_action_t_order_by"],
+	object_t_action_t_id?:ValueTypes["order_by"]
+};
+	/** primary key columns input for table: v2.object_action */
+["v2_object_action_pk_columns_input"]: {
+	id:number
+};
+	/** select columns of table "v2.object_action" */
+["v2_object_action_select_column"]:v2_object_action_select_column;
+	/** input type for updating data in table "v2.object_action" */
+["v2_object_action_set_input"]: {
+	action_id?:number,
+	id?:number,
+	object_id?:number,
+	object_t_action_t_id?:number
+};
+	/** aggregate stddev on columns */
+["v2_object_action_stddev_fields"]: AliasType<{
+	action_id?:true,
+	id?:true,
+	object_id?:true,
+	object_t_action_t_id?:true,
+		__typename?: true
+}>;
+	/** order by stddev() on columns of table "v2.object_action" */
+["v2_object_action_stddev_order_by"]: {
+	action_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	object_id?:ValueTypes["order_by"],
+	object_t_action_t_id?:ValueTypes["order_by"]
+};
+	/** aggregate stddev_pop on columns */
+["v2_object_action_stddev_pop_fields"]: AliasType<{
+	action_id?:true,
+	id?:true,
+	object_id?:true,
+	object_t_action_t_id?:true,
+		__typename?: true
+}>;
+	/** order by stddev_pop() on columns of table "v2.object_action" */
+["v2_object_action_stddev_pop_order_by"]: {
+	action_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	object_id?:ValueTypes["order_by"],
+	object_t_action_t_id?:ValueTypes["order_by"]
+};
+	/** aggregate stddev_samp on columns */
+["v2_object_action_stddev_samp_fields"]: AliasType<{
+	action_id?:true,
+	id?:true,
+	object_id?:true,
+	object_t_action_t_id?:true,
+		__typename?: true
+}>;
+	/** order by stddev_samp() on columns of table "v2.object_action" */
+["v2_object_action_stddev_samp_order_by"]: {
+	action_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	object_id?:ValueTypes["order_by"],
+	object_t_action_t_id?:ValueTypes["order_by"]
+};
+	/** Streaming cursor of the table "v2_object_action" */
+["v2_object_action_stream_cursor_input"]: {
+	/** Stream column input with initial value */
+	initial_value:ValueTypes["v2_object_action_stream_cursor_value_input"],
+	/** cursor ordering */
+	ordering?:ValueTypes["cursor_ordering"]
+};
+	/** Initial value of the column from where the streaming should start */
+["v2_object_action_stream_cursor_value_input"]: {
+	action_id?:number,
+	id?:number,
+	object_id?:number,
+	object_t_action_t_id?:number
+};
+	/** aggregate sum on columns */
+["v2_object_action_sum_fields"]: AliasType<{
+	action_id?:true,
+	id?:true,
+	object_id?:true,
+	object_t_action_t_id?:true,
+		__typename?: true
+}>;
+	/** order by sum() on columns of table "v2.object_action" */
+["v2_object_action_sum_order_by"]: {
+	action_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	object_id?:ValueTypes["order_by"],
+	object_t_action_t_id?:ValueTypes["order_by"]
+};
+	/** update columns of table "v2.object_action" */
+["v2_object_action_update_column"]:v2_object_action_update_column;
+	["v2_object_action_updates"]: {
+	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["v2_object_action_inc_input"],
+	/** sets the columns of the filtered rows to the given values */
+	_set?:ValueTypes["v2_object_action_set_input"],
+	/** filter the rows which have to be updated */
+	where:ValueTypes["v2_object_action_bool_exp"]
+};
+	/** aggregate var_pop on columns */
+["v2_object_action_var_pop_fields"]: AliasType<{
+	action_id?:true,
+	id?:true,
+	object_id?:true,
+	object_t_action_t_id?:true,
+		__typename?: true
+}>;
+	/** order by var_pop() on columns of table "v2.object_action" */
+["v2_object_action_var_pop_order_by"]: {
+	action_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	object_id?:ValueTypes["order_by"],
+	object_t_action_t_id?:ValueTypes["order_by"]
+};
+	/** aggregate var_samp on columns */
+["v2_object_action_var_samp_fields"]: AliasType<{
+	action_id?:true,
+	id?:true,
+	object_id?:true,
+	object_t_action_t_id?:true,
+		__typename?: true
+}>;
+	/** order by var_samp() on columns of table "v2.object_action" */
+["v2_object_action_var_samp_order_by"]: {
+	action_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	object_id?:ValueTypes["order_by"],
+	object_t_action_t_id?:ValueTypes["order_by"]
+};
+	/** aggregate variance on columns */
+["v2_object_action_variance_fields"]: AliasType<{
+	action_id?:true,
+	id?:true,
+	object_id?:true,
+	object_t_action_t_id?:true,
+		__typename?: true
+}>;
+	/** order by variance() on columns of table "v2.object_action" */
+["v2_object_action_variance_order_by"]: {
+	action_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	object_id?:ValueTypes["order_by"],
+	object_t_action_t_id?:ValueTypes["order_by"]
+};
+	/** columns and relationships of "v2.object_t_action_t" */
+["v2_object_t_action_t"]: AliasType<{
+	/** An object relationship */
+	action_type?:ValueTypes["v2_action_types"],
+	action_type_id?:true,
+	id?:true,
+metadata?: [{	/** JSON select path */
+	path?:string},true],
+	/** An object relationship */
+	object_type?:ValueTypes["object_types"],
+	object_type_id?:true,
+		__typename?: true
+}>;
+	/** aggregated selection of "v2.object_t_action_t" */
+["v2_object_t_action_t_aggregate"]: AliasType<{
+	aggregate?:ValueTypes["v2_object_t_action_t_aggregate_fields"],
+	nodes?:ValueTypes["v2_object_t_action_t"],
+		__typename?: true
+}>;
+	["v2_object_t_action_t_aggregate_bool_exp"]: {
+	count?:ValueTypes["v2_object_t_action_t_aggregate_bool_exp_count"]
+};
+	["v2_object_t_action_t_aggregate_bool_exp_count"]: {
+	arguments?:ValueTypes["v2_object_t_action_t_select_column"][],
+	distinct?:boolean,
+	filter?:ValueTypes["v2_object_t_action_t_bool_exp"],
+	predicate:ValueTypes["Int_comparison_exp"]
+};
+	/** aggregate fields of "v2.object_t_action_t" */
+["v2_object_t_action_t_aggregate_fields"]: AliasType<{
+	avg?:ValueTypes["v2_object_t_action_t_avg_fields"],
+count?: [{	columns?:ValueTypes["v2_object_t_action_t_select_column"][],	distinct?:boolean},true],
+	max?:ValueTypes["v2_object_t_action_t_max_fields"],
+	min?:ValueTypes["v2_object_t_action_t_min_fields"],
+	stddev?:ValueTypes["v2_object_t_action_t_stddev_fields"],
+	stddev_pop?:ValueTypes["v2_object_t_action_t_stddev_pop_fields"],
+	stddev_samp?:ValueTypes["v2_object_t_action_t_stddev_samp_fields"],
+	sum?:ValueTypes["v2_object_t_action_t_sum_fields"],
+	var_pop?:ValueTypes["v2_object_t_action_t_var_pop_fields"],
+	var_samp?:ValueTypes["v2_object_t_action_t_var_samp_fields"],
+	variance?:ValueTypes["v2_object_t_action_t_variance_fields"],
+		__typename?: true
+}>;
+	/** order by aggregate values of table "v2.object_t_action_t" */
+["v2_object_t_action_t_aggregate_order_by"]: {
+	avg?:ValueTypes["v2_object_t_action_t_avg_order_by"],
+	count?:ValueTypes["order_by"],
+	max?:ValueTypes["v2_object_t_action_t_max_order_by"],
+	min?:ValueTypes["v2_object_t_action_t_min_order_by"],
+	stddev?:ValueTypes["v2_object_t_action_t_stddev_order_by"],
+	stddev_pop?:ValueTypes["v2_object_t_action_t_stddev_pop_order_by"],
+	stddev_samp?:ValueTypes["v2_object_t_action_t_stddev_samp_order_by"],
+	sum?:ValueTypes["v2_object_t_action_t_sum_order_by"],
+	var_pop?:ValueTypes["v2_object_t_action_t_var_pop_order_by"],
+	var_samp?:ValueTypes["v2_object_t_action_t_var_samp_order_by"],
+	variance?:ValueTypes["v2_object_t_action_t_variance_order_by"]
+};
+	/** append existing jsonb value of filtered columns with new jsonb value */
+["v2_object_t_action_t_append_input"]: {
+	metadata?:ValueTypes["jsonb"]
+};
+	/** input type for inserting array relation for remote table "v2.object_t_action_t" */
+["v2_object_t_action_t_arr_rel_insert_input"]: {
+	data:ValueTypes["v2_object_t_action_t_insert_input"][],
+	/** upsert condition */
+	on_conflict?:ValueTypes["v2_object_t_action_t_on_conflict"]
+};
+	/** aggregate avg on columns */
+["v2_object_t_action_t_avg_fields"]: AliasType<{
+	action_type_id?:true,
+	id?:true,
+	object_type_id?:true,
+		__typename?: true
+}>;
+	/** order by avg() on columns of table "v2.object_t_action_t" */
+["v2_object_t_action_t_avg_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	object_type_id?:ValueTypes["order_by"]
+};
+	/** Boolean expression to filter rows from the table "v2.object_t_action_t". All fields are combined with a logical 'AND'. */
+["v2_object_t_action_t_bool_exp"]: {
+	_and?:ValueTypes["v2_object_t_action_t_bool_exp"][],
+	_not?:ValueTypes["v2_object_t_action_t_bool_exp"],
+	_or?:ValueTypes["v2_object_t_action_t_bool_exp"][],
+	action_type?:ValueTypes["v2_action_types_bool_exp"],
+	action_type_id?:ValueTypes["Int_comparison_exp"],
+	id?:ValueTypes["Int_comparison_exp"],
+	metadata?:ValueTypes["jsonb_comparison_exp"],
+	object_type?:ValueTypes["object_types_bool_exp"],
+	object_type_id?:ValueTypes["Int_comparison_exp"]
+};
+	/** unique or primary key constraints on table "v2.object_t_action_t" */
+["v2_object_t_action_t_constraint"]:v2_object_t_action_t_constraint;
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+["v2_object_t_action_t_delete_at_path_input"]: {
+	metadata?:string[]
+};
+	/** delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array */
+["v2_object_t_action_t_delete_elem_input"]: {
+	metadata?:number
+};
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+["v2_object_t_action_t_delete_key_input"]: {
+	metadata?:string
+};
+	/** input type for incrementing numeric columns in table "v2.object_t_action_t" */
+["v2_object_t_action_t_inc_input"]: {
+	action_type_id?:number,
+	id?:number,
+	object_type_id?:number
+};
+	/** input type for inserting data into table "v2.object_t_action_t" */
+["v2_object_t_action_t_insert_input"]: {
+	action_type?:ValueTypes["v2_action_types_obj_rel_insert_input"],
+	action_type_id?:number,
+	id?:number,
+	metadata?:ValueTypes["jsonb"],
+	object_type?:ValueTypes["object_types_obj_rel_insert_input"],
+	object_type_id?:number
+};
+	/** aggregate max on columns */
+["v2_object_t_action_t_max_fields"]: AliasType<{
+	action_type_id?:true,
+	id?:true,
+	object_type_id?:true,
+		__typename?: true
+}>;
+	/** order by max() on columns of table "v2.object_t_action_t" */
+["v2_object_t_action_t_max_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	object_type_id?:ValueTypes["order_by"]
+};
+	/** aggregate min on columns */
+["v2_object_t_action_t_min_fields"]: AliasType<{
+	action_type_id?:true,
+	id?:true,
+	object_type_id?:true,
+		__typename?: true
+}>;
+	/** order by min() on columns of table "v2.object_t_action_t" */
+["v2_object_t_action_t_min_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	object_type_id?:ValueTypes["order_by"]
+};
+	/** response of any mutation on the table "v2.object_t_action_t" */
+["v2_object_t_action_t_mutation_response"]: AliasType<{
+	/** number of rows affected by the mutation */
+	affected_rows?:true,
+	/** data from the rows affected by the mutation */
+	returning?:ValueTypes["v2_object_t_action_t"],
+		__typename?: true
+}>;
+	/** input type for inserting object relation for remote table "v2.object_t_action_t" */
+["v2_object_t_action_t_obj_rel_insert_input"]: {
+	data:ValueTypes["v2_object_t_action_t_insert_input"],
+	/** upsert condition */
+	on_conflict?:ValueTypes["v2_object_t_action_t_on_conflict"]
+};
+	/** on_conflict condition type for table "v2.object_t_action_t" */
+["v2_object_t_action_t_on_conflict"]: {
+	constraint:ValueTypes["v2_object_t_action_t_constraint"],
+	update_columns:ValueTypes["v2_object_t_action_t_update_column"][],
+	where?:ValueTypes["v2_object_t_action_t_bool_exp"]
+};
+	/** Ordering options when selecting data from "v2.object_t_action_t". */
+["v2_object_t_action_t_order_by"]: {
+	action_type?:ValueTypes["v2_action_types_order_by"],
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	metadata?:ValueTypes["order_by"],
+	object_type?:ValueTypes["object_types_order_by"],
+	object_type_id?:ValueTypes["order_by"]
+};
+	/** primary key columns input for table: v2.object_t_action_t */
+["v2_object_t_action_t_pk_columns_input"]: {
+	id:number
+};
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+["v2_object_t_action_t_prepend_input"]: {
+	metadata?:ValueTypes["jsonb"]
+};
+	/** select columns of table "v2.object_t_action_t" */
+["v2_object_t_action_t_select_column"]:v2_object_t_action_t_select_column;
+	/** input type for updating data in table "v2.object_t_action_t" */
+["v2_object_t_action_t_set_input"]: {
+	action_type_id?:number,
+	id?:number,
+	metadata?:ValueTypes["jsonb"],
+	object_type_id?:number
+};
+	/** aggregate stddev on columns */
+["v2_object_t_action_t_stddev_fields"]: AliasType<{
+	action_type_id?:true,
+	id?:true,
+	object_type_id?:true,
+		__typename?: true
+}>;
+	/** order by stddev() on columns of table "v2.object_t_action_t" */
+["v2_object_t_action_t_stddev_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	object_type_id?:ValueTypes["order_by"]
+};
+	/** aggregate stddev_pop on columns */
+["v2_object_t_action_t_stddev_pop_fields"]: AliasType<{
+	action_type_id?:true,
+	id?:true,
+	object_type_id?:true,
+		__typename?: true
+}>;
+	/** order by stddev_pop() on columns of table "v2.object_t_action_t" */
+["v2_object_t_action_t_stddev_pop_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	object_type_id?:ValueTypes["order_by"]
+};
+	/** aggregate stddev_samp on columns */
+["v2_object_t_action_t_stddev_samp_fields"]: AliasType<{
+	action_type_id?:true,
+	id?:true,
+	object_type_id?:true,
+		__typename?: true
+}>;
+	/** order by stddev_samp() on columns of table "v2.object_t_action_t" */
+["v2_object_t_action_t_stddev_samp_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	object_type_id?:ValueTypes["order_by"]
+};
+	/** Streaming cursor of the table "v2_object_t_action_t" */
+["v2_object_t_action_t_stream_cursor_input"]: {
+	/** Stream column input with initial value */
+	initial_value:ValueTypes["v2_object_t_action_t_stream_cursor_value_input"],
+	/** cursor ordering */
+	ordering?:ValueTypes["cursor_ordering"]
+};
+	/** Initial value of the column from where the streaming should start */
+["v2_object_t_action_t_stream_cursor_value_input"]: {
+	action_type_id?:number,
+	id?:number,
+	metadata?:ValueTypes["jsonb"],
+	object_type_id?:number
+};
+	/** aggregate sum on columns */
+["v2_object_t_action_t_sum_fields"]: AliasType<{
+	action_type_id?:true,
+	id?:true,
+	object_type_id?:true,
+		__typename?: true
+}>;
+	/** order by sum() on columns of table "v2.object_t_action_t" */
+["v2_object_t_action_t_sum_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	object_type_id?:ValueTypes["order_by"]
+};
+	/** update columns of table "v2.object_t_action_t" */
+["v2_object_t_action_t_update_column"]:v2_object_t_action_t_update_column;
+	["v2_object_t_action_t_updates"]: {
+	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:ValueTypes["v2_object_t_action_t_append_input"],
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:ValueTypes["v2_object_t_action_t_delete_at_path_input"],
+	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:ValueTypes["v2_object_t_action_t_delete_elem_input"],
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:ValueTypes["v2_object_t_action_t_delete_key_input"],
+	/** increments the numeric columns with given value of the filtered values */
+	_inc?:ValueTypes["v2_object_t_action_t_inc_input"],
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:ValueTypes["v2_object_t_action_t_prepend_input"],
+	/** sets the columns of the filtered rows to the given values */
+	_set?:ValueTypes["v2_object_t_action_t_set_input"],
+	/** filter the rows which have to be updated */
+	where:ValueTypes["v2_object_t_action_t_bool_exp"]
+};
+	/** aggregate var_pop on columns */
+["v2_object_t_action_t_var_pop_fields"]: AliasType<{
+	action_type_id?:true,
+	id?:true,
+	object_type_id?:true,
+		__typename?: true
+}>;
+	/** order by var_pop() on columns of table "v2.object_t_action_t" */
+["v2_object_t_action_t_var_pop_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	object_type_id?:ValueTypes["order_by"]
+};
+	/** aggregate var_samp on columns */
+["v2_object_t_action_t_var_samp_fields"]: AliasType<{
+	action_type_id?:true,
+	id?:true,
+	object_type_id?:true,
+		__typename?: true
+}>;
+	/** order by var_samp() on columns of table "v2.object_t_action_t" */
+["v2_object_t_action_t_var_samp_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	object_type_id?:ValueTypes["order_by"]
+};
+	/** aggregate variance on columns */
+["v2_object_t_action_t_variance_fields"]: AliasType<{
+	action_type_id?:true,
+	id?:true,
+	object_type_id?:true,
+		__typename?: true
+}>;
+	/** order by variance() on columns of table "v2.object_t_action_t" */
+["v2_object_t_action_t_variance_order_by"]: {
+	action_type_id?:ValueTypes["order_by"],
+	id?:ValueTypes["order_by"],
+	object_type_id?:ValueTypes["order_by"]
+};
 	["vector"]:unknown;
 	/** Boolean expression to compare columns of type "vector". All fields are combined with logical 'AND'. */
 ["vector_comparison_exp"]: {
@@ -5301,6 +8508,837 @@ the end). throws an error if top level container is not an array */
 			id?:number,
 			user_id?:number
 	},
+	/** columns and relationships of "group.chat" */
+["group_chat"]: {
+		__typename?: "group_chat";
+			id?:number,
+			/** An array relationship */
+	members?:PartialObjects["group_members"][],
+			/** An aggregate relationship */
+	members_aggregate?:PartialObjects["group_members_aggregate"],
+			/** An array relationship */
+	messages?:PartialObjects["group_messages"][],
+			/** An aggregate relationship */
+	messages_aggregate?:PartialObjects["group_messages_aggregate"],
+			name?:string,
+			/** An object relationship */
+	owner?:PartialObjects["users"],
+			owner_id?:number
+	},
+	/** aggregated selection of "group.chat" */
+["group_chat_aggregate"]: {
+		__typename?: "group_chat_aggregate";
+			aggregate?:PartialObjects["group_chat_aggregate_fields"],
+			nodes?:PartialObjects["group_chat"][]
+	},
+	/** aggregate fields of "group.chat" */
+["group_chat_aggregate_fields"]: {
+		__typename?: "group_chat_aggregate_fields";
+			avg?:PartialObjects["group_chat_avg_fields"],
+			count?:number,
+			max?:PartialObjects["group_chat_max_fields"],
+			min?:PartialObjects["group_chat_min_fields"],
+			stddev?:PartialObjects["group_chat_stddev_fields"],
+			stddev_pop?:PartialObjects["group_chat_stddev_pop_fields"],
+			stddev_samp?:PartialObjects["group_chat_stddev_samp_fields"],
+			sum?:PartialObjects["group_chat_sum_fields"],
+			var_pop?:PartialObjects["group_chat_var_pop_fields"],
+			var_samp?:PartialObjects["group_chat_var_samp_fields"],
+			variance?:PartialObjects["group_chat_variance_fields"]
+	},
+	/** aggregate avg on columns */
+["group_chat_avg_fields"]: {
+		__typename?: "group_chat_avg_fields";
+			id?:number,
+			owner_id?:number
+	},
+	/** Boolean expression to filter rows from the table "group.chat". All fields are combined with a logical 'AND'. */
+["group_chat_bool_exp"]: {
+	_and?:PartialObjects["group_chat_bool_exp"][],
+	_not?:PartialObjects["group_chat_bool_exp"],
+	_or?:PartialObjects["group_chat_bool_exp"][],
+	id?:PartialObjects["Int_comparison_exp"],
+	members?:PartialObjects["group_members_bool_exp"],
+	members_aggregate?:PartialObjects["group_members_aggregate_bool_exp"],
+	messages?:PartialObjects["group_messages_bool_exp"],
+	messages_aggregate?:PartialObjects["group_messages_aggregate_bool_exp"],
+	name?:PartialObjects["String_comparison_exp"],
+	owner?:PartialObjects["users_bool_exp"],
+	owner_id?:PartialObjects["Int_comparison_exp"]
+},
+	/** unique or primary key constraints on table "group.chat" */
+["group_chat_constraint"]:group_chat_constraint,
+	/** input type for incrementing numeric columns in table "group.chat" */
+["group_chat_inc_input"]: {
+	id?:number,
+	owner_id?:number
+},
+	/** input type for inserting data into table "group.chat" */
+["group_chat_insert_input"]: {
+	id?:number,
+	members?:PartialObjects["group_members_arr_rel_insert_input"],
+	messages?:PartialObjects["group_messages_arr_rel_insert_input"],
+	name?:string,
+	owner?:PartialObjects["users_obj_rel_insert_input"],
+	owner_id?:number
+},
+	/** aggregate max on columns */
+["group_chat_max_fields"]: {
+		__typename?: "group_chat_max_fields";
+			id?:number,
+			name?:string,
+			owner_id?:number
+	},
+	/** aggregate min on columns */
+["group_chat_min_fields"]: {
+		__typename?: "group_chat_min_fields";
+			id?:number,
+			name?:string,
+			owner_id?:number
+	},
+	/** response of any mutation on the table "group.chat" */
+["group_chat_mutation_response"]: {
+		__typename?: "group_chat_mutation_response";
+			/** number of rows affected by the mutation */
+	affected_rows?:number,
+			/** data from the rows affected by the mutation */
+	returning?:PartialObjects["group_chat"][]
+	},
+	/** input type for inserting object relation for remote table "group.chat" */
+["group_chat_obj_rel_insert_input"]: {
+	data:PartialObjects["group_chat_insert_input"],
+	/** upsert condition */
+	on_conflict?:PartialObjects["group_chat_on_conflict"]
+},
+	/** on_conflict condition type for table "group.chat" */
+["group_chat_on_conflict"]: {
+	constraint:PartialObjects["group_chat_constraint"],
+	update_columns:PartialObjects["group_chat_update_column"][],
+	where?:PartialObjects["group_chat_bool_exp"]
+},
+	/** Ordering options when selecting data from "group.chat". */
+["group_chat_order_by"]: {
+	id?:PartialObjects["order_by"],
+	members_aggregate?:PartialObjects["group_members_aggregate_order_by"],
+	messages_aggregate?:PartialObjects["group_messages_aggregate_order_by"],
+	name?:PartialObjects["order_by"],
+	owner?:PartialObjects["users_order_by"],
+	owner_id?:PartialObjects["order_by"]
+},
+	/** primary key columns input for table: group.chat */
+["group_chat_pk_columns_input"]: {
+	id:number
+},
+	/** select columns of table "group.chat" */
+["group_chat_select_column"]:group_chat_select_column,
+	/** input type for updating data in table "group.chat" */
+["group_chat_set_input"]: {
+	id?:number,
+	name?:string,
+	owner_id?:number
+},
+	/** aggregate stddev on columns */
+["group_chat_stddev_fields"]: {
+		__typename?: "group_chat_stddev_fields";
+			id?:number,
+			owner_id?:number
+	},
+	/** aggregate stddev_pop on columns */
+["group_chat_stddev_pop_fields"]: {
+		__typename?: "group_chat_stddev_pop_fields";
+			id?:number,
+			owner_id?:number
+	},
+	/** aggregate stddev_samp on columns */
+["group_chat_stddev_samp_fields"]: {
+		__typename?: "group_chat_stddev_samp_fields";
+			id?:number,
+			owner_id?:number
+	},
+	/** Streaming cursor of the table "group_chat" */
+["group_chat_stream_cursor_input"]: {
+	/** Stream column input with initial value */
+	initial_value:PartialObjects["group_chat_stream_cursor_value_input"],
+	/** cursor ordering */
+	ordering?:PartialObjects["cursor_ordering"]
+},
+	/** Initial value of the column from where the streaming should start */
+["group_chat_stream_cursor_value_input"]: {
+	id?:number,
+	name?:string,
+	owner_id?:number
+},
+	/** aggregate sum on columns */
+["group_chat_sum_fields"]: {
+		__typename?: "group_chat_sum_fields";
+			id?:number,
+			owner_id?:number
+	},
+	/** update columns of table "group.chat" */
+["group_chat_update_column"]:group_chat_update_column,
+	["group_chat_updates"]: {
+	/** increments the numeric columns with given value of the filtered values */
+	_inc?:PartialObjects["group_chat_inc_input"],
+	/** sets the columns of the filtered rows to the given values */
+	_set?:PartialObjects["group_chat_set_input"],
+	/** filter the rows which have to be updated */
+	where:PartialObjects["group_chat_bool_exp"]
+},
+	/** aggregate var_pop on columns */
+["group_chat_var_pop_fields"]: {
+		__typename?: "group_chat_var_pop_fields";
+			id?:number,
+			owner_id?:number
+	},
+	/** aggregate var_samp on columns */
+["group_chat_var_samp_fields"]: {
+		__typename?: "group_chat_var_samp_fields";
+			id?:number,
+			owner_id?:number
+	},
+	/** aggregate variance on columns */
+["group_chat_variance_fields"]: {
+		__typename?: "group_chat_variance_fields";
+			id?:number,
+			owner_id?:number
+	},
+	/** columns and relationships of "group.members" */
+["group_members"]: {
+		__typename?: "group_members";
+			/** An object relationship */
+	chat?:PartialObjects["group_chat"],
+			chat_id?:number,
+			id?:number,
+			metadata?:PartialObjects["jsonb"],
+			/** An object relationship */
+	user?:PartialObjects["users"],
+			user_id?:number
+	},
+	/** aggregated selection of "group.members" */
+["group_members_aggregate"]: {
+		__typename?: "group_members_aggregate";
+			aggregate?:PartialObjects["group_members_aggregate_fields"],
+			nodes?:PartialObjects["group_members"][]
+	},
+	["group_members_aggregate_bool_exp"]: {
+	count?:PartialObjects["group_members_aggregate_bool_exp_count"]
+},
+	["group_members_aggregate_bool_exp_count"]: {
+	arguments?:PartialObjects["group_members_select_column"][],
+	distinct?:boolean,
+	filter?:PartialObjects["group_members_bool_exp"],
+	predicate:PartialObjects["Int_comparison_exp"]
+},
+	/** aggregate fields of "group.members" */
+["group_members_aggregate_fields"]: {
+		__typename?: "group_members_aggregate_fields";
+			avg?:PartialObjects["group_members_avg_fields"],
+			count?:number,
+			max?:PartialObjects["group_members_max_fields"],
+			min?:PartialObjects["group_members_min_fields"],
+			stddev?:PartialObjects["group_members_stddev_fields"],
+			stddev_pop?:PartialObjects["group_members_stddev_pop_fields"],
+			stddev_samp?:PartialObjects["group_members_stddev_samp_fields"],
+			sum?:PartialObjects["group_members_sum_fields"],
+			var_pop?:PartialObjects["group_members_var_pop_fields"],
+			var_samp?:PartialObjects["group_members_var_samp_fields"],
+			variance?:PartialObjects["group_members_variance_fields"]
+	},
+	/** order by aggregate values of table "group.members" */
+["group_members_aggregate_order_by"]: {
+	avg?:PartialObjects["group_members_avg_order_by"],
+	count?:PartialObjects["order_by"],
+	max?:PartialObjects["group_members_max_order_by"],
+	min?:PartialObjects["group_members_min_order_by"],
+	stddev?:PartialObjects["group_members_stddev_order_by"],
+	stddev_pop?:PartialObjects["group_members_stddev_pop_order_by"],
+	stddev_samp?:PartialObjects["group_members_stddev_samp_order_by"],
+	sum?:PartialObjects["group_members_sum_order_by"],
+	var_pop?:PartialObjects["group_members_var_pop_order_by"],
+	var_samp?:PartialObjects["group_members_var_samp_order_by"],
+	variance?:PartialObjects["group_members_variance_order_by"]
+},
+	/** append existing jsonb value of filtered columns with new jsonb value */
+["group_members_append_input"]: {
+	metadata?:PartialObjects["jsonb"]
+},
+	/** input type for inserting array relation for remote table "group.members" */
+["group_members_arr_rel_insert_input"]: {
+	data:PartialObjects["group_members_insert_input"][],
+	/** upsert condition */
+	on_conflict?:PartialObjects["group_members_on_conflict"]
+},
+	/** aggregate avg on columns */
+["group_members_avg_fields"]: {
+		__typename?: "group_members_avg_fields";
+			chat_id?:number,
+			id?:number,
+			user_id?:number
+	},
+	/** order by avg() on columns of table "group.members" */
+["group_members_avg_order_by"]: {
+	chat_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** Boolean expression to filter rows from the table "group.members". All fields are combined with a logical 'AND'. */
+["group_members_bool_exp"]: {
+	_and?:PartialObjects["group_members_bool_exp"][],
+	_not?:PartialObjects["group_members_bool_exp"],
+	_or?:PartialObjects["group_members_bool_exp"][],
+	chat?:PartialObjects["group_chat_bool_exp"],
+	chat_id?:PartialObjects["Int_comparison_exp"],
+	id?:PartialObjects["Int_comparison_exp"],
+	metadata?:PartialObjects["jsonb_comparison_exp"],
+	user?:PartialObjects["users_bool_exp"],
+	user_id?:PartialObjects["Int_comparison_exp"]
+},
+	/** unique or primary key constraints on table "group.members" */
+["group_members_constraint"]:group_members_constraint,
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+["group_members_delete_at_path_input"]: {
+	metadata?:string[]
+},
+	/** delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array */
+["group_members_delete_elem_input"]: {
+	metadata?:number
+},
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+["group_members_delete_key_input"]: {
+	metadata?:string
+},
+	/** input type for incrementing numeric columns in table "group.members" */
+["group_members_inc_input"]: {
+	chat_id?:number,
+	id?:number,
+	user_id?:number
+},
+	/** input type for inserting data into table "group.members" */
+["group_members_insert_input"]: {
+	chat?:PartialObjects["group_chat_obj_rel_insert_input"],
+	chat_id?:number,
+	id?:number,
+	metadata?:PartialObjects["jsonb"],
+	user?:PartialObjects["users_obj_rel_insert_input"],
+	user_id?:number
+},
+	/** aggregate max on columns */
+["group_members_max_fields"]: {
+		__typename?: "group_members_max_fields";
+			chat_id?:number,
+			id?:number,
+			user_id?:number
+	},
+	/** order by max() on columns of table "group.members" */
+["group_members_max_order_by"]: {
+	chat_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** aggregate min on columns */
+["group_members_min_fields"]: {
+		__typename?: "group_members_min_fields";
+			chat_id?:number,
+			id?:number,
+			user_id?:number
+	},
+	/** order by min() on columns of table "group.members" */
+["group_members_min_order_by"]: {
+	chat_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** response of any mutation on the table "group.members" */
+["group_members_mutation_response"]: {
+		__typename?: "group_members_mutation_response";
+			/** number of rows affected by the mutation */
+	affected_rows?:number,
+			/** data from the rows affected by the mutation */
+	returning?:PartialObjects["group_members"][]
+	},
+	/** input type for inserting object relation for remote table "group.members" */
+["group_members_obj_rel_insert_input"]: {
+	data:PartialObjects["group_members_insert_input"],
+	/** upsert condition */
+	on_conflict?:PartialObjects["group_members_on_conflict"]
+},
+	/** on_conflict condition type for table "group.members" */
+["group_members_on_conflict"]: {
+	constraint:PartialObjects["group_members_constraint"],
+	update_columns:PartialObjects["group_members_update_column"][],
+	where?:PartialObjects["group_members_bool_exp"]
+},
+	/** Ordering options when selecting data from "group.members". */
+["group_members_order_by"]: {
+	chat?:PartialObjects["group_chat_order_by"],
+	chat_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	metadata?:PartialObjects["order_by"],
+	user?:PartialObjects["users_order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** primary key columns input for table: group.members */
+["group_members_pk_columns_input"]: {
+	id:number
+},
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+["group_members_prepend_input"]: {
+	metadata?:PartialObjects["jsonb"]
+},
+	/** select columns of table "group.members" */
+["group_members_select_column"]:group_members_select_column,
+	/** input type for updating data in table "group.members" */
+["group_members_set_input"]: {
+	chat_id?:number,
+	id?:number,
+	metadata?:PartialObjects["jsonb"],
+	user_id?:number
+},
+	/** aggregate stddev on columns */
+["group_members_stddev_fields"]: {
+		__typename?: "group_members_stddev_fields";
+			chat_id?:number,
+			id?:number,
+			user_id?:number
+	},
+	/** order by stddev() on columns of table "group.members" */
+["group_members_stddev_order_by"]: {
+	chat_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** aggregate stddev_pop on columns */
+["group_members_stddev_pop_fields"]: {
+		__typename?: "group_members_stddev_pop_fields";
+			chat_id?:number,
+			id?:number,
+			user_id?:number
+	},
+	/** order by stddev_pop() on columns of table "group.members" */
+["group_members_stddev_pop_order_by"]: {
+	chat_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** aggregate stddev_samp on columns */
+["group_members_stddev_samp_fields"]: {
+		__typename?: "group_members_stddev_samp_fields";
+			chat_id?:number,
+			id?:number,
+			user_id?:number
+	},
+	/** order by stddev_samp() on columns of table "group.members" */
+["group_members_stddev_samp_order_by"]: {
+	chat_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** Streaming cursor of the table "group_members" */
+["group_members_stream_cursor_input"]: {
+	/** Stream column input with initial value */
+	initial_value:PartialObjects["group_members_stream_cursor_value_input"],
+	/** cursor ordering */
+	ordering?:PartialObjects["cursor_ordering"]
+},
+	/** Initial value of the column from where the streaming should start */
+["group_members_stream_cursor_value_input"]: {
+	chat_id?:number,
+	id?:number,
+	metadata?:PartialObjects["jsonb"],
+	user_id?:number
+},
+	/** aggregate sum on columns */
+["group_members_sum_fields"]: {
+		__typename?: "group_members_sum_fields";
+			chat_id?:number,
+			id?:number,
+			user_id?:number
+	},
+	/** order by sum() on columns of table "group.members" */
+["group_members_sum_order_by"]: {
+	chat_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** update columns of table "group.members" */
+["group_members_update_column"]:group_members_update_column,
+	["group_members_updates"]: {
+	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:PartialObjects["group_members_append_input"],
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:PartialObjects["group_members_delete_at_path_input"],
+	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:PartialObjects["group_members_delete_elem_input"],
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:PartialObjects["group_members_delete_key_input"],
+	/** increments the numeric columns with given value of the filtered values */
+	_inc?:PartialObjects["group_members_inc_input"],
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:PartialObjects["group_members_prepend_input"],
+	/** sets the columns of the filtered rows to the given values */
+	_set?:PartialObjects["group_members_set_input"],
+	/** filter the rows which have to be updated */
+	where:PartialObjects["group_members_bool_exp"]
+},
+	/** aggregate var_pop on columns */
+["group_members_var_pop_fields"]: {
+		__typename?: "group_members_var_pop_fields";
+			chat_id?:number,
+			id?:number,
+			user_id?:number
+	},
+	/** order by var_pop() on columns of table "group.members" */
+["group_members_var_pop_order_by"]: {
+	chat_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** aggregate var_samp on columns */
+["group_members_var_samp_fields"]: {
+		__typename?: "group_members_var_samp_fields";
+			chat_id?:number,
+			id?:number,
+			user_id?:number
+	},
+	/** order by var_samp() on columns of table "group.members" */
+["group_members_var_samp_order_by"]: {
+	chat_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** aggregate variance on columns */
+["group_members_variance_fields"]: {
+		__typename?: "group_members_variance_fields";
+			chat_id?:number,
+			id?:number,
+			user_id?:number
+	},
+	/** order by variance() on columns of table "group.members" */
+["group_members_variance_order_by"]: {
+	chat_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** columns and relationships of "group.messages" */
+["group_messages"]: {
+		__typename?: "group_messages";
+			chat_id?:number,
+			id?:number,
+			member_id?:number,
+			payload?:PartialObjects["jsonb"],
+			/** An object relationship */
+	sender?:PartialObjects["group_members"],
+			time?:PartialObjects["timestamptz"]
+	},
+	/** aggregated selection of "group.messages" */
+["group_messages_aggregate"]: {
+		__typename?: "group_messages_aggregate";
+			aggregate?:PartialObjects["group_messages_aggregate_fields"],
+			nodes?:PartialObjects["group_messages"][]
+	},
+	["group_messages_aggregate_bool_exp"]: {
+	count?:PartialObjects["group_messages_aggregate_bool_exp_count"]
+},
+	["group_messages_aggregate_bool_exp_count"]: {
+	arguments?:PartialObjects["group_messages_select_column"][],
+	distinct?:boolean,
+	filter?:PartialObjects["group_messages_bool_exp"],
+	predicate:PartialObjects["Int_comparison_exp"]
+},
+	/** aggregate fields of "group.messages" */
+["group_messages_aggregate_fields"]: {
+		__typename?: "group_messages_aggregate_fields";
+			avg?:PartialObjects["group_messages_avg_fields"],
+			count?:number,
+			max?:PartialObjects["group_messages_max_fields"],
+			min?:PartialObjects["group_messages_min_fields"],
+			stddev?:PartialObjects["group_messages_stddev_fields"],
+			stddev_pop?:PartialObjects["group_messages_stddev_pop_fields"],
+			stddev_samp?:PartialObjects["group_messages_stddev_samp_fields"],
+			sum?:PartialObjects["group_messages_sum_fields"],
+			var_pop?:PartialObjects["group_messages_var_pop_fields"],
+			var_samp?:PartialObjects["group_messages_var_samp_fields"],
+			variance?:PartialObjects["group_messages_variance_fields"]
+	},
+	/** order by aggregate values of table "group.messages" */
+["group_messages_aggregate_order_by"]: {
+	avg?:PartialObjects["group_messages_avg_order_by"],
+	count?:PartialObjects["order_by"],
+	max?:PartialObjects["group_messages_max_order_by"],
+	min?:PartialObjects["group_messages_min_order_by"],
+	stddev?:PartialObjects["group_messages_stddev_order_by"],
+	stddev_pop?:PartialObjects["group_messages_stddev_pop_order_by"],
+	stddev_samp?:PartialObjects["group_messages_stddev_samp_order_by"],
+	sum?:PartialObjects["group_messages_sum_order_by"],
+	var_pop?:PartialObjects["group_messages_var_pop_order_by"],
+	var_samp?:PartialObjects["group_messages_var_samp_order_by"],
+	variance?:PartialObjects["group_messages_variance_order_by"]
+},
+	/** append existing jsonb value of filtered columns with new jsonb value */
+["group_messages_append_input"]: {
+	payload?:PartialObjects["jsonb"]
+},
+	/** input type for inserting array relation for remote table "group.messages" */
+["group_messages_arr_rel_insert_input"]: {
+	data:PartialObjects["group_messages_insert_input"][],
+	/** upsert condition */
+	on_conflict?:PartialObjects["group_messages_on_conflict"]
+},
+	/** aggregate avg on columns */
+["group_messages_avg_fields"]: {
+		__typename?: "group_messages_avg_fields";
+			chat_id?:number,
+			id?:number,
+			member_id?:number
+	},
+	/** order by avg() on columns of table "group.messages" */
+["group_messages_avg_order_by"]: {
+	chat_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	member_id?:PartialObjects["order_by"]
+},
+	/** Boolean expression to filter rows from the table "group.messages". All fields are combined with a logical 'AND'. */
+["group_messages_bool_exp"]: {
+	_and?:PartialObjects["group_messages_bool_exp"][],
+	_not?:PartialObjects["group_messages_bool_exp"],
+	_or?:PartialObjects["group_messages_bool_exp"][],
+	chat_id?:PartialObjects["Int_comparison_exp"],
+	id?:PartialObjects["Int_comparison_exp"],
+	member_id?:PartialObjects["Int_comparison_exp"],
+	payload?:PartialObjects["jsonb_comparison_exp"],
+	sender?:PartialObjects["group_members_bool_exp"],
+	time?:PartialObjects["timestamptz_comparison_exp"]
+},
+	/** unique or primary key constraints on table "group.messages" */
+["group_messages_constraint"]:group_messages_constraint,
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+["group_messages_delete_at_path_input"]: {
+	payload?:string[]
+},
+	/** delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array */
+["group_messages_delete_elem_input"]: {
+	payload?:number
+},
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+["group_messages_delete_key_input"]: {
+	payload?:string
+},
+	/** input type for incrementing numeric columns in table "group.messages" */
+["group_messages_inc_input"]: {
+	chat_id?:number,
+	id?:number,
+	member_id?:number
+},
+	/** input type for inserting data into table "group.messages" */
+["group_messages_insert_input"]: {
+	chat_id?:number,
+	id?:number,
+	member_id?:number,
+	payload?:PartialObjects["jsonb"],
+	sender?:PartialObjects["group_members_obj_rel_insert_input"],
+	time?:PartialObjects["timestamptz"]
+},
+	/** aggregate max on columns */
+["group_messages_max_fields"]: {
+		__typename?: "group_messages_max_fields";
+			chat_id?:number,
+			id?:number,
+			member_id?:number,
+			time?:PartialObjects["timestamptz"]
+	},
+	/** order by max() on columns of table "group.messages" */
+["group_messages_max_order_by"]: {
+	chat_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	member_id?:PartialObjects["order_by"],
+	time?:PartialObjects["order_by"]
+},
+	/** aggregate min on columns */
+["group_messages_min_fields"]: {
+		__typename?: "group_messages_min_fields";
+			chat_id?:number,
+			id?:number,
+			member_id?:number,
+			time?:PartialObjects["timestamptz"]
+	},
+	/** order by min() on columns of table "group.messages" */
+["group_messages_min_order_by"]: {
+	chat_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	member_id?:PartialObjects["order_by"],
+	time?:PartialObjects["order_by"]
+},
+	/** response of any mutation on the table "group.messages" */
+["group_messages_mutation_response"]: {
+		__typename?: "group_messages_mutation_response";
+			/** number of rows affected by the mutation */
+	affected_rows?:number,
+			/** data from the rows affected by the mutation */
+	returning?:PartialObjects["group_messages"][]
+	},
+	/** on_conflict condition type for table "group.messages" */
+["group_messages_on_conflict"]: {
+	constraint:PartialObjects["group_messages_constraint"],
+	update_columns:PartialObjects["group_messages_update_column"][],
+	where?:PartialObjects["group_messages_bool_exp"]
+},
+	/** Ordering options when selecting data from "group.messages". */
+["group_messages_order_by"]: {
+	chat_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	member_id?:PartialObjects["order_by"],
+	payload?:PartialObjects["order_by"],
+	sender?:PartialObjects["group_members_order_by"],
+	time?:PartialObjects["order_by"]
+},
+	/** primary key columns input for table: group.messages */
+["group_messages_pk_columns_input"]: {
+	id:number
+},
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+["group_messages_prepend_input"]: {
+	payload?:PartialObjects["jsonb"]
+},
+	/** select columns of table "group.messages" */
+["group_messages_select_column"]:group_messages_select_column,
+	/** input type for updating data in table "group.messages" */
+["group_messages_set_input"]: {
+	chat_id?:number,
+	id?:number,
+	member_id?:number,
+	payload?:PartialObjects["jsonb"],
+	time?:PartialObjects["timestamptz"]
+},
+	/** aggregate stddev on columns */
+["group_messages_stddev_fields"]: {
+		__typename?: "group_messages_stddev_fields";
+			chat_id?:number,
+			id?:number,
+			member_id?:number
+	},
+	/** order by stddev() on columns of table "group.messages" */
+["group_messages_stddev_order_by"]: {
+	chat_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	member_id?:PartialObjects["order_by"]
+},
+	/** aggregate stddev_pop on columns */
+["group_messages_stddev_pop_fields"]: {
+		__typename?: "group_messages_stddev_pop_fields";
+			chat_id?:number,
+			id?:number,
+			member_id?:number
+	},
+	/** order by stddev_pop() on columns of table "group.messages" */
+["group_messages_stddev_pop_order_by"]: {
+	chat_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	member_id?:PartialObjects["order_by"]
+},
+	/** aggregate stddev_samp on columns */
+["group_messages_stddev_samp_fields"]: {
+		__typename?: "group_messages_stddev_samp_fields";
+			chat_id?:number,
+			id?:number,
+			member_id?:number
+	},
+	/** order by stddev_samp() on columns of table "group.messages" */
+["group_messages_stddev_samp_order_by"]: {
+	chat_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	member_id?:PartialObjects["order_by"]
+},
+	/** Streaming cursor of the table "group_messages" */
+["group_messages_stream_cursor_input"]: {
+	/** Stream column input with initial value */
+	initial_value:PartialObjects["group_messages_stream_cursor_value_input"],
+	/** cursor ordering */
+	ordering?:PartialObjects["cursor_ordering"]
+},
+	/** Initial value of the column from where the streaming should start */
+["group_messages_stream_cursor_value_input"]: {
+	chat_id?:number,
+	id?:number,
+	member_id?:number,
+	payload?:PartialObjects["jsonb"],
+	time?:PartialObjects["timestamptz"]
+},
+	/** aggregate sum on columns */
+["group_messages_sum_fields"]: {
+		__typename?: "group_messages_sum_fields";
+			chat_id?:number,
+			id?:number,
+			member_id?:number
+	},
+	/** order by sum() on columns of table "group.messages" */
+["group_messages_sum_order_by"]: {
+	chat_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	member_id?:PartialObjects["order_by"]
+},
+	/** update columns of table "group.messages" */
+["group_messages_update_column"]:group_messages_update_column,
+	["group_messages_updates"]: {
+	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:PartialObjects["group_messages_append_input"],
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:PartialObjects["group_messages_delete_at_path_input"],
+	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:PartialObjects["group_messages_delete_elem_input"],
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:PartialObjects["group_messages_delete_key_input"],
+	/** increments the numeric columns with given value of the filtered values */
+	_inc?:PartialObjects["group_messages_inc_input"],
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:PartialObjects["group_messages_prepend_input"],
+	/** sets the columns of the filtered rows to the given values */
+	_set?:PartialObjects["group_messages_set_input"],
+	/** filter the rows which have to be updated */
+	where:PartialObjects["group_messages_bool_exp"]
+},
+	/** aggregate var_pop on columns */
+["group_messages_var_pop_fields"]: {
+		__typename?: "group_messages_var_pop_fields";
+			chat_id?:number,
+			id?:number,
+			member_id?:number
+	},
+	/** order by var_pop() on columns of table "group.messages" */
+["group_messages_var_pop_order_by"]: {
+	chat_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	member_id?:PartialObjects["order_by"]
+},
+	/** aggregate var_samp on columns */
+["group_messages_var_samp_fields"]: {
+		__typename?: "group_messages_var_samp_fields";
+			chat_id?:number,
+			id?:number,
+			member_id?:number
+	},
+	/** order by var_samp() on columns of table "group.messages" */
+["group_messages_var_samp_order_by"]: {
+	chat_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	member_id?:PartialObjects["order_by"]
+},
+	/** aggregate variance on columns */
+["group_messages_variance_fields"]: {
+		__typename?: "group_messages_variance_fields";
+			chat_id?:number,
+			id?:number,
+			member_id?:number
+	},
+	/** order by variance() on columns of table "group.messages" */
+["group_messages_variance_order_by"]: {
+	chat_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	member_id?:PartialObjects["order_by"]
+},
 	/** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
 ["Int_comparison_exp"]: {
 	_eq?:number,
@@ -5913,6 +9951,18 @@ the end). throws an error if top level container is not an array */
 	delete_goals?:PartialObjects["goals_mutation_response"],
 			/** delete single row from the table: "goals" */
 	delete_goals_by_pk?:PartialObjects["goals"],
+			/** delete data from the table: "group.chat" */
+	delete_group_chat?:PartialObjects["group_chat_mutation_response"],
+			/** delete single row from the table: "group.chat" */
+	delete_group_chat_by_pk?:PartialObjects["group_chat"],
+			/** delete data from the table: "group.members" */
+	delete_group_members?:PartialObjects["group_members_mutation_response"],
+			/** delete single row from the table: "group.members" */
+	delete_group_members_by_pk?:PartialObjects["group_members"],
+			/** delete data from the table: "group.messages" */
+	delete_group_messages?:PartialObjects["group_messages_mutation_response"],
+			/** delete single row from the table: "group.messages" */
+	delete_group_messages_by_pk?:PartialObjects["group_messages"],
 			/** delete data from the table: "interactions" */
 	delete_interactions?:PartialObjects["interactions_mutation_response"],
 			/** delete single row from the table: "interactions" */
@@ -5941,6 +9991,26 @@ the end). throws an error if top level container is not an array */
 	delete_users?:PartialObjects["users_mutation_response"],
 			/** delete single row from the table: "users" */
 	delete_users_by_pk?:PartialObjects["users"],
+			/** delete data from the table: "v2.action_types" */
+	delete_v2_action_types?:PartialObjects["v2_action_types_mutation_response"],
+			/** delete single row from the table: "v2.action_types" */
+	delete_v2_action_types_by_pk?:PartialObjects["v2_action_types"],
+			/** delete data from the table: "v2.actions" */
+	delete_v2_actions?:PartialObjects["v2_actions_mutation_response"],
+			/** delete single row from the table: "v2.actions" */
+	delete_v2_actions_by_pk?:PartialObjects["v2_actions"],
+			/** delete data from the table: "v2.aggregates" */
+	delete_v2_aggregates?:PartialObjects["v2_aggregates_mutation_response"],
+			/** delete single row from the table: "v2.aggregates" */
+	delete_v2_aggregates_by_pk?:PartialObjects["v2_aggregates"],
+			/** delete data from the table: "v2.object_action" */
+	delete_v2_object_action?:PartialObjects["v2_object_action_mutation_response"],
+			/** delete single row from the table: "v2.object_action" */
+	delete_v2_object_action_by_pk?:PartialObjects["v2_object_action"],
+			/** delete data from the table: "v2.object_t_action_t" */
+	delete_v2_object_t_action_t?:PartialObjects["v2_object_t_action_t_mutation_response"],
+			/** delete single row from the table: "v2.object_t_action_t" */
+	delete_v2_object_t_action_t_by_pk?:PartialObjects["v2_object_t_action_t"],
 			/** insert data into the table: "associations" */
 	insert_associations?:PartialObjects["associations_mutation_response"],
 			/** insert a single row into the table: "associations" */
@@ -5957,6 +10027,18 @@ the end). throws an error if top level container is not an array */
 	insert_goals?:PartialObjects["goals_mutation_response"],
 			/** insert a single row into the table: "goals" */
 	insert_goals_one?:PartialObjects["goals"],
+			/** insert data into the table: "group.chat" */
+	insert_group_chat?:PartialObjects["group_chat_mutation_response"],
+			/** insert a single row into the table: "group.chat" */
+	insert_group_chat_one?:PartialObjects["group_chat"],
+			/** insert data into the table: "group.members" */
+	insert_group_members?:PartialObjects["group_members_mutation_response"],
+			/** insert a single row into the table: "group.members" */
+	insert_group_members_one?:PartialObjects["group_members"],
+			/** insert data into the table: "group.messages" */
+	insert_group_messages?:PartialObjects["group_messages_mutation_response"],
+			/** insert a single row into the table: "group.messages" */
+	insert_group_messages_one?:PartialObjects["group_messages"],
 			/** insert data into the table: "interactions" */
 	insert_interactions?:PartialObjects["interactions_mutation_response"],
 			/** insert a single row into the table: "interactions" */
@@ -5985,6 +10067,26 @@ the end). throws an error if top level container is not an array */
 	insert_users?:PartialObjects["users_mutation_response"],
 			/** insert a single row into the table: "users" */
 	insert_users_one?:PartialObjects["users"],
+			/** insert data into the table: "v2.action_types" */
+	insert_v2_action_types?:PartialObjects["v2_action_types_mutation_response"],
+			/** insert a single row into the table: "v2.action_types" */
+	insert_v2_action_types_one?:PartialObjects["v2_action_types"],
+			/** insert data into the table: "v2.actions" */
+	insert_v2_actions?:PartialObjects["v2_actions_mutation_response"],
+			/** insert a single row into the table: "v2.actions" */
+	insert_v2_actions_one?:PartialObjects["v2_actions"],
+			/** insert data into the table: "v2.aggregates" */
+	insert_v2_aggregates?:PartialObjects["v2_aggregates_mutation_response"],
+			/** insert a single row into the table: "v2.aggregates" */
+	insert_v2_aggregates_one?:PartialObjects["v2_aggregates"],
+			/** insert data into the table: "v2.object_action" */
+	insert_v2_object_action?:PartialObjects["v2_object_action_mutation_response"],
+			/** insert a single row into the table: "v2.object_action" */
+	insert_v2_object_action_one?:PartialObjects["v2_object_action"],
+			/** insert data into the table: "v2.object_t_action_t" */
+	insert_v2_object_t_action_t?:PartialObjects["v2_object_t_action_t_mutation_response"],
+			/** insert a single row into the table: "v2.object_t_action_t" */
+	insert_v2_object_t_action_t_one?:PartialObjects["v2_object_t_action_t"],
 			/** update data of the table: "associations" */
 	update_associations?:PartialObjects["associations_mutation_response"],
 			/** update single row of the table: "associations" */
@@ -6009,6 +10111,24 @@ the end). throws an error if top level container is not an array */
 	update_goals_by_pk?:PartialObjects["goals"],
 			/** update multiples rows of table: "goals" */
 	update_goals_many?:(PartialObjects["goals_mutation_response"] | undefined)[],
+			/** update data of the table: "group.chat" */
+	update_group_chat?:PartialObjects["group_chat_mutation_response"],
+			/** update single row of the table: "group.chat" */
+	update_group_chat_by_pk?:PartialObjects["group_chat"],
+			/** update multiples rows of table: "group.chat" */
+	update_group_chat_many?:(PartialObjects["group_chat_mutation_response"] | undefined)[],
+			/** update data of the table: "group.members" */
+	update_group_members?:PartialObjects["group_members_mutation_response"],
+			/** update single row of the table: "group.members" */
+	update_group_members_by_pk?:PartialObjects["group_members"],
+			/** update multiples rows of table: "group.members" */
+	update_group_members_many?:(PartialObjects["group_members_mutation_response"] | undefined)[],
+			/** update data of the table: "group.messages" */
+	update_group_messages?:PartialObjects["group_messages_mutation_response"],
+			/** update single row of the table: "group.messages" */
+	update_group_messages_by_pk?:PartialObjects["group_messages"],
+			/** update multiples rows of table: "group.messages" */
+	update_group_messages_many?:(PartialObjects["group_messages_mutation_response"] | undefined)[],
 			/** update data of the table: "interactions" */
 	update_interactions?:PartialObjects["interactions_mutation_response"],
 			/** update single row of the table: "interactions" */
@@ -6050,13 +10170,50 @@ the end). throws an error if top level container is not an array */
 			/** update single row of the table: "users" */
 	update_users_by_pk?:PartialObjects["users"],
 			/** update multiples rows of table: "users" */
-	update_users_many?:(PartialObjects["users_mutation_response"] | undefined)[]
+	update_users_many?:(PartialObjects["users_mutation_response"] | undefined)[],
+			/** update data of the table: "v2.action_types" */
+	update_v2_action_types?:PartialObjects["v2_action_types_mutation_response"],
+			/** update single row of the table: "v2.action_types" */
+	update_v2_action_types_by_pk?:PartialObjects["v2_action_types"],
+			/** update multiples rows of table: "v2.action_types" */
+	update_v2_action_types_many?:(PartialObjects["v2_action_types_mutation_response"] | undefined)[],
+			/** update data of the table: "v2.actions" */
+	update_v2_actions?:PartialObjects["v2_actions_mutation_response"],
+			/** update single row of the table: "v2.actions" */
+	update_v2_actions_by_pk?:PartialObjects["v2_actions"],
+			/** update multiples rows of table: "v2.actions" */
+	update_v2_actions_many?:(PartialObjects["v2_actions_mutation_response"] | undefined)[],
+			/** update data of the table: "v2.aggregates" */
+	update_v2_aggregates?:PartialObjects["v2_aggregates_mutation_response"],
+			/** update single row of the table: "v2.aggregates" */
+	update_v2_aggregates_by_pk?:PartialObjects["v2_aggregates"],
+			/** update multiples rows of table: "v2.aggregates" */
+	update_v2_aggregates_many?:(PartialObjects["v2_aggregates_mutation_response"] | undefined)[],
+			/** update data of the table: "v2.object_action" */
+	update_v2_object_action?:PartialObjects["v2_object_action_mutation_response"],
+			/** update single row of the table: "v2.object_action" */
+	update_v2_object_action_by_pk?:PartialObjects["v2_object_action"],
+			/** update multiples rows of table: "v2.object_action" */
+	update_v2_object_action_many?:(PartialObjects["v2_object_action_mutation_response"] | undefined)[],
+			/** update data of the table: "v2.object_t_action_t" */
+	update_v2_object_t_action_t?:PartialObjects["v2_object_t_action_t_mutation_response"],
+			/** update single row of the table: "v2.object_t_action_t" */
+	update_v2_object_t_action_t_by_pk?:PartialObjects["v2_object_t_action_t"],
+			/** update multiples rows of table: "v2.object_t_action_t" */
+	update_v2_object_t_action_t_many?:(PartialObjects["v2_object_t_action_t_mutation_response"] | undefined)[]
 	},
 	/** columns and relationships of "object_types" */
 ["object_types"]: {
 		__typename?: "object_types";
-			id?:string,
-			metadata?:PartialObjects["jsonb"]
+			created_at?:PartialObjects["timestamptz"],
+			id?:number,
+			metadata?:PartialObjects["jsonb"],
+			name?:string,
+			/** An array relationship */
+	objects?:PartialObjects["objects"][],
+			/** An aggregate relationship */
+	objects_aggregate?:PartialObjects["objects_aggregate"],
+			user_id?:number
 	},
 	/** aggregated selection of "object_types" */
 ["object_types_aggregate"]: {
@@ -6067,21 +10224,40 @@ the end). throws an error if top level container is not an array */
 	/** aggregate fields of "object_types" */
 ["object_types_aggregate_fields"]: {
 		__typename?: "object_types_aggregate_fields";
+			avg?:PartialObjects["object_types_avg_fields"],
 			count?:number,
 			max?:PartialObjects["object_types_max_fields"],
-			min?:PartialObjects["object_types_min_fields"]
+			min?:PartialObjects["object_types_min_fields"],
+			stddev?:PartialObjects["object_types_stddev_fields"],
+			stddev_pop?:PartialObjects["object_types_stddev_pop_fields"],
+			stddev_samp?:PartialObjects["object_types_stddev_samp_fields"],
+			sum?:PartialObjects["object_types_sum_fields"],
+			var_pop?:PartialObjects["object_types_var_pop_fields"],
+			var_samp?:PartialObjects["object_types_var_samp_fields"],
+			variance?:PartialObjects["object_types_variance_fields"]
 	},
 	/** append existing jsonb value of filtered columns with new jsonb value */
 ["object_types_append_input"]: {
 	metadata?:PartialObjects["jsonb"]
 },
+	/** aggregate avg on columns */
+["object_types_avg_fields"]: {
+		__typename?: "object_types_avg_fields";
+			id?:number,
+			user_id?:number
+	},
 	/** Boolean expression to filter rows from the table "object_types". All fields are combined with a logical 'AND'. */
 ["object_types_bool_exp"]: {
 	_and?:PartialObjects["object_types_bool_exp"][],
 	_not?:PartialObjects["object_types_bool_exp"],
 	_or?:PartialObjects["object_types_bool_exp"][],
-	id?:PartialObjects["String_comparison_exp"],
-	metadata?:PartialObjects["jsonb_comparison_exp"]
+	created_at?:PartialObjects["timestamptz_comparison_exp"],
+	id?:PartialObjects["Int_comparison_exp"],
+	metadata?:PartialObjects["jsonb_comparison_exp"],
+	name?:PartialObjects["String_comparison_exp"],
+	objects?:PartialObjects["objects_bool_exp"],
+	objects_aggregate?:PartialObjects["objects_aggregate_bool_exp"],
+	user_id?:PartialObjects["Int_comparison_exp"]
 },
 	/** unique or primary key constraints on table "object_types" */
 ["object_types_constraint"]:object_types_constraint,
@@ -6098,20 +10274,35 @@ end). throws an error if top level container is not an array */
 ["object_types_delete_key_input"]: {
 	metadata?:string
 },
+	/** input type for incrementing numeric columns in table "object_types" */
+["object_types_inc_input"]: {
+	id?:number,
+	user_id?:number
+},
 	/** input type for inserting data into table "object_types" */
 ["object_types_insert_input"]: {
-	id?:string,
-	metadata?:PartialObjects["jsonb"]
+	created_at?:PartialObjects["timestamptz"],
+	id?:number,
+	metadata?:PartialObjects["jsonb"],
+	name?:string,
+	objects?:PartialObjects["objects_arr_rel_insert_input"],
+	user_id?:number
 },
 	/** aggregate max on columns */
 ["object_types_max_fields"]: {
 		__typename?: "object_types_max_fields";
-			id?:string
+			created_at?:PartialObjects["timestamptz"],
+			id?:number,
+			name?:string,
+			user_id?:number
 	},
 	/** aggregate min on columns */
 ["object_types_min_fields"]: {
 		__typename?: "object_types_min_fields";
-			id?:string
+			created_at?:PartialObjects["timestamptz"],
+			id?:number,
+			name?:string,
+			user_id?:number
 	},
 	/** response of any mutation on the table "object_types" */
 ["object_types_mutation_response"]: {
@@ -6121,6 +10312,12 @@ end). throws an error if top level container is not an array */
 			/** data from the rows affected by the mutation */
 	returning?:PartialObjects["object_types"][]
 	},
+	/** input type for inserting object relation for remote table "object_types" */
+["object_types_obj_rel_insert_input"]: {
+	data:PartialObjects["object_types_insert_input"],
+	/** upsert condition */
+	on_conflict?:PartialObjects["object_types_on_conflict"]
+},
 	/** on_conflict condition type for table "object_types" */
 ["object_types_on_conflict"]: {
 	constraint:PartialObjects["object_types_constraint"],
@@ -6129,12 +10326,16 @@ end). throws an error if top level container is not an array */
 },
 	/** Ordering options when selecting data from "object_types". */
 ["object_types_order_by"]: {
+	created_at?:PartialObjects["order_by"],
 	id?:PartialObjects["order_by"],
-	metadata?:PartialObjects["order_by"]
+	metadata?:PartialObjects["order_by"],
+	name?:PartialObjects["order_by"],
+	objects_aggregate?:PartialObjects["objects_aggregate_order_by"],
+	user_id?:PartialObjects["order_by"]
 },
 	/** primary key columns input for table: object_types */
 ["object_types_pk_columns_input"]: {
-	id:string
+	id:number
 },
 	/** prepend existing jsonb value of filtered columns with new jsonb value */
 ["object_types_prepend_input"]: {
@@ -6144,9 +10345,30 @@ end). throws an error if top level container is not an array */
 ["object_types_select_column"]:object_types_select_column,
 	/** input type for updating data in table "object_types" */
 ["object_types_set_input"]: {
-	id?:string,
-	metadata?:PartialObjects["jsonb"]
+	created_at?:PartialObjects["timestamptz"],
+	id?:number,
+	metadata?:PartialObjects["jsonb"],
+	name?:string,
+	user_id?:number
 },
+	/** aggregate stddev on columns */
+["object_types_stddev_fields"]: {
+		__typename?: "object_types_stddev_fields";
+			id?:number,
+			user_id?:number
+	},
+	/** aggregate stddev_pop on columns */
+["object_types_stddev_pop_fields"]: {
+		__typename?: "object_types_stddev_pop_fields";
+			id?:number,
+			user_id?:number
+	},
+	/** aggregate stddev_samp on columns */
+["object_types_stddev_samp_fields"]: {
+		__typename?: "object_types_stddev_samp_fields";
+			id?:number,
+			user_id?:number
+	},
 	/** Streaming cursor of the table "object_types" */
 ["object_types_stream_cursor_input"]: {
 	/** Stream column input with initial value */
@@ -6156,9 +10378,18 @@ end). throws an error if top level container is not an array */
 },
 	/** Initial value of the column from where the streaming should start */
 ["object_types_stream_cursor_value_input"]: {
-	id?:string,
-	metadata?:PartialObjects["jsonb"]
+	created_at?:PartialObjects["timestamptz"],
+	id?:number,
+	metadata?:PartialObjects["jsonb"],
+	name?:string,
+	user_id?:number
 },
+	/** aggregate sum on columns */
+["object_types_sum_fields"]: {
+		__typename?: "object_types_sum_fields";
+			id?:number,
+			user_id?:number
+	},
 	/** update columns of table "object_types" */
 ["object_types_update_column"]:object_types_update_column,
 	["object_types_updates"]: {
@@ -6171,6 +10402,8 @@ the end). throws an error if top level container is not an array */
 	_delete_elem?:PartialObjects["object_types_delete_elem_input"],
 	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
 	_delete_key?:PartialObjects["object_types_delete_key_input"],
+	/** increments the numeric columns with given value of the filtered values */
+	_inc?:PartialObjects["object_types_inc_input"],
 	/** prepend existing jsonb value of filtered columns with new jsonb value */
 	_prepend?:PartialObjects["object_types_prepend_input"],
 	/** sets the columns of the filtered rows to the given values */
@@ -6178,14 +10411,38 @@ the end). throws an error if top level container is not an array */
 	/** filter the rows which have to be updated */
 	where:PartialObjects["object_types_bool_exp"]
 },
+	/** aggregate var_pop on columns */
+["object_types_var_pop_fields"]: {
+		__typename?: "object_types_var_pop_fields";
+			id?:number,
+			user_id?:number
+	},
+	/** aggregate var_samp on columns */
+["object_types_var_samp_fields"]: {
+		__typename?: "object_types_var_samp_fields";
+			id?:number,
+			user_id?:number
+	},
+	/** aggregate variance on columns */
+["object_types_variance_fields"]: {
+		__typename?: "object_types_variance_fields";
+			id?:number,
+			user_id?:number
+	},
 	/** columns and relationships of "objects" */
 ["objects"]: {
 		__typename?: "objects";
 			/** A computed field, executes function "object_events" */
 	events?:PartialObjects["events"][],
+			fields?:PartialObjects["jsonb"],
 			id?:number,
+			metadata?:PartialObjects["jsonb"],
 			name?:string,
-			object_type?:string,
+			/** An object relationship */
+	object_type?:PartialObjects["object_types"],
+			object_type_id?:number,
+			/** A computed field, executes function "parent_events" */
+	parent_events?:PartialObjects["events"][],
 			user_id?:number
 	},
 	/** aggregated selection of "objects" */
@@ -6194,6 +10451,15 @@ the end). throws an error if top level container is not an array */
 			aggregate?:PartialObjects["objects_aggregate_fields"],
 			nodes?:PartialObjects["objects"][]
 	},
+	["objects_aggregate_bool_exp"]: {
+	count?:PartialObjects["objects_aggregate_bool_exp_count"]
+},
+	["objects_aggregate_bool_exp_count"]: {
+	arguments?:PartialObjects["objects_select_column"][],
+	distinct?:boolean,
+	filter?:PartialObjects["objects_bool_exp"],
+	predicate:PartialObjects["Int_comparison_exp"]
+},
 	/** aggregate fields of "objects" */
 ["objects_aggregate_fields"]: {
 		__typename?: "objects_aggregate_fields";
@@ -6223,15 +10489,28 @@ the end). throws an error if top level container is not an array */
 	var_samp?:PartialObjects["objects_var_samp_order_by"],
 	variance?:PartialObjects["objects_variance_order_by"]
 },
+	/** append existing jsonb value of filtered columns with new jsonb value */
+["objects_append_input"]: {
+	fields?:PartialObjects["jsonb"],
+	metadata?:PartialObjects["jsonb"]
+},
+	/** input type for inserting array relation for remote table "objects" */
+["objects_arr_rel_insert_input"]: {
+	data:PartialObjects["objects_insert_input"][],
+	/** upsert condition */
+	on_conflict?:PartialObjects["objects_on_conflict"]
+},
 	/** aggregate avg on columns */
 ["objects_avg_fields"]: {
 		__typename?: "objects_avg_fields";
 			id?:number,
+			object_type_id?:number,
 			user_id?:number
 	},
 	/** order by avg() on columns of table "objects" */
 ["objects_avg_order_by"]: {
 	id?:PartialObjects["order_by"],
+	object_type_id?:PartialObjects["order_by"],
 	user_id?:PartialObjects["order_by"]
 },
 	/** Boolean expression to filter rows from the table "objects". All fields are combined with a logical 'AND'. */
@@ -6240,23 +10519,47 @@ the end). throws an error if top level container is not an array */
 	_not?:PartialObjects["objects_bool_exp"],
 	_or?:PartialObjects["objects_bool_exp"][],
 	events?:PartialObjects["events_bool_exp"],
+	fields?:PartialObjects["jsonb_comparison_exp"],
 	id?:PartialObjects["Int_comparison_exp"],
+	metadata?:PartialObjects["jsonb_comparison_exp"],
 	name?:PartialObjects["String_comparison_exp"],
-	object_type?:PartialObjects["String_comparison_exp"],
+	object_type?:PartialObjects["object_types_bool_exp"],
+	object_type_id?:PartialObjects["Int_comparison_exp"],
+	parent_events?:PartialObjects["events_bool_exp"],
 	user_id?:PartialObjects["Int_comparison_exp"]
 },
 	/** unique or primary key constraints on table "objects" */
 ["objects_constraint"]:objects_constraint,
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+["objects_delete_at_path_input"]: {
+	fields?:string[],
+	metadata?:string[]
+},
+	/** delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array */
+["objects_delete_elem_input"]: {
+	fields?:number,
+	metadata?:number
+},
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+["objects_delete_key_input"]: {
+	fields?:string,
+	metadata?:string
+},
 	/** input type for incrementing numeric columns in table "objects" */
 ["objects_inc_input"]: {
 	id?:number,
+	object_type_id?:number,
 	user_id?:number
 },
 	/** input type for inserting data into table "objects" */
 ["objects_insert_input"]: {
+	fields?:PartialObjects["jsonb"],
 	id?:number,
+	metadata?:PartialObjects["jsonb"],
 	name?:string,
-	object_type?:string,
+	object_type?:PartialObjects["object_types_obj_rel_insert_input"],
+	object_type_id?:number,
 	user_id?:number
 },
 	/** aggregate max on columns */
@@ -6264,14 +10567,14 @@ the end). throws an error if top level container is not an array */
 		__typename?: "objects_max_fields";
 			id?:number,
 			name?:string,
-			object_type?:string,
+			object_type_id?:number,
 			user_id?:number
 	},
 	/** order by max() on columns of table "objects" */
 ["objects_max_order_by"]: {
 	id?:PartialObjects["order_by"],
 	name?:PartialObjects["order_by"],
-	object_type?:PartialObjects["order_by"],
+	object_type_id?:PartialObjects["order_by"],
 	user_id?:PartialObjects["order_by"]
 },
 	/** aggregate min on columns */
@@ -6279,14 +10582,14 @@ the end). throws an error if top level container is not an array */
 		__typename?: "objects_min_fields";
 			id?:number,
 			name?:string,
-			object_type?:string,
+			object_type_id?:number,
 			user_id?:number
 	},
 	/** order by min() on columns of table "objects" */
 ["objects_min_order_by"]: {
 	id?:PartialObjects["order_by"],
 	name?:PartialObjects["order_by"],
-	object_type?:PartialObjects["order_by"],
+	object_type_id?:PartialObjects["order_by"],
 	user_id?:PartialObjects["order_by"]
 },
 	/** response of any mutation on the table "objects" */
@@ -6297,6 +10600,12 @@ the end). throws an error if top level container is not an array */
 			/** data from the rows affected by the mutation */
 	returning?:PartialObjects["objects"][]
 	},
+	/** input type for inserting object relation for remote table "objects" */
+["objects_obj_rel_insert_input"]: {
+	data:PartialObjects["objects_insert_input"],
+	/** upsert condition */
+	on_conflict?:PartialObjects["objects_on_conflict"]
+},
 	/** on_conflict condition type for table "objects" */
 ["objects_on_conflict"]: {
 	constraint:PartialObjects["objects_constraint"],
@@ -6306,55 +10615,72 @@ the end). throws an error if top level container is not an array */
 	/** Ordering options when selecting data from "objects". */
 ["objects_order_by"]: {
 	events_aggregate?:PartialObjects["events_aggregate_order_by"],
+	fields?:PartialObjects["order_by"],
 	id?:PartialObjects["order_by"],
+	metadata?:PartialObjects["order_by"],
 	name?:PartialObjects["order_by"],
-	object_type?:PartialObjects["order_by"],
+	object_type?:PartialObjects["object_types_order_by"],
+	object_type_id?:PartialObjects["order_by"],
+	parent_events_aggregate?:PartialObjects["events_aggregate_order_by"],
 	user_id?:PartialObjects["order_by"]
 },
 	/** primary key columns input for table: objects */
 ["objects_pk_columns_input"]: {
 	id:number
 },
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+["objects_prepend_input"]: {
+	fields?:PartialObjects["jsonb"],
+	metadata?:PartialObjects["jsonb"]
+},
 	/** select columns of table "objects" */
 ["objects_select_column"]:objects_select_column,
 	/** input type for updating data in table "objects" */
 ["objects_set_input"]: {
+	fields?:PartialObjects["jsonb"],
 	id?:number,
+	metadata?:PartialObjects["jsonb"],
 	name?:string,
-	object_type?:string,
+	object_type_id?:number,
 	user_id?:number
 },
 	/** aggregate stddev on columns */
 ["objects_stddev_fields"]: {
 		__typename?: "objects_stddev_fields";
 			id?:number,
+			object_type_id?:number,
 			user_id?:number
 	},
 	/** order by stddev() on columns of table "objects" */
 ["objects_stddev_order_by"]: {
 	id?:PartialObjects["order_by"],
+	object_type_id?:PartialObjects["order_by"],
 	user_id?:PartialObjects["order_by"]
 },
 	/** aggregate stddev_pop on columns */
 ["objects_stddev_pop_fields"]: {
 		__typename?: "objects_stddev_pop_fields";
 			id?:number,
+			object_type_id?:number,
 			user_id?:number
 	},
 	/** order by stddev_pop() on columns of table "objects" */
 ["objects_stddev_pop_order_by"]: {
 	id?:PartialObjects["order_by"],
+	object_type_id?:PartialObjects["order_by"],
 	user_id?:PartialObjects["order_by"]
 },
 	/** aggregate stddev_samp on columns */
 ["objects_stddev_samp_fields"]: {
 		__typename?: "objects_stddev_samp_fields";
 			id?:number,
+			object_type_id?:number,
 			user_id?:number
 	},
 	/** order by stddev_samp() on columns of table "objects" */
 ["objects_stddev_samp_order_by"]: {
 	id?:PartialObjects["order_by"],
+	object_type_id?:PartialObjects["order_by"],
 	user_id?:PartialObjects["order_by"]
 },
 	/** Streaming cursor of the table "objects" */
@@ -6366,27 +10692,42 @@ the end). throws an error if top level container is not an array */
 },
 	/** Initial value of the column from where the streaming should start */
 ["objects_stream_cursor_value_input"]: {
+	fields?:PartialObjects["jsonb"],
 	id?:number,
+	metadata?:PartialObjects["jsonb"],
 	name?:string,
-	object_type?:string,
+	object_type_id?:number,
 	user_id?:number
 },
 	/** aggregate sum on columns */
 ["objects_sum_fields"]: {
 		__typename?: "objects_sum_fields";
 			id?:number,
+			object_type_id?:number,
 			user_id?:number
 	},
 	/** order by sum() on columns of table "objects" */
 ["objects_sum_order_by"]: {
 	id?:PartialObjects["order_by"],
+	object_type_id?:PartialObjects["order_by"],
 	user_id?:PartialObjects["order_by"]
 },
 	/** update columns of table "objects" */
 ["objects_update_column"]:objects_update_column,
 	["objects_updates"]: {
+	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:PartialObjects["objects_append_input"],
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:PartialObjects["objects_delete_at_path_input"],
+	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:PartialObjects["objects_delete_elem_input"],
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:PartialObjects["objects_delete_key_input"],
 	/** increments the numeric columns with given value of the filtered values */
 	_inc?:PartialObjects["objects_inc_input"],
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:PartialObjects["objects_prepend_input"],
 	/** sets the columns of the filtered rows to the given values */
 	_set?:PartialObjects["objects_set_input"],
 	/** filter the rows which have to be updated */
@@ -6396,33 +10737,39 @@ the end). throws an error if top level container is not an array */
 ["objects_var_pop_fields"]: {
 		__typename?: "objects_var_pop_fields";
 			id?:number,
+			object_type_id?:number,
 			user_id?:number
 	},
 	/** order by var_pop() on columns of table "objects" */
 ["objects_var_pop_order_by"]: {
 	id?:PartialObjects["order_by"],
+	object_type_id?:PartialObjects["order_by"],
 	user_id?:PartialObjects["order_by"]
 },
 	/** aggregate var_samp on columns */
 ["objects_var_samp_fields"]: {
 		__typename?: "objects_var_samp_fields";
 			id?:number,
+			object_type_id?:number,
 			user_id?:number
 	},
 	/** order by var_samp() on columns of table "objects" */
 ["objects_var_samp_order_by"]: {
 	id?:PartialObjects["order_by"],
+	object_type_id?:PartialObjects["order_by"],
 	user_id?:PartialObjects["order_by"]
 },
 	/** aggregate variance on columns */
 ["objects_variance_fields"]: {
 		__typename?: "objects_variance_fields";
 			id?:number,
+			object_type_id?:number,
 			user_id?:number
 	},
 	/** order by variance() on columns of table "objects" */
 ["objects_variance_order_by"]: {
 	id?:PartialObjects["order_by"],
+	object_type_id?:PartialObjects["order_by"],
 	user_id?:PartialObjects["order_by"]
 },
 	/** column ordering options */
@@ -6461,6 +10808,24 @@ the end). throws an error if top level container is not an array */
 	goals_aggregate?:PartialObjects["goals_aggregate"],
 			/** fetch data from the table: "goals" using primary key columns */
 	goals_by_pk?:PartialObjects["goals"],
+			/** fetch data from the table: "group.chat" */
+	group_chat?:PartialObjects["group_chat"][],
+			/** fetch aggregated fields from the table: "group.chat" */
+	group_chat_aggregate?:PartialObjects["group_chat_aggregate"],
+			/** fetch data from the table: "group.chat" using primary key columns */
+	group_chat_by_pk?:PartialObjects["group_chat"],
+			/** fetch data from the table: "group.members" */
+	group_members?:PartialObjects["group_members"][],
+			/** fetch aggregated fields from the table: "group.members" */
+	group_members_aggregate?:PartialObjects["group_members_aggregate"],
+			/** fetch data from the table: "group.members" using primary key columns */
+	group_members_by_pk?:PartialObjects["group_members"],
+			/** fetch data from the table: "group.messages" */
+	group_messages?:PartialObjects["group_messages"][],
+			/** fetch aggregated fields from the table: "group.messages" */
+	group_messages_aggregate?:PartialObjects["group_messages_aggregate"],
+			/** fetch data from the table: "group.messages" using primary key columns */
+	group_messages_by_pk?:PartialObjects["group_messages"],
 			/** fetch data from the table: "interactions" */
 	interactions?:PartialObjects["interactions"][],
 			/** fetch aggregated fields from the table: "interactions" */
@@ -6483,9 +10848,9 @@ the end). throws an error if top level container is not an array */
 	object_types_aggregate?:PartialObjects["object_types_aggregate"],
 			/** fetch data from the table: "object_types" using primary key columns */
 	object_types_by_pk?:PartialObjects["object_types"],
-			/** fetch data from the table: "objects" */
+			/** An array relationship */
 	objects?:PartialObjects["objects"][],
-			/** fetch aggregated fields from the table: "objects" */
+			/** An aggregate relationship */
 	objects_aggregate?:PartialObjects["objects_aggregate"],
 			/** fetch data from the table: "objects" using primary key columns */
 	objects_by_pk?:PartialObjects["objects"],
@@ -6506,7 +10871,37 @@ the end). throws an error if top level container is not an array */
 			/** fetch aggregated fields from the table: "users" */
 	users_aggregate?:PartialObjects["users_aggregate"],
 			/** fetch data from the table: "users" using primary key columns */
-	users_by_pk?:PartialObjects["users"]
+	users_by_pk?:PartialObjects["users"],
+			/** fetch data from the table: "v2.action_types" */
+	v2_action_types?:PartialObjects["v2_action_types"][],
+			/** fetch aggregated fields from the table: "v2.action_types" */
+	v2_action_types_aggregate?:PartialObjects["v2_action_types_aggregate"],
+			/** fetch data from the table: "v2.action_types" using primary key columns */
+	v2_action_types_by_pk?:PartialObjects["v2_action_types"],
+			/** fetch data from the table: "v2.actions" */
+	v2_actions?:PartialObjects["v2_actions"][],
+			/** fetch aggregated fields from the table: "v2.actions" */
+	v2_actions_aggregate?:PartialObjects["v2_actions_aggregate"],
+			/** fetch data from the table: "v2.actions" using primary key columns */
+	v2_actions_by_pk?:PartialObjects["v2_actions"],
+			/** fetch data from the table: "v2.aggregates" */
+	v2_aggregates?:PartialObjects["v2_aggregates"][],
+			/** fetch aggregated fields from the table: "v2.aggregates" */
+	v2_aggregates_aggregate?:PartialObjects["v2_aggregates_aggregate"],
+			/** fetch data from the table: "v2.aggregates" using primary key columns */
+	v2_aggregates_by_pk?:PartialObjects["v2_aggregates"],
+			/** fetch data from the table: "v2.object_action" */
+	v2_object_action?:PartialObjects["v2_object_action"][],
+			/** fetch aggregated fields from the table: "v2.object_action" */
+	v2_object_action_aggregate?:PartialObjects["v2_object_action_aggregate"],
+			/** fetch data from the table: "v2.object_action" using primary key columns */
+	v2_object_action_by_pk?:PartialObjects["v2_object_action"],
+			/** fetch data from the table: "v2.object_t_action_t" */
+	v2_object_t_action_t?:PartialObjects["v2_object_t_action_t"][],
+			/** fetch aggregated fields from the table: "v2.object_t_action_t" */
+	v2_object_t_action_t_aggregate?:PartialObjects["v2_object_t_action_t_aggregate"],
+			/** fetch data from the table: "v2.object_t_action_t" using primary key columns */
+	v2_object_t_action_t_by_pk?:PartialObjects["v2_object_t_action_t"]
 	},
 	["st_d_within_geography_input"]: {
 	distance:number,
@@ -6591,6 +10986,30 @@ the end). throws an error if top level container is not an array */
 	goals_by_pk?:PartialObjects["goals"],
 			/** fetch data from the table in a streaming manner: "goals" */
 	goals_stream?:PartialObjects["goals"][],
+			/** fetch data from the table: "group.chat" */
+	group_chat?:PartialObjects["group_chat"][],
+			/** fetch aggregated fields from the table: "group.chat" */
+	group_chat_aggregate?:PartialObjects["group_chat_aggregate"],
+			/** fetch data from the table: "group.chat" using primary key columns */
+	group_chat_by_pk?:PartialObjects["group_chat"],
+			/** fetch data from the table in a streaming manner: "group.chat" */
+	group_chat_stream?:PartialObjects["group_chat"][],
+			/** fetch data from the table: "group.members" */
+	group_members?:PartialObjects["group_members"][],
+			/** fetch aggregated fields from the table: "group.members" */
+	group_members_aggregate?:PartialObjects["group_members_aggregate"],
+			/** fetch data from the table: "group.members" using primary key columns */
+	group_members_by_pk?:PartialObjects["group_members"],
+			/** fetch data from the table in a streaming manner: "group.members" */
+	group_members_stream?:PartialObjects["group_members"][],
+			/** fetch data from the table: "group.messages" */
+	group_messages?:PartialObjects["group_messages"][],
+			/** fetch aggregated fields from the table: "group.messages" */
+	group_messages_aggregate?:PartialObjects["group_messages_aggregate"],
+			/** fetch data from the table: "group.messages" using primary key columns */
+	group_messages_by_pk?:PartialObjects["group_messages"],
+			/** fetch data from the table in a streaming manner: "group.messages" */
+	group_messages_stream?:PartialObjects["group_messages"][],
 			/** fetch data from the table: "interactions" */
 	interactions?:PartialObjects["interactions"][],
 			/** fetch aggregated fields from the table: "interactions" */
@@ -6619,9 +11038,9 @@ the end). throws an error if top level container is not an array */
 	object_types_by_pk?:PartialObjects["object_types"],
 			/** fetch data from the table in a streaming manner: "object_types" */
 	object_types_stream?:PartialObjects["object_types"][],
-			/** fetch data from the table: "objects" */
+			/** An array relationship */
 	objects?:PartialObjects["objects"][],
-			/** fetch aggregated fields from the table: "objects" */
+			/** An aggregate relationship */
 	objects_aggregate?:PartialObjects["objects_aggregate"],
 			/** fetch data from the table: "objects" using primary key columns */
 	objects_by_pk?:PartialObjects["objects"],
@@ -6650,7 +11069,47 @@ the end). throws an error if top level container is not an array */
 			/** fetch data from the table: "users" using primary key columns */
 	users_by_pk?:PartialObjects["users"],
 			/** fetch data from the table in a streaming manner: "users" */
-	users_stream?:PartialObjects["users"][]
+	users_stream?:PartialObjects["users"][],
+			/** fetch data from the table: "v2.action_types" */
+	v2_action_types?:PartialObjects["v2_action_types"][],
+			/** fetch aggregated fields from the table: "v2.action_types" */
+	v2_action_types_aggregate?:PartialObjects["v2_action_types_aggregate"],
+			/** fetch data from the table: "v2.action_types" using primary key columns */
+	v2_action_types_by_pk?:PartialObjects["v2_action_types"],
+			/** fetch data from the table in a streaming manner: "v2.action_types" */
+	v2_action_types_stream?:PartialObjects["v2_action_types"][],
+			/** fetch data from the table: "v2.actions" */
+	v2_actions?:PartialObjects["v2_actions"][],
+			/** fetch aggregated fields from the table: "v2.actions" */
+	v2_actions_aggregate?:PartialObjects["v2_actions_aggregate"],
+			/** fetch data from the table: "v2.actions" using primary key columns */
+	v2_actions_by_pk?:PartialObjects["v2_actions"],
+			/** fetch data from the table in a streaming manner: "v2.actions" */
+	v2_actions_stream?:PartialObjects["v2_actions"][],
+			/** fetch data from the table: "v2.aggregates" */
+	v2_aggregates?:PartialObjects["v2_aggregates"][],
+			/** fetch aggregated fields from the table: "v2.aggregates" */
+	v2_aggregates_aggregate?:PartialObjects["v2_aggregates_aggregate"],
+			/** fetch data from the table: "v2.aggregates" using primary key columns */
+	v2_aggregates_by_pk?:PartialObjects["v2_aggregates"],
+			/** fetch data from the table in a streaming manner: "v2.aggregates" */
+	v2_aggregates_stream?:PartialObjects["v2_aggregates"][],
+			/** fetch data from the table: "v2.object_action" */
+	v2_object_action?:PartialObjects["v2_object_action"][],
+			/** fetch aggregated fields from the table: "v2.object_action" */
+	v2_object_action_aggregate?:PartialObjects["v2_object_action_aggregate"],
+			/** fetch data from the table: "v2.object_action" using primary key columns */
+	v2_object_action_by_pk?:PartialObjects["v2_object_action"],
+			/** fetch data from the table in a streaming manner: "v2.object_action" */
+	v2_object_action_stream?:PartialObjects["v2_object_action"][],
+			/** fetch data from the table: "v2.object_t_action_t" */
+	v2_object_t_action_t?:PartialObjects["v2_object_t_action_t"][],
+			/** fetch aggregated fields from the table: "v2.object_t_action_t" */
+	v2_object_t_action_t_aggregate?:PartialObjects["v2_object_t_action_t_aggregate"],
+			/** fetch data from the table: "v2.object_t_action_t" using primary key columns */
+	v2_object_t_action_t_by_pk?:PartialObjects["v2_object_t_action_t"],
+			/** fetch data from the table in a streaming manner: "v2.object_t_action_t" */
+	v2_object_t_action_t_stream?:PartialObjects["v2_object_t_action_t"][]
 	},
 	["timestamp"]:any,
 	/** Boolean expression to compare columns of type "timestamp". All fields are combined with logical 'AND'. */
@@ -7141,7 +11600,16 @@ the end). throws an error if top level container is not an array */
 	/** columns and relationships of "users" */
 ["users"]: {
 		__typename?: "users";
+			/** An array relationship */
+	actions?:PartialObjects["v2_actions"][],
+			/** An aggregate relationship */
+	actions_aggregate?:PartialObjects["v2_actions_aggregate"],
+			apns_token?:string,
 			apple_id?:string,
+			/** An array relationship */
+	chats?:PartialObjects["group_members"][],
+			/** An aggregate relationship */
+	chats_aggregate?:PartialObjects["group_members_aggregate"],
 			/** A computed field, executes function "closest_user_location" */
 	closest_user_location?:PartialObjects["locations"][],
 			config?:PartialObjects["jsonb"],
@@ -7193,7 +11661,12 @@ the end). throws an error if top level container is not an array */
 	_and?:PartialObjects["users_bool_exp"][],
 	_not?:PartialObjects["users_bool_exp"],
 	_or?:PartialObjects["users_bool_exp"][],
+	actions?:PartialObjects["v2_actions_bool_exp"],
+	actions_aggregate?:PartialObjects["v2_actions_aggregate_bool_exp"],
+	apns_token?:PartialObjects["String_comparison_exp"],
 	apple_id?:PartialObjects["String_comparison_exp"],
+	chats?:PartialObjects["group_members_bool_exp"],
+	chats_aggregate?:PartialObjects["group_members_aggregate_bool_exp"],
 	config?:PartialObjects["jsonb_comparison_exp"],
 	events?:PartialObjects["events_bool_exp"],
 	events_aggregate?:PartialObjects["events_aggregate_bool_exp"],
@@ -7225,7 +11698,10 @@ end). throws an error if top level container is not an array */
 },
 	/** input type for inserting data into table "users" */
 ["users_insert_input"]: {
+	actions?:PartialObjects["v2_actions_arr_rel_insert_input"],
+	apns_token?:string,
 	apple_id?:string,
+	chats?:PartialObjects["group_members_arr_rel_insert_input"],
 	config?:PartialObjects["jsonb"],
 	events?:PartialObjects["events_arr_rel_insert_input"],
 	id?:number,
@@ -7237,6 +11713,7 @@ end). throws an error if top level container is not an array */
 	/** aggregate max on columns */
 ["users_max_fields"]: {
 		__typename?: "users_max_fields";
+			apns_token?:string,
 			apple_id?:string,
 			id?:number,
 			language?:string,
@@ -7246,6 +11723,7 @@ end). throws an error if top level container is not an array */
 	/** aggregate min on columns */
 ["users_min_fields"]: {
 		__typename?: "users_min_fields";
+			apns_token?:string,
 			apple_id?:string,
 			id?:number,
 			language?:string,
@@ -7274,7 +11752,10 @@ end). throws an error if top level container is not an array */
 },
 	/** Ordering options when selecting data from "users". */
 ["users_order_by"]: {
+	actions_aggregate?:PartialObjects["v2_actions_aggregate_order_by"],
+	apns_token?:PartialObjects["order_by"],
 	apple_id?:PartialObjects["order_by"],
+	chats_aggregate?:PartialObjects["group_members_aggregate_order_by"],
 	config?:PartialObjects["order_by"],
 	events_aggregate?:PartialObjects["events_aggregate_order_by"],
 	id?:PartialObjects["order_by"],
@@ -7296,6 +11777,7 @@ end). throws an error if top level container is not an array */
 ["users_select_column"]:users_select_column,
 	/** input type for updating data in table "users" */
 ["users_set_input"]: {
+	apns_token?:string,
 	apple_id?:string,
 	config?:PartialObjects["jsonb"],
 	id?:number,
@@ -7327,6 +11809,7 @@ end). throws an error if top level container is not an array */
 },
 	/** Initial value of the column from where the streaming should start */
 ["users_stream_cursor_value_input"]: {
+	apns_token?:string,
 	apple_id?:string,
 	config?:PartialObjects["jsonb"],
 	id?:number,
@@ -7375,6 +11858,1607 @@ the end). throws an error if top level container is not an array */
 		__typename?: "users_variance_fields";
 			id?:number
 	},
+	/** columns and relationships of "v2.action_types" */
+["v2_action_types"]: {
+		__typename?: "v2_action_types";
+			/** An array relationship */
+	aggregates?:PartialObjects["v2_aggregates"][],
+			/** An aggregate relationship */
+	aggregates_aggregate?:PartialObjects["v2_aggregates_aggregate"],
+			created_at?:PartialObjects["timestamptz"],
+			description?:string,
+			has_duration?:boolean,
+			id?:number,
+			metadata?:PartialObjects["jsonb"],
+			name?:string,
+			/** An array relationship */
+	object_t_action_ts?:PartialObjects["v2_object_t_action_t"][],
+			/** An aggregate relationship */
+	object_t_action_ts_aggregate?:PartialObjects["v2_object_t_action_t_aggregate"],
+			short_desc_syntax?:string,
+			updated_at?:PartialObjects["timestamptz"],
+			user_id?:number
+	},
+	/** aggregated selection of "v2.action_types" */
+["v2_action_types_aggregate"]: {
+		__typename?: "v2_action_types_aggregate";
+			aggregate?:PartialObjects["v2_action_types_aggregate_fields"],
+			nodes?:PartialObjects["v2_action_types"][]
+	},
+	/** aggregate fields of "v2.action_types" */
+["v2_action_types_aggregate_fields"]: {
+		__typename?: "v2_action_types_aggregate_fields";
+			avg?:PartialObjects["v2_action_types_avg_fields"],
+			count?:number,
+			max?:PartialObjects["v2_action_types_max_fields"],
+			min?:PartialObjects["v2_action_types_min_fields"],
+			stddev?:PartialObjects["v2_action_types_stddev_fields"],
+			stddev_pop?:PartialObjects["v2_action_types_stddev_pop_fields"],
+			stddev_samp?:PartialObjects["v2_action_types_stddev_samp_fields"],
+			sum?:PartialObjects["v2_action_types_sum_fields"],
+			var_pop?:PartialObjects["v2_action_types_var_pop_fields"],
+			var_samp?:PartialObjects["v2_action_types_var_samp_fields"],
+			variance?:PartialObjects["v2_action_types_variance_fields"]
+	},
+	/** append existing jsonb value of filtered columns with new jsonb value */
+["v2_action_types_append_input"]: {
+	metadata?:PartialObjects["jsonb"]
+},
+	/** aggregate avg on columns */
+["v2_action_types_avg_fields"]: {
+		__typename?: "v2_action_types_avg_fields";
+			id?:number,
+			user_id?:number
+	},
+	/** Boolean expression to filter rows from the table "v2.action_types". All fields are combined with a logical 'AND'. */
+["v2_action_types_bool_exp"]: {
+	_and?:PartialObjects["v2_action_types_bool_exp"][],
+	_not?:PartialObjects["v2_action_types_bool_exp"],
+	_or?:PartialObjects["v2_action_types_bool_exp"][],
+	aggregates?:PartialObjects["v2_aggregates_bool_exp"],
+	aggregates_aggregate?:PartialObjects["v2_aggregates_aggregate_bool_exp"],
+	created_at?:PartialObjects["timestamptz_comparison_exp"],
+	description?:PartialObjects["String_comparison_exp"],
+	has_duration?:PartialObjects["Boolean_comparison_exp"],
+	id?:PartialObjects["Int_comparison_exp"],
+	metadata?:PartialObjects["jsonb_comparison_exp"],
+	name?:PartialObjects["String_comparison_exp"],
+	object_t_action_ts?:PartialObjects["v2_object_t_action_t_bool_exp"],
+	object_t_action_ts_aggregate?:PartialObjects["v2_object_t_action_t_aggregate_bool_exp"],
+	short_desc_syntax?:PartialObjects["String_comparison_exp"],
+	updated_at?:PartialObjects["timestamptz_comparison_exp"],
+	user_id?:PartialObjects["Int_comparison_exp"]
+},
+	/** unique or primary key constraints on table "v2.action_types" */
+["v2_action_types_constraint"]:v2_action_types_constraint,
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+["v2_action_types_delete_at_path_input"]: {
+	metadata?:string[]
+},
+	/** delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array */
+["v2_action_types_delete_elem_input"]: {
+	metadata?:number
+},
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+["v2_action_types_delete_key_input"]: {
+	metadata?:string
+},
+	/** input type for incrementing numeric columns in table "v2.action_types" */
+["v2_action_types_inc_input"]: {
+	id?:number,
+	user_id?:number
+},
+	/** input type for inserting data into table "v2.action_types" */
+["v2_action_types_insert_input"]: {
+	aggregates?:PartialObjects["v2_aggregates_arr_rel_insert_input"],
+	created_at?:PartialObjects["timestamptz"],
+	description?:string,
+	has_duration?:boolean,
+	id?:number,
+	metadata?:PartialObjects["jsonb"],
+	name?:string,
+	object_t_action_ts?:PartialObjects["v2_object_t_action_t_arr_rel_insert_input"],
+	short_desc_syntax?:string,
+	updated_at?:PartialObjects["timestamptz"],
+	user_id?:number
+},
+	/** aggregate max on columns */
+["v2_action_types_max_fields"]: {
+		__typename?: "v2_action_types_max_fields";
+			created_at?:PartialObjects["timestamptz"],
+			description?:string,
+			id?:number,
+			name?:string,
+			short_desc_syntax?:string,
+			updated_at?:PartialObjects["timestamptz"],
+			user_id?:number
+	},
+	/** aggregate min on columns */
+["v2_action_types_min_fields"]: {
+		__typename?: "v2_action_types_min_fields";
+			created_at?:PartialObjects["timestamptz"],
+			description?:string,
+			id?:number,
+			name?:string,
+			short_desc_syntax?:string,
+			updated_at?:PartialObjects["timestamptz"],
+			user_id?:number
+	},
+	/** response of any mutation on the table "v2.action_types" */
+["v2_action_types_mutation_response"]: {
+		__typename?: "v2_action_types_mutation_response";
+			/** number of rows affected by the mutation */
+	affected_rows?:number,
+			/** data from the rows affected by the mutation */
+	returning?:PartialObjects["v2_action_types"][]
+	},
+	/** input type for inserting object relation for remote table "v2.action_types" */
+["v2_action_types_obj_rel_insert_input"]: {
+	data:PartialObjects["v2_action_types_insert_input"],
+	/** upsert condition */
+	on_conflict?:PartialObjects["v2_action_types_on_conflict"]
+},
+	/** on_conflict condition type for table "v2.action_types" */
+["v2_action_types_on_conflict"]: {
+	constraint:PartialObjects["v2_action_types_constraint"],
+	update_columns:PartialObjects["v2_action_types_update_column"][],
+	where?:PartialObjects["v2_action_types_bool_exp"]
+},
+	/** Ordering options when selecting data from "v2.action_types". */
+["v2_action_types_order_by"]: {
+	aggregates_aggregate?:PartialObjects["v2_aggregates_aggregate_order_by"],
+	created_at?:PartialObjects["order_by"],
+	description?:PartialObjects["order_by"],
+	has_duration?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	metadata?:PartialObjects["order_by"],
+	name?:PartialObjects["order_by"],
+	object_t_action_ts_aggregate?:PartialObjects["v2_object_t_action_t_aggregate_order_by"],
+	short_desc_syntax?:PartialObjects["order_by"],
+	updated_at?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** primary key columns input for table: v2.action_types */
+["v2_action_types_pk_columns_input"]: {
+	id:number
+},
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+["v2_action_types_prepend_input"]: {
+	metadata?:PartialObjects["jsonb"]
+},
+	/** select columns of table "v2.action_types" */
+["v2_action_types_select_column"]:v2_action_types_select_column,
+	/** input type for updating data in table "v2.action_types" */
+["v2_action_types_set_input"]: {
+	created_at?:PartialObjects["timestamptz"],
+	description?:string,
+	has_duration?:boolean,
+	id?:number,
+	metadata?:PartialObjects["jsonb"],
+	name?:string,
+	short_desc_syntax?:string,
+	updated_at?:PartialObjects["timestamptz"],
+	user_id?:number
+},
+	/** aggregate stddev on columns */
+["v2_action_types_stddev_fields"]: {
+		__typename?: "v2_action_types_stddev_fields";
+			id?:number,
+			user_id?:number
+	},
+	/** aggregate stddev_pop on columns */
+["v2_action_types_stddev_pop_fields"]: {
+		__typename?: "v2_action_types_stddev_pop_fields";
+			id?:number,
+			user_id?:number
+	},
+	/** aggregate stddev_samp on columns */
+["v2_action_types_stddev_samp_fields"]: {
+		__typename?: "v2_action_types_stddev_samp_fields";
+			id?:number,
+			user_id?:number
+	},
+	/** Streaming cursor of the table "v2_action_types" */
+["v2_action_types_stream_cursor_input"]: {
+	/** Stream column input with initial value */
+	initial_value:PartialObjects["v2_action_types_stream_cursor_value_input"],
+	/** cursor ordering */
+	ordering?:PartialObjects["cursor_ordering"]
+},
+	/** Initial value of the column from where the streaming should start */
+["v2_action_types_stream_cursor_value_input"]: {
+	created_at?:PartialObjects["timestamptz"],
+	description?:string,
+	has_duration?:boolean,
+	id?:number,
+	metadata?:PartialObjects["jsonb"],
+	name?:string,
+	short_desc_syntax?:string,
+	updated_at?:PartialObjects["timestamptz"],
+	user_id?:number
+},
+	/** aggregate sum on columns */
+["v2_action_types_sum_fields"]: {
+		__typename?: "v2_action_types_sum_fields";
+			id?:number,
+			user_id?:number
+	},
+	/** update columns of table "v2.action_types" */
+["v2_action_types_update_column"]:v2_action_types_update_column,
+	["v2_action_types_updates"]: {
+	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:PartialObjects["v2_action_types_append_input"],
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:PartialObjects["v2_action_types_delete_at_path_input"],
+	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:PartialObjects["v2_action_types_delete_elem_input"],
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:PartialObjects["v2_action_types_delete_key_input"],
+	/** increments the numeric columns with given value of the filtered values */
+	_inc?:PartialObjects["v2_action_types_inc_input"],
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:PartialObjects["v2_action_types_prepend_input"],
+	/** sets the columns of the filtered rows to the given values */
+	_set?:PartialObjects["v2_action_types_set_input"],
+	/** filter the rows which have to be updated */
+	where:PartialObjects["v2_action_types_bool_exp"]
+},
+	/** aggregate var_pop on columns */
+["v2_action_types_var_pop_fields"]: {
+		__typename?: "v2_action_types_var_pop_fields";
+			id?:number,
+			user_id?:number
+	},
+	/** aggregate var_samp on columns */
+["v2_action_types_var_samp_fields"]: {
+		__typename?: "v2_action_types_var_samp_fields";
+			id?:number,
+			user_id?:number
+	},
+	/** aggregate variance on columns */
+["v2_action_types_variance_fields"]: {
+		__typename?: "v2_action_types_variance_fields";
+			id?:number,
+			user_id?:number
+	},
+	/** columns and relationships of "v2.actions" */
+["v2_actions"]: {
+		__typename?: "v2_actions";
+			/** An object relationship */
+	action_type?:PartialObjects["v2_action_types"],
+			action_type_id?:number,
+			/** An array relationship */
+	children?:PartialObjects["v2_actions"][],
+			/** An aggregate relationship */
+	children_aggregate?:PartialObjects["v2_actions_aggregate"],
+			created_at?:PartialObjects["timestamptz"],
+			dynamic_data?:PartialObjects["jsonb"],
+			end_time?:PartialObjects["timestamptz"],
+			id?:number,
+			/** An array relationship */
+	object_actions?:PartialObjects["v2_object_action"][],
+			/** An aggregate relationship */
+	object_actions_aggregate?:PartialObjects["v2_object_action_aggregate"],
+			/** An object relationship */
+	parent?:PartialObjects["v2_actions"],
+			parent_id?:number,
+			start_time?:PartialObjects["timestamptz"],
+			updated_at?:PartialObjects["timestamptz"],
+			user_id?:number
+	},
+	/** aggregated selection of "v2.actions" */
+["v2_actions_aggregate"]: {
+		__typename?: "v2_actions_aggregate";
+			aggregate?:PartialObjects["v2_actions_aggregate_fields"],
+			nodes?:PartialObjects["v2_actions"][]
+	},
+	["v2_actions_aggregate_bool_exp"]: {
+	count?:PartialObjects["v2_actions_aggregate_bool_exp_count"]
+},
+	["v2_actions_aggregate_bool_exp_count"]: {
+	arguments?:PartialObjects["v2_actions_select_column"][],
+	distinct?:boolean,
+	filter?:PartialObjects["v2_actions_bool_exp"],
+	predicate:PartialObjects["Int_comparison_exp"]
+},
+	/** aggregate fields of "v2.actions" */
+["v2_actions_aggregate_fields"]: {
+		__typename?: "v2_actions_aggregate_fields";
+			avg?:PartialObjects["v2_actions_avg_fields"],
+			count?:number,
+			max?:PartialObjects["v2_actions_max_fields"],
+			min?:PartialObjects["v2_actions_min_fields"],
+			stddev?:PartialObjects["v2_actions_stddev_fields"],
+			stddev_pop?:PartialObjects["v2_actions_stddev_pop_fields"],
+			stddev_samp?:PartialObjects["v2_actions_stddev_samp_fields"],
+			sum?:PartialObjects["v2_actions_sum_fields"],
+			var_pop?:PartialObjects["v2_actions_var_pop_fields"],
+			var_samp?:PartialObjects["v2_actions_var_samp_fields"],
+			variance?:PartialObjects["v2_actions_variance_fields"]
+	},
+	/** order by aggregate values of table "v2.actions" */
+["v2_actions_aggregate_order_by"]: {
+	avg?:PartialObjects["v2_actions_avg_order_by"],
+	count?:PartialObjects["order_by"],
+	max?:PartialObjects["v2_actions_max_order_by"],
+	min?:PartialObjects["v2_actions_min_order_by"],
+	stddev?:PartialObjects["v2_actions_stddev_order_by"],
+	stddev_pop?:PartialObjects["v2_actions_stddev_pop_order_by"],
+	stddev_samp?:PartialObjects["v2_actions_stddev_samp_order_by"],
+	sum?:PartialObjects["v2_actions_sum_order_by"],
+	var_pop?:PartialObjects["v2_actions_var_pop_order_by"],
+	var_samp?:PartialObjects["v2_actions_var_samp_order_by"],
+	variance?:PartialObjects["v2_actions_variance_order_by"]
+},
+	/** append existing jsonb value of filtered columns with new jsonb value */
+["v2_actions_append_input"]: {
+	dynamic_data?:PartialObjects["jsonb"]
+},
+	/** input type for inserting array relation for remote table "v2.actions" */
+["v2_actions_arr_rel_insert_input"]: {
+	data:PartialObjects["v2_actions_insert_input"][],
+	/** upsert condition */
+	on_conflict?:PartialObjects["v2_actions_on_conflict"]
+},
+	/** aggregate avg on columns */
+["v2_actions_avg_fields"]: {
+		__typename?: "v2_actions_avg_fields";
+			action_type_id?:number,
+			id?:number,
+			parent_id?:number,
+			user_id?:number
+	},
+	/** order by avg() on columns of table "v2.actions" */
+["v2_actions_avg_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	parent_id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** Boolean expression to filter rows from the table "v2.actions". All fields are combined with a logical 'AND'. */
+["v2_actions_bool_exp"]: {
+	_and?:PartialObjects["v2_actions_bool_exp"][],
+	_not?:PartialObjects["v2_actions_bool_exp"],
+	_or?:PartialObjects["v2_actions_bool_exp"][],
+	action_type?:PartialObjects["v2_action_types_bool_exp"],
+	action_type_id?:PartialObjects["Int_comparison_exp"],
+	children?:PartialObjects["v2_actions_bool_exp"],
+	children_aggregate?:PartialObjects["v2_actions_aggregate_bool_exp"],
+	created_at?:PartialObjects["timestamptz_comparison_exp"],
+	dynamic_data?:PartialObjects["jsonb_comparison_exp"],
+	end_time?:PartialObjects["timestamptz_comparison_exp"],
+	id?:PartialObjects["Int_comparison_exp"],
+	object_actions?:PartialObjects["v2_object_action_bool_exp"],
+	object_actions_aggregate?:PartialObjects["v2_object_action_aggregate_bool_exp"],
+	parent?:PartialObjects["v2_actions_bool_exp"],
+	parent_id?:PartialObjects["Int_comparison_exp"],
+	start_time?:PartialObjects["timestamptz_comparison_exp"],
+	updated_at?:PartialObjects["timestamptz_comparison_exp"],
+	user_id?:PartialObjects["Int_comparison_exp"]
+},
+	/** unique or primary key constraints on table "v2.actions" */
+["v2_actions_constraint"]:v2_actions_constraint,
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+["v2_actions_delete_at_path_input"]: {
+	dynamic_data?:string[]
+},
+	/** delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array */
+["v2_actions_delete_elem_input"]: {
+	dynamic_data?:number
+},
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+["v2_actions_delete_key_input"]: {
+	dynamic_data?:string
+},
+	/** input type for incrementing numeric columns in table "v2.actions" */
+["v2_actions_inc_input"]: {
+	action_type_id?:number,
+	id?:number,
+	parent_id?:number,
+	user_id?:number
+},
+	/** input type for inserting data into table "v2.actions" */
+["v2_actions_insert_input"]: {
+	action_type?:PartialObjects["v2_action_types_obj_rel_insert_input"],
+	action_type_id?:number,
+	children?:PartialObjects["v2_actions_arr_rel_insert_input"],
+	created_at?:PartialObjects["timestamptz"],
+	dynamic_data?:PartialObjects["jsonb"],
+	end_time?:PartialObjects["timestamptz"],
+	id?:number,
+	object_actions?:PartialObjects["v2_object_action_arr_rel_insert_input"],
+	parent?:PartialObjects["v2_actions_obj_rel_insert_input"],
+	parent_id?:number,
+	start_time?:PartialObjects["timestamptz"],
+	updated_at?:PartialObjects["timestamptz"],
+	user_id?:number
+},
+	/** aggregate max on columns */
+["v2_actions_max_fields"]: {
+		__typename?: "v2_actions_max_fields";
+			action_type_id?:number,
+			created_at?:PartialObjects["timestamptz"],
+			end_time?:PartialObjects["timestamptz"],
+			id?:number,
+			parent_id?:number,
+			start_time?:PartialObjects["timestamptz"],
+			updated_at?:PartialObjects["timestamptz"],
+			user_id?:number
+	},
+	/** order by max() on columns of table "v2.actions" */
+["v2_actions_max_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	created_at?:PartialObjects["order_by"],
+	end_time?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	parent_id?:PartialObjects["order_by"],
+	start_time?:PartialObjects["order_by"],
+	updated_at?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** aggregate min on columns */
+["v2_actions_min_fields"]: {
+		__typename?: "v2_actions_min_fields";
+			action_type_id?:number,
+			created_at?:PartialObjects["timestamptz"],
+			end_time?:PartialObjects["timestamptz"],
+			id?:number,
+			parent_id?:number,
+			start_time?:PartialObjects["timestamptz"],
+			updated_at?:PartialObjects["timestamptz"],
+			user_id?:number
+	},
+	/** order by min() on columns of table "v2.actions" */
+["v2_actions_min_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	created_at?:PartialObjects["order_by"],
+	end_time?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	parent_id?:PartialObjects["order_by"],
+	start_time?:PartialObjects["order_by"],
+	updated_at?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** response of any mutation on the table "v2.actions" */
+["v2_actions_mutation_response"]: {
+		__typename?: "v2_actions_mutation_response";
+			/** number of rows affected by the mutation */
+	affected_rows?:number,
+			/** data from the rows affected by the mutation */
+	returning?:PartialObjects["v2_actions"][]
+	},
+	/** input type for inserting object relation for remote table "v2.actions" */
+["v2_actions_obj_rel_insert_input"]: {
+	data:PartialObjects["v2_actions_insert_input"],
+	/** upsert condition */
+	on_conflict?:PartialObjects["v2_actions_on_conflict"]
+},
+	/** on_conflict condition type for table "v2.actions" */
+["v2_actions_on_conflict"]: {
+	constraint:PartialObjects["v2_actions_constraint"],
+	update_columns:PartialObjects["v2_actions_update_column"][],
+	where?:PartialObjects["v2_actions_bool_exp"]
+},
+	/** Ordering options when selecting data from "v2.actions". */
+["v2_actions_order_by"]: {
+	action_type?:PartialObjects["v2_action_types_order_by"],
+	action_type_id?:PartialObjects["order_by"],
+	children_aggregate?:PartialObjects["v2_actions_aggregate_order_by"],
+	created_at?:PartialObjects["order_by"],
+	dynamic_data?:PartialObjects["order_by"],
+	end_time?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	object_actions_aggregate?:PartialObjects["v2_object_action_aggregate_order_by"],
+	parent?:PartialObjects["v2_actions_order_by"],
+	parent_id?:PartialObjects["order_by"],
+	start_time?:PartialObjects["order_by"],
+	updated_at?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** primary key columns input for table: v2.actions */
+["v2_actions_pk_columns_input"]: {
+	id:number
+},
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+["v2_actions_prepend_input"]: {
+	dynamic_data?:PartialObjects["jsonb"]
+},
+	/** select columns of table "v2.actions" */
+["v2_actions_select_column"]:v2_actions_select_column,
+	/** input type for updating data in table "v2.actions" */
+["v2_actions_set_input"]: {
+	action_type_id?:number,
+	created_at?:PartialObjects["timestamptz"],
+	dynamic_data?:PartialObjects["jsonb"],
+	end_time?:PartialObjects["timestamptz"],
+	id?:number,
+	parent_id?:number,
+	start_time?:PartialObjects["timestamptz"],
+	updated_at?:PartialObjects["timestamptz"],
+	user_id?:number
+},
+	/** aggregate stddev on columns */
+["v2_actions_stddev_fields"]: {
+		__typename?: "v2_actions_stddev_fields";
+			action_type_id?:number,
+			id?:number,
+			parent_id?:number,
+			user_id?:number
+	},
+	/** order by stddev() on columns of table "v2.actions" */
+["v2_actions_stddev_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	parent_id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** aggregate stddev_pop on columns */
+["v2_actions_stddev_pop_fields"]: {
+		__typename?: "v2_actions_stddev_pop_fields";
+			action_type_id?:number,
+			id?:number,
+			parent_id?:number,
+			user_id?:number
+	},
+	/** order by stddev_pop() on columns of table "v2.actions" */
+["v2_actions_stddev_pop_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	parent_id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** aggregate stddev_samp on columns */
+["v2_actions_stddev_samp_fields"]: {
+		__typename?: "v2_actions_stddev_samp_fields";
+			action_type_id?:number,
+			id?:number,
+			parent_id?:number,
+			user_id?:number
+	},
+	/** order by stddev_samp() on columns of table "v2.actions" */
+["v2_actions_stddev_samp_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	parent_id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** Streaming cursor of the table "v2_actions" */
+["v2_actions_stream_cursor_input"]: {
+	/** Stream column input with initial value */
+	initial_value:PartialObjects["v2_actions_stream_cursor_value_input"],
+	/** cursor ordering */
+	ordering?:PartialObjects["cursor_ordering"]
+},
+	/** Initial value of the column from where the streaming should start */
+["v2_actions_stream_cursor_value_input"]: {
+	action_type_id?:number,
+	created_at?:PartialObjects["timestamptz"],
+	dynamic_data?:PartialObjects["jsonb"],
+	end_time?:PartialObjects["timestamptz"],
+	id?:number,
+	parent_id?:number,
+	start_time?:PartialObjects["timestamptz"],
+	updated_at?:PartialObjects["timestamptz"],
+	user_id?:number
+},
+	/** aggregate sum on columns */
+["v2_actions_sum_fields"]: {
+		__typename?: "v2_actions_sum_fields";
+			action_type_id?:number,
+			id?:number,
+			parent_id?:number,
+			user_id?:number
+	},
+	/** order by sum() on columns of table "v2.actions" */
+["v2_actions_sum_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	parent_id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** update columns of table "v2.actions" */
+["v2_actions_update_column"]:v2_actions_update_column,
+	["v2_actions_updates"]: {
+	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:PartialObjects["v2_actions_append_input"],
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:PartialObjects["v2_actions_delete_at_path_input"],
+	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:PartialObjects["v2_actions_delete_elem_input"],
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:PartialObjects["v2_actions_delete_key_input"],
+	/** increments the numeric columns with given value of the filtered values */
+	_inc?:PartialObjects["v2_actions_inc_input"],
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:PartialObjects["v2_actions_prepend_input"],
+	/** sets the columns of the filtered rows to the given values */
+	_set?:PartialObjects["v2_actions_set_input"],
+	/** filter the rows which have to be updated */
+	where:PartialObjects["v2_actions_bool_exp"]
+},
+	/** aggregate var_pop on columns */
+["v2_actions_var_pop_fields"]: {
+		__typename?: "v2_actions_var_pop_fields";
+			action_type_id?:number,
+			id?:number,
+			parent_id?:number,
+			user_id?:number
+	},
+	/** order by var_pop() on columns of table "v2.actions" */
+["v2_actions_var_pop_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	parent_id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** aggregate var_samp on columns */
+["v2_actions_var_samp_fields"]: {
+		__typename?: "v2_actions_var_samp_fields";
+			action_type_id?:number,
+			id?:number,
+			parent_id?:number,
+			user_id?:number
+	},
+	/** order by var_samp() on columns of table "v2.actions" */
+["v2_actions_var_samp_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	parent_id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** aggregate variance on columns */
+["v2_actions_variance_fields"]: {
+		__typename?: "v2_actions_variance_fields";
+			action_type_id?:number,
+			id?:number,
+			parent_id?:number,
+			user_id?:number
+	},
+	/** order by variance() on columns of table "v2.actions" */
+["v2_actions_variance_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	parent_id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** columns and relationships of "v2.aggregates" */
+["v2_aggregates"]: {
+		__typename?: "v2_aggregates";
+			/** An object relationship */
+	action_type?:PartialObjects["v2_action_types"],
+			action_type_id?:number,
+			id?:number,
+			metadata?:PartialObjects["jsonb"],
+			user_id?:number
+	},
+	/** aggregated selection of "v2.aggregates" */
+["v2_aggregates_aggregate"]: {
+		__typename?: "v2_aggregates_aggregate";
+			aggregate?:PartialObjects["v2_aggregates_aggregate_fields"],
+			nodes?:PartialObjects["v2_aggregates"][]
+	},
+	["v2_aggregates_aggregate_bool_exp"]: {
+	count?:PartialObjects["v2_aggregates_aggregate_bool_exp_count"]
+},
+	["v2_aggregates_aggregate_bool_exp_count"]: {
+	arguments?:PartialObjects["v2_aggregates_select_column"][],
+	distinct?:boolean,
+	filter?:PartialObjects["v2_aggregates_bool_exp"],
+	predicate:PartialObjects["Int_comparison_exp"]
+},
+	/** aggregate fields of "v2.aggregates" */
+["v2_aggregates_aggregate_fields"]: {
+		__typename?: "v2_aggregates_aggregate_fields";
+			avg?:PartialObjects["v2_aggregates_avg_fields"],
+			count?:number,
+			max?:PartialObjects["v2_aggregates_max_fields"],
+			min?:PartialObjects["v2_aggregates_min_fields"],
+			stddev?:PartialObjects["v2_aggregates_stddev_fields"],
+			stddev_pop?:PartialObjects["v2_aggregates_stddev_pop_fields"],
+			stddev_samp?:PartialObjects["v2_aggregates_stddev_samp_fields"],
+			sum?:PartialObjects["v2_aggregates_sum_fields"],
+			var_pop?:PartialObjects["v2_aggregates_var_pop_fields"],
+			var_samp?:PartialObjects["v2_aggregates_var_samp_fields"],
+			variance?:PartialObjects["v2_aggregates_variance_fields"]
+	},
+	/** order by aggregate values of table "v2.aggregates" */
+["v2_aggregates_aggregate_order_by"]: {
+	avg?:PartialObjects["v2_aggregates_avg_order_by"],
+	count?:PartialObjects["order_by"],
+	max?:PartialObjects["v2_aggregates_max_order_by"],
+	min?:PartialObjects["v2_aggregates_min_order_by"],
+	stddev?:PartialObjects["v2_aggregates_stddev_order_by"],
+	stddev_pop?:PartialObjects["v2_aggregates_stddev_pop_order_by"],
+	stddev_samp?:PartialObjects["v2_aggregates_stddev_samp_order_by"],
+	sum?:PartialObjects["v2_aggregates_sum_order_by"],
+	var_pop?:PartialObjects["v2_aggregates_var_pop_order_by"],
+	var_samp?:PartialObjects["v2_aggregates_var_samp_order_by"],
+	variance?:PartialObjects["v2_aggregates_variance_order_by"]
+},
+	/** append existing jsonb value of filtered columns with new jsonb value */
+["v2_aggregates_append_input"]: {
+	metadata?:PartialObjects["jsonb"]
+},
+	/** input type for inserting array relation for remote table "v2.aggregates" */
+["v2_aggregates_arr_rel_insert_input"]: {
+	data:PartialObjects["v2_aggregates_insert_input"][],
+	/** upsert condition */
+	on_conflict?:PartialObjects["v2_aggregates_on_conflict"]
+},
+	/** aggregate avg on columns */
+["v2_aggregates_avg_fields"]: {
+		__typename?: "v2_aggregates_avg_fields";
+			action_type_id?:number,
+			id?:number,
+			user_id?:number
+	},
+	/** order by avg() on columns of table "v2.aggregates" */
+["v2_aggregates_avg_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** Boolean expression to filter rows from the table "v2.aggregates". All fields are combined with a logical 'AND'. */
+["v2_aggregates_bool_exp"]: {
+	_and?:PartialObjects["v2_aggregates_bool_exp"][],
+	_not?:PartialObjects["v2_aggregates_bool_exp"],
+	_or?:PartialObjects["v2_aggregates_bool_exp"][],
+	action_type?:PartialObjects["v2_action_types_bool_exp"],
+	action_type_id?:PartialObjects["Int_comparison_exp"],
+	id?:PartialObjects["Int_comparison_exp"],
+	metadata?:PartialObjects["jsonb_comparison_exp"],
+	user_id?:PartialObjects["Int_comparison_exp"]
+},
+	/** unique or primary key constraints on table "v2.aggregates" */
+["v2_aggregates_constraint"]:v2_aggregates_constraint,
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+["v2_aggregates_delete_at_path_input"]: {
+	metadata?:string[]
+},
+	/** delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array */
+["v2_aggregates_delete_elem_input"]: {
+	metadata?:number
+},
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+["v2_aggregates_delete_key_input"]: {
+	metadata?:string
+},
+	/** input type for incrementing numeric columns in table "v2.aggregates" */
+["v2_aggregates_inc_input"]: {
+	action_type_id?:number,
+	id?:number,
+	user_id?:number
+},
+	/** input type for inserting data into table "v2.aggregates" */
+["v2_aggregates_insert_input"]: {
+	action_type?:PartialObjects["v2_action_types_obj_rel_insert_input"],
+	action_type_id?:number,
+	id?:number,
+	metadata?:PartialObjects["jsonb"],
+	user_id?:number
+},
+	/** aggregate max on columns */
+["v2_aggregates_max_fields"]: {
+		__typename?: "v2_aggregates_max_fields";
+			action_type_id?:number,
+			id?:number,
+			user_id?:number
+	},
+	/** order by max() on columns of table "v2.aggregates" */
+["v2_aggregates_max_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** aggregate min on columns */
+["v2_aggregates_min_fields"]: {
+		__typename?: "v2_aggregates_min_fields";
+			action_type_id?:number,
+			id?:number,
+			user_id?:number
+	},
+	/** order by min() on columns of table "v2.aggregates" */
+["v2_aggregates_min_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** response of any mutation on the table "v2.aggregates" */
+["v2_aggregates_mutation_response"]: {
+		__typename?: "v2_aggregates_mutation_response";
+			/** number of rows affected by the mutation */
+	affected_rows?:number,
+			/** data from the rows affected by the mutation */
+	returning?:PartialObjects["v2_aggregates"][]
+	},
+	/** on_conflict condition type for table "v2.aggregates" */
+["v2_aggregates_on_conflict"]: {
+	constraint:PartialObjects["v2_aggregates_constraint"],
+	update_columns:PartialObjects["v2_aggregates_update_column"][],
+	where?:PartialObjects["v2_aggregates_bool_exp"]
+},
+	/** Ordering options when selecting data from "v2.aggregates". */
+["v2_aggregates_order_by"]: {
+	action_type?:PartialObjects["v2_action_types_order_by"],
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	metadata?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** primary key columns input for table: v2.aggregates */
+["v2_aggregates_pk_columns_input"]: {
+	id:number
+},
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+["v2_aggregates_prepend_input"]: {
+	metadata?:PartialObjects["jsonb"]
+},
+	/** select columns of table "v2.aggregates" */
+["v2_aggregates_select_column"]:v2_aggregates_select_column,
+	/** input type for updating data in table "v2.aggregates" */
+["v2_aggregates_set_input"]: {
+	action_type_id?:number,
+	id?:number,
+	metadata?:PartialObjects["jsonb"],
+	user_id?:number
+},
+	/** aggregate stddev on columns */
+["v2_aggregates_stddev_fields"]: {
+		__typename?: "v2_aggregates_stddev_fields";
+			action_type_id?:number,
+			id?:number,
+			user_id?:number
+	},
+	/** order by stddev() on columns of table "v2.aggregates" */
+["v2_aggregates_stddev_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** aggregate stddev_pop on columns */
+["v2_aggregates_stddev_pop_fields"]: {
+		__typename?: "v2_aggregates_stddev_pop_fields";
+			action_type_id?:number,
+			id?:number,
+			user_id?:number
+	},
+	/** order by stddev_pop() on columns of table "v2.aggregates" */
+["v2_aggregates_stddev_pop_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** aggregate stddev_samp on columns */
+["v2_aggregates_stddev_samp_fields"]: {
+		__typename?: "v2_aggregates_stddev_samp_fields";
+			action_type_id?:number,
+			id?:number,
+			user_id?:number
+	},
+	/** order by stddev_samp() on columns of table "v2.aggregates" */
+["v2_aggregates_stddev_samp_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** Streaming cursor of the table "v2_aggregates" */
+["v2_aggregates_stream_cursor_input"]: {
+	/** Stream column input with initial value */
+	initial_value:PartialObjects["v2_aggregates_stream_cursor_value_input"],
+	/** cursor ordering */
+	ordering?:PartialObjects["cursor_ordering"]
+},
+	/** Initial value of the column from where the streaming should start */
+["v2_aggregates_stream_cursor_value_input"]: {
+	action_type_id?:number,
+	id?:number,
+	metadata?:PartialObjects["jsonb"],
+	user_id?:number
+},
+	/** aggregate sum on columns */
+["v2_aggregates_sum_fields"]: {
+		__typename?: "v2_aggregates_sum_fields";
+			action_type_id?:number,
+			id?:number,
+			user_id?:number
+	},
+	/** order by sum() on columns of table "v2.aggregates" */
+["v2_aggregates_sum_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** update columns of table "v2.aggregates" */
+["v2_aggregates_update_column"]:v2_aggregates_update_column,
+	["v2_aggregates_updates"]: {
+	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:PartialObjects["v2_aggregates_append_input"],
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:PartialObjects["v2_aggregates_delete_at_path_input"],
+	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:PartialObjects["v2_aggregates_delete_elem_input"],
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:PartialObjects["v2_aggregates_delete_key_input"],
+	/** increments the numeric columns with given value of the filtered values */
+	_inc?:PartialObjects["v2_aggregates_inc_input"],
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:PartialObjects["v2_aggregates_prepend_input"],
+	/** sets the columns of the filtered rows to the given values */
+	_set?:PartialObjects["v2_aggregates_set_input"],
+	/** filter the rows which have to be updated */
+	where:PartialObjects["v2_aggregates_bool_exp"]
+},
+	/** aggregate var_pop on columns */
+["v2_aggregates_var_pop_fields"]: {
+		__typename?: "v2_aggregates_var_pop_fields";
+			action_type_id?:number,
+			id?:number,
+			user_id?:number
+	},
+	/** order by var_pop() on columns of table "v2.aggregates" */
+["v2_aggregates_var_pop_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** aggregate var_samp on columns */
+["v2_aggregates_var_samp_fields"]: {
+		__typename?: "v2_aggregates_var_samp_fields";
+			action_type_id?:number,
+			id?:number,
+			user_id?:number
+	},
+	/** order by var_samp() on columns of table "v2.aggregates" */
+["v2_aggregates_var_samp_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** aggregate variance on columns */
+["v2_aggregates_variance_fields"]: {
+		__typename?: "v2_aggregates_variance_fields";
+			action_type_id?:number,
+			id?:number,
+			user_id?:number
+	},
+	/** order by variance() on columns of table "v2.aggregates" */
+["v2_aggregates_variance_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	user_id?:PartialObjects["order_by"]
+},
+	/** columns and relationships of "v2.object_action" */
+["v2_object_action"]: {
+		__typename?: "v2_object_action";
+			/** An object relationship */
+	action?:PartialObjects["v2_actions"],
+			action_id?:number,
+			id?:number,
+			/** An object relationship */
+	object?:PartialObjects["objects"],
+			object_id?:number,
+			/** An object relationship */
+	object_t_action_t?:PartialObjects["v2_object_t_action_t"],
+			object_t_action_t_id?:number
+	},
+	/** aggregated selection of "v2.object_action" */
+["v2_object_action_aggregate"]: {
+		__typename?: "v2_object_action_aggregate";
+			aggregate?:PartialObjects["v2_object_action_aggregate_fields"],
+			nodes?:PartialObjects["v2_object_action"][]
+	},
+	["v2_object_action_aggregate_bool_exp"]: {
+	count?:PartialObjects["v2_object_action_aggregate_bool_exp_count"]
+},
+	["v2_object_action_aggregate_bool_exp_count"]: {
+	arguments?:PartialObjects["v2_object_action_select_column"][],
+	distinct?:boolean,
+	filter?:PartialObjects["v2_object_action_bool_exp"],
+	predicate:PartialObjects["Int_comparison_exp"]
+},
+	/** aggregate fields of "v2.object_action" */
+["v2_object_action_aggregate_fields"]: {
+		__typename?: "v2_object_action_aggregate_fields";
+			avg?:PartialObjects["v2_object_action_avg_fields"],
+			count?:number,
+			max?:PartialObjects["v2_object_action_max_fields"],
+			min?:PartialObjects["v2_object_action_min_fields"],
+			stddev?:PartialObjects["v2_object_action_stddev_fields"],
+			stddev_pop?:PartialObjects["v2_object_action_stddev_pop_fields"],
+			stddev_samp?:PartialObjects["v2_object_action_stddev_samp_fields"],
+			sum?:PartialObjects["v2_object_action_sum_fields"],
+			var_pop?:PartialObjects["v2_object_action_var_pop_fields"],
+			var_samp?:PartialObjects["v2_object_action_var_samp_fields"],
+			variance?:PartialObjects["v2_object_action_variance_fields"]
+	},
+	/** order by aggregate values of table "v2.object_action" */
+["v2_object_action_aggregate_order_by"]: {
+	avg?:PartialObjects["v2_object_action_avg_order_by"],
+	count?:PartialObjects["order_by"],
+	max?:PartialObjects["v2_object_action_max_order_by"],
+	min?:PartialObjects["v2_object_action_min_order_by"],
+	stddev?:PartialObjects["v2_object_action_stddev_order_by"],
+	stddev_pop?:PartialObjects["v2_object_action_stddev_pop_order_by"],
+	stddev_samp?:PartialObjects["v2_object_action_stddev_samp_order_by"],
+	sum?:PartialObjects["v2_object_action_sum_order_by"],
+	var_pop?:PartialObjects["v2_object_action_var_pop_order_by"],
+	var_samp?:PartialObjects["v2_object_action_var_samp_order_by"],
+	variance?:PartialObjects["v2_object_action_variance_order_by"]
+},
+	/** input type for inserting array relation for remote table "v2.object_action" */
+["v2_object_action_arr_rel_insert_input"]: {
+	data:PartialObjects["v2_object_action_insert_input"][],
+	/** upsert condition */
+	on_conflict?:PartialObjects["v2_object_action_on_conflict"]
+},
+	/** aggregate avg on columns */
+["v2_object_action_avg_fields"]: {
+		__typename?: "v2_object_action_avg_fields";
+			action_id?:number,
+			id?:number,
+			object_id?:number,
+			object_t_action_t_id?:number
+	},
+	/** order by avg() on columns of table "v2.object_action" */
+["v2_object_action_avg_order_by"]: {
+	action_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	object_id?:PartialObjects["order_by"],
+	object_t_action_t_id?:PartialObjects["order_by"]
+},
+	/** Boolean expression to filter rows from the table "v2.object_action". All fields are combined with a logical 'AND'. */
+["v2_object_action_bool_exp"]: {
+	_and?:PartialObjects["v2_object_action_bool_exp"][],
+	_not?:PartialObjects["v2_object_action_bool_exp"],
+	_or?:PartialObjects["v2_object_action_bool_exp"][],
+	action?:PartialObjects["v2_actions_bool_exp"],
+	action_id?:PartialObjects["Int_comparison_exp"],
+	id?:PartialObjects["Int_comparison_exp"],
+	object?:PartialObjects["objects_bool_exp"],
+	object_id?:PartialObjects["Int_comparison_exp"],
+	object_t_action_t?:PartialObjects["v2_object_t_action_t_bool_exp"],
+	object_t_action_t_id?:PartialObjects["Int_comparison_exp"]
+},
+	/** unique or primary key constraints on table "v2.object_action" */
+["v2_object_action_constraint"]:v2_object_action_constraint,
+	/** input type for incrementing numeric columns in table "v2.object_action" */
+["v2_object_action_inc_input"]: {
+	action_id?:number,
+	id?:number,
+	object_id?:number,
+	object_t_action_t_id?:number
+},
+	/** input type for inserting data into table "v2.object_action" */
+["v2_object_action_insert_input"]: {
+	action?:PartialObjects["v2_actions_obj_rel_insert_input"],
+	action_id?:number,
+	id?:number,
+	object?:PartialObjects["objects_obj_rel_insert_input"],
+	object_id?:number,
+	object_t_action_t?:PartialObjects["v2_object_t_action_t_obj_rel_insert_input"],
+	object_t_action_t_id?:number
+},
+	/** aggregate max on columns */
+["v2_object_action_max_fields"]: {
+		__typename?: "v2_object_action_max_fields";
+			action_id?:number,
+			id?:number,
+			object_id?:number,
+			object_t_action_t_id?:number
+	},
+	/** order by max() on columns of table "v2.object_action" */
+["v2_object_action_max_order_by"]: {
+	action_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	object_id?:PartialObjects["order_by"],
+	object_t_action_t_id?:PartialObjects["order_by"]
+},
+	/** aggregate min on columns */
+["v2_object_action_min_fields"]: {
+		__typename?: "v2_object_action_min_fields";
+			action_id?:number,
+			id?:number,
+			object_id?:number,
+			object_t_action_t_id?:number
+	},
+	/** order by min() on columns of table "v2.object_action" */
+["v2_object_action_min_order_by"]: {
+	action_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	object_id?:PartialObjects["order_by"],
+	object_t_action_t_id?:PartialObjects["order_by"]
+},
+	/** response of any mutation on the table "v2.object_action" */
+["v2_object_action_mutation_response"]: {
+		__typename?: "v2_object_action_mutation_response";
+			/** number of rows affected by the mutation */
+	affected_rows?:number,
+			/** data from the rows affected by the mutation */
+	returning?:PartialObjects["v2_object_action"][]
+	},
+	/** on_conflict condition type for table "v2.object_action" */
+["v2_object_action_on_conflict"]: {
+	constraint:PartialObjects["v2_object_action_constraint"],
+	update_columns:PartialObjects["v2_object_action_update_column"][],
+	where?:PartialObjects["v2_object_action_bool_exp"]
+},
+	/** Ordering options when selecting data from "v2.object_action". */
+["v2_object_action_order_by"]: {
+	action?:PartialObjects["v2_actions_order_by"],
+	action_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	object?:PartialObjects["objects_order_by"],
+	object_id?:PartialObjects["order_by"],
+	object_t_action_t?:PartialObjects["v2_object_t_action_t_order_by"],
+	object_t_action_t_id?:PartialObjects["order_by"]
+},
+	/** primary key columns input for table: v2.object_action */
+["v2_object_action_pk_columns_input"]: {
+	id:number
+},
+	/** select columns of table "v2.object_action" */
+["v2_object_action_select_column"]:v2_object_action_select_column,
+	/** input type for updating data in table "v2.object_action" */
+["v2_object_action_set_input"]: {
+	action_id?:number,
+	id?:number,
+	object_id?:number,
+	object_t_action_t_id?:number
+},
+	/** aggregate stddev on columns */
+["v2_object_action_stddev_fields"]: {
+		__typename?: "v2_object_action_stddev_fields";
+			action_id?:number,
+			id?:number,
+			object_id?:number,
+			object_t_action_t_id?:number
+	},
+	/** order by stddev() on columns of table "v2.object_action" */
+["v2_object_action_stddev_order_by"]: {
+	action_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	object_id?:PartialObjects["order_by"],
+	object_t_action_t_id?:PartialObjects["order_by"]
+},
+	/** aggregate stddev_pop on columns */
+["v2_object_action_stddev_pop_fields"]: {
+		__typename?: "v2_object_action_stddev_pop_fields";
+			action_id?:number,
+			id?:number,
+			object_id?:number,
+			object_t_action_t_id?:number
+	},
+	/** order by stddev_pop() on columns of table "v2.object_action" */
+["v2_object_action_stddev_pop_order_by"]: {
+	action_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	object_id?:PartialObjects["order_by"],
+	object_t_action_t_id?:PartialObjects["order_by"]
+},
+	/** aggregate stddev_samp on columns */
+["v2_object_action_stddev_samp_fields"]: {
+		__typename?: "v2_object_action_stddev_samp_fields";
+			action_id?:number,
+			id?:number,
+			object_id?:number,
+			object_t_action_t_id?:number
+	},
+	/** order by stddev_samp() on columns of table "v2.object_action" */
+["v2_object_action_stddev_samp_order_by"]: {
+	action_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	object_id?:PartialObjects["order_by"],
+	object_t_action_t_id?:PartialObjects["order_by"]
+},
+	/** Streaming cursor of the table "v2_object_action" */
+["v2_object_action_stream_cursor_input"]: {
+	/** Stream column input with initial value */
+	initial_value:PartialObjects["v2_object_action_stream_cursor_value_input"],
+	/** cursor ordering */
+	ordering?:PartialObjects["cursor_ordering"]
+},
+	/** Initial value of the column from where the streaming should start */
+["v2_object_action_stream_cursor_value_input"]: {
+	action_id?:number,
+	id?:number,
+	object_id?:number,
+	object_t_action_t_id?:number
+},
+	/** aggregate sum on columns */
+["v2_object_action_sum_fields"]: {
+		__typename?: "v2_object_action_sum_fields";
+			action_id?:number,
+			id?:number,
+			object_id?:number,
+			object_t_action_t_id?:number
+	},
+	/** order by sum() on columns of table "v2.object_action" */
+["v2_object_action_sum_order_by"]: {
+	action_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	object_id?:PartialObjects["order_by"],
+	object_t_action_t_id?:PartialObjects["order_by"]
+},
+	/** update columns of table "v2.object_action" */
+["v2_object_action_update_column"]:v2_object_action_update_column,
+	["v2_object_action_updates"]: {
+	/** increments the numeric columns with given value of the filtered values */
+	_inc?:PartialObjects["v2_object_action_inc_input"],
+	/** sets the columns of the filtered rows to the given values */
+	_set?:PartialObjects["v2_object_action_set_input"],
+	/** filter the rows which have to be updated */
+	where:PartialObjects["v2_object_action_bool_exp"]
+},
+	/** aggregate var_pop on columns */
+["v2_object_action_var_pop_fields"]: {
+		__typename?: "v2_object_action_var_pop_fields";
+			action_id?:number,
+			id?:number,
+			object_id?:number,
+			object_t_action_t_id?:number
+	},
+	/** order by var_pop() on columns of table "v2.object_action" */
+["v2_object_action_var_pop_order_by"]: {
+	action_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	object_id?:PartialObjects["order_by"],
+	object_t_action_t_id?:PartialObjects["order_by"]
+},
+	/** aggregate var_samp on columns */
+["v2_object_action_var_samp_fields"]: {
+		__typename?: "v2_object_action_var_samp_fields";
+			action_id?:number,
+			id?:number,
+			object_id?:number,
+			object_t_action_t_id?:number
+	},
+	/** order by var_samp() on columns of table "v2.object_action" */
+["v2_object_action_var_samp_order_by"]: {
+	action_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	object_id?:PartialObjects["order_by"],
+	object_t_action_t_id?:PartialObjects["order_by"]
+},
+	/** aggregate variance on columns */
+["v2_object_action_variance_fields"]: {
+		__typename?: "v2_object_action_variance_fields";
+			action_id?:number,
+			id?:number,
+			object_id?:number,
+			object_t_action_t_id?:number
+	},
+	/** order by variance() on columns of table "v2.object_action" */
+["v2_object_action_variance_order_by"]: {
+	action_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	object_id?:PartialObjects["order_by"],
+	object_t_action_t_id?:PartialObjects["order_by"]
+},
+	/** columns and relationships of "v2.object_t_action_t" */
+["v2_object_t_action_t"]: {
+		__typename?: "v2_object_t_action_t";
+			/** An object relationship */
+	action_type?:PartialObjects["v2_action_types"],
+			action_type_id?:number,
+			id?:number,
+			metadata?:PartialObjects["jsonb"],
+			/** An object relationship */
+	object_type?:PartialObjects["object_types"],
+			object_type_id?:number
+	},
+	/** aggregated selection of "v2.object_t_action_t" */
+["v2_object_t_action_t_aggregate"]: {
+		__typename?: "v2_object_t_action_t_aggregate";
+			aggregate?:PartialObjects["v2_object_t_action_t_aggregate_fields"],
+			nodes?:PartialObjects["v2_object_t_action_t"][]
+	},
+	["v2_object_t_action_t_aggregate_bool_exp"]: {
+	count?:PartialObjects["v2_object_t_action_t_aggregate_bool_exp_count"]
+},
+	["v2_object_t_action_t_aggregate_bool_exp_count"]: {
+	arguments?:PartialObjects["v2_object_t_action_t_select_column"][],
+	distinct?:boolean,
+	filter?:PartialObjects["v2_object_t_action_t_bool_exp"],
+	predicate:PartialObjects["Int_comparison_exp"]
+},
+	/** aggregate fields of "v2.object_t_action_t" */
+["v2_object_t_action_t_aggregate_fields"]: {
+		__typename?: "v2_object_t_action_t_aggregate_fields";
+			avg?:PartialObjects["v2_object_t_action_t_avg_fields"],
+			count?:number,
+			max?:PartialObjects["v2_object_t_action_t_max_fields"],
+			min?:PartialObjects["v2_object_t_action_t_min_fields"],
+			stddev?:PartialObjects["v2_object_t_action_t_stddev_fields"],
+			stddev_pop?:PartialObjects["v2_object_t_action_t_stddev_pop_fields"],
+			stddev_samp?:PartialObjects["v2_object_t_action_t_stddev_samp_fields"],
+			sum?:PartialObjects["v2_object_t_action_t_sum_fields"],
+			var_pop?:PartialObjects["v2_object_t_action_t_var_pop_fields"],
+			var_samp?:PartialObjects["v2_object_t_action_t_var_samp_fields"],
+			variance?:PartialObjects["v2_object_t_action_t_variance_fields"]
+	},
+	/** order by aggregate values of table "v2.object_t_action_t" */
+["v2_object_t_action_t_aggregate_order_by"]: {
+	avg?:PartialObjects["v2_object_t_action_t_avg_order_by"],
+	count?:PartialObjects["order_by"],
+	max?:PartialObjects["v2_object_t_action_t_max_order_by"],
+	min?:PartialObjects["v2_object_t_action_t_min_order_by"],
+	stddev?:PartialObjects["v2_object_t_action_t_stddev_order_by"],
+	stddev_pop?:PartialObjects["v2_object_t_action_t_stddev_pop_order_by"],
+	stddev_samp?:PartialObjects["v2_object_t_action_t_stddev_samp_order_by"],
+	sum?:PartialObjects["v2_object_t_action_t_sum_order_by"],
+	var_pop?:PartialObjects["v2_object_t_action_t_var_pop_order_by"],
+	var_samp?:PartialObjects["v2_object_t_action_t_var_samp_order_by"],
+	variance?:PartialObjects["v2_object_t_action_t_variance_order_by"]
+},
+	/** append existing jsonb value of filtered columns with new jsonb value */
+["v2_object_t_action_t_append_input"]: {
+	metadata?:PartialObjects["jsonb"]
+},
+	/** input type for inserting array relation for remote table "v2.object_t_action_t" */
+["v2_object_t_action_t_arr_rel_insert_input"]: {
+	data:PartialObjects["v2_object_t_action_t_insert_input"][],
+	/** upsert condition */
+	on_conflict?:PartialObjects["v2_object_t_action_t_on_conflict"]
+},
+	/** aggregate avg on columns */
+["v2_object_t_action_t_avg_fields"]: {
+		__typename?: "v2_object_t_action_t_avg_fields";
+			action_type_id?:number,
+			id?:number,
+			object_type_id?:number
+	},
+	/** order by avg() on columns of table "v2.object_t_action_t" */
+["v2_object_t_action_t_avg_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	object_type_id?:PartialObjects["order_by"]
+},
+	/** Boolean expression to filter rows from the table "v2.object_t_action_t". All fields are combined with a logical 'AND'. */
+["v2_object_t_action_t_bool_exp"]: {
+	_and?:PartialObjects["v2_object_t_action_t_bool_exp"][],
+	_not?:PartialObjects["v2_object_t_action_t_bool_exp"],
+	_or?:PartialObjects["v2_object_t_action_t_bool_exp"][],
+	action_type?:PartialObjects["v2_action_types_bool_exp"],
+	action_type_id?:PartialObjects["Int_comparison_exp"],
+	id?:PartialObjects["Int_comparison_exp"],
+	metadata?:PartialObjects["jsonb_comparison_exp"],
+	object_type?:PartialObjects["object_types_bool_exp"],
+	object_type_id?:PartialObjects["Int_comparison_exp"]
+},
+	/** unique or primary key constraints on table "v2.object_t_action_t" */
+["v2_object_t_action_t_constraint"]:v2_object_t_action_t_constraint,
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+["v2_object_t_action_t_delete_at_path_input"]: {
+	metadata?:string[]
+},
+	/** delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array */
+["v2_object_t_action_t_delete_elem_input"]: {
+	metadata?:number
+},
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+["v2_object_t_action_t_delete_key_input"]: {
+	metadata?:string
+},
+	/** input type for incrementing numeric columns in table "v2.object_t_action_t" */
+["v2_object_t_action_t_inc_input"]: {
+	action_type_id?:number,
+	id?:number,
+	object_type_id?:number
+},
+	/** input type for inserting data into table "v2.object_t_action_t" */
+["v2_object_t_action_t_insert_input"]: {
+	action_type?:PartialObjects["v2_action_types_obj_rel_insert_input"],
+	action_type_id?:number,
+	id?:number,
+	metadata?:PartialObjects["jsonb"],
+	object_type?:PartialObjects["object_types_obj_rel_insert_input"],
+	object_type_id?:number
+},
+	/** aggregate max on columns */
+["v2_object_t_action_t_max_fields"]: {
+		__typename?: "v2_object_t_action_t_max_fields";
+			action_type_id?:number,
+			id?:number,
+			object_type_id?:number
+	},
+	/** order by max() on columns of table "v2.object_t_action_t" */
+["v2_object_t_action_t_max_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	object_type_id?:PartialObjects["order_by"]
+},
+	/** aggregate min on columns */
+["v2_object_t_action_t_min_fields"]: {
+		__typename?: "v2_object_t_action_t_min_fields";
+			action_type_id?:number,
+			id?:number,
+			object_type_id?:number
+	},
+	/** order by min() on columns of table "v2.object_t_action_t" */
+["v2_object_t_action_t_min_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	object_type_id?:PartialObjects["order_by"]
+},
+	/** response of any mutation on the table "v2.object_t_action_t" */
+["v2_object_t_action_t_mutation_response"]: {
+		__typename?: "v2_object_t_action_t_mutation_response";
+			/** number of rows affected by the mutation */
+	affected_rows?:number,
+			/** data from the rows affected by the mutation */
+	returning?:PartialObjects["v2_object_t_action_t"][]
+	},
+	/** input type for inserting object relation for remote table "v2.object_t_action_t" */
+["v2_object_t_action_t_obj_rel_insert_input"]: {
+	data:PartialObjects["v2_object_t_action_t_insert_input"],
+	/** upsert condition */
+	on_conflict?:PartialObjects["v2_object_t_action_t_on_conflict"]
+},
+	/** on_conflict condition type for table "v2.object_t_action_t" */
+["v2_object_t_action_t_on_conflict"]: {
+	constraint:PartialObjects["v2_object_t_action_t_constraint"],
+	update_columns:PartialObjects["v2_object_t_action_t_update_column"][],
+	where?:PartialObjects["v2_object_t_action_t_bool_exp"]
+},
+	/** Ordering options when selecting data from "v2.object_t_action_t". */
+["v2_object_t_action_t_order_by"]: {
+	action_type?:PartialObjects["v2_action_types_order_by"],
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	metadata?:PartialObjects["order_by"],
+	object_type?:PartialObjects["object_types_order_by"],
+	object_type_id?:PartialObjects["order_by"]
+},
+	/** primary key columns input for table: v2.object_t_action_t */
+["v2_object_t_action_t_pk_columns_input"]: {
+	id:number
+},
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+["v2_object_t_action_t_prepend_input"]: {
+	metadata?:PartialObjects["jsonb"]
+},
+	/** select columns of table "v2.object_t_action_t" */
+["v2_object_t_action_t_select_column"]:v2_object_t_action_t_select_column,
+	/** input type for updating data in table "v2.object_t_action_t" */
+["v2_object_t_action_t_set_input"]: {
+	action_type_id?:number,
+	id?:number,
+	metadata?:PartialObjects["jsonb"],
+	object_type_id?:number
+},
+	/** aggregate stddev on columns */
+["v2_object_t_action_t_stddev_fields"]: {
+		__typename?: "v2_object_t_action_t_stddev_fields";
+			action_type_id?:number,
+			id?:number,
+			object_type_id?:number
+	},
+	/** order by stddev() on columns of table "v2.object_t_action_t" */
+["v2_object_t_action_t_stddev_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	object_type_id?:PartialObjects["order_by"]
+},
+	/** aggregate stddev_pop on columns */
+["v2_object_t_action_t_stddev_pop_fields"]: {
+		__typename?: "v2_object_t_action_t_stddev_pop_fields";
+			action_type_id?:number,
+			id?:number,
+			object_type_id?:number
+	},
+	/** order by stddev_pop() on columns of table "v2.object_t_action_t" */
+["v2_object_t_action_t_stddev_pop_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	object_type_id?:PartialObjects["order_by"]
+},
+	/** aggregate stddev_samp on columns */
+["v2_object_t_action_t_stddev_samp_fields"]: {
+		__typename?: "v2_object_t_action_t_stddev_samp_fields";
+			action_type_id?:number,
+			id?:number,
+			object_type_id?:number
+	},
+	/** order by stddev_samp() on columns of table "v2.object_t_action_t" */
+["v2_object_t_action_t_stddev_samp_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	object_type_id?:PartialObjects["order_by"]
+},
+	/** Streaming cursor of the table "v2_object_t_action_t" */
+["v2_object_t_action_t_stream_cursor_input"]: {
+	/** Stream column input with initial value */
+	initial_value:PartialObjects["v2_object_t_action_t_stream_cursor_value_input"],
+	/** cursor ordering */
+	ordering?:PartialObjects["cursor_ordering"]
+},
+	/** Initial value of the column from where the streaming should start */
+["v2_object_t_action_t_stream_cursor_value_input"]: {
+	action_type_id?:number,
+	id?:number,
+	metadata?:PartialObjects["jsonb"],
+	object_type_id?:number
+},
+	/** aggregate sum on columns */
+["v2_object_t_action_t_sum_fields"]: {
+		__typename?: "v2_object_t_action_t_sum_fields";
+			action_type_id?:number,
+			id?:number,
+			object_type_id?:number
+	},
+	/** order by sum() on columns of table "v2.object_t_action_t" */
+["v2_object_t_action_t_sum_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	object_type_id?:PartialObjects["order_by"]
+},
+	/** update columns of table "v2.object_t_action_t" */
+["v2_object_t_action_t_update_column"]:v2_object_t_action_t_update_column,
+	["v2_object_t_action_t_updates"]: {
+	/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:PartialObjects["v2_object_t_action_t_append_input"],
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:PartialObjects["v2_object_t_action_t_delete_at_path_input"],
+	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:PartialObjects["v2_object_t_action_t_delete_elem_input"],
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:PartialObjects["v2_object_t_action_t_delete_key_input"],
+	/** increments the numeric columns with given value of the filtered values */
+	_inc?:PartialObjects["v2_object_t_action_t_inc_input"],
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:PartialObjects["v2_object_t_action_t_prepend_input"],
+	/** sets the columns of the filtered rows to the given values */
+	_set?:PartialObjects["v2_object_t_action_t_set_input"],
+	/** filter the rows which have to be updated */
+	where:PartialObjects["v2_object_t_action_t_bool_exp"]
+},
+	/** aggregate var_pop on columns */
+["v2_object_t_action_t_var_pop_fields"]: {
+		__typename?: "v2_object_t_action_t_var_pop_fields";
+			action_type_id?:number,
+			id?:number,
+			object_type_id?:number
+	},
+	/** order by var_pop() on columns of table "v2.object_t_action_t" */
+["v2_object_t_action_t_var_pop_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	object_type_id?:PartialObjects["order_by"]
+},
+	/** aggregate var_samp on columns */
+["v2_object_t_action_t_var_samp_fields"]: {
+		__typename?: "v2_object_t_action_t_var_samp_fields";
+			action_type_id?:number,
+			id?:number,
+			object_type_id?:number
+	},
+	/** order by var_samp() on columns of table "v2.object_t_action_t" */
+["v2_object_t_action_t_var_samp_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	object_type_id?:PartialObjects["order_by"]
+},
+	/** aggregate variance on columns */
+["v2_object_t_action_t_variance_fields"]: {
+		__typename?: "v2_object_t_action_t_variance_fields";
+			action_type_id?:number,
+			id?:number,
+			object_type_id?:number
+	},
+	/** order by variance() on columns of table "v2.object_t_action_t" */
+["v2_object_t_action_t_variance_order_by"]: {
+	action_type_id?:PartialObjects["order_by"],
+	id?:PartialObjects["order_by"],
+	object_type_id?:PartialObjects["order_by"]
+},
 	["vector"]:any,
 	/** Boolean expression to compare columns of type "vector". All fields are combined with logical 'AND'. */
 ["vector_comparison_exp"]: {
@@ -9020,6 +15104,994 @@ export type goals_variance_fields = {
 	user_id?:number
 }
 
+/** columns and relationships of "group.chat" */
+export type group_chat = {
+	__typename?: "group_chat",
+	id:number,
+	/** An array relationship */
+	members:group_members[],
+	/** An aggregate relationship */
+	members_aggregate:group_members_aggregate,
+	/** An array relationship */
+	messages:group_messages[],
+	/** An aggregate relationship */
+	messages_aggregate:group_messages_aggregate,
+	name:string,
+	/** An object relationship */
+	owner:users,
+	owner_id:number
+}
+
+/** aggregated selection of "group.chat" */
+export type group_chat_aggregate = {
+	__typename?: "group_chat_aggregate",
+	aggregate?:group_chat_aggregate_fields,
+	nodes:group_chat[]
+}
+
+/** aggregate fields of "group.chat" */
+export type group_chat_aggregate_fields = {
+	__typename?: "group_chat_aggregate_fields",
+	avg?:group_chat_avg_fields,
+	count:number,
+	max?:group_chat_max_fields,
+	min?:group_chat_min_fields,
+	stddev?:group_chat_stddev_fields,
+	stddev_pop?:group_chat_stddev_pop_fields,
+	stddev_samp?:group_chat_stddev_samp_fields,
+	sum?:group_chat_sum_fields,
+	var_pop?:group_chat_var_pop_fields,
+	var_samp?:group_chat_var_samp_fields,
+	variance?:group_chat_variance_fields
+}
+
+/** aggregate avg on columns */
+export type group_chat_avg_fields = {
+	__typename?: "group_chat_avg_fields",
+	id?:number,
+	owner_id?:number
+}
+
+/** Boolean expression to filter rows from the table "group.chat". All fields are combined with a logical 'AND'. */
+export type group_chat_bool_exp = {
+		_and?:group_chat_bool_exp[],
+	_not?:group_chat_bool_exp,
+	_or?:group_chat_bool_exp[],
+	id?:Int_comparison_exp,
+	members?:group_members_bool_exp,
+	members_aggregate?:group_members_aggregate_bool_exp,
+	messages?:group_messages_bool_exp,
+	messages_aggregate?:group_messages_aggregate_bool_exp,
+	name?:String_comparison_exp,
+	owner?:users_bool_exp,
+	owner_id?:Int_comparison_exp
+}
+
+/** unique or primary key constraints on table "group.chat" */
+export enum group_chat_constraint {
+	chat_pkey = "chat_pkey"
+}
+
+/** input type for incrementing numeric columns in table "group.chat" */
+export type group_chat_inc_input = {
+		id?:number,
+	owner_id?:number
+}
+
+/** input type for inserting data into table "group.chat" */
+export type group_chat_insert_input = {
+		id?:number,
+	members?:group_members_arr_rel_insert_input,
+	messages?:group_messages_arr_rel_insert_input,
+	name?:string,
+	owner?:users_obj_rel_insert_input,
+	owner_id?:number
+}
+
+/** aggregate max on columns */
+export type group_chat_max_fields = {
+	__typename?: "group_chat_max_fields",
+	id?:number,
+	name?:string,
+	owner_id?:number
+}
+
+/** aggregate min on columns */
+export type group_chat_min_fields = {
+	__typename?: "group_chat_min_fields",
+	id?:number,
+	name?:string,
+	owner_id?:number
+}
+
+/** response of any mutation on the table "group.chat" */
+export type group_chat_mutation_response = {
+	__typename?: "group_chat_mutation_response",
+	/** number of rows affected by the mutation */
+	affected_rows:number,
+	/** data from the rows affected by the mutation */
+	returning:group_chat[]
+}
+
+/** input type for inserting object relation for remote table "group.chat" */
+export type group_chat_obj_rel_insert_input = {
+		data:group_chat_insert_input,
+	/** upsert condition */
+	on_conflict?:group_chat_on_conflict
+}
+
+/** on_conflict condition type for table "group.chat" */
+export type group_chat_on_conflict = {
+		constraint:group_chat_constraint,
+	update_columns:group_chat_update_column[],
+	where?:group_chat_bool_exp
+}
+
+/** Ordering options when selecting data from "group.chat". */
+export type group_chat_order_by = {
+		id?:order_by,
+	members_aggregate?:group_members_aggregate_order_by,
+	messages_aggregate?:group_messages_aggregate_order_by,
+	name?:order_by,
+	owner?:users_order_by,
+	owner_id?:order_by
+}
+
+/** primary key columns input for table: group.chat */
+export type group_chat_pk_columns_input = {
+		id:number
+}
+
+/** select columns of table "group.chat" */
+export enum group_chat_select_column {
+	id = "id",
+	name = "name",
+	owner_id = "owner_id"
+}
+
+/** input type for updating data in table "group.chat" */
+export type group_chat_set_input = {
+		id?:number,
+	name?:string,
+	owner_id?:number
+}
+
+/** aggregate stddev on columns */
+export type group_chat_stddev_fields = {
+	__typename?: "group_chat_stddev_fields",
+	id?:number,
+	owner_id?:number
+}
+
+/** aggregate stddev_pop on columns */
+export type group_chat_stddev_pop_fields = {
+	__typename?: "group_chat_stddev_pop_fields",
+	id?:number,
+	owner_id?:number
+}
+
+/** aggregate stddev_samp on columns */
+export type group_chat_stddev_samp_fields = {
+	__typename?: "group_chat_stddev_samp_fields",
+	id?:number,
+	owner_id?:number
+}
+
+/** Streaming cursor of the table "group_chat" */
+export type group_chat_stream_cursor_input = {
+		/** Stream column input with initial value */
+	initial_value:group_chat_stream_cursor_value_input,
+	/** cursor ordering */
+	ordering?:cursor_ordering
+}
+
+/** Initial value of the column from where the streaming should start */
+export type group_chat_stream_cursor_value_input = {
+		id?:number,
+	name?:string,
+	owner_id?:number
+}
+
+/** aggregate sum on columns */
+export type group_chat_sum_fields = {
+	__typename?: "group_chat_sum_fields",
+	id?:number,
+	owner_id?:number
+}
+
+/** update columns of table "group.chat" */
+export enum group_chat_update_column {
+	id = "id",
+	name = "name",
+	owner_id = "owner_id"
+}
+
+export type group_chat_updates = {
+		/** increments the numeric columns with given value of the filtered values */
+	_inc?:group_chat_inc_input,
+	/** sets the columns of the filtered rows to the given values */
+	_set?:group_chat_set_input,
+	/** filter the rows which have to be updated */
+	where:group_chat_bool_exp
+}
+
+/** aggregate var_pop on columns */
+export type group_chat_var_pop_fields = {
+	__typename?: "group_chat_var_pop_fields",
+	id?:number,
+	owner_id?:number
+}
+
+/** aggregate var_samp on columns */
+export type group_chat_var_samp_fields = {
+	__typename?: "group_chat_var_samp_fields",
+	id?:number,
+	owner_id?:number
+}
+
+/** aggregate variance on columns */
+export type group_chat_variance_fields = {
+	__typename?: "group_chat_variance_fields",
+	id?:number,
+	owner_id?:number
+}
+
+/** columns and relationships of "group.members" */
+export type group_members = {
+	__typename?: "group_members",
+	/** An object relationship */
+	chat:group_chat,
+	chat_id:number,
+	id:number,
+	metadata:jsonb,
+	/** An object relationship */
+	user:users,
+	user_id:number
+}
+
+/** aggregated selection of "group.members" */
+export type group_members_aggregate = {
+	__typename?: "group_members_aggregate",
+	aggregate?:group_members_aggregate_fields,
+	nodes:group_members[]
+}
+
+export type group_members_aggregate_bool_exp = {
+		count?:group_members_aggregate_bool_exp_count
+}
+
+export type group_members_aggregate_bool_exp_count = {
+		arguments?:group_members_select_column[],
+	distinct?:boolean,
+	filter?:group_members_bool_exp,
+	predicate:Int_comparison_exp
+}
+
+/** aggregate fields of "group.members" */
+export type group_members_aggregate_fields = {
+	__typename?: "group_members_aggregate_fields",
+	avg?:group_members_avg_fields,
+	count:number,
+	max?:group_members_max_fields,
+	min?:group_members_min_fields,
+	stddev?:group_members_stddev_fields,
+	stddev_pop?:group_members_stddev_pop_fields,
+	stddev_samp?:group_members_stddev_samp_fields,
+	sum?:group_members_sum_fields,
+	var_pop?:group_members_var_pop_fields,
+	var_samp?:group_members_var_samp_fields,
+	variance?:group_members_variance_fields
+}
+
+/** order by aggregate values of table "group.members" */
+export type group_members_aggregate_order_by = {
+		avg?:group_members_avg_order_by,
+	count?:order_by,
+	max?:group_members_max_order_by,
+	min?:group_members_min_order_by,
+	stddev?:group_members_stddev_order_by,
+	stddev_pop?:group_members_stddev_pop_order_by,
+	stddev_samp?:group_members_stddev_samp_order_by,
+	sum?:group_members_sum_order_by,
+	var_pop?:group_members_var_pop_order_by,
+	var_samp?:group_members_var_samp_order_by,
+	variance?:group_members_variance_order_by
+}
+
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type group_members_append_input = {
+		metadata?:jsonb
+}
+
+/** input type for inserting array relation for remote table "group.members" */
+export type group_members_arr_rel_insert_input = {
+		data:group_members_insert_input[],
+	/** upsert condition */
+	on_conflict?:group_members_on_conflict
+}
+
+/** aggregate avg on columns */
+export type group_members_avg_fields = {
+	__typename?: "group_members_avg_fields",
+	chat_id?:number,
+	id?:number,
+	user_id?:number
+}
+
+/** order by avg() on columns of table "group.members" */
+export type group_members_avg_order_by = {
+		chat_id?:order_by,
+	id?:order_by,
+	user_id?:order_by
+}
+
+/** Boolean expression to filter rows from the table "group.members". All fields are combined with a logical 'AND'. */
+export type group_members_bool_exp = {
+		_and?:group_members_bool_exp[],
+	_not?:group_members_bool_exp,
+	_or?:group_members_bool_exp[],
+	chat?:group_chat_bool_exp,
+	chat_id?:Int_comparison_exp,
+	id?:Int_comparison_exp,
+	metadata?:jsonb_comparison_exp,
+	user?:users_bool_exp,
+	user_id?:Int_comparison_exp
+}
+
+/** unique or primary key constraints on table "group.members" */
+export enum group_members_constraint {
+	members_pkey = "members_pkey"
+}
+
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type group_members_delete_at_path_input = {
+		metadata?:string[]
+}
+
+/** delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array */
+export type group_members_delete_elem_input = {
+		metadata?:number
+}
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type group_members_delete_key_input = {
+		metadata?:string
+}
+
+/** input type for incrementing numeric columns in table "group.members" */
+export type group_members_inc_input = {
+		chat_id?:number,
+	id?:number,
+	user_id?:number
+}
+
+/** input type for inserting data into table "group.members" */
+export type group_members_insert_input = {
+		chat?:group_chat_obj_rel_insert_input,
+	chat_id?:number,
+	id?:number,
+	metadata?:jsonb,
+	user?:users_obj_rel_insert_input,
+	user_id?:number
+}
+
+/** aggregate max on columns */
+export type group_members_max_fields = {
+	__typename?: "group_members_max_fields",
+	chat_id?:number,
+	id?:number,
+	user_id?:number
+}
+
+/** order by max() on columns of table "group.members" */
+export type group_members_max_order_by = {
+		chat_id?:order_by,
+	id?:order_by,
+	user_id?:order_by
+}
+
+/** aggregate min on columns */
+export type group_members_min_fields = {
+	__typename?: "group_members_min_fields",
+	chat_id?:number,
+	id?:number,
+	user_id?:number
+}
+
+/** order by min() on columns of table "group.members" */
+export type group_members_min_order_by = {
+		chat_id?:order_by,
+	id?:order_by,
+	user_id?:order_by
+}
+
+/** response of any mutation on the table "group.members" */
+export type group_members_mutation_response = {
+	__typename?: "group_members_mutation_response",
+	/** number of rows affected by the mutation */
+	affected_rows:number,
+	/** data from the rows affected by the mutation */
+	returning:group_members[]
+}
+
+/** input type for inserting object relation for remote table "group.members" */
+export type group_members_obj_rel_insert_input = {
+		data:group_members_insert_input,
+	/** upsert condition */
+	on_conflict?:group_members_on_conflict
+}
+
+/** on_conflict condition type for table "group.members" */
+export type group_members_on_conflict = {
+		constraint:group_members_constraint,
+	update_columns:group_members_update_column[],
+	where?:group_members_bool_exp
+}
+
+/** Ordering options when selecting data from "group.members". */
+export type group_members_order_by = {
+		chat?:group_chat_order_by,
+	chat_id?:order_by,
+	id?:order_by,
+	metadata?:order_by,
+	user?:users_order_by,
+	user_id?:order_by
+}
+
+/** primary key columns input for table: group.members */
+export type group_members_pk_columns_input = {
+		id:number
+}
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type group_members_prepend_input = {
+		metadata?:jsonb
+}
+
+/** select columns of table "group.members" */
+export enum group_members_select_column {
+	chat_id = "chat_id",
+	id = "id",
+	metadata = "metadata",
+	user_id = "user_id"
+}
+
+/** input type for updating data in table "group.members" */
+export type group_members_set_input = {
+		chat_id?:number,
+	id?:number,
+	metadata?:jsonb,
+	user_id?:number
+}
+
+/** aggregate stddev on columns */
+export type group_members_stddev_fields = {
+	__typename?: "group_members_stddev_fields",
+	chat_id?:number,
+	id?:number,
+	user_id?:number
+}
+
+/** order by stddev() on columns of table "group.members" */
+export type group_members_stddev_order_by = {
+		chat_id?:order_by,
+	id?:order_by,
+	user_id?:order_by
+}
+
+/** aggregate stddev_pop on columns */
+export type group_members_stddev_pop_fields = {
+	__typename?: "group_members_stddev_pop_fields",
+	chat_id?:number,
+	id?:number,
+	user_id?:number
+}
+
+/** order by stddev_pop() on columns of table "group.members" */
+export type group_members_stddev_pop_order_by = {
+		chat_id?:order_by,
+	id?:order_by,
+	user_id?:order_by
+}
+
+/** aggregate stddev_samp on columns */
+export type group_members_stddev_samp_fields = {
+	__typename?: "group_members_stddev_samp_fields",
+	chat_id?:number,
+	id?:number,
+	user_id?:number
+}
+
+/** order by stddev_samp() on columns of table "group.members" */
+export type group_members_stddev_samp_order_by = {
+		chat_id?:order_by,
+	id?:order_by,
+	user_id?:order_by
+}
+
+/** Streaming cursor of the table "group_members" */
+export type group_members_stream_cursor_input = {
+		/** Stream column input with initial value */
+	initial_value:group_members_stream_cursor_value_input,
+	/** cursor ordering */
+	ordering?:cursor_ordering
+}
+
+/** Initial value of the column from where the streaming should start */
+export type group_members_stream_cursor_value_input = {
+		chat_id?:number,
+	id?:number,
+	metadata?:jsonb,
+	user_id?:number
+}
+
+/** aggregate sum on columns */
+export type group_members_sum_fields = {
+	__typename?: "group_members_sum_fields",
+	chat_id?:number,
+	id?:number,
+	user_id?:number
+}
+
+/** order by sum() on columns of table "group.members" */
+export type group_members_sum_order_by = {
+		chat_id?:order_by,
+	id?:order_by,
+	user_id?:order_by
+}
+
+/** update columns of table "group.members" */
+export enum group_members_update_column {
+	chat_id = "chat_id",
+	id = "id",
+	metadata = "metadata",
+	user_id = "user_id"
+}
+
+export type group_members_updates = {
+		/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:group_members_append_input,
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:group_members_delete_at_path_input,
+	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:group_members_delete_elem_input,
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:group_members_delete_key_input,
+	/** increments the numeric columns with given value of the filtered values */
+	_inc?:group_members_inc_input,
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:group_members_prepend_input,
+	/** sets the columns of the filtered rows to the given values */
+	_set?:group_members_set_input,
+	/** filter the rows which have to be updated */
+	where:group_members_bool_exp
+}
+
+/** aggregate var_pop on columns */
+export type group_members_var_pop_fields = {
+	__typename?: "group_members_var_pop_fields",
+	chat_id?:number,
+	id?:number,
+	user_id?:number
+}
+
+/** order by var_pop() on columns of table "group.members" */
+export type group_members_var_pop_order_by = {
+		chat_id?:order_by,
+	id?:order_by,
+	user_id?:order_by
+}
+
+/** aggregate var_samp on columns */
+export type group_members_var_samp_fields = {
+	__typename?: "group_members_var_samp_fields",
+	chat_id?:number,
+	id?:number,
+	user_id?:number
+}
+
+/** order by var_samp() on columns of table "group.members" */
+export type group_members_var_samp_order_by = {
+		chat_id?:order_by,
+	id?:order_by,
+	user_id?:order_by
+}
+
+/** aggregate variance on columns */
+export type group_members_variance_fields = {
+	__typename?: "group_members_variance_fields",
+	chat_id?:number,
+	id?:number,
+	user_id?:number
+}
+
+/** order by variance() on columns of table "group.members" */
+export type group_members_variance_order_by = {
+		chat_id?:order_by,
+	id?:order_by,
+	user_id?:order_by
+}
+
+/** columns and relationships of "group.messages" */
+export type group_messages = {
+	__typename?: "group_messages",
+	chat_id:number,
+	id:number,
+	member_id:number,
+	payload:jsonb,
+	/** An object relationship */
+	sender:group_members,
+	time:timestamptz
+}
+
+/** aggregated selection of "group.messages" */
+export type group_messages_aggregate = {
+	__typename?: "group_messages_aggregate",
+	aggregate?:group_messages_aggregate_fields,
+	nodes:group_messages[]
+}
+
+export type group_messages_aggregate_bool_exp = {
+		count?:group_messages_aggregate_bool_exp_count
+}
+
+export type group_messages_aggregate_bool_exp_count = {
+		arguments?:group_messages_select_column[],
+	distinct?:boolean,
+	filter?:group_messages_bool_exp,
+	predicate:Int_comparison_exp
+}
+
+/** aggregate fields of "group.messages" */
+export type group_messages_aggregate_fields = {
+	__typename?: "group_messages_aggregate_fields",
+	avg?:group_messages_avg_fields,
+	count:number,
+	max?:group_messages_max_fields,
+	min?:group_messages_min_fields,
+	stddev?:group_messages_stddev_fields,
+	stddev_pop?:group_messages_stddev_pop_fields,
+	stddev_samp?:group_messages_stddev_samp_fields,
+	sum?:group_messages_sum_fields,
+	var_pop?:group_messages_var_pop_fields,
+	var_samp?:group_messages_var_samp_fields,
+	variance?:group_messages_variance_fields
+}
+
+/** order by aggregate values of table "group.messages" */
+export type group_messages_aggregate_order_by = {
+		avg?:group_messages_avg_order_by,
+	count?:order_by,
+	max?:group_messages_max_order_by,
+	min?:group_messages_min_order_by,
+	stddev?:group_messages_stddev_order_by,
+	stddev_pop?:group_messages_stddev_pop_order_by,
+	stddev_samp?:group_messages_stddev_samp_order_by,
+	sum?:group_messages_sum_order_by,
+	var_pop?:group_messages_var_pop_order_by,
+	var_samp?:group_messages_var_samp_order_by,
+	variance?:group_messages_variance_order_by
+}
+
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type group_messages_append_input = {
+		payload?:jsonb
+}
+
+/** input type for inserting array relation for remote table "group.messages" */
+export type group_messages_arr_rel_insert_input = {
+		data:group_messages_insert_input[],
+	/** upsert condition */
+	on_conflict?:group_messages_on_conflict
+}
+
+/** aggregate avg on columns */
+export type group_messages_avg_fields = {
+	__typename?: "group_messages_avg_fields",
+	chat_id?:number,
+	id?:number,
+	member_id?:number
+}
+
+/** order by avg() on columns of table "group.messages" */
+export type group_messages_avg_order_by = {
+		chat_id?:order_by,
+	id?:order_by,
+	member_id?:order_by
+}
+
+/** Boolean expression to filter rows from the table "group.messages". All fields are combined with a logical 'AND'. */
+export type group_messages_bool_exp = {
+		_and?:group_messages_bool_exp[],
+	_not?:group_messages_bool_exp,
+	_or?:group_messages_bool_exp[],
+	chat_id?:Int_comparison_exp,
+	id?:Int_comparison_exp,
+	member_id?:Int_comparison_exp,
+	payload?:jsonb_comparison_exp,
+	sender?:group_members_bool_exp,
+	time?:timestamptz_comparison_exp
+}
+
+/** unique or primary key constraints on table "group.messages" */
+export enum group_messages_constraint {
+	messages_pkey = "messages_pkey"
+}
+
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type group_messages_delete_at_path_input = {
+		payload?:string[]
+}
+
+/** delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array */
+export type group_messages_delete_elem_input = {
+		payload?:number
+}
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type group_messages_delete_key_input = {
+		payload?:string
+}
+
+/** input type for incrementing numeric columns in table "group.messages" */
+export type group_messages_inc_input = {
+		chat_id?:number,
+	id?:number,
+	member_id?:number
+}
+
+/** input type for inserting data into table "group.messages" */
+export type group_messages_insert_input = {
+		chat_id?:number,
+	id?:number,
+	member_id?:number,
+	payload?:jsonb,
+	sender?:group_members_obj_rel_insert_input,
+	time?:timestamptz
+}
+
+/** aggregate max on columns */
+export type group_messages_max_fields = {
+	__typename?: "group_messages_max_fields",
+	chat_id?:number,
+	id?:number,
+	member_id?:number,
+	time?:timestamptz
+}
+
+/** order by max() on columns of table "group.messages" */
+export type group_messages_max_order_by = {
+		chat_id?:order_by,
+	id?:order_by,
+	member_id?:order_by,
+	time?:order_by
+}
+
+/** aggregate min on columns */
+export type group_messages_min_fields = {
+	__typename?: "group_messages_min_fields",
+	chat_id?:number,
+	id?:number,
+	member_id?:number,
+	time?:timestamptz
+}
+
+/** order by min() on columns of table "group.messages" */
+export type group_messages_min_order_by = {
+		chat_id?:order_by,
+	id?:order_by,
+	member_id?:order_by,
+	time?:order_by
+}
+
+/** response of any mutation on the table "group.messages" */
+export type group_messages_mutation_response = {
+	__typename?: "group_messages_mutation_response",
+	/** number of rows affected by the mutation */
+	affected_rows:number,
+	/** data from the rows affected by the mutation */
+	returning:group_messages[]
+}
+
+/** on_conflict condition type for table "group.messages" */
+export type group_messages_on_conflict = {
+		constraint:group_messages_constraint,
+	update_columns:group_messages_update_column[],
+	where?:group_messages_bool_exp
+}
+
+/** Ordering options when selecting data from "group.messages". */
+export type group_messages_order_by = {
+		chat_id?:order_by,
+	id?:order_by,
+	member_id?:order_by,
+	payload?:order_by,
+	sender?:group_members_order_by,
+	time?:order_by
+}
+
+/** primary key columns input for table: group.messages */
+export type group_messages_pk_columns_input = {
+		id:number
+}
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type group_messages_prepend_input = {
+		payload?:jsonb
+}
+
+/** select columns of table "group.messages" */
+export enum group_messages_select_column {
+	chat_id = "chat_id",
+	id = "id",
+	member_id = "member_id",
+	payload = "payload",
+	time = "time"
+}
+
+/** input type for updating data in table "group.messages" */
+export type group_messages_set_input = {
+		chat_id?:number,
+	id?:number,
+	member_id?:number,
+	payload?:jsonb,
+	time?:timestamptz
+}
+
+/** aggregate stddev on columns */
+export type group_messages_stddev_fields = {
+	__typename?: "group_messages_stddev_fields",
+	chat_id?:number,
+	id?:number,
+	member_id?:number
+}
+
+/** order by stddev() on columns of table "group.messages" */
+export type group_messages_stddev_order_by = {
+		chat_id?:order_by,
+	id?:order_by,
+	member_id?:order_by
+}
+
+/** aggregate stddev_pop on columns */
+export type group_messages_stddev_pop_fields = {
+	__typename?: "group_messages_stddev_pop_fields",
+	chat_id?:number,
+	id?:number,
+	member_id?:number
+}
+
+/** order by stddev_pop() on columns of table "group.messages" */
+export type group_messages_stddev_pop_order_by = {
+		chat_id?:order_by,
+	id?:order_by,
+	member_id?:order_by
+}
+
+/** aggregate stddev_samp on columns */
+export type group_messages_stddev_samp_fields = {
+	__typename?: "group_messages_stddev_samp_fields",
+	chat_id?:number,
+	id?:number,
+	member_id?:number
+}
+
+/** order by stddev_samp() on columns of table "group.messages" */
+export type group_messages_stddev_samp_order_by = {
+		chat_id?:order_by,
+	id?:order_by,
+	member_id?:order_by
+}
+
+/** Streaming cursor of the table "group_messages" */
+export type group_messages_stream_cursor_input = {
+		/** Stream column input with initial value */
+	initial_value:group_messages_stream_cursor_value_input,
+	/** cursor ordering */
+	ordering?:cursor_ordering
+}
+
+/** Initial value of the column from where the streaming should start */
+export type group_messages_stream_cursor_value_input = {
+		chat_id?:number,
+	id?:number,
+	member_id?:number,
+	payload?:jsonb,
+	time?:timestamptz
+}
+
+/** aggregate sum on columns */
+export type group_messages_sum_fields = {
+	__typename?: "group_messages_sum_fields",
+	chat_id?:number,
+	id?:number,
+	member_id?:number
+}
+
+/** order by sum() on columns of table "group.messages" */
+export type group_messages_sum_order_by = {
+		chat_id?:order_by,
+	id?:order_by,
+	member_id?:order_by
+}
+
+/** update columns of table "group.messages" */
+export enum group_messages_update_column {
+	chat_id = "chat_id",
+	id = "id",
+	member_id = "member_id",
+	payload = "payload",
+	time = "time"
+}
+
+export type group_messages_updates = {
+		/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:group_messages_append_input,
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:group_messages_delete_at_path_input,
+	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:group_messages_delete_elem_input,
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:group_messages_delete_key_input,
+	/** increments the numeric columns with given value of the filtered values */
+	_inc?:group_messages_inc_input,
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:group_messages_prepend_input,
+	/** sets the columns of the filtered rows to the given values */
+	_set?:group_messages_set_input,
+	/** filter the rows which have to be updated */
+	where:group_messages_bool_exp
+}
+
+/** aggregate var_pop on columns */
+export type group_messages_var_pop_fields = {
+	__typename?: "group_messages_var_pop_fields",
+	chat_id?:number,
+	id?:number,
+	member_id?:number
+}
+
+/** order by var_pop() on columns of table "group.messages" */
+export type group_messages_var_pop_order_by = {
+		chat_id?:order_by,
+	id?:order_by,
+	member_id?:order_by
+}
+
+/** aggregate var_samp on columns */
+export type group_messages_var_samp_fields = {
+	__typename?: "group_messages_var_samp_fields",
+	chat_id?:number,
+	id?:number,
+	member_id?:number
+}
+
+/** order by var_samp() on columns of table "group.messages" */
+export type group_messages_var_samp_order_by = {
+		chat_id?:order_by,
+	id?:order_by,
+	member_id?:order_by
+}
+
+/** aggregate variance on columns */
+export type group_messages_variance_fields = {
+	__typename?: "group_messages_variance_fields",
+	chat_id?:number,
+	id?:number,
+	member_id?:number
+}
+
+/** order by variance() on columns of table "group.messages" */
+export type group_messages_variance_order_by = {
+		chat_id?:order_by,
+	id?:order_by,
+	member_id?:order_by
+}
+
 /** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
 export type Int_comparison_exp = {
 		_eq?:number,
@@ -9747,6 +16819,18 @@ export type mutation_root = {
 	delete_goals?:goals_mutation_response,
 	/** delete single row from the table: "goals" */
 	delete_goals_by_pk?:goals,
+	/** delete data from the table: "group.chat" */
+	delete_group_chat?:group_chat_mutation_response,
+	/** delete single row from the table: "group.chat" */
+	delete_group_chat_by_pk?:group_chat,
+	/** delete data from the table: "group.members" */
+	delete_group_members?:group_members_mutation_response,
+	/** delete single row from the table: "group.members" */
+	delete_group_members_by_pk?:group_members,
+	/** delete data from the table: "group.messages" */
+	delete_group_messages?:group_messages_mutation_response,
+	/** delete single row from the table: "group.messages" */
+	delete_group_messages_by_pk?:group_messages,
 	/** delete data from the table: "interactions" */
 	delete_interactions?:interactions_mutation_response,
 	/** delete single row from the table: "interactions" */
@@ -9775,6 +16859,26 @@ export type mutation_root = {
 	delete_users?:users_mutation_response,
 	/** delete single row from the table: "users" */
 	delete_users_by_pk?:users,
+	/** delete data from the table: "v2.action_types" */
+	delete_v2_action_types?:v2_action_types_mutation_response,
+	/** delete single row from the table: "v2.action_types" */
+	delete_v2_action_types_by_pk?:v2_action_types,
+	/** delete data from the table: "v2.actions" */
+	delete_v2_actions?:v2_actions_mutation_response,
+	/** delete single row from the table: "v2.actions" */
+	delete_v2_actions_by_pk?:v2_actions,
+	/** delete data from the table: "v2.aggregates" */
+	delete_v2_aggregates?:v2_aggregates_mutation_response,
+	/** delete single row from the table: "v2.aggregates" */
+	delete_v2_aggregates_by_pk?:v2_aggregates,
+	/** delete data from the table: "v2.object_action" */
+	delete_v2_object_action?:v2_object_action_mutation_response,
+	/** delete single row from the table: "v2.object_action" */
+	delete_v2_object_action_by_pk?:v2_object_action,
+	/** delete data from the table: "v2.object_t_action_t" */
+	delete_v2_object_t_action_t?:v2_object_t_action_t_mutation_response,
+	/** delete single row from the table: "v2.object_t_action_t" */
+	delete_v2_object_t_action_t_by_pk?:v2_object_t_action_t,
 	/** insert data into the table: "associations" */
 	insert_associations?:associations_mutation_response,
 	/** insert a single row into the table: "associations" */
@@ -9791,6 +16895,18 @@ export type mutation_root = {
 	insert_goals?:goals_mutation_response,
 	/** insert a single row into the table: "goals" */
 	insert_goals_one?:goals,
+	/** insert data into the table: "group.chat" */
+	insert_group_chat?:group_chat_mutation_response,
+	/** insert a single row into the table: "group.chat" */
+	insert_group_chat_one?:group_chat,
+	/** insert data into the table: "group.members" */
+	insert_group_members?:group_members_mutation_response,
+	/** insert a single row into the table: "group.members" */
+	insert_group_members_one?:group_members,
+	/** insert data into the table: "group.messages" */
+	insert_group_messages?:group_messages_mutation_response,
+	/** insert a single row into the table: "group.messages" */
+	insert_group_messages_one?:group_messages,
 	/** insert data into the table: "interactions" */
 	insert_interactions?:interactions_mutation_response,
 	/** insert a single row into the table: "interactions" */
@@ -9819,6 +16935,26 @@ export type mutation_root = {
 	insert_users?:users_mutation_response,
 	/** insert a single row into the table: "users" */
 	insert_users_one?:users,
+	/** insert data into the table: "v2.action_types" */
+	insert_v2_action_types?:v2_action_types_mutation_response,
+	/** insert a single row into the table: "v2.action_types" */
+	insert_v2_action_types_one?:v2_action_types,
+	/** insert data into the table: "v2.actions" */
+	insert_v2_actions?:v2_actions_mutation_response,
+	/** insert a single row into the table: "v2.actions" */
+	insert_v2_actions_one?:v2_actions,
+	/** insert data into the table: "v2.aggregates" */
+	insert_v2_aggregates?:v2_aggregates_mutation_response,
+	/** insert a single row into the table: "v2.aggregates" */
+	insert_v2_aggregates_one?:v2_aggregates,
+	/** insert data into the table: "v2.object_action" */
+	insert_v2_object_action?:v2_object_action_mutation_response,
+	/** insert a single row into the table: "v2.object_action" */
+	insert_v2_object_action_one?:v2_object_action,
+	/** insert data into the table: "v2.object_t_action_t" */
+	insert_v2_object_t_action_t?:v2_object_t_action_t_mutation_response,
+	/** insert a single row into the table: "v2.object_t_action_t" */
+	insert_v2_object_t_action_t_one?:v2_object_t_action_t,
 	/** update data of the table: "associations" */
 	update_associations?:associations_mutation_response,
 	/** update single row of the table: "associations" */
@@ -9843,6 +16979,24 @@ export type mutation_root = {
 	update_goals_by_pk?:goals,
 	/** update multiples rows of table: "goals" */
 	update_goals_many?:(goals_mutation_response | undefined)[],
+	/** update data of the table: "group.chat" */
+	update_group_chat?:group_chat_mutation_response,
+	/** update single row of the table: "group.chat" */
+	update_group_chat_by_pk?:group_chat,
+	/** update multiples rows of table: "group.chat" */
+	update_group_chat_many?:(group_chat_mutation_response | undefined)[],
+	/** update data of the table: "group.members" */
+	update_group_members?:group_members_mutation_response,
+	/** update single row of the table: "group.members" */
+	update_group_members_by_pk?:group_members,
+	/** update multiples rows of table: "group.members" */
+	update_group_members_many?:(group_members_mutation_response | undefined)[],
+	/** update data of the table: "group.messages" */
+	update_group_messages?:group_messages_mutation_response,
+	/** update single row of the table: "group.messages" */
+	update_group_messages_by_pk?:group_messages,
+	/** update multiples rows of table: "group.messages" */
+	update_group_messages_many?:(group_messages_mutation_response | undefined)[],
 	/** update data of the table: "interactions" */
 	update_interactions?:interactions_mutation_response,
 	/** update single row of the table: "interactions" */
@@ -9884,14 +17038,51 @@ export type mutation_root = {
 	/** update single row of the table: "users" */
 	update_users_by_pk?:users,
 	/** update multiples rows of table: "users" */
-	update_users_many?:(users_mutation_response | undefined)[]
+	update_users_many?:(users_mutation_response | undefined)[],
+	/** update data of the table: "v2.action_types" */
+	update_v2_action_types?:v2_action_types_mutation_response,
+	/** update single row of the table: "v2.action_types" */
+	update_v2_action_types_by_pk?:v2_action_types,
+	/** update multiples rows of table: "v2.action_types" */
+	update_v2_action_types_many?:(v2_action_types_mutation_response | undefined)[],
+	/** update data of the table: "v2.actions" */
+	update_v2_actions?:v2_actions_mutation_response,
+	/** update single row of the table: "v2.actions" */
+	update_v2_actions_by_pk?:v2_actions,
+	/** update multiples rows of table: "v2.actions" */
+	update_v2_actions_many?:(v2_actions_mutation_response | undefined)[],
+	/** update data of the table: "v2.aggregates" */
+	update_v2_aggregates?:v2_aggregates_mutation_response,
+	/** update single row of the table: "v2.aggregates" */
+	update_v2_aggregates_by_pk?:v2_aggregates,
+	/** update multiples rows of table: "v2.aggregates" */
+	update_v2_aggregates_many?:(v2_aggregates_mutation_response | undefined)[],
+	/** update data of the table: "v2.object_action" */
+	update_v2_object_action?:v2_object_action_mutation_response,
+	/** update single row of the table: "v2.object_action" */
+	update_v2_object_action_by_pk?:v2_object_action,
+	/** update multiples rows of table: "v2.object_action" */
+	update_v2_object_action_many?:(v2_object_action_mutation_response | undefined)[],
+	/** update data of the table: "v2.object_t_action_t" */
+	update_v2_object_t_action_t?:v2_object_t_action_t_mutation_response,
+	/** update single row of the table: "v2.object_t_action_t" */
+	update_v2_object_t_action_t_by_pk?:v2_object_t_action_t,
+	/** update multiples rows of table: "v2.object_t_action_t" */
+	update_v2_object_t_action_t_many?:(v2_object_t_action_t_mutation_response | undefined)[]
 }
 
 /** columns and relationships of "object_types" */
 export type object_types = {
 	__typename?: "object_types",
-	id:string,
-	metadata:jsonb
+	created_at?:timestamptz,
+	id:number,
+	metadata:jsonb,
+	name?:string,
+	/** An array relationship */
+	objects:objects[],
+	/** An aggregate relationship */
+	objects_aggregate:objects_aggregate,
+	user_id:number
 }
 
 /** aggregated selection of "object_types" */
@@ -9904,9 +17095,17 @@ export type object_types_aggregate = {
 /** aggregate fields of "object_types" */
 export type object_types_aggregate_fields = {
 	__typename?: "object_types_aggregate_fields",
+	avg?:object_types_avg_fields,
 	count:number,
 	max?:object_types_max_fields,
-	min?:object_types_min_fields
+	min?:object_types_min_fields,
+	stddev?:object_types_stddev_fields,
+	stddev_pop?:object_types_stddev_pop_fields,
+	stddev_samp?:object_types_stddev_samp_fields,
+	sum?:object_types_sum_fields,
+	var_pop?:object_types_var_pop_fields,
+	var_samp?:object_types_var_samp_fields,
+	variance?:object_types_variance_fields
 }
 
 /** append existing jsonb value of filtered columns with new jsonb value */
@@ -9914,17 +17113,30 @@ export type object_types_append_input = {
 		metadata?:jsonb
 }
 
+/** aggregate avg on columns */
+export type object_types_avg_fields = {
+	__typename?: "object_types_avg_fields",
+	id?:number,
+	user_id?:number
+}
+
 /** Boolean expression to filter rows from the table "object_types". All fields are combined with a logical 'AND'. */
 export type object_types_bool_exp = {
 		_and?:object_types_bool_exp[],
 	_not?:object_types_bool_exp,
 	_or?:object_types_bool_exp[],
-	id?:String_comparison_exp,
-	metadata?:jsonb_comparison_exp
+	created_at?:timestamptz_comparison_exp,
+	id?:Int_comparison_exp,
+	metadata?:jsonb_comparison_exp,
+	name?:String_comparison_exp,
+	objects?:objects_bool_exp,
+	objects_aggregate?:objects_aggregate_bool_exp,
+	user_id?:Int_comparison_exp
 }
 
 /** unique or primary key constraints on table "object_types" */
 export enum object_types_constraint {
+	object_types_id_key = "object_types_id_key",
 	object_types_pkey = "object_types_pkey"
 }
 
@@ -9944,22 +17156,38 @@ export type object_types_delete_key_input = {
 		metadata?:string
 }
 
+/** input type for incrementing numeric columns in table "object_types" */
+export type object_types_inc_input = {
+		id?:number,
+	user_id?:number
+}
+
 /** input type for inserting data into table "object_types" */
 export type object_types_insert_input = {
-		id?:string,
-	metadata?:jsonb
+		created_at?:timestamptz,
+	id?:number,
+	metadata?:jsonb,
+	name?:string,
+	objects?:objects_arr_rel_insert_input,
+	user_id?:number
 }
 
 /** aggregate max on columns */
 export type object_types_max_fields = {
 	__typename?: "object_types_max_fields",
-	id?:string
+	created_at?:timestamptz,
+	id?:number,
+	name?:string,
+	user_id?:number
 }
 
 /** aggregate min on columns */
 export type object_types_min_fields = {
 	__typename?: "object_types_min_fields",
-	id?:string
+	created_at?:timestamptz,
+	id?:number,
+	name?:string,
+	user_id?:number
 }
 
 /** response of any mutation on the table "object_types" */
@@ -9971,6 +17199,13 @@ export type object_types_mutation_response = {
 	returning:object_types[]
 }
 
+/** input type for inserting object relation for remote table "object_types" */
+export type object_types_obj_rel_insert_input = {
+		data:object_types_insert_input,
+	/** upsert condition */
+	on_conflict?:object_types_on_conflict
+}
+
 /** on_conflict condition type for table "object_types" */
 export type object_types_on_conflict = {
 		constraint:object_types_constraint,
@@ -9980,13 +17215,17 @@ export type object_types_on_conflict = {
 
 /** Ordering options when selecting data from "object_types". */
 export type object_types_order_by = {
-		id?:order_by,
-	metadata?:order_by
+		created_at?:order_by,
+	id?:order_by,
+	metadata?:order_by,
+	name?:order_by,
+	objects_aggregate?:objects_aggregate_order_by,
+	user_id?:order_by
 }
 
 /** primary key columns input for table: object_types */
 export type object_types_pk_columns_input = {
-		id:string
+		id:number
 }
 
 /** prepend existing jsonb value of filtered columns with new jsonb value */
@@ -9996,14 +17235,41 @@ export type object_types_prepend_input = {
 
 /** select columns of table "object_types" */
 export enum object_types_select_column {
+	created_at = "created_at",
 	id = "id",
-	metadata = "metadata"
+	metadata = "metadata",
+	name = "name",
+	user_id = "user_id"
 }
 
 /** input type for updating data in table "object_types" */
 export type object_types_set_input = {
-		id?:string,
-	metadata?:jsonb
+		created_at?:timestamptz,
+	id?:number,
+	metadata?:jsonb,
+	name?:string,
+	user_id?:number
+}
+
+/** aggregate stddev on columns */
+export type object_types_stddev_fields = {
+	__typename?: "object_types_stddev_fields",
+	id?:number,
+	user_id?:number
+}
+
+/** aggregate stddev_pop on columns */
+export type object_types_stddev_pop_fields = {
+	__typename?: "object_types_stddev_pop_fields",
+	id?:number,
+	user_id?:number
+}
+
+/** aggregate stddev_samp on columns */
+export type object_types_stddev_samp_fields = {
+	__typename?: "object_types_stddev_samp_fields",
+	id?:number,
+	user_id?:number
 }
 
 /** Streaming cursor of the table "object_types" */
@@ -10016,14 +17282,27 @@ export type object_types_stream_cursor_input = {
 
 /** Initial value of the column from where the streaming should start */
 export type object_types_stream_cursor_value_input = {
-		id?:string,
-	metadata?:jsonb
+		created_at?:timestamptz,
+	id?:number,
+	metadata?:jsonb,
+	name?:string,
+	user_id?:number
+}
+
+/** aggregate sum on columns */
+export type object_types_sum_fields = {
+	__typename?: "object_types_sum_fields",
+	id?:number,
+	user_id?:number
 }
 
 /** update columns of table "object_types" */
 export enum object_types_update_column {
+	created_at = "created_at",
 	id = "id",
-	metadata = "metadata"
+	metadata = "metadata",
+	name = "name",
+	user_id = "user_id"
 }
 
 export type object_types_updates = {
@@ -10036,6 +17315,8 @@ the end). throws an error if top level container is not an array */
 	_delete_elem?:object_types_delete_elem_input,
 	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
 	_delete_key?:object_types_delete_key_input,
+	/** increments the numeric columns with given value of the filtered values */
+	_inc?:object_types_inc_input,
 	/** prepend existing jsonb value of filtered columns with new jsonb value */
 	_prepend?:object_types_prepend_input,
 	/** sets the columns of the filtered rows to the given values */
@@ -10044,14 +17325,41 @@ the end). throws an error if top level container is not an array */
 	where:object_types_bool_exp
 }
 
+/** aggregate var_pop on columns */
+export type object_types_var_pop_fields = {
+	__typename?: "object_types_var_pop_fields",
+	id?:number,
+	user_id?:number
+}
+
+/** aggregate var_samp on columns */
+export type object_types_var_samp_fields = {
+	__typename?: "object_types_var_samp_fields",
+	id?:number,
+	user_id?:number
+}
+
+/** aggregate variance on columns */
+export type object_types_variance_fields = {
+	__typename?: "object_types_variance_fields",
+	id?:number,
+	user_id?:number
+}
+
 /** columns and relationships of "objects" */
 export type objects = {
 	__typename?: "objects",
 	/** A computed field, executes function "object_events" */
 	events?:events[],
+	fields:jsonb,
 	id:number,
+	metadata:jsonb,
 	name:string,
-	object_type:string,
+	/** An object relationship */
+	object_type?:object_types,
+	object_type_id?:number,
+	/** A computed field, executes function "parent_events" */
+	parent_events?:events[],
 	user_id:number
 }
 
@@ -10060,6 +17368,17 @@ export type objects_aggregate = {
 	__typename?: "objects_aggregate",
 	aggregate?:objects_aggregate_fields,
 	nodes:objects[]
+}
+
+export type objects_aggregate_bool_exp = {
+		count?:objects_aggregate_bool_exp_count
+}
+
+export type objects_aggregate_bool_exp_count = {
+		arguments?:objects_select_column[],
+	distinct?:boolean,
+	filter?:objects_bool_exp,
+	predicate:Int_comparison_exp
 }
 
 /** aggregate fields of "objects" */
@@ -10093,16 +17412,31 @@ export type objects_aggregate_order_by = {
 	variance?:objects_variance_order_by
 }
 
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type objects_append_input = {
+		fields?:jsonb,
+	metadata?:jsonb
+}
+
+/** input type for inserting array relation for remote table "objects" */
+export type objects_arr_rel_insert_input = {
+		data:objects_insert_input[],
+	/** upsert condition */
+	on_conflict?:objects_on_conflict
+}
+
 /** aggregate avg on columns */
 export type objects_avg_fields = {
 	__typename?: "objects_avg_fields",
 	id?:number,
+	object_type_id?:number,
 	user_id?:number
 }
 
 /** order by avg() on columns of table "objects" */
 export type objects_avg_order_by = {
 		id?:order_by,
+	object_type_id?:order_by,
 	user_id?:order_by
 }
 
@@ -10112,9 +17446,13 @@ export type objects_bool_exp = {
 	_not?:objects_bool_exp,
 	_or?:objects_bool_exp[],
 	events?:events_bool_exp,
+	fields?:jsonb_comparison_exp,
 	id?:Int_comparison_exp,
+	metadata?:jsonb_comparison_exp,
 	name?:String_comparison_exp,
-	object_type?:String_comparison_exp,
+	object_type?:object_types_bool_exp,
+	object_type_id?:Int_comparison_exp,
+	parent_events?:events_bool_exp,
 	user_id?:Int_comparison_exp
 }
 
@@ -10123,17 +17461,40 @@ export enum objects_constraint {
 	objects_pkey = "objects_pkey"
 }
 
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type objects_delete_at_path_input = {
+		fields?:string[],
+	metadata?:string[]
+}
+
+/** delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array */
+export type objects_delete_elem_input = {
+		fields?:number,
+	metadata?:number
+}
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type objects_delete_key_input = {
+		fields?:string,
+	metadata?:string
+}
+
 /** input type for incrementing numeric columns in table "objects" */
 export type objects_inc_input = {
 		id?:number,
+	object_type_id?:number,
 	user_id?:number
 }
 
 /** input type for inserting data into table "objects" */
 export type objects_insert_input = {
-		id?:number,
+		fields?:jsonb,
+	id?:number,
+	metadata?:jsonb,
 	name?:string,
-	object_type?:string,
+	object_type?:object_types_obj_rel_insert_input,
+	object_type_id?:number,
 	user_id?:number
 }
 
@@ -10142,7 +17503,7 @@ export type objects_max_fields = {
 	__typename?: "objects_max_fields",
 	id?:number,
 	name?:string,
-	object_type?:string,
+	object_type_id?:number,
 	user_id?:number
 }
 
@@ -10150,7 +17511,7 @@ export type objects_max_fields = {
 export type objects_max_order_by = {
 		id?:order_by,
 	name?:order_by,
-	object_type?:order_by,
+	object_type_id?:order_by,
 	user_id?:order_by
 }
 
@@ -10159,7 +17520,7 @@ export type objects_min_fields = {
 	__typename?: "objects_min_fields",
 	id?:number,
 	name?:string,
-	object_type?:string,
+	object_type_id?:number,
 	user_id?:number
 }
 
@@ -10167,7 +17528,7 @@ export type objects_min_fields = {
 export type objects_min_order_by = {
 		id?:order_by,
 	name?:order_by,
-	object_type?:order_by,
+	object_type_id?:order_by,
 	user_id?:order_by
 }
 
@@ -10180,6 +17541,13 @@ export type objects_mutation_response = {
 	returning:objects[]
 }
 
+/** input type for inserting object relation for remote table "objects" */
+export type objects_obj_rel_insert_input = {
+		data:objects_insert_input,
+	/** upsert condition */
+	on_conflict?:objects_on_conflict
+}
+
 /** on_conflict condition type for table "objects" */
 export type objects_on_conflict = {
 		constraint:objects_constraint,
@@ -10190,9 +17558,13 @@ export type objects_on_conflict = {
 /** Ordering options when selecting data from "objects". */
 export type objects_order_by = {
 		events_aggregate?:events_aggregate_order_by,
+	fields?:order_by,
 	id?:order_by,
+	metadata?:order_by,
 	name?:order_by,
-	object_type?:order_by,
+	object_type?:object_types_order_by,
+	object_type_id?:order_by,
+	parent_events_aggregate?:events_aggregate_order_by,
 	user_id?:order_by
 }
 
@@ -10201,19 +17573,29 @@ export type objects_pk_columns_input = {
 		id:number
 }
 
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type objects_prepend_input = {
+		fields?:jsonb,
+	metadata?:jsonb
+}
+
 /** select columns of table "objects" */
 export enum objects_select_column {
+	fields = "fields",
 	id = "id",
+	metadata = "metadata",
 	name = "name",
-	object_type = "object_type",
+	object_type_id = "object_type_id",
 	user_id = "user_id"
 }
 
 /** input type for updating data in table "objects" */
 export type objects_set_input = {
-		id?:number,
+		fields?:jsonb,
+	id?:number,
+	metadata?:jsonb,
 	name?:string,
-	object_type?:string,
+	object_type_id?:number,
 	user_id?:number
 }
 
@@ -10221,12 +17603,14 @@ export type objects_set_input = {
 export type objects_stddev_fields = {
 	__typename?: "objects_stddev_fields",
 	id?:number,
+	object_type_id?:number,
 	user_id?:number
 }
 
 /** order by stddev() on columns of table "objects" */
 export type objects_stddev_order_by = {
 		id?:order_by,
+	object_type_id?:order_by,
 	user_id?:order_by
 }
 
@@ -10234,12 +17618,14 @@ export type objects_stddev_order_by = {
 export type objects_stddev_pop_fields = {
 	__typename?: "objects_stddev_pop_fields",
 	id?:number,
+	object_type_id?:number,
 	user_id?:number
 }
 
 /** order by stddev_pop() on columns of table "objects" */
 export type objects_stddev_pop_order_by = {
 		id?:order_by,
+	object_type_id?:order_by,
 	user_id?:order_by
 }
 
@@ -10247,12 +17633,14 @@ export type objects_stddev_pop_order_by = {
 export type objects_stddev_samp_fields = {
 	__typename?: "objects_stddev_samp_fields",
 	id?:number,
+	object_type_id?:number,
 	user_id?:number
 }
 
 /** order by stddev_samp() on columns of table "objects" */
 export type objects_stddev_samp_order_by = {
 		id?:order_by,
+	object_type_id?:order_by,
 	user_id?:order_by
 }
 
@@ -10266,9 +17654,11 @@ export type objects_stream_cursor_input = {
 
 /** Initial value of the column from where the streaming should start */
 export type objects_stream_cursor_value_input = {
-		id?:number,
+		fields?:jsonb,
+	id?:number,
+	metadata?:jsonb,
 	name?:string,
-	object_type?:string,
+	object_type_id?:number,
 	user_id?:number
 }
 
@@ -10276,26 +17666,41 @@ export type objects_stream_cursor_value_input = {
 export type objects_sum_fields = {
 	__typename?: "objects_sum_fields",
 	id?:number,
+	object_type_id?:number,
 	user_id?:number
 }
 
 /** order by sum() on columns of table "objects" */
 export type objects_sum_order_by = {
 		id?:order_by,
+	object_type_id?:order_by,
 	user_id?:order_by
 }
 
 /** update columns of table "objects" */
 export enum objects_update_column {
+	fields = "fields",
 	id = "id",
+	metadata = "metadata",
 	name = "name",
-	object_type = "object_type",
+	object_type_id = "object_type_id",
 	user_id = "user_id"
 }
 
 export type objects_updates = {
-		/** increments the numeric columns with given value of the filtered values */
+		/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:objects_append_input,
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:objects_delete_at_path_input,
+	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:objects_delete_elem_input,
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:objects_delete_key_input,
+	/** increments the numeric columns with given value of the filtered values */
 	_inc?:objects_inc_input,
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:objects_prepend_input,
 	/** sets the columns of the filtered rows to the given values */
 	_set?:objects_set_input,
 	/** filter the rows which have to be updated */
@@ -10306,12 +17711,14 @@ export type objects_updates = {
 export type objects_var_pop_fields = {
 	__typename?: "objects_var_pop_fields",
 	id?:number,
+	object_type_id?:number,
 	user_id?:number
 }
 
 /** order by var_pop() on columns of table "objects" */
 export type objects_var_pop_order_by = {
 		id?:order_by,
+	object_type_id?:order_by,
 	user_id?:order_by
 }
 
@@ -10319,12 +17726,14 @@ export type objects_var_pop_order_by = {
 export type objects_var_samp_fields = {
 	__typename?: "objects_var_samp_fields",
 	id?:number,
+	object_type_id?:number,
 	user_id?:number
 }
 
 /** order by var_samp() on columns of table "objects" */
 export type objects_var_samp_order_by = {
 		id?:order_by,
+	object_type_id?:order_by,
 	user_id?:order_by
 }
 
@@ -10332,12 +17741,14 @@ export type objects_var_samp_order_by = {
 export type objects_variance_fields = {
 	__typename?: "objects_variance_fields",
 	id?:number,
+	object_type_id?:number,
 	user_id?:number
 }
 
 /** order by variance() on columns of table "objects" */
 export type objects_variance_order_by = {
 		id?:order_by,
+	object_type_id?:order_by,
 	user_id?:order_by
 }
 
@@ -10385,6 +17796,24 @@ export type query_root = {
 	goals_aggregate:goals_aggregate,
 	/** fetch data from the table: "goals" using primary key columns */
 	goals_by_pk?:goals,
+	/** fetch data from the table: "group.chat" */
+	group_chat:group_chat[],
+	/** fetch aggregated fields from the table: "group.chat" */
+	group_chat_aggregate:group_chat_aggregate,
+	/** fetch data from the table: "group.chat" using primary key columns */
+	group_chat_by_pk?:group_chat,
+	/** fetch data from the table: "group.members" */
+	group_members:group_members[],
+	/** fetch aggregated fields from the table: "group.members" */
+	group_members_aggregate:group_members_aggregate,
+	/** fetch data from the table: "group.members" using primary key columns */
+	group_members_by_pk?:group_members,
+	/** fetch data from the table: "group.messages" */
+	group_messages:group_messages[],
+	/** fetch aggregated fields from the table: "group.messages" */
+	group_messages_aggregate:group_messages_aggregate,
+	/** fetch data from the table: "group.messages" using primary key columns */
+	group_messages_by_pk?:group_messages,
 	/** fetch data from the table: "interactions" */
 	interactions:interactions[],
 	/** fetch aggregated fields from the table: "interactions" */
@@ -10407,9 +17836,9 @@ export type query_root = {
 	object_types_aggregate:object_types_aggregate,
 	/** fetch data from the table: "object_types" using primary key columns */
 	object_types_by_pk?:object_types,
-	/** fetch data from the table: "objects" */
+	/** An array relationship */
 	objects:objects[],
-	/** fetch aggregated fields from the table: "objects" */
+	/** An aggregate relationship */
 	objects_aggregate:objects_aggregate,
 	/** fetch data from the table: "objects" using primary key columns */
 	objects_by_pk?:objects,
@@ -10430,7 +17859,37 @@ export type query_root = {
 	/** fetch aggregated fields from the table: "users" */
 	users_aggregate:users_aggregate,
 	/** fetch data from the table: "users" using primary key columns */
-	users_by_pk?:users
+	users_by_pk?:users,
+	/** fetch data from the table: "v2.action_types" */
+	v2_action_types:v2_action_types[],
+	/** fetch aggregated fields from the table: "v2.action_types" */
+	v2_action_types_aggregate:v2_action_types_aggregate,
+	/** fetch data from the table: "v2.action_types" using primary key columns */
+	v2_action_types_by_pk?:v2_action_types,
+	/** fetch data from the table: "v2.actions" */
+	v2_actions:v2_actions[],
+	/** fetch aggregated fields from the table: "v2.actions" */
+	v2_actions_aggregate:v2_actions_aggregate,
+	/** fetch data from the table: "v2.actions" using primary key columns */
+	v2_actions_by_pk?:v2_actions,
+	/** fetch data from the table: "v2.aggregates" */
+	v2_aggregates:v2_aggregates[],
+	/** fetch aggregated fields from the table: "v2.aggregates" */
+	v2_aggregates_aggregate:v2_aggregates_aggregate,
+	/** fetch data from the table: "v2.aggregates" using primary key columns */
+	v2_aggregates_by_pk?:v2_aggregates,
+	/** fetch data from the table: "v2.object_action" */
+	v2_object_action:v2_object_action[],
+	/** fetch aggregated fields from the table: "v2.object_action" */
+	v2_object_action_aggregate:v2_object_action_aggregate,
+	/** fetch data from the table: "v2.object_action" using primary key columns */
+	v2_object_action_by_pk?:v2_object_action,
+	/** fetch data from the table: "v2.object_t_action_t" */
+	v2_object_t_action_t:v2_object_t_action_t[],
+	/** fetch aggregated fields from the table: "v2.object_t_action_t" */
+	v2_object_t_action_t_aggregate:v2_object_t_action_t_aggregate,
+	/** fetch data from the table: "v2.object_t_action_t" using primary key columns */
+	v2_object_t_action_t_by_pk?:v2_object_t_action_t
 }
 
 export type st_d_within_geography_input = {
@@ -10519,6 +17978,30 @@ export type subscription_root = {
 	goals_by_pk?:goals,
 	/** fetch data from the table in a streaming manner: "goals" */
 	goals_stream:goals[],
+	/** fetch data from the table: "group.chat" */
+	group_chat:group_chat[],
+	/** fetch aggregated fields from the table: "group.chat" */
+	group_chat_aggregate:group_chat_aggregate,
+	/** fetch data from the table: "group.chat" using primary key columns */
+	group_chat_by_pk?:group_chat,
+	/** fetch data from the table in a streaming manner: "group.chat" */
+	group_chat_stream:group_chat[],
+	/** fetch data from the table: "group.members" */
+	group_members:group_members[],
+	/** fetch aggregated fields from the table: "group.members" */
+	group_members_aggregate:group_members_aggregate,
+	/** fetch data from the table: "group.members" using primary key columns */
+	group_members_by_pk?:group_members,
+	/** fetch data from the table in a streaming manner: "group.members" */
+	group_members_stream:group_members[],
+	/** fetch data from the table: "group.messages" */
+	group_messages:group_messages[],
+	/** fetch aggregated fields from the table: "group.messages" */
+	group_messages_aggregate:group_messages_aggregate,
+	/** fetch data from the table: "group.messages" using primary key columns */
+	group_messages_by_pk?:group_messages,
+	/** fetch data from the table in a streaming manner: "group.messages" */
+	group_messages_stream:group_messages[],
 	/** fetch data from the table: "interactions" */
 	interactions:interactions[],
 	/** fetch aggregated fields from the table: "interactions" */
@@ -10547,9 +18030,9 @@ export type subscription_root = {
 	object_types_by_pk?:object_types,
 	/** fetch data from the table in a streaming manner: "object_types" */
 	object_types_stream:object_types[],
-	/** fetch data from the table: "objects" */
+	/** An array relationship */
 	objects:objects[],
-	/** fetch aggregated fields from the table: "objects" */
+	/** An aggregate relationship */
 	objects_aggregate:objects_aggregate,
 	/** fetch data from the table: "objects" using primary key columns */
 	objects_by_pk?:objects,
@@ -10578,7 +18061,47 @@ export type subscription_root = {
 	/** fetch data from the table: "users" using primary key columns */
 	users_by_pk?:users,
 	/** fetch data from the table in a streaming manner: "users" */
-	users_stream:users[]
+	users_stream:users[],
+	/** fetch data from the table: "v2.action_types" */
+	v2_action_types:v2_action_types[],
+	/** fetch aggregated fields from the table: "v2.action_types" */
+	v2_action_types_aggregate:v2_action_types_aggregate,
+	/** fetch data from the table: "v2.action_types" using primary key columns */
+	v2_action_types_by_pk?:v2_action_types,
+	/** fetch data from the table in a streaming manner: "v2.action_types" */
+	v2_action_types_stream:v2_action_types[],
+	/** fetch data from the table: "v2.actions" */
+	v2_actions:v2_actions[],
+	/** fetch aggregated fields from the table: "v2.actions" */
+	v2_actions_aggregate:v2_actions_aggregate,
+	/** fetch data from the table: "v2.actions" using primary key columns */
+	v2_actions_by_pk?:v2_actions,
+	/** fetch data from the table in a streaming manner: "v2.actions" */
+	v2_actions_stream:v2_actions[],
+	/** fetch data from the table: "v2.aggregates" */
+	v2_aggregates:v2_aggregates[],
+	/** fetch aggregated fields from the table: "v2.aggregates" */
+	v2_aggregates_aggregate:v2_aggregates_aggregate,
+	/** fetch data from the table: "v2.aggregates" using primary key columns */
+	v2_aggregates_by_pk?:v2_aggregates,
+	/** fetch data from the table in a streaming manner: "v2.aggregates" */
+	v2_aggregates_stream:v2_aggregates[],
+	/** fetch data from the table: "v2.object_action" */
+	v2_object_action:v2_object_action[],
+	/** fetch aggregated fields from the table: "v2.object_action" */
+	v2_object_action_aggregate:v2_object_action_aggregate,
+	/** fetch data from the table: "v2.object_action" using primary key columns */
+	v2_object_action_by_pk?:v2_object_action,
+	/** fetch data from the table in a streaming manner: "v2.object_action" */
+	v2_object_action_stream:v2_object_action[],
+	/** fetch data from the table: "v2.object_t_action_t" */
+	v2_object_t_action_t:v2_object_t_action_t[],
+	/** fetch aggregated fields from the table: "v2.object_t_action_t" */
+	v2_object_t_action_t_aggregate:v2_object_t_action_t_aggregate,
+	/** fetch data from the table: "v2.object_t_action_t" using primary key columns */
+	v2_object_t_action_t_by_pk?:v2_object_t_action_t,
+	/** fetch data from the table in a streaming manner: "v2.object_t_action_t" */
+	v2_object_t_action_t_stream:v2_object_t_action_t[]
 }
 
 export type timestamp = any
@@ -11172,7 +18695,16 @@ export type user_movements_variance_fields = {
 /** columns and relationships of "users" */
 export type users = {
 	__typename?: "users",
+	/** An array relationship */
+	actions:v2_actions[],
+	/** An aggregate relationship */
+	actions_aggregate:v2_actions_aggregate,
+	apns_token?:string,
 	apple_id?:string,
+	/** An array relationship */
+	chats:group_members[],
+	/** An aggregate relationship */
+	chats_aggregate:group_members_aggregate,
 	/** A computed field, executes function "closest_user_location" */
 	closest_user_location?:locations[],
 	config:jsonb,
@@ -11229,7 +18761,12 @@ export type users_bool_exp = {
 		_and?:users_bool_exp[],
 	_not?:users_bool_exp,
 	_or?:users_bool_exp[],
+	actions?:v2_actions_bool_exp,
+	actions_aggregate?:v2_actions_aggregate_bool_exp,
+	apns_token?:String_comparison_exp,
 	apple_id?:String_comparison_exp,
+	chats?:group_members_bool_exp,
+	chats_aggregate?:group_members_aggregate_bool_exp,
 	config?:jsonb_comparison_exp,
 	events?:events_bool_exp,
 	events_aggregate?:events_aggregate_bool_exp,
@@ -11269,7 +18806,10 @@ export type users_inc_input = {
 
 /** input type for inserting data into table "users" */
 export type users_insert_input = {
-		apple_id?:string,
+		actions?:v2_actions_arr_rel_insert_input,
+	apns_token?:string,
+	apple_id?:string,
+	chats?:group_members_arr_rel_insert_input,
 	config?:jsonb,
 	events?:events_arr_rel_insert_input,
 	id?:number,
@@ -11282,6 +18822,7 @@ export type users_insert_input = {
 /** aggregate max on columns */
 export type users_max_fields = {
 	__typename?: "users_max_fields",
+	apns_token?:string,
 	apple_id?:string,
 	id?:number,
 	language?:string,
@@ -11292,6 +18833,7 @@ export type users_max_fields = {
 /** aggregate min on columns */
 export type users_min_fields = {
 	__typename?: "users_min_fields",
+	apns_token?:string,
 	apple_id?:string,
 	id?:number,
 	language?:string,
@@ -11324,7 +18866,10 @@ export type users_on_conflict = {
 
 /** Ordering options when selecting data from "users". */
 export type users_order_by = {
-		apple_id?:order_by,
+		actions_aggregate?:v2_actions_aggregate_order_by,
+	apns_token?:order_by,
+	apple_id?:order_by,
+	chats_aggregate?:group_members_aggregate_order_by,
 	config?:order_by,
 	events_aggregate?:events_aggregate_order_by,
 	id?:order_by,
@@ -11348,6 +18893,7 @@ export type users_scalar = any
 
 /** select columns of table "users" */
 export enum users_select_column {
+	apns_token = "apns_token",
 	apple_id = "apple_id",
 	config = "config",
 	id = "id",
@@ -11358,7 +18904,8 @@ export enum users_select_column {
 
 /** input type for updating data in table "users" */
 export type users_set_input = {
-		apple_id?:string,
+		apns_token?:string,
+	apple_id?:string,
 	config?:jsonb,
 	id?:number,
 	language?:string,
@@ -11394,7 +18941,8 @@ export type users_stream_cursor_input = {
 
 /** Initial value of the column from where the streaming should start */
 export type users_stream_cursor_value_input = {
-		apple_id?:string,
+		apns_token?:string,
+	apple_id?:string,
 	config?:jsonb,
 	id?:number,
 	language?:string,
@@ -11410,6 +18958,7 @@ export type users_sum_fields = {
 
 /** update columns of table "users" */
 export enum users_update_column {
+	apns_token = "apns_token",
 	apple_id = "apple_id",
 	config = "config",
 	id = "id",
@@ -11454,6 +19003,1903 @@ export type users_var_samp_fields = {
 export type users_variance_fields = {
 	__typename?: "users_variance_fields",
 	id?:number
+}
+
+/** columns and relationships of "v2.action_types" */
+export type v2_action_types = {
+	__typename?: "v2_action_types",
+	/** An array relationship */
+	aggregates:v2_aggregates[],
+	/** An aggregate relationship */
+	aggregates_aggregate:v2_aggregates_aggregate,
+	created_at:timestamptz,
+	description?:string,
+	has_duration:boolean,
+	id:number,
+	metadata?:jsonb,
+	name:string,
+	/** An array relationship */
+	object_t_action_ts:v2_object_t_action_t[],
+	/** An aggregate relationship */
+	object_t_action_ts_aggregate:v2_object_t_action_t_aggregate,
+	short_desc_syntax?:string,
+	updated_at:timestamptz,
+	user_id:number
+}
+
+/** aggregated selection of "v2.action_types" */
+export type v2_action_types_aggregate = {
+	__typename?: "v2_action_types_aggregate",
+	aggregate?:v2_action_types_aggregate_fields,
+	nodes:v2_action_types[]
+}
+
+/** aggregate fields of "v2.action_types" */
+export type v2_action_types_aggregate_fields = {
+	__typename?: "v2_action_types_aggregate_fields",
+	avg?:v2_action_types_avg_fields,
+	count:number,
+	max?:v2_action_types_max_fields,
+	min?:v2_action_types_min_fields,
+	stddev?:v2_action_types_stddev_fields,
+	stddev_pop?:v2_action_types_stddev_pop_fields,
+	stddev_samp?:v2_action_types_stddev_samp_fields,
+	sum?:v2_action_types_sum_fields,
+	var_pop?:v2_action_types_var_pop_fields,
+	var_samp?:v2_action_types_var_samp_fields,
+	variance?:v2_action_types_variance_fields
+}
+
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type v2_action_types_append_input = {
+		metadata?:jsonb
+}
+
+/** aggregate avg on columns */
+export type v2_action_types_avg_fields = {
+	__typename?: "v2_action_types_avg_fields",
+	id?:number,
+	user_id?:number
+}
+
+/** Boolean expression to filter rows from the table "v2.action_types". All fields are combined with a logical 'AND'. */
+export type v2_action_types_bool_exp = {
+		_and?:v2_action_types_bool_exp[],
+	_not?:v2_action_types_bool_exp,
+	_or?:v2_action_types_bool_exp[],
+	aggregates?:v2_aggregates_bool_exp,
+	aggregates_aggregate?:v2_aggregates_aggregate_bool_exp,
+	created_at?:timestamptz_comparison_exp,
+	description?:String_comparison_exp,
+	has_duration?:Boolean_comparison_exp,
+	id?:Int_comparison_exp,
+	metadata?:jsonb_comparison_exp,
+	name?:String_comparison_exp,
+	object_t_action_ts?:v2_object_t_action_t_bool_exp,
+	object_t_action_ts_aggregate?:v2_object_t_action_t_aggregate_bool_exp,
+	short_desc_syntax?:String_comparison_exp,
+	updated_at?:timestamptz_comparison_exp,
+	user_id?:Int_comparison_exp
+}
+
+/** unique or primary key constraints on table "v2.action_types" */
+export enum v2_action_types_constraint {
+	action_types_id_key1 = "action_types_id_key1",
+	actiontypes_pkey = "actiontypes_pkey"
+}
+
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type v2_action_types_delete_at_path_input = {
+		metadata?:string[]
+}
+
+/** delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array */
+export type v2_action_types_delete_elem_input = {
+		metadata?:number
+}
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type v2_action_types_delete_key_input = {
+		metadata?:string
+}
+
+/** input type for incrementing numeric columns in table "v2.action_types" */
+export type v2_action_types_inc_input = {
+		id?:number,
+	user_id?:number
+}
+
+/** input type for inserting data into table "v2.action_types" */
+export type v2_action_types_insert_input = {
+		aggregates?:v2_aggregates_arr_rel_insert_input,
+	created_at?:timestamptz,
+	description?:string,
+	has_duration?:boolean,
+	id?:number,
+	metadata?:jsonb,
+	name?:string,
+	object_t_action_ts?:v2_object_t_action_t_arr_rel_insert_input,
+	short_desc_syntax?:string,
+	updated_at?:timestamptz,
+	user_id?:number
+}
+
+/** aggregate max on columns */
+export type v2_action_types_max_fields = {
+	__typename?: "v2_action_types_max_fields",
+	created_at?:timestamptz,
+	description?:string,
+	id?:number,
+	name?:string,
+	short_desc_syntax?:string,
+	updated_at?:timestamptz,
+	user_id?:number
+}
+
+/** aggregate min on columns */
+export type v2_action_types_min_fields = {
+	__typename?: "v2_action_types_min_fields",
+	created_at?:timestamptz,
+	description?:string,
+	id?:number,
+	name?:string,
+	short_desc_syntax?:string,
+	updated_at?:timestamptz,
+	user_id?:number
+}
+
+/** response of any mutation on the table "v2.action_types" */
+export type v2_action_types_mutation_response = {
+	__typename?: "v2_action_types_mutation_response",
+	/** number of rows affected by the mutation */
+	affected_rows:number,
+	/** data from the rows affected by the mutation */
+	returning:v2_action_types[]
+}
+
+/** input type for inserting object relation for remote table "v2.action_types" */
+export type v2_action_types_obj_rel_insert_input = {
+		data:v2_action_types_insert_input,
+	/** upsert condition */
+	on_conflict?:v2_action_types_on_conflict
+}
+
+/** on_conflict condition type for table "v2.action_types" */
+export type v2_action_types_on_conflict = {
+		constraint:v2_action_types_constraint,
+	update_columns:v2_action_types_update_column[],
+	where?:v2_action_types_bool_exp
+}
+
+/** Ordering options when selecting data from "v2.action_types". */
+export type v2_action_types_order_by = {
+		aggregates_aggregate?:v2_aggregates_aggregate_order_by,
+	created_at?:order_by,
+	description?:order_by,
+	has_duration?:order_by,
+	id?:order_by,
+	metadata?:order_by,
+	name?:order_by,
+	object_t_action_ts_aggregate?:v2_object_t_action_t_aggregate_order_by,
+	short_desc_syntax?:order_by,
+	updated_at?:order_by,
+	user_id?:order_by
+}
+
+/** primary key columns input for table: v2.action_types */
+export type v2_action_types_pk_columns_input = {
+		id:number
+}
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type v2_action_types_prepend_input = {
+		metadata?:jsonb
+}
+
+/** select columns of table "v2.action_types" */
+export enum v2_action_types_select_column {
+	created_at = "created_at",
+	description = "description",
+	has_duration = "has_duration",
+	id = "id",
+	metadata = "metadata",
+	name = "name",
+	short_desc_syntax = "short_desc_syntax",
+	updated_at = "updated_at",
+	user_id = "user_id"
+}
+
+/** input type for updating data in table "v2.action_types" */
+export type v2_action_types_set_input = {
+		created_at?:timestamptz,
+	description?:string,
+	has_duration?:boolean,
+	id?:number,
+	metadata?:jsonb,
+	name?:string,
+	short_desc_syntax?:string,
+	updated_at?:timestamptz,
+	user_id?:number
+}
+
+/** aggregate stddev on columns */
+export type v2_action_types_stddev_fields = {
+	__typename?: "v2_action_types_stddev_fields",
+	id?:number,
+	user_id?:number
+}
+
+/** aggregate stddev_pop on columns */
+export type v2_action_types_stddev_pop_fields = {
+	__typename?: "v2_action_types_stddev_pop_fields",
+	id?:number,
+	user_id?:number
+}
+
+/** aggregate stddev_samp on columns */
+export type v2_action_types_stddev_samp_fields = {
+	__typename?: "v2_action_types_stddev_samp_fields",
+	id?:number,
+	user_id?:number
+}
+
+/** Streaming cursor of the table "v2_action_types" */
+export type v2_action_types_stream_cursor_input = {
+		/** Stream column input with initial value */
+	initial_value:v2_action_types_stream_cursor_value_input,
+	/** cursor ordering */
+	ordering?:cursor_ordering
+}
+
+/** Initial value of the column from where the streaming should start */
+export type v2_action_types_stream_cursor_value_input = {
+		created_at?:timestamptz,
+	description?:string,
+	has_duration?:boolean,
+	id?:number,
+	metadata?:jsonb,
+	name?:string,
+	short_desc_syntax?:string,
+	updated_at?:timestamptz,
+	user_id?:number
+}
+
+/** aggregate sum on columns */
+export type v2_action_types_sum_fields = {
+	__typename?: "v2_action_types_sum_fields",
+	id?:number,
+	user_id?:number
+}
+
+/** update columns of table "v2.action_types" */
+export enum v2_action_types_update_column {
+	created_at = "created_at",
+	description = "description",
+	has_duration = "has_duration",
+	id = "id",
+	metadata = "metadata",
+	name = "name",
+	short_desc_syntax = "short_desc_syntax",
+	updated_at = "updated_at",
+	user_id = "user_id"
+}
+
+export type v2_action_types_updates = {
+		/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:v2_action_types_append_input,
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:v2_action_types_delete_at_path_input,
+	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:v2_action_types_delete_elem_input,
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:v2_action_types_delete_key_input,
+	/** increments the numeric columns with given value of the filtered values */
+	_inc?:v2_action_types_inc_input,
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:v2_action_types_prepend_input,
+	/** sets the columns of the filtered rows to the given values */
+	_set?:v2_action_types_set_input,
+	/** filter the rows which have to be updated */
+	where:v2_action_types_bool_exp
+}
+
+/** aggregate var_pop on columns */
+export type v2_action_types_var_pop_fields = {
+	__typename?: "v2_action_types_var_pop_fields",
+	id?:number,
+	user_id?:number
+}
+
+/** aggregate var_samp on columns */
+export type v2_action_types_var_samp_fields = {
+	__typename?: "v2_action_types_var_samp_fields",
+	id?:number,
+	user_id?:number
+}
+
+/** aggregate variance on columns */
+export type v2_action_types_variance_fields = {
+	__typename?: "v2_action_types_variance_fields",
+	id?:number,
+	user_id?:number
+}
+
+/** columns and relationships of "v2.actions" */
+export type v2_actions = {
+	__typename?: "v2_actions",
+	/** An object relationship */
+	action_type:v2_action_types,
+	action_type_id:number,
+	/** An array relationship */
+	children:v2_actions[],
+	/** An aggregate relationship */
+	children_aggregate:v2_actions_aggregate,
+	created_at:timestamptz,
+	dynamic_data:jsonb,
+	end_time?:timestamptz,
+	id:number,
+	/** An array relationship */
+	object_actions:v2_object_action[],
+	/** An aggregate relationship */
+	object_actions_aggregate:v2_object_action_aggregate,
+	/** An object relationship */
+	parent?:v2_actions,
+	parent_id?:number,
+	start_time:timestamptz,
+	updated_at:timestamptz,
+	user_id:number
+}
+
+/** aggregated selection of "v2.actions" */
+export type v2_actions_aggregate = {
+	__typename?: "v2_actions_aggregate",
+	aggregate?:v2_actions_aggregate_fields,
+	nodes:v2_actions[]
+}
+
+export type v2_actions_aggregate_bool_exp = {
+		count?:v2_actions_aggregate_bool_exp_count
+}
+
+export type v2_actions_aggregate_bool_exp_count = {
+		arguments?:v2_actions_select_column[],
+	distinct?:boolean,
+	filter?:v2_actions_bool_exp,
+	predicate:Int_comparison_exp
+}
+
+/** aggregate fields of "v2.actions" */
+export type v2_actions_aggregate_fields = {
+	__typename?: "v2_actions_aggregate_fields",
+	avg?:v2_actions_avg_fields,
+	count:number,
+	max?:v2_actions_max_fields,
+	min?:v2_actions_min_fields,
+	stddev?:v2_actions_stddev_fields,
+	stddev_pop?:v2_actions_stddev_pop_fields,
+	stddev_samp?:v2_actions_stddev_samp_fields,
+	sum?:v2_actions_sum_fields,
+	var_pop?:v2_actions_var_pop_fields,
+	var_samp?:v2_actions_var_samp_fields,
+	variance?:v2_actions_variance_fields
+}
+
+/** order by aggregate values of table "v2.actions" */
+export type v2_actions_aggregate_order_by = {
+		avg?:v2_actions_avg_order_by,
+	count?:order_by,
+	max?:v2_actions_max_order_by,
+	min?:v2_actions_min_order_by,
+	stddev?:v2_actions_stddev_order_by,
+	stddev_pop?:v2_actions_stddev_pop_order_by,
+	stddev_samp?:v2_actions_stddev_samp_order_by,
+	sum?:v2_actions_sum_order_by,
+	var_pop?:v2_actions_var_pop_order_by,
+	var_samp?:v2_actions_var_samp_order_by,
+	variance?:v2_actions_variance_order_by
+}
+
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type v2_actions_append_input = {
+		dynamic_data?:jsonb
+}
+
+/** input type for inserting array relation for remote table "v2.actions" */
+export type v2_actions_arr_rel_insert_input = {
+		data:v2_actions_insert_input[],
+	/** upsert condition */
+	on_conflict?:v2_actions_on_conflict
+}
+
+/** aggregate avg on columns */
+export type v2_actions_avg_fields = {
+	__typename?: "v2_actions_avg_fields",
+	action_type_id?:number,
+	id?:number,
+	parent_id?:number,
+	user_id?:number
+}
+
+/** order by avg() on columns of table "v2.actions" */
+export type v2_actions_avg_order_by = {
+		action_type_id?:order_by,
+	id?:order_by,
+	parent_id?:order_by,
+	user_id?:order_by
+}
+
+/** Boolean expression to filter rows from the table "v2.actions". All fields are combined with a logical 'AND'. */
+export type v2_actions_bool_exp = {
+		_and?:v2_actions_bool_exp[],
+	_not?:v2_actions_bool_exp,
+	_or?:v2_actions_bool_exp[],
+	action_type?:v2_action_types_bool_exp,
+	action_type_id?:Int_comparison_exp,
+	children?:v2_actions_bool_exp,
+	children_aggregate?:v2_actions_aggregate_bool_exp,
+	created_at?:timestamptz_comparison_exp,
+	dynamic_data?:jsonb_comparison_exp,
+	end_time?:timestamptz_comparison_exp,
+	id?:Int_comparison_exp,
+	object_actions?:v2_object_action_bool_exp,
+	object_actions_aggregate?:v2_object_action_aggregate_bool_exp,
+	parent?:v2_actions_bool_exp,
+	parent_id?:Int_comparison_exp,
+	start_time?:timestamptz_comparison_exp,
+	updated_at?:timestamptz_comparison_exp,
+	user_id?:Int_comparison_exp
+}
+
+/** unique or primary key constraints on table "v2.actions" */
+export enum v2_actions_constraint {
+	actions_pkey = "actions_pkey"
+}
+
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type v2_actions_delete_at_path_input = {
+		dynamic_data?:string[]
+}
+
+/** delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array */
+export type v2_actions_delete_elem_input = {
+		dynamic_data?:number
+}
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type v2_actions_delete_key_input = {
+		dynamic_data?:string
+}
+
+/** input type for incrementing numeric columns in table "v2.actions" */
+export type v2_actions_inc_input = {
+		action_type_id?:number,
+	id?:number,
+	parent_id?:number,
+	user_id?:number
+}
+
+/** input type for inserting data into table "v2.actions" */
+export type v2_actions_insert_input = {
+		action_type?:v2_action_types_obj_rel_insert_input,
+	action_type_id?:number,
+	children?:v2_actions_arr_rel_insert_input,
+	created_at?:timestamptz,
+	dynamic_data?:jsonb,
+	end_time?:timestamptz,
+	id?:number,
+	object_actions?:v2_object_action_arr_rel_insert_input,
+	parent?:v2_actions_obj_rel_insert_input,
+	parent_id?:number,
+	start_time?:timestamptz,
+	updated_at?:timestamptz,
+	user_id?:number
+}
+
+/** aggregate max on columns */
+export type v2_actions_max_fields = {
+	__typename?: "v2_actions_max_fields",
+	action_type_id?:number,
+	created_at?:timestamptz,
+	end_time?:timestamptz,
+	id?:number,
+	parent_id?:number,
+	start_time?:timestamptz,
+	updated_at?:timestamptz,
+	user_id?:number
+}
+
+/** order by max() on columns of table "v2.actions" */
+export type v2_actions_max_order_by = {
+		action_type_id?:order_by,
+	created_at?:order_by,
+	end_time?:order_by,
+	id?:order_by,
+	parent_id?:order_by,
+	start_time?:order_by,
+	updated_at?:order_by,
+	user_id?:order_by
+}
+
+/** aggregate min on columns */
+export type v2_actions_min_fields = {
+	__typename?: "v2_actions_min_fields",
+	action_type_id?:number,
+	created_at?:timestamptz,
+	end_time?:timestamptz,
+	id?:number,
+	parent_id?:number,
+	start_time?:timestamptz,
+	updated_at?:timestamptz,
+	user_id?:number
+}
+
+/** order by min() on columns of table "v2.actions" */
+export type v2_actions_min_order_by = {
+		action_type_id?:order_by,
+	created_at?:order_by,
+	end_time?:order_by,
+	id?:order_by,
+	parent_id?:order_by,
+	start_time?:order_by,
+	updated_at?:order_by,
+	user_id?:order_by
+}
+
+/** response of any mutation on the table "v2.actions" */
+export type v2_actions_mutation_response = {
+	__typename?: "v2_actions_mutation_response",
+	/** number of rows affected by the mutation */
+	affected_rows:number,
+	/** data from the rows affected by the mutation */
+	returning:v2_actions[]
+}
+
+/** input type for inserting object relation for remote table "v2.actions" */
+export type v2_actions_obj_rel_insert_input = {
+		data:v2_actions_insert_input,
+	/** upsert condition */
+	on_conflict?:v2_actions_on_conflict
+}
+
+/** on_conflict condition type for table "v2.actions" */
+export type v2_actions_on_conflict = {
+		constraint:v2_actions_constraint,
+	update_columns:v2_actions_update_column[],
+	where?:v2_actions_bool_exp
+}
+
+/** Ordering options when selecting data from "v2.actions". */
+export type v2_actions_order_by = {
+		action_type?:v2_action_types_order_by,
+	action_type_id?:order_by,
+	children_aggregate?:v2_actions_aggregate_order_by,
+	created_at?:order_by,
+	dynamic_data?:order_by,
+	end_time?:order_by,
+	id?:order_by,
+	object_actions_aggregate?:v2_object_action_aggregate_order_by,
+	parent?:v2_actions_order_by,
+	parent_id?:order_by,
+	start_time?:order_by,
+	updated_at?:order_by,
+	user_id?:order_by
+}
+
+/** primary key columns input for table: v2.actions */
+export type v2_actions_pk_columns_input = {
+		id:number
+}
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type v2_actions_prepend_input = {
+		dynamic_data?:jsonb
+}
+
+/** select columns of table "v2.actions" */
+export enum v2_actions_select_column {
+	action_type_id = "action_type_id",
+	created_at = "created_at",
+	dynamic_data = "dynamic_data",
+	end_time = "end_time",
+	id = "id",
+	parent_id = "parent_id",
+	start_time = "start_time",
+	updated_at = "updated_at",
+	user_id = "user_id"
+}
+
+/** input type for updating data in table "v2.actions" */
+export type v2_actions_set_input = {
+		action_type_id?:number,
+	created_at?:timestamptz,
+	dynamic_data?:jsonb,
+	end_time?:timestamptz,
+	id?:number,
+	parent_id?:number,
+	start_time?:timestamptz,
+	updated_at?:timestamptz,
+	user_id?:number
+}
+
+/** aggregate stddev on columns */
+export type v2_actions_stddev_fields = {
+	__typename?: "v2_actions_stddev_fields",
+	action_type_id?:number,
+	id?:number,
+	parent_id?:number,
+	user_id?:number
+}
+
+/** order by stddev() on columns of table "v2.actions" */
+export type v2_actions_stddev_order_by = {
+		action_type_id?:order_by,
+	id?:order_by,
+	parent_id?:order_by,
+	user_id?:order_by
+}
+
+/** aggregate stddev_pop on columns */
+export type v2_actions_stddev_pop_fields = {
+	__typename?: "v2_actions_stddev_pop_fields",
+	action_type_id?:number,
+	id?:number,
+	parent_id?:number,
+	user_id?:number
+}
+
+/** order by stddev_pop() on columns of table "v2.actions" */
+export type v2_actions_stddev_pop_order_by = {
+		action_type_id?:order_by,
+	id?:order_by,
+	parent_id?:order_by,
+	user_id?:order_by
+}
+
+/** aggregate stddev_samp on columns */
+export type v2_actions_stddev_samp_fields = {
+	__typename?: "v2_actions_stddev_samp_fields",
+	action_type_id?:number,
+	id?:number,
+	parent_id?:number,
+	user_id?:number
+}
+
+/** order by stddev_samp() on columns of table "v2.actions" */
+export type v2_actions_stddev_samp_order_by = {
+		action_type_id?:order_by,
+	id?:order_by,
+	parent_id?:order_by,
+	user_id?:order_by
+}
+
+/** Streaming cursor of the table "v2_actions" */
+export type v2_actions_stream_cursor_input = {
+		/** Stream column input with initial value */
+	initial_value:v2_actions_stream_cursor_value_input,
+	/** cursor ordering */
+	ordering?:cursor_ordering
+}
+
+/** Initial value of the column from where the streaming should start */
+export type v2_actions_stream_cursor_value_input = {
+		action_type_id?:number,
+	created_at?:timestamptz,
+	dynamic_data?:jsonb,
+	end_time?:timestamptz,
+	id?:number,
+	parent_id?:number,
+	start_time?:timestamptz,
+	updated_at?:timestamptz,
+	user_id?:number
+}
+
+/** aggregate sum on columns */
+export type v2_actions_sum_fields = {
+	__typename?: "v2_actions_sum_fields",
+	action_type_id?:number,
+	id?:number,
+	parent_id?:number,
+	user_id?:number
+}
+
+/** order by sum() on columns of table "v2.actions" */
+export type v2_actions_sum_order_by = {
+		action_type_id?:order_by,
+	id?:order_by,
+	parent_id?:order_by,
+	user_id?:order_by
+}
+
+/** update columns of table "v2.actions" */
+export enum v2_actions_update_column {
+	action_type_id = "action_type_id",
+	created_at = "created_at",
+	dynamic_data = "dynamic_data",
+	end_time = "end_time",
+	id = "id",
+	parent_id = "parent_id",
+	start_time = "start_time",
+	updated_at = "updated_at",
+	user_id = "user_id"
+}
+
+export type v2_actions_updates = {
+		/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:v2_actions_append_input,
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:v2_actions_delete_at_path_input,
+	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:v2_actions_delete_elem_input,
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:v2_actions_delete_key_input,
+	/** increments the numeric columns with given value of the filtered values */
+	_inc?:v2_actions_inc_input,
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:v2_actions_prepend_input,
+	/** sets the columns of the filtered rows to the given values */
+	_set?:v2_actions_set_input,
+	/** filter the rows which have to be updated */
+	where:v2_actions_bool_exp
+}
+
+/** aggregate var_pop on columns */
+export type v2_actions_var_pop_fields = {
+	__typename?: "v2_actions_var_pop_fields",
+	action_type_id?:number,
+	id?:number,
+	parent_id?:number,
+	user_id?:number
+}
+
+/** order by var_pop() on columns of table "v2.actions" */
+export type v2_actions_var_pop_order_by = {
+		action_type_id?:order_by,
+	id?:order_by,
+	parent_id?:order_by,
+	user_id?:order_by
+}
+
+/** aggregate var_samp on columns */
+export type v2_actions_var_samp_fields = {
+	__typename?: "v2_actions_var_samp_fields",
+	action_type_id?:number,
+	id?:number,
+	parent_id?:number,
+	user_id?:number
+}
+
+/** order by var_samp() on columns of table "v2.actions" */
+export type v2_actions_var_samp_order_by = {
+		action_type_id?:order_by,
+	id?:order_by,
+	parent_id?:order_by,
+	user_id?:order_by
+}
+
+/** aggregate variance on columns */
+export type v2_actions_variance_fields = {
+	__typename?: "v2_actions_variance_fields",
+	action_type_id?:number,
+	id?:number,
+	parent_id?:number,
+	user_id?:number
+}
+
+/** order by variance() on columns of table "v2.actions" */
+export type v2_actions_variance_order_by = {
+		action_type_id?:order_by,
+	id?:order_by,
+	parent_id?:order_by,
+	user_id?:order_by
+}
+
+/** columns and relationships of "v2.aggregates" */
+export type v2_aggregates = {
+	__typename?: "v2_aggregates",
+	/** An object relationship */
+	action_type:v2_action_types,
+	action_type_id:number,
+	id:number,
+	metadata:jsonb,
+	user_id:number
+}
+
+/** aggregated selection of "v2.aggregates" */
+export type v2_aggregates_aggregate = {
+	__typename?: "v2_aggregates_aggregate",
+	aggregate?:v2_aggregates_aggregate_fields,
+	nodes:v2_aggregates[]
+}
+
+export type v2_aggregates_aggregate_bool_exp = {
+		count?:v2_aggregates_aggregate_bool_exp_count
+}
+
+export type v2_aggregates_aggregate_bool_exp_count = {
+		arguments?:v2_aggregates_select_column[],
+	distinct?:boolean,
+	filter?:v2_aggregates_bool_exp,
+	predicate:Int_comparison_exp
+}
+
+/** aggregate fields of "v2.aggregates" */
+export type v2_aggregates_aggregate_fields = {
+	__typename?: "v2_aggregates_aggregate_fields",
+	avg?:v2_aggregates_avg_fields,
+	count:number,
+	max?:v2_aggregates_max_fields,
+	min?:v2_aggregates_min_fields,
+	stddev?:v2_aggregates_stddev_fields,
+	stddev_pop?:v2_aggregates_stddev_pop_fields,
+	stddev_samp?:v2_aggregates_stddev_samp_fields,
+	sum?:v2_aggregates_sum_fields,
+	var_pop?:v2_aggregates_var_pop_fields,
+	var_samp?:v2_aggregates_var_samp_fields,
+	variance?:v2_aggregates_variance_fields
+}
+
+/** order by aggregate values of table "v2.aggregates" */
+export type v2_aggregates_aggregate_order_by = {
+		avg?:v2_aggregates_avg_order_by,
+	count?:order_by,
+	max?:v2_aggregates_max_order_by,
+	min?:v2_aggregates_min_order_by,
+	stddev?:v2_aggregates_stddev_order_by,
+	stddev_pop?:v2_aggregates_stddev_pop_order_by,
+	stddev_samp?:v2_aggregates_stddev_samp_order_by,
+	sum?:v2_aggregates_sum_order_by,
+	var_pop?:v2_aggregates_var_pop_order_by,
+	var_samp?:v2_aggregates_var_samp_order_by,
+	variance?:v2_aggregates_variance_order_by
+}
+
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type v2_aggregates_append_input = {
+		metadata?:jsonb
+}
+
+/** input type for inserting array relation for remote table "v2.aggregates" */
+export type v2_aggregates_arr_rel_insert_input = {
+		data:v2_aggregates_insert_input[],
+	/** upsert condition */
+	on_conflict?:v2_aggregates_on_conflict
+}
+
+/** aggregate avg on columns */
+export type v2_aggregates_avg_fields = {
+	__typename?: "v2_aggregates_avg_fields",
+	action_type_id?:number,
+	id?:number,
+	user_id?:number
+}
+
+/** order by avg() on columns of table "v2.aggregates" */
+export type v2_aggregates_avg_order_by = {
+		action_type_id?:order_by,
+	id?:order_by,
+	user_id?:order_by
+}
+
+/** Boolean expression to filter rows from the table "v2.aggregates". All fields are combined with a logical 'AND'. */
+export type v2_aggregates_bool_exp = {
+		_and?:v2_aggregates_bool_exp[],
+	_not?:v2_aggregates_bool_exp,
+	_or?:v2_aggregates_bool_exp[],
+	action_type?:v2_action_types_bool_exp,
+	action_type_id?:Int_comparison_exp,
+	id?:Int_comparison_exp,
+	metadata?:jsonb_comparison_exp,
+	user_id?:Int_comparison_exp
+}
+
+/** unique or primary key constraints on table "v2.aggregates" */
+export enum v2_aggregates_constraint {
+	aggregates_pkey = "aggregates_pkey"
+}
+
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type v2_aggregates_delete_at_path_input = {
+		metadata?:string[]
+}
+
+/** delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array */
+export type v2_aggregates_delete_elem_input = {
+		metadata?:number
+}
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type v2_aggregates_delete_key_input = {
+		metadata?:string
+}
+
+/** input type for incrementing numeric columns in table "v2.aggregates" */
+export type v2_aggregates_inc_input = {
+		action_type_id?:number,
+	id?:number,
+	user_id?:number
+}
+
+/** input type for inserting data into table "v2.aggregates" */
+export type v2_aggregates_insert_input = {
+		action_type?:v2_action_types_obj_rel_insert_input,
+	action_type_id?:number,
+	id?:number,
+	metadata?:jsonb,
+	user_id?:number
+}
+
+/** aggregate max on columns */
+export type v2_aggregates_max_fields = {
+	__typename?: "v2_aggregates_max_fields",
+	action_type_id?:number,
+	id?:number,
+	user_id?:number
+}
+
+/** order by max() on columns of table "v2.aggregates" */
+export type v2_aggregates_max_order_by = {
+		action_type_id?:order_by,
+	id?:order_by,
+	user_id?:order_by
+}
+
+/** aggregate min on columns */
+export type v2_aggregates_min_fields = {
+	__typename?: "v2_aggregates_min_fields",
+	action_type_id?:number,
+	id?:number,
+	user_id?:number
+}
+
+/** order by min() on columns of table "v2.aggregates" */
+export type v2_aggregates_min_order_by = {
+		action_type_id?:order_by,
+	id?:order_by,
+	user_id?:order_by
+}
+
+/** response of any mutation on the table "v2.aggregates" */
+export type v2_aggregates_mutation_response = {
+	__typename?: "v2_aggregates_mutation_response",
+	/** number of rows affected by the mutation */
+	affected_rows:number,
+	/** data from the rows affected by the mutation */
+	returning:v2_aggregates[]
+}
+
+/** on_conflict condition type for table "v2.aggregates" */
+export type v2_aggregates_on_conflict = {
+		constraint:v2_aggregates_constraint,
+	update_columns:v2_aggregates_update_column[],
+	where?:v2_aggregates_bool_exp
+}
+
+/** Ordering options when selecting data from "v2.aggregates". */
+export type v2_aggregates_order_by = {
+		action_type?:v2_action_types_order_by,
+	action_type_id?:order_by,
+	id?:order_by,
+	metadata?:order_by,
+	user_id?:order_by
+}
+
+/** primary key columns input for table: v2.aggregates */
+export type v2_aggregates_pk_columns_input = {
+		id:number
+}
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type v2_aggregates_prepend_input = {
+		metadata?:jsonb
+}
+
+/** select columns of table "v2.aggregates" */
+export enum v2_aggregates_select_column {
+	action_type_id = "action_type_id",
+	id = "id",
+	metadata = "metadata",
+	user_id = "user_id"
+}
+
+/** input type for updating data in table "v2.aggregates" */
+export type v2_aggregates_set_input = {
+		action_type_id?:number,
+	id?:number,
+	metadata?:jsonb,
+	user_id?:number
+}
+
+/** aggregate stddev on columns */
+export type v2_aggregates_stddev_fields = {
+	__typename?: "v2_aggregates_stddev_fields",
+	action_type_id?:number,
+	id?:number,
+	user_id?:number
+}
+
+/** order by stddev() on columns of table "v2.aggregates" */
+export type v2_aggregates_stddev_order_by = {
+		action_type_id?:order_by,
+	id?:order_by,
+	user_id?:order_by
+}
+
+/** aggregate stddev_pop on columns */
+export type v2_aggregates_stddev_pop_fields = {
+	__typename?: "v2_aggregates_stddev_pop_fields",
+	action_type_id?:number,
+	id?:number,
+	user_id?:number
+}
+
+/** order by stddev_pop() on columns of table "v2.aggregates" */
+export type v2_aggregates_stddev_pop_order_by = {
+		action_type_id?:order_by,
+	id?:order_by,
+	user_id?:order_by
+}
+
+/** aggregate stddev_samp on columns */
+export type v2_aggregates_stddev_samp_fields = {
+	__typename?: "v2_aggregates_stddev_samp_fields",
+	action_type_id?:number,
+	id?:number,
+	user_id?:number
+}
+
+/** order by stddev_samp() on columns of table "v2.aggregates" */
+export type v2_aggregates_stddev_samp_order_by = {
+		action_type_id?:order_by,
+	id?:order_by,
+	user_id?:order_by
+}
+
+/** Streaming cursor of the table "v2_aggregates" */
+export type v2_aggregates_stream_cursor_input = {
+		/** Stream column input with initial value */
+	initial_value:v2_aggregates_stream_cursor_value_input,
+	/** cursor ordering */
+	ordering?:cursor_ordering
+}
+
+/** Initial value of the column from where the streaming should start */
+export type v2_aggregates_stream_cursor_value_input = {
+		action_type_id?:number,
+	id?:number,
+	metadata?:jsonb,
+	user_id?:number
+}
+
+/** aggregate sum on columns */
+export type v2_aggregates_sum_fields = {
+	__typename?: "v2_aggregates_sum_fields",
+	action_type_id?:number,
+	id?:number,
+	user_id?:number
+}
+
+/** order by sum() on columns of table "v2.aggregates" */
+export type v2_aggregates_sum_order_by = {
+		action_type_id?:order_by,
+	id?:order_by,
+	user_id?:order_by
+}
+
+/** update columns of table "v2.aggregates" */
+export enum v2_aggregates_update_column {
+	action_type_id = "action_type_id",
+	id = "id",
+	metadata = "metadata",
+	user_id = "user_id"
+}
+
+export type v2_aggregates_updates = {
+		/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:v2_aggregates_append_input,
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:v2_aggregates_delete_at_path_input,
+	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:v2_aggregates_delete_elem_input,
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:v2_aggregates_delete_key_input,
+	/** increments the numeric columns with given value of the filtered values */
+	_inc?:v2_aggregates_inc_input,
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:v2_aggregates_prepend_input,
+	/** sets the columns of the filtered rows to the given values */
+	_set?:v2_aggregates_set_input,
+	/** filter the rows which have to be updated */
+	where:v2_aggregates_bool_exp
+}
+
+/** aggregate var_pop on columns */
+export type v2_aggregates_var_pop_fields = {
+	__typename?: "v2_aggregates_var_pop_fields",
+	action_type_id?:number,
+	id?:number,
+	user_id?:number
+}
+
+/** order by var_pop() on columns of table "v2.aggregates" */
+export type v2_aggregates_var_pop_order_by = {
+		action_type_id?:order_by,
+	id?:order_by,
+	user_id?:order_by
+}
+
+/** aggregate var_samp on columns */
+export type v2_aggregates_var_samp_fields = {
+	__typename?: "v2_aggregates_var_samp_fields",
+	action_type_id?:number,
+	id?:number,
+	user_id?:number
+}
+
+/** order by var_samp() on columns of table "v2.aggregates" */
+export type v2_aggregates_var_samp_order_by = {
+		action_type_id?:order_by,
+	id?:order_by,
+	user_id?:order_by
+}
+
+/** aggregate variance on columns */
+export type v2_aggregates_variance_fields = {
+	__typename?: "v2_aggregates_variance_fields",
+	action_type_id?:number,
+	id?:number,
+	user_id?:number
+}
+
+/** order by variance() on columns of table "v2.aggregates" */
+export type v2_aggregates_variance_order_by = {
+		action_type_id?:order_by,
+	id?:order_by,
+	user_id?:order_by
+}
+
+/** columns and relationships of "v2.object_action" */
+export type v2_object_action = {
+	__typename?: "v2_object_action",
+	/** An object relationship */
+	action:v2_actions,
+	action_id:number,
+	id:number,
+	/** An object relationship */
+	object:objects,
+	object_id:number,
+	/** An object relationship */
+	object_t_action_t:v2_object_t_action_t,
+	object_t_action_t_id:number
+}
+
+/** aggregated selection of "v2.object_action" */
+export type v2_object_action_aggregate = {
+	__typename?: "v2_object_action_aggregate",
+	aggregate?:v2_object_action_aggregate_fields,
+	nodes:v2_object_action[]
+}
+
+export type v2_object_action_aggregate_bool_exp = {
+		count?:v2_object_action_aggregate_bool_exp_count
+}
+
+export type v2_object_action_aggregate_bool_exp_count = {
+		arguments?:v2_object_action_select_column[],
+	distinct?:boolean,
+	filter?:v2_object_action_bool_exp,
+	predicate:Int_comparison_exp
+}
+
+/** aggregate fields of "v2.object_action" */
+export type v2_object_action_aggregate_fields = {
+	__typename?: "v2_object_action_aggregate_fields",
+	avg?:v2_object_action_avg_fields,
+	count:number,
+	max?:v2_object_action_max_fields,
+	min?:v2_object_action_min_fields,
+	stddev?:v2_object_action_stddev_fields,
+	stddev_pop?:v2_object_action_stddev_pop_fields,
+	stddev_samp?:v2_object_action_stddev_samp_fields,
+	sum?:v2_object_action_sum_fields,
+	var_pop?:v2_object_action_var_pop_fields,
+	var_samp?:v2_object_action_var_samp_fields,
+	variance?:v2_object_action_variance_fields
+}
+
+/** order by aggregate values of table "v2.object_action" */
+export type v2_object_action_aggregate_order_by = {
+		avg?:v2_object_action_avg_order_by,
+	count?:order_by,
+	max?:v2_object_action_max_order_by,
+	min?:v2_object_action_min_order_by,
+	stddev?:v2_object_action_stddev_order_by,
+	stddev_pop?:v2_object_action_stddev_pop_order_by,
+	stddev_samp?:v2_object_action_stddev_samp_order_by,
+	sum?:v2_object_action_sum_order_by,
+	var_pop?:v2_object_action_var_pop_order_by,
+	var_samp?:v2_object_action_var_samp_order_by,
+	variance?:v2_object_action_variance_order_by
+}
+
+/** input type for inserting array relation for remote table "v2.object_action" */
+export type v2_object_action_arr_rel_insert_input = {
+		data:v2_object_action_insert_input[],
+	/** upsert condition */
+	on_conflict?:v2_object_action_on_conflict
+}
+
+/** aggregate avg on columns */
+export type v2_object_action_avg_fields = {
+	__typename?: "v2_object_action_avg_fields",
+	action_id?:number,
+	id?:number,
+	object_id?:number,
+	object_t_action_t_id?:number
+}
+
+/** order by avg() on columns of table "v2.object_action" */
+export type v2_object_action_avg_order_by = {
+		action_id?:order_by,
+	id?:order_by,
+	object_id?:order_by,
+	object_t_action_t_id?:order_by
+}
+
+/** Boolean expression to filter rows from the table "v2.object_action". All fields are combined with a logical 'AND'. */
+export type v2_object_action_bool_exp = {
+		_and?:v2_object_action_bool_exp[],
+	_not?:v2_object_action_bool_exp,
+	_or?:v2_object_action_bool_exp[],
+	action?:v2_actions_bool_exp,
+	action_id?:Int_comparison_exp,
+	id?:Int_comparison_exp,
+	object?:objects_bool_exp,
+	object_id?:Int_comparison_exp,
+	object_t_action_t?:v2_object_t_action_t_bool_exp,
+	object_t_action_t_id?:Int_comparison_exp
+}
+
+/** unique or primary key constraints on table "v2.object_action" */
+export enum v2_object_action_constraint {
+	object_action_action_id_object_id_object_t_action_t_id_key = "object_action_action_id_object_id_object_t_action_t_id_key",
+	object_action_pkey = "object_action_pkey"
+}
+
+/** input type for incrementing numeric columns in table "v2.object_action" */
+export type v2_object_action_inc_input = {
+		action_id?:number,
+	id?:number,
+	object_id?:number,
+	object_t_action_t_id?:number
+}
+
+/** input type for inserting data into table "v2.object_action" */
+export type v2_object_action_insert_input = {
+		action?:v2_actions_obj_rel_insert_input,
+	action_id?:number,
+	id?:number,
+	object?:objects_obj_rel_insert_input,
+	object_id?:number,
+	object_t_action_t?:v2_object_t_action_t_obj_rel_insert_input,
+	object_t_action_t_id?:number
+}
+
+/** aggregate max on columns */
+export type v2_object_action_max_fields = {
+	__typename?: "v2_object_action_max_fields",
+	action_id?:number,
+	id?:number,
+	object_id?:number,
+	object_t_action_t_id?:number
+}
+
+/** order by max() on columns of table "v2.object_action" */
+export type v2_object_action_max_order_by = {
+		action_id?:order_by,
+	id?:order_by,
+	object_id?:order_by,
+	object_t_action_t_id?:order_by
+}
+
+/** aggregate min on columns */
+export type v2_object_action_min_fields = {
+	__typename?: "v2_object_action_min_fields",
+	action_id?:number,
+	id?:number,
+	object_id?:number,
+	object_t_action_t_id?:number
+}
+
+/** order by min() on columns of table "v2.object_action" */
+export type v2_object_action_min_order_by = {
+		action_id?:order_by,
+	id?:order_by,
+	object_id?:order_by,
+	object_t_action_t_id?:order_by
+}
+
+/** response of any mutation on the table "v2.object_action" */
+export type v2_object_action_mutation_response = {
+	__typename?: "v2_object_action_mutation_response",
+	/** number of rows affected by the mutation */
+	affected_rows:number,
+	/** data from the rows affected by the mutation */
+	returning:v2_object_action[]
+}
+
+/** on_conflict condition type for table "v2.object_action" */
+export type v2_object_action_on_conflict = {
+		constraint:v2_object_action_constraint,
+	update_columns:v2_object_action_update_column[],
+	where?:v2_object_action_bool_exp
+}
+
+/** Ordering options when selecting data from "v2.object_action". */
+export type v2_object_action_order_by = {
+		action?:v2_actions_order_by,
+	action_id?:order_by,
+	id?:order_by,
+	object?:objects_order_by,
+	object_id?:order_by,
+	object_t_action_t?:v2_object_t_action_t_order_by,
+	object_t_action_t_id?:order_by
+}
+
+/** primary key columns input for table: v2.object_action */
+export type v2_object_action_pk_columns_input = {
+		id:number
+}
+
+/** select columns of table "v2.object_action" */
+export enum v2_object_action_select_column {
+	action_id = "action_id",
+	id = "id",
+	object_id = "object_id",
+	object_t_action_t_id = "object_t_action_t_id"
+}
+
+/** input type for updating data in table "v2.object_action" */
+export type v2_object_action_set_input = {
+		action_id?:number,
+	id?:number,
+	object_id?:number,
+	object_t_action_t_id?:number
+}
+
+/** aggregate stddev on columns */
+export type v2_object_action_stddev_fields = {
+	__typename?: "v2_object_action_stddev_fields",
+	action_id?:number,
+	id?:number,
+	object_id?:number,
+	object_t_action_t_id?:number
+}
+
+/** order by stddev() on columns of table "v2.object_action" */
+export type v2_object_action_stddev_order_by = {
+		action_id?:order_by,
+	id?:order_by,
+	object_id?:order_by,
+	object_t_action_t_id?:order_by
+}
+
+/** aggregate stddev_pop on columns */
+export type v2_object_action_stddev_pop_fields = {
+	__typename?: "v2_object_action_stddev_pop_fields",
+	action_id?:number,
+	id?:number,
+	object_id?:number,
+	object_t_action_t_id?:number
+}
+
+/** order by stddev_pop() on columns of table "v2.object_action" */
+export type v2_object_action_stddev_pop_order_by = {
+		action_id?:order_by,
+	id?:order_by,
+	object_id?:order_by,
+	object_t_action_t_id?:order_by
+}
+
+/** aggregate stddev_samp on columns */
+export type v2_object_action_stddev_samp_fields = {
+	__typename?: "v2_object_action_stddev_samp_fields",
+	action_id?:number,
+	id?:number,
+	object_id?:number,
+	object_t_action_t_id?:number
+}
+
+/** order by stddev_samp() on columns of table "v2.object_action" */
+export type v2_object_action_stddev_samp_order_by = {
+		action_id?:order_by,
+	id?:order_by,
+	object_id?:order_by,
+	object_t_action_t_id?:order_by
+}
+
+/** Streaming cursor of the table "v2_object_action" */
+export type v2_object_action_stream_cursor_input = {
+		/** Stream column input with initial value */
+	initial_value:v2_object_action_stream_cursor_value_input,
+	/** cursor ordering */
+	ordering?:cursor_ordering
+}
+
+/** Initial value of the column from where the streaming should start */
+export type v2_object_action_stream_cursor_value_input = {
+		action_id?:number,
+	id?:number,
+	object_id?:number,
+	object_t_action_t_id?:number
+}
+
+/** aggregate sum on columns */
+export type v2_object_action_sum_fields = {
+	__typename?: "v2_object_action_sum_fields",
+	action_id?:number,
+	id?:number,
+	object_id?:number,
+	object_t_action_t_id?:number
+}
+
+/** order by sum() on columns of table "v2.object_action" */
+export type v2_object_action_sum_order_by = {
+		action_id?:order_by,
+	id?:order_by,
+	object_id?:order_by,
+	object_t_action_t_id?:order_by
+}
+
+/** update columns of table "v2.object_action" */
+export enum v2_object_action_update_column {
+	action_id = "action_id",
+	id = "id",
+	object_id = "object_id",
+	object_t_action_t_id = "object_t_action_t_id"
+}
+
+export type v2_object_action_updates = {
+		/** increments the numeric columns with given value of the filtered values */
+	_inc?:v2_object_action_inc_input,
+	/** sets the columns of the filtered rows to the given values */
+	_set?:v2_object_action_set_input,
+	/** filter the rows which have to be updated */
+	where:v2_object_action_bool_exp
+}
+
+/** aggregate var_pop on columns */
+export type v2_object_action_var_pop_fields = {
+	__typename?: "v2_object_action_var_pop_fields",
+	action_id?:number,
+	id?:number,
+	object_id?:number,
+	object_t_action_t_id?:number
+}
+
+/** order by var_pop() on columns of table "v2.object_action" */
+export type v2_object_action_var_pop_order_by = {
+		action_id?:order_by,
+	id?:order_by,
+	object_id?:order_by,
+	object_t_action_t_id?:order_by
+}
+
+/** aggregate var_samp on columns */
+export type v2_object_action_var_samp_fields = {
+	__typename?: "v2_object_action_var_samp_fields",
+	action_id?:number,
+	id?:number,
+	object_id?:number,
+	object_t_action_t_id?:number
+}
+
+/** order by var_samp() on columns of table "v2.object_action" */
+export type v2_object_action_var_samp_order_by = {
+		action_id?:order_by,
+	id?:order_by,
+	object_id?:order_by,
+	object_t_action_t_id?:order_by
+}
+
+/** aggregate variance on columns */
+export type v2_object_action_variance_fields = {
+	__typename?: "v2_object_action_variance_fields",
+	action_id?:number,
+	id?:number,
+	object_id?:number,
+	object_t_action_t_id?:number
+}
+
+/** order by variance() on columns of table "v2.object_action" */
+export type v2_object_action_variance_order_by = {
+		action_id?:order_by,
+	id?:order_by,
+	object_id?:order_by,
+	object_t_action_t_id?:order_by
+}
+
+/** columns and relationships of "v2.object_t_action_t" */
+export type v2_object_t_action_t = {
+	__typename?: "v2_object_t_action_t",
+	/** An object relationship */
+	action_type:v2_action_types,
+	action_type_id:number,
+	id:number,
+	metadata:jsonb,
+	/** An object relationship */
+	object_type:object_types,
+	object_type_id:number
+}
+
+/** aggregated selection of "v2.object_t_action_t" */
+export type v2_object_t_action_t_aggregate = {
+	__typename?: "v2_object_t_action_t_aggregate",
+	aggregate?:v2_object_t_action_t_aggregate_fields,
+	nodes:v2_object_t_action_t[]
+}
+
+export type v2_object_t_action_t_aggregate_bool_exp = {
+		count?:v2_object_t_action_t_aggregate_bool_exp_count
+}
+
+export type v2_object_t_action_t_aggregate_bool_exp_count = {
+		arguments?:v2_object_t_action_t_select_column[],
+	distinct?:boolean,
+	filter?:v2_object_t_action_t_bool_exp,
+	predicate:Int_comparison_exp
+}
+
+/** aggregate fields of "v2.object_t_action_t" */
+export type v2_object_t_action_t_aggregate_fields = {
+	__typename?: "v2_object_t_action_t_aggregate_fields",
+	avg?:v2_object_t_action_t_avg_fields,
+	count:number,
+	max?:v2_object_t_action_t_max_fields,
+	min?:v2_object_t_action_t_min_fields,
+	stddev?:v2_object_t_action_t_stddev_fields,
+	stddev_pop?:v2_object_t_action_t_stddev_pop_fields,
+	stddev_samp?:v2_object_t_action_t_stddev_samp_fields,
+	sum?:v2_object_t_action_t_sum_fields,
+	var_pop?:v2_object_t_action_t_var_pop_fields,
+	var_samp?:v2_object_t_action_t_var_samp_fields,
+	variance?:v2_object_t_action_t_variance_fields
+}
+
+/** order by aggregate values of table "v2.object_t_action_t" */
+export type v2_object_t_action_t_aggregate_order_by = {
+		avg?:v2_object_t_action_t_avg_order_by,
+	count?:order_by,
+	max?:v2_object_t_action_t_max_order_by,
+	min?:v2_object_t_action_t_min_order_by,
+	stddev?:v2_object_t_action_t_stddev_order_by,
+	stddev_pop?:v2_object_t_action_t_stddev_pop_order_by,
+	stddev_samp?:v2_object_t_action_t_stddev_samp_order_by,
+	sum?:v2_object_t_action_t_sum_order_by,
+	var_pop?:v2_object_t_action_t_var_pop_order_by,
+	var_samp?:v2_object_t_action_t_var_samp_order_by,
+	variance?:v2_object_t_action_t_variance_order_by
+}
+
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type v2_object_t_action_t_append_input = {
+		metadata?:jsonb
+}
+
+/** input type for inserting array relation for remote table "v2.object_t_action_t" */
+export type v2_object_t_action_t_arr_rel_insert_input = {
+		data:v2_object_t_action_t_insert_input[],
+	/** upsert condition */
+	on_conflict?:v2_object_t_action_t_on_conflict
+}
+
+/** aggregate avg on columns */
+export type v2_object_t_action_t_avg_fields = {
+	__typename?: "v2_object_t_action_t_avg_fields",
+	action_type_id?:number,
+	id?:number,
+	object_type_id?:number
+}
+
+/** order by avg() on columns of table "v2.object_t_action_t" */
+export type v2_object_t_action_t_avg_order_by = {
+		action_type_id?:order_by,
+	id?:order_by,
+	object_type_id?:order_by
+}
+
+/** Boolean expression to filter rows from the table "v2.object_t_action_t". All fields are combined with a logical 'AND'. */
+export type v2_object_t_action_t_bool_exp = {
+		_and?:v2_object_t_action_t_bool_exp[],
+	_not?:v2_object_t_action_t_bool_exp,
+	_or?:v2_object_t_action_t_bool_exp[],
+	action_type?:v2_action_types_bool_exp,
+	action_type_id?:Int_comparison_exp,
+	id?:Int_comparison_exp,
+	metadata?:jsonb_comparison_exp,
+	object_type?:object_types_bool_exp,
+	object_type_id?:Int_comparison_exp
+}
+
+/** unique or primary key constraints on table "v2.object_t_action_t" */
+export enum v2_object_t_action_t_constraint {
+	object_t_action_t_pkey = "object_t_action_t_pkey"
+}
+
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type v2_object_t_action_t_delete_at_path_input = {
+		metadata?:string[]
+}
+
+/** delete the array element with specified index (negative integers count from the
+end). throws an error if top level container is not an array */
+export type v2_object_t_action_t_delete_elem_input = {
+		metadata?:number
+}
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type v2_object_t_action_t_delete_key_input = {
+		metadata?:string
+}
+
+/** input type for incrementing numeric columns in table "v2.object_t_action_t" */
+export type v2_object_t_action_t_inc_input = {
+		action_type_id?:number,
+	id?:number,
+	object_type_id?:number
+}
+
+/** input type for inserting data into table "v2.object_t_action_t" */
+export type v2_object_t_action_t_insert_input = {
+		action_type?:v2_action_types_obj_rel_insert_input,
+	action_type_id?:number,
+	id?:number,
+	metadata?:jsonb,
+	object_type?:object_types_obj_rel_insert_input,
+	object_type_id?:number
+}
+
+/** aggregate max on columns */
+export type v2_object_t_action_t_max_fields = {
+	__typename?: "v2_object_t_action_t_max_fields",
+	action_type_id?:number,
+	id?:number,
+	object_type_id?:number
+}
+
+/** order by max() on columns of table "v2.object_t_action_t" */
+export type v2_object_t_action_t_max_order_by = {
+		action_type_id?:order_by,
+	id?:order_by,
+	object_type_id?:order_by
+}
+
+/** aggregate min on columns */
+export type v2_object_t_action_t_min_fields = {
+	__typename?: "v2_object_t_action_t_min_fields",
+	action_type_id?:number,
+	id?:number,
+	object_type_id?:number
+}
+
+/** order by min() on columns of table "v2.object_t_action_t" */
+export type v2_object_t_action_t_min_order_by = {
+		action_type_id?:order_by,
+	id?:order_by,
+	object_type_id?:order_by
+}
+
+/** response of any mutation on the table "v2.object_t_action_t" */
+export type v2_object_t_action_t_mutation_response = {
+	__typename?: "v2_object_t_action_t_mutation_response",
+	/** number of rows affected by the mutation */
+	affected_rows:number,
+	/** data from the rows affected by the mutation */
+	returning:v2_object_t_action_t[]
+}
+
+/** input type for inserting object relation for remote table "v2.object_t_action_t" */
+export type v2_object_t_action_t_obj_rel_insert_input = {
+		data:v2_object_t_action_t_insert_input,
+	/** upsert condition */
+	on_conflict?:v2_object_t_action_t_on_conflict
+}
+
+/** on_conflict condition type for table "v2.object_t_action_t" */
+export type v2_object_t_action_t_on_conflict = {
+		constraint:v2_object_t_action_t_constraint,
+	update_columns:v2_object_t_action_t_update_column[],
+	where?:v2_object_t_action_t_bool_exp
+}
+
+/** Ordering options when selecting data from "v2.object_t_action_t". */
+export type v2_object_t_action_t_order_by = {
+		action_type?:v2_action_types_order_by,
+	action_type_id?:order_by,
+	id?:order_by,
+	metadata?:order_by,
+	object_type?:object_types_order_by,
+	object_type_id?:order_by
+}
+
+/** primary key columns input for table: v2.object_t_action_t */
+export type v2_object_t_action_t_pk_columns_input = {
+		id:number
+}
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type v2_object_t_action_t_prepend_input = {
+		metadata?:jsonb
+}
+
+/** select columns of table "v2.object_t_action_t" */
+export enum v2_object_t_action_t_select_column {
+	action_type_id = "action_type_id",
+	id = "id",
+	metadata = "metadata",
+	object_type_id = "object_type_id"
+}
+
+/** input type for updating data in table "v2.object_t_action_t" */
+export type v2_object_t_action_t_set_input = {
+		action_type_id?:number,
+	id?:number,
+	metadata?:jsonb,
+	object_type_id?:number
+}
+
+/** aggregate stddev on columns */
+export type v2_object_t_action_t_stddev_fields = {
+	__typename?: "v2_object_t_action_t_stddev_fields",
+	action_type_id?:number,
+	id?:number,
+	object_type_id?:number
+}
+
+/** order by stddev() on columns of table "v2.object_t_action_t" */
+export type v2_object_t_action_t_stddev_order_by = {
+		action_type_id?:order_by,
+	id?:order_by,
+	object_type_id?:order_by
+}
+
+/** aggregate stddev_pop on columns */
+export type v2_object_t_action_t_stddev_pop_fields = {
+	__typename?: "v2_object_t_action_t_stddev_pop_fields",
+	action_type_id?:number,
+	id?:number,
+	object_type_id?:number
+}
+
+/** order by stddev_pop() on columns of table "v2.object_t_action_t" */
+export type v2_object_t_action_t_stddev_pop_order_by = {
+		action_type_id?:order_by,
+	id?:order_by,
+	object_type_id?:order_by
+}
+
+/** aggregate stddev_samp on columns */
+export type v2_object_t_action_t_stddev_samp_fields = {
+	__typename?: "v2_object_t_action_t_stddev_samp_fields",
+	action_type_id?:number,
+	id?:number,
+	object_type_id?:number
+}
+
+/** order by stddev_samp() on columns of table "v2.object_t_action_t" */
+export type v2_object_t_action_t_stddev_samp_order_by = {
+		action_type_id?:order_by,
+	id?:order_by,
+	object_type_id?:order_by
+}
+
+/** Streaming cursor of the table "v2_object_t_action_t" */
+export type v2_object_t_action_t_stream_cursor_input = {
+		/** Stream column input with initial value */
+	initial_value:v2_object_t_action_t_stream_cursor_value_input,
+	/** cursor ordering */
+	ordering?:cursor_ordering
+}
+
+/** Initial value of the column from where the streaming should start */
+export type v2_object_t_action_t_stream_cursor_value_input = {
+		action_type_id?:number,
+	id?:number,
+	metadata?:jsonb,
+	object_type_id?:number
+}
+
+/** aggregate sum on columns */
+export type v2_object_t_action_t_sum_fields = {
+	__typename?: "v2_object_t_action_t_sum_fields",
+	action_type_id?:number,
+	id?:number,
+	object_type_id?:number
+}
+
+/** order by sum() on columns of table "v2.object_t_action_t" */
+export type v2_object_t_action_t_sum_order_by = {
+		action_type_id?:order_by,
+	id?:order_by,
+	object_type_id?:order_by
+}
+
+/** update columns of table "v2.object_t_action_t" */
+export enum v2_object_t_action_t_update_column {
+	action_type_id = "action_type_id",
+	id = "id",
+	metadata = "metadata",
+	object_type_id = "object_type_id"
+}
+
+export type v2_object_t_action_t_updates = {
+		/** append existing jsonb value of filtered columns with new jsonb value */
+	_append?:v2_object_t_action_t_append_input,
+	/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+	_delete_at_path?:v2_object_t_action_t_delete_at_path_input,
+	/** delete the array element with specified index (negative integers count from
+the end). throws an error if top level container is not an array */
+	_delete_elem?:v2_object_t_action_t_delete_elem_input,
+	/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+	_delete_key?:v2_object_t_action_t_delete_key_input,
+	/** increments the numeric columns with given value of the filtered values */
+	_inc?:v2_object_t_action_t_inc_input,
+	/** prepend existing jsonb value of filtered columns with new jsonb value */
+	_prepend?:v2_object_t_action_t_prepend_input,
+	/** sets the columns of the filtered rows to the given values */
+	_set?:v2_object_t_action_t_set_input,
+	/** filter the rows which have to be updated */
+	where:v2_object_t_action_t_bool_exp
+}
+
+/** aggregate var_pop on columns */
+export type v2_object_t_action_t_var_pop_fields = {
+	__typename?: "v2_object_t_action_t_var_pop_fields",
+	action_type_id?:number,
+	id?:number,
+	object_type_id?:number
+}
+
+/** order by var_pop() on columns of table "v2.object_t_action_t" */
+export type v2_object_t_action_t_var_pop_order_by = {
+		action_type_id?:order_by,
+	id?:order_by,
+	object_type_id?:order_by
+}
+
+/** aggregate var_samp on columns */
+export type v2_object_t_action_t_var_samp_fields = {
+	__typename?: "v2_object_t_action_t_var_samp_fields",
+	action_type_id?:number,
+	id?:number,
+	object_type_id?:number
+}
+
+/** order by var_samp() on columns of table "v2.object_t_action_t" */
+export type v2_object_t_action_t_var_samp_order_by = {
+		action_type_id?:order_by,
+	id?:order_by,
+	object_type_id?:order_by
+}
+
+/** aggregate variance on columns */
+export type v2_object_t_action_t_variance_fields = {
+	__typename?: "v2_object_t_action_t_variance_fields",
+	action_type_id?:number,
+	id?:number,
+	object_type_id?:number
+}
+
+/** order by variance() on columns of table "v2.object_t_action_t" */
+export type v2_object_t_action_t_variance_order_by = {
+		action_type_id?:order_by,
+	id?:order_by,
+	object_type_id?:order_by
 }
 
 export type vector = any
@@ -14996,6 +24442,1829 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
+	group_chat:{
+		members:{
+			distinct_on:{
+				type:"group_members_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"group_members_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"group_members_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		members_aggregate:{
+			distinct_on:{
+				type:"group_members_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"group_members_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"group_members_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		messages:{
+			distinct_on:{
+				type:"group_messages_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"group_messages_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"group_messages_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		messages_aggregate:{
+			distinct_on:{
+				type:"group_messages_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"group_messages_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"group_messages_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		}
+	},
+	group_chat_aggregate_fields:{
+		count:{
+			columns:{
+				type:"group_chat_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			distinct:{
+				type:"Boolean",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		}
+	},
+	group_chat_bool_exp:{
+		_and:{
+			type:"group_chat_bool_exp",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		_not:{
+			type:"group_chat_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_or:{
+			type:"group_chat_bool_exp",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		id:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		members:{
+			type:"group_members_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		members_aggregate:{
+			type:"group_members_aggregate_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		messages:{
+			type:"group_messages_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		messages_aggregate:{
+			type:"group_messages_aggregate_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		name:{
+			type:"String_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		owner:{
+			type:"users_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		owner_id:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_chat_constraint: "enum",
+	group_chat_inc_input:{
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		owner_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_chat_insert_input:{
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		members:{
+			type:"group_members_arr_rel_insert_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		messages:{
+			type:"group_messages_arr_rel_insert_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		name:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		owner:{
+			type:"users_obj_rel_insert_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		owner_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_chat_obj_rel_insert_input:{
+		data:{
+			type:"group_chat_insert_input",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		on_conflict:{
+			type:"group_chat_on_conflict",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_chat_on_conflict:{
+		constraint:{
+			type:"group_chat_constraint",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		update_columns:{
+			type:"group_chat_update_column",
+			array:true,
+			arrayRequired:true,
+			required:true
+		},
+		where:{
+			type:"group_chat_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_chat_order_by:{
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		members_aggregate:{
+			type:"group_members_aggregate_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		messages_aggregate:{
+			type:"group_messages_aggregate_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		name:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		owner:{
+			type:"users_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		owner_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_chat_pk_columns_input:{
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	group_chat_select_column: "enum",
+	group_chat_set_input:{
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		name:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		owner_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_chat_stream_cursor_input:{
+		initial_value:{
+			type:"group_chat_stream_cursor_value_input",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		ordering:{
+			type:"cursor_ordering",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_chat_stream_cursor_value_input:{
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		name:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		owner_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_chat_update_column: "enum",
+	group_chat_updates:{
+		_inc:{
+			type:"group_chat_inc_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_set:{
+			type:"group_chat_set_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		where:{
+			type:"group_chat_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	group_members:{
+		metadata:{
+			path:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		}
+	},
+	group_members_aggregate_bool_exp:{
+		count:{
+			type:"group_members_aggregate_bool_exp_count",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_members_aggregate_bool_exp_count:{
+		arguments:{
+			type:"group_members_select_column",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		distinct:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		filter:{
+			type:"group_members_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		predicate:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	group_members_aggregate_fields:{
+		count:{
+			columns:{
+				type:"group_members_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			distinct:{
+				type:"Boolean",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		}
+	},
+	group_members_aggregate_order_by:{
+		avg:{
+			type:"group_members_avg_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		count:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		max:{
+			type:"group_members_max_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		min:{
+			type:"group_members_min_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		stddev:{
+			type:"group_members_stddev_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		stddev_pop:{
+			type:"group_members_stddev_pop_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		stddev_samp:{
+			type:"group_members_stddev_samp_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		sum:{
+			type:"group_members_sum_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		var_pop:{
+			type:"group_members_var_pop_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		var_samp:{
+			type:"group_members_var_samp_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		variance:{
+			type:"group_members_variance_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_members_append_input:{
+		metadata:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_members_arr_rel_insert_input:{
+		data:{
+			type:"group_members_insert_input",
+			array:true,
+			arrayRequired:true,
+			required:true
+		},
+		on_conflict:{
+			type:"group_members_on_conflict",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_members_avg_order_by:{
+		chat_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_members_bool_exp:{
+		_and:{
+			type:"group_members_bool_exp",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		_not:{
+			type:"group_members_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_or:{
+			type:"group_members_bool_exp",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		chat:{
+			type:"group_chat_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		chat_id:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		metadata:{
+			type:"jsonb_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user:{
+			type:"users_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_members_constraint: "enum",
+	group_members_delete_at_path_input:{
+		metadata:{
+			type:"String",
+			array:true,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	group_members_delete_elem_input:{
+		metadata:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_members_delete_key_input:{
+		metadata:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_members_inc_input:{
+		chat_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_members_insert_input:{
+		chat:{
+			type:"group_chat_obj_rel_insert_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		chat_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		metadata:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user:{
+			type:"users_obj_rel_insert_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_members_max_order_by:{
+		chat_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_members_min_order_by:{
+		chat_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_members_obj_rel_insert_input:{
+		data:{
+			type:"group_members_insert_input",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		on_conflict:{
+			type:"group_members_on_conflict",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_members_on_conflict:{
+		constraint:{
+			type:"group_members_constraint",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		update_columns:{
+			type:"group_members_update_column",
+			array:true,
+			arrayRequired:true,
+			required:true
+		},
+		where:{
+			type:"group_members_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_members_order_by:{
+		chat:{
+			type:"group_chat_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		chat_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		metadata:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user:{
+			type:"users_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_members_pk_columns_input:{
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	group_members_prepend_input:{
+		metadata:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_members_select_column: "enum",
+	group_members_set_input:{
+		chat_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		metadata:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_members_stddev_order_by:{
+		chat_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_members_stddev_pop_order_by:{
+		chat_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_members_stddev_samp_order_by:{
+		chat_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_members_stream_cursor_input:{
+		initial_value:{
+			type:"group_members_stream_cursor_value_input",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		ordering:{
+			type:"cursor_ordering",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_members_stream_cursor_value_input:{
+		chat_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		metadata:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_members_sum_order_by:{
+		chat_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_members_update_column: "enum",
+	group_members_updates:{
+		_append:{
+			type:"group_members_append_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_delete_at_path:{
+			type:"group_members_delete_at_path_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_delete_elem:{
+			type:"group_members_delete_elem_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_delete_key:{
+			type:"group_members_delete_key_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_inc:{
+			type:"group_members_inc_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_prepend:{
+			type:"group_members_prepend_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_set:{
+			type:"group_members_set_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		where:{
+			type:"group_members_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	group_members_var_pop_order_by:{
+		chat_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_members_var_samp_order_by:{
+		chat_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_members_variance_order_by:{
+		chat_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_messages:{
+		payload:{
+			path:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		}
+	},
+	group_messages_aggregate_bool_exp:{
+		count:{
+			type:"group_messages_aggregate_bool_exp_count",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_messages_aggregate_bool_exp_count:{
+		arguments:{
+			type:"group_messages_select_column",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		distinct:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		filter:{
+			type:"group_messages_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		predicate:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	group_messages_aggregate_fields:{
+		count:{
+			columns:{
+				type:"group_messages_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			distinct:{
+				type:"Boolean",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		}
+	},
+	group_messages_aggregate_order_by:{
+		avg:{
+			type:"group_messages_avg_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		count:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		max:{
+			type:"group_messages_max_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		min:{
+			type:"group_messages_min_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		stddev:{
+			type:"group_messages_stddev_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		stddev_pop:{
+			type:"group_messages_stddev_pop_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		stddev_samp:{
+			type:"group_messages_stddev_samp_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		sum:{
+			type:"group_messages_sum_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		var_pop:{
+			type:"group_messages_var_pop_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		var_samp:{
+			type:"group_messages_var_samp_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		variance:{
+			type:"group_messages_variance_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_messages_append_input:{
+		payload:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_messages_arr_rel_insert_input:{
+		data:{
+			type:"group_messages_insert_input",
+			array:true,
+			arrayRequired:true,
+			required:true
+		},
+		on_conflict:{
+			type:"group_messages_on_conflict",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_messages_avg_order_by:{
+		chat_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		member_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_messages_bool_exp:{
+		_and:{
+			type:"group_messages_bool_exp",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		_not:{
+			type:"group_messages_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_or:{
+			type:"group_messages_bool_exp",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		chat_id:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		member_id:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		payload:{
+			type:"jsonb_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		sender:{
+			type:"group_members_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		time:{
+			type:"timestamptz_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_messages_constraint: "enum",
+	group_messages_delete_at_path_input:{
+		payload:{
+			type:"String",
+			array:true,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	group_messages_delete_elem_input:{
+		payload:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_messages_delete_key_input:{
+		payload:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_messages_inc_input:{
+		chat_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		member_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_messages_insert_input:{
+		chat_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		member_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		payload:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		sender:{
+			type:"group_members_obj_rel_insert_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		time:{
+			type:"timestamptz",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_messages_max_order_by:{
+		chat_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		member_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		time:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_messages_min_order_by:{
+		chat_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		member_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		time:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_messages_on_conflict:{
+		constraint:{
+			type:"group_messages_constraint",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		update_columns:{
+			type:"group_messages_update_column",
+			array:true,
+			arrayRequired:true,
+			required:true
+		},
+		where:{
+			type:"group_messages_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_messages_order_by:{
+		chat_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		member_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		payload:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		sender:{
+			type:"group_members_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		time:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_messages_pk_columns_input:{
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	group_messages_prepend_input:{
+		payload:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_messages_select_column: "enum",
+	group_messages_set_input:{
+		chat_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		member_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		payload:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		time:{
+			type:"timestamptz",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_messages_stddev_order_by:{
+		chat_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		member_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_messages_stddev_pop_order_by:{
+		chat_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		member_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_messages_stddev_samp_order_by:{
+		chat_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		member_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_messages_stream_cursor_input:{
+		initial_value:{
+			type:"group_messages_stream_cursor_value_input",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		ordering:{
+			type:"cursor_ordering",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_messages_stream_cursor_value_input:{
+		chat_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		member_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		payload:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		time:{
+			type:"timestamptz",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_messages_sum_order_by:{
+		chat_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		member_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_messages_update_column: "enum",
+	group_messages_updates:{
+		_append:{
+			type:"group_messages_append_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_delete_at_path:{
+			type:"group_messages_delete_at_path_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_delete_elem:{
+			type:"group_messages_delete_elem_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_delete_key:{
+			type:"group_messages_delete_key_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_inc:{
+			type:"group_messages_inc_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_prepend:{
+			type:"group_messages_prepend_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_set:{
+			type:"group_messages_set_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		where:{
+			type:"group_messages_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	group_messages_var_pop_order_by:{
+		chat_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		member_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_messages_var_samp_order_by:{
+		chat_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		member_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	group_messages_variance_order_by:{
+		chat_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		member_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
 	Int_comparison_exp:{
 		_eq:{
 			type:"Int",
@@ -16450,6 +27719,54 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
+		delete_group_chat:{
+			where:{
+				type:"group_chat_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		delete_group_chat_by_pk:{
+			id:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		delete_group_members:{
+			where:{
+				type:"group_members_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		delete_group_members_by_pk:{
+			id:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		delete_group_messages:{
+			where:{
+				type:"group_messages_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		delete_group_messages_by_pk:{
+			id:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
 		delete_interactions:{
 			where:{
 				type:"interactions_bool_exp",
@@ -16492,7 +27809,7 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		delete_object_types_by_pk:{
 			id:{
-				type:"String",
+				type:"Int",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -16555,6 +27872,86 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		},
 		delete_users_by_pk:{
+			id:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		delete_v2_action_types:{
+			where:{
+				type:"v2_action_types_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		delete_v2_action_types_by_pk:{
+			id:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		delete_v2_actions:{
+			where:{
+				type:"v2_actions_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		delete_v2_actions_by_pk:{
+			id:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		delete_v2_aggregates:{
+			where:{
+				type:"v2_aggregates_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		delete_v2_aggregates_by_pk:{
+			id:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		delete_v2_object_action:{
+			where:{
+				type:"v2_object_action_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		delete_v2_object_action_by_pk:{
+			id:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		delete_v2_object_t_action_t:{
+			where:{
+				type:"v2_object_t_action_t_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		delete_v2_object_t_action_t_by_pk:{
 			id:{
 				type:"Int",
 				array:false,
@@ -16669,6 +28066,90 @@ export const AllTypesProps: Record<string,any> = {
 			},
 			on_conflict:{
 				type:"goals_on_conflict",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		insert_group_chat:{
+			objects:{
+				type:"group_chat_insert_input",
+				array:true,
+				arrayRequired:true,
+				required:true
+			},
+			on_conflict:{
+				type:"group_chat_on_conflict",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		insert_group_chat_one:{
+			object:{
+				type:"group_chat_insert_input",
+				array:false,
+				arrayRequired:false,
+				required:true
+			},
+			on_conflict:{
+				type:"group_chat_on_conflict",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		insert_group_members:{
+			objects:{
+				type:"group_members_insert_input",
+				array:true,
+				arrayRequired:true,
+				required:true
+			},
+			on_conflict:{
+				type:"group_members_on_conflict",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		insert_group_members_one:{
+			object:{
+				type:"group_members_insert_input",
+				array:false,
+				arrayRequired:false,
+				required:true
+			},
+			on_conflict:{
+				type:"group_members_on_conflict",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		insert_group_messages:{
+			objects:{
+				type:"group_messages_insert_input",
+				array:true,
+				arrayRequired:true,
+				required:true
+			},
+			on_conflict:{
+				type:"group_messages_on_conflict",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		insert_group_messages_one:{
+			object:{
+				type:"group_messages_insert_input",
+				array:false,
+				arrayRequired:false,
+				required:true
+			},
+			on_conflict:{
+				type:"group_messages_on_conflict",
 				array:false,
 				arrayRequired:false,
 				required:false
@@ -16865,6 +28346,146 @@ export const AllTypesProps: Record<string,any> = {
 			},
 			on_conflict:{
 				type:"users_on_conflict",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		insert_v2_action_types:{
+			objects:{
+				type:"v2_action_types_insert_input",
+				array:true,
+				arrayRequired:true,
+				required:true
+			},
+			on_conflict:{
+				type:"v2_action_types_on_conflict",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		insert_v2_action_types_one:{
+			object:{
+				type:"v2_action_types_insert_input",
+				array:false,
+				arrayRequired:false,
+				required:true
+			},
+			on_conflict:{
+				type:"v2_action_types_on_conflict",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		insert_v2_actions:{
+			objects:{
+				type:"v2_actions_insert_input",
+				array:true,
+				arrayRequired:true,
+				required:true
+			},
+			on_conflict:{
+				type:"v2_actions_on_conflict",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		insert_v2_actions_one:{
+			object:{
+				type:"v2_actions_insert_input",
+				array:false,
+				arrayRequired:false,
+				required:true
+			},
+			on_conflict:{
+				type:"v2_actions_on_conflict",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		insert_v2_aggregates:{
+			objects:{
+				type:"v2_aggregates_insert_input",
+				array:true,
+				arrayRequired:true,
+				required:true
+			},
+			on_conflict:{
+				type:"v2_aggregates_on_conflict",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		insert_v2_aggregates_one:{
+			object:{
+				type:"v2_aggregates_insert_input",
+				array:false,
+				arrayRequired:false,
+				required:true
+			},
+			on_conflict:{
+				type:"v2_aggregates_on_conflict",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		insert_v2_object_action:{
+			objects:{
+				type:"v2_object_action_insert_input",
+				array:true,
+				arrayRequired:true,
+				required:true
+			},
+			on_conflict:{
+				type:"v2_object_action_on_conflict",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		insert_v2_object_action_one:{
+			object:{
+				type:"v2_object_action_insert_input",
+				array:false,
+				arrayRequired:false,
+				required:true
+			},
+			on_conflict:{
+				type:"v2_object_action_on_conflict",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		insert_v2_object_t_action_t:{
+			objects:{
+				type:"v2_object_t_action_t_insert_input",
+				array:true,
+				arrayRequired:true,
+				required:true
+			},
+			on_conflict:{
+				type:"v2_object_t_action_t_on_conflict",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		insert_v2_object_t_action_t_one:{
+			object:{
+				type:"v2_object_t_action_t_insert_input",
+				array:false,
+				arrayRequired:false,
+				required:true
+			},
+			on_conflict:{
+				type:"v2_object_t_action_t_on_conflict",
 				array:false,
 				arrayRequired:false,
 				required:false
@@ -17230,6 +28851,270 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
+		update_group_chat:{
+			_inc:{
+				type:"group_chat_inc_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_set:{
+				type:"group_chat_set_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			where:{
+				type:"group_chat_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		update_group_chat_by_pk:{
+			_inc:{
+				type:"group_chat_inc_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_set:{
+				type:"group_chat_set_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			pk_columns:{
+				type:"group_chat_pk_columns_input",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		update_group_chat_many:{
+			updates:{
+				type:"group_chat_updates",
+				array:true,
+				arrayRequired:true,
+				required:true
+			}
+		},
+		update_group_members:{
+			_append:{
+				type:"group_members_append_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_at_path:{
+				type:"group_members_delete_at_path_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_elem:{
+				type:"group_members_delete_elem_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_key:{
+				type:"group_members_delete_key_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_inc:{
+				type:"group_members_inc_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_prepend:{
+				type:"group_members_prepend_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_set:{
+				type:"group_members_set_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			where:{
+				type:"group_members_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		update_group_members_by_pk:{
+			_append:{
+				type:"group_members_append_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_at_path:{
+				type:"group_members_delete_at_path_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_elem:{
+				type:"group_members_delete_elem_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_key:{
+				type:"group_members_delete_key_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_inc:{
+				type:"group_members_inc_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_prepend:{
+				type:"group_members_prepend_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_set:{
+				type:"group_members_set_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			pk_columns:{
+				type:"group_members_pk_columns_input",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		update_group_members_many:{
+			updates:{
+				type:"group_members_updates",
+				array:true,
+				arrayRequired:true,
+				required:true
+			}
+		},
+		update_group_messages:{
+			_append:{
+				type:"group_messages_append_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_at_path:{
+				type:"group_messages_delete_at_path_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_elem:{
+				type:"group_messages_delete_elem_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_key:{
+				type:"group_messages_delete_key_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_inc:{
+				type:"group_messages_inc_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_prepend:{
+				type:"group_messages_prepend_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_set:{
+				type:"group_messages_set_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			where:{
+				type:"group_messages_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		update_group_messages_by_pk:{
+			_append:{
+				type:"group_messages_append_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_at_path:{
+				type:"group_messages_delete_at_path_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_elem:{
+				type:"group_messages_delete_elem_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_key:{
+				type:"group_messages_delete_key_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_inc:{
+				type:"group_messages_inc_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_prepend:{
+				type:"group_messages_prepend_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_set:{
+				type:"group_messages_set_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			pk_columns:{
+				type:"group_messages_pk_columns_input",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		update_group_messages_many:{
+			updates:{
+				type:"group_messages_updates",
+				array:true,
+				arrayRequired:true,
+				required:true
+			}
+		},
 		update_interactions:{
 			_append:{
 				type:"interactions_append_input",
@@ -17411,6 +29296,12 @@ export const AllTypesProps: Record<string,any> = {
 				arrayRequired:false,
 				required:false
 			},
+			_inc:{
+				type:"object_types_inc_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
 			_prepend:{
 				type:"object_types_prepend_input",
 				array:false,
@@ -17455,6 +29346,12 @@ export const AllTypesProps: Record<string,any> = {
 				arrayRequired:false,
 				required:false
 			},
+			_inc:{
+				type:"object_types_inc_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
 			_prepend:{
 				type:"object_types_prepend_input",
 				array:false,
@@ -17483,8 +29380,38 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		},
 		update_objects:{
+			_append:{
+				type:"objects_append_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_at_path:{
+				type:"objects_delete_at_path_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_elem:{
+				type:"objects_delete_elem_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_key:{
+				type:"objects_delete_key_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
 			_inc:{
 				type:"objects_inc_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_prepend:{
+				type:"objects_prepend_input",
 				array:false,
 				arrayRequired:false,
 				required:false
@@ -17503,8 +29430,38 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		},
 		update_objects_by_pk:{
+			_append:{
+				type:"objects_append_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_at_path:{
+				type:"objects_delete_at_path_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_elem:{
+				type:"objects_delete_elem_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_key:{
+				type:"objects_delete_key_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
 			_inc:{
 				type:"objects_inc_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_prepend:{
+				type:"objects_prepend_input",
 				array:false,
 				arrayRequired:false,
 				required:false
@@ -17793,12 +29750,556 @@ export const AllTypesProps: Record<string,any> = {
 				arrayRequired:true,
 				required:true
 			}
+		},
+		update_v2_action_types:{
+			_append:{
+				type:"v2_action_types_append_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_at_path:{
+				type:"v2_action_types_delete_at_path_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_elem:{
+				type:"v2_action_types_delete_elem_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_key:{
+				type:"v2_action_types_delete_key_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_inc:{
+				type:"v2_action_types_inc_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_prepend:{
+				type:"v2_action_types_prepend_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_set:{
+				type:"v2_action_types_set_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			where:{
+				type:"v2_action_types_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		update_v2_action_types_by_pk:{
+			_append:{
+				type:"v2_action_types_append_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_at_path:{
+				type:"v2_action_types_delete_at_path_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_elem:{
+				type:"v2_action_types_delete_elem_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_key:{
+				type:"v2_action_types_delete_key_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_inc:{
+				type:"v2_action_types_inc_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_prepend:{
+				type:"v2_action_types_prepend_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_set:{
+				type:"v2_action_types_set_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			pk_columns:{
+				type:"v2_action_types_pk_columns_input",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		update_v2_action_types_many:{
+			updates:{
+				type:"v2_action_types_updates",
+				array:true,
+				arrayRequired:true,
+				required:true
+			}
+		},
+		update_v2_actions:{
+			_append:{
+				type:"v2_actions_append_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_at_path:{
+				type:"v2_actions_delete_at_path_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_elem:{
+				type:"v2_actions_delete_elem_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_key:{
+				type:"v2_actions_delete_key_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_inc:{
+				type:"v2_actions_inc_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_prepend:{
+				type:"v2_actions_prepend_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_set:{
+				type:"v2_actions_set_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			where:{
+				type:"v2_actions_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		update_v2_actions_by_pk:{
+			_append:{
+				type:"v2_actions_append_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_at_path:{
+				type:"v2_actions_delete_at_path_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_elem:{
+				type:"v2_actions_delete_elem_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_key:{
+				type:"v2_actions_delete_key_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_inc:{
+				type:"v2_actions_inc_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_prepend:{
+				type:"v2_actions_prepend_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_set:{
+				type:"v2_actions_set_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			pk_columns:{
+				type:"v2_actions_pk_columns_input",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		update_v2_actions_many:{
+			updates:{
+				type:"v2_actions_updates",
+				array:true,
+				arrayRequired:true,
+				required:true
+			}
+		},
+		update_v2_aggregates:{
+			_append:{
+				type:"v2_aggregates_append_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_at_path:{
+				type:"v2_aggregates_delete_at_path_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_elem:{
+				type:"v2_aggregates_delete_elem_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_key:{
+				type:"v2_aggregates_delete_key_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_inc:{
+				type:"v2_aggregates_inc_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_prepend:{
+				type:"v2_aggregates_prepend_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_set:{
+				type:"v2_aggregates_set_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			where:{
+				type:"v2_aggregates_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		update_v2_aggregates_by_pk:{
+			_append:{
+				type:"v2_aggregates_append_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_at_path:{
+				type:"v2_aggregates_delete_at_path_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_elem:{
+				type:"v2_aggregates_delete_elem_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_key:{
+				type:"v2_aggregates_delete_key_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_inc:{
+				type:"v2_aggregates_inc_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_prepend:{
+				type:"v2_aggregates_prepend_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_set:{
+				type:"v2_aggregates_set_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			pk_columns:{
+				type:"v2_aggregates_pk_columns_input",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		update_v2_aggregates_many:{
+			updates:{
+				type:"v2_aggregates_updates",
+				array:true,
+				arrayRequired:true,
+				required:true
+			}
+		},
+		update_v2_object_action:{
+			_inc:{
+				type:"v2_object_action_inc_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_set:{
+				type:"v2_object_action_set_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			where:{
+				type:"v2_object_action_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		update_v2_object_action_by_pk:{
+			_inc:{
+				type:"v2_object_action_inc_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_set:{
+				type:"v2_object_action_set_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			pk_columns:{
+				type:"v2_object_action_pk_columns_input",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		update_v2_object_action_many:{
+			updates:{
+				type:"v2_object_action_updates",
+				array:true,
+				arrayRequired:true,
+				required:true
+			}
+		},
+		update_v2_object_t_action_t:{
+			_append:{
+				type:"v2_object_t_action_t_append_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_at_path:{
+				type:"v2_object_t_action_t_delete_at_path_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_elem:{
+				type:"v2_object_t_action_t_delete_elem_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_key:{
+				type:"v2_object_t_action_t_delete_key_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_inc:{
+				type:"v2_object_t_action_t_inc_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_prepend:{
+				type:"v2_object_t_action_t_prepend_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_set:{
+				type:"v2_object_t_action_t_set_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			where:{
+				type:"v2_object_t_action_t_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		update_v2_object_t_action_t_by_pk:{
+			_append:{
+				type:"v2_object_t_action_t_append_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_at_path:{
+				type:"v2_object_t_action_t_delete_at_path_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_elem:{
+				type:"v2_object_t_action_t_delete_elem_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_delete_key:{
+				type:"v2_object_t_action_t_delete_key_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_inc:{
+				type:"v2_object_t_action_t_inc_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_prepend:{
+				type:"v2_object_t_action_t_prepend_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			_set:{
+				type:"v2_object_t_action_t_set_input",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			pk_columns:{
+				type:"v2_object_t_action_t_pk_columns_input",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		update_v2_object_t_action_t_many:{
+			updates:{
+				type:"v2_object_t_action_t_updates",
+				array:true,
+				arrayRequired:true,
+				required:true
+			}
 		}
 	},
 	object_types:{
 		metadata:{
 			path:{
 				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		objects:{
+			distinct_on:{
+				type:"objects_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"objects_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"objects_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		objects_aggregate:{
+			distinct_on:{
+				type:"objects_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"objects_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"objects_bool_exp",
 				array:false,
 				arrayRequired:false,
 				required:false
@@ -17848,14 +30349,44 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
+		created_at:{
+			type:"timestamptz_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		id:{
-			type:"String_comparison_exp",
+			type:"Int_comparison_exp",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
 		metadata:{
 			type:"jsonb_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		name:{
+			type:"String_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		objects:{
+			type:"objects_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		objects_aggregate:{
+			type:"objects_aggregate_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int_comparison_exp",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -17886,15 +30417,67 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	object_types_insert_input:{
+	object_types_inc_input:{
 		id:{
-			type:"String",
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	object_types_insert_input:{
+		created_at:{
+			type:"timestamptz",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
 		metadata:{
 			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		name:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		objects:{
+			type:"objects_arr_rel_insert_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	object_types_obj_rel_insert_input:{
+		data:{
+			type:"object_types_insert_input",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		on_conflict:{
+			type:"object_types_on_conflict",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -17921,6 +30504,12 @@ export const AllTypesProps: Record<string,any> = {
 		}
 	},
 	object_types_order_by:{
+		created_at:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		id:{
 			type:"order_by",
 			array:false,
@@ -17932,11 +30521,29 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		name:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		objects_aggregate:{
+			type:"objects_aggregate_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	object_types_pk_columns_input:{
 		id:{
-			type:"String",
+			type:"Int",
 			array:false,
 			arrayRequired:false,
 			required:true
@@ -17952,14 +30559,32 @@ export const AllTypesProps: Record<string,any> = {
 	},
 	object_types_select_column: "enum",
 	object_types_set_input:{
+		created_at:{
+			type:"timestamptz",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		id:{
-			type:"String",
+			type:"Int",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
 		metadata:{
 			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		name:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -17980,14 +30605,32 @@ export const AllTypesProps: Record<string,any> = {
 		}
 	},
 	object_types_stream_cursor_value_input:{
+		created_at:{
+			type:"timestamptz",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		id:{
-			type:"String",
+			type:"Int",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
 		metadata:{
 			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		name:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -18015,6 +30658,12 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		_delete_key:{
 			type:"object_types_delete_key_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_inc:{
+			type:"object_types_inc_input",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -18070,6 +30719,88 @@ export const AllTypesProps: Record<string,any> = {
 				arrayRequired:false,
 				required:false
 			}
+		},
+		fields:{
+			path:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		metadata:{
+			path:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		parent_events:{
+			distinct_on:{
+				type:"events_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"events_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"events_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		}
+	},
+	objects_aggregate_bool_exp:{
+		count:{
+			type:"objects_aggregate_bool_exp_count",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	objects_aggregate_bool_exp_count:{
+		arguments:{
+			type:"objects_select_column",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		distinct:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		filter:{
+			type:"objects_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		predicate:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:true
 		}
 	},
 	objects_aggregate_fields:{
@@ -18156,8 +30887,42 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
+	objects_append_input:{
+		fields:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		metadata:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	objects_arr_rel_insert_input:{
+		data:{
+			type:"objects_insert_input",
+			array:true,
+			arrayRequired:true,
+			required:true
+		},
+		on_conflict:{
+			type:"objects_on_conflict",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
 	objects_avg_order_by:{
 		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_type_id:{
 			type:"order_by",
 			array:false,
 			arrayRequired:false,
@@ -18195,8 +30960,20 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
+		fields:{
+			type:"jsonb_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		id:{
 			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		metadata:{
+			type:"jsonb_comparison_exp",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -18208,7 +30985,19 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		},
 		object_type:{
-			type:"String_comparison_exp",
+			type:"object_types_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_type_id:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		parent_events:{
+			type:"events_bool_exp",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -18221,8 +31010,56 @@ export const AllTypesProps: Record<string,any> = {
 		}
 	},
 	objects_constraint: "enum",
+	objects_delete_at_path_input:{
+		fields:{
+			type:"String",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		metadata:{
+			type:"String",
+			array:true,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	objects_delete_elem_input:{
+		fields:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		metadata:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	objects_delete_key_input:{
+		fields:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		metadata:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
 	objects_inc_input:{
 		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_type_id:{
 			type:"Int",
 			array:false,
 			arrayRequired:false,
@@ -18236,8 +31073,20 @@ export const AllTypesProps: Record<string,any> = {
 		}
 	},
 	objects_insert_input:{
+		fields:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		id:{
 			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		metadata:{
+			type:"jsonb",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -18249,7 +31098,13 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		},
 		object_type:{
-			type:"String",
+			type:"object_types_obj_rel_insert_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_type_id:{
+			type:"Int",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -18274,7 +31129,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		object_type:{
+		object_type_id:{
 			type:"order_by",
 			array:false,
 			arrayRequired:false,
@@ -18300,7 +31155,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		object_type:{
+		object_type_id:{
 			type:"order_by",
 			array:false,
 			arrayRequired:false,
@@ -18308,6 +31163,20 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		user_id:{
 			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	objects_obj_rel_insert_input:{
+		data:{
+			type:"objects_insert_input",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		on_conflict:{
+			type:"objects_on_conflict",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -18340,7 +31209,19 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
+		fields:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		metadata:{
 			type:"order_by",
 			array:false,
 			arrayRequired:false,
@@ -18353,7 +31234,19 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		},
 		object_type:{
+			type:"object_types_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_type_id:{
 			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		parent_events_aggregate:{
+			type:"events_aggregate_order_by",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -18373,10 +31266,36 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
+	objects_prepend_input:{
+		fields:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		metadata:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
 	objects_select_column: "enum",
 	objects_set_input:{
+		fields:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		id:{
 			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		metadata:{
+			type:"jsonb",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -18387,8 +31306,8 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		object_type:{
-			type:"String",
+		object_type_id:{
+			type:"Int",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -18402,6 +31321,12 @@ export const AllTypesProps: Record<string,any> = {
 	},
 	objects_stddev_order_by:{
 		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_type_id:{
 			type:"order_by",
 			array:false,
 			arrayRequired:false,
@@ -18421,6 +31346,12 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
+		object_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		user_id:{
 			type:"order_by",
 			array:false,
@@ -18430,6 +31361,12 @@ export const AllTypesProps: Record<string,any> = {
 	},
 	objects_stddev_samp_order_by:{
 		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_type_id:{
 			type:"order_by",
 			array:false,
 			arrayRequired:false,
@@ -18457,8 +31394,20 @@ export const AllTypesProps: Record<string,any> = {
 		}
 	},
 	objects_stream_cursor_value_input:{
+		fields:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		id:{
 			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		metadata:{
+			type:"jsonb",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -18469,8 +31418,8 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		object_type:{
-			type:"String",
+		object_type_id:{
+			type:"Int",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -18489,6 +31438,12 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
+		object_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		user_id:{
 			type:"order_by",
 			array:false,
@@ -18498,8 +31453,38 @@ export const AllTypesProps: Record<string,any> = {
 	},
 	objects_update_column: "enum",
 	objects_updates:{
+		_append:{
+			type:"objects_append_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_delete_at_path:{
+			type:"objects_delete_at_path_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_delete_elem:{
+			type:"objects_delete_elem_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_delete_key:{
+			type:"objects_delete_key_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		_inc:{
 			type:"objects_inc_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_prepend:{
+			type:"objects_prepend_input",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -18524,6 +31509,12 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
+		object_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		user_id:{
 			type:"order_by",
 			array:false,
@@ -18538,6 +31529,12 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
+		object_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		user_id:{
 			type:"order_by",
 			array:false,
@@ -18547,6 +31544,12 @@ export const AllTypesProps: Record<string,any> = {
 	},
 	objects_variance_order_by:{
 		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_type_id:{
 			type:"order_by",
 			array:false,
 			arrayRequired:false,
@@ -19001,6 +32004,222 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
+		group_chat:{
+			distinct_on:{
+				type:"group_chat_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"group_chat_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"group_chat_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		group_chat_aggregate:{
+			distinct_on:{
+				type:"group_chat_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"group_chat_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"group_chat_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		group_chat_by_pk:{
+			id:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		group_members:{
+			distinct_on:{
+				type:"group_members_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"group_members_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"group_members_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		group_members_aggregate:{
+			distinct_on:{
+				type:"group_members_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"group_members_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"group_members_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		group_members_by_pk:{
+			id:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		group_messages:{
+			distinct_on:{
+				type:"group_messages_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"group_messages_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"group_messages_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		group_messages_aggregate:{
+			distinct_on:{
+				type:"group_messages_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"group_messages_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"group_messages_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		group_messages_by_pk:{
+			id:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
 		interactions:{
 			distinct_on:{
 				type:"interactions_select_column",
@@ -19287,7 +32506,7 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		object_types_by_pk:{
 			id:{
-				type:"String",
+				type:"Int",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -19574,6 +32793,366 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		},
 		users_by_pk:{
+			id:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		v2_action_types:{
+			distinct_on:{
+				type:"v2_action_types_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_action_types_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_action_types_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		v2_action_types_aggregate:{
+			distinct_on:{
+				type:"v2_action_types_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_action_types_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_action_types_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		v2_action_types_by_pk:{
+			id:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		v2_actions:{
+			distinct_on:{
+				type:"v2_actions_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_actions_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_actions_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		v2_actions_aggregate:{
+			distinct_on:{
+				type:"v2_actions_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_actions_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_actions_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		v2_actions_by_pk:{
+			id:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		v2_aggregates:{
+			distinct_on:{
+				type:"v2_aggregates_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_aggregates_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_aggregates_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		v2_aggregates_aggregate:{
+			distinct_on:{
+				type:"v2_aggregates_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_aggregates_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_aggregates_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		v2_aggregates_by_pk:{
+			id:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		v2_object_action:{
+			distinct_on:{
+				type:"v2_object_action_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_object_action_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_object_action_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		v2_object_action_aggregate:{
+			distinct_on:{
+				type:"v2_object_action_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_object_action_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_object_action_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		v2_object_action_by_pk:{
+			id:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		v2_object_t_action_t:{
+			distinct_on:{
+				type:"v2_object_t_action_t_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_object_t_action_t_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_object_t_action_t_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		v2_object_t_action_t_aggregate:{
+			distinct_on:{
+				type:"v2_object_t_action_t_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_object_t_action_t_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_object_t_action_t_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		v2_object_t_action_t_by_pk:{
 			id:{
 				type:"Int",
 				array:false,
@@ -20253,6 +33832,282 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
+		group_chat:{
+			distinct_on:{
+				type:"group_chat_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"group_chat_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"group_chat_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		group_chat_aggregate:{
+			distinct_on:{
+				type:"group_chat_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"group_chat_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"group_chat_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		group_chat_by_pk:{
+			id:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		group_chat_stream:{
+			batch_size:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			},
+			cursor:{
+				type:"group_chat_stream_cursor_input",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"group_chat_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		group_members:{
+			distinct_on:{
+				type:"group_members_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"group_members_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"group_members_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		group_members_aggregate:{
+			distinct_on:{
+				type:"group_members_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"group_members_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"group_members_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		group_members_by_pk:{
+			id:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		group_members_stream:{
+			batch_size:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			},
+			cursor:{
+				type:"group_members_stream_cursor_input",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"group_members_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		group_messages:{
+			distinct_on:{
+				type:"group_messages_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"group_messages_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"group_messages_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		group_messages_aggregate:{
+			distinct_on:{
+				type:"group_messages_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"group_messages_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"group_messages_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		group_messages_by_pk:{
+			id:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		group_messages_stream:{
+			batch_size:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			},
+			cursor:{
+				type:"group_messages_stream_cursor_input",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"group_messages_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
 		interactions:{
 			distinct_on:{
 				type:"interactions_select_column",
@@ -20579,7 +34434,7 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		object_types_by_pk:{
 			id:{
-				type:"String",
+				type:"Int",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -20968,6 +34823,466 @@ export const AllTypesProps: Record<string,any> = {
 			},
 			where:{
 				type:"users_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		v2_action_types:{
+			distinct_on:{
+				type:"v2_action_types_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_action_types_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_action_types_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		v2_action_types_aggregate:{
+			distinct_on:{
+				type:"v2_action_types_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_action_types_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_action_types_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		v2_action_types_by_pk:{
+			id:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		v2_action_types_stream:{
+			batch_size:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			},
+			cursor:{
+				type:"v2_action_types_stream_cursor_input",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_action_types_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		v2_actions:{
+			distinct_on:{
+				type:"v2_actions_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_actions_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_actions_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		v2_actions_aggregate:{
+			distinct_on:{
+				type:"v2_actions_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_actions_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_actions_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		v2_actions_by_pk:{
+			id:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		v2_actions_stream:{
+			batch_size:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			},
+			cursor:{
+				type:"v2_actions_stream_cursor_input",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_actions_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		v2_aggregates:{
+			distinct_on:{
+				type:"v2_aggregates_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_aggregates_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_aggregates_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		v2_aggregates_aggregate:{
+			distinct_on:{
+				type:"v2_aggregates_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_aggregates_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_aggregates_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		v2_aggregates_by_pk:{
+			id:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		v2_aggregates_stream:{
+			batch_size:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			},
+			cursor:{
+				type:"v2_aggregates_stream_cursor_input",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_aggregates_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		v2_object_action:{
+			distinct_on:{
+				type:"v2_object_action_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_object_action_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_object_action_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		v2_object_action_aggregate:{
+			distinct_on:{
+				type:"v2_object_action_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_object_action_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_object_action_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		v2_object_action_by_pk:{
+			id:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		v2_object_action_stream:{
+			batch_size:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			},
+			cursor:{
+				type:"v2_object_action_stream_cursor_input",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_object_action_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		v2_object_t_action_t:{
+			distinct_on:{
+				type:"v2_object_t_action_t_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_object_t_action_t_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_object_t_action_t_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		v2_object_t_action_t_aggregate:{
+			distinct_on:{
+				type:"v2_object_t_action_t_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_object_t_action_t_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_object_t_action_t_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		v2_object_t_action_t_by_pk:{
+			id:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		v2_object_t_action_t_stream:{
+			batch_size:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:true
+			},
+			cursor:{
+				type:"v2_object_t_action_t_stream_cursor_input",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_object_t_action_t_bool_exp",
 				array:false,
 				arrayRequired:false,
 				required:false
@@ -21897,6 +36212,134 @@ export const AllTypesProps: Record<string,any> = {
 		}
 	},
 	users:{
+		actions:{
+			distinct_on:{
+				type:"v2_actions_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_actions_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_actions_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		actions_aggregate:{
+			distinct_on:{
+				type:"v2_actions_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_actions_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_actions_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		chats:{
+			distinct_on:{
+				type:"group_members_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"group_members_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"group_members_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		chats_aggregate:{
+			distinct_on:{
+				type:"group_members_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"group_members_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"group_members_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
 		closest_user_location:{
 			args:{
 				type:"closest_user_location_users_args",
@@ -22115,8 +36558,38 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
+		actions:{
+			type:"v2_actions_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		actions_aggregate:{
+			type:"v2_actions_aggregate_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		apns_token:{
+			type:"String_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		apple_id:{
 			type:"String_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		chats:{
+			type:"group_members_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		chats_aggregate:{
+			type:"group_members_aggregate_bool_exp",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -22210,8 +36683,26 @@ export const AllTypesProps: Record<string,any> = {
 		}
 	},
 	users_insert_input:{
+		actions:{
+			type:"v2_actions_arr_rel_insert_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		apns_token:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		apple_id:{
 			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		chats:{
+			type:"group_members_arr_rel_insert_input",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -22294,8 +36785,26 @@ export const AllTypesProps: Record<string,any> = {
 		}
 	},
 	users_order_by:{
+		actions_aggregate:{
+			type:"v2_actions_aggregate_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		apns_token:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		apple_id:{
 			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		chats_aggregate:{
+			type:"group_members_aggregate_order_by",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -22362,6 +36871,12 @@ export const AllTypesProps: Record<string,any> = {
 	users_scalar: "String",
 	users_select_column: "enum",
 	users_set_input:{
+		apns_token:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		apple_id:{
 			type:"String",
 			array:false,
@@ -22414,6 +36929,12 @@ export const AllTypesProps: Record<string,any> = {
 		}
 	},
 	users_stream_cursor_value_input:{
+		apns_token:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
 		apple_id:{
 			type:"String",
 			array:false,
@@ -22500,6 +37021,3847 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:true
+		}
+	},
+	v2_action_types:{
+		aggregates:{
+			distinct_on:{
+				type:"v2_aggregates_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_aggregates_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_aggregates_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		aggregates_aggregate:{
+			distinct_on:{
+				type:"v2_aggregates_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_aggregates_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_aggregates_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		metadata:{
+			path:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		object_t_action_ts:{
+			distinct_on:{
+				type:"v2_object_t_action_t_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_object_t_action_t_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_object_t_action_t_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		object_t_action_ts_aggregate:{
+			distinct_on:{
+				type:"v2_object_t_action_t_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_object_t_action_t_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_object_t_action_t_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		}
+	},
+	v2_action_types_aggregate_fields:{
+		count:{
+			columns:{
+				type:"v2_action_types_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			distinct:{
+				type:"Boolean",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		}
+	},
+	v2_action_types_append_input:{
+		metadata:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_action_types_bool_exp:{
+		_and:{
+			type:"v2_action_types_bool_exp",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		_not:{
+			type:"v2_action_types_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_or:{
+			type:"v2_action_types_bool_exp",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		aggregates:{
+			type:"v2_aggregates_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		aggregates_aggregate:{
+			type:"v2_aggregates_aggregate_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		created_at:{
+			type:"timestamptz_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		description:{
+			type:"String_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		has_duration:{
+			type:"Boolean_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		metadata:{
+			type:"jsonb_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		name:{
+			type:"String_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_t_action_ts:{
+			type:"v2_object_t_action_t_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_t_action_ts_aggregate:{
+			type:"v2_object_t_action_t_aggregate_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		short_desc_syntax:{
+			type:"String_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		updated_at:{
+			type:"timestamptz_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_action_types_constraint: "enum",
+	v2_action_types_delete_at_path_input:{
+		metadata:{
+			type:"String",
+			array:true,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	v2_action_types_delete_elem_input:{
+		metadata:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_action_types_delete_key_input:{
+		metadata:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_action_types_inc_input:{
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_action_types_insert_input:{
+		aggregates:{
+			type:"v2_aggregates_arr_rel_insert_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		created_at:{
+			type:"timestamptz",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		description:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		has_duration:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		metadata:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		name:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_t_action_ts:{
+			type:"v2_object_t_action_t_arr_rel_insert_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		short_desc_syntax:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		updated_at:{
+			type:"timestamptz",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_action_types_obj_rel_insert_input:{
+		data:{
+			type:"v2_action_types_insert_input",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		on_conflict:{
+			type:"v2_action_types_on_conflict",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_action_types_on_conflict:{
+		constraint:{
+			type:"v2_action_types_constraint",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		update_columns:{
+			type:"v2_action_types_update_column",
+			array:true,
+			arrayRequired:true,
+			required:true
+		},
+		where:{
+			type:"v2_action_types_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_action_types_order_by:{
+		aggregates_aggregate:{
+			type:"v2_aggregates_aggregate_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		created_at:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		description:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		has_duration:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		metadata:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		name:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_t_action_ts_aggregate:{
+			type:"v2_object_t_action_t_aggregate_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		short_desc_syntax:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		updated_at:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_action_types_pk_columns_input:{
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	v2_action_types_prepend_input:{
+		metadata:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_action_types_select_column: "enum",
+	v2_action_types_set_input:{
+		created_at:{
+			type:"timestamptz",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		description:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		has_duration:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		metadata:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		name:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		short_desc_syntax:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		updated_at:{
+			type:"timestamptz",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_action_types_stream_cursor_input:{
+		initial_value:{
+			type:"v2_action_types_stream_cursor_value_input",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		ordering:{
+			type:"cursor_ordering",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_action_types_stream_cursor_value_input:{
+		created_at:{
+			type:"timestamptz",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		description:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		has_duration:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		metadata:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		name:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		short_desc_syntax:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		updated_at:{
+			type:"timestamptz",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_action_types_update_column: "enum",
+	v2_action_types_updates:{
+		_append:{
+			type:"v2_action_types_append_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_delete_at_path:{
+			type:"v2_action_types_delete_at_path_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_delete_elem:{
+			type:"v2_action_types_delete_elem_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_delete_key:{
+			type:"v2_action_types_delete_key_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_inc:{
+			type:"v2_action_types_inc_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_prepend:{
+			type:"v2_action_types_prepend_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_set:{
+			type:"v2_action_types_set_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		where:{
+			type:"v2_action_types_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	v2_actions:{
+		children:{
+			distinct_on:{
+				type:"v2_actions_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_actions_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_actions_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		children_aggregate:{
+			distinct_on:{
+				type:"v2_actions_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_actions_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_actions_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		dynamic_data:{
+			path:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		object_actions:{
+			distinct_on:{
+				type:"v2_object_action_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_object_action_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_object_action_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		object_actions_aggregate:{
+			distinct_on:{
+				type:"v2_object_action_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			limit:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			order_by:{
+				type:"v2_object_action_order_by",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			where:{
+				type:"v2_object_action_bool_exp",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		}
+	},
+	v2_actions_aggregate_bool_exp:{
+		count:{
+			type:"v2_actions_aggregate_bool_exp_count",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_actions_aggregate_bool_exp_count:{
+		arguments:{
+			type:"v2_actions_select_column",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		distinct:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		filter:{
+			type:"v2_actions_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		predicate:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	v2_actions_aggregate_fields:{
+		count:{
+			columns:{
+				type:"v2_actions_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			distinct:{
+				type:"Boolean",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		}
+	},
+	v2_actions_aggregate_order_by:{
+		avg:{
+			type:"v2_actions_avg_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		count:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		max:{
+			type:"v2_actions_max_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		min:{
+			type:"v2_actions_min_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		stddev:{
+			type:"v2_actions_stddev_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		stddev_pop:{
+			type:"v2_actions_stddev_pop_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		stddev_samp:{
+			type:"v2_actions_stddev_samp_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		sum:{
+			type:"v2_actions_sum_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		var_pop:{
+			type:"v2_actions_var_pop_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		var_samp:{
+			type:"v2_actions_var_samp_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		variance:{
+			type:"v2_actions_variance_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_actions_append_input:{
+		dynamic_data:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_actions_arr_rel_insert_input:{
+		data:{
+			type:"v2_actions_insert_input",
+			array:true,
+			arrayRequired:true,
+			required:true
+		},
+		on_conflict:{
+			type:"v2_actions_on_conflict",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_actions_avg_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		parent_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_actions_bool_exp:{
+		_and:{
+			type:"v2_actions_bool_exp",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		_not:{
+			type:"v2_actions_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_or:{
+			type:"v2_actions_bool_exp",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		action_type:{
+			type:"v2_action_types_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		action_type_id:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		children:{
+			type:"v2_actions_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		children_aggregate:{
+			type:"v2_actions_aggregate_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		created_at:{
+			type:"timestamptz_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		dynamic_data:{
+			type:"jsonb_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		end_time:{
+			type:"timestamptz_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_actions:{
+			type:"v2_object_action_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_actions_aggregate:{
+			type:"v2_object_action_aggregate_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		parent:{
+			type:"v2_actions_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		parent_id:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		start_time:{
+			type:"timestamptz_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		updated_at:{
+			type:"timestamptz_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_actions_constraint: "enum",
+	v2_actions_delete_at_path_input:{
+		dynamic_data:{
+			type:"String",
+			array:true,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	v2_actions_delete_elem_input:{
+		dynamic_data:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_actions_delete_key_input:{
+		dynamic_data:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_actions_inc_input:{
+		action_type_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		parent_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_actions_insert_input:{
+		action_type:{
+			type:"v2_action_types_obj_rel_insert_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		action_type_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		children:{
+			type:"v2_actions_arr_rel_insert_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		created_at:{
+			type:"timestamptz",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		dynamic_data:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		end_time:{
+			type:"timestamptz",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_actions:{
+			type:"v2_object_action_arr_rel_insert_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		parent:{
+			type:"v2_actions_obj_rel_insert_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		parent_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		start_time:{
+			type:"timestamptz",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		updated_at:{
+			type:"timestamptz",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_actions_max_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		created_at:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		end_time:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		parent_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		start_time:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		updated_at:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_actions_min_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		created_at:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		end_time:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		parent_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		start_time:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		updated_at:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_actions_obj_rel_insert_input:{
+		data:{
+			type:"v2_actions_insert_input",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		on_conflict:{
+			type:"v2_actions_on_conflict",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_actions_on_conflict:{
+		constraint:{
+			type:"v2_actions_constraint",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		update_columns:{
+			type:"v2_actions_update_column",
+			array:true,
+			arrayRequired:true,
+			required:true
+		},
+		where:{
+			type:"v2_actions_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_actions_order_by:{
+		action_type:{
+			type:"v2_action_types_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		children_aggregate:{
+			type:"v2_actions_aggregate_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		created_at:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		dynamic_data:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		end_time:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_actions_aggregate:{
+			type:"v2_object_action_aggregate_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		parent:{
+			type:"v2_actions_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		parent_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		start_time:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		updated_at:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_actions_pk_columns_input:{
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	v2_actions_prepend_input:{
+		dynamic_data:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_actions_select_column: "enum",
+	v2_actions_set_input:{
+		action_type_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		created_at:{
+			type:"timestamptz",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		dynamic_data:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		end_time:{
+			type:"timestamptz",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		parent_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		start_time:{
+			type:"timestamptz",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		updated_at:{
+			type:"timestamptz",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_actions_stddev_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		parent_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_actions_stddev_pop_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		parent_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_actions_stddev_samp_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		parent_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_actions_stream_cursor_input:{
+		initial_value:{
+			type:"v2_actions_stream_cursor_value_input",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		ordering:{
+			type:"cursor_ordering",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_actions_stream_cursor_value_input:{
+		action_type_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		created_at:{
+			type:"timestamptz",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		dynamic_data:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		end_time:{
+			type:"timestamptz",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		parent_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		start_time:{
+			type:"timestamptz",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		updated_at:{
+			type:"timestamptz",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_actions_sum_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		parent_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_actions_update_column: "enum",
+	v2_actions_updates:{
+		_append:{
+			type:"v2_actions_append_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_delete_at_path:{
+			type:"v2_actions_delete_at_path_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_delete_elem:{
+			type:"v2_actions_delete_elem_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_delete_key:{
+			type:"v2_actions_delete_key_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_inc:{
+			type:"v2_actions_inc_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_prepend:{
+			type:"v2_actions_prepend_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_set:{
+			type:"v2_actions_set_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		where:{
+			type:"v2_actions_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	v2_actions_var_pop_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		parent_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_actions_var_samp_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		parent_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_actions_variance_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		parent_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_aggregates:{
+		metadata:{
+			path:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		}
+	},
+	v2_aggregates_aggregate_bool_exp:{
+		count:{
+			type:"v2_aggregates_aggregate_bool_exp_count",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_aggregates_aggregate_bool_exp_count:{
+		arguments:{
+			type:"v2_aggregates_select_column",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		distinct:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		filter:{
+			type:"v2_aggregates_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		predicate:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	v2_aggregates_aggregate_fields:{
+		count:{
+			columns:{
+				type:"v2_aggregates_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			distinct:{
+				type:"Boolean",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		}
+	},
+	v2_aggregates_aggregate_order_by:{
+		avg:{
+			type:"v2_aggregates_avg_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		count:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		max:{
+			type:"v2_aggregates_max_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		min:{
+			type:"v2_aggregates_min_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		stddev:{
+			type:"v2_aggregates_stddev_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		stddev_pop:{
+			type:"v2_aggregates_stddev_pop_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		stddev_samp:{
+			type:"v2_aggregates_stddev_samp_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		sum:{
+			type:"v2_aggregates_sum_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		var_pop:{
+			type:"v2_aggregates_var_pop_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		var_samp:{
+			type:"v2_aggregates_var_samp_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		variance:{
+			type:"v2_aggregates_variance_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_aggregates_append_input:{
+		metadata:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_aggregates_arr_rel_insert_input:{
+		data:{
+			type:"v2_aggregates_insert_input",
+			array:true,
+			arrayRequired:true,
+			required:true
+		},
+		on_conflict:{
+			type:"v2_aggregates_on_conflict",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_aggregates_avg_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_aggregates_bool_exp:{
+		_and:{
+			type:"v2_aggregates_bool_exp",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		_not:{
+			type:"v2_aggregates_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_or:{
+			type:"v2_aggregates_bool_exp",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		action_type:{
+			type:"v2_action_types_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		action_type_id:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		metadata:{
+			type:"jsonb_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_aggregates_constraint: "enum",
+	v2_aggregates_delete_at_path_input:{
+		metadata:{
+			type:"String",
+			array:true,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	v2_aggregates_delete_elem_input:{
+		metadata:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_aggregates_delete_key_input:{
+		metadata:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_aggregates_inc_input:{
+		action_type_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_aggregates_insert_input:{
+		action_type:{
+			type:"v2_action_types_obj_rel_insert_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		action_type_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		metadata:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_aggregates_max_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_aggregates_min_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_aggregates_on_conflict:{
+		constraint:{
+			type:"v2_aggregates_constraint",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		update_columns:{
+			type:"v2_aggregates_update_column",
+			array:true,
+			arrayRequired:true,
+			required:true
+		},
+		where:{
+			type:"v2_aggregates_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_aggregates_order_by:{
+		action_type:{
+			type:"v2_action_types_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		metadata:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_aggregates_pk_columns_input:{
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	v2_aggregates_prepend_input:{
+		metadata:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_aggregates_select_column: "enum",
+	v2_aggregates_set_input:{
+		action_type_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		metadata:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_aggregates_stddev_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_aggregates_stddev_pop_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_aggregates_stddev_samp_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_aggregates_stream_cursor_input:{
+		initial_value:{
+			type:"v2_aggregates_stream_cursor_value_input",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		ordering:{
+			type:"cursor_ordering",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_aggregates_stream_cursor_value_input:{
+		action_type_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		metadata:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_aggregates_sum_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_aggregates_update_column: "enum",
+	v2_aggregates_updates:{
+		_append:{
+			type:"v2_aggregates_append_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_delete_at_path:{
+			type:"v2_aggregates_delete_at_path_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_delete_elem:{
+			type:"v2_aggregates_delete_elem_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_delete_key:{
+			type:"v2_aggregates_delete_key_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_inc:{
+			type:"v2_aggregates_inc_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_prepend:{
+			type:"v2_aggregates_prepend_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_set:{
+			type:"v2_aggregates_set_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		where:{
+			type:"v2_aggregates_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	v2_aggregates_var_pop_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_aggregates_var_samp_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_aggregates_variance_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		user_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_action_aggregate_bool_exp:{
+		count:{
+			type:"v2_object_action_aggregate_bool_exp_count",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_action_aggregate_bool_exp_count:{
+		arguments:{
+			type:"v2_object_action_select_column",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		distinct:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		filter:{
+			type:"v2_object_action_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		predicate:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	v2_object_action_aggregate_fields:{
+		count:{
+			columns:{
+				type:"v2_object_action_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			distinct:{
+				type:"Boolean",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		}
+	},
+	v2_object_action_aggregate_order_by:{
+		avg:{
+			type:"v2_object_action_avg_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		count:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		max:{
+			type:"v2_object_action_max_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		min:{
+			type:"v2_object_action_min_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		stddev:{
+			type:"v2_object_action_stddev_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		stddev_pop:{
+			type:"v2_object_action_stddev_pop_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		stddev_samp:{
+			type:"v2_object_action_stddev_samp_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		sum:{
+			type:"v2_object_action_sum_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		var_pop:{
+			type:"v2_object_action_var_pop_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		var_samp:{
+			type:"v2_object_action_var_samp_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		variance:{
+			type:"v2_object_action_variance_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_action_arr_rel_insert_input:{
+		data:{
+			type:"v2_object_action_insert_input",
+			array:true,
+			arrayRequired:true,
+			required:true
+		},
+		on_conflict:{
+			type:"v2_object_action_on_conflict",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_action_avg_order_by:{
+		action_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_t_action_t_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_action_bool_exp:{
+		_and:{
+			type:"v2_object_action_bool_exp",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		_not:{
+			type:"v2_object_action_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_or:{
+			type:"v2_object_action_bool_exp",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		action:{
+			type:"v2_actions_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		action_id:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object:{
+			type:"objects_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_id:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_t_action_t:{
+			type:"v2_object_t_action_t_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_t_action_t_id:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_action_constraint: "enum",
+	v2_object_action_inc_input:{
+		action_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_t_action_t_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_action_insert_input:{
+		action:{
+			type:"v2_actions_obj_rel_insert_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		action_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object:{
+			type:"objects_obj_rel_insert_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_t_action_t:{
+			type:"v2_object_t_action_t_obj_rel_insert_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_t_action_t_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_action_max_order_by:{
+		action_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_t_action_t_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_action_min_order_by:{
+		action_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_t_action_t_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_action_on_conflict:{
+		constraint:{
+			type:"v2_object_action_constraint",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		update_columns:{
+			type:"v2_object_action_update_column",
+			array:true,
+			arrayRequired:true,
+			required:true
+		},
+		where:{
+			type:"v2_object_action_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_action_order_by:{
+		action:{
+			type:"v2_actions_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		action_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object:{
+			type:"objects_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_t_action_t:{
+			type:"v2_object_t_action_t_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_t_action_t_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_action_pk_columns_input:{
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	v2_object_action_select_column: "enum",
+	v2_object_action_set_input:{
+		action_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_t_action_t_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_action_stddev_order_by:{
+		action_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_t_action_t_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_action_stddev_pop_order_by:{
+		action_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_t_action_t_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_action_stddev_samp_order_by:{
+		action_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_t_action_t_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_action_stream_cursor_input:{
+		initial_value:{
+			type:"v2_object_action_stream_cursor_value_input",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		ordering:{
+			type:"cursor_ordering",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_action_stream_cursor_value_input:{
+		action_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_t_action_t_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_action_sum_order_by:{
+		action_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_t_action_t_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_action_update_column: "enum",
+	v2_object_action_updates:{
+		_inc:{
+			type:"v2_object_action_inc_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_set:{
+			type:"v2_object_action_set_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		where:{
+			type:"v2_object_action_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	v2_object_action_var_pop_order_by:{
+		action_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_t_action_t_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_action_var_samp_order_by:{
+		action_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_t_action_t_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_action_variance_order_by:{
+		action_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_t_action_t_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_t_action_t:{
+		metadata:{
+			path:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		}
+	},
+	v2_object_t_action_t_aggregate_bool_exp:{
+		count:{
+			type:"v2_object_t_action_t_aggregate_bool_exp_count",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_t_action_t_aggregate_bool_exp_count:{
+		arguments:{
+			type:"v2_object_t_action_t_select_column",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		distinct:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		filter:{
+			type:"v2_object_t_action_t_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		predicate:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	v2_object_t_action_t_aggregate_fields:{
+		count:{
+			columns:{
+				type:"v2_object_t_action_t_select_column",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			distinct:{
+				type:"Boolean",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		}
+	},
+	v2_object_t_action_t_aggregate_order_by:{
+		avg:{
+			type:"v2_object_t_action_t_avg_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		count:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		max:{
+			type:"v2_object_t_action_t_max_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		min:{
+			type:"v2_object_t_action_t_min_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		stddev:{
+			type:"v2_object_t_action_t_stddev_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		stddev_pop:{
+			type:"v2_object_t_action_t_stddev_pop_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		stddev_samp:{
+			type:"v2_object_t_action_t_stddev_samp_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		sum:{
+			type:"v2_object_t_action_t_sum_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		var_pop:{
+			type:"v2_object_t_action_t_var_pop_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		var_samp:{
+			type:"v2_object_t_action_t_var_samp_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		variance:{
+			type:"v2_object_t_action_t_variance_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_t_action_t_append_input:{
+		metadata:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_t_action_t_arr_rel_insert_input:{
+		data:{
+			type:"v2_object_t_action_t_insert_input",
+			array:true,
+			arrayRequired:true,
+			required:true
+		},
+		on_conflict:{
+			type:"v2_object_t_action_t_on_conflict",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_t_action_t_avg_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_t_action_t_bool_exp:{
+		_and:{
+			type:"v2_object_t_action_t_bool_exp",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		_not:{
+			type:"v2_object_t_action_t_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_or:{
+			type:"v2_object_t_action_t_bool_exp",
+			array:true,
+			arrayRequired:false,
+			required:true
+		},
+		action_type:{
+			type:"v2_action_types_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		action_type_id:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		metadata:{
+			type:"jsonb_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_type:{
+			type:"object_types_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_type_id:{
+			type:"Int_comparison_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_t_action_t_constraint: "enum",
+	v2_object_t_action_t_delete_at_path_input:{
+		metadata:{
+			type:"String",
+			array:true,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	v2_object_t_action_t_delete_elem_input:{
+		metadata:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_t_action_t_delete_key_input:{
+		metadata:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_t_action_t_inc_input:{
+		action_type_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_type_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_t_action_t_insert_input:{
+		action_type:{
+			type:"v2_action_types_obj_rel_insert_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		action_type_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		metadata:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_type:{
+			type:"object_types_obj_rel_insert_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_type_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_t_action_t_max_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_t_action_t_min_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_t_action_t_obj_rel_insert_input:{
+		data:{
+			type:"v2_object_t_action_t_insert_input",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		on_conflict:{
+			type:"v2_object_t_action_t_on_conflict",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_t_action_t_on_conflict:{
+		constraint:{
+			type:"v2_object_t_action_t_constraint",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		update_columns:{
+			type:"v2_object_t_action_t_update_column",
+			array:true,
+			arrayRequired:true,
+			required:true
+		},
+		where:{
+			type:"v2_object_t_action_t_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_t_action_t_order_by:{
+		action_type:{
+			type:"v2_action_types_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		metadata:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_type:{
+			type:"object_types_order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_t_action_t_pk_columns_input:{
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	v2_object_t_action_t_prepend_input:{
+		metadata:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_t_action_t_select_column: "enum",
+	v2_object_t_action_t_set_input:{
+		action_type_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		metadata:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_type_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_t_action_t_stddev_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_t_action_t_stddev_pop_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_t_action_t_stddev_samp_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_t_action_t_stream_cursor_input:{
+		initial_value:{
+			type:"v2_object_t_action_t_stream_cursor_value_input",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		ordering:{
+			type:"cursor_ordering",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_t_action_t_stream_cursor_value_input:{
+		action_type_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		metadata:{
+			type:"jsonb",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_type_id:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_t_action_t_sum_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_t_action_t_update_column: "enum",
+	v2_object_t_action_t_updates:{
+		_append:{
+			type:"v2_object_t_action_t_append_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_delete_at_path:{
+			type:"v2_object_t_action_t_delete_at_path_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_delete_elem:{
+			type:"v2_object_t_action_t_delete_elem_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_delete_key:{
+			type:"v2_object_t_action_t_delete_key_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_inc:{
+			type:"v2_object_t_action_t_inc_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_prepend:{
+			type:"v2_object_t_action_t_prepend_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		_set:{
+			type:"v2_object_t_action_t_set_input",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		where:{
+			type:"v2_object_t_action_t_bool_exp",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	v2_object_t_action_t_var_pop_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_t_action_t_var_samp_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	v2_object_t_action_t_variance_order_by:{
+		action_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		object_type_id:{
+			type:"order_by",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	vector: "String",
@@ -22910,6 +41272,239 @@ export const ReturnTypes: Record<string,any> = {
 		id:"Float",
 		user_id:"Float"
 	},
+	group_chat:{
+		id:"Int",
+		members:"group_members",
+		members_aggregate:"group_members_aggregate",
+		messages:"group_messages",
+		messages_aggregate:"group_messages_aggregate",
+		name:"String",
+		owner:"users",
+		owner_id:"Int"
+	},
+	group_chat_aggregate:{
+		aggregate:"group_chat_aggregate_fields",
+		nodes:"group_chat"
+	},
+	group_chat_aggregate_fields:{
+		avg:"group_chat_avg_fields",
+		count:"Int",
+		max:"group_chat_max_fields",
+		min:"group_chat_min_fields",
+		stddev:"group_chat_stddev_fields",
+		stddev_pop:"group_chat_stddev_pop_fields",
+		stddev_samp:"group_chat_stddev_samp_fields",
+		sum:"group_chat_sum_fields",
+		var_pop:"group_chat_var_pop_fields",
+		var_samp:"group_chat_var_samp_fields",
+		variance:"group_chat_variance_fields"
+	},
+	group_chat_avg_fields:{
+		id:"Float",
+		owner_id:"Float"
+	},
+	group_chat_max_fields:{
+		id:"Int",
+		name:"String",
+		owner_id:"Int"
+	},
+	group_chat_min_fields:{
+		id:"Int",
+		name:"String",
+		owner_id:"Int"
+	},
+	group_chat_mutation_response:{
+		affected_rows:"Int",
+		returning:"group_chat"
+	},
+	group_chat_stddev_fields:{
+		id:"Float",
+		owner_id:"Float"
+	},
+	group_chat_stddev_pop_fields:{
+		id:"Float",
+		owner_id:"Float"
+	},
+	group_chat_stddev_samp_fields:{
+		id:"Float",
+		owner_id:"Float"
+	},
+	group_chat_sum_fields:{
+		id:"Int",
+		owner_id:"Int"
+	},
+	group_chat_var_pop_fields:{
+		id:"Float",
+		owner_id:"Float"
+	},
+	group_chat_var_samp_fields:{
+		id:"Float",
+		owner_id:"Float"
+	},
+	group_chat_variance_fields:{
+		id:"Float",
+		owner_id:"Float"
+	},
+	group_members:{
+		chat:"group_chat",
+		chat_id:"Int",
+		id:"Int",
+		metadata:"jsonb",
+		user:"users",
+		user_id:"Int"
+	},
+	group_members_aggregate:{
+		aggregate:"group_members_aggregate_fields",
+		nodes:"group_members"
+	},
+	group_members_aggregate_fields:{
+		avg:"group_members_avg_fields",
+		count:"Int",
+		max:"group_members_max_fields",
+		min:"group_members_min_fields",
+		stddev:"group_members_stddev_fields",
+		stddev_pop:"group_members_stddev_pop_fields",
+		stddev_samp:"group_members_stddev_samp_fields",
+		sum:"group_members_sum_fields",
+		var_pop:"group_members_var_pop_fields",
+		var_samp:"group_members_var_samp_fields",
+		variance:"group_members_variance_fields"
+	},
+	group_members_avg_fields:{
+		chat_id:"Float",
+		id:"Float",
+		user_id:"Float"
+	},
+	group_members_max_fields:{
+		chat_id:"Int",
+		id:"Int",
+		user_id:"Int"
+	},
+	group_members_min_fields:{
+		chat_id:"Int",
+		id:"Int",
+		user_id:"Int"
+	},
+	group_members_mutation_response:{
+		affected_rows:"Int",
+		returning:"group_members"
+	},
+	group_members_stddev_fields:{
+		chat_id:"Float",
+		id:"Float",
+		user_id:"Float"
+	},
+	group_members_stddev_pop_fields:{
+		chat_id:"Float",
+		id:"Float",
+		user_id:"Float"
+	},
+	group_members_stddev_samp_fields:{
+		chat_id:"Float",
+		id:"Float",
+		user_id:"Float"
+	},
+	group_members_sum_fields:{
+		chat_id:"Int",
+		id:"Int",
+		user_id:"Int"
+	},
+	group_members_var_pop_fields:{
+		chat_id:"Float",
+		id:"Float",
+		user_id:"Float"
+	},
+	group_members_var_samp_fields:{
+		chat_id:"Float",
+		id:"Float",
+		user_id:"Float"
+	},
+	group_members_variance_fields:{
+		chat_id:"Float",
+		id:"Float",
+		user_id:"Float"
+	},
+	group_messages:{
+		chat_id:"Int",
+		id:"Int",
+		member_id:"Int",
+		payload:"jsonb",
+		sender:"group_members",
+		time:"timestamptz"
+	},
+	group_messages_aggregate:{
+		aggregate:"group_messages_aggregate_fields",
+		nodes:"group_messages"
+	},
+	group_messages_aggregate_fields:{
+		avg:"group_messages_avg_fields",
+		count:"Int",
+		max:"group_messages_max_fields",
+		min:"group_messages_min_fields",
+		stddev:"group_messages_stddev_fields",
+		stddev_pop:"group_messages_stddev_pop_fields",
+		stddev_samp:"group_messages_stddev_samp_fields",
+		sum:"group_messages_sum_fields",
+		var_pop:"group_messages_var_pop_fields",
+		var_samp:"group_messages_var_samp_fields",
+		variance:"group_messages_variance_fields"
+	},
+	group_messages_avg_fields:{
+		chat_id:"Float",
+		id:"Float",
+		member_id:"Float"
+	},
+	group_messages_max_fields:{
+		chat_id:"Int",
+		id:"Int",
+		member_id:"Int",
+		time:"timestamptz"
+	},
+	group_messages_min_fields:{
+		chat_id:"Int",
+		id:"Int",
+		member_id:"Int",
+		time:"timestamptz"
+	},
+	group_messages_mutation_response:{
+		affected_rows:"Int",
+		returning:"group_messages"
+	},
+	group_messages_stddev_fields:{
+		chat_id:"Float",
+		id:"Float",
+		member_id:"Float"
+	},
+	group_messages_stddev_pop_fields:{
+		chat_id:"Float",
+		id:"Float",
+		member_id:"Float"
+	},
+	group_messages_stddev_samp_fields:{
+		chat_id:"Float",
+		id:"Float",
+		member_id:"Float"
+	},
+	group_messages_sum_fields:{
+		chat_id:"Int",
+		id:"Int",
+		member_id:"Int"
+	},
+	group_messages_var_pop_fields:{
+		chat_id:"Float",
+		id:"Float",
+		member_id:"Float"
+	},
+	group_messages_var_samp_fields:{
+		chat_id:"Float",
+		id:"Float",
+		member_id:"Float"
+	},
+	group_messages_variance_fields:{
+		chat_id:"Float",
+		id:"Float",
+		member_id:"Float"
+	},
 	interactions:{
 		content:"String",
 		content_type:"String",
@@ -23089,6 +41684,12 @@ export const ReturnTypes: Record<string,any> = {
 		delete_events_by_pk:"events",
 		delete_goals:"goals_mutation_response",
 		delete_goals_by_pk:"goals",
+		delete_group_chat:"group_chat_mutation_response",
+		delete_group_chat_by_pk:"group_chat",
+		delete_group_members:"group_members_mutation_response",
+		delete_group_members_by_pk:"group_members",
+		delete_group_messages:"group_messages_mutation_response",
+		delete_group_messages_by_pk:"group_messages",
 		delete_interactions:"interactions_mutation_response",
 		delete_interactions_by_pk:"interactions",
 		delete_locations:"locations_mutation_response",
@@ -23103,6 +41704,16 @@ export const ReturnTypes: Record<string,any> = {
 		delete_user_movements_by_pk:"user_movements",
 		delete_users:"users_mutation_response",
 		delete_users_by_pk:"users",
+		delete_v2_action_types:"v2_action_types_mutation_response",
+		delete_v2_action_types_by_pk:"v2_action_types",
+		delete_v2_actions:"v2_actions_mutation_response",
+		delete_v2_actions_by_pk:"v2_actions",
+		delete_v2_aggregates:"v2_aggregates_mutation_response",
+		delete_v2_aggregates_by_pk:"v2_aggregates",
+		delete_v2_object_action:"v2_object_action_mutation_response",
+		delete_v2_object_action_by_pk:"v2_object_action",
+		delete_v2_object_t_action_t:"v2_object_t_action_t_mutation_response",
+		delete_v2_object_t_action_t_by_pk:"v2_object_t_action_t",
 		insert_associations:"associations_mutation_response",
 		insert_associations_one:"associations",
 		insert_event_types:"event_types_mutation_response",
@@ -23111,6 +41722,12 @@ export const ReturnTypes: Record<string,any> = {
 		insert_events_one:"events",
 		insert_goals:"goals_mutation_response",
 		insert_goals_one:"goals",
+		insert_group_chat:"group_chat_mutation_response",
+		insert_group_chat_one:"group_chat",
+		insert_group_members:"group_members_mutation_response",
+		insert_group_members_one:"group_members",
+		insert_group_messages:"group_messages_mutation_response",
+		insert_group_messages_one:"group_messages",
 		insert_interactions:"interactions_mutation_response",
 		insert_interactions_one:"interactions",
 		insert_locations:"locations_mutation_response",
@@ -23125,6 +41742,16 @@ export const ReturnTypes: Record<string,any> = {
 		insert_user_movements_one:"user_movements",
 		insert_users:"users_mutation_response",
 		insert_users_one:"users",
+		insert_v2_action_types:"v2_action_types_mutation_response",
+		insert_v2_action_types_one:"v2_action_types",
+		insert_v2_actions:"v2_actions_mutation_response",
+		insert_v2_actions_one:"v2_actions",
+		insert_v2_aggregates:"v2_aggregates_mutation_response",
+		insert_v2_aggregates_one:"v2_aggregates",
+		insert_v2_object_action:"v2_object_action_mutation_response",
+		insert_v2_object_action_one:"v2_object_action",
+		insert_v2_object_t_action_t:"v2_object_t_action_t_mutation_response",
+		insert_v2_object_t_action_t_one:"v2_object_t_action_t",
 		update_associations:"associations_mutation_response",
 		update_associations_by_pk:"associations",
 		update_associations_many:"associations_mutation_response",
@@ -23137,6 +41764,15 @@ export const ReturnTypes: Record<string,any> = {
 		update_goals:"goals_mutation_response",
 		update_goals_by_pk:"goals",
 		update_goals_many:"goals_mutation_response",
+		update_group_chat:"group_chat_mutation_response",
+		update_group_chat_by_pk:"group_chat",
+		update_group_chat_many:"group_chat_mutation_response",
+		update_group_members:"group_members_mutation_response",
+		update_group_members_by_pk:"group_members",
+		update_group_members_many:"group_members_mutation_response",
+		update_group_messages:"group_messages_mutation_response",
+		update_group_messages_by_pk:"group_messages",
+		update_group_messages_many:"group_messages_mutation_response",
 		update_interactions:"interactions_mutation_response",
 		update_interactions_by_pk:"interactions",
 		update_interactions_many:"interactions_mutation_response",
@@ -23157,36 +41793,106 @@ export const ReturnTypes: Record<string,any> = {
 		update_user_movements_many:"user_movements_mutation_response",
 		update_users:"users_mutation_response",
 		update_users_by_pk:"users",
-		update_users_many:"users_mutation_response"
+		update_users_many:"users_mutation_response",
+		update_v2_action_types:"v2_action_types_mutation_response",
+		update_v2_action_types_by_pk:"v2_action_types",
+		update_v2_action_types_many:"v2_action_types_mutation_response",
+		update_v2_actions:"v2_actions_mutation_response",
+		update_v2_actions_by_pk:"v2_actions",
+		update_v2_actions_many:"v2_actions_mutation_response",
+		update_v2_aggregates:"v2_aggregates_mutation_response",
+		update_v2_aggregates_by_pk:"v2_aggregates",
+		update_v2_aggregates_many:"v2_aggregates_mutation_response",
+		update_v2_object_action:"v2_object_action_mutation_response",
+		update_v2_object_action_by_pk:"v2_object_action",
+		update_v2_object_action_many:"v2_object_action_mutation_response",
+		update_v2_object_t_action_t:"v2_object_t_action_t_mutation_response",
+		update_v2_object_t_action_t_by_pk:"v2_object_t_action_t",
+		update_v2_object_t_action_t_many:"v2_object_t_action_t_mutation_response"
 	},
 	object_types:{
-		id:"String",
-		metadata:"jsonb"
+		created_at:"timestamptz",
+		id:"Int",
+		metadata:"jsonb",
+		name:"String",
+		objects:"objects",
+		objects_aggregate:"objects_aggregate",
+		user_id:"Int"
 	},
 	object_types_aggregate:{
 		aggregate:"object_types_aggregate_fields",
 		nodes:"object_types"
 	},
 	object_types_aggregate_fields:{
+		avg:"object_types_avg_fields",
 		count:"Int",
 		max:"object_types_max_fields",
-		min:"object_types_min_fields"
+		min:"object_types_min_fields",
+		stddev:"object_types_stddev_fields",
+		stddev_pop:"object_types_stddev_pop_fields",
+		stddev_samp:"object_types_stddev_samp_fields",
+		sum:"object_types_sum_fields",
+		var_pop:"object_types_var_pop_fields",
+		var_samp:"object_types_var_samp_fields",
+		variance:"object_types_variance_fields"
+	},
+	object_types_avg_fields:{
+		id:"Float",
+		user_id:"Float"
 	},
 	object_types_max_fields:{
-		id:"String"
+		created_at:"timestamptz",
+		id:"Int",
+		name:"String",
+		user_id:"Int"
 	},
 	object_types_min_fields:{
-		id:"String"
+		created_at:"timestamptz",
+		id:"Int",
+		name:"String",
+		user_id:"Int"
 	},
 	object_types_mutation_response:{
 		affected_rows:"Int",
 		returning:"object_types"
 	},
+	object_types_stddev_fields:{
+		id:"Float",
+		user_id:"Float"
+	},
+	object_types_stddev_pop_fields:{
+		id:"Float",
+		user_id:"Float"
+	},
+	object_types_stddev_samp_fields:{
+		id:"Float",
+		user_id:"Float"
+	},
+	object_types_sum_fields:{
+		id:"Int",
+		user_id:"Int"
+	},
+	object_types_var_pop_fields:{
+		id:"Float",
+		user_id:"Float"
+	},
+	object_types_var_samp_fields:{
+		id:"Float",
+		user_id:"Float"
+	},
+	object_types_variance_fields:{
+		id:"Float",
+		user_id:"Float"
+	},
 	objects:{
 		events:"events",
+		fields:"jsonb",
 		id:"Int",
+		metadata:"jsonb",
 		name:"String",
-		object_type:"String",
+		object_type:"object_types",
+		object_type_id:"Int",
+		parent_events:"events",
 		user_id:"Int"
 	},
 	objects_aggregate:{
@@ -23208,18 +41914,19 @@ export const ReturnTypes: Record<string,any> = {
 	},
 	objects_avg_fields:{
 		id:"Float",
+		object_type_id:"Float",
 		user_id:"Float"
 	},
 	objects_max_fields:{
 		id:"Int",
 		name:"String",
-		object_type:"String",
+		object_type_id:"Int",
 		user_id:"Int"
 	},
 	objects_min_fields:{
 		id:"Int",
 		name:"String",
-		object_type:"String",
+		object_type_id:"Int",
 		user_id:"Int"
 	},
 	objects_mutation_response:{
@@ -23228,30 +41935,37 @@ export const ReturnTypes: Record<string,any> = {
 	},
 	objects_stddev_fields:{
 		id:"Float",
+		object_type_id:"Float",
 		user_id:"Float"
 	},
 	objects_stddev_pop_fields:{
 		id:"Float",
+		object_type_id:"Float",
 		user_id:"Float"
 	},
 	objects_stddev_samp_fields:{
 		id:"Float",
+		object_type_id:"Float",
 		user_id:"Float"
 	},
 	objects_sum_fields:{
 		id:"Int",
+		object_type_id:"Int",
 		user_id:"Int"
 	},
 	objects_var_pop_fields:{
 		id:"Float",
+		object_type_id:"Float",
 		user_id:"Float"
 	},
 	objects_var_samp_fields:{
 		id:"Float",
+		object_type_id:"Float",
 		user_id:"Float"
 	},
 	objects_variance_fields:{
 		id:"Float",
+		object_type_id:"Float",
 		user_id:"Float"
 	},
 	query_root:{
@@ -23271,6 +41985,15 @@ export const ReturnTypes: Record<string,any> = {
 		goals:"goals",
 		goals_aggregate:"goals_aggregate",
 		goals_by_pk:"goals",
+		group_chat:"group_chat",
+		group_chat_aggregate:"group_chat_aggregate",
+		group_chat_by_pk:"group_chat",
+		group_members:"group_members",
+		group_members_aggregate:"group_members_aggregate",
+		group_members_by_pk:"group_members",
+		group_messages:"group_messages",
+		group_messages_aggregate:"group_messages_aggregate",
+		group_messages_by_pk:"group_messages",
 		interactions:"interactions",
 		interactions_aggregate:"interactions_aggregate",
 		interactions_by_pk:"interactions",
@@ -23293,7 +42016,22 @@ export const ReturnTypes: Record<string,any> = {
 		user_movements_by_pk:"user_movements",
 		users:"users",
 		users_aggregate:"users_aggregate",
-		users_by_pk:"users"
+		users_by_pk:"users",
+		v2_action_types:"v2_action_types",
+		v2_action_types_aggregate:"v2_action_types_aggregate",
+		v2_action_types_by_pk:"v2_action_types",
+		v2_actions:"v2_actions",
+		v2_actions_aggregate:"v2_actions_aggregate",
+		v2_actions_by_pk:"v2_actions",
+		v2_aggregates:"v2_aggregates",
+		v2_aggregates_aggregate:"v2_aggregates_aggregate",
+		v2_aggregates_by_pk:"v2_aggregates",
+		v2_object_action:"v2_object_action",
+		v2_object_action_aggregate:"v2_object_action_aggregate",
+		v2_object_action_by_pk:"v2_object_action",
+		v2_object_t_action_t:"v2_object_t_action_t",
+		v2_object_t_action_t_aggregate:"v2_object_t_action_t_aggregate",
+		v2_object_t_action_t_by_pk:"v2_object_t_action_t"
 	},
 	subscription_root:{
 		associations:"associations",
@@ -23316,6 +42054,18 @@ export const ReturnTypes: Record<string,any> = {
 		goals_aggregate:"goals_aggregate",
 		goals_by_pk:"goals",
 		goals_stream:"goals",
+		group_chat:"group_chat",
+		group_chat_aggregate:"group_chat_aggregate",
+		group_chat_by_pk:"group_chat",
+		group_chat_stream:"group_chat",
+		group_members:"group_members",
+		group_members_aggregate:"group_members_aggregate",
+		group_members_by_pk:"group_members",
+		group_members_stream:"group_members",
+		group_messages:"group_messages",
+		group_messages_aggregate:"group_messages_aggregate",
+		group_messages_by_pk:"group_messages",
+		group_messages_stream:"group_messages",
 		interactions:"interactions",
 		interactions_aggregate:"interactions_aggregate",
 		interactions_by_pk:"interactions",
@@ -23345,7 +42095,27 @@ export const ReturnTypes: Record<string,any> = {
 		users:"users",
 		users_aggregate:"users_aggregate",
 		users_by_pk:"users",
-		users_stream:"users"
+		users_stream:"users",
+		v2_action_types:"v2_action_types",
+		v2_action_types_aggregate:"v2_action_types_aggregate",
+		v2_action_types_by_pk:"v2_action_types",
+		v2_action_types_stream:"v2_action_types",
+		v2_actions:"v2_actions",
+		v2_actions_aggregate:"v2_actions_aggregate",
+		v2_actions_by_pk:"v2_actions",
+		v2_actions_stream:"v2_actions",
+		v2_aggregates:"v2_aggregates",
+		v2_aggregates_aggregate:"v2_aggregates_aggregate",
+		v2_aggregates_by_pk:"v2_aggregates",
+		v2_aggregates_stream:"v2_aggregates",
+		v2_object_action:"v2_object_action",
+		v2_object_action_aggregate:"v2_object_action_aggregate",
+		v2_object_action_by_pk:"v2_object_action",
+		v2_object_action_stream:"v2_object_action",
+		v2_object_t_action_t:"v2_object_t_action_t",
+		v2_object_t_action_t_aggregate:"v2_object_t_action_t_aggregate",
+		v2_object_t_action_t_by_pk:"v2_object_t_action_t",
+		v2_object_t_action_t_stream:"v2_object_t_action_t"
 	},
 	todos:{
 		current_count:"Int",
@@ -23522,7 +42292,12 @@ export const ReturnTypes: Record<string,any> = {
 		user_id:"Float"
 	},
 	users:{
+		actions:"v2_actions",
+		actions_aggregate:"v2_actions_aggregate",
+		apns_token:"String",
 		apple_id:"String",
+		chats:"group_members",
+		chats_aggregate:"group_members_aggregate",
 		closest_user_location:"locations",
 		config:"jsonb",
 		events:"events",
@@ -23555,6 +42330,7 @@ export const ReturnTypes: Record<string,any> = {
 		id:"Float"
 	},
 	users_max_fields:{
+		apns_token:"String",
 		apple_id:"String",
 		id:"Int",
 		language:"String",
@@ -23562,6 +42338,7 @@ export const ReturnTypes: Record<string,any> = {
 		timezone:"String"
 	},
 	users_min_fields:{
+		apns_token:"String",
 		apple_id:"String",
 		id:"Int",
 		language:"String",
@@ -23592,6 +42369,445 @@ export const ReturnTypes: Record<string,any> = {
 	},
 	users_variance_fields:{
 		id:"Float"
+	},
+	v2_action_types:{
+		aggregates:"v2_aggregates",
+		aggregates_aggregate:"v2_aggregates_aggregate",
+		created_at:"timestamptz",
+		description:"String",
+		has_duration:"Boolean",
+		id:"Int",
+		metadata:"jsonb",
+		name:"String",
+		object_t_action_ts:"v2_object_t_action_t",
+		object_t_action_ts_aggregate:"v2_object_t_action_t_aggregate",
+		short_desc_syntax:"String",
+		updated_at:"timestamptz",
+		user_id:"Int"
+	},
+	v2_action_types_aggregate:{
+		aggregate:"v2_action_types_aggregate_fields",
+		nodes:"v2_action_types"
+	},
+	v2_action_types_aggregate_fields:{
+		avg:"v2_action_types_avg_fields",
+		count:"Int",
+		max:"v2_action_types_max_fields",
+		min:"v2_action_types_min_fields",
+		stddev:"v2_action_types_stddev_fields",
+		stddev_pop:"v2_action_types_stddev_pop_fields",
+		stddev_samp:"v2_action_types_stddev_samp_fields",
+		sum:"v2_action_types_sum_fields",
+		var_pop:"v2_action_types_var_pop_fields",
+		var_samp:"v2_action_types_var_samp_fields",
+		variance:"v2_action_types_variance_fields"
+	},
+	v2_action_types_avg_fields:{
+		id:"Float",
+		user_id:"Float"
+	},
+	v2_action_types_max_fields:{
+		created_at:"timestamptz",
+		description:"String",
+		id:"Int",
+		name:"String",
+		short_desc_syntax:"String",
+		updated_at:"timestamptz",
+		user_id:"Int"
+	},
+	v2_action_types_min_fields:{
+		created_at:"timestamptz",
+		description:"String",
+		id:"Int",
+		name:"String",
+		short_desc_syntax:"String",
+		updated_at:"timestamptz",
+		user_id:"Int"
+	},
+	v2_action_types_mutation_response:{
+		affected_rows:"Int",
+		returning:"v2_action_types"
+	},
+	v2_action_types_stddev_fields:{
+		id:"Float",
+		user_id:"Float"
+	},
+	v2_action_types_stddev_pop_fields:{
+		id:"Float",
+		user_id:"Float"
+	},
+	v2_action_types_stddev_samp_fields:{
+		id:"Float",
+		user_id:"Float"
+	},
+	v2_action_types_sum_fields:{
+		id:"Int",
+		user_id:"Int"
+	},
+	v2_action_types_var_pop_fields:{
+		id:"Float",
+		user_id:"Float"
+	},
+	v2_action_types_var_samp_fields:{
+		id:"Float",
+		user_id:"Float"
+	},
+	v2_action_types_variance_fields:{
+		id:"Float",
+		user_id:"Float"
+	},
+	v2_actions:{
+		action_type:"v2_action_types",
+		action_type_id:"Int",
+		children:"v2_actions",
+		children_aggregate:"v2_actions_aggregate",
+		created_at:"timestamptz",
+		dynamic_data:"jsonb",
+		end_time:"timestamptz",
+		id:"Int",
+		object_actions:"v2_object_action",
+		object_actions_aggregate:"v2_object_action_aggregate",
+		parent:"v2_actions",
+		parent_id:"Int",
+		start_time:"timestamptz",
+		updated_at:"timestamptz",
+		user_id:"Int"
+	},
+	v2_actions_aggregate:{
+		aggregate:"v2_actions_aggregate_fields",
+		nodes:"v2_actions"
+	},
+	v2_actions_aggregate_fields:{
+		avg:"v2_actions_avg_fields",
+		count:"Int",
+		max:"v2_actions_max_fields",
+		min:"v2_actions_min_fields",
+		stddev:"v2_actions_stddev_fields",
+		stddev_pop:"v2_actions_stddev_pop_fields",
+		stddev_samp:"v2_actions_stddev_samp_fields",
+		sum:"v2_actions_sum_fields",
+		var_pop:"v2_actions_var_pop_fields",
+		var_samp:"v2_actions_var_samp_fields",
+		variance:"v2_actions_variance_fields"
+	},
+	v2_actions_avg_fields:{
+		action_type_id:"Float",
+		id:"Float",
+		parent_id:"Float",
+		user_id:"Float"
+	},
+	v2_actions_max_fields:{
+		action_type_id:"Int",
+		created_at:"timestamptz",
+		end_time:"timestamptz",
+		id:"Int",
+		parent_id:"Int",
+		start_time:"timestamptz",
+		updated_at:"timestamptz",
+		user_id:"Int"
+	},
+	v2_actions_min_fields:{
+		action_type_id:"Int",
+		created_at:"timestamptz",
+		end_time:"timestamptz",
+		id:"Int",
+		parent_id:"Int",
+		start_time:"timestamptz",
+		updated_at:"timestamptz",
+		user_id:"Int"
+	},
+	v2_actions_mutation_response:{
+		affected_rows:"Int",
+		returning:"v2_actions"
+	},
+	v2_actions_stddev_fields:{
+		action_type_id:"Float",
+		id:"Float",
+		parent_id:"Float",
+		user_id:"Float"
+	},
+	v2_actions_stddev_pop_fields:{
+		action_type_id:"Float",
+		id:"Float",
+		parent_id:"Float",
+		user_id:"Float"
+	},
+	v2_actions_stddev_samp_fields:{
+		action_type_id:"Float",
+		id:"Float",
+		parent_id:"Float",
+		user_id:"Float"
+	},
+	v2_actions_sum_fields:{
+		action_type_id:"Int",
+		id:"Int",
+		parent_id:"Int",
+		user_id:"Int"
+	},
+	v2_actions_var_pop_fields:{
+		action_type_id:"Float",
+		id:"Float",
+		parent_id:"Float",
+		user_id:"Float"
+	},
+	v2_actions_var_samp_fields:{
+		action_type_id:"Float",
+		id:"Float",
+		parent_id:"Float",
+		user_id:"Float"
+	},
+	v2_actions_variance_fields:{
+		action_type_id:"Float",
+		id:"Float",
+		parent_id:"Float",
+		user_id:"Float"
+	},
+	v2_aggregates:{
+		action_type:"v2_action_types",
+		action_type_id:"Int",
+		id:"Int",
+		metadata:"jsonb",
+		user_id:"Int"
+	},
+	v2_aggregates_aggregate:{
+		aggregate:"v2_aggregates_aggregate_fields",
+		nodes:"v2_aggregates"
+	},
+	v2_aggregates_aggregate_fields:{
+		avg:"v2_aggregates_avg_fields",
+		count:"Int",
+		max:"v2_aggregates_max_fields",
+		min:"v2_aggregates_min_fields",
+		stddev:"v2_aggregates_stddev_fields",
+		stddev_pop:"v2_aggregates_stddev_pop_fields",
+		stddev_samp:"v2_aggregates_stddev_samp_fields",
+		sum:"v2_aggregates_sum_fields",
+		var_pop:"v2_aggregates_var_pop_fields",
+		var_samp:"v2_aggregates_var_samp_fields",
+		variance:"v2_aggregates_variance_fields"
+	},
+	v2_aggregates_avg_fields:{
+		action_type_id:"Float",
+		id:"Float",
+		user_id:"Float"
+	},
+	v2_aggregates_max_fields:{
+		action_type_id:"Int",
+		id:"Int",
+		user_id:"Int"
+	},
+	v2_aggregates_min_fields:{
+		action_type_id:"Int",
+		id:"Int",
+		user_id:"Int"
+	},
+	v2_aggregates_mutation_response:{
+		affected_rows:"Int",
+		returning:"v2_aggregates"
+	},
+	v2_aggregates_stddev_fields:{
+		action_type_id:"Float",
+		id:"Float",
+		user_id:"Float"
+	},
+	v2_aggregates_stddev_pop_fields:{
+		action_type_id:"Float",
+		id:"Float",
+		user_id:"Float"
+	},
+	v2_aggregates_stddev_samp_fields:{
+		action_type_id:"Float",
+		id:"Float",
+		user_id:"Float"
+	},
+	v2_aggregates_sum_fields:{
+		action_type_id:"Int",
+		id:"Int",
+		user_id:"Int"
+	},
+	v2_aggregates_var_pop_fields:{
+		action_type_id:"Float",
+		id:"Float",
+		user_id:"Float"
+	},
+	v2_aggregates_var_samp_fields:{
+		action_type_id:"Float",
+		id:"Float",
+		user_id:"Float"
+	},
+	v2_aggregates_variance_fields:{
+		action_type_id:"Float",
+		id:"Float",
+		user_id:"Float"
+	},
+	v2_object_action:{
+		action:"v2_actions",
+		action_id:"Int",
+		id:"Int",
+		object:"objects",
+		object_id:"Int",
+		object_t_action_t:"v2_object_t_action_t",
+		object_t_action_t_id:"Int"
+	},
+	v2_object_action_aggregate:{
+		aggregate:"v2_object_action_aggregate_fields",
+		nodes:"v2_object_action"
+	},
+	v2_object_action_aggregate_fields:{
+		avg:"v2_object_action_avg_fields",
+		count:"Int",
+		max:"v2_object_action_max_fields",
+		min:"v2_object_action_min_fields",
+		stddev:"v2_object_action_stddev_fields",
+		stddev_pop:"v2_object_action_stddev_pop_fields",
+		stddev_samp:"v2_object_action_stddev_samp_fields",
+		sum:"v2_object_action_sum_fields",
+		var_pop:"v2_object_action_var_pop_fields",
+		var_samp:"v2_object_action_var_samp_fields",
+		variance:"v2_object_action_variance_fields"
+	},
+	v2_object_action_avg_fields:{
+		action_id:"Float",
+		id:"Float",
+		object_id:"Float",
+		object_t_action_t_id:"Float"
+	},
+	v2_object_action_max_fields:{
+		action_id:"Int",
+		id:"Int",
+		object_id:"Int",
+		object_t_action_t_id:"Int"
+	},
+	v2_object_action_min_fields:{
+		action_id:"Int",
+		id:"Int",
+		object_id:"Int",
+		object_t_action_t_id:"Int"
+	},
+	v2_object_action_mutation_response:{
+		affected_rows:"Int",
+		returning:"v2_object_action"
+	},
+	v2_object_action_stddev_fields:{
+		action_id:"Float",
+		id:"Float",
+		object_id:"Float",
+		object_t_action_t_id:"Float"
+	},
+	v2_object_action_stddev_pop_fields:{
+		action_id:"Float",
+		id:"Float",
+		object_id:"Float",
+		object_t_action_t_id:"Float"
+	},
+	v2_object_action_stddev_samp_fields:{
+		action_id:"Float",
+		id:"Float",
+		object_id:"Float",
+		object_t_action_t_id:"Float"
+	},
+	v2_object_action_sum_fields:{
+		action_id:"Int",
+		id:"Int",
+		object_id:"Int",
+		object_t_action_t_id:"Int"
+	},
+	v2_object_action_var_pop_fields:{
+		action_id:"Float",
+		id:"Float",
+		object_id:"Float",
+		object_t_action_t_id:"Float"
+	},
+	v2_object_action_var_samp_fields:{
+		action_id:"Float",
+		id:"Float",
+		object_id:"Float",
+		object_t_action_t_id:"Float"
+	},
+	v2_object_action_variance_fields:{
+		action_id:"Float",
+		id:"Float",
+		object_id:"Float",
+		object_t_action_t_id:"Float"
+	},
+	v2_object_t_action_t:{
+		action_type:"v2_action_types",
+		action_type_id:"Int",
+		id:"Int",
+		metadata:"jsonb",
+		object_type:"object_types",
+		object_type_id:"Int"
+	},
+	v2_object_t_action_t_aggregate:{
+		aggregate:"v2_object_t_action_t_aggregate_fields",
+		nodes:"v2_object_t_action_t"
+	},
+	v2_object_t_action_t_aggregate_fields:{
+		avg:"v2_object_t_action_t_avg_fields",
+		count:"Int",
+		max:"v2_object_t_action_t_max_fields",
+		min:"v2_object_t_action_t_min_fields",
+		stddev:"v2_object_t_action_t_stddev_fields",
+		stddev_pop:"v2_object_t_action_t_stddev_pop_fields",
+		stddev_samp:"v2_object_t_action_t_stddev_samp_fields",
+		sum:"v2_object_t_action_t_sum_fields",
+		var_pop:"v2_object_t_action_t_var_pop_fields",
+		var_samp:"v2_object_t_action_t_var_samp_fields",
+		variance:"v2_object_t_action_t_variance_fields"
+	},
+	v2_object_t_action_t_avg_fields:{
+		action_type_id:"Float",
+		id:"Float",
+		object_type_id:"Float"
+	},
+	v2_object_t_action_t_max_fields:{
+		action_type_id:"Int",
+		id:"Int",
+		object_type_id:"Int"
+	},
+	v2_object_t_action_t_min_fields:{
+		action_type_id:"Int",
+		id:"Int",
+		object_type_id:"Int"
+	},
+	v2_object_t_action_t_mutation_response:{
+		affected_rows:"Int",
+		returning:"v2_object_t_action_t"
+	},
+	v2_object_t_action_t_stddev_fields:{
+		action_type_id:"Float",
+		id:"Float",
+		object_type_id:"Float"
+	},
+	v2_object_t_action_t_stddev_pop_fields:{
+		action_type_id:"Float",
+		id:"Float",
+		object_type_id:"Float"
+	},
+	v2_object_t_action_t_stddev_samp_fields:{
+		action_type_id:"Float",
+		id:"Float",
+		object_type_id:"Float"
+	},
+	v2_object_t_action_t_sum_fields:{
+		action_type_id:"Int",
+		id:"Int",
+		object_type_id:"Int"
+	},
+	v2_object_t_action_t_var_pop_fields:{
+		action_type_id:"Float",
+		id:"Float",
+		object_type_id:"Float"
+	},
+	v2_object_t_action_t_var_samp_fields:{
+		action_type_id:"Float",
+		id:"Float",
+		object_type_id:"Float"
+	},
+	v2_object_t_action_t_variance_fields:{
+		action_type_id:"Float",
+		id:"Float",
+		object_type_id:"Float"
 	}
 }
 
