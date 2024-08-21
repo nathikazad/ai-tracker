@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-
 struct ContentView: View {
     @ObservedObject var appState = state
     var chatViewPresented: Binding<Bool> {

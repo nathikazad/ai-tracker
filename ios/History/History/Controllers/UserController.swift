@@ -77,20 +77,49 @@ class UserController: ObservableObject {
         }
     }
     
+    static func updateUserAPNSToken(token: String?) async {
+        let tokenValue = token != nil ? "\"\(token!)\"" : "null"
+        
+        let mutationQuery = """
+        mutation {
+            update_users_by_pk(pk_columns: {id: \(auth.userId!)}, _set: {apns_token: \(tokenValue)}) {
+                id
+                apns_token
+            }
+        }
+        """
+        
+        struct UserMutationResponseData: Decodable {
+            var data: UsersWrapper
+            struct UsersWrapper: Decodable {
+                var update_users_by_pk: UpdatedUser
+                struct UpdatedUser: Decodable {
+                    var id: Int
+                    var apns_token: String?
+                }
+            }
+        }
+        
+        do {
+            let response: UserMutationResponseData = try await Hasura.shared.sendGraphQL(query: mutationQuery, responseType: UserMutationResponseData.self)
+            
+            if let token = response.data.update_users_by_pk.apns_token {
+                print("User APNS token updated: \(token) for user ID: \(response.data.update_users_by_pk.id)")
+            } else {
+                print("User APNS token unset for user ID: \(response.data.update_users_by_pk.id)")
+            }
+        } catch {
+            print("Error: \(error.localizedDescription)")
+        }
+    }
+    
     static func generateQuery(userId: Int, isSubscription: Bool = false) -> String {
         let operationType = isSubscription ? "subscription" : "query"
-        let calendar = Calendar.current
-        let yesterday = calendar.date(byAdding: .day, value: -1, to: Date())!
         return """
         \(operationType) {
             users_by_pk(id: \(userId)) {
                 timezone
-                events(where: {event_type: {_eq: "stay"}, end_time: {_is_null: true}, start_time: {_gt: "\(yesterday.toUTCString)"}}, order_by: {start_time: desc}, limit: 1) {
-                      id
-                      event_type
-                      metadata
-                      start_time
-                }
+                apns_token
             }
         }
         """
@@ -100,11 +129,11 @@ class UserController: ObservableObject {
 
 struct UserModel: Decodable {
     var timezone: String?
-    var events: [EventModel]
+    var deviceToken: String?
     
     enum CodingKeys: String, CodingKey {
         case timezone
-        case events
+        case deviceToken = "apns_token"
     }
 }
 

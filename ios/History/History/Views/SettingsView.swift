@@ -5,15 +5,12 @@
 //  Created by Nathik Azad on 4/9/24.
 //
 import SwiftUI
-import CoreLocation
-import HealthKit
-
-
 
 
 struct SettingsView: View {
     @State private var showingDeleteConfirmation = false
     @State var isOriginalUser: Bool
+    @State var notificationsOn: Bool = false
     
     init() {
         self.isOriginalUser = SettingsView.getIsOriginalUser()
@@ -27,6 +24,16 @@ struct SettingsView: View {
         return false
     }
     
+    private func checkNotificationSettings() {
+        APNSTokenManager.shared.getNotificationSettings { isAuthorized in
+            if auth.user?.deviceToken != nil {
+                DispatchQueue.main.async {
+                    notificationsOn = isAuthorized
+                }
+            }
+        }
+    }
+    
     
     var body: some View {
         NavigationView {
@@ -35,6 +42,18 @@ struct SettingsView: View {
                     Button(action: changeUserId) {
                         Label("Change \(isOriginalUser ? "To Nathik" : "Back to You" )", systemImage: "person.2.fill")
                             .foregroundColor(.primary)
+                    }
+                    .alignmentGuide(.listRowSeparatorLeading) { _ in
+                        -20
+                    }
+                    
+                    Toggle("Notifications", isOn: $notificationsOn)
+                    .onChange(of: notificationsOn) { old, new in
+                        if new {
+                            APNSTokenManager.shared.registerForPushNotifications()
+                        } else {
+                            APNSTokenManager.shared.unregisterForPushNotifications()
+                        }
                     }
                     .alignmentGuide(.listRowSeparatorLeading) { _ in
                         -20
@@ -89,6 +108,9 @@ struct SettingsView: View {
             } message: {
                 Text("Are you sure you want to delete your account? This action cannot be undone.")
             }
+            .onAppear {
+                checkNotificationSettings()
+            }
         }
     }
     
@@ -123,3 +145,4 @@ private func deleteUser() async {
         print("Error deleting user: \(error)")
     }
 }
+

@@ -69,9 +69,9 @@ class Authentication {
         if(hasuraJWTObject?.isExpired ?? true){
             hasuraJwt = await fetchHasuraJwt(appleKey: appleJwt!)
         } 
-        // else {
-            // print("jwt not expired")
-        // }
+//         else {
+//             print("jwt not expired")
+//         }
     }
     
     func signInCallback() {
@@ -79,10 +79,6 @@ class Authentication {
         watch.sync()
         Task {
             user = try await UserController.fetchUser()
-//            if locationManager.isTrackingLocation {
-//                print("Authentication: signInCallback: Tracking location enabled")
-//                locationManager.startMonitoringLocation()
-//            }
             await UserController.ensureUserTimezone()
             
         }
@@ -94,7 +90,6 @@ class Authentication {
         UserDefaults.standard.removeObject(forKey: appleJwtKey)
         watch.sync()
         hasura.closeConnection()
-//        locationManager.stopMonitoringLocation()
     }
 }
 

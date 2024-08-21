@@ -44,6 +44,16 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             state.inForeground = false
             Hasura.shared.pause()
         }
+        
+        // Check if launched from notification
+        let notificationOption = launchOptions?[.remoteNotification]
+        if
+          let notification = notificationOption as? [String: AnyObject],
+          let aps = notification["aps"] as? [String: AnyObject] {
+            print("new notification")
+            print(aps)
+        }
+
         return true
     }
     
@@ -56,6 +66,40 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             NotificationCenter.default.removeObserver(observerb)
             backgroundObserver = nil
         }
+    }
+
+    func application(
+        _ application: UIApplication,
+        didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
+    ) {
+        let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
+        let token = tokenParts.joined()
+        Task {
+            await UserController.updateUserAPNSToken(token: token)
+            auth.user?.deviceToken = token
+        }
+        auth.user?.deviceToken = token
+        print("Device Token: \(token)")
+    }
+
+    func application(
+        _ application: UIApplication,
+        didFailToRegisterForRemoteNotificationsWithError error: Error
+    ) {
+        print("Failed to register: \(error)")
+    }
+    
+    func application(
+        _ application: UIApplication,
+        didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+        fetchCompletionHandler completionHandler:
+        @escaping (UIBackgroundFetchResult) -> Void
+    ) {
+        guard let aps = userInfo["aps"] as? [String: AnyObject] else {
+            completionHandler(.failed)
+            return
+        }
+        print("New notification foreground/background")
     }
 }
 

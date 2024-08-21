@@ -36,6 +36,7 @@
 		FE04A7ED2C752014000F5C24 /* SquadSettingsV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7EC2C752014000F5C24 /* SquadSettingsV.swift */; };
 		FE04A7EF2C752040000F5C24 /* SquadGoalsV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7EE2C752040000F5C24 /* SquadGoalsV.swift */; };
 		FE04A7F12C755742000F5C24 /* GoalsListV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7F02C755742000F5C24 /* GoalsListV.swift */; };
+		FE04A7F52C766CA3000F5C24 /* APNSTokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7F42C766CA3000F5C24 /* APNSTokenManager.swift */; };
 		FE06FD042C0913E800E65D41 /* MinPeopleViewForEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE06FD032C0913E800E65D41 /* MinPeopleViewForEventView.swift */; };
 		FE06FD062C09140500E65D41 /* PeopleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE06FD052C09140500E65D41 /* PeopleView.swift */; };
 		FE06FD082C0921C900E65D41 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE06FD072C0921C900E65D41 /* Image.swift */; };
@@ -255,6 +256,7 @@
 		FE04A7EC2C752014000F5C24 /* SquadSettingsV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquadSettingsV.swift; sourceTree = "<group>"; };
 		FE04A7EE2C752040000F5C24 /* SquadGoalsV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquadGoalsV.swift; sourceTree = "<group>"; };
 		FE04A7F02C755742000F5C24 /* GoalsListV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsListV.swift; sourceTree = "<group>"; };
+		FE04A7F42C766CA3000F5C24 /* APNSTokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APNSTokenManager.swift; sourceTree = "<group>"; };
 		FE06FD032C0913E800E65D41 /* MinPeopleViewForEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinPeopleViewForEventView.swift; sourceTree = "<group>"; };
 		FE06FD052C09140500E65D41 /* PeopleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleView.swift; sourceTree = "<group>"; };
 		FE06FD072C0921C900E65D41 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
@@ -810,6 +812,7 @@
 				FE06FD072C0921C900E65D41 /* Image.swift */,
 				FE2074B72C5ADDCE00C58226 /* Timer.swift */,
 				FEBB198B2C65639300ECAC85 /* ColorHelper.swift */,
+				FE04A7F42C766CA3000F5C24 /* APNSTokenManager.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -1276,6 +1279,7 @@
 				FE04A7E72C745ABA000F5C24 /* SquadMembersC.swift in Sources */,
 				FEBB19942C66B3A000ECAC85 /* ObjectTypesListV.swift in Sources */,
 				FE8AB2B02C07DDCB00131C13 /* MetadataController.swift in Sources */,
+				FE04A7F52C766CA3000F5C24 /* APNSTokenManager.swift in Sources */,
 				FE06FD082C0921C900E65D41 /* Image.swift in Sources */,
 				FE04A7C92C72CD9C000F5C24 /* ATVOther.swift in Sources */,
 				FEBB19862C61B80500ECAC85 /* LandingView.swift in Sources */,
