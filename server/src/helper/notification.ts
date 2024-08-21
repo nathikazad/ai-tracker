@@ -103,7 +103,7 @@ export async function notifyOtherMembers(id: number, senderMemberId: number, mes
 
   notification.alert = {
     title: `${resp.group_chat_by_pk?.name}`,
-    body: `${sender?.user.name} ${message}` 
+    body: `${sender?.user.name}: ${message}` 
   };
   notification.topic = 'com.snow.aspire';
   // notify other members
