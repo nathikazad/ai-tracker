@@ -167,11 +167,13 @@ app.post('/deleteUser', async (req, res) => {
 });
 
 app.post('/notifyParticipants', async (req, res) => {
-    console.log(req.body.secret_key)
-    console.log(JSON.stringify(req.body.data, null, 2));
-    if (req.body.secret_key != "iloveyareni") {
+    console.log(req.headers['secret-key'])
+    console.log(JSON.stringify(req.body.event, null, 2));
+    if (req.headers['secret-key'] != "iloveyareni") {
+        console.log("Incorrect key")
         res.status(401).json({ error: "Incorrect key" });
     }
+    console.log("Correct key")
     let deviceToken = await getHasuraUserDeviceToken(1)
     if (deviceToken) {
         const sender = new ApnsNotificationSender();
