@@ -58,8 +58,10 @@ struct ActionsTabView: View {
     func fetchEvents() {
         Task {
             let events = await ActionController.fetchActions(userId: auth.userId!, forDate: state.currentDate, withObjectConnections: true)
+            let nextDay = Calendar.current.date(byAdding: .day, value: 1, to: state.currentDate)!
+            let filteredEvents = events.filterEvents(startDate: state.currentDate, endDate: nextDay)
             await MainActor.run {
-                self.events = events
+                self.events = filteredEvents
             }
         }
     }

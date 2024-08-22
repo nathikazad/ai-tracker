@@ -20,6 +20,7 @@ class ActionController {
             hasuraStruct.addParameter(name: "end_time", type: .timestamp, value: endTime.toUTCString)
         }
         hasuraStruct.addParameter(name: "parent_id", type: .int, value: model.parentId)
+        hasuraStruct.addParameter(name: "timezone", type: .string, value: TimeZone.current.identifier)
         hasuraStruct.addParameter(name: "dynamic_data", type: .jsonb, value: model.dynamicData.toJson)
         
         let (graphqlQuery, variables) = hasuraStruct.getMutationAndVariables
@@ -170,10 +171,9 @@ class ActionController {
             hasuraStruct.addWhereClause(name: "id", type: .int, value: actionId, op: .equals)
         }
         if let gteDate = forDate {
-            let startOfTodayUTCString = gteDate.toUTCString
             let calendar = Calendar.current
-            let dayAfterGteDate = calendar.date(byAdding: .day, value: +1, to: gteDate)!
-            let dayAfterUTCString = dayAfterGteDate.toUTCString
+            let startOfTodayUTCString = calendar.date(byAdding: .day, value: -1, to: gteDate)!.toUTCString
+            let dayAfterUTCString = calendar.date(byAdding: .day, value: +1, to: gteDate)!.toUTCString
             let startTimeConditions = "_and: {start_time: {_gt: $start_time, _lt: $end_time}}"
             let endTimeConditions = "_and: {end_time: {_gt: $start_time, _lt: $end_time}}"
             let combinedConditions = "_or: [{\(startTimeConditions)},{\(endTimeConditions)}]"
@@ -186,7 +186,7 @@ class ActionController {
             let endOfEndDateUTCString = endDate.toUTCString
             let startTimeConditions = "_and: {start_time: {_gte: $start_time, _lt: $end_time}}"
             let endTimeConditions = "_and: {end_time: {_gt: $start_time, _lte: $end_time}}"
-            let nullEndTimeConditions = "_and: {start_time: {_lte: $end_time}, end_time: {_is_null: true}}"
+            let nullEndTimeConditions = "_and: {start_time: {_gte: $start_time}, end_time: {_is_null: true}}"
             let combinedConditions = "_or: [{\(startTimeConditions)},{\(endTimeConditions)},{\(nullEndTimeConditions)}]"
             
             hasuraStruct.addWhereClause(clause: combinedConditions)
@@ -214,6 +214,7 @@ class ActionController {
             end_time
             parent_id
             dynamic_data
+            timezone
             action_type {
                 \(ActionTypesController.actionTypeSelections(withObjectConnections: withObjectConnections))
             }

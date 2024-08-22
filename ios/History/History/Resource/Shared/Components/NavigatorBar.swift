@@ -31,10 +31,10 @@ struct NavigationBar<Content: View>: View {
                 let hstackTopPadding: CGFloat = verticalSizeClass == .compact ? -10 : -15
                 HStack {
                     if selectedTab == .history {
-                        leftButton
+                        switchTimelineButton
                     }
                     Spacer()
-                    rightButton
+                    settingsButton
                 }
                 .padding(.top, hstackTopPadding)
             }
@@ -42,7 +42,7 @@ struct NavigationBar<Content: View>: View {
         }
     }
     
-    private var leftButton: some View {
+    private var switchTimelineButton: some View {
         Button(action: {
             if selectedTimelineType == .day {
                 selectedTimelineType = .week
@@ -58,7 +58,7 @@ struct NavigationBar<Content: View>: View {
         }
     }
     
-    private var rightButton: some View {
+    private var settingsButton: some View {
         Button(action: {
             state.showSheet(newSheetToShow: .settings)
         }) {

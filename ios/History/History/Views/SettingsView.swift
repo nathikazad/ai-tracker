@@ -9,19 +9,15 @@ import SwiftUI
 
 struct SettingsView: View {
     @State private var showingDeleteConfirmation = false
-    @State var isOriginalUser: Bool
     @State var notificationsOn: Bool = false
+
     
-    init() {
-        self.isOriginalUser = SettingsView.getIsOriginalUser()
-    }
-    
-    static func getIsOriginalUser() -> Bool {
+    var originalUserId: Int? {
         if let originalJwt = auth.hasuraJwt, let currentUserId = auth.hasuraJWTObject?.userId {
             let originalUser =  HasuraJWTObject(jwt: originalJwt)
-            return originalUser.userId == currentUserId
+            return originalUser.userId
         }
-        return false
+        return nil
     }
     
     private func checkNotificationSettings() {
@@ -39,12 +35,10 @@ struct SettingsView: View {
         NavigationView {
             List {
                 Section(header: Text("Settings")) {
-                    Button(action: changeUserId) {
-                        Label("Change \(isOriginalUser ? "To Nathik" : "Back to You" )", systemImage: "person.2.fill")
-                            .foregroundColor(.primary)
-                    }
-                    .alignmentGuide(.listRowSeparatorLeading) { _ in
-                        -20
+                    if originalUserId == 1 {
+                        NavigationLink(destination: SwitchUsersV()){
+                            Text("Switch User")
+                        }
                     }
                     
                     Toggle("Notifications", isOn: $notificationsOn)
@@ -112,19 +106,6 @@ struct SettingsView: View {
                 checkNotificationSettings()
             }
         }
-    }
-    
-    func changeUserId() {
-        if isOriginalUser {
-            let newUser = auth.hasuraJWTObject?.userId == 1 ? 3 : 1
-            auth.hasuraJWTObject?.userId = newUser
-            isOriginalUser = false
-        } else {
-            let originalUser =  HasuraJWTObject(jwt: auth.hasuraJwt!)
-            auth.hasuraJWTObject?.userId = originalUser.userId
-            isOriginalUser = true
-        }
-        state.notifyCoreStateChanged()
     }
 }
 

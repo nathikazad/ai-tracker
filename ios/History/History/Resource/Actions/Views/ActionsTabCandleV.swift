@@ -16,8 +16,8 @@ enum SelectedGrouping: String, CodingKey {
 struct CandleChartWithList: View {
     @State private var actions: [ActionModel] = []
     @State private var unselectedModels: [Int] = []
+    var fetchActionsCallback: (() -> [ActionModel])?
     var offsetHours: Int = 0
-    
     @State var hoursRange: ClosedRange<Int> = 0...24
     @State var daysRange: ClosedRange<Int> = 0...7
     @State var showColorPickerForActionTypeId: Int? = nil
@@ -95,11 +95,16 @@ struct CandleChartWithList: View {
     }
     
     func fetchActions() {
-        Task {
-            let fetchedActions = await ActionController.fetchActions(userId: auth.userId!, startDate: state.currentWeek.start, endDate: state.currentWeek.end)
-            await MainActor.run {
-                self.actions = fetchedActions
-                redrawChart.toggle()
+        if let fetchActionsCallback = fetchActionsCallback {
+            self.actions = fetchActionsCallback()
+            redrawChart.toggle()
+        } else {
+            Task {
+                let fetchedActions = await ActionController.fetchActions(userId: auth.userId!, startDate: state.currentWeek.start, endDate: state.currentWeek.end)
+                await MainActor.run {
+                    self.actions = fetchedActions
+                    redrawChart.toggle()
+                }
             }
         }
     }
@@ -123,7 +128,7 @@ struct CandleChartWithList: View {
                     selectedWeekday: $selectedWeekday)
             } else {
                 let weekBoundary = state.currentWeek.getStartAndEnd(weekday: selectedWeekday)
-                let selectedActions = actions.filterEvents(weekBoundary: weekBoundary).sortEvents
+                let selectedActions = actions.filterEvents(startDate: weekBoundary.start, endDate: weekBoundary.end).sortEvents
                 ForEach(selectedActions, id: \.id) { action in
                     ActionRowForCandleView(
                         actionModel: action,

@@ -135,7 +135,7 @@ struct MainView: View {
                                 .tag(Tab.history)
                         } else {
                             ActionsTabView(datePickerModel: datePickerModel, cameFromAnotherTab: $enteringTimelineDayTab)
-                                .tabItem { Label("Timeline", systemImage: "list.dash") }
+                                .tabItem { Label("Timeline", systemImage: "clock.arrow.circlepath") }
                                 .tag(Tab.history)
                         }
                         GoalsTabView()

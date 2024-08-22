@@ -12,8 +12,8 @@ struct SquadGoalsView: View {
     @State private var actions: [ActionModel] = []
     @State private var loading = true
     @State var selectedMemberId: Int
-    @State private var weekBoundary: WeekBoundary = Date().getWeekBoundary
     @State private var openDisclosures: Set<Int> = []
+    
     var body: some View {
         VStack {
             if loading == true {
@@ -30,7 +30,6 @@ struct SquadGoalsView: View {
                                 Text(member.user.name).tag(member.id as Int?)
                             }
                         }
-                        
                         .clipped()
                         .contentShape(Rectangle())
                         .onChange(of: selectedMemberId) {
@@ -39,7 +38,6 @@ struct SquadGoalsView: View {
                         }
                     }
                     .alignmentGuide(.listRowSeparatorLeading) { _ in -20 }
-                    
                     if aggregates.isEmpty {
                         Text("\(squadMember?.user.name ?? "User") has not added any goals yet.")
                             .padding(.vertical, 10)
@@ -47,10 +45,16 @@ struct SquadGoalsView: View {
                     } else {
                         WeekNavigator
                             .alignmentGuide(.listRowSeparatorLeading) { _ in -20 }
+                        NavigationLink(destination: CandleChartWithList(
+                            fetchActionsCallback: {
+                                return actions
+                            })) {
+                            Text("Timeline")
+                        }
+                        .alignmentGuide(.listRowSeparatorLeading) { _ in -20 }
                         GoalsGraphsView(
                             aggregates: $aggregates,
                             actions: $actions,
-                            weekBoundary: $weekBoundary,
                             openDisclosures: $openDisclosures,
                             goalEditable: false
                             
@@ -76,7 +80,7 @@ struct SquadGoalsView: View {
                 Task {
                     let aggregates = await AggregateController.fetchAggregates(ids: member.aggregates)
                     let actionTypeIds: [Int] = aggregates.map { $0.actionTypeId }
-                    let actions = await ActionController.fetchActions(userId: member.user.id, startDate: weekBoundary.start, endDate: weekBoundary.end, actionTypeIds: actionTypeIds)
+                    let actions = await ActionController.fetchActions(userId: member.user.id, startDate: state.currentWeek.start, endDate: state.currentWeek.end, actionTypeIds: actionTypeIds)
                     DispatchQueue.main.async {
                         self.aggregates = aggregates
                         self.actions = actions
@@ -91,7 +95,7 @@ struct SquadGoalsView: View {
             HStack {
                 Spacer()
                 Button(action: {
-                    weekBoundary = weekBoundary.previousWeek()
+                    state.goToPreviousWeek()
                     loadData()
                 }) {
                     Image(systemName: "chevron.left.circle.fill")
@@ -101,12 +105,12 @@ struct SquadGoalsView: View {
                 .buttonStyle(PlainButtonStyle())
                 
                 HStack {
-                    Text(weekBoundary.formatString)
+                    Text(state.currentWeek.formatString)
                         .font(.headline)
                 }.frame(minWidth: 130)
                 
                 Button(action: {
-                    weekBoundary = weekBoundary.nextWeek()
+                    state.goToNextWeek()
                     loadData()
                 }) {
                     Image(systemName: "chevron.right.circle.fill")

@@ -78,7 +78,6 @@ struct GoalsTabView: View {
                                 set: { _ in }
                             ),
                             actions: $actions,
-                            weekBoundary: $weekBoundary,
                             openDisclosures: $openDisclosures
                         )
                     }
@@ -119,7 +118,6 @@ struct GoalsTabView: View {
 struct GoalsGraphsView: View {
     @Binding var aggregates: [AggregateModel]
     @Binding var actions: [ActionModel]
-    @Binding var weekBoundary: WeekBoundary
     @Binding var openDisclosures: Set<Int>
     var goalEditable: Bool = true
 
@@ -140,7 +138,7 @@ struct GoalsGraphsView: View {
                 AggregateChartView(
                     aggregate: aggregate,
                     actionsParam: actions,
-                    weekBoundary: weekBoundary,
+                    weekBoundary: state.currentWeek,
                     showWeekNavigator: false,
                     actionTypeModel: aggregate.actionType ?? ActionTypeModel(name: "Unknown")
                 )

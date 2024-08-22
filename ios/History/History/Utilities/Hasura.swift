@@ -117,11 +117,11 @@ struct HasuraQuery {
     }
     
     var getQueryAndVariables: (String, [String: Any]) {
-        let whereClause = whereClauses.isEmpty ? "" : "where: {\(whereClauses.joined(separator: ", "))}"
+        let whereClause = whereClauses.isEmpty ? "" : "(where: {\(whereClauses.joined(separator: ", "))})"
         let parameterClause = parameterClauses.isEmpty ? "" : "(\(parameterClauses.joined(separator: ", ")))"
         let query = """
         \(queryType.rawValue) \(queryName)\(parameterClause) {
-          \(queryFor)(\(whereClause)) {
+          \(queryFor)\(whereClause) {
             \(selections)
             }
         }

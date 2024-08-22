@@ -219,11 +219,7 @@ class ActionTypesController {
 
 // ACTION VIEWS
 // finished: add object connection
-// here: list actions(inside object) 
 // finished: children
-// skipped: dropdown and short string, 
-// skipped: filter for actions and objects, only enum, bool and object connection.name
-// NEXT: delete action button
 
 // traction, super simple, messages, settings(which 3 goals to share) and goals
 // cool demo
@@ -235,19 +231,39 @@ class ActionTypesController {
 
 // -----------------------------------------------------------
 // V2 COMMUNITIES
-// timezone support for viewing across timezone
 // finished: Add groups tab, list all groups, create group
 // finished: break group view into three tabs
 // finished: show messages, send message
 // finished: goals view
 // settings view 
 //     finished: view members
-//     admin can add/delete members
+//     finished: admin can switch users
 //     finished: goals to share
-// notifications
+// finished: notifications
 // finished: auto scroll only if already in bottom, other wise show smtn with down arrow
 // RELEASE
 
+// -----------------------------------------------------------
+// V3
+// RELATIONAL DB
+// finished: internal objects
+// finished: work on object view
+// finished: work on object create/edit
+// finished: put object into database and then fetch it
+// create connections between objects and actions
+// integrate contacts
+// RELASE
+
+// Finished: timezone support for viewing across timezone
+// Streak
+// monthly goals
+// Onboard Mom, Tito, Dane, Tipu, Nivedh, Alisha, Paty
+// Dropdown and short string, 
+// AI or 3rd party integration?
+
+
+// skip: list actions(inside object) 
+// skip: filter for actions and objects, only enum, bool and object connection.name
 // goals
 //  skip: goal field be unit or other similar datatypes also
 //  skip: actual/expected value and streak
@@ -262,25 +278,12 @@ class ActionTypesController {
 //  skip: list objects filter by enum
 // skip: create segments
 
-// -----------------------------------------------------------
-// V3
-// RELATIONAL DB
-// finished: internal objects
-// finished: work on object view
-// finished: work on object create/edit
-// finished: put object into database and then fetch it
-// create connections between objects and actions
-// integrate contacts
-// RELASE
-
 // skipped: Add hour and minute when choosing duration
 // skipped: add conditions only for enums (for Nivedh)
 // add arrays
 // add todos
 
 // THIRD PARTY
-// integrate location
-// RELASE
 // integrate saaha
 // RELASE
 // integrate plaid

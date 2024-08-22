@@ -37,6 +37,8 @@
 		FE04A7EF2C752040000F5C24 /* SquadGoalsV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7EE2C752040000F5C24 /* SquadGoalsV.swift */; };
 		FE04A7F12C755742000F5C24 /* GoalsListV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7F02C755742000F5C24 /* GoalsListV.swift */; };
 		FE04A7F52C766CA3000F5C24 /* APNSTokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7F42C766CA3000F5C24 /* APNSTokenManager.swift */; };
+		FE04A7F82C769D32000F5C24 /* SwitchUsersV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7F72C769D32000F5C24 /* SwitchUsersV.swift */; };
+		FE04A7FB2C769E6C000F5C24 /* AdminUsersC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE04A7FA2C769E6C000F5C24 /* AdminUsersC.swift */; };
 		FE06FD042C0913E800E65D41 /* MinPeopleViewForEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE06FD032C0913E800E65D41 /* MinPeopleViewForEventView.swift */; };
 		FE06FD062C09140500E65D41 /* PeopleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE06FD052C09140500E65D41 /* PeopleView.swift */; };
 		FE06FD082C0921C900E65D41 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE06FD072C0921C900E65D41 /* Image.swift */; };
@@ -257,6 +259,8 @@
 		FE04A7EE2C752040000F5C24 /* SquadGoalsV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquadGoalsV.swift; sourceTree = "<group>"; };
 		FE04A7F02C755742000F5C24 /* GoalsListV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsListV.swift; sourceTree = "<group>"; };
 		FE04A7F42C766CA3000F5C24 /* APNSTokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APNSTokenManager.swift; sourceTree = "<group>"; };
+		FE04A7F72C769D32000F5C24 /* SwitchUsersV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchUsersV.swift; sourceTree = "<group>"; };
+		FE04A7FA2C769E6C000F5C24 /* AdminUsersC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminUsersC.swift; sourceTree = "<group>"; };
 		FE06FD032C0913E800E65D41 /* MinPeopleViewForEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinPeopleViewForEventView.swift; sourceTree = "<group>"; };
 		FE06FD052C09140500E65D41 /* PeopleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleView.swift; sourceTree = "<group>"; };
 		FE06FD072C0921C900E65D41 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
@@ -519,6 +523,23 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		FE04A7F62C769D25000F5C24 /* Admin */ = {
+			isa = PBXGroup;
+			children = (
+				FE04A7F92C769D3B000F5C24 /* Views */,
+				FE04A7FA2C769E6C000F5C24 /* AdminUsersC.swift */,
+			);
+			path = Admin;
+			sourceTree = "<group>";
+		};
+		FE04A7F92C769D3B000F5C24 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				FE04A7F72C769D32000F5C24 /* SwitchUsersV.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		FE06FD022C0913D500E65D41 /* Person */ = {
 			isa = PBXGroup;
 			children = (
@@ -595,6 +616,7 @@
 		FE4AB3A92C544D0700A07749 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				FE04A7F62C769D25000F5C24 /* Admin */,
 				FE04A7DB2C73F8DF000F5C24 /* Squads */,
 				FEBB199E2C681DC600ECAC85 /* Shared */,
 				FEBB19952C66D94400ECAC85 /* Objects */,
@@ -1172,6 +1194,8 @@
 				FEBB19902C65811700ECAC85 /* ObjectTypeM.swift in Sources */,
 				FEA98C132BFFEC70006BB857 /* TwoDatePicker.swift in Sources */,
 				FEB366E62BDDF8F9000A48C0 /* Chart.swift in Sources */,
+				FE04A7F82C769D32000F5C24 /* SwitchUsersV.swift in Sources */,
+				FE04A7FB2C769E6C000F5C24 /* AdminUsersC.swift in Sources */,
 				FE4AB3872C4EF43800A07749 /* ActionTypesListV.swift in Sources */,
 				FE04A7BC2C6D96C6000F5C24 /* ObjectConnectionV.swift in Sources */,
 				FE04A7E12C7424E6000F5C24 /* SquadV.swift in Sources */,
@@ -1518,7 +1542,7 @@
 				CODE_SIGN_ENTITLEMENTS = History/History.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_ASSET_PATHS = "\"History/Preview Content\"";
 				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
@@ -1537,7 +1561,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.21;
+				MARKETING_VERSION = 0.25;
 				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1560,7 +1584,7 @@
 				CODE_SIGN_ENTITLEMENTS = History/History.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_ASSET_PATHS = "\"History/Preview Content\"";
 				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
@@ -1579,7 +1603,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.21;
+				MARKETING_VERSION = 0.25;
 				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1600,7 +1624,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_ASSET_PATHS = "\"MiniHistory Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
@@ -1612,7 +1636,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.21;
+				MARKETING_VERSION = 0.25;
 				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire.watchapp;
 				PRODUCT_NAME = "Aspire Watch";
 				SDKROOT = watchos;
@@ -1631,7 +1655,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_ASSET_PATHS = "\"MiniHistory Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
@@ -1643,7 +1667,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.21;
+				MARKETING_VERSION = 0.25;
 				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire.watchapp;
 				PRODUCT_NAME = "Aspire Watch";
 				SDKROOT = watchos;

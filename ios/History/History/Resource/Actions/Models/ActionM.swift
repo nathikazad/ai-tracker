@@ -17,6 +17,14 @@ extension Int {
         return String(format: "%02d:%02d", hours, minutes)
     }
 }
+extension Date {
+    func convertUTCToLocalPreservingTime(originalTimeZone: TimeZone) -> Date {
+        let localTimeZone = TimeZone.current
+        let offsetSeconds = localTimeZone.secondsFromGMT() - originalTimeZone.secondsFromGMT()
+        let adjustedDate = self.addingTimeInterval(TimeInterval(-offsetSeconds))
+        return adjustedDate
+    }
+}
 
 class ActionModel: ObservableObject, Codable {
     @Published var id: Int?
@@ -29,6 +37,7 @@ class ActionModel: ObservableObject, Codable {
     @Published var objectConnections: [Int:[ObjectAction]] = [:] //Int is the actionTypeObjectTypeId
     @Published var children: [Int:[ActionModel]] = [:]
     @Published var parent: ActionModel? = nil
+    var timezone: TimeZone
     
     let createdAt: Date
     let updatedAt: Date
@@ -47,6 +56,7 @@ class ActionModel: ObservableObject, Codable {
         case objectActions = "object_actions"
         case children = "children"
         case parent = "parent"
+        case timezone
     }
     
     var durationInSeconds: Int {
@@ -64,16 +74,20 @@ class ActionModel: ObservableObject, Codable {
         self.actionTypeModel = actionTypeModel
         self.createdAt = createdAt
         self.updatedAt = updatedAt
+        self.timezone = TimeZone.current
     }
     
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decodeIfPresent(Int.self, forKey: .id)
         actionTypeId = try container.decode(Int.self, forKey: .actionTypeId)
+        let timezoneIdentifier = try container.decode(String.self, forKey: .timezone)
+        timezone = TimeZone(identifier: timezoneIdentifier)!
         let startTimeString = try container.decode(String.self, forKey: .startTime)
-        startTime = startTimeString.getDate ?? Date()
+        
+        startTime = startTimeString.getDate?.convertUTCToLocalPreservingTime(originalTimeZone: timezone) ?? Date()
         if let endTimeString = try container.decodeIfPresent(String.self, forKey: .endTime) {
-            endTime = endTimeString.getDate
+            endTime = endTimeString.getDate?.convertUTCToLocalPreservingTime(originalTimeZone: timezone)
         } else {
             endTime = nil
         }
@@ -155,5 +169,53 @@ extension Dictionary where Key == Int, Value == [ActionModel] {
         }
         actions.removeAll { $0.id == childId }
         self[id] = actions
+    }
+}
+
+extension ActionModel {
+    
+    var formattedTime: String {
+        if let endTime = endTime  {
+            return "\(startTime.formattedTime) - \(endTime.formattedTime)"
+        } else {
+            return  "\(startTime.formattedTime)"
+        }
+    }
+
+    func formattedTimeWithReferenceDate(_ referenceDate: Date) -> String {
+        let formattedStartTime = startTime.formattedTimeWithReferenceDate(referenceDate)
+        if (endTime != nil) {
+            let formattedEndTime = endTime!.formattedTimeWithReferenceDate(referenceDate)
+            return "\(formattedStartTime) - \(formattedEndTime)"
+        } else {
+            return "\(formattedStartTime)"
+        }
+    }
+    
+    var formattedDate: String {
+        return "\(startTime.formattedDate)"
+    }
+    
+    var date: Date {
+        return startTime
+    }
+    
+    var formattedTimeWithDate: String {
+        return "\(formattedDate): \(formattedTime)"
+    }
+    
+    var totalHoursPerDay: TimeInterval? {
+        if(endTime == nil){
+            return nil
+        }
+        return endTime!.timeIntervalSince(startTime)
+    }
+    
+    var timeTaken: String? {
+        if endTime != nil {
+            return startTime.durationInHHMM(to: endTime!)
+        } else {
+            return nil
+        }
     }
 }
