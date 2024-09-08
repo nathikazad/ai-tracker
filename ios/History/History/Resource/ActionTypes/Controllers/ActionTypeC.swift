@@ -256,10 +256,14 @@ class ActionTypesController {
 
 // Finished: timezone support for viewing across timezone
 // Streak
+// future events
+// share verbs
 // monthly goals
 // Onboard Mom, Tito, Dane, Tipu, Nivedh, Alisha, Paty
 // Dropdown and short string, 
-// AI or 3rd party integration?
+// AI
+// 3rd party integration Toggle/Plaid and Saaha
+// INVESTORRRRRS
 
 
 // skip: list actions(inside object) 

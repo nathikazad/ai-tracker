@@ -571,7 +571,6 @@
 				FE9E18B82C02933400611CE8 /* Popup.swift */,
 				FE12C5EE2BC4B832002CDC60 /* MicrophoneButton.swift */,
 				FE3E9F652BC8ACAD008BD120 /* NavigationTitle.swift */,
-				FE477D922BD8122B001FC341 /* CalendarPicker.swift */,
 				FEB366E22BDDEC5D000A48C0 /* SendBar.swift */,
 				FEA98C102BFFC96C006BB857 /* QuickComponents.swift */,
 				FEA98C122BFFEC70006BB857 /* TwoDatePicker.swift */,
@@ -950,6 +949,7 @@
 		FEBB19A02C681DD400ECAC85 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				FE477D922BD8122B001FC341 /* CalendarPicker.swift */,
 				FEBB19A12C681DDF00ECAC85 /* RadioButton.swift */,
 				FEBB19A32C681DF900ECAC85 /* RangedSlider.swift */,
 				FEBB19A52C682CE400ECAC85 /* AddNewActionButton.swift */,
@@ -1542,7 +1542,7 @@
 				CODE_SIGN_ENTITLEMENTS = History/History.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 25;
+				CURRENT_PROJECT_VERSION = 26;
 				DEVELOPMENT_ASSET_PATHS = "\"History/Preview Content\"";
 				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
@@ -1561,7 +1561,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.25;
+				MARKETING_VERSION = 0.26;
 				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1584,7 +1584,7 @@
 				CODE_SIGN_ENTITLEMENTS = History/History.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 25;
+				CURRENT_PROJECT_VERSION = 26;
 				DEVELOPMENT_ASSET_PATHS = "\"History/Preview Content\"";
 				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
@@ -1603,7 +1603,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.25;
+				MARKETING_VERSION = 0.26;
 				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1624,7 +1624,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 25;
+				CURRENT_PROJECT_VERSION = 26;
 				DEVELOPMENT_ASSET_PATHS = "\"MiniHistory Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
@@ -1636,7 +1636,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.25;
+				MARKETING_VERSION = 0.26;
 				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire.watchapp;
 				PRODUCT_NAME = "Aspire Watch";
 				SDKROOT = watchos;
@@ -1655,7 +1655,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 25;
+				CURRENT_PROJECT_VERSION = 26;
 				DEVELOPMENT_ASSET_PATHS = "\"MiniHistory Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
@@ -1667,7 +1667,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.25;
+				MARKETING_VERSION = 0.26;
 				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire.watchapp;
 				PRODUCT_NAME = "Aspire Watch";
 				SDKROOT = watchos;

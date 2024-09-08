@@ -28,69 +28,76 @@ struct ObjectView: View {
     }
     
     var body: some View {
-        
-        Form {
-            HStack {
-                Text("Name:")
-                TextField("Name", text: $object.name)
-                    .onChange(of: object.name) {
-                        changesToSave = true
+        VStack {
+            Form {
+                HStack {
+                    Text("Name:")
+                    TextField("Name", text: $object.name)
+                        .onChange(of: object.name) {
+                            changesToSave = true
+                        }
+                }
+                
+                if(Array(object.objectTypeModel.fields.keys).count > 0) {
+                    DynamicFieldsView(
+                        dynamicFields: $object.objectTypeModel.fields,
+                        dynamicData: $object.fields,
+                        changesToSave: $changesToSave
+                    )
+                }
+                
+                NavigationLink(destination: GroupedActionsListView(actions: object.actions, fetchActions: fetchObject)) {
+                    Text("View Associated Actions")
+                }
+                
+                Section {
+                    if object.id != nil {
+                        Button(action: {
+                            Task {
+                                await ObjectV2Controller.updateObjectModel(model: object)
+                                self.presentationMode.wrappedValue.dismiss()
+                                clickObject?(object)
+                                changesToSave = false
+                            }
+                        }) {
+                            Label("Update \(object.name)", systemImage: "square.and.arrow.up")
+                                .frame(maxWidth: .infinity, alignment: .center)
+                        }
+                        .alignmentGuide(.listRowSeparatorLeading) { _ in
+                            -20
+                        }
+                        .disabled(!changesToSave)
+                        
+                        Button(role: .destructive, action: {
+                            Task {
+                                await ObjectV2Controller.deleteObjectModel(id: object.id!)
+                                self.presentationMode.wrappedValue.dismiss()
+                            }
+                        }) {
+                            Label("Delete \(object.name)", systemImage: "trash")
+                                .foregroundColor(.red)
+                                .frame(maxWidth: .infinity, alignment: .center)
+                        }
+                    } else {
+                        Button(action: {
+                            Task {
+                                if let id = await ObjectV2Controller.createObjectModel(model: object ) {
+                                    object.id = id
+                                }
+                                changesToSave = false
+                                self.presentationMode.wrappedValue.dismiss()
+                                clickObject?(object)
+                            }
+                        }) {
+                            Text("Create \(object.name)")
+                                .frame(maxWidth: .infinity, alignment: .center)
+                        }
+                        .disabled(!changesToSave)
                     }
+                }
+                
             }
             
-            if(Array(object.objectTypeModel.fields.keys).count > 0) {
-                DynamicFieldsView(
-                    dynamicFields: $object.objectTypeModel.fields,
-                    dynamicData: $object.fields,
-                    changesToSave: $changesToSave
-                )
-            }
-            Section {
-                if object.id != nil {
-                    Button(action: {
-                        Task {
-                            await ObjectV2Controller.updateObjectModel(model: object)
-                            self.presentationMode.wrappedValue.dismiss()
-                            clickObject?(object)
-                            changesToSave = false
-                        }
-                    }) {
-                        Label("Update \(object.name)", systemImage: "square.and.arrow.up")
-                            .frame(maxWidth: .infinity, alignment: .center)
-                    }
-                    .alignmentGuide(.listRowSeparatorLeading) { _ in
-                        -20
-                    }
-                    .disabled(!changesToSave)
-                    
-                    Button(role: .destructive, action: {
-                        Task {
-                            await ObjectV2Controller.deleteObjectModel(id: object.id!)
-                            self.presentationMode.wrappedValue.dismiss()
-                        }
-                    }) {
-                        Label("Delete \(object.name)", systemImage: "trash")
-                            .foregroundColor(.red)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                    }
-                } else {
-                    Button(action: {
-                        Task {
-                            if let id = await ObjectV2Controller.createObjectModel(model: object ) {
-                                object.id = id
-                            }
-                            changesToSave = false
-                            self.presentationMode.wrappedValue.dismiss()
-                            clickObject?(object)
-                        }
-                    }) {
-                        Text("Create \(object.name)")
-                            .frame(maxWidth: .infinity, alignment: .center)
-                    }
-                    .disabled(!changesToSave)
-                }
-            }
-                    
         }
 
 //        .listSectionSpacing(0)
@@ -113,16 +120,20 @@ struct ObjectView: View {
             }
         }
         .onAppear {
-            Task {
-                if (object.id != nil) {
-                    let objects = await ObjectV2Controller.fetchObjects(userId: Authentication.shared.userId!, objectId: object.id)
-                    if (!objects.isEmpty) {
-                        self.object.copy(objects[0])
-                    }
+            fetchObject()
+        }
+    }
+    
+    func fetchObject() {
+        Task {
+            if (object.id != nil) {
+                let objects = await ObjectV2Controller.fetchObjects(userId: Authentication.shared.userId!, objectId: object.id, includeActions: true)
+                if (!objects.isEmpty) {
+                    self.object.copy(objects[0])
                 }
-                DispatchQueue.main.async {
-                    changesToSave = false
-                }
+            }
+            DispatchQueue.main.async {
+                changesToSave = false
             }
         }
     }

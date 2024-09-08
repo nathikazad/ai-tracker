@@ -21,11 +21,18 @@ class AppState: ObservableObject, MicrophoneDelegate {
         case none, settings, dailyQuotes, calendar
     }
     
+    enum TimePickerToShow {
+        case day, week, month
+    }
+    
     static let shared = AppState()
     @Published var currentDate = Calendar.current.startOfDay(for: Date())
     @Published var currentWeek = Date().getWeekBoundary
+    @Published var currentMonth = Date().getMonthBoundary
+    @Published private(set) var timePickerToShow: TimePickerToShow = .day
     @Published private(set) var chatViewToShow: ChatViewToShow = .none
     @Published private(set) var sheetViewToShow: SheetViewToShow = .none
+    
     @Published private(set) var isRecording: Bool = false
     @Published private(set) var isProcessingRecording: Bool = false
     @Published private(set) var navigationStackIds: [Int] = []
@@ -52,6 +59,11 @@ class AppState: ObservableObject, MicrophoneDelegate {
     
     func setParentEventId(_ id:Int?) {
         parentEventId = id
+    }
+    
+    func setTimePicker(_ newValue: TimePickerToShow) {
+        timePickerToShow = newValue
+        notifyCoreStateChanged()
     }
 
     func didStopRecording(response: String) {

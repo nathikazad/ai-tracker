@@ -14,31 +14,7 @@ struct ListActionsView: View {
     var createAction: ((ActionTypeModel) -> Void)?
     var withDate: Bool = true
     var body: some View {
-        let groupedEvents = Dictionary(grouping: actions) { $0.formattedDate }
-        
-        let sortedDates = groupedEvents.keys.sorted(by: { (date1, date2) -> Bool in
-            let date1Components = date1.split(separator: " ")
-            let date2Components = date2.split(separator: " ")
-            
-            guard !date1Components.isEmpty, !date2Components.isEmpty, date1Components.count == 2, date2Components.count == 2 else {
-                return false
-            }
-            
-            return date1Components[1] > date2Components[1]
-        })
-        
-        List {
-            ForEach(sortedDates, id: \.self) { date in
-                Section(header: Text(date)) {
-                    let events = groupedEvents[date]?.sorted(by: { $0.startTime < $1.startTime }) ?? []
-                    ForEach(events, id: \.id) { action in
-                        ActionRow(event: action, fetchActions: {
-                            // Implement your fetch logic here
-                        }, includeActionName: false)
-                    }
-                }
-            }
-        }
+        GroupedActionsListView(actions: actions, fetchActions: fetchActions)
         .navigationTitle( "\(actionTypeName)")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -56,14 +32,55 @@ struct ListActionsView: View {
             }
         }
         .onAppear {
-            Task {
-                self.actions = await ActionController.fetchActions(userId: Authentication.shared.userId!, actionTypeId: actionType.id, withObjectConnections: true)
-                print(self.actions.count)
-            }
+            fetchActions()
+        }
+    }
+    
+    func fetchActions() {
+        Task {
+            self.actions = await ActionController.fetchActions(userId: Authentication.shared.userId!, actionTypeId: actionType.id, withObjectConnections: true)
+            print(self.actions.count)
         }
     }
 }
 
+
+struct GroupedActionsListView: View {
+    var actions: [ActionModel]
+    var fetchActions: () -> Void
+    
+    private var groupedAndSortedActions: [(String, [ActionModel])] {
+        let groupedEvents = Dictionary(grouping: actions) { $0.formattedDate }
+        
+        let sortedDates = groupedEvents.keys.sorted(by: { (date1, date2) -> Bool in
+            let date1Components = date1.split(separator: " ")
+            let date2Components = date2.split(separator: " ")
+            
+            guard !date1Components.isEmpty, !date2Components.isEmpty, date1Components.count == 2, date2Components.count == 2 else {
+                return false
+            }
+            
+            return date1Components[1] > date2Components[1]
+        })
+        
+        return sortedDates.map { date in
+            let events = groupedEvents[date]?.sorted(by: { $0.startTime < $1.startTime }) ?? []
+            return (date, events)
+        }
+    }
+    
+    var body: some View {
+        List {
+            ForEach(groupedAndSortedActions, id: \.0) { date, events in
+                Section(header: Text(date)) {
+                    ForEach(events, id: \.id) { action in
+                        ActionRow(event: action, fetchActions: fetchActions, includeActionName: false)
+                    }
+                }
+            }
+        }
+    }
+}
 
 
 //var body: some View {

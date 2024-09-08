@@ -32,6 +32,9 @@ struct NavigationBar<Content: View>: View {
                 HStack {
                     if selectedTab == .history {
                         switchTimelineButton
+                    } else if selectedTab == .goals {
+                        switchPeriodButton
+                            .padding(.top, buttonTopPadding)
                     }
                     Spacer()
                     settingsButton
@@ -44,10 +47,10 @@ struct NavigationBar<Content: View>: View {
     
     private var switchTimelineButton: some View {
         Button(action: {
-            if selectedTimelineType == .day {
-                selectedTimelineType = .week
+            if selectedTimelineType == .list {
+                selectedTimelineType = .candle
             } else {
-                selectedTimelineType = .day
+                selectedTimelineType = .list
             }
         }) {
             Image(systemName: "arrow.left.arrow.right")
@@ -72,5 +75,20 @@ struct NavigationBar<Content: View>: View {
     
     private var buttonTopPadding: CGFloat {
         verticalSizeClass == .compact ? 25 : 5
+    }
+}
+
+var switchPeriodButton: some View {
+    Button(action: {
+        if state.timePickerToShow == .week {
+            state.setTimePicker(.month)
+        } else {
+            state.setTimePicker(.week)
+        }
+    }) {
+        Image(systemName: "arrow.left.arrow.right")
+            .resizable()
+            .frame(width: 20, height: 20)
+            .padding(.horizontal, 20)
     }
 }

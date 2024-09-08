@@ -40,6 +40,7 @@ struct ActionsTabView: View {
             }
             .onAppear {
                 print("EventsView: onAppear")
+                state.setTimePicker(.day)
                 if(auth.areJwtSet) {
                     fetchEvents()
                     coreStateSubcription?.cancel()

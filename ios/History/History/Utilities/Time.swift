@@ -200,23 +200,37 @@ extension Date {
         
         return Weekday(rawValue: adjustedWeekdayNumber)!
     }
+    
+    var getMonthBoundary: MonthBoundary {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month], from: self)
+        let startOfMonth = calendar.date(from: components)!
+        let nextMonth = calendar.date(byAdding: .month, value: 1, to: startOfMonth)!
+        let endOfMonth = calendar.date(byAdding: .day, value: -1, to: nextMonth)!
+        let endOfDay = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: endOfMonth)!
+        return MonthBoundary(start: startOfMonth, end: endOfDay)
+    }
 }
 
-struct WeekBoundary: Equatable {
-    let start: Date //(Monday at 00:00)
-    let end: Date //(Sunday at 23:59:59)
+protocol Boundary: Equatable {
+    var start: Date { get }
+    var end: Date { get }
+    var formatString: String { get }
     
-    func nextWeek() -> WeekBoundary {
+    func next() -> Self
+    func previous() -> Self
+}
+
+struct WeekBoundary: Boundary {
+    let start: Date // (Monday at 00:00)
+    let end: Date // (Sunday at 23:59:59)
+    
+    func next() -> WeekBoundary {
         return Calendar.current.date(byAdding: .day, value: 7, to: self.start)!.getWeekBoundary
     }
     
-    func previousWeek() -> WeekBoundary {
+    func previous() -> WeekBoundary {
         return Calendar.current.date(byAdding: .day, value: -7, to: self.start)!.getWeekBoundary
-    }
-    var formatString: String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM d"
-        return "\(dateFormatter.string(from: self.start)) - \(dateFormatter.string(from: self.end))"
     }
     
     func getStartAndEnd(weekday: Weekday) -> WeekBoundary {
@@ -226,7 +240,32 @@ struct WeekBoundary: Equatable {
         let endDate = calendar.date(byAdding: .day, value: 1, to: startDate)!.addingTimeInterval(-1)
         return WeekBoundary(start: startDate, end: endDate)
     }
+    
+    var formatString: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM d"
+        return "\(dateFormatter.string(from: start)) - \(dateFormatter.string(from: end))"
+    }
 }
+
+struct MonthBoundary: Boundary {
+    let start: Date // (First day of the month at 00:00)
+    let end: Date // (Last day of the month at 23:59:59)
+    
+    func next() -> MonthBoundary {
+        return Calendar.current.date(byAdding: .month, value: 1, to: self.start)!.getMonthBoundary
+    }
+    
+    func previous() -> MonthBoundary {
+        return Calendar.current.date(byAdding: .month, value: -1, to: self.start)!.getMonthBoundary
+    }
+    var formatString: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM"
+        return "\(dateFormatter.string(from: start))"
+    }
+}
+
 
 enum Weekday: Int, CaseIterable {
     case monday = 1, tuesday, wednesday, thursday, friday, saturday, sunday

@@ -13,11 +13,18 @@ class ObjectModel: Observable, Codable, ObservableObject {
     @Published var fields: [String: AnyCodable]
     @Published var objectTypeId: Int
     @Published var objectTypeModel: ObjectTypeModel
+    @Published var actions: [ActionModel] = []
+    
     
     enum CodingKeys: String, CodingKey {
         case id, name, fields
         case objectTypeId = "object_type_id"
         case objectType = "object_type"
+        case objectActions = "object_actions"
+    }
+    
+    struct ObjectAction: Codable {
+        let action: ActionModel
     }
     
     init(objectTypeId: Int, objectType: ObjectTypeModel, name: String = "", fields: [String : AnyCodable] = [:]) {
@@ -47,6 +54,14 @@ class ObjectModel: Observable, Codable, ObservableObject {
                 fields[field.key] = field.value.dataType.getInitAnyCodable()
             }
         }
+        
+        if let objectActions = try container.decodeIfPresent([ObjectAction].self, forKey: .objectActions) {
+            for objectAction in objectActions {
+                if let actionId = objectAction.action.id {
+                    actions.append(objectAction.action)
+                }
+            }
+        }
     }
     
     func encode(to encoder: Encoder) throws {
@@ -61,6 +76,7 @@ class ObjectModel: Observable, Codable, ObservableObject {
         self.fields = newModel.fields
         self.objectTypeModel = newModel.objectTypeModel
         self.name = newModel.name
+        self.actions = newModel.actions
     }
 }
 

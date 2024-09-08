@@ -102,8 +102,8 @@ class ObjectV2Controller {
         }
     }
     
-    static func fetchObjects(userId: Int, objectId: Int? = nil, objectTypeId: Int? = nil) async -> [ObjectModel] {
-        let (graphqlQuery, variables) = generateQueryForObjects(userId: userId, objectId: objectId, objectTypeId: objectTypeId)
+    static func fetchObjects(userId: Int, objectId: Int? = nil, objectTypeId: Int? = nil, includeActions: Bool = false) async -> [ObjectModel] {
+        let (graphqlQuery, variables) = generateQueryForObjects(userId: userId, objectId: objectId, objectTypeId: objectTypeId, includeActions: includeActions)
         struct ObjectData: GraphQLData {
             var objects: [ObjectModel]
         }
@@ -136,7 +136,7 @@ class ObjectV2Controller {
         }
     }
     
-    static private func generateQueryForObjects(userId: Int, objectId: Int?, objectTypeId: Int? = nil, isSubscription:Bool = false) -> (String, [String: Any]) {
+    static private func generateQueryForObjects(userId: Int, objectId: Int?, objectTypeId: Int? = nil, isSubscription:Bool = false, includeActions: Bool = false) -> (String, [String: Any]) {
         var hasuraStruct: HasuraQuery = HasuraQuery(queryFor: "objects", queryName: "ObjectsQuery", queryType: isSubscription ? .subscription : .query)
         hasuraStruct.addWhereClause(name: "user_id", type: .int, value: userId, op: .equals)
         
@@ -146,11 +146,11 @@ class ObjectV2Controller {
         if let objectTypeId = objectTypeId {
             hasuraStruct.addWhereClause(name: "object_type_id", type: .int, value: objectTypeId, op: .equals)
         }
-        hasuraStruct.setSelections(selections: ObjectSelections)
+        hasuraStruct.setSelections(selections: ObjectSelections(includeActions: includeActions))
         return hasuraStruct.getQueryAndVariables
     }
     
-    static var ObjectSelections: String {
+    static func ObjectSelections(includeActions: Bool = false) -> String {
         return """
             id
             name
@@ -159,6 +159,13 @@ class ObjectV2Controller {
             object_type {
                 \(ObjectTypeController.objectTypeSelections())
             }
+            \(includeActions ? """
+                object_actions {
+                      action {
+                    \(ActionController.actionSelections())
+                }
+            }
+            """ : "")
         """
     }
 }

@@ -11,13 +11,11 @@ struct AggregateChartView: View {
     @ObservedObject var aggregate: AggregateModel
     @ObservedObject var actionTypeModel: ActionTypeModel
     let actionsParam: [ActionModel]
-    let weekBoundary: WeekBoundary?
     let showWeekNavigator: Bool
     
-    init(aggregate: AggregateModel, actionsParam: [ActionModel], weekBoundary: WeekBoundary? = nil, endDate: Date? = nil, showWeekNavigator:Bool = true, actionTypeModel: ActionTypeModel) {
+    init(aggregate: AggregateModel, actionsParam: [ActionModel], endDate: Date? = nil, showWeekNavigator:Bool = true, actionTypeModel: ActionTypeModel) {
         self.aggregate = aggregate
         self.actionsParam = actionsParam
-        self.weekBoundary = weekBoundary
         self.showWeekNavigator = showWeekNavigator
         self.actionTypeModel = actionTypeModel
     }
@@ -30,14 +28,14 @@ struct AggregateChartView: View {
         VStack(alignment: .leading, spacing: 8) {
             if aggregate.metadata.aggregatorType == .compare {
                 let mark: Date? = aggregate.metadata.goals.first?.value?.toType(Date.self)
-                let times = minTimeForEachDay(actions: actions, timezone: Authentication.shared.user!.timezone!, timeSelect: aggregate.metadata.field)
+                let times = minTimeForEachDay(actions: actions, timeSelect: aggregate.metadata.field)
                     ScatterView(title: "", data: times,
                                 mark: mark,
                                 range: 2)
                     .id(aggregate.id)
             } else  {
-                let dateCounts = getCumulativePerWeek(actions: actions, timezone: Authentication.shared.user!.timezone!, adder: adder)
-                WeeklyBarView(weeklyDurations: dateCounts, aggregate: aggregate, showWeekNavigator: showWeekNavigator, mark: mark, units: units)
+                let values = getCumulative(actions: actions, adder: adder)
+                WeeklyBarView(values: values, aggregate: aggregate, showWeekNavigator: showWeekNavigator, mark: mark, units: units)
             }
         }
     }
@@ -85,20 +83,18 @@ struct AggregateChartView: View {
         }
     }
     
-    func getDateRange(from dates: [Date], timezone: String) -> (Calendar, Date, Date)? {
-        var calendar = Calendar.current
-        let timeZone = TimeZone(identifier: timezone) ?? Calendar.current.timeZone
-        calendar.timeZone = timeZone
-        
-        if let startDate = weekBoundary?.start, let endDate = weekBoundary?.end {
-            return (calendar, calendar.startOfDay(for: startDate), calendar.startOfDay(for: endDate))
-        } else {
-            guard let minDate = dates.min(),
-                  let maxDate = dates.max() else {
-                return nil
-            }
-            return (calendar, calendar.startOfDay(for: minDate), calendar.startOfDay(for: maxDate))
-        }
+    func getDateRange(from dates: [Date]) -> (Calendar, Date, Date)? {
+        let calendar = Calendar.current
+        print("start \(state.bounds.start), end \(state.bounds.end)")
+//        if let startDate = state.bounds.start, let endDate = state.bounds.end {
+            return (calendar, calendar.startOfDay(for: state.bounds.start), calendar.startOfDay(for: state.bounds.end))
+//        } else {
+//            guard let minDate = dates.min(),
+//                  let maxDate = dates.max() else {
+//                return nil
+//            }
+//            return (calendar, calendar.startOfDay(for: minDate), calendar.startOfDay(for: maxDate))
+//        }
     }
 }
 

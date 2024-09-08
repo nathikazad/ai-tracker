@@ -9,11 +9,10 @@ import Foundation
 
 extension AggregateChartView {
     
-    func minTimeForEachDay(actions: [ActionModel], timezone: String, timeSelect: String = "Start Time") -> [Date] {
+    func minTimeForEachDay(actions: [ActionModel], timeSelect: String = "Start Time") -> [Date] {
         
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        formatter.timeZone = TimeZone(identifier: timezone) ?? TimeZone.current
         
         for action in actions {
             let startTimeString = formatter.string(from: action.startTime)
@@ -24,7 +23,7 @@ extension AggregateChartView {
         
         let relevantDates = timeSelect == "Start Time" ? actions.map { $0.startTime } : actions.compactMap { $0.endTime }
         
-        guard let (calendar, startDate, endDate) = getDateRange(from: relevantDates, timezone: timezone) else {
+        guard let (calendar, startDate, endDate) = getDateRange(from: relevantDates) else {
             return []
         }
         

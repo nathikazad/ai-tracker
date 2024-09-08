@@ -78,6 +78,7 @@ struct CandleChartWithList: View {
             }
         }
         .onAppear {
+            state.setTimePicker(.week)
             if(auth.areJwtSet) {
                 fetchActions()
                 coreStateSubcription?.cancel()

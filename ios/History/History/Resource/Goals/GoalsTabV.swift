@@ -12,14 +12,10 @@ struct GoalsTabView: View {
     @State private var aggregates: [AggregateModel] = []
     @State private var actions: [ActionModel] = []
     @State private var loading = true
-    @State private var weekBoundary: WeekBoundary
     @State private var selectedUser = 0
     @State private var selectedPriority: GoalPriority = .high
-    @State private var openDisclosures: Set<Int> = []
+    @State private var selectedAggregateId: Int? = nil
     @State private var coreStateSubcription: AnyCancellable?
-    init() {
-        weekBoundary = state.currentWeek
-    }
     
     var filteredAggregates: [AggregateModel] {
         aggregates.filter( {$0.metadata.goals.contains(where: {$0.priority == selectedPriority} ) } )
@@ -78,7 +74,8 @@ struct GoalsTabView: View {
                                 set: { _ in }
                             ),
                             actions: $actions,
-                            openDisclosures: $openDisclosures
+                            selectedAggregateId: $selectedAggregateId,
+                            loadActions: loadActions
                         )
                     }
                 }
@@ -86,13 +83,15 @@ struct GoalsTabView: View {
         }
 
         .onAppear {
+            if state.timePickerToShow == .day {
+                state.setTimePicker(.week)
+            }
             if(auth.areJwtSet) {
-                loadData(userId: auth.userId!)
+                loadData()
                 coreStateSubcription?.cancel()
                 coreStateSubcription = state.subscribeToCoreStateChanges {
                     print("AggregatesTab Core state occurred")
-                    weekBoundary = state.currentWeek
-                    loadData(userId: auth.userId!)
+                    loadData()
                 }
             }
         }
@@ -101,15 +100,30 @@ struct GoalsTabView: View {
         }
     }
     
-    private func loadData(userId: Int) {
+    private func loadData() {
         Task {
             loading = true
-            let aggregates = await AggregateController.fetchAggregates(userId: userId, withActionTypes: true)
-            let actions = await ActionController.fetchActions(userId: userId, startDate: state.currentWeek.start, endDate: state.currentWeek.end)
+            let aggregates = await AggregateController.fetchAggregates(userId: auth.userId!, withActionTypes: true)
+            if selectedAggregateId == nil {
+                selectedAggregateId = aggregates.first?.id
+            }
             await MainActor.run {
                 self.aggregates = aggregates
-                self.actions = actions
-                loading = false
+                self.loading = false
+            }
+            loadActions()
+        }
+    }
+    
+    private func loadActions() {
+        Task {
+            if let actionTypeId = aggregates.first(where: { $0.id == selectedAggregateId })?.actionTypeId  {
+                print("Action Type Id \(actionTypeId)")
+                let actions = await ActionController.fetchActions(userId: auth.userId!, actionTypeId: actionTypeId, startDate: state.bounds.start, endDate: state.bounds.end)
+                print("actions \(actions.count)")
+                await MainActor.run {
+                    self.actions = actions
+                }
             }
         }
     }
@@ -118,19 +132,21 @@ struct GoalsTabView: View {
 struct GoalsGraphsView: View {
     @Binding var aggregates: [AggregateModel]
     @Binding var actions: [ActionModel]
-    @Binding var openDisclosures: Set<Int>
+    @Binding var selectedAggregateId: Int?
     var goalEditable: Bool = true
+    var loadActions: (() -> Void)
 
     var body: some View {
         ForEach(aggregates, id: \.id) { aggregate in
             DisclosureGroup(
                 isExpanded: Binding(
-                    get: { openDisclosures.contains(aggregate.id!) },
+                    get: { selectedAggregateId == aggregate.id },
                     set: { isExpanded in
                         if isExpanded {
-                            openDisclosures.insert(aggregate.id!)
+                            selectedAggregateId = aggregate.id
+                            loadActions()
                         } else {
-                            openDisclosures.remove(aggregate.id!)
+                            selectedAggregateId = nil
                         }
                     }
                 )
@@ -138,7 +154,6 @@ struct GoalsGraphsView: View {
                 AggregateChartView(
                     aggregate: aggregate,
                     actionsParam: actions,
-                    weekBoundary: state.currentWeek,
                     showWeekNavigator: false,
                     actionTypeModel: aggregate.actionType ?? ActionTypeModel(name: "Unknown")
                 )

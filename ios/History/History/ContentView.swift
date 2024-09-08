@@ -42,8 +42,8 @@ enum SelectedTimeline: String, CodingKey {
 }
 
 enum TimelineType: String, CaseIterable {
-    case week = "Week"
-    case day = "Day"
+    case candle = "Candle"
+    case list = "List"
 }
 
 enum Tab {
@@ -56,7 +56,7 @@ struct MainView: View {
     @ObservedObject var appState = state
     @ObservedObject private var timerManager = TimerManager.shared
     @State private var selectedExplorerType: ExplorerType = .actions
-    @State private var selectedTimelineType: TimelineType = .day
+    @State private var selectedTimelineType: TimelineType = .list
     @StateObject private var datePickerModel: TwoDatePickerModel = TwoDatePickerModel()
     @State var enteringTimelineDayTab: Bool = true
     
@@ -97,14 +97,6 @@ struct MainView: View {
                                     .padding(.horizontal, 10)
                                 Spacer()
                             }
-                        } else if selectedTab == Tab.history {
-                            if selectedTimelineType == .day   {
-                                DateNavigator()
-                            } else {
-                                WeekNavigator()
-                            }
-                        } else if selectedTab == Tab.goals {
-                            WeekNavigator()
                         } else if selectedTab == Tab.squads {
                             HStack {
                                 Text("Squads")
@@ -113,8 +105,11 @@ struct MainView: View {
                                     .padding(.horizontal, 10)
                                 Spacer()
                             }
+                        } else {
+                            TimeNavigator()
                         }
                     }
+                    
                     if selectedTab == Tab.explorer {
                         Picker("", selection: $selectedExplorerType) {
                             ForEach(ExplorerType.allCases, id: \.self) { viewType in
@@ -124,12 +119,10 @@ struct MainView: View {
                         .pickerStyle(SegmentedPickerStyle())
                         .padding()
                         Divider()
-                    } else {
-                        
                     }
                     
                     TabView(selection: $selectedTab) {
-                        if selectedTimelineType == .week {
+                        if selectedTimelineType == .candle {
                             CandleChartWithList()
                                 .tabItem { Label("History", systemImage: "clock.arrow.circlepath") }
                                 .tag(Tab.history)

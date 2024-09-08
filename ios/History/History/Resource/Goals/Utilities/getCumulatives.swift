@@ -8,50 +8,30 @@
 import Foundation
 
 extension AggregateChartView {
-    func getCumulativePerWeek(actions: [ActionModel], timezone: String, adder: (ActionModel) -> Int) -> [[(Date, Int, Int)]] {
-        guard let (calendar, startDate, endDate) = getDateRange(from: actions.map { $0.startTime }, timezone: timezone) else {
-            return []
-        }
-        
+    func getCumulative(actions: [ActionModel], adder: (ActionModel) -> Int) -> [(Date, Int, Int)] {
+        let calendar = Calendar.current
+        let startDate = state.bounds.start
+        let endDate = state.bounds.end
         var currentDate = startDate
-        var weeklyDurations: [[(Date, Int, Int)]] = []
-        
+        var values: [(Date, Int, Int)] = []
         while currentDate <= endDate {
-            let weekBoundary = currentDate.getWeekBoundary
-            let weekStartDate = weekBoundary.start
-            let weekEndDate = weekBoundary.end
-            
-            var weekCumulative = 0
-            var dailyDate = weekStartDate
-            var weekDurations: [(Date, Int, Int)] = []
-            
-            while dailyDate <= weekEndDate {
-                if dailyDate <= endDate {
-                    let dailyDuration = actions
-                        .filter { action in
-                            calendar.isDate(action.startTime, inSameDayAs: dailyDate)
-                        }
-                        .reduce(0) { sum, action in
-                            sum + adder(action)
-                        }
-                    
-                    weekCumulative += dailyDuration
-                    weekDurations.append((dailyDate, weekCumulative, dailyDuration))
-                } else {
-                    weekDurations.append((dailyDate, 0, 0))
+            var cumulative = 0
+            let dayValue = actions
+                .filter { action in
+                    calendar.isDate(action.startTime, inSameDayAs: currentDate)
                 }
-                dailyDate = calendar.date(byAdding: .day, value: 1, to: dailyDate)!
-            }
-            
-            weeklyDurations.append(weekDurations)
-            currentDate = calendar.date(byAdding: .day, value: 7, to: currentDate)!
+                .reduce(0) { sum, action in
+                    sum + adder(action)
+                }
+            cumulative += dayValue
+            values.append((currentDate, cumulative, dayValue))
+            currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate)!
         }
-        
-        return weeklyDurations
+        return values
     }
     
     func getCumulativeDurationsPerMonth(actions: [ActionModel], timezone: String) -> [(Date, Int)] {
-        guard let (calendar, startDate, endDate) = getDateRange(from: actions.map { $0.startTime }, timezone: timezone) else {
+        guard let (calendar, startDate, endDate) = getDateRange(from: actions.map { $0.startTime }) else {
             return []
         }
         
