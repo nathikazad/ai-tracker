@@ -13,7 +13,13 @@ struct StatusBarView: View {
     
     var body: some View {
         VStack(spacing: 10) {
-            Button(action: appState.toggleScreenshots) {
+            Button(action: {
+                if appState.isSignedIn {
+                    appState.toggleScreenshots()
+                } else {
+                    showMainWindowAction()
+                }
+            }) {
                 Text(appState.isRunning ? "Stop" : "Start")
                     .frame(maxWidth: .infinity)
             }
@@ -27,7 +33,7 @@ struct StatusBarView: View {
             }
             
             Button("Show App") {
-                showMainWindowAction()
+                
             }
             .buttonStyle(.bordered)
             

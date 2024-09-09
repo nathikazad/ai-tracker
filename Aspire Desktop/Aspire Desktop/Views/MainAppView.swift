@@ -6,12 +6,61 @@
 //
 
 import SwiftUI
+import AuthenticationServices
 struct MainAppView: View {
     @ObservedObject var appState: AppState
     
     var body: some View {
         VStack {
-            Text("Aspire Desktop \(appState.isRunning)")
+            if appState.isSignedIn {
+                SignedInView(appState: appState)
+            } else {
+                SignInView(appState: appState)
+            }
+        }
+        .padding()
+        .frame(width: 400, height: 500)
+    }
+}
+
+struct SignInView: View {
+    @ObservedObject var appState: AppState
+    
+    var body: some View {
+        VStack {
+            Text("Welcome to Aspire Desktop")
+                .font(.title)
+                .padding()
+            
+            SignInWithAppleButton(
+                .signIn,
+                onRequest: { request in
+                    request.requestedScopes = [.fullName, .email]
+                },
+                onCompletion: { result in
+                    switch result {
+                    case .success(let authResults):
+                        print("Authorization successful.")
+                        if let appleIDCredential = authResults.credential as? ASAuthorizationAppleIDCredential {
+                            let userId = appleIDCredential.user
+                            appState.signIn(with: userId)
+                        }
+                    case .failure(let error):
+                        print("Authorization failed: " + error.localizedDescription)
+                    }
+                }
+            )
+            .frame(width: 200, height: 44)
+        }
+    }
+}
+
+struct SignedInView: View {
+    @ObservedObject var appState: AppState
+    
+    var body: some View {
+        VStack {
+            Text("Aspire Desktop")
                 .font(.title)
             
             Button(action: appState.toggleScreenshots) {
@@ -57,14 +106,17 @@ struct MainAppView: View {
                 Text(errorMessage)
                     .foregroundColor(.red)
             }
-        }
-        .padding()
-        .frame(width: 400, height: 500)
-        .sheet(isPresented: $appState.isImagePresented) {
-            ImageViewer(image: $appState.selectedImage, isPresented: $appState.isImagePresented)
+            
+            Button("Sign Out") {
+                appState.signOut()
+            }
+            .padding(.top)
         }
         .onAppear {
             appState.fetchScreenshotFiles()
+        }
+        .sheet(isPresented: $appState.isImagePresented) {
+            ImageViewer(image: $appState.selectedImage, isPresented: $appState.isImagePresented)
         }
     }
 }

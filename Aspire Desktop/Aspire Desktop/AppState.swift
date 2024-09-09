@@ -18,6 +18,16 @@ final class ScreenshotSettings {
 }
 
 class AppState: ObservableObject {
+    @Published var isSignedIn = false
+    @Published var userID: String? {
+        didSet {
+            if let userID = userID {
+                UserDefaults.standard.set(userID, forKey: "savedUserID")
+            } else {
+                UserDefaults.standard.removeObject(forKey: "savedUserID")
+            }
+        }
+    }
     @Published var isRunning = false
     @Published var interval = 10
     @Published var screenshotFiles: [String] = []
@@ -25,7 +35,14 @@ class AppState: ObservableObject {
     @Published var isImagePresented = false
     @Published var errorMessage: String?
     @State private var settings: ScreenshotSettings = ScreenshotSettings(interval: 10, saveDirectory: "Screenshots")
-    @State private var timer: Timer?
+    private var timer: DispatchSourceTimer?
+    
+    init() {
+        if let savedUserID = UserDefaults.standard.string(forKey: "savedUserID") {
+            self.userID = savedUserID
+            self.isSignedIn = true
+        }
+    }
     
     func toggleScreenshots() {
         if isRunning {
@@ -33,21 +50,44 @@ class AppState: ObservableObject {
         } else {
             startScreenshots()
         }
-        self.isRunning.toggle()
     }
     
     private func startScreenshots() {
-        timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(settings.interval), repeats: true) { _ in
-            let inactivityThreshold: TimeInterval = 10 // 1 minute
-            let lastEventTime = CGEventSource.secondsSinceLastEventType(.combinedSessionState, eventType: CGEventType(rawValue: ~0)! )
-            
-            print("Time since last \(lastEventTime)")
-            
-            if lastEventTime > inactivityThreshold {
-                print("User inactive. Skipping screenshot.")
-                return
-            }
-            
+        guard !isRunning else { return }
+        isRunning = true
+        
+        let queue = DispatchQueue.global(qos: .background)
+        timer = DispatchSource.makeTimerSource(queue: queue)
+        timer?.schedule(deadline: .now(), repeating: .seconds(settings.interval))
+        timer?.setEventHandler { [weak self] in
+            self?.takeScreenshot()
+        }
+        timer?.resume()
+        
+        print("Screenshots started")
+    }
+    
+    func stopScreenshots() {
+        isRunning = false
+        timer?.cancel()
+        timer = nil
+        print("Screenshots stopped")
+    }
+    
+    private func takeScreenshot() {
+        guard isRunning else { return }
+        
+        let inactivityThreshold: TimeInterval = 10 // 10 seconds
+        let lastEventTime = CGEventSource.secondsSinceLastEventType(.combinedSessionState, eventType: CGEventType(rawValue: ~0)!)
+        
+        print("Time since last activity: \(lastEventTime) seconds")
+        
+        if lastEventTime > inactivityThreshold {
+            print("User inactive. Skipping screenshot.")
+            return
+        }
+        
+        DispatchQueue.main.async {
             let result = ImageOperations.takeScreenshot(saveDirectory: self.settings.saveDirectory, interval: self.settings.interval)
             switch result {
             case .success(_):
@@ -57,11 +97,6 @@ class AppState: ObservableObject {
                 self.errorMessage = "Error taking screenshot: \(error.localizedDescription)"
             }
         }
-    }
-    
-    func stopScreenshots() {
-        timer?.invalidate()
-        timer = nil
     }
     
     func deleteImage(filename: String) {
@@ -96,5 +131,16 @@ class AppState: ObservableObject {
         case .failure(let error):
             errorMessage = "Error loading image: \(error.localizedDescription)"
         }
+    }
+    
+    func signIn(with userId: String) {
+        print(userId)
+        self.userID = userId
+        self.isSignedIn = true
+    }
+    
+    func signOut() {
+        self.userID = nil
+        self.isSignedIn = false
     }
 }
