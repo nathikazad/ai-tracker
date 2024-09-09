@@ -82,7 +82,6 @@ class Authentication {
         Task {
             user = try await UserController.fetchUser()
             await UserController.ensureUserTimezone()
-            
         }
         
     }
@@ -151,7 +150,7 @@ private func fetchHasuraJwt(appleKey: String, username: String? = nil, userLangu
         if let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any], let jwt = jsonResponse["jwt"] as? String {
             return jwt
         } else {
-            print("Invalid response received from the server")
+            print("Authentication: Invalid response received from the server")
             return nil
         }
     } catch {

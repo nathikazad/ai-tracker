@@ -12,7 +12,7 @@ struct MainAppView: View {
     
     var body: some View {
         VStack {
-            if auth.areJwtSet {
+            if appState.isSignedIn {
                 SignedInView(appState: appState)
             } else {
                 SignInView(appState: appState)
@@ -25,7 +25,6 @@ struct MainAppView: View {
 
 struct SignInView: View {
     @ObservedObject var appState: AppState
-    
     var body: some View {
         VStack {
             Text("Welcome to Aspire Desktop")
@@ -40,6 +39,7 @@ struct SignInView: View {
                 onCompletion: { result in
                     Task {
                         let result = await handleSignIn(result: result)
+                        appState.isSignedIn = true
                     }
                 }
             )
@@ -102,6 +102,7 @@ struct SignedInView: View {
             
             Button("Sign Out") {
                 auth.signOutCallback()
+                appState.isSignedIn = false
             }
             .padding(.top)
         }

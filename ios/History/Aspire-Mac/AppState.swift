@@ -18,6 +18,7 @@ final class ScreenshotSettings {
 }
 
 class AppState: ObservableObject {
+    @Published var isSignedIn = false
     @Published var isRunning = false
     @Published var interval = 10
     @Published var screenshotFiles: [String] = []
@@ -26,6 +27,10 @@ class AppState: ObservableObject {
     @Published var errorMessage: String?
     @State private var settings: ScreenshotSettings = ScreenshotSettings(interval: 10, saveDirectory: "Screenshots")
     private var timer: DispatchSourceTimer?
+    
+    init() {
+        isSignedIn = auth.areJwtSet
+    }
         
     func toggleScreenshots() {
         if isRunning {
