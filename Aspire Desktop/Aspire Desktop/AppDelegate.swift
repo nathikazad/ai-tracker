@@ -99,14 +99,4 @@ class StatusBarController {
     }
 }
 
-final class ScreenshotSettings {
-    var interval: Int
-    var saveDirectory: String
-    
-    init(interval: Int, saveDirectory: String) {
-        self.interval = interval
-        self.saveDirectory = saveDirectory
-    }
-}
-
 

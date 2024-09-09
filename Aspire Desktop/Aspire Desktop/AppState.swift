@@ -6,6 +6,17 @@
 //
 
 import SwiftUI
+
+final class ScreenshotSettings {
+    var interval: Int
+    var saveDirectory: String
+    
+    init(interval: Int, saveDirectory: String) {
+        self.interval = interval
+        self.saveDirectory = saveDirectory
+    }
+}
+
 class AppState: ObservableObject {
     @Published var isRunning = false
     @Published var interval = 10
@@ -28,7 +39,7 @@ class AppState: ObservableObject {
     private func startScreenshots() {
         timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(settings.interval), repeats: true) { _ in
             let inactivityThreshold: TimeInterval = 10 // 1 minute
-            let lastEventTime = CGEventSource.secondsSinceLastEventType(.combinedSessionState, eventType: .mouseMoved)
+            let lastEventTime = CGEventSource.secondsSinceLastEventType(.combinedSessionState, eventType: CGEventType(rawValue: ~0)! )
             
             print("Time since last \(lastEventTime)")
             
