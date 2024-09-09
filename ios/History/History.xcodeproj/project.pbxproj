@@ -108,6 +108,21 @@
 		FE6ED6D52C06AA5D00E6A2A6 /* EventModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6ED6D42C06AA5D00E6A2A6 /* EventModels.swift */; };
 		FE6ED6D72C06AA9100E6A2A6 /* EventTypeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6ED6D62C06AA9100E6A2A6 /* EventTypeModel.swift */; };
 		FE71B3882BD07BCE008F7D1A /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4F7BDA2BA957780041CB6A /* AudioRecorder.swift */; };
+		FE71C6142C8FAF7500953D63 /* Aspire_MacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C6132C8FAF7500953D63 /* Aspire_MacApp.swift */; };
+		FE71C61A2C8FAF7600953D63 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE71C6192C8FAF7600953D63 /* Assets.xcassets */; };
+		FE71C61D2C8FAF7600953D63 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE71C61C2C8FAF7600953D63 /* Preview Assets.xcassets */; };
+		FE71C6502C8FB21400953D63 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C6462C8FB21400953D63 /* AppState.swift */; };
+		FE71C6512C8FB21400953D63 /* ImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C6472C8FB21400953D63 /* ImageViewer.swift */; };
+		FE71C6522C8FB21400953D63 /* MainAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C6482C8FB21400953D63 /* MainAppView.swift */; };
+		FE71C6532C8FB21400953D63 /* StatusBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C6492C8FB21400953D63 /* StatusBarView.swift */; };
+		FE71C6552C8FB21400953D63 /* FileOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C64C2C8FB21400953D63 /* FileOperations.swift */; };
+		FE71C6562C8FB21400953D63 /* ImageOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C64D2C8FB21400953D63 /* ImageOperations.swift */; };
+		FE71C6572C8FB21400953D63 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C64F2C8FB21400953D63 /* AppDelegate.swift */; };
+		FE71C6582C8FB44E00953D63 /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EAD2BC0713B00FF56AB /* Authentication.swift */; };
+		FE71C6592C8FB48400953D63 /* UserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8965A92BC7B31D00E9D633 /* UserController.swift */; };
+		FE71C65A2C8FB4A800953D63 /* Hasura.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EB02BC0A29300FF56AB /* Hasura.swift */; };
+		FE71C65B2C8FB4B400953D63 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8965AE2BC85FE000E9D633 /* Constants.swift */; };
+		FE71C65C2C8FB4DE00953D63 /* ServerCommunicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5264802BA99AF700502521 /* ServerCommunicator.swift */; };
 		FE759E122C5DE432001A0FF4 /* DataTypeV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE759E112C5DE432001A0FF4 /* DataTypeV.swift */; };
 		FE759E142C5ECA0A001A0FF4 /* TimeSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE759E132C5ECA0A001A0FF4 /* TimeSelector.swift */; };
 		FE7EBFC82C0A8F2200F720EB /* PersonAssociationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7EBFC72C0A8F2200F720EB /* PersonAssociationsView.swift */; };
@@ -330,6 +345,18 @@
 		FE6ED6D22C06A9F500E6A2A6 /* ASObjectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASObjectModel.swift; sourceTree = "<group>"; };
 		FE6ED6D42C06AA5D00E6A2A6 /* EventModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventModels.swift; sourceTree = "<group>"; };
 		FE6ED6D62C06AA9100E6A2A6 /* EventTypeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTypeModel.swift; sourceTree = "<group>"; };
+		FE71C6112C8FAF7500953D63 /* Aspire-Mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Aspire-Mac.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FE71C6132C8FAF7500953D63 /* Aspire_MacApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Aspire_MacApp.swift; sourceTree = "<group>"; };
+		FE71C6192C8FAF7600953D63 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FE71C61C2C8FAF7600953D63 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		FE71C61E2C8FAF7600953D63 /* Aspire_Mac.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Aspire_Mac.entitlements; sourceTree = "<group>"; };
+		FE71C6462C8FB21400953D63 /* AppState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		FE71C6472C8FB21400953D63 /* ImageViewer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageViewer.swift; path = "../../../ios/History/Aspire-Mac/Views/ImageViewer.swift"; sourceTree = "<group>"; };
+		FE71C6482C8FB21400953D63 /* MainAppView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MainAppView.swift; path = "../../../ios/History/Aspire-Mac/Views/MainAppView.swift"; sourceTree = "<group>"; };
+		FE71C6492C8FB21400953D63 /* StatusBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StatusBarView.swift; path = "../../../ios/History/Aspire-Mac/Views/StatusBarView.swift"; sourceTree = "<group>"; };
+		FE71C64C2C8FB21400953D63 /* FileOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileOperations.swift; path = "../../../ios/History/Aspire-Mac/Utilities/FileOperations.swift"; sourceTree = "<group>"; };
+		FE71C64D2C8FB21400953D63 /* ImageOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageOperations.swift; path = "../../../ios/History/Aspire-Mac/Utilities/ImageOperations.swift"; sourceTree = "<group>"; };
+		FE71C64F2C8FB21400953D63 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FE759E112C5DE432001A0FF4 /* DataTypeV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTypeV.swift; sourceTree = "<group>"; };
 		FE759E132C5ECA0A001A0FF4 /* TimeSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSelector.swift; sourceTree = "<group>"; };
 		FE7EBFC72C0A8F2200F720EB /* PersonAssociationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonAssociationsView.swift; sourceTree = "<group>"; };
@@ -428,6 +455,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		FE4F7BB32BA7D7E60041CB6A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE71C60E2C8FAF7500953D63 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -667,6 +701,7 @@
 				FE4F7BA12BA7D79E0041CB6A /* History */,
 				FE4F7BB72BA7D7E60041CB6A /* MiniHistory Watch App */,
 				FE2074D62C5B3FD100C58226 /* Shortcut Extension */,
+				FE71C6122C8FAF7500953D63 /* Aspire-Mac */,
 				FE4F7BA02BA7D79E0041CB6A /* Products */,
 				FE4F7BCA2BA7DBB60041CB6A /* Frameworks */,
 			);
@@ -678,6 +713,7 @@
 				FE4F7B9F2BA7D79E0041CB6A /* History.app */,
 				FE4F7BB62BA7D7E60041CB6A /* Aspire Watch.app */,
 				FE2074D32C5B3FD100C58226 /* Shortcut ExtensionExtension.appex */,
+				FE71C6112C8FAF7500953D63 /* Aspire-Mac.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -766,6 +802,50 @@
 				FE04A7C32C6FDDAD000F5C24 /* ObjectConnectionM.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		FE71C6122C8FAF7500953D63 /* Aspire-Mac */ = {
+			isa = PBXGroup;
+			children = (
+				FE71C64F2C8FB21400953D63 /* AppDelegate.swift */,
+				FE71C6462C8FB21400953D63 /* AppState.swift */,
+				FE71C64E2C8FB21400953D63 /* Utilities */,
+				FE71C64A2C8FB21400953D63 /* Views */,
+				FE71C6132C8FAF7500953D63 /* Aspire_MacApp.swift */,
+				FE71C6192C8FAF7600953D63 /* Assets.xcassets */,
+				FE71C61E2C8FAF7600953D63 /* Aspire_Mac.entitlements */,
+				FE71C61B2C8FAF7600953D63 /* Preview Content */,
+			);
+			path = "Aspire-Mac";
+			sourceTree = "<group>";
+		};
+		FE71C61B2C8FAF7600953D63 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				FE71C61C2C8FAF7600953D63 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		FE71C64A2C8FB21400953D63 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				FE71C6472C8FB21400953D63 /* ImageViewer.swift */,
+				FE71C6482C8FB21400953D63 /* MainAppView.swift */,
+				FE71C6492C8FB21400953D63 /* StatusBarView.swift */,
+			);
+			name = Views;
+			path = "../../../Aspire Desktop/Aspire Desktop/Views";
+			sourceTree = "<group>";
+		};
+		FE71C64E2C8FB21400953D63 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				FE71C64C2C8FB21400953D63 /* FileOperations.swift */,
+				FE71C64D2C8FB21400953D63 /* ImageOperations.swift */,
+			);
+			name = Utilities;
+			path = "../../../Aspire Desktop/Aspire Desktop/Utilities";
 			sourceTree = "<group>";
 		};
 		FE759E0F2C5DE40D001A0FF4 /* DataTypes */ = {
@@ -1077,6 +1157,23 @@
 			productReference = FE4F7BB62BA7D7E60041CB6A /* Aspire Watch.app */;
 			productType = "com.apple.product-type.application";
 		};
+		FE71C6102C8FAF7500953D63 /* Aspire-Mac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FE71C6212C8FAF7600953D63 /* Build configuration list for PBXNativeTarget "Aspire-Mac" */;
+			buildPhases = (
+				FE71C60D2C8FAF7500953D63 /* Sources */,
+				FE71C60E2C8FAF7500953D63 /* Frameworks */,
+				FE71C60F2C8FAF7500953D63 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Aspire-Mac";
+			productName = "Aspire-Mac";
+			productReference = FE71C6112C8FAF7500953D63 /* Aspire-Mac.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1095,6 +1192,9 @@
 					};
 					FE4F7BB52BA7D7E60041CB6A = {
 						CreatedOnToolsVersion = 15.2;
+					};
+					FE71C6102C8FAF7500953D63 = {
+						CreatedOnToolsVersion = 15.4;
 					};
 				};
 			};
@@ -1117,6 +1217,7 @@
 				FE4F7B9E2BA7D79E0041CB6A /* History */,
 				FE4F7BB52BA7D7E60041CB6A /* MiniHistory Watch App */,
 				FE2074D22C5B3FD100C58226 /* Shortcut ExtensionExtension */,
+				FE71C6102C8FAF7500953D63 /* Aspire-Mac */,
 			);
 		};
 /* End PBXProject section */
@@ -1145,6 +1246,15 @@
 			files = (
 				FE4F7BC02BA7D7E70041CB6A /* Preview Assets.xcassets in Resources */,
 				FE4F7BBD2BA7D7E70041CB6A /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE71C60F2C8FAF7500953D63 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FE71C61D2C8FAF7600953D63 /* Preview Assets.xcassets in Resources */,
+				FE71C61A2C8FAF7600953D63 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1335,6 +1445,26 @@
 				FEC538812BBDF8C7006BDBDA /* WidgetIntent.swift in Sources */,
 				FE8965B02BC8606900E9D633 /* Constants.swift in Sources */,
 				FE129BE42BCB3CFB004058EA /* Authentication.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE71C60D2C8FAF7500953D63 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FE71C6572C8FB21400953D63 /* AppDelegate.swift in Sources */,
+				FE71C65A2C8FB4A800953D63 /* Hasura.swift in Sources */,
+				FE71C6522C8FB21400953D63 /* MainAppView.swift in Sources */,
+				FE71C6592C8FB48400953D63 /* UserController.swift in Sources */,
+				FE71C65C2C8FB4DE00953D63 /* ServerCommunicator.swift in Sources */,
+				FE71C6552C8FB21400953D63 /* FileOperations.swift in Sources */,
+				FE71C6532C8FB21400953D63 /* StatusBarView.swift in Sources */,
+				FE71C6142C8FAF7500953D63 /* Aspire_MacApp.swift in Sources */,
+				FE71C6512C8FB21400953D63 /* ImageViewer.swift in Sources */,
+				FE71C6502C8FB21400953D63 /* AppState.swift in Sources */,
+				FE71C6562C8FB21400953D63 /* ImageOperations.swift in Sources */,
+				FE71C6582C8FB44E00953D63 /* Authentication.swift in Sources */,
+				FE71C65B2C8FB4B400953D63 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1679,6 +1809,66 @@
 			};
 			name = Release;
 		};
+		FE71C61F2C8FAF7600953D63 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Aspire-Mac/Aspire_Mac.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Aspire-Mac/Preview Content\"";
+				DEVELOPMENT_TEAM = F2W45BF2AV;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.snow.aspire.Aspire-Mac";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		FE71C6202C8FAF7600953D63 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Aspire-Mac/Aspire_Mac.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Aspire-Mac/Preview Content\"";
+				DEVELOPMENT_TEAM = F2W45BF2AV;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.snow.aspire.Aspire-Mac";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1714,6 +1904,15 @@
 			buildConfigurations = (
 				FE4F7BC52BA7D7E70041CB6A /* Debug */,
 				FE4F7BC62BA7D7E70041CB6A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FE71C6212C8FAF7600953D63 /* Build configuration list for PBXNativeTarget "Aspire-Mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FE71C61F2C8FAF7600953D63 /* Debug */,
+				FE71C6202C8FAF7600953D63 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

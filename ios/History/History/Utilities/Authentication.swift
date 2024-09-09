@@ -76,7 +76,9 @@ class Authentication {
     
     func signInCallback() {
         hasura.setup()
+#if os(iOS)
         watch.sync()
+#endif
         Task {
             user = try await UserController.fetchUser()
             await UserController.ensureUserTimezone()
@@ -88,7 +90,9 @@ class Authentication {
     func signOutCallback() {
         UserDefaults.standard.removeObject(forKey: hasuraJwtKey)
         UserDefaults.standard.removeObject(forKey: appleJwtKey)
+#if os(iOS)
         watch.sync()
+#endif
         hasura.closeConnection()
     }
 }

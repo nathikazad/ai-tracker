@@ -31,7 +31,7 @@ struct LandingPageView: View {
                 .padding(.bottom, 20)
             
             SignInWithAppleButton(.signIn, onRequest: { request in
-                request.requestedScopes = [.fullName]
+                request.requestedScopes = [.fullName, .email]
             }, onCompletion: { result in
                 Task {
                     let result = await handleSignIn(result: result)
