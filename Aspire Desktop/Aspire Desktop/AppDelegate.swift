@@ -18,26 +18,48 @@ extension NSApplication {
 class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBar: StatusBarController?
     var popover = NSPopover()
+    var mainWindow: NSWindow?
     
-    func applicationDidFinishLaunching(_ aNotification: Notification) {
+    @ObservedObject var appState = AppState()
+    
+    func applicationDidFinishLaunching(_ notification: Notification) {
         NSApplication.hideFromDock()
+        setupStatusBar()
+        setupMainWindow()
+    }
+    
+    func setupStatusBar() {
+        let statusBarView = StatusBarView(
+            appState: appState,
+            quitAction: { NSApplication.shared.terminate(nil) },
+            showMainWindowAction: { self.showMainWindow() }
+        )
         
-        let contentView = ScreenshotView()
-            .environment(\.modelContext, (NSApplication.shared.delegate as? Aspire_DesktopApp)?.sharedModelContainer.mainContext ?? ModelContext(try! ModelContainer(for: ScreenshotSettings.self)))
-        
-        popover.contentSize = NSSize(width: 360, height: 360)
+        popover.contentSize = NSSize(width: 250, height: 200)
         popover.behavior = .transient
-        popover.contentViewController = NSHostingController(rootView: contentView)
+        popover.contentViewController = NSHostingController(rootView: statusBarView)
         
         statusBar = StatusBarController(popover)
     }
     
-    func applicationWillTerminate(_ notification: Notification) {
-        // Perform any cleanup here if needed
-        // For example, stop any ongoing screenshot processes
-        if let screenshotView = popover.contentViewController?.view as? NSHostingView<ScreenshotView> {
-            screenshotView.rootView.stopScreenshots()
-        }
+    func setupMainWindow() {
+        let mainAppView = MainAppView(
+            appState: appState
+        )
+        
+        mainWindow = NSWindow(
+            contentRect: NSRect(x: 100, y: 100, width: 400, height: 500),
+            styleMask: [.titled, .closable, .miniaturizable, .resizable],
+            backing: .buffered,
+            defer: false
+        )
+        mainWindow?.title = "Aspire Desktop"
+        mainWindow?.contentView = NSHostingView(rootView: mainAppView)
+    }
+    
+    func showMainWindow() {
+        mainWindow?.makeKeyAndOrderFront(nil)
+        NSApplication.shared.activate(ignoringOtherApps: true)
     }
 }
 
@@ -76,3 +98,15 @@ class StatusBarController {
         popover.performClose(nil)
     }
 }
+
+final class ScreenshotSettings {
+    var interval: Int
+    var saveDirectory: String
+    
+    init(interval: Int, saveDirectory: String) {
+        self.interval = interval
+        self.saveDirectory = saveDirectory
+    }
+}
+
+

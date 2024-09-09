@@ -8,14 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		FE71C58C2C8D327A00953D63 /* Aspire_DesktopApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C58B2C8D327A00953D63 /* Aspire_DesktopApp.swift */; };
-		FE71C58E2C8D327A00953D63 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C58D2C8D327A00953D63 /* ContentView.swift */; };
 		FE71C5922C8D327C00953D63 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE71C5912C8D327C00953D63 /* Assets.xcassets */; };
 		FE71C5952C8D327C00953D63 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE71C5942C8D327C00953D63 /* Preview Assets.xcassets */; };
 		FE71C5A02C8D327C00953D63 /* Aspire_DesktopTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C59F2C8D327C00953D63 /* Aspire_DesktopTests.swift */; };
 		FE71C5AA2C8D327C00953D63 /* Aspire_DesktopUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C5A92C8D327C00953D63 /* Aspire_DesktopUITests.swift */; };
 		FE71C5AC2C8D327C00953D63 /* Aspire_DesktopUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C5AB2C8D327C00953D63 /* Aspire_DesktopUITestsLaunchTests.swift */; };
-		FE71C5B92C8D341A00953D63 /* ScreenshotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C5B82C8D341A00953D63 /* ScreenshotView.swift */; };
 		FE71C5BB2C8D368F00953D63 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C5BA2C8D368F00953D63 /* AppDelegate.swift */; };
+		FE71C5BE2C8F702800953D63 /* FileOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C5BD2C8F702800953D63 /* FileOperations.swift */; };
+		FE71C5C02C8F712B00953D63 /* ImageOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C5BF2C8F712B00953D63 /* ImageOperations.swift */; };
+		FE71C5C32C8F715300953D63 /* ImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C5C22C8F715300953D63 /* ImageViewer.swift */; };
+		FE71C5C52C8F864E00953D63 /* StatusBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C5C42C8F864E00953D63 /* StatusBarView.swift */; };
+		FE71C5C72C8F869500953D63 /* MainAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C5C62C8F869500953D63 /* MainAppView.swift */; };
+		FE71C5C92C8F86B500953D63 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C5C82C8F86B500953D63 /* AppState.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,7 +42,6 @@
 /* Begin PBXFileReference section */
 		FE71C5882C8D327A00953D63 /* Aspire Desktop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Aspire Desktop.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE71C58B2C8D327A00953D63 /* Aspire_DesktopApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Aspire_DesktopApp.swift; sourceTree = "<group>"; };
-		FE71C58D2C8D327A00953D63 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		FE71C5912C8D327C00953D63 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FE71C5942C8D327C00953D63 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		FE71C5962C8D327C00953D63 /* Aspire_Desktop.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Aspire_Desktop.entitlements; sourceTree = "<group>"; };
@@ -47,8 +50,13 @@
 		FE71C5A52C8D327C00953D63 /* Aspire DesktopUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Aspire DesktopUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE71C5A92C8D327C00953D63 /* Aspire_DesktopUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Aspire_DesktopUITests.swift; sourceTree = "<group>"; };
 		FE71C5AB2C8D327C00953D63 /* Aspire_DesktopUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Aspire_DesktopUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		FE71C5B82C8D341A00953D63 /* ScreenshotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotView.swift; sourceTree = "<group>"; };
 		FE71C5BA2C8D368F00953D63 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		FE71C5BD2C8F702800953D63 /* FileOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileOperations.swift; sourceTree = "<group>"; };
+		FE71C5BF2C8F712B00953D63 /* ImageOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageOperations.swift; sourceTree = "<group>"; };
+		FE71C5C22C8F715300953D63 /* ImageViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewer.swift; sourceTree = "<group>"; };
+		FE71C5C42C8F864E00953D63 /* StatusBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarView.swift; sourceTree = "<group>"; };
+		FE71C5C62C8F869500953D63 /* MainAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainAppView.swift; sourceTree = "<group>"; };
+		FE71C5C82C8F86B500953D63 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,13 +107,14 @@
 		FE71C58A2C8D327A00953D63 /* Aspire Desktop */ = {
 			isa = PBXGroup;
 			children = (
+				FE71C5C12C8F714500953D63 /* Views */,
+				FE71C5BC2C8F701800953D63 /* Utilities */,
 				FE71C58B2C8D327A00953D63 /* Aspire_DesktopApp.swift */,
-				FE71C58D2C8D327A00953D63 /* ContentView.swift */,
 				FE71C5912C8D327C00953D63 /* Assets.xcassets */,
 				FE71C5962C8D327C00953D63 /* Aspire_Desktop.entitlements */,
 				FE71C5932C8D327C00953D63 /* Preview Content */,
-				FE71C5B82C8D341A00953D63 /* ScreenshotView.swift */,
 				FE71C5BA2C8D368F00953D63 /* AppDelegate.swift */,
+				FE71C5C82C8F86B500953D63 /* AppState.swift */,
 			);
 			path = "Aspire Desktop";
 			sourceTree = "<group>";
@@ -133,6 +142,25 @@
 				FE71C5AB2C8D327C00953D63 /* Aspire_DesktopUITestsLaunchTests.swift */,
 			);
 			path = "Aspire DesktopUITests";
+			sourceTree = "<group>";
+		};
+		FE71C5BC2C8F701800953D63 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				FE71C5BD2C8F702800953D63 /* FileOperations.swift */,
+				FE71C5BF2C8F712B00953D63 /* ImageOperations.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		FE71C5C12C8F714500953D63 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				FE71C5C22C8F715300953D63 /* ImageViewer.swift */,
+				FE71C5C42C8F864E00953D63 /* StatusBarView.swift */,
+				FE71C5C62C8F869500953D63 /* MainAppView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -266,9 +294,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				FE71C5BB2C8D368F00953D63 /* AppDelegate.swift in Sources */,
-				FE71C5B92C8D341A00953D63 /* ScreenshotView.swift in Sources */,
-				FE71C58E2C8D327A00953D63 /* ContentView.swift in Sources */,
+				FE71C5C02C8F712B00953D63 /* ImageOperations.swift in Sources */,
+				FE71C5C72C8F869500953D63 /* MainAppView.swift in Sources */,
+				FE71C5C92C8F86B500953D63 /* AppState.swift in Sources */,
+				FE71C5C52C8F864E00953D63 /* StatusBarView.swift in Sources */,
 				FE71C58C2C8D327A00953D63 /* Aspire_DesktopApp.swift in Sources */,
+				FE71C5BE2C8F702800953D63 /* FileOperations.swift in Sources */,
+				FE71C5C32C8F715300953D63 /* ImageViewer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
