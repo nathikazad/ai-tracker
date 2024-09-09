@@ -12,7 +12,7 @@ struct MainAppView: View {
     
     var body: some View {
         VStack {
-            if appState.isSignedIn {
+            if auth.areJwtSet {
                 SignedInView(appState: appState)
             } else {
                 SignInView(appState: appState)
@@ -38,15 +38,8 @@ struct SignInView: View {
                     request.requestedScopes = [.fullName, .email]
                 },
                 onCompletion: { result in
-                    switch result {
-                    case .success(let authResults):
-                        print("Authorization successful.")
-                        if let appleIDCredential = authResults.credential as? ASAuthorizationAppleIDCredential {
-                            let userId = appleIDCredential.user
-                            appState.signIn(with: userId)
-                        }
-                    case .failure(let error):
-                        print("Authorization failed: " + error.localizedDescription)
+                    Task {
+                        let result = await handleSignIn(result: result)
                     }
                 }
             )
@@ -108,7 +101,7 @@ struct SignedInView: View {
             }
             
             Button("Sign Out") {
-                appState.signOut()
+                auth.signOutCallback()
             }
             .padding(.top)
         }

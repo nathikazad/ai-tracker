@@ -1,17 +1,17 @@
 //
-//  Aspire_DesktopApp.swift
-//  Aspire Desktop
+//  Aspire_MacApp.swift
+//  Aspire-Mac
 //
-//  Created by Nathik Azad on 9/7/24.
+//  Created by Nathik Azad on 9/9/24.
 //
+
 import SwiftUI
 import SwiftData
-import AVFoundation
 
 @main
 struct Aspire_DesktopApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    
+
     var body: some Scene {
         Settings {
             EmptyView()

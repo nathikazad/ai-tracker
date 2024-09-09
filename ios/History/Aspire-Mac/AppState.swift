@@ -18,16 +18,6 @@ final class ScreenshotSettings {
 }
 
 class AppState: ObservableObject {
-    @Published var isSignedIn = false
-    @Published var userID: String? {
-        didSet {
-            if let userID = userID {
-                UserDefaults.standard.set(userID, forKey: "savedUserID")
-            } else {
-                UserDefaults.standard.removeObject(forKey: "savedUserID")
-            }
-        }
-    }
     @Published var isRunning = false
     @Published var interval = 10
     @Published var screenshotFiles: [String] = []
@@ -36,14 +26,7 @@ class AppState: ObservableObject {
     @Published var errorMessage: String?
     @State private var settings: ScreenshotSettings = ScreenshotSettings(interval: 10, saveDirectory: "Screenshots")
     private var timer: DispatchSourceTimer?
-    
-    init() {
-        if let savedUserID = UserDefaults.standard.string(forKey: "savedUserID") {
-            self.userID = savedUserID
-            self.isSignedIn = true
-        }
-    }
-    
+        
     func toggleScreenshots() {
         if isRunning {
             stopScreenshots()
@@ -131,16 +114,5 @@ class AppState: ObservableObject {
         case .failure(let error):
             errorMessage = "Error loading image: \(error.localizedDescription)"
         }
-    }
-    
-    func signIn(with userId: String) {
-        print(userId)
-        self.userID = userId
-        self.isSignedIn = true
-    }
-    
-    func signOut() {
-        self.userID = nil
-        self.isSignedIn = false
     }
 }

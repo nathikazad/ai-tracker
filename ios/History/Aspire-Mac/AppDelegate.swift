@@ -58,6 +58,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func showMainWindow() {
+        print("Show main window")
         mainWindow?.makeKeyAndOrderFront(nil)
         NSApplication.shared.activate(ignoringOtherApps: true)
     }

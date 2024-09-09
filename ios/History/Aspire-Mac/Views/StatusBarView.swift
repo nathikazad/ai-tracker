@@ -14,7 +14,7 @@ struct StatusBarView: View {
     var body: some View {
         VStack(spacing: 10) {
             Button(action: {
-                if appState.isSignedIn {
+                if auth.areJwtSet {
                     appState.toggleScreenshots()
                 } else {
                     showMainWindowAction()
@@ -33,7 +33,7 @@ struct StatusBarView: View {
             }
             
             Button("Show App") {
-                
+                showMainWindowAction()
             }
             .buttonStyle(.bordered)
             
