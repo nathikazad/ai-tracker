@@ -1,0 +1,596 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FE71C58C2C8D327A00953D63 /* Aspire_DesktopApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C58B2C8D327A00953D63 /* Aspire_DesktopApp.swift */; };
+		FE71C58E2C8D327A00953D63 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C58D2C8D327A00953D63 /* ContentView.swift */; };
+		FE71C5922C8D327C00953D63 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE71C5912C8D327C00953D63 /* Assets.xcassets */; };
+		FE71C5952C8D327C00953D63 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE71C5942C8D327C00953D63 /* Preview Assets.xcassets */; };
+		FE71C5A02C8D327C00953D63 /* Aspire_DesktopTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C59F2C8D327C00953D63 /* Aspire_DesktopTests.swift */; };
+		FE71C5AA2C8D327C00953D63 /* Aspire_DesktopUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C5A92C8D327C00953D63 /* Aspire_DesktopUITests.swift */; };
+		FE71C5AC2C8D327C00953D63 /* Aspire_DesktopUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C5AB2C8D327C00953D63 /* Aspire_DesktopUITestsLaunchTests.swift */; };
+		FE71C5B92C8D341A00953D63 /* ScreenshotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C5B82C8D341A00953D63 /* ScreenshotView.swift */; };
+		FE71C5BB2C8D368F00953D63 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C5BA2C8D368F00953D63 /* AppDelegate.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		FE71C59C2C8D327C00953D63 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FE71C5802C8D327A00953D63 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FE71C5872C8D327A00953D63;
+			remoteInfo = "Aspire Desktop";
+		};
+		FE71C5A62C8D327C00953D63 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FE71C5802C8D327A00953D63 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FE71C5872C8D327A00953D63;
+			remoteInfo = "Aspire Desktop";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		FE71C5882C8D327A00953D63 /* Aspire Desktop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Aspire Desktop.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FE71C58B2C8D327A00953D63 /* Aspire_DesktopApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Aspire_DesktopApp.swift; sourceTree = "<group>"; };
+		FE71C58D2C8D327A00953D63 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		FE71C5912C8D327C00953D63 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FE71C5942C8D327C00953D63 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		FE71C5962C8D327C00953D63 /* Aspire_Desktop.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Aspire_Desktop.entitlements; sourceTree = "<group>"; };
+		FE71C59B2C8D327C00953D63 /* Aspire DesktopTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Aspire DesktopTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FE71C59F2C8D327C00953D63 /* Aspire_DesktopTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Aspire_DesktopTests.swift; sourceTree = "<group>"; };
+		FE71C5A52C8D327C00953D63 /* Aspire DesktopUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Aspire DesktopUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FE71C5A92C8D327C00953D63 /* Aspire_DesktopUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Aspire_DesktopUITests.swift; sourceTree = "<group>"; };
+		FE71C5AB2C8D327C00953D63 /* Aspire_DesktopUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Aspire_DesktopUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		FE71C5B82C8D341A00953D63 /* ScreenshotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotView.swift; sourceTree = "<group>"; };
+		FE71C5BA2C8D368F00953D63 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FE71C5852C8D327A00953D63 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE71C5982C8D327C00953D63 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE71C5A22C8D327C00953D63 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FE71C57F2C8D327A00953D63 = {
+			isa = PBXGroup;
+			children = (
+				FE71C58A2C8D327A00953D63 /* Aspire Desktop */,
+				FE71C59E2C8D327C00953D63 /* Aspire DesktopTests */,
+				FE71C5A82C8D327C00953D63 /* Aspire DesktopUITests */,
+				FE71C5892C8D327A00953D63 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FE71C5892C8D327A00953D63 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FE71C5882C8D327A00953D63 /* Aspire Desktop.app */,
+				FE71C59B2C8D327C00953D63 /* Aspire DesktopTests.xctest */,
+				FE71C5A52C8D327C00953D63 /* Aspire DesktopUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FE71C58A2C8D327A00953D63 /* Aspire Desktop */ = {
+			isa = PBXGroup;
+			children = (
+				FE71C58B2C8D327A00953D63 /* Aspire_DesktopApp.swift */,
+				FE71C58D2C8D327A00953D63 /* ContentView.swift */,
+				FE71C5912C8D327C00953D63 /* Assets.xcassets */,
+				FE71C5962C8D327C00953D63 /* Aspire_Desktop.entitlements */,
+				FE71C5932C8D327C00953D63 /* Preview Content */,
+				FE71C5B82C8D341A00953D63 /* ScreenshotView.swift */,
+				FE71C5BA2C8D368F00953D63 /* AppDelegate.swift */,
+			);
+			path = "Aspire Desktop";
+			sourceTree = "<group>";
+		};
+		FE71C5932C8D327C00953D63 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				FE71C5942C8D327C00953D63 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		FE71C59E2C8D327C00953D63 /* Aspire DesktopTests */ = {
+			isa = PBXGroup;
+			children = (
+				FE71C59F2C8D327C00953D63 /* Aspire_DesktopTests.swift */,
+			);
+			path = "Aspire DesktopTests";
+			sourceTree = "<group>";
+		};
+		FE71C5A82C8D327C00953D63 /* Aspire DesktopUITests */ = {
+			isa = PBXGroup;
+			children = (
+				FE71C5A92C8D327C00953D63 /* Aspire_DesktopUITests.swift */,
+				FE71C5AB2C8D327C00953D63 /* Aspire_DesktopUITestsLaunchTests.swift */,
+			);
+			path = "Aspire DesktopUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FE71C5872C8D327A00953D63 /* Aspire Desktop */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FE71C5AF2C8D327C00953D63 /* Build configuration list for PBXNativeTarget "Aspire Desktop" */;
+			buildPhases = (
+				FE71C5842C8D327A00953D63 /* Sources */,
+				FE71C5852C8D327A00953D63 /* Frameworks */,
+				FE71C5862C8D327A00953D63 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Aspire Desktop";
+			productName = "Aspire Desktop";
+			productReference = FE71C5882C8D327A00953D63 /* Aspire Desktop.app */;
+			productType = "com.apple.product-type.application";
+		};
+		FE71C59A2C8D327C00953D63 /* Aspire DesktopTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FE71C5B22C8D327C00953D63 /* Build configuration list for PBXNativeTarget "Aspire DesktopTests" */;
+			buildPhases = (
+				FE71C5972C8D327C00953D63 /* Sources */,
+				FE71C5982C8D327C00953D63 /* Frameworks */,
+				FE71C5992C8D327C00953D63 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FE71C59D2C8D327C00953D63 /* PBXTargetDependency */,
+			);
+			name = "Aspire DesktopTests";
+			productName = "Aspire DesktopTests";
+			productReference = FE71C59B2C8D327C00953D63 /* Aspire DesktopTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		FE71C5A42C8D327C00953D63 /* Aspire DesktopUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FE71C5B52C8D327C00953D63 /* Build configuration list for PBXNativeTarget "Aspire DesktopUITests" */;
+			buildPhases = (
+				FE71C5A12C8D327C00953D63 /* Sources */,
+				FE71C5A22C8D327C00953D63 /* Frameworks */,
+				FE71C5A32C8D327C00953D63 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FE71C5A72C8D327C00953D63 /* PBXTargetDependency */,
+			);
+			name = "Aspire DesktopUITests";
+			productName = "Aspire DesktopUITests";
+			productReference = FE71C5A52C8D327C00953D63 /* Aspire DesktopUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FE71C5802C8D327A00953D63 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					FE71C5872C8D327A00953D63 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+					FE71C59A2C8D327C00953D63 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = FE71C5872C8D327A00953D63;
+					};
+					FE71C5A42C8D327C00953D63 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = FE71C5872C8D327A00953D63;
+					};
+				};
+			};
+			buildConfigurationList = FE71C5832C8D327A00953D63 /* Build configuration list for PBXProject "Aspire Desktop" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = FE71C57F2C8D327A00953D63;
+			productRefGroup = FE71C5892C8D327A00953D63 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FE71C5872C8D327A00953D63 /* Aspire Desktop */,
+				FE71C59A2C8D327C00953D63 /* Aspire DesktopTests */,
+				FE71C5A42C8D327C00953D63 /* Aspire DesktopUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FE71C5862C8D327A00953D63 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FE71C5952C8D327C00953D63 /* Preview Assets.xcassets in Resources */,
+				FE71C5922C8D327C00953D63 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE71C5992C8D327C00953D63 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE71C5A32C8D327C00953D63 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FE71C5842C8D327A00953D63 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FE71C5BB2C8D368F00953D63 /* AppDelegate.swift in Sources */,
+				FE71C5B92C8D341A00953D63 /* ScreenshotView.swift in Sources */,
+				FE71C58E2C8D327A00953D63 /* ContentView.swift in Sources */,
+				FE71C58C2C8D327A00953D63 /* Aspire_DesktopApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE71C5972C8D327C00953D63 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FE71C5A02C8D327C00953D63 /* Aspire_DesktopTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE71C5A12C8D327C00953D63 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FE71C5AA2C8D327C00953D63 /* Aspire_DesktopUITests.swift in Sources */,
+				FE71C5AC2C8D327C00953D63 /* Aspire_DesktopUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		FE71C59D2C8D327C00953D63 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FE71C5872C8D327A00953D63 /* Aspire Desktop */;
+			targetProxy = FE71C59C2C8D327C00953D63 /* PBXContainerItemProxy */;
+		};
+		FE71C5A72C8D327C00953D63 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FE71C5872C8D327A00953D63 /* Aspire Desktop */;
+			targetProxy = FE71C5A62C8D327C00953D63 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		FE71C5AD2C8D327C00953D63 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.3;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		FE71C5AE2C8D327C00953D63 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		FE71C5B02C8D327C00953D63 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Aspire Desktop/Aspire_Desktop.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Aspire Desktop/Preview Content\"";
+				DEVELOPMENT_TEAM = C22W55L7FR;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.snow.aspire.Aspire-Desktop";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		FE71C5B12C8D327C00953D63 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Aspire Desktop/Aspire_Desktop.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Aspire Desktop/Preview Content\"";
+				DEVELOPMENT_TEAM = C22W55L7FR;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.snow.aspire.Aspire-Desktop";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		FE71C5B32C8D327C00953D63 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = C22W55L7FR;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.snow.aspire.Aspire-DesktopTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Aspire Desktop.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Aspire Desktop";
+			};
+			name = Debug;
+		};
+		FE71C5B42C8D327C00953D63 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = C22W55L7FR;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.snow.aspire.Aspire-DesktopTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Aspire Desktop.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Aspire Desktop";
+			};
+			name = Release;
+		};
+		FE71C5B62C8D327C00953D63 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = C22W55L7FR;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.snow.aspire.Aspire-DesktopUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = "Aspire Desktop";
+			};
+			name = Debug;
+		};
+		FE71C5B72C8D327C00953D63 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = C22W55L7FR;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.snow.aspire.Aspire-DesktopUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = "Aspire Desktop";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FE71C5832C8D327A00953D63 /* Build configuration list for PBXProject "Aspire Desktop" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FE71C5AD2C8D327C00953D63 /* Debug */,
+				FE71C5AE2C8D327C00953D63 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FE71C5AF2C8D327C00953D63 /* Build configuration list for PBXNativeTarget "Aspire Desktop" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FE71C5B02C8D327C00953D63 /* Debug */,
+				FE71C5B12C8D327C00953D63 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FE71C5B22C8D327C00953D63 /* Build configuration list for PBXNativeTarget "Aspire DesktopTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FE71C5B32C8D327C00953D63 /* Debug */,
+				FE71C5B42C8D327C00953D63 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FE71C5B52C8D327C00953D63 /* Build configuration list for PBXNativeTarget "Aspire DesktopUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FE71C5B62C8D327C00953D63 /* Debug */,
+				FE71C5B72C8D327C00953D63 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FE71C5802C8D327A00953D63 /* Project object */;
+}
