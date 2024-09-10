@@ -123,6 +123,11 @@
 		FE71C65A2C8FB4A800953D63 /* Hasura.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0EB02BC0A29300FF56AB /* Hasura.swift */; };
 		FE71C65B2C8FB4B400953D63 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8965AE2BC85FE000E9D633 /* Constants.swift */; };
 		FE71C65C2C8FB4DE00953D63 /* ServerCommunicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5264802BA99AF700502521 /* ServerCommunicator.swift */; };
+		FE71C6612C8FF73600953D63 /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = FE71C6602C8FF73600953D63 /* Storage */; };
+		FE71C67A2C8FFB1400953D63 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = FE71C6792C8FFB1400953D63 /* Supabase */; };
+		FE71C6852C8FFBFC00953D63 /* SupabaseOps.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C65D2C8FF61600953D63 /* SupabaseOps.swift */; };
+		FE71C6872C8FFC1100953D63 /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = FE71C6862C8FFC1100953D63 /* Storage */; };
+		FE71C68A2C909FFE00953D63 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = FE71C6892C909FFE00953D63 /* ZIPFoundation */; };
 		FE759E122C5DE432001A0FF4 /* DataTypeV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE759E112C5DE432001A0FF4 /* DataTypeV.swift */; };
 		FE759E142C5ECA0A001A0FF4 /* TimeSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE759E132C5ECA0A001A0FF4 /* TimeSelector.swift */; };
 		FE7EBFC82C0A8F2200F720EB /* PersonAssociationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7EBFC72C0A8F2200F720EB /* PersonAssociationsView.swift */; };
@@ -357,6 +362,7 @@
 		FE71C64C2C8FB21400953D63 /* FileOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileOperations.swift; path = "../../../ios/History/Aspire-Mac/Utilities/FileOperations.swift"; sourceTree = "<group>"; };
 		FE71C64D2C8FB21400953D63 /* ImageOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageOperations.swift; path = "../../../ios/History/Aspire-Mac/Utilities/ImageOperations.swift"; sourceTree = "<group>"; };
 		FE71C64F2C8FB21400953D63 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		FE71C65D2C8FF61600953D63 /* SupabaseOps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SupabaseOps.swift; path = "Aspire-Mac/Views/SupabaseOps.swift"; sourceTree = SOURCE_ROOT; };
 		FE759E112C5DE432001A0FF4 /* DataTypeV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTypeV.swift; sourceTree = "<group>"; };
 		FE759E132C5ECA0A001A0FF4 /* TimeSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSelector.swift; sourceTree = "<group>"; };
 		FE7EBFC72C0A8F2200F720EB /* PersonAssociationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonAssociationsView.swift; sourceTree = "<group>"; };
@@ -449,6 +455,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE71C6612C8FF73600953D63 /* Storage in Frameworks */,
+				FE71C67A2C8FFB1400953D63 /* Supabase in Frameworks */,
 				FE2074EB2C5B426B00C58226 /* WrappingHStack in Frameworks */,
 				FE4F7BCC2BA7DBB70041CB6A /* WatchConnectivity.framework in Frameworks */,
 			);
@@ -465,6 +473,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE71C6872C8FFC1100953D63 /* Storage in Frameworks */,
+				FE71C68A2C909FFE00953D63 /* ZIPFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -843,6 +853,7 @@
 			children = (
 				FE71C64C2C8FB21400953D63 /* FileOperations.swift */,
 				FE71C64D2C8FB21400953D63 /* ImageOperations.swift */,
+				FE71C65D2C8FF61600953D63 /* SupabaseOps.swift */,
 			);
 			name = Utilities;
 			path = "../../../Aspire Desktop/Aspire Desktop/Utilities";
@@ -1131,6 +1142,8 @@
 			name = History;
 			packageProductDependencies = (
 				FE2074EA2C5B426B00C58226 /* WrappingHStack */,
+				FE71C6602C8FF73600953D63 /* Storage */,
+				FE71C6792C8FFB1400953D63 /* Supabase */,
 			);
 			productName = History;
 			productReference = FE4F7B9F2BA7D79E0041CB6A /* History.app */;
@@ -1170,6 +1183,10 @@
 			dependencies = (
 			);
 			name = "Aspire-Mac";
+			packageProductDependencies = (
+				FE71C6862C8FFC1100953D63 /* Storage */,
+				FE71C6892C909FFE00953D63 /* ZIPFoundation */,
+			);
 			productName = "Aspire-Mac";
 			productReference = FE71C6112C8FAF7500953D63 /* Aspire-Mac.app */;
 			productType = "com.apple.product-type.application";
@@ -1209,6 +1226,8 @@
 			mainGroup = FE4F7B962BA7D79E0041CB6A;
 			packageReferences = (
 				FE4AB3912C51D94400A07749 /* XCRemoteSwiftPackageReference "WrappingHStack" */,
+				FE71C65F2C8FF73600953D63 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+				FE71C6882C909FFE00953D63 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 			);
 			productRefGroup = FE4F7BA02BA7D79E0041CB6A /* Products */;
 			projectDirPath = "";
@@ -1452,6 +1471,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE71C6852C8FFBFC00953D63 /* SupabaseOps.swift in Sources */,
 				FE71C6572C8FB21400953D63 /* AppDelegate.swift in Sources */,
 				FE71C65A2C8FB4A800953D63 /* Hasura.swift in Sources */,
 				FE71C6522C8FB21400953D63 /* MainAppView.swift in Sources */,
@@ -1928,6 +1948,22 @@
 				minimumVersion = 2.2.11;
 			};
 		};
+		FE71C65F2C8FF73600953D63 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase-community/supabase-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
+		FE71C6882C909FFE00953D63 /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/weichsel/ZIPFoundation.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.19;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1935,6 +1971,26 @@
 			isa = XCSwiftPackageProductDependency;
 			package = FE4AB3912C51D94400A07749 /* XCRemoteSwiftPackageReference "WrappingHStack" */;
 			productName = WrappingHStack;
+		};
+		FE71C6602C8FF73600953D63 /* Storage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FE71C65F2C8FF73600953D63 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Storage;
+		};
+		FE71C6792C8FFB1400953D63 /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FE71C65F2C8FF73600953D63 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+		FE71C6862C8FFC1100953D63 /* Storage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FE71C65F2C8FF73600953D63 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Storage;
+		};
+		FE71C6892C909FFE00953D63 /* ZIPFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FE71C6882C909FFE00953D63 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			productName = ZIPFoundation;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

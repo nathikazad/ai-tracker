@@ -74,6 +74,19 @@ struct SignedInView: View {
             }
             .buttonStyle(.bordered)
             
+            Button("Download Screenshots") {
+                Task {
+                    do {
+                        print("Download and unzipping")
+                        try await Supabase.downloadAndUnzipImages(dateFolderName: "20240910", bucketName: "desktop", saveDirectory: appState.saveDirectory)
+                        appState.fetchScreenshotFiles()
+                    } catch {
+                        print("Error")
+                    }
+                }
+            }
+            .buttonStyle(.bordered)
+            
             List {
                 ForEach(appState.screenshotFiles, id: \.self) { file in
                     HStack {

@@ -1,6 +1,8 @@
 import Foundation
 import SwiftUI
 import Cocoa
+import ZIPFoundation
+
 
 class ImageOperations {
     static func takeScreenshot(saveDirectory: String, interval: Int) -> Result<String, Error> {
@@ -65,6 +67,8 @@ class ImageOperations {
                     print("Screenshot saved: \(dateFolderName)/\(filename)")
                     print("File size: \(String(format: "%.2f", fileSizeKB)) KB")
                     print("Active application: \(activeAppName)")
+                    print("Saving screenshot to: \(screenshotsDirectory.path)")
+                    Supabase.zipAndUploadImages(folderPath: screenshotsDirectory.path, bucketName: "desktop")
                     
                     return .success("\(dateFolderName)/\(filename)")
                 } catch {
@@ -89,5 +93,6 @@ class ImageOperations {
         } else {
             return .failure(NSError(domain: "ImageOperations", code: 6, userInfo: [NSLocalizedDescriptionKey: "Error loading image: \(filename)"]))
         }
+        
     }
 }

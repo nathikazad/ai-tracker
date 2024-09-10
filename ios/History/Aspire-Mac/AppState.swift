@@ -20,18 +20,27 @@ final class ScreenshotSettings {
 class AppState: ObservableObject {
     @Published var isSignedIn = false
     @Published var isRunning = false
-    @Published var interval = 10
+    
+    @Published var interval: Int {
+        didSet {
+            UserDefaults.standard.set(interval, forKey: "interval")
+        }
+    }
     @Published var screenshotFiles: [String] = []
     @Published var selectedImage: NSImage?
     @Published var isImagePresented = false
     @Published var errorMessage: String?
-    @State private var settings: ScreenshotSettings = ScreenshotSettings(interval: 10, saveDirectory: "Screenshots")
+    let saveDirectory = "Screenshots"
     private var timer: DispatchSourceTimer?
     
     init() {
         isSignedIn = auth.areJwtSet
+        self.interval = UserDefaults.standard.integer(forKey: "interval")
+        if self.interval == 0 {
+            self.interval = 10  // Set default value if not found in UserDefaults
+        }
     }
-        
+    
     func toggleScreenshots() {
         if isRunning {
             stopScreenshots()
@@ -46,7 +55,7 @@ class AppState: ObservableObject {
         
         let queue = DispatchQueue.global(qos: .background)
         timer = DispatchSource.makeTimerSource(queue: queue)
-        timer?.schedule(deadline: .now(), repeating: .seconds(settings.interval))
+        timer?.schedule(deadline: .now(), repeating: .seconds(interval))
         timer?.setEventHandler { [weak self] in
             self?.takeScreenshot()
         }
@@ -76,7 +85,7 @@ class AppState: ObservableObject {
         }
         
         DispatchQueue.main.async {
-            let result = ImageOperations.takeScreenshot(saveDirectory: self.settings.saveDirectory, interval: self.settings.interval)
+            let result = ImageOperations.takeScreenshot(saveDirectory: self.saveDirectory, interval: self.interval)
             switch result {
             case .success(_):
                 self.errorMessage = nil
@@ -88,7 +97,7 @@ class AppState: ObservableObject {
     }
     
     func deleteImage(filename: String) {
-        let result = FileOperations.deleteImage(filename: filename, in: settings.saveDirectory)
+        let result = FileOperations.deleteImage(filename: filename, in: saveDirectory)
         switch result {
         case .success:
             fetchScreenshotFiles()
@@ -99,7 +108,7 @@ class AppState: ObservableObject {
     }
     
     func fetchScreenshotFiles() {
-        let result = FileOperations.fetchScreenshotFiles(in: settings.saveDirectory)
+        let result = FileOperations.fetchScreenshotFiles(in: saveDirectory)
         switch result {
         case .success(let files):
             screenshotFiles = files
@@ -110,7 +119,7 @@ class AppState: ObservableObject {
     }
     
     func loadImage(filename: String) {
-        let result = ImageOperations.loadImage(filename: filename, in: settings.saveDirectory)
+        let result = ImageOperations.loadImage(filename: filename, in: saveDirectory)
         switch result {
         case .success(let image):
             selectedImage = image
