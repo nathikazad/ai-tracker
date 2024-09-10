@@ -18,5 +18,10 @@
       "quantity": 1
     }
   },
-  "stack": "container"
+  "stack": "container",
+  "addons": [
+    {
+      "plan": "heroku-postgresql:mini"
+    }
+  ]
 }
