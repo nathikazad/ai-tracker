@@ -5,35 +5,15 @@ import ZIPFoundation
 
 
 class ImageOperations {
-    static func takeScreenshot(saveDirectory: String, interval: Int) -> Result<String, Error> {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyyMMdd"
-        let dateFolderName = dateFormatter.string(from: Date())
+    static func takeScreenshot(saveDirectory: String, interval: Int, uploadToCloud: Bool = false) -> Result<String, Error> {
+        let pathResult = FileOperations.prepareScreenshotPath(saveDirectory: saveDirectory)
         
-        dateFormatter.dateFormat = "HHmmss"
-        let timeString = dateFormatter.string(from: Date())
-        
-        // Get the name of the current active application
-        let activeAppName = NSWorkspace.shared.frontmostApplication?.localizedName ?? "Unknown"
-        let sanitizedAppName = activeAppName.replacingOccurrences(of: " ", with: "_")
-                                            .replacingOccurrences(of: "/", with: "_")
-                                            .replacingOccurrences(of: ":", with: "_")
-        
-        let filename = "\(timeString)_\(sanitizedAppName).png"
-        
-        // Ensure the save directory exists
-        let directoryResult = FileOperations.createSaveDirectoryIfNeeded(in: saveDirectory, dateFolderName: dateFolderName)
-        if case .failure(let error) = directoryResult {
-            return .failure(error)
+        guard case .success(let screenshotInfo) = pathResult else {
+            if case .failure(let error) = pathResult {
+                return .failure(error)
+            }
+            return .failure(NSError(domain: "ImageOperations", code: 5, userInfo: [NSLocalizedDescriptionKey: "Failed to prepare screenshot path"]))
         }
-        
-        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            return .failure(NSError(domain: "ImageOperations", code: 1, userInfo: [NSLocalizedDescriptionKey: "Unable to access Documents directory"]))
-        }
-        
-        let screenshotsDirectory = documentsDirectory.appendingPathComponent(saveDirectory)
-                                                     .appendingPathComponent(dateFolderName)
-        let url = screenshotsDirectory.appendingPathComponent(filename)
         
         if let cgImage = CGDisplayCreateImage(CGMainDisplayID()) {
             let newSize = CGSize(width: 320, height: 180)
@@ -60,17 +40,15 @@ class ImageOperations {
             
             if let pngData = bitmapRep.representation(using: .png, properties: [.compressionFactor: 0.7]) {
                 do {
-                    try pngData.write(to: url)
+                    try pngData.write(to: screenshotInfo.url)
                     
-                    let fileSizeBytes = try FileManager.default.attributesOfItem(atPath: url.path)[.size] as? Int64 ?? 0
-                    let fileSizeKB = Double(fileSizeBytes) / 1024.0
-                    print("Screenshot saved: \(dateFolderName)/\(filename)")
-                    print("File size: \(String(format: "%.2f", fileSizeKB)) KB")
-                    print("Active application: \(activeAppName)")
-                    print("Saving screenshot to: \(screenshotsDirectory.path)")
-                    Supabase.zipAndUploadImages(folderPath: screenshotsDirectory.path, bucketName: "desktop")
-                    
-                    return .success("\(dateFolderName)/\(filename)")
+//                    let fileSizeBytes = try FileManager.default.attributesOfItem(atPath: screenshotInfo.url.path)[.size] as? Int64 ?? 0
+//                    let fileSizeKB = Double(fileSizeBytes) / 1024.0
+//                    print("Screenshot saved: \(screenshotInfo.dateFolderName)/\(screenshotInfo.filename)")
+//                    print("File size: \(String(format: "%.2f", fileSizeKB)) KB")
+//                    print("Active application: \(screenshotInfo.activeAppName)")
+//                    print("Saving screenshot to: \(screenshotInfo.url.deletingLastPathComponent().path)")
+                    return .success("\(screenshotInfo.dateFolderName)/\(screenshotInfo.filename)")
                 } catch {
                     return .failure(error)
                 }

@@ -54,8 +54,8 @@ class Supabase {
                 print("Supabase Upload Error")
             }
         }
-        
     }
+    
     static func downloadZipFile(path: String, bucketName: String) async throws -> URL {
         let fileApi = client.from(bucketName)
         let userId = Authentication.shared.userId ?? 0

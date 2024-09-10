@@ -66,4 +66,45 @@ class FileOperations {
             return .failure(error)
         }
     }
+    
+    struct ScreenshotInfo {
+        let url: URL
+        let filename: String
+        let dateFolderName: String
+        let activeAppName: String
+        let path: String
+    }
+
+    static func prepareScreenshotPath(saveDirectory: String) -> Result<ScreenshotInfo, Error> {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyyMMdd"
+        let dateFolderName = dateFormatter.string(from: Date())
+        
+        dateFormatter.dateFormat = "HHmmss"
+        let timeString = dateFormatter.string(from: Date())
+        
+        // Get the name of the current active application
+        let activeAppName = NSWorkspace.shared.frontmostApplication?.localizedName ?? "Unknown"
+        let sanitizedAppName = activeAppName.replacingOccurrences(of: " ", with: "_")
+                                            .replacingOccurrences(of: "/", with: "_")
+                                            .replacingOccurrences(of: ":", with: "_")
+        
+        let filename = "\(timeString)_\(sanitizedAppName).png"
+        
+        // Ensure the save directory exists
+        let directoryResult = FileOperations.createSaveDirectoryIfNeeded(in: saveDirectory, dateFolderName: dateFolderName)
+        if case .failure(let error) = directoryResult {
+            return .failure(error)
+        }
+        
+        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return .failure(NSError(domain: "ImageOperations", code: 1, userInfo: [NSLocalizedDescriptionKey: "Unable to access Documents directory"]))
+        }
+        
+        let screenshotsDirectory = documentsDirectory.appendingPathComponent(saveDirectory)
+                                                     .appendingPathComponent(dateFolderName)
+        let url = screenshotsDirectory.appendingPathComponent(filename)
+        
+        return .success(ScreenshotInfo(url: url, filename: filename, dateFolderName: dateFolderName, activeAppName: activeAppName, path: screenshotsDirectory.path ))
+    }
 }

@@ -15,17 +15,26 @@ extension NSApplication {
     }
 }
 
+extension AppDelegate: NSWindowDelegate {
+    func windowWillClose(_ notification: Notification) {
+        // Instead of closing the window, we'll just hide it
+        if let window = notification.object as? NSWindow {
+            window.orderOut(nil)
+        }
+    }
+}
+
 class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBar: StatusBarController?
     var popover = NSPopover()
-    var mainWindow: NSWindow?
+    var mainWindowController: MainWindowController?
     
     @ObservedObject var appState = AppState()
     
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApplication.hideFromDock()
         setupStatusBar()
-        setupMainWindow()
+        setupMainWindowController()
     }
     
     func setupStatusBar() {
@@ -42,25 +51,57 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         statusBar = StatusBarController(popover)
     }
     
-    func setupMainWindow() {
-        let mainAppView = MainAppView(
-            appState: appState
-        )
+    func setupMainWindowController() {
+        mainWindowController = MainWindowController(appState: appState)
+    }
+    
+    func showMainWindow() {
+        if mainWindowController == nil {
+            setupMainWindowController()
+        }
         
-        mainWindow = NSWindow(
-            contentRect: NSRect(x: 100, y: 100, width: 400, height: 500),
+        mainWindowController?.showWindow(nil)
+        NSApplication.shared.activate(ignoringOtherApps: true)
+    }
+    
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        if !flag {
+            showMainWindow()
+        }
+        return true
+    }
+}
+
+class MainWindowController: NSWindowController, NSWindowDelegate {
+    var appState: AppState
+
+    init(appState: AppState) {
+        self.appState = appState
+        
+        let mainAppView = MainAppView(appState: appState)
+        let hostingController = NSHostingController(rootView: mainAppView)
+        
+        let window = NSWindow(
+            contentRect: NSRect(x: 100, y: 100, width: 400, height: 600),
             styleMask: [.titled, .closable, .miniaturizable, .resizable],
             backing: .buffered,
             defer: false
         )
-        mainWindow?.title = "Aspire Desktop"
-        mainWindow?.contentView = NSHostingView(rootView: mainAppView)
+        window.title = "Aspire Desktop"
+        window.contentViewController = hostingController
+        
+        super.init(window: window)
+        
+        window.delegate = self
     }
     
-    func showMainWindow() {
-        print("Show main window")
-        mainWindow?.makeKeyAndOrderFront(nil)
-        NSApplication.shared.activate(ignoringOtherApps: true)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func windowWillClose(_ notification: Notification) {
+        // Instead of closing the window, we'll just hide it
+        window?.orderOut(nil)
     }
 }
 

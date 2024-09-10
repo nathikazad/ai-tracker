@@ -27,7 +27,7 @@ struct StatusBarView: View {
             
             HStack {
                 Text("Interval:")
-                Stepper(value: $appState.interval, in: 5...60, step: 5) {
+                Stepper(value: $appState.interval, in: 10...300, step: 10) {
                     Text("\(appState.interval) seconds")
                 }
             }
