@@ -1,5 +1,5 @@
 # Logs
-heroku_dump.sql
+heroku_dump/*
 logs
 *.log
 npm-debug.log*
