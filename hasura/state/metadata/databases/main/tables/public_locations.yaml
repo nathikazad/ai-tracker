@@ -1,6 +1,12 @@
 table:
   name: locations
   schema: public
+computed_fields:
+  - name: events
+    definition:
+      function:
+        name: location_events
+        schema: public
 select_permissions:
   - role: user
     permission:

@@ -1,63 +1,41 @@
 table:
-  name: objects
-  schema: public
+  name: object_t_action_t
+  schema: v2
 object_relationships:
+  - name: action_type
+    using:
+      foreign_key_constraint_on: action_type_id
   - name: object_type
     using:
       foreign_key_constraint_on: object_type_id
-array_relationships:
-  - name: object_actions
-    using:
-      foreign_key_constraint_on:
-        column: object_id
-        table:
-          name: object_action
-          schema: v2
-computed_fields:
-  - name: events
-    definition:
-      function:
-        name: object_events
-        schema: public
-  - name: parent_events
-    definition:
-      function:
-        name: parent_events
-        schema: public
 insert_permissions:
   - role: user
     permission:
       check: {}
       columns:
+        - action_type_id
         - id
         - object_type_id
-        - user_id
-        - fields
         - metadata
-        - name
     comment: ""
 select_permissions:
   - role: user
     permission:
       columns:
+        - action_type_id
         - id
         - object_type_id
-        - user_id
-        - fields
         - metadata
-        - name
       filter: {}
     comment: ""
 update_permissions:
   - role: user
     permission:
       columns:
+        - action_type_id
         - id
         - object_type_id
-        - user_id
-        - fields
         - metadata
-        - name
       filter: {}
       check: {}
     comment: ""

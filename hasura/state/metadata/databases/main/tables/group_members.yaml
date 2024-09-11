@@ -1,45 +1,41 @@
 table:
-  name: object_types
-  schema: public
-array_relationships:
-  - name: objects
+  name: members
+  schema: group
+object_relationships:
+  - name: chat
     using:
-      foreign_key_constraint_on:
-        column: object_type_id
-        table:
-          name: objects
-          schema: public
+      foreign_key_constraint_on: chat_id
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
 insert_permissions:
   - role: user
     permission:
       check: {}
       columns:
+        - chat_id
         - id
         - user_id
         - metadata
-        - name
-        - created_at
     comment: ""
 select_permissions:
   - role: user
     permission:
       columns:
+        - chat_id
         - id
         - user_id
         - metadata
-        - name
-        - created_at
       filter: {}
     comment: ""
 update_permissions:
   - role: user
     permission:
       columns:
+        - chat_id
         - id
         - user_id
         - metadata
-        - name
-        - created_at
       filter: {}
       check: {}
     comment: ""

@@ -1,63 +1,62 @@
 table:
-  name: objects
-  schema: public
-object_relationships:
-  - name: object_type
-    using:
-      foreign_key_constraint_on: object_type_id
+  name: action_types
+  schema: v2
 array_relationships:
-  - name: object_actions
+  - name: aggregates
     using:
       foreign_key_constraint_on:
-        column: object_id
+        column: action_type_id
         table:
-          name: object_action
+          name: aggregates
           schema: v2
-computed_fields:
-  - name: events
-    definition:
-      function:
-        name: object_events
-        schema: public
-  - name: parent_events
-    definition:
-      function:
-        name: parent_events
-        schema: public
+  - name: object_t_action_ts
+    using:
+      foreign_key_constraint_on:
+        column: action_type_id
+        table:
+          name: object_t_action_t
+          schema: v2
 insert_permissions:
   - role: user
     permission:
       check: {}
       columns:
+        - has_duration
         - id
-        - object_type_id
         - user_id
-        - fields
         - metadata
+        - description
         - name
+        - created_at
+        - updated_at
     comment: ""
 select_permissions:
   - role: user
     permission:
       columns:
+        - has_duration
         - id
-        - object_type_id
         - user_id
-        - fields
         - metadata
+        - description
         - name
+        - short_desc_syntax
+        - created_at
+        - updated_at
       filter: {}
     comment: ""
 update_permissions:
   - role: user
     permission:
       columns:
+        - has_duration
         - id
-        - object_type_id
         - user_id
-        - fields
         - metadata
+        - description
         - name
+        - created_at
+        - updated_at
       filter: {}
       check: {}
     comment: ""

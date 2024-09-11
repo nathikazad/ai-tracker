@@ -1,0 +1,79 @@
+table:
+  name: actions
+  schema: v2
+object_relationships:
+  - name: action_type
+    using:
+      foreign_key_constraint_on: action_type_id
+  - name: parent
+    using:
+      foreign_key_constraint_on: parent_id
+array_relationships:
+  - name: children
+    using:
+      foreign_key_constraint_on:
+        column: parent_id
+        table:
+          name: actions
+          schema: v2
+  - name: object_actions
+    using:
+      foreign_key_constraint_on:
+        column: action_id
+        table:
+          name: object_action
+          schema: v2
+insert_permissions:
+  - role: user
+    permission:
+      check: {}
+      columns:
+        - action_type_id
+        - created_at
+        - dynamic_data
+        - end_time
+        - id
+        - parent_id
+        - start_time
+        - timezone
+        - updated_at
+        - user_id
+    comment: ""
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - action_type_id
+        - created_at
+        - dynamic_data
+        - end_time
+        - id
+        - parent_id
+        - start_time
+        - timezone
+        - updated_at
+        - user_id
+      filter: {}
+    comment: ""
+update_permissions:
+  - role: user
+    permission:
+      columns:
+        - action_type_id
+        - created_at
+        - dynamic_data
+        - end_time
+        - id
+        - parent_id
+        - start_time
+        - timezone
+        - updated_at
+        - user_id
+      filter: {}
+      check: {}
+    comment: ""
+delete_permissions:
+  - role: user
+    permission:
+      filter: {}
+    comment: ""

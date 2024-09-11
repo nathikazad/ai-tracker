@@ -2,6 +2,20 @@ table:
   name: users
   schema: public
 array_relationships:
+  - name: actions
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: actions
+          schema: v2
+  - name: chats
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: members
+          schema: group
   - name: events
     using:
       foreign_key_constraint_on:
@@ -26,8 +40,12 @@ select_permissions:
   - role: user
     permission:
       columns:
-        - id
+        - apns_token
         - apple_id
+        - config
+        - id
+        - language
+        - name
         - timezone
       filter: {}
     comment: ""
@@ -35,9 +53,15 @@ update_permissions:
   - role: user
     permission:
       columns:
+        - apns_token
         - timezone
       filter: {}
       check:
         id:
           _eq: X-Hasura-User-Id
+    comment: ""
+delete_permissions:
+  - role: user
+    permission:
+      filter: {}
     comment: ""

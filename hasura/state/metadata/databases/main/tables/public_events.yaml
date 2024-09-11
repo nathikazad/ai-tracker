@@ -68,6 +68,8 @@ update_permissions:
     permission:
       columns:
         - end_time
+        - metadata
+        - parent_id
         - start_time
       filter: {}
       check: {}

@@ -1,0 +1,60 @@
+table:
+  name: messages
+  schema: group
+object_relationships:
+  - name: sender
+    using:
+      foreign_key_constraint_on: member_id
+insert_permissions:
+  - role: user
+    permission:
+      check: {}
+      columns:
+        - chat_id
+        - id
+        - member_id
+        - payload
+        - time
+    comment: ""
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - chat_id
+        - id
+        - member_id
+        - payload
+        - time
+      filter: {}
+    comment: ""
+update_permissions:
+  - role: user
+    permission:
+      columns:
+        - chat_id
+        - id
+        - member_id
+        - payload
+        - time
+      filter: {}
+      check: {}
+    comment: ""
+delete_permissions:
+  - role: user
+    permission:
+      filter: {}
+    comment: ""
+event_triggers:
+  - name: notify_members
+    definition:
+      enable_manual: false
+      insert:
+        columns: '*'
+    retry_conf:
+      interval_sec: 10
+      num_retries: 0
+      timeout_sec: 60
+    webhook: https://ai-tracker-server-613e3dd103bb.herokuapp.com/notifyParticipants
+    headers:
+      - name: secret_key
+        value: iloveyareni
