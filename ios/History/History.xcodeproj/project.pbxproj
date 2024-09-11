@@ -128,6 +128,7 @@
 		FE71C6852C8FFBFC00953D63 /* SupabaseOps.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C65D2C8FF61600953D63 /* SupabaseOps.swift */; };
 		FE71C6872C8FFC1100953D63 /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = FE71C6862C8FFC1100953D63 /* Storage */; };
 		FE71C68A2C909FFE00953D63 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = FE71C6892C909FFE00953D63 /* ZIPFoundation */; };
+		FE71C68C2C915DD700953D63 /* BLE.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C68B2C915DD700953D63 /* BLE.swift */; };
 		FE759E122C5DE432001A0FF4 /* DataTypeV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE759E112C5DE432001A0FF4 /* DataTypeV.swift */; };
 		FE759E142C5ECA0A001A0FF4 /* TimeSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE759E132C5ECA0A001A0FF4 /* TimeSelector.swift */; };
 		FE7EBFC82C0A8F2200F720EB /* PersonAssociationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7EBFC72C0A8F2200F720EB /* PersonAssociationsView.swift */; };
@@ -363,6 +364,7 @@
 		FE71C64D2C8FB21400953D63 /* ImageOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageOperations.swift; path = "../../../ios/History/Aspire-Mac/Utilities/ImageOperations.swift"; sourceTree = "<group>"; };
 		FE71C64F2C8FB21400953D63 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FE71C65D2C8FF61600953D63 /* SupabaseOps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SupabaseOps.swift; path = "Aspire-Mac/Views/SupabaseOps.swift"; sourceTree = SOURCE_ROOT; };
+		FE71C68B2C915DD700953D63 /* BLE.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLE.swift; sourceTree = "<group>"; };
 		FE759E112C5DE432001A0FF4 /* DataTypeV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTypeV.swift; sourceTree = "<group>"; };
 		FE759E132C5ECA0A001A0FF4 /* TimeSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSelector.swift; sourceTree = "<group>"; };
 		FE7EBFC72C0A8F2200F720EB /* PersonAssociationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonAssociationsView.swift; sourceTree = "<group>"; };
@@ -925,6 +927,7 @@
 				FE2074B72C5ADDCE00C58226 /* Timer.swift */,
 				FEBB198B2C65639300ECAC85 /* ColorHelper.swift */,
 				FE04A7F42C766CA3000F5C24 /* APNSTokenManager.swift */,
+				FE71C68B2C915DD700953D63 /* BLE.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -1408,6 +1411,7 @@
 				FE759E122C5DE432001A0FF4 /* DataTypeV.swift in Sources */,
 				FEBB19972C66D96100ECAC85 /* ObjectM.swift in Sources */,
 				FE7EBFC82C0A8F2200F720EB /* PersonAssociationsView.swift in Sources */,
+				FE71C68C2C915DD700953D63 /* BLE.swift in Sources */,
 				FE900C0A2BD363ED00F97050 /* LocationController.swift in Sources */,
 				FE04A7B42C6D909D000F5C24 /* ActionTObjectTConnM.swift in Sources */,
 				FE04A7D82C73C3E6000F5C24 /* AVChildren.swift in Sources */,
@@ -1700,6 +1704,7 @@
 				INFOPLIST_FILE = History/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Aspire;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "To communicate with peripherals";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "To get audio to log an event";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "To log an event";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -1742,6 +1747,7 @@
 				INFOPLIST_FILE = History/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Aspire;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "To communicate with peripherals";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "To get audio to log an event";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "To log an event";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
