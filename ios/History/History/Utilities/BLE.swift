@@ -1,5 +1,7 @@
 import Foundation
 import CoreBluetooth
+import AVFoundation
+import UIKit
 
 class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     private var centralManager: CBCentralManager!
@@ -23,11 +25,26 @@ class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
 //    var onAudioDataReceived: ((Data) -> Void)?
 //    var onImageDataReceived: ((Data) -> Void)?
     
+    // Audio properties
+    private let sampleRate: Double = 16000
+    private let channels: AVAudioChannelCount = 1
+    private let bitDepth: UInt32 = 16
+    private var audioFile: AVAudioFile?
+    private var audioEngine: AVAudioEngine?
+    private var audioPlayerNode: AVAudioPlayerNode?
+    
+    
+    
+    
     func onAudioDataReceived(_ d:Data) {
         print("Handle Audio data")
     }
     func onImageDataReceived(_ d:Data) {
         print("Handle Image data")
+        if let image = UIImage(data: imageBuffer) {
+            // Use the complete image here
+            // For example, save it or display it
+        }
     }
     
     override init() {
