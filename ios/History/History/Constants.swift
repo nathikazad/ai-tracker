@@ -8,7 +8,8 @@
 import Foundation
 // Server Addresses
 let ServerAddress = "https://ai-tracker-server-613e3dd103bb.herokuapp.com"
-let HasuraAddress = "ai-tracker-hasura-a1071aad7764.herokuapp.com"
+let HasuraAddress = "hasura-with-supabase-4af73d659910.herokuapp.com"
+
 func fullURL(for path: String) -> String {
     return "\(ServerAddress)/\(path)"
 }

@@ -3,7 +3,7 @@
   configuration:
     connection_info:
       database_url:
-        from_env: DATABASE_URL
+        from_env: SUPABASE_PG_URL
       isolation_level: read-committed
       use_prepared_statements: false
   tables: "!include main/tables/tables.yaml"
