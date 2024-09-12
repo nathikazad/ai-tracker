@@ -40,7 +40,7 @@ private:
   int imageCount;
   TaskHandle_t imageCaptureTaskHandle;
   static const char* IMAGE_FILE_PREFIX;
-  static const int CAPTURE_INTERVAL = 60000; // 60 seconds
+  static const int CAPTURE_INTERVAL = 30000; // 60 seconds
 };
 
 #endif // CAMERA_H

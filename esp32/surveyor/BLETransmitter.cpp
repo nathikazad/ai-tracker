@@ -49,15 +49,15 @@ void BLETransmitter::begin() {
     pAdvertising->setMaxPreferred(0x12);
     BLEDevice::startAdvertising();
     Serial.println("BLE started.");
-    xTaskCreatePinnedToCore(
-        this->transmitTask,
-        "TransmitTask",
-        10000,
-        this,
-        1,
-        &transmitTaskHandle,
-        0
-    );
+    // xTaskCreatePinnedToCore(
+    //     this->transmitTask,
+    //     "TransmitTask",
+    //     10000,
+    //     this,
+    //     1,
+    //     &transmitTaskHandle,
+    //     0
+    // );
 }
 
 void BLETransmitter::transmitTask(void *pvParameters) {
@@ -65,74 +65,92 @@ void BLETransmitter::transmitTask(void *pvParameters) {
     for (;;) {
         Serial.println("Checking for files to transmit...");
         transmitter->transmitFiles();
-        vTaskDelay(pdMS_TO_TICKS(1000)); // Adjust delay as needed
+        vTaskDelay(pdMS_TO_TICKS(5000));
     }
 }
 
 void BLETransmitter::transmitFiles() {
-//     if(fileSent) {
-//         return;
-//     }
-//     if (!deviceConnected) {
-//         Serial.println("Device not connected, skipping file transmission.");
-//         return;
-//     }
-//     String filename = "image0.jpg";
-//     // String filename;
-//     // if (sdCard.acquireNextFile(filename)) {
-//         Serial.printf("Transmitting file: %s\n", filename.c_str());
-//         size_t fileSize = sdCard.getFileSize(filename);
+    if (fileSent) {
+        return;
+    }
+    // if (!deviceConnected) {
+    //     Serial.println("Device not connected, skipping file transmission.");
+    //     return;
+    // }
 
-//         // Send packet 0 with filename and number of frames
-//         uint16_t numFrames = (fileSize + MAX_FRAME_SIZE - 1) / MAX_FRAME_SIZE;
-//         sendPacket(0, filename.c_str(), filename.length() + 1, numFrames);
+    String filename;
+    if (sdCard.acquireNextFile(filename)) {
+        Serial.printf("Acquired file: %s\n", filename.c_str());
+        vTaskDelay(pdMS_TO_TICKS(100)); 
+    } else {
+        Serial.println("No files to transmit.");
+    }
+    // String filename = "arduino_rec_0.wav";
+    filename = "/image0.jpg";
+    size_t fileSize = sdCard.getFileSize(filename);
+    if (fileSize == 0) {
+        Serial.println("File size is 0, skipping file transmission.");
+        vTaskDelay(pdMS_TO_TICKS(100)); 
+        return;
+    }
+    // Send packet 0 with filename and number of frames
+    uint16_t numFrames = (fileSize + MAX_FRAME_SIZE - 1) / MAX_FRAME_SIZE;
+    Serial.printf("Transmitting file: %s, size: %d, frames: %d\n", filename.c_str(), fileSize, numFrames);
+    sendPacket(0, reinterpret_cast<const uint8_t*>(filename.c_str()), filename.length() + 1, numFrames);
 
-//         uint8_t frameBuffer[MAX_FRAME_SIZE];
-//         uint16_t frameIndex = 1;
-//         while (file.available()) {
-//             size_t bytesRead = file.read(frameBuffer, MAX_FRAME_SIZE);
-//             sendPacket(frameIndex++, frameBuffer, bytesRead);
-//         }
 
-//         // Send last packet with closing signature
-//         static const uint8_t signature[] = "END";
-//         sendPacket(frameIndex, signature, sizeof(signature));
+    uint8_t frameBuffer[MAX_FRAME_SIZE];
+    size_t bytesRead;
+    uint16_t frameIndex = 1;
 
-//         sdCard.removeFile(filename);
-//         sdCard.releaseLock();
-//         Serial.println("File transmission complete.");
-//         fileSent = true;
-//     // } else {
-//     //     Serial.println("No files to transmit.");
-//     // }
+    if (sdCard.readFile(filename, frameBuffer, MAX_FRAME_SIZE, bytesRead)) {
+        Serial.printf("Reading frame %d, bytesRead: %d\n", frameIndex, bytesRead);
+        while (bytesRead > 0) {
+            sendPacket(frameIndex++, frameBuffer, bytesRead);
+            bytesRead = 0;
+            if (sdCard.readFile(filename, frameBuffer, MAX_FRAME_SIZE, bytesRead)) {
+                // Continue reading and sending packets
+            } else {
+                Serial.printf("Error reading file: %s\n", filename.c_str());
+                break;
+            }
+        }
+    } else {
+        Serial.printf("Error opening file: %s\n", filename.c_str());
+    }
+
+    // Send last packet with closing signature
+    static const uint8_t signature[] = "END";
+    sendPacket(frameIndex, signature, sizeof(signature));
+
+    sdCard.removeFile(filename);
+    Serial.println("File transmission complete.");
+    fileSent = true;
 }
 
-// void BLETransmitter::sendPacket(uint16_t packetIndex, const uint8_t* data, size_t length, uint16_t numFrames) {
-//     uint8_t packet[MAX_PACKET_SIZE];
-//     size_t packetSize = 0;
+void BLETransmitter::sendPacket(uint16_t packetIndex, const uint8_t* data, size_t length, uint16_t numFrames) {
+    uint8_t packet[MAX_PACKET_SIZE];
+    size_t packetSize = 0;
 
-//     packet[packetSize++] = packetIndex >> 8;
-//     packet[packetSize++] = packetIndex & 0xFF;
+    packet[packetSize++] = packetIndex >> 8;
+    packet[packetSize++] = packetIndex & 0xFF;
 
-//     if (packetIndex == 0) {
-//         packet[packetSize++] = numFrames >> 8;
-//         packet[packetSize++] = numFrames & 0xFF;
+    if (packetIndex == 0) {
+        packet[packetSize++] = numFrames >> 8;
+        packet[packetSize++] = numFrames & 0xFF;
 
-//         // Add current millis time to the starting packet
-//         uint32_t currentMillis = millis();
-//         packet[packetSize++] = (currentMillis >> 24) & 0xFF;
-//         packet[packetSize++] = (currentMillis >> 16) & 0xFF;
-//         packet[packetSize++] = (currentMillis >> 8) & 0xFF;
-//         packet[packetSize++] = currentMillis & 0xFF;
-//     }
+        // Add current millis time to the starting packet
+        uint32_t currentMillis = millis();
+        packet[packetSize++] = (currentMillis >> 24) & 0xFF;
+        packet[packetSize++] = (currentMillis >> 16) & 0xFF;
+        packet[packetSize++] = (currentMillis >> 8) & 0xFF;
+        packet[packetSize++] = currentMillis & 0xFF;
+    }
 
-//     memcpy(packet + packetSize, data, length);
-//     packetSize += length;
+    memcpy(packet + packetSize, data, length);
+    packetSize += length;
+    fileDataCharacteristic->setValue(packet, packetSize);
+    fileDataCharacteristic->notify();
+    Serial.printf("Sent packet %d\n", packetIndex);
 
-//     if (fileDataCharacteristic->setValue(packet, packetSize)) {
-//         fileDataCharacteristic->notify();
-//         Serial.printf("Sent packet %d\n", packetIndex);
-//     } else {
-//         Serial.printf("Failed to send packet %d\n", packetIndex);
-//     }
-// }
+}

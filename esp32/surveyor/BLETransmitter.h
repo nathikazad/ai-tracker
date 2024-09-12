@@ -14,7 +14,7 @@ public:
     void transmitFiles();
 
 private:
-    // void sendPacket(uint16_t packetIndex, const uint8_t* data, size_t length, uint16_t numFrames = 0);
+    void sendPacket(uint16_t packetIndex, const uint8_t* data, size_t length, uint16_t numFrames = 0);
     static void transmitTask(void *pvParameters);
     SDCard& sdCard;
 };

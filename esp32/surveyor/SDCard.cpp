@@ -177,3 +177,19 @@ void SDCard::deleteAllFiles() {
   root.close();
   releaseLock();
 }
+
+bool SDCard::readFile(const String& filename, uint8_t* buffer, size_t bufferSize, size_t& bytesRead) {
+    if (!acquireLock()) return false;
+
+    File file = SD.open(filename.c_str(), FILE_READ);
+    if (!file) {
+        releaseLock();
+        return false;
+    }
+
+    bytesRead = file.read(buffer, bufferSize);
+    file.close();
+    releaseLock();
+
+    return true;
+}
