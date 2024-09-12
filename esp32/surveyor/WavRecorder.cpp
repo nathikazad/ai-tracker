@@ -64,43 +64,50 @@ void WavRecorder::record_wav() {
   uint32_t sample_size = 0;
   uint32_t record_size = (SAMPLE_RATE * SAMPLE_BITS / 8) * RECORD_TIME;
   uint8_t *rec_buffer = NULL;
+  uint8_t wav_header[44];
 
   Serial.printf("Starting recording for file %d...\n", fileCounter);
 
   char filename[32];
   snprintf(filename, sizeof(filename), "/%s_%d.wav", WAV_FILE_NAME, fileCounter);
 
-  uint8_t wav_header[44];
+  // Allocate buffer for both header and audio data
+  uint32_t total_size = 44 + record_size;
+  uint8_t *total_buffer = (uint8_t *)ps_malloc(total_size);
+  if (total_buffer == NULL) {
+    Serial.println("malloc failed!");
+    return;
+  }
+
+  // Generate WAV header
   WavUtil::generate_wav_header(wav_header, record_size, SAMPLE_RATE, SAMPLE_BITS);
-  
-  if (!sdCard.writeFile(filename, wav_header, 44)) {
-    Serial.println("Failed to write WAV header");
-    return;
-  }
 
-  rec_buffer = (uint8_t *)ps_malloc(record_size);
-  if (rec_buffer == NULL) {
-    Serial.printf("malloc failed!\n");
-    return;
-  }
-  Serial.printf("Buffer: %d bytes\n", ESP.getPsramSize() - ESP.getFreePsram());
+  // Copy header to the beginning of total_buffer
+  memcpy(total_buffer, wav_header, 44);
 
+  // Record audio data
+  rec_buffer = total_buffer + 44;  // Point to the part of total_buffer after the header
   esp_i2s::i2s_read(esp_i2s::I2S_NUM_0, rec_buffer, record_size, &sample_size, portMAX_DELAY);
   if (sample_size == 0) {
-    Serial.printf("Record Failed!\n");
-  } else {
-    Serial.printf("Recorded %d bytes\n", sample_size);
+    Serial.println("Record Failed!");
+    free(total_buffer);
+    return;
   }
 
+  Serial.printf("Recorded %d bytes\n", sample_size);
+
+  // Apply volume gain
   for (uint32_t i = 0; i < sample_size; i += SAMPLE_BITS/8) {
     (*(uint16_t *)(rec_buffer+i)) <<= VOLUME_GAIN;
   }
 
+  // Write entire buffer (header + audio data) to file
   Serial.printf("Writing to file %s ...\n", filename);
-  if (!sdCard.appendFile(filename, rec_buffer, record_size)) {
+  if (!sdCard.writeFile(filename, total_buffer, total_size)) {
     Serial.println("Failed to write audio data");
+  } else {
+    Serial.printf("Recording of file %d is complete.\n", fileCounter);
   }
 
-  free(rec_buffer);
-  Serial.printf("Recording of file %d is complete.\n", fileCounter);
+  free(total_buffer);
 }
