@@ -14,11 +14,16 @@ public:
   bool begin(int csPin);
   bool writeFile(const char* path, const uint8_t* buffer, size_t size);
   bool appendFile(const char* path, const uint8_t* buffer, size_t size);
+  bool acquireNextFile(String& filename);
+  size_t getFileSize(const String& filename);
+  void removeFile(const String& filename);
 
 private:
   SemaphoreHandle_t semaphore;
   bool acquireLock(TickType_t waitTime = portMAX_DELAY);
   void releaseLock();
+  bool defragment();
+  void deleteAllFiles();
 };
 
 #endif // SDCARD_H

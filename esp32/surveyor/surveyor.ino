@@ -2,10 +2,12 @@
 #include "WavRecorder.h"
 #include "SDCard.h"
 #include "Camera.h"
+#include "BLETransmitter.h"
 
 SDCard sdCard;
 WavRecorder recorder(sdCard);
 Camera camera(sdCard);
+BLETransmitter bleTransmitter(sdCard);
 
 void setup() {
   Serial.begin(115200);
@@ -16,23 +18,26 @@ void setup() {
     while (1);
   }
 
-  if (!recorder.begin()) {
-    Serial.println("Failed to initialize recorder!");
-    while (1);
-  }
+//   if (!recorder.begin()) {
+//     Serial.println("Failed to initialize recorder!");
+//     while (1);
+//   }
 
-  if (!camera.begin()) {
-    Serial.println("Failed to initialize camera!");
-    while (1);
-  }
+//   if (!camera.begin()) {
+//     Serial.println("Failed to initialize camera!");
+//     while (1);
+//   }
 
   Serial.println("Setup complete. Starting recording and image capture tasks.");
-  recorder.startRecordingTask();
-  camera.startImageCaptureTask();
+//   recorder.startRecordingTask();
+//   camera.startImageCaptureTask();
+
+  bleTransmitter.begin();
 }
 
 void loop() {
   // Your main loop code here
   Serial.println("Main loop running...");
   delay(5000);  // Just a placeholder delay
+
 }
