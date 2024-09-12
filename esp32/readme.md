@@ -51,5 +51,10 @@ arduino-cli compile --build-path build --output-dir dist -e -u -p /dev/cu.usbmod
 
 only upload
 ```bash
-arduino-cli upload -p /dev/cu.usbmodem1101 -b esp32:esp32:XIAO_ESP32S3 --input-dir dist
+arduino-cli upload -p /dev/cu.usbmodem1101 --fqbn esp32:esp32:XIAO_ESP32S3 --input-dir dist
+````
+
+only compile
+```bash
+arduino-cli compile --fqbn esp32:esp32:XIAO_ESP32S3:PSRAM=opi --build-path build --output-dir dist -e
 ````
