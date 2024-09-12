@@ -1,76 +1,122 @@
 #include "BLETransmitter.h"
-#include "SDCard.h"
-#include <BLEDevice.h>
-#include <BLEUtils.h>
-#include <BLEServer.h>
-#include <BLE2902.h>
+// // // BLE service and characteristic UUIDs
 
-// BLE service and characteristic UUIDs
 static BLEUUID serviceUUID("19B10000-E8F2-537E-4F6C-D104768A1214");
 static BLEUUID fileDataUUID("19B10001-E8F2-537E-4F6C-D104768A1214");
 
-BLECharacteristic *fileDataCharacteristic;
 bool deviceConnected = false;
-bool fileSent = false;
-
-class ServerCallbacks : public BLEServerCallbacks {
-    void onConnect(BLEServer* pServer) {
+class ServerCallbacks : public BLEServerCallbacks
+{
+    void onConnect(BLEServer *pServer)
+    {
         deviceConnected = true;
     }
-    void onDisconnect(BLEServer* pServer) {
+    void onDisconnect(BLEServer *pServer)
+    {
         deviceConnected = false;
     }
 };
 
-BLETransmitter::BLETransmitter(SDCard& sd) : sdCard(sd) {}
+BLETransmitter::BLETransmitter(SDCard &sd) : sdCard(sd), sendFileTaskHandle(NULL) {}
 
-TaskHandle_t transmitTaskHandle = NULL;
-
-void BLETransmitter::begin() {
+bool BLETransmitter::begin()
+{
     BLEDevice::init("OpenSurveyor");
-    BLEServer *pServer = BLEDevice::createServer();
+    setPHY();
+    pServer = BLEDevice::createServer();
     pServer->setCallbacks(new ServerCallbacks());
 
-    BLEService *pService = pServer->createService(serviceUUID);
+    pService = pServer->createService(serviceUUID);
 
     fileDataCharacteristic = pService->createCharacteristic(
         fileDataUUID,
         BLECharacteristic::PROPERTY_READ |
-        BLECharacteristic::PROPERTY_NOTIFY
-    );
+            BLECharacteristic::PROPERTY_NOTIFY);
     fileDataCharacteristic->addDescriptor(new BLE2902());
 
     pService->start();
 
-    BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
+    pAdvertising = BLEDevice::getAdvertising();
     pAdvertising->addServiceUUID(serviceUUID);
     pAdvertising->setScanResponse(true);
     pAdvertising->setMinPreferred(0x06);
     pAdvertising->setMaxPreferred(0x12);
+
     BLEDevice::startAdvertising();
     Serial.println("BLE started.");
-    // xTaskCreatePinnedToCore(
-    //     this->transmitTask,
-    //     "TransmitTask",
-    //     10000,
-    //     this,
-    //     1,
-    //     &transmitTaskHandle,
-    //     0
-    // );
+    return true;
 }
 
-void BLETransmitter::transmitTask(void *pvParameters) {
-    BLETransmitter* transmitter = static_cast<BLETransmitter*>(pvParameters);
-    for (;;) {
+void BLETransmitter::setPHY()
+{
+    ext_adv_params_1M.type = ESP_BLE_GAP_SET_EXT_ADV_PROP_CONNECTABLE;
+    ext_adv_params_1M.channel_map = ADV_CHNL_ALL;
+    ext_adv_params_1M.filter_policy = ADV_FILTER_ALLOW_SCAN_ANY_CON_ANY;
+    ext_adv_params_1M.primary_phy = ESP_BLE_GAP_PHY_1M;
+    ext_adv_params_1M.max_skip = 0;
+    ext_adv_params_1M.secondary_phy = ESP_BLE_GAP_PHY_2M;
+    ext_adv_params_1M.sid = 0;
+    ext_adv_params_1M.scan_req_notif = false;
+    ext_adv_params_1M.own_addr_type = BLE_ADDR_TYPE_PUBLIC;
+
+    // Setup extended advertising parameters for 2M PHY
+    memcpy(&ext_adv_params_2M, &ext_adv_params_1M, sizeof(esp_ble_gap_ext_adv_params_t));
+    ext_adv_params_2M.primary_phy = ESP_BLE_GAP_PHY_2M;
+
+    // Set up connection parameters for 1M PHY
+    conn_params_1M.scan_interval = 0x40;
+    conn_params_1M.scan_window = 0x40;
+    conn_params_1M.interval_min = 0x18; // 30ms
+    conn_params_1M.interval_max = 0x28; // 50ms
+    conn_params_1M.latency = 0;
+    conn_params_1M.supervision_timeout = 400; // 4s
+
+    // Set up connection parameters for 2M PHY
+    memcpy(&conn_params_2M, &conn_params_1M, sizeof(esp_ble_gap_conn_params_t));
+    conn_params_2M.interval_min = 0x18; // 30ms
+    conn_params_2M.interval_max = 0x28; // 50ms
+
+    // Set extended advertising parameters
+    esp_ble_gap_ext_adv_set_params(0, &ext_adv_params_1M);
+    esp_ble_gap_ext_adv_set_params(1, &ext_adv_params_2M);
+
+    // Set preferred PHYs
+    esp_ble_gap_set_prefered_default_phy(ESP_BLE_GAP_PHY_OPTIONS_PREF_S2_CODING, ESP_BLE_GAP_PHY_OPTIONS_PREF_S2_CODING);
+
+    // Set preferred connection parameters
+    esp_ble_gap_prefer_ext_connect_params_set(NULL,
+                                              ESP_BLE_GAP_PHY_1M_PREF_MASK | ESP_BLE_GAP_PHY_2M_PREF_MASK,
+                                              &conn_params_1M, &conn_params_2M, NULL);
+}
+
+void BLETransmitter::startBleServer()
+{
+    xTaskCreatePinnedToCore(
+        this->sendFileTask,
+        "BLETask",
+        10000,
+        this,
+        1,
+        &sendFileTaskHandle,
+        1 // Run on core 1
+    );
+}
+
+void BLETransmitter::sendFileTask(void *pvParameters)
+{
+    BLETransmitter *transmitter = static_cast<BLETransmitter *>(pvParameters);
+    for (;;)
+    {
         Serial.println("Checking for files to transmit...");
         transmitter->transmitFiles();
-        vTaskDelay(pdMS_TO_TICKS(5000));
+        vTaskDelay(pdMS_TO_TICKS(SEND_FILE_INTERVAL));
     }
 }
 
-void BLETransmitter::transmitFiles() {
-    if (fileSent) {
+void BLETransmitter::transmitFiles()
+{
+    if (fileSent)
+    {
         return;
     }
     // if (!deviceConnected) {
@@ -79,43 +125,50 @@ void BLETransmitter::transmitFiles() {
     // }
 
     String filename;
-    if (sdCard.acquireNextFile(filename)) {
-        Serial.printf("Acquired file: %s\n", filename.c_str());
-        vTaskDelay(pdMS_TO_TICKS(100)); 
-    } else {
-        Serial.println("No files to transmit.");
-    }
-    // String filename = "arduino_rec_0.wav";
-    filename = "/image0.jpg";
+    // if (sdCard.acquireNextFile(filename)) {
+    //     Serial.printf("Acquired file: %s\n", filename.c_str());
+    // } else {
+    //     Serial.println("No files to transmit.");
+    // }
+    // String
+    filename = "/arduino_rec_0.wav";
+    // filename = "/image0.jpg";
     size_t fileSize = sdCard.getFileSize(filename);
-    if (fileSize == 0) {
+    if (fileSize == 0)
+    {
         Serial.println("File size is 0, skipping file transmission.");
-        vTaskDelay(pdMS_TO_TICKS(100)); 
         return;
     }
     // Send packet 0 with filename and number of frames
-    uint16_t numFrames = (fileSize + MAX_FRAME_SIZE - 1) / MAX_FRAME_SIZE;
+    uint16_t numFrames = (fileSize + MAX_FRAME_SIZE - 1) / MAX_FRAME_SIZE + 1;
     Serial.printf("Transmitting file: %s, size: %d, frames: %d\n", filename.c_str(), fileSize, numFrames);
-    sendPacket(0, reinterpret_cast<const uint8_t*>(filename.c_str()), filename.length() + 1, numFrames);
-
+    Serial.printf("Sending first frame\n");
+    sendPacket(0, reinterpret_cast<const uint8_t *>(filename.c_str()), filename.length() + 1, numFrames);
 
     uint8_t frameBuffer[MAX_FRAME_SIZE];
     size_t bytesRead;
     uint16_t frameIndex = 1;
-
-    if (sdCard.readFile(filename, frameBuffer, MAX_FRAME_SIZE, bytesRead)) {
-        Serial.printf("Reading frame %d, bytesRead: %d\n", frameIndex, bytesRead);
-        while (bytesRead > 0) {
+    Serial.printf("Sending rest of frames\n");
+    if (sdCard.readFile(filename, frameBuffer, 0, MAX_FRAME_SIZE, bytesRead))
+    {
+        while (bytesRead > 0)
+        {
+            Serial.printf("Reading frame %d/%d, bytesRead: %d\n", frameIndex, numFrames, bytesRead);
             sendPacket(frameIndex++, frameBuffer, bytesRead);
             bytesRead = 0;
-            if (sdCard.readFile(filename, frameBuffer, MAX_FRAME_SIZE, bytesRead)) {
-                // Continue reading and sending packets
-            } else {
+            if (sdCard.readFile(filename, frameBuffer, (frameIndex - 1) * MAX_FRAME_SIZE, MAX_FRAME_SIZE, bytesRead))
+            {
+                sendPacket(frameIndex++, frameBuffer, bytesRead);
+            }
+            else
+            {
                 Serial.printf("Error reading file: %s\n", filename.c_str());
                 break;
             }
         }
-    } else {
+    }
+    else
+    {
         Serial.printf("Error opening file: %s\n", filename.c_str());
     }
 
@@ -128,14 +181,16 @@ void BLETransmitter::transmitFiles() {
     fileSent = true;
 }
 
-void BLETransmitter::sendPacket(uint16_t packetIndex, const uint8_t* data, size_t length, uint16_t numFrames) {
+void BLETransmitter::sendPacket(uint16_t packetIndex, const uint8_t *data, size_t length, uint16_t numFrames)
+{
     uint8_t packet[MAX_PACKET_SIZE];
     size_t packetSize = 0;
 
     packet[packetSize++] = packetIndex >> 8;
     packet[packetSize++] = packetIndex & 0xFF;
 
-    if (packetIndex == 0) {
+    if (packetIndex == 0)
+    {
         packet[packetSize++] = numFrames >> 8;
         packet[packetSize++] = numFrames & 0xFF;
 
@@ -152,5 +207,4 @@ void BLETransmitter::sendPacket(uint16_t packetIndex, const uint8_t* data, size_
     fileDataCharacteristic->setValue(packet, packetSize);
     fileDataCharacteristic->notify();
     Serial.printf("Sent packet %d\n", packetIndex);
-
 }

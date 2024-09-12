@@ -95,7 +95,7 @@ bool SDCard::acquireNextFile(String& filename) {
   filename = entry.name();
   entry.close();
   root.close();
-  Serial.printf("Found file: %s\n", filename.c_str());
+  releaseLock();
   return true;
 }
 
@@ -178,7 +178,7 @@ void SDCard::deleteAllFiles() {
   releaseLock();
 }
 
-bool SDCard::readFile(const String& filename, uint8_t* buffer, size_t bufferSize, size_t& bytesRead) {
+bool SDCard::readFile(const String& filename, uint8_t* buffer, size_t offset, size_t bufferSize, size_t& bytesRead) {
     if (!acquireLock()) return false;
 
     File file = SD.open(filename.c_str(), FILE_READ);
@@ -186,8 +186,18 @@ bool SDCard::readFile(const String& filename, uint8_t* buffer, size_t bufferSize
         releaseLock();
         return false;
     }
-
+    if (offset > 0) {
+        file.seek(offset);
+    }
     bytesRead = file.read(buffer, bufferSize);
+    if (bytesRead == 0) {
+        Serial.printf("End Of File\n");
+        file.close();
+        releaseLock();
+        return false;
+    }
+
+    Serial.printf("Read %d bytes from offset %d\n", bytesRead, offset);
     file.close();
     releaseLock();
 

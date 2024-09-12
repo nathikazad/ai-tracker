@@ -17,7 +17,7 @@ public:
   bool acquireNextFile(String& filename);
   size_t getFileSize(const String& filename);
   void removeFile(const String& filename);
-  bool readFile(const String& filename, uint8_t* buffer, size_t bufferSize, size_t& bytesRead);
+  bool readFile(const String& filename, uint8_t* buffer, size_t offset, size_t bufferSize, size_t& bytesRead);
 
 private:
   SemaphoreHandle_t semaphore;

@@ -28,15 +28,17 @@ void setup() {
     while (1);
   }
 
-  Serial.println("Setup complete. Starting recording and image capture tasks.");
+  if (!bleTransmitter.begin()) {
+    Serial.println("Failed to initialize BLE Transmitter!");
+    while (1);
+  }
+
+  Serial.println("Setup complete. Starting recording, image capture and BLE server tasks.");
 //   recorder.startRecordingTask();
   camera.startImageCaptureTask();
-  bleTransmitter.begin();
+  bleTransmitter.startBleServer();
 }
 
 void loop() {
-  // Your main loop code here
-  Serial.println("Main loop running...v1");
-  delay(10000);  // Just a placeholder delay
 
 }
