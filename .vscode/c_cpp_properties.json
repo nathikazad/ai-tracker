@@ -1,0 +1,37 @@
+{
+    "configurations": [
+        {
+            "name": "Mac",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/Users/nathikazad/Library/Arduino15/packages/esp32/hardware/esp32/2.0.17/tools/sdk/esp32/include/freertos/include/",
+                "/Users/nathikazad/Library/Arduino15/packages/esp32/hardware/esp32/2.0.17/cores/esp32/",
+                "/Users/nathikazad/Library/Arduino15/packages/esp32/hardware/esp32/2.0.17/tools/sdk/esp32s3/include/freertos/include/esp_additions/freertos",
+                "/Users/nathikazad/Library/Arduino15/packages/esp32/hardware/esp32/2.0.17/tools/sdk/esp32s3/include/freertos/port/xtensa/include",
+                "/Users/nathikazad/Library/Arduino15/packages/esp32/hardware/esp32/2.0.17/tools/sdk/esp32s3/include/esp_common/include",
+                "/Users/nathikazad/Library/Arduino15/packages/esp32/hardware/esp32/2.0.17/tools/sdk/esp32s3/opi_opi/include",
+                "/Users/nathikazad/Library/Arduino15/packages/esp32/hardware/esp32/2.0.17/tools/sdk/esp32s3/include/xtensa/include",
+                "/Users/nathikazad/Library/Arduino15/packages/esp32/hardware/esp32/2.0.17/tools/sdk/esp32s3/include/xtensa/esp32s3/include",
+                "/Users/nathikazad/Library/Arduino15/packages/esp32/hardware/esp32/2.0.17/tools/sdk/esp32s3/include/esp32-camera/driver/include",
+                "/Users/nathikazad/Library/Arduino15/packages/esp32/hardware/esp32/2.0.17/tools/sdk/esp32s3/include/driver/include",
+                "/Users/nathikazad/Library/Arduino15/packages/esp32/hardware/esp32/2.0.17/tools/sdk/esp32s3/include/esp_hw_support/include",
+                "/Users/nathikazad/Library/Arduino15/packages/esp32/hardware/esp32/2.0.17/tools/sdk/esp32s3/include/soc/esp32s3/include/",
+                "/Users/nathikazad/Library/Arduino15/packages/esp32/hardware/esp32/2.0.17/tools/sdk/esp32s3/include/hal/include",
+                "/Users/nathikazad/Library/Arduino15/packages/esp32/hardware/esp32/2.0.17/tools/sdk/esp32s3/include/soc/include",
+                "/Users/nathikazad/Library/Arduino15/packages/esp32/hardware/esp32/2.0.17/tools/sdk/esp32s3/include/esp_rom/include"
+            ],
+            "defines": [],
+            "macFrameworkPath": [
+                "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks"
+            ],
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "macos-clang-arm64",
+            "compilerArgs": [
+                "\"${workspaceFolder}\"/"
+            ]
+        }
+    ],
+    "version": 4
+}
