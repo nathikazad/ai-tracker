@@ -1,30 +1,98 @@
 #include "BLETransmitter.h"
 // // // BLE service and characteristic UUIDs
 
-static BLEUUID serviceUUID("19B10000-E8F2-537E-4F6C-D104768A1214");
-static BLEUUID fileDataUUID("19B10001-E8F2-537E-4F6C-D104768A1214");
 
-bool deviceConnected = false;
 class ServerCallbacks : public BLEServerCallbacks
 {
-    void onConnect(BLEServer *pServer)
+public:
+    ServerCallbacks(BLETransmitter* transmitter) : m_transmitter(transmitter) {}
+
+    void onConnect(BLEServer* pServer, esp_ble_gatts_cb_param_t* param) override
     {
-        deviceConnected = true;
+        m_transmitter->setDeviceConnected(true);
+        
+        // Get and print the address of the connected client
+        char address_str[18];
+        sprintf(address_str, "%02x:%02x:%02x:%02x:%02x:%02x",
+                param->connect.remote_bda[0], param->connect.remote_bda[1],
+                param->connect.remote_bda[2], param->connect.remote_bda[3],
+                param->connect.remote_bda[4], param->connect.remote_bda[5]);
+        
+        Serial.print("Connected client address: ");
+        Serial.println(address_str);
     }
-    void onDisconnect(BLEServer *pServer)
+
+    void onDisconnect(BLEServer* pServer) override
     {
-        deviceConnected = false;
+        m_transmitter->setDeviceConnected(false);
     }
+
+private:
+    BLETransmitter* m_transmitter;
 };
 
-BLETransmitter::BLETransmitter(SDCard &sd) : sdCard(sd), sendFileTaskHandle(NULL) {}
+void AckCharacteristicCallbacks::onWrite(BLECharacteristic *pCharacteristic)
+{
+    if (pCharacteristic == nullptr) {
+        Serial.println("Error: Null characteristic in onWrite callback");
+        return;
+    }
+    
+    std::string value = pCharacteristic->getValue();
+    size_t len = value.length();
+    
+    if (len == 2)
+    {
+        uint16_t ackedPacket = (uint16_t)((uint8_t)value[0] << 8 | (uint8_t)value[1]);
+        // Serial.printf(" Received ack for packet %d\n", ackedPacket);
+        
+        if (m_transmitter != nullptr) {
+            m_transmitter->setAckBit(ackedPacket);
+        } else {
+            Serial.println("Error: Null m_transmitter in onWrite callback");
+        }
+    } 
+}
+
+void BLETransmitter::setAckBit(uint16_t packetIndex)
+{
+    // if (packetIndex < MAX_PACKETS)
+    // {
+        // m_ackBitmap[packetIndex / 8] |= (1 << (packetIndex % 8));
+        m_ackBitmap[packetIndex] = 1;
+    // }
+}
+
+BLETransmitter::BLETransmitter(SDCard &sd) 
+    : sdCard(sd), sendFileTaskHandle(NULL), m_deviceConnected(false), m_ackBitmap(NULL)
+{
+    // m_ackBitmap = (uint8_t *)ps_calloc(4000, sizeof(uint8_t));
+    m_ackBitmap = (uint8_t*)heap_caps_malloc(4000, MALLOC_CAP_8BIT | MALLOC_CAP_INTERNAL);
+    memset(m_ackBitmap, 0, 4000);
+    if (m_ackBitmap == NULL) {
+        Serial.println("Failed to allocate memory for ackBitmap");
+    }
+    
+    // m_ackBitmap_copy = (uint8_t *)ps_calloc(BITMAP_SIZE, sizeof(uint8_t));
+    // if (m_ackBitmap_copy == NULL) {
+    //     Serial.println("Failed to allocate memory for ackBitmap_copy");
+    // }
+}
+
+BLETransmitter::~BLETransmitter()
+{
+    if (m_ackBitmap != NULL) {
+        free(m_ackBitmap);
+    }
+}
+
 
 bool BLETransmitter::begin()
 {
     BLEDevice::init("OpenSurveyor");
-    setPHY();
+    // setPHY();
     pServer = BLEDevice::createServer();
-    pServer->setCallbacks(new ServerCallbacks());
+    pServer->setCallbacks(new ServerCallbacks(this));
 
     pService = pServer->createService(serviceUUID);
 
@@ -33,6 +101,11 @@ bool BLETransmitter::begin()
         BLECharacteristic::PROPERTY_READ |
             BLECharacteristic::PROPERTY_NOTIFY);
     fileDataCharacteristic->addDescriptor(new BLE2902());
+
+    ackCharacteristic = pService->createCharacteristic(
+        ackUUID,
+        BLECharacteristic::PROPERTY_WRITE);
+    ackCharacteristic->setCallbacks(new AckCharacteristicCallbacks(this));
 
     pService->start();
 
@@ -119,10 +192,12 @@ void BLETransmitter::transmitFiles()
     {
         return;
     }
-    // if (!deviceConnected) {
-    //     Serial.println("Device not connected, skipping file transmission.");
-    //     return;
-    // }
+    if (!m_deviceConnected) {
+        Serial.println("Device not connected, skipping file transmission.");
+        return;
+    }
+
+    
 
     String filename;
     // if (sdCard.acquireNextFile(filename)) {
@@ -131,8 +206,8 @@ void BLETransmitter::transmitFiles()
     //     Serial.println("No files to transmit.");
     // }
     // String
-    filename = "/arduino_rec_0.wav";
-    // filename = "/image0.jpg";
+    filename = "/arduino_rec_1.wav";
+    // filename = "/image3.jpg";
     size_t fileSize = sdCard.getFileSize(filename);
     if (fileSize == 0)
     {
@@ -141,30 +216,32 @@ void BLETransmitter::transmitFiles()
     }
     // Send packet 0 with filename and number of frames
     uint16_t numFrames = (fileSize + MAX_FRAME_SIZE - 1) / MAX_FRAME_SIZE + 1;
-    Serial.printf("Transmitting file: %s, size: %d, frames: %d\n", filename.c_str(), fileSize, numFrames);
-    Serial.printf("Sending first frame\n");
+    Serial.printf("Transmitting file: %s, size: %d, frames: %d, time: %d\n", filename.c_str(), fileSize, numFrames);
+    uint32_t startTime = millis();
+    // Serial.printf("Sending first frame\n");
     sendPacket(0, reinterpret_cast<const uint8_t *>(filename.c_str()), filename.length() + 1, numFrames);
 
     uint8_t frameBuffer[MAX_FRAME_SIZE];
     size_t bytesRead;
     uint16_t frameIndex = 1;
-    Serial.printf("Sending rest of frames\n");
+    // Serial.printf("Sending rest of frames\n");
     if (sdCard.readFile(filename, frameBuffer, 0, MAX_FRAME_SIZE, bytesRead))
     {
         while (bytesRead > 0)
         {
-            Serial.printf("Reading frame %d/%d, bytesRead: %d\n", frameIndex, numFrames, bytesRead);
-            sendPacket(frameIndex++, frameBuffer, bytesRead);
             bytesRead = 0;
-            if (sdCard.readFile(filename, frameBuffer, (frameIndex - 1) * MAX_FRAME_SIZE, MAX_FRAME_SIZE, bytesRead))
-            {
-                sendPacket(frameIndex++, frameBuffer, bytesRead);
+            if (m_ackBitmap[frameIndex] == 0) {
+                if (sdCard.readFile(filename, frameBuffer, (frameIndex - 1) * MAX_FRAME_SIZE, MAX_FRAME_SIZE, bytesRead))
+                {
+                    sendPacket(frameIndex, frameBuffer, bytesRead);
+                }
+                else
+                {
+                    Serial.printf("No more data to read: %s\n", filename.c_str());
+                    break;
+                }
             }
-            else
-            {
-                Serial.printf("Error reading file: %s\n", filename.c_str());
-                break;
-            }
+            frameIndex++;
         }
     }
     else
@@ -176,9 +253,11 @@ void BLETransmitter::transmitFiles()
     static const uint8_t signature[] = "END";
     sendPacket(frameIndex, signature, sizeof(signature));
 
-    sdCard.removeFile(filename);
-    Serial.println("File transmission complete.");
-    fileSent = true;
+    // sdCard.removeFile(filename);
+    uint32_t endTime = millis();
+    uint32_t duration = endTime - startTime;
+    Serial.printf("Transmitting file complete: %s, time: %d\n", filename.c_str(), duration);
+    // fileSent = true;
 }
 
 void BLETransmitter::sendPacket(uint16_t packetIndex, const uint8_t *data, size_t length, uint16_t numFrames)
@@ -186,8 +265,11 @@ void BLETransmitter::sendPacket(uint16_t packetIndex, const uint8_t *data, size_
     uint8_t packet[MAX_PACKET_SIZE];
     size_t packetSize = 0;
 
-    packet[packetSize++] = packetIndex >> 8;
-    packet[packetSize++] = packetIndex & 0xFF;
+    packet[0] = packetIndex & 0xFF;
+    packet[1] = (packetIndex >> 8) & 0xFF;
+    packet[2] = 0;
+
+    packetSize = 3;
 
     if (packetIndex == 0)
     {
@@ -206,5 +288,5 @@ void BLETransmitter::sendPacket(uint16_t packetIndex, const uint8_t *data, size_
     packetSize += length;
     fileDataCharacteristic->setValue(packet, packetSize);
     fileDataCharacteristic->notify();
-    Serial.printf("Sent packet %d\n", packetIndex);
+    // Serial.printf("Sent packet %d\n", packetIndex);
 }

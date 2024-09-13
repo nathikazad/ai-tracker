@@ -197,7 +197,7 @@ bool SDCard::readFile(const String& filename, uint8_t* buffer, size_t offset, si
         return false;
     }
 
-    Serial.printf("Read %d bytes from offset %d\n", bytesRead, offset);
+    // Serial.printf("Read %d bytes from offset %d\n", bytesRead, offset);
     file.close();
     releaseLock();
 

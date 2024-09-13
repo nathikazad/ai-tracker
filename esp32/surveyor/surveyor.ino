@@ -1,3 +1,4 @@
+
 #include <Arduino.h>
 #include "WavRecorder.h"
 #include "SDCard.h"
@@ -35,10 +36,13 @@ void setup() {
 
   Serial.println("Setup complete. Starting recording, image capture and BLE server tasks.");
 //   recorder.startRecordingTask();
-  camera.startImageCaptureTask();
+  // camera.startImageCaptureTask();
   bleTransmitter.startBleServer();
 }
 
 void loop() {
 
 }
+
+//modified this file to get ride of include error
+// /Users/nathikazad/Library/Arduino15/packages/esp32/hardware/esp32/2.0.17/tools/sdk/esp32s3/include/xtensa/esp32s3/include/xtensa/config/core.h 
