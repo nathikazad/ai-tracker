@@ -9,17 +9,17 @@ class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     
     // Main Friend Service UUID
     private let serviceUUID = CBUUID(string: "19B10000-E8F2-537E-4F6C-D104768A1214")
-    
-    // Characteristic UUIDs
-    private let audioDataUUID = CBUUID(string: "19B10001-E8F2-537E-4F6C-D104768A1214")
-    private let audioCodecUUID = CBUUID(string: "19B10002-E8F2-537E-4F6C-D104768A1214")
-    private let photoDataUUID = CBUUID(string: "19B10005-E8F2-537E-4F6C-D104768A1214")
-    private let photoControlUUID = CBUUID(string: "19B10006-E8F2-537E-4F6C-D104768A1214")
+    private let fileDataUUID = CBUUID(string: "19B10001-E8F2-537E-4F6C-D104768A1214")
     
     // Data handling properties
     private var audioBuffer: Data = Data()
     private var imageBuffer: Data = Data()
     private var currentImageFrameCount: UInt16 = 0
+    
+    // Add a new property to store the received file data
+    private var fileData: Data = Data()
+    private var currentFilePacketIndex: UInt16 = 0
+    private var totalFilePackets: UInt16 = 0
     
     // Callback closures
 //    var onAudioDataReceived: ((Data) -> Void)?
@@ -34,11 +34,6 @@ class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     private var audioPlayerNode: AVAudioPlayerNode?
     
     
-    
-    
-    func onAudioDataReceived(_ d:Data) {
-        print("Handle Audio data")
-    }
     func onImageDataReceived(_ d:Data) {
         print("Handle Image data")
         if let image = UIImage(data: imageBuffer) {
@@ -65,11 +60,11 @@ class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         print("Discovered \(peripheral.name ?? "Unknown Device")")
         
-        if peripheral.name == "OpenGlass" {
+        if peripheral.name == "OpenSurveyor" {
             self.peripheral = peripheral
             centralManager.stopScan()
             centralManager.connect(peripheral, options: nil)
-            print("Connecting to OpenGlass")
+            print("Connecting to OpenSurveyor")
         }
     }
     
@@ -94,7 +89,7 @@ class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         for characteristic in characteristics {
             print("Discovered characteristic: \(characteristic.uuid)")
             
-            if characteristic.uuid == audioDataUUID || characteristic.uuid == photoDataUUID {
+            if characteristic.uuid == fileDataUUID {
                 peripheral.setNotifyValue(true, for: characteristic)
             }
         }
@@ -102,48 +97,85 @@ class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         guard let data = characteristic.value else { return }
-        if characteristic.uuid == audioDataUUID {
-            handleAudioData(data)
-        } else if characteristic.uuid == photoDataUUID {
-            handlePhotoData(data)
+        if characteristic.uuid == fileDataUUID {
+            handleFileData(data)
         }
     }
+
+//    private func handlePhotoData(_ data: Data) {
+//        if data.count >= 2 {
+//            let frameCount = data.withUnsafeBytes { $0.load(as: UInt16.self) }
+//            print(frameCount)
+//            if frameCount == 0xFFFF {
+//                // End of image
+//                onImageDataReceived(imageBuffer)
+//                imageBuffer = Data()
+//                currentImageFrameCount = 0
+//            } else if frameCount == currentImageFrameCount {
+//                imageBuffer.append(data.dropFirst(2))
+//                currentImageFrameCount += 1
+//            } else {
+//                print("Received out-of-order image frame")
+//                // Handle error or reset image buffer
+//            }
+//        }
+//    }
     
-    private func handleAudioData(_ data: Data) {
-        // Process audio data as needed
-        // For simplicity, we're just passing the raw data to the callback
-        onAudioDataReceived(data)
-    }
-    
-    private func handlePhotoData(_ data: Data) {
+    private func handleFileData(_ data: Data) {
         if data.count >= 2 {
-            let frameCount = data.withUnsafeBytes { $0.load(as: UInt16.self) }
-            
-            if frameCount == 0xFFFF {
-                // End of image
-                onImageDataReceived(imageBuffer)
-                imageBuffer = Data()
-                currentImageFrameCount = 0
-            } else if frameCount == currentImageFrameCount {
-                imageBuffer.append(data.dropFirst(2))
-                currentImageFrameCount += 1
+            let packetIndex = data.withUnsafeBytes { $0.load(as: UInt16.self) }
+            print(packetIndex, " ", currentFilePacketIndex)
+            if packetIndex == 0 {
+                // First packet, initialize file data and packet count
+                let numPackets = data.withUnsafeBytes { $0.load(fromByteOffset: 2, as: UInt16.self) }
+                let timestamp = data.withUnsafeBytes { $0.load(fromByteOffset: 4, as: UInt32.self) }
+                fileData = Data()
+                totalFilePackets = numPackets
+                currentFilePacketIndex = 1
+                
+                // Extract filename from packet data
+                let filenameLength = Int(data[8])
+                let filenameBytes = [UInt8](data.dropFirst(9).prefix(filenameLength))
+                let filename = String(bytes: filenameBytes, encoding: .utf8)
+                print("Receiving file: \(filename ?? "Unknown")")
+            } else if packetIndex == currentFilePacketIndex {
+                // Append packet data to file data
+                let packetData = data.dropFirst(10)
+                fileData.append(packetData)
+                currentFilePacketIndex += 1
+                
+                if packetIndex == totalFilePackets {
+                    // Last packet received, handle complete file data
+                    handleCompleteFileData(fileData)
+                }
             } else {
-                print("Received out-of-order image frame")
-                // Handle error or reset image buffer
+                print("Received out-of-order file packet")
+                // Handle error or reset file data
             }
         }
     }
     
-    func takePhoto() {
-        guard let peripheral = peripheral,
-              let service = peripheral.services?.first(where: { $0.uuid == serviceUUID }),
-              let characteristic = service.characteristics?.first(where: { $0.uuid == photoControlUUID }) else {
-            print("Photo control characteristic not found")
-            return
-        }
+    private func handleCompleteFileData(_ data: Data) {
+        // Handle the complete file data here
+        // For example, you can save it to disk or process it further
+        print("Received complete file data: \(data.count) bytes")
         
-        let controlValue: UInt8 = 0xFF  // -1 in two's complement
-        let data = Data([controlValue])
-        peripheral.writeValue(data, for: characteristic, type: .withResponse)
+        // Reset properties for next file
+        currentFilePacketIndex = 0
+        totalFilePackets = 0
+        fileData = Data()
     }
+    
+//    func takePhoto() {
+//        guard let peripheral = peripheral,
+//              let service = peripheral.services?.first(where: { $0.uuid == serviceUUID }),
+//              let characteristic = service.characteristics?.first(where: { $0.uuid == photoControlUUID }) else {
+//            print("Photo control characteristic not found")
+//            return
+//        }
+//        
+//        let controlValue: UInt8 = 0xFF  // -1 in two's complement
+//        let data = Data([controlValue])
+//        peripheral.writeValue(data, for: characteristic, type: .withResponse)
+//    }
 }
