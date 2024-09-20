@@ -16,7 +16,7 @@ class ImageOperations {
         }
         
         if let cgImage = CGDisplayCreateImage(CGMainDisplayID()) {
-            let newSize = CGSize(width: 320, height: 180)
+            let newSize = CGSize(width: 1280, height: 720)
             
             let colorSpace = CGColorSpaceCreateDeviceGray()
             guard let context = CGContext(data: nil,

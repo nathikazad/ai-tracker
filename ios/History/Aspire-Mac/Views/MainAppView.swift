@@ -202,6 +202,9 @@ struct SignedInView: View {
                         .padding()
                 }
             }
+            // SpeechViewer()
+            //     .padding()
+
             
             if let errorMessage = appState.errorMessage {
                 Text(errorMessage)
