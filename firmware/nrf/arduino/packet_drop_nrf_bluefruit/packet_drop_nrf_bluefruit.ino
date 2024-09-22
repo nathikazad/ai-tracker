@@ -2,7 +2,7 @@
 
 #define FAST
 #define CONN_PARAM 6
-#define DATA_NUM 10
+#define DATA_NUM 240
 
 BLEService uploadService("19B10000-E8F2-537E-4F6C-D104768A1214");
 BLECharacteristic dataCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1214", BLERead | BLENotify, DATA_NUM);
@@ -13,7 +13,7 @@ const int packetCount = 100;
 const unsigned long sendInterval = 20000; // 10 seconds in milliseconds
 unsigned long lastSendTime = 0;
 uint32_t packetNumber = 0;
-uint32_t packetDelay = 20; // Default delay between packets (in milliseconds)
+uint32_t packetDelay = 10; // Default delay between packets (in milliseconds)
 bool connectedFlag = false;
 
 void setup() {
@@ -23,9 +23,12 @@ void setup() {
   Serial.println("Bluefruit52 Random Data Sender");
   Serial.println("-------------------------------\n");
 
+  Bluefruit.configPrphBandwidth(BANDWIDTH_MAX);
+  Bluefruit.configUuid128Count(15);
   Bluefruit.begin();
   Bluefruit.setTxPower(0);
   Bluefruit.setName("Random Data Sender");
+  Bluefruit.setConnLedInterval(50);
   Bluefruit.Periph.setConnectCallback(connect_callback);
   Bluefruit.Periph.setDisconnectCallback(disconnect_callback);
 
@@ -39,20 +42,11 @@ void setupServices() {
   uploadService.begin();
 
   dataCharacteristic.setProperties(CHR_PROPS_NOTIFY);
-  dataCharacteristic.setPermission(SECMODE_OPEN, SECMODE_NO_ACCESS);
+  // dataCharacteristic.setPermission(SECMODE_OPEN, SECMODE_NO_ACCESS);
   dataCharacteristic.setFixedLen(DATA_NUM);
   dataCharacteristic.begin();
 
-  delayCharacteristic.setProperties(CHR_PROPS_READ | CHR_PROPS_WRITE);
-  delayCharacteristic.setPermission(SECMODE_OPEN, SECMODE_OPEN);
-  delayCharacteristic.setFixedLen(sizeof(uint32_t));
-  delayCharacteristic.begin();
-  delayCharacteristic.write32(packetDelay);
 
-  burstTimeCharacteristic.setProperties(CHR_PROPS_READ | CHR_PROPS_NOTIFY);
-  burstTimeCharacteristic.setPermission(SECMODE_OPEN, SECMODE_NO_ACCESS);
-  burstTimeCharacteristic.setFixedLen(sizeof(uint32_t));
-  burstTimeCharacteristic.begin();
 }
 
 void startAdv() {
@@ -62,9 +56,9 @@ void startAdv() {
   Bluefruit.ScanResponse.addName();
   
   Bluefruit.Advertising.restartOnDisconnect(true);
-  Bluefruit.Advertising.setInterval(32, 244);
-  Bluefruit.Advertising.setFastTimeout(30);
-  Bluefruit.Advertising.start(0);
+  Bluefruit.Advertising.setIntervalMS(20, 153);     // fast mode 20mS, slow mode 153mS
+  Bluefruit.Advertising.setFastTimeout(30);         // fast mode 30 sec
+  Bluefruit.Advertising.start(0);    
 }
 
 void loop() {
@@ -114,7 +108,7 @@ void connect_callback(uint16_t conn_handle) {
   BLEConnection* connection = Bluefruit.Connection(conn_handle);
 
   connection->requestPHY();
-  delay(100);
+  delay(1000);
   connection->requestDataLengthUpdate();
   connection->requestMtuExchange(DATA_NUM + 3);
   connection->requestConnectionParameter(CONN_PARAM);

@@ -47,8 +47,8 @@ async def run_ble_client():
         print(f"Connected to {device.name}")
         
         # Set delay time to 20ms
-        await client.write_gatt_char(DELAY_CHARACTERISTIC_UUID, struct.pack('<I', 15))
-        print("Set delay time to 20ms")
+        # await client.write_gatt_char(DELAY_CHARACTERISTIC_UUID, struct.pack('<I', 15))
+        # print("Set delay time to 20ms")
         
         await client.start_notify(DATA_CHARACTERISTIC_UUID, notification_handler)
         print("Listening for packets...")
