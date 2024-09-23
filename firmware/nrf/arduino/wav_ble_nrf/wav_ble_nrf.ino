@@ -54,7 +54,7 @@ void setup() {
   BLE.setConnectionInterval(0x0006, 0x0010); // Set connection interval (7.5ms - 20ms)
   // BLE.setTxPower(4); // Set to maximum power (4 dBm)
 
-  BLE.setLocalName("Random Data Sender");
+  BLE.setLocalName("Audio Sender");
   BLE.setAdvertisedService(dataService);
 
   dataService.addCharacteristic(dataCharacteristic);

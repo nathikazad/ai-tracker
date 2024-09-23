@@ -46,7 +46,7 @@ void setupBle() {
   Bluefruit.configUuid128Count(15);
   Bluefruit.begin();
   Bluefruit.setTxPower(0);
-  Bluefruit.setName("Random Data Sender");
+  Bluefruit.setName("Audio Sender");
   Bluefruit.setConnLedInterval(50);
   Bluefruit.Periph.setConnectCallback(connect_callback);
   Bluefruit.Periph.setDisconnectCallback(disconnect_callback);

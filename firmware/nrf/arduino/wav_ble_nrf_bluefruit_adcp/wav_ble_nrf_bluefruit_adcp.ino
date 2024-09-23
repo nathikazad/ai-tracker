@@ -6,52 +6,59 @@
 #define CONN_PARAM 6
 #define DATA_NUM 240
 
+#define RECORD_TIME 5 // seconds
+#define INPUT_SAMPLE_RATE 16000
+#define OUTPUT_SAMPLE_RATE 4000
+#define SAMPLE_BITS 16
+#define VOLUME_GAIN 2
+#define CHUNK_SIZE 236
+
+#define DOWNSAMPLE_FACTOR (INPUT_SAMPLE_RATE / OUTPUT_SAMPLE_RATE)
+
 BLEService uploadService("19B10000-E8F2-537E-4F6C-D104768A1214");
 BLECharacteristic dataCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1214", BLERead | BLENotify, DATA_NUM);
 BLECharacteristic delayCharacteristic("19B10002-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite, sizeof(uint32_t));
 BLECharacteristic burstTimeCharacteristic("19B10003-E8F2-537E-4F6C-D104768A1214", BLERead | BLENotify, sizeof(uint32_t));
 
-const unsigned long sendInterval = 10000; // 10 seconds in milliseconds
-unsigned long lastSendTime = 0;
 bool connectedFlag = false;
 
-#define RECORD_TIME 5 // seconds
-#define SAMPLE_RATE 4000
-#define SAMPLE_BITS 16
-#define VOLUME_GAIN 2
-#define CHUNK_SIZE 236
+// Circular buffer for continuous recording (stores downsampled audio)
+#define BUFFER_SIZE (OUTPUT_SAMPLE_RATE * SAMPLE_BITS / 8 * RECORD_TIME * 2)
+int16_t audioBuffer[BUFFER_SIZE / 2];
+volatile uint32_t writeIndex = 0;
+volatile uint32_t readIndex = 0;
 
-// Buffer to read samples into, each sample is 16-bits
-short sampleBuffer[512];
-// Number of audio samples read
-volatile int samplesRead;
-
-uint8_t *audioBuffer = NULL;
-uint32_t audioBufferSize = 0;
+// Buffer for compressed data
 uint8_t *compressedBuffer = NULL;
 uint32_t compressedBufferSize = 0;
-// int16_t *decodedBuffer = NULL;
+
 void *adpcm_context = NULL;
 
+// Timer for periodic compression and sending
+unsigned long lastCompressAndSendTime = 0;
+const unsigned long compressAndSendInterval = RECORD_TIME * 1000; // 5 seconds in milliseconds
 
 void onPDMdata() {
   // Query the number of available bytes
   int bytesAvailable = PDM.available();
 
-  // Read into the sample buffer
-  PDM.read(sampleBuffer, bytesAvailable);
+  // Read into a temporary buffer
+  int16_t sampleBuffer[512];
+  int samplesRead = PDM.read(sampleBuffer, bytesAvailable) / 2;
 
-  // 16-bit, 2 bytes per sample
-  samplesRead = bytesAvailable / 2;
+  // Downsample and copy to circular buffer
+  for (int i = 0; i < samplesRead; i += DOWNSAMPLE_FACTOR) {
+    audioBuffer[writeIndex] = sampleBuffer[i];
+    writeIndex = (writeIndex + 1) % (BUFFER_SIZE / 2);
+  }
 }
-
 
 void setupBle() {
   Bluefruit.configPrphBandwidth(BANDWIDTH_MAX);
   Bluefruit.configUuid128Count(15);
   Bluefruit.begin();
   Bluefruit.setTxPower(0);
-  Bluefruit.setName("Random Data Sender");
+  Bluefruit.setName("Audio Sender");
   Bluefruit.setConnLedInterval(50);
   Bluefruit.Periph.setConnectCallback(connect_callback);
   Bluefruit.Periph.setDisconnectCallback(disconnect_callback);
@@ -70,9 +77,7 @@ void setupBle() {
   Bluefruit.Advertising.setIntervalMS(20, 153);     // fast mode 20mS, slow mode 153mS
   Bluefruit.Advertising.setFastTimeout(30);         // fast mode 30 sec
   Bluefruit.Advertising.start(0);    
-
 }
-
 
 void setup() {
   Serial.begin(9600);
@@ -80,145 +85,90 @@ void setup() {
 
   // Initialize PDM
   PDM.onReceive(onPDMdata);
-  if (!PDM.begin(1, 16000)) {
+  if (!PDM.begin(1, INPUT_SAMPLE_RATE)) {
     Serial.println("Failed to start PDM!");
     while (1);
   }
 
-  // Allocate memory for buffers
-  uint32_t recordSize = (SAMPLE_RATE * SAMPLE_BITS / 8) * RECORD_TIME;
-  audioBuffer = (uint8_t *)malloc(recordSize);
-  compressedBufferSize = recordSize / 2; // ADPCM typically compresses 2:1
+  // Allocate memory for compressed buffer
+  compressedBufferSize = BUFFER_SIZE / 2; // ADPCM typically compresses 2:1
   compressedBuffer = (uint8_t *)malloc(compressedBufferSize);
-  // decodedBuffer = (int16_t *)malloc(recordSize);
 
-  if (audioBuffer == NULL || compressedBuffer == NULL) {
-    Serial.println("Failed to allocate memory for buffers!");
-    while (1); // Halt if memory allocation fails
+  if (compressedBuffer == NULL) {
+    Serial.println("Failed to allocate memory for compressed buffer!");
+    while (1);
   }
 
   // Create ADPCM context
-  int32_t initial_deltas[2] = {0, 0}; // For mono audio, we only need one channel
+  int32_t initial_deltas[2] = {0, 0};
   adpcm_context = adpcm_create_context(1, 0, 0, initial_deltas);
   if (adpcm_context == NULL) {
     Serial.println("Failed to create ADPCM context!");
-    while (1); // Halt if context creation fails
+    while (1);
   }
 
-  //   // Reset ADPCM state
-  // adpcm_free_context(adpcm_context);
-  // int32_t initial_deltas[2] = {0, 0};
-  // adpcm_context = adpcm_create_context(1, 0, 0, initial_deltas);
-
   setupBle();
-  Serial.println("BLE Random Data Sender Ready");
+  Serial.println("BLE Continuous Audio Sender Ready");
 }
-
 
 void loop() {
   if (Bluefruit.connected() && connectedFlag) {
     unsigned long currentTime = millis();
-    if (currentTime - lastSendTime >= sendInterval) {
-      recordAndSendAudio();
-      lastSendTime = currentTime;
+    if (currentTime - lastCompressAndSendTime >= compressAndSendInterval) {
+      compressAndSendAudio();
+      lastCompressAndSendTime = currentTime;
     }
   }
 }
 
-void recordAndSendAudio() {
-  uint32_t recordSize = (SAMPLE_RATE * SAMPLE_BITS / 8) * RECORD_TIME;
-  
-  // Clear the buffers
-  memset(audioBuffer, 0, recordSize);
-  memset(compressedBuffer, 0, compressedBufferSize);
-  
-  // Record audio
-  Serial.print("Recording audio of size: ");
-  Serial.println(recordSize);
-  uint32_t recordedSize = 0;
-  unsigned long startTime = millis();
-  while (recordedSize < recordSize) {
-    if (samplesRead > 0) {
-      for (int i = 0; i < samplesRead; i += 4) {
-          // Copy every other 16-bit sample
-          *((int16_t*)(audioBuffer + recordedSize)) = sampleBuffer[i];
-          recordedSize += 2;
-      }
-      samplesRead = 0;
-    }
-    if (millis() - startTime > RECORD_TIME * 1000) break;
-  }
-  audioBufferSize = recordedSize;
-  
-  if (audioBufferSize == 0) {
-    Serial.println("Failed to record audio!");
-    return;
-  }
-  
-  Serial.print("Recorded ");
-  Serial.print(audioBufferSize);
-  Serial.println(" bytes");
-  unsigned long endTime = millis();
-  unsigned long duration = endTime - startTime;
-  Serial.print("Record time: ");
-  Serial.print(duration); 
-  Serial.println(" ms");
-  
-  // Increase volume
-  for (uint32_t i = 0; i < audioBufferSize; i += SAMPLE_BITS/8) {
-    (*(int16_t *)(audioBuffer+i)) <<= VOLUME_GAIN;
+void compressAndSendAudio() {
+  uint32_t audioToProcess = (writeIndex - readIndex + (BUFFER_SIZE / 2)) % (BUFFER_SIZE / 2);
+  if (audioToProcess < OUTPUT_SAMPLE_RATE * RECORD_TIME) {
+    return; // Not enough data to process
   }
 
-  startTime = millis();
-
-  // Encode audio using ADPCM
+  // Compress audio
   size_t outbufsize = compressedBufferSize;
-  int result = adpcm_encode_block(adpcm_context, compressedBuffer, &outbufsize, (const int16_t*)audioBuffer, audioBufferSize / 2);
+  int result = adpcm_encode_block(adpcm_context, compressedBuffer, &outbufsize, 
+                                  (const int16_t*)(audioBuffer + readIndex), 
+                                  OUTPUT_SAMPLE_RATE * RECORD_TIME);
   if (result < 0) {
     Serial.println("ADPCM encoding failed!");
     return;
   }
 
-  Serial.print("Compressed size: ");
-  Serial.println(outbufsize);
+  // Update read index
+  readIndex = (readIndex + OUTPUT_SAMPLE_RATE * RECORD_TIME) % (BUFFER_SIZE / 2);
 
-  endTime = millis();
-  duration = endTime - startTime;
-  Serial.print("Encoding time. Total time: ");
-  Serial.print(duration); 
-  Serial.println(" ms");
+  // Send compressed audio over BLE
+  sendCompressedAudio(compressedBuffer, outbufsize);
+}
 
-  // Start timing the BLE transmission
-  startTime = millis();
-
+void sendCompressedAudio(uint8_t* buffer, uint32_t size) {
   // Send start packet
-  uint32_t numPackets = (outbufsize + CHUNK_SIZE - 1) / CHUNK_SIZE;
+  uint32_t numPackets = (size + CHUNK_SIZE - 1) / CHUNK_SIZE;
   uint8_t startPacket[8] = {'S', 'T', 'A', 'R', 'T', 0, 0, 0};
   startPacket[5] = (numPackets >> 16) & 0xFF;
   startPacket[6] = (numPackets >> 8) & 0xFF;
   startPacket[7] = numPackets & 0xFF;
   dataCharacteristic.notify(startPacket, 8);
-  delay(20);  // Give the client some time to process
-  
+  delay(20);
+
   // Send compressed audio data in chunks
-  for (uint32_t i = 0; i < outbufsize; i += CHUNK_SIZE) {
-    uint32_t chunkSize = (CHUNK_SIZE < outbufsize - i) ? CHUNK_SIZE : (outbufsize - i);
+  for (uint32_t i = 0; i < size; i += CHUNK_SIZE) {
+    uint32_t chunkSize = (CHUNK_SIZE < size - i) ? CHUNK_SIZE : (size - i);
     uint8_t header[4] = {0xFF, 0xFF, (i >> 8) & 0xFF, i & 0xFF};
     uint8_t chunk[CHUNK_SIZE + 4];
     memcpy(chunk, header, 4);
-    memcpy(chunk + 4, compressedBuffer + i, chunkSize);
+    memcpy(chunk + 4, buffer + i, chunkSize);
     dataCharacteristic.notify(chunk, chunkSize + 4);
   }
-  
+
   // Send end packet
   uint8_t endPacket[4] = {'E', 'N', 'D', 0};
   dataCharacteristic.notify(endPacket, 4);
-  
-  endTime = millis();
-  duration = endTime - startTime;
-  Serial.print("Compressed audio data sent successfully. Total time: ");
-  Serial.print(duration); 
-  Serial.println(" ms");
+
+  Serial.println("Compressed audio data sent successfully.");
 }
 
 void connect_callback(uint16_t conn_handle) {

@@ -6,7 +6,7 @@ import wave
 import numpy as np
 
 # Replace with your Arduino's advertised name
-DEVICE_NAME = "Random Data Sender"
+DEVICE_NAME = "Audio Sender"
 DATA_CHARACTERISTIC_UUID = "19B10001-E8F2-537E-4F6C-D104768A1214"
 
 # Global variables
@@ -151,26 +151,39 @@ def save_wav_file():
 
 def notification_handler(sender, data):
     global audio_data, expected_packets, received_packets, start_time
-    if data[:5] == b'START':
+    
+    if data.startswith(b'START'):
         audio_data.clear()
         start_time = time.time()
-        expected_packets = struct.unpack('>I', b'\x00' + data[5:])[0]
-        received_packets = 0
-        print(f"Starting to receive {expected_packets} packets")
+        
+        # Try to extract the expected packet count
+        try:
+            if len(data) >= 8:
+                expected_packets = data[7]#struct.unpack('>I', data[4:8])[0]
+                # print(data[7])
+            else:
+                expected_packets = 0  # If packet count is not provided, set to 0
+            received_packets = 0
+            print(f"Starting to receive {expected_packets} packets")
+        except struct.error:
+            print(f"Warning: Could not extract packet count from START packet: {data}")
+            expected_packets = 0
+            received_packets = 0
+    
     elif data[:2] == b'\xFF\xFF':
         chunk_index = struct.unpack('>H', data[2:4])[0]
         audio_data.extend(data[4:])
         received_packets += 1
-        print(f"Received packet {chunk_index}/{received_packets}/{expected_packets} {len(data[4:])} {len(audio_data)} bytes", end='\r')
-    elif data[:3] == b'END':
+        print(f"Received packet {received_packets}/{expected_packets} {len(audio_data)} bytes", end='\r')
+    
+    elif data.startswith(b'END'):
         end_time = time.time()
         duration = (end_time - start_time) * 1000  # Convert to milliseconds
-        print(f"Audio data received successfully. Total time: {duration:.2f} ms, received {received_packets} packets")
-        # print("\nReceived all packets")
+        print(f"\nAudio data received successfully. Total time: {duration:.2f} ms, received {received_packets} packets")
         save_wav_file()
+    
     else:
         print(f"Received unexpected data: {data}")
-    
 
 
 async def run_ble_client():
