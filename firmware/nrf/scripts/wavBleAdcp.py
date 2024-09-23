@@ -4,6 +4,8 @@ import time
 import struct
 import wave
 import numpy as np
+from openai import OpenAI
+import os
 
 # Replace with your Arduino's advertised name
 DEVICE_NAME = "Audio Sender"
@@ -23,7 +25,7 @@ received_packets = 0
 
 file_number = 0
 
-import numpy as np
+
 
 # Step table
 step_table = [
@@ -110,6 +112,32 @@ def adpcm_decode_block(inbuf, channels):
 
     return np.array(outbuf, dtype=np.int16)
 
+def transcribe_wav(file_path):
+    # Set the API key
+    client = OpenAI(
+        api_key=os.environ.get("OPENAI_API_KEY")
+    )
+
+    # Check if file exists
+    if not os.path.isfile(file_path):
+        return "Error: File not found."
+
+    try:
+        # Open the audio file
+        with open(file_path, "rb") as audio_file:
+            # Transcribe the audio file
+            transcript = client.audio.transcriptions.create(
+                model="whisper-1", 
+                file=audio_file
+                )
+            print(transcript)
+
+        # Return the transcribed text
+        return transcript.text
+    except Exception as e:
+        return f"An error occurred during transcription: {str(e)}"
+
+
 def generate_wav_header(sample_rate, bits_per_sample, channels, data_size):
     print(f"Generating WAV header for {data_size} bytes")
     header = bytearray(44)
@@ -139,6 +167,7 @@ def save_wav_file():
     
     # Convert numpy array to bytes
     decoded_bytes = decoded_data.tobytes()
+    
 
     wav_header = generate_wav_header(sample_rate, bits_per_sample, channels, len(decoded_bytes))
     with wave.open(f"recorded_audio_{file_number}.wav", "wb") as wav_file:
@@ -147,6 +176,9 @@ def save_wav_file():
         wav_file.setframerate(sample_rate)
         wav_file.writeframes(wav_header + decoded_bytes)
     print(f"Decoded audio saved as 'recorded_audio_{file_number}.wav'")
+
+    text = transcribe_wav(f"recorded_audio_{file_number}.wav")
+    print(text)
     file_number += 1
 
 def notification_handler(sender, data):
