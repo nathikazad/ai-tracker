@@ -3,16 +3,17 @@ from bleak import BleakClient, BleakScanner
 import struct
 import wave
 import time
+import os
 
 # BLE device name (should match the name set in the ESP32 code)
 DEVICE_NAME = "XIAO_ESP32S3_Audio"
-
 # UUID of the characteristic to notify (should match the one in the ESP32 code)
 NOTIFY_CHARACTERISTIC_UUID = "00002a59-0000-1000-8000-00805f9b34fb"
 
 audio_data = bytearray()
 expected_packets = 0
 received_packets = 0
+file_counter = 0
 
 def generate_wav_header(sample_rate, bits_per_sample, channels, data_size):
     header = bytearray(44)
@@ -32,16 +33,21 @@ def generate_wav_header(sample_rate, bits_per_sample, channels, data_size):
     return header
 
 def save_wav_file():
+    global file_counter
     sample_rate = 4000
     bits_per_sample = 16
     channels = 1
     wav_header = generate_wav_header(sample_rate, bits_per_sample, channels, len(audio_data))
-    with wave.open("recorded_audio.wav", "wb") as wav_file:
+    
+    filename = f"recorded_audio_{file_counter}.wav"
+    with wave.open(filename, "wb") as wav_file:
         wav_file.setnchannels(channels)
         wav_file.setsampwidth(bits_per_sample // 8)
         wav_file.setframerate(sample_rate)
         wav_file.writeframes(wav_header + audio_data)
-    print("Audio saved as 'recorded_audio.wav'")
+    
+    print(f"Audio saved as '{filename}'")
+    file_counter += 1
 
 async def run_ble_client():
     global audio_data, expected_packets, received_packets, start_time
@@ -49,6 +55,7 @@ async def run_ble_client():
 
     def notification_handler(sender, data):
         global audio_data, expected_packets, received_packets, start_time
+
         if data[:5] == b'START':
             audio_data.clear()
             start_time = time.time()
@@ -63,8 +70,7 @@ async def run_ble_client():
         elif data[:3] == b'END':
             end_time = time.time()
             duration = (end_time - start_time) * 1000  # Convert to milliseconds
-            print(f"Audio data received successfully. Total time: {duration:.2f} ms")
-            # print("\nReceived all packets")
+            print(f"\nAudio data received successfully. Total time: {duration:.2f} ms")
             save_wav_file()
         else:
             print(f"Received unexpected data: {data}")
@@ -77,14 +83,10 @@ async def run_ble_client():
     async with BleakClient(device) as client:
         print(f"Connected to {device.name}")
         await client.start_notify(NOTIFY_CHARACTERISTIC_UUID, notification_handler)
-
         print("Waiting for audio data...")
+        
         while True:
             await asyncio.sleep(1)
-            if received_packets == expected_packets and expected_packets > 0:
-                print("\nReceived all expected packets. Saving WAV file...")
-                save_wav_file()
-                break
 
 if __name__ == "__main__":
     asyncio.run(run_ble_client())
