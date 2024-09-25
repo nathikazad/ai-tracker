@@ -61,6 +61,9 @@
 		FE2074E02C5B3FD200C58226 /* Shortcut ExtensionExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FE2074D32C5B3FD100C58226 /* Shortcut ExtensionExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		FE2074EB2C5B426B00C58226 /* WrappingHStack in Frameworks */ = {isa = PBXBuildFile; productRef = FE2074EA2C5B426B00C58226 /* WrappingHStack */; };
 		FE20CA262BC5E4CD00863604 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE20CA252BC5E4CD00863604 /* SettingsView.swift */; };
+		FE2596262CA392AA002B8575 /* BleOps.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE2596252CA392AA002B8575 /* BleOps.swift */; };
+		FE2596282CA39395002B8575 /* SpeechOps.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE2596272CA39395002B8575 /* SpeechOps.swift */; };
+		FE25962A2CA3946E002B8575 /* ImageOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE2596292CA3946E002B8575 /* ImageOperations.swift */; };
 		FE3E9F662BC8ACAD008BD120 /* NavigationTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3E9F652BC8ACAD008BD120 /* NavigationTitle.swift */; };
 		FE4594272BD9E713002B163E /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4594262BD9E713002B163E /* HealthKitManager.swift */; };
 		FE477D8F2BD5E3C8001FC341 /* EventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE477D8E2BD5E3C8001FC341 /* EventsView.swift */; };
@@ -127,7 +130,6 @@
 		FE71C6872C8FFC1100953D63 /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = FE71C6862C8FFC1100953D63 /* Storage */; };
 		FE71C68A2C909FFE00953D63 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = FE71C6892C909FFE00953D63 /* ZIPFoundation */; };
 		FE71C68C2C915DD700953D63 /* BLE.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C68B2C915DD700953D63 /* BLE.swift */; };
-		FE71C6922C94E31500953D63 /* ImageOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C6912C94E31500953D63 /* ImageOperations.swift */; };
 		FE71C6962C94E3BD00953D63 /* FileOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C6952C94E3BD00953D63 /* FileOperations.swift */; };
 		FE71C6982C94F69C00953D63 /* SpeechViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C6972C94F69C00953D63 /* SpeechViewer.swift */; };
 		FE759E122C5DE432001A0FF4 /* DataTypeV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE759E112C5DE432001A0FF4 /* DataTypeV.swift */; };
@@ -304,6 +306,9 @@
 		FE2074DB2C5B3FD200C58226 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FE2074DD2C5B3FD200C58226 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FE20CA252BC5E4CD00863604 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		FE2596252CA392AA002B8575 /* BleOps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleOps.swift; sourceTree = "<group>"; };
+		FE2596272CA39395002B8575 /* SpeechOps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechOps.swift; sourceTree = "<group>"; };
+		FE2596292CA3946E002B8575 /* ImageOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageOperations.swift; sourceTree = "<group>"; };
 		FE3E9F652BC8ACAD008BD120 /* NavigationTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationTitle.swift; sourceTree = "<group>"; };
 		FE4594262BD9E713002B163E /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
 		FE477D8E2BD5E3C8001FC341 /* EventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsView.swift; sourceTree = "<group>"; };
@@ -364,7 +369,6 @@
 		FE71C64F2C8FB21400953D63 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FE71C65D2C8FF61600953D63 /* SupabaseOps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SupabaseOps.swift; path = "Aspire-Mac/Views/SupabaseOps.swift"; sourceTree = SOURCE_ROOT; };
 		FE71C68B2C915DD700953D63 /* BLE.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLE.swift; sourceTree = "<group>"; };
-		FE71C6912C94E31500953D63 /* ImageOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ImageOperations.swift; path = "Aspire-Mac/Utilities2/ImageOperations.swift"; sourceTree = SOURCE_ROOT; };
 		FE71C6952C94E3BD00953D63 /* FileOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileOperations.swift; sourceTree = "<group>"; };
 		FE71C6972C94F69C00953D63 /* SpeechViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechViewer.swift; sourceTree = "<group>"; };
 		FE759E112C5DE432001A0FF4 /* DataTypeV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTypeV.swift; sourceTree = "<group>"; };
@@ -855,9 +859,11 @@
 		FE71C64E2C8FB21400953D63 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				FE71C6912C94E31500953D63 /* ImageOperations.swift */,
 				FE71C65D2C8FF61600953D63 /* SupabaseOps.swift */,
 				FE71C6952C94E3BD00953D63 /* FileOperations.swift */,
+				FE2596252CA392AA002B8575 /* BleOps.swift */,
+				FE2596272CA39395002B8575 /* SpeechOps.swift */,
+				FE2596292CA3946E002B8575 /* ImageOperations.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -1478,6 +1484,7 @@
 			files = (
 				FE71C6982C94F69C00953D63 /* SpeechViewer.swift in Sources */,
 				FE71C6852C8FFBFC00953D63 /* SupabaseOps.swift in Sources */,
+				FE2596282CA39395002B8575 /* SpeechOps.swift in Sources */,
 				FE71C6572C8FB21400953D63 /* AppDelegate.swift in Sources */,
 				FE71C65A2C8FB4A800953D63 /* Hasura.swift in Sources */,
 				FE71C6522C8FB21400953D63 /* MainAppView.swift in Sources */,
@@ -1486,8 +1493,9 @@
 				FE71C6532C8FB21400953D63 /* StatusBarView.swift in Sources */,
 				FE71C6962C94E3BD00953D63 /* FileOperations.swift in Sources */,
 				FE71C6142C8FAF7500953D63 /* Aspire_MacApp.swift in Sources */,
+				FE25962A2CA3946E002B8575 /* ImageOperations.swift in Sources */,
 				FE71C6512C8FB21400953D63 /* ImageViewer.swift in Sources */,
-				FE71C6922C94E31500953D63 /* ImageOperations.swift in Sources */,
+				FE2596262CA392AA002B8575 /* BleOps.swift in Sources */,
 				FE71C6502C8FB21400953D63 /* AppState.swift in Sources */,
 				FE71C6582C8FB44E00953D63 /* Authentication.swift in Sources */,
 				FE71C65B2C8FB4B400953D63 /* Constants.swift in Sources */,
@@ -1852,6 +1860,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "For reading sensor data";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "To transcribe speech to text";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1883,6 +1892,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "For reading sensor data";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "To transcribe speech to text";
 				LD_RUNPATH_SEARCH_PATHS = (

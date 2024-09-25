@@ -28,6 +28,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBar: StatusBarController?
     var popover = NSPopover()
     var mainWindowController: MainWindowController?
+    var bleAudioTranscriber: BLEAudioTranscriber?
     
     @ObservedObject var appState = AppState()
     
@@ -35,6 +36,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         NSApplication.hideFromDock()
         setupStatusBar()
         setupMainWindowController()
+        startBle()
+    }
+    
+    func startBle() {
+        bleAudioTranscriber = BLEAudioTranscriber()
     }
     
     func setupStatusBar() {
