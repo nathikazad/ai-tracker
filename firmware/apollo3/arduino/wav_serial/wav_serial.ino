@@ -36,7 +36,7 @@ am_hal_pdm_config_t newConfig = {
     .ui32DecimationRate = 48,            // OSR = 1500/16 = 96 = 2*SINCRATE --> SINC_RATE = 48
     .bHighPassEnable = 0,
     .ui32HighPassCutoff = 0xB,
-    .ePDMClkSpeed = AM_HAL_PDM_CLK_1_5MHZ,
+    .ePDMClkSpeed = AM_HAL_PDM_CLK_375KHZ,
     .bInvertI2SBCLK = 0,
     .ePDMClkSource = AM_HAL_PDM_INTERNAL_CLK,
     .bPDMSampleDelay = 0,
