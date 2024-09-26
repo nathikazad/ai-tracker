@@ -6,7 +6,7 @@ import struct
 # Serial port configuration
 SERIAL_PORT = '/dev/cu.usbserial-110'  # Change this to match your serial port
 BAUD_RATE = 500000
-SAMPLE_RATE = 15625  # As mentioned in the Arduino sketch
+SAMPLE_RATE = 3906  # As mentioned in the Arduino sketch
 
 # WAV file configuration
 CHANNELS = 1
