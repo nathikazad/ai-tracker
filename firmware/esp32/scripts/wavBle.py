@@ -4,7 +4,7 @@ import struct
 import wave
 import time
 import os
-
+from openai import OpenAI
 # BLE device name (should match the name set in the ESP32 code)
 DEVICE_NAME = "XIAO_ESP32S3_Audio"
 # UUID of the characteristic to notify (should match the one in the ESP32 code)
@@ -39,7 +39,7 @@ def save_wav_file():
     channels = 1
     wav_header = generate_wav_header(sample_rate, bits_per_sample, channels, len(audio_data))
     
-    filename = f"recorded_audio_{file_counter}.wav"
+    filename = f"audio_recordings/recorded_audio_{file_counter}.wav"
     with wave.open(filename, "wb") as wav_file:
         wav_file.setnchannels(channels)
         wav_file.setsampwidth(bits_per_sample // 8)
@@ -48,6 +48,37 @@ def save_wav_file():
     
     print(f"Audio saved as '{filename}'")
     file_counter += 1
+    return filename
+
+# def transcribe_audio(filename):
+#     global model
+#     result = model.transcribe(filename, fp16=False)
+#     return result["text"]
+
+def transcribe_audio(file_path):
+    # Set the API key
+    client = OpenAI(
+        api_key=os.environ.get("OPENAI_API_KEY")
+    )
+
+    # Check if file exists
+    if not os.path.isfile(file_path):
+        return "Error: File not found."
+
+    try:
+        # Open the audio file
+        with open(file_path, "rb") as audio_file:
+            # Transcribe the audio file
+            transcript = client.audio.transcriptions.create(
+                model="whisper-1", 
+                file=audio_file
+                )
+            print(transcript)
+
+        # Return the transcribed text
+        return transcript.text
+    except Exception as e:
+        return f"An error occurred during transcription: {str(e)}"
 
 async def run_ble_client():
     global audio_data, expected_packets, received_packets, start_time
@@ -71,7 +102,13 @@ async def run_ble_client():
             end_time = time.time()
             duration = (end_time - start_time) * 1000  # Convert to milliseconds
             print(f"\nAudio data received successfully. Total time: {duration:.2f} ms")
-            save_wav_file()
+            audio_file = save_wav_file()
+            start_time = time.time()
+            transcription = transcribe_audio(audio_file)
+            end_time = time.time()
+            print("Transcription:", transcription)
+            duration = (end_time - start_time) * 1000  # Convert to milliseconds
+            print(f"\nAudio data received successfully. Total time: {duration:.2f} ms")
         else:
             print(f"Received unexpected data: {data}")
 
@@ -81,7 +118,9 @@ async def run_ble_client():
         return
 
     async with BleakClient(device) as client:
+        global model
         print(f"Connected to {device.name}")
+        # model = whisper.load_model("tiny")
         await client.start_notify(NOTIFY_CHARACTERISTIC_UUID, notification_handler)
         print("Waiting for audio data...")
         

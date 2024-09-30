@@ -72,11 +72,10 @@ void loop() {
           Serial.print("Duration: ");
           Serial.print(duration);
           Serial.println(" ms");
-          delay(1000);
           Serial.print("Samples played: ");
           Serial.println(sampleCount);
           Serial.print("Average sample rate: ");
-          Serial.print((float)sampleCount);
+          Serial.print((float)sampleCount/duration);
           Serial.println(" Hz");
         } else {
           // Write the value to the DAC
