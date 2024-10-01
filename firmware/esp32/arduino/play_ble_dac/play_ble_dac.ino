@@ -18,25 +18,24 @@ volatile bool bufferFull = false;
 
 SemaphoreHandle_t bufferMutex;
 unsigned long startTime = 0;
-unsigned long lastPacket = 0;
-bool printedTime = false;
+unsigned long lastPacketIndex = 0;
+bool playingAudio = false;
+bool receivingAudio = false;
 class MyCallbacks: public BLECharacteristicCallbacks {
     void onWrite(BLECharacteristic *pCharacteristic) {
         std::string value = pCharacteristic->getValue();
         if (value.length() == 2) {
           uint16_t sample = (uint8_t)value[0] << 8 | (uint8_t)value[1];
-          // Serial.println(sample);
-          if (sample == 65535) {
+          if (sample == 65535) { // start marker
             Serial.println("Playback started");
+            receivingAudio = true;
             startTime = millis();
-          } else if (sample == 65534) {
-            lastPacket = writeIndex;
-            // unsigned long duration = millis() - startTime;
-            // delay(1000);
-            // Serial.print("Duration: ");
-            // Serial.print(duration);
-            // Serial.println(" ms");
-            // Serial.println(readIndex);
+            writeIndex = 0;
+            readIndex = 0;
+            lastPacketIndex;
+          } else if (sample == 65534) { //end marker
+            lastPacketIndex = writeIndex;
+            receivingAudio = false;
           }
         }
         if (value.length() > 0) {
@@ -74,6 +73,9 @@ class MyCallbacks: public BLECharacteristicCallbacks {
 void playAudioTask(void *parameter) {
     while (1) {
         xSemaphoreTake(bufferMutex, portMAX_DELAY);
+        if(readIndex == 0) {
+          playingAudio = true;
+        }
         if (readIndex != writeIndex || bufferFull) {
             uint16_t sample = audioBuffer[readIndex];
             readIndex = (readIndex + 1) % BUFFER_SIZE;
@@ -160,16 +162,9 @@ void setup() {
 }
 
 void loop() {
-    // This loop can be used for other tasks if needed
-    if(readIndex > (lastPacket - 500)) {
-      unsigned long duration = millis() - startTime;
-      // Serial.println("duration:");
-      Serial.print(duration);
-      Serial.print(", ");
-      Serial.print(lastPacket);
-      Serial.print(", ");
-      Serial.println(readIndex);
-      lastPacket = 0;
+    if(playingAudio && readIndex > (lastPacketIndex - 500)) { // accounting for missed packets
+      playingAudio = false;
+      Serial.println("finished playing");
     }
     delay(1000);
 }
