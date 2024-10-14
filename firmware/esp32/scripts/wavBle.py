@@ -6,9 +6,9 @@ import time
 import os
 from openai import OpenAI
 # BLE device name (should match the name set in the ESP32 code)
-DEVICE_NAME = "XIAO_ESP32S3_Audio"
+DEVICE_NAME = "ESP32_Audio_System"
 # UUID of the characteristic to notify (should match the one in the ESP32 code)
-NOTIFY_CHARACTERISTIC_UUID = "00002a59-0000-1000-8000-00805f9b34fb"
+NOTIFY_CHARACTERISTIC_UUID = "6E400003-B5A3-F393-E0A9-E50E24DCCA9E"
 
 audio_data = bytearray()
 expected_packets = 0

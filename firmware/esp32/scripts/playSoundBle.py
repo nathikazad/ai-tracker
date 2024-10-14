@@ -6,9 +6,9 @@ import struct
 import time
 
 # BLE device name (should match the name set in the ESP32 code)
-DEVICE_NAME = "ESP32_Audio_DAC"
+DEVICE_NAME = "ESP32_Audio_System"
 # UUID of the characteristic to write (should match the one in the ESP32 code)
-WRITE_CHARACTERISTIC_UUID = "6E400002-B5A3-F393-E0A9-E50E24DCCA9E"
+WRITE_CHARACTERISTIC_UUID = "6E400004-B5A3-F393-E0A9-E50E24DCCA9E"
 
 START_MARKER = 0xFFFF
 STOP_MARKER = 0xFFFE
