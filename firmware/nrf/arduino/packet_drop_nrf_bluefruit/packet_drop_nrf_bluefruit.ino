@@ -2,7 +2,7 @@
 
 #define FAST
 #define CONN_PARAM 6
-#define DATA_NUM 240
+#define DATA_NUM 244
 
 BLEService uploadService("19B10000-E8F2-537E-4F6C-D104768A1214");
 BLECharacteristic dataCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1214", BLERead | BLENotify, DATA_NUM);
@@ -10,7 +10,7 @@ BLECharacteristic delayCharacteristic("19B10002-E8F2-537E-4F6C-D104768A1214", BL
 BLECharacteristic burstTimeCharacteristic("19B10003-E8F2-537E-4F6C-D104768A1214", BLERead | BLENotify, sizeof(uint32_t));
 
 const int packetCount = 100;
-const unsigned long sendInterval = 20000; // 10 seconds in milliseconds
+const unsigned long sendInterval = 5000; // 10 seconds in milliseconds
 unsigned long lastSendTime = 0;
 uint32_t packetNumber = 0;
 uint32_t packetDelay = 10; // Default delay between packets (in milliseconds)
@@ -74,18 +74,15 @@ void loop() {
 void sendRandomData() {
   packetNumber = 0;
   unsigned long startTime = millis();
-  
+  uint8_t packet[DATA_NUM];
+  for (int j = 4; j < DATA_NUM; j++) {
+    packet[j] = 0;//random(256);
+  }
   for (int i = 0; i < packetCount; i++) {
-    uint8_t packet[DATA_NUM];
     packet[0] = 0;//(packetNumber >> 24) & 0xFF;
     packet[1] = 0;(packetNumber >> 16) & 0xFF;
     packet[2] = 0;(packetNumber >> 8) & 0xFF;
     packet[3] = packetNumber;//packetNumber & 0xFF;
-    
-    for (int j = 4; j < DATA_NUM; j++) {
-      packet[j] = 0;//random(256);
-    }
-    
     dataCharacteristic.notify(packet, DATA_NUM);
     // delay(packetDelay);
     
@@ -122,7 +119,8 @@ void connect_callback(uint16_t conn_handle) {
   Serial.print("PHY: "); Serial.println(connection->getPHY());
   Serial.print("Data Length: "); Serial.println(connection->getDataLength());
   Serial.print("MTU: "); Serial.println(connection->getMtu());
-  Serial.print("Connection Interval: "); Serial.println(connection->getConnectionInterval());
+  Serial.print("Connection Interval: "); 
+  Serial.println(connection->getConnectionInterval());
 
   connectedFlag = true;
 }

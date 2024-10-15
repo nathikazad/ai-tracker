@@ -10,22 +10,28 @@ import adafruit_sdcard
 import audiomp3
 import audiobusio
 
-board_id = "pi"
+board_id = "micromod"
 
 if board_id == "micromod":
     DATA = board.GP6
-    LRCLK = board.GP26
-    BCLK = board.GP27
+    BCLK = board.GP26
+    LRCLK = board.GP27
     audio = audiobusio.I2SOut(BCLK, LRCLK, DATA)
     SD_CS = board.GP21
-    spi = busio.SPI(board.GP22, board.GP23, board.GP20)
+    CLK = board.GP22
+    MOSI = board.GP23
+    MISO = board.GP20
+    spi = busio.SPI(CLK, MOSI, MISO)
 else:
     DATA = board.GP28
-    LRCLK = board.GP26
-    BCLK = board.GP27
+    BCLK = board.GP26
+    LRCLK = board.GP27
     audio = audiobusio.I2SOut(BCLK, LRCLK, DATA)
     SD_CS = board.GP13
-    spi = busio.SPI(board.GP10, board.GP11, board.GP12)
+    CLK = board.GP10
+    MOSI = board.GP11
+    MISO = board.GP12
+    spi = busio.SPI(CLK, MOSI, MISO)
 
 cs = digitalio.DigitalInOut(SD_CS)
 sdcard = adafruit_sdcard.SDCard(spi, cs)
