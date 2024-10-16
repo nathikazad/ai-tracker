@@ -71,9 +71,14 @@ void setup() {
   Serial.begin(115200);
   Serial.print("Initializing \n");
 
-  // Initialise GPIO (Green LED connected to pin 25)
-
-  pinMode(25, OUTPUT);
+  Serial.print("Initializing Camera \n");
+  if (hm01b0_init(&hm01b0_config) != 0)
+  {
+      Serial.print("failed to initialize camera!\n");
+      while(true) {
+      }
+  }
+  Serial.print("Camera Initialized \n");
 
 }
 
@@ -81,48 +86,27 @@ void loop() {
   if (Serial.available()) {
     // get the new byte:
     char userInput = Serial.read();
-    if (userInput == '0')
-    {
-        digitalWrite(25, LOW); 
-        Serial.print("LED switched on!\n");
-    }
-    else if (userInput == '1')
-    {
-        // Turn Off LED
-        digitalWrite(25, HIGH); 
-        Serial.print("LED switched off!\n");
-    }
-    else if (userInput == '2')
-    {
-        Serial.print("Initializing Camera \n");
-        if (hm01b0_init(&hm01b0_config) != 0)
-        {
-            Serial.print("failed to initialize camera!\n");
-            while(true) {
-
-            }
-        }
-        Serial.print("Camera Initialized \n");
-    }
-    else if (userInput == '3')
+    if (userInput == '1')
     {
         row[160] = '\0';
         Serial.println("Starting stream");
-        hm01b0_read_frame(pixels, sizeof(pixels));
-        Serial.printf("\033[2J");
-        for (int y = 0; y < 120; y += 2)
-        {
-            // Map each pixel in the row to an ASCII character, and send the row over stdio
-            Serial.printf("\033[%dH", y / 2);
-            for (int x = 0; x < 160; x++)
-            {
-                uint8_t pixel = pixels[160 * y + x];
-                row[x] = REMAP[pixel];
-            }
-            Serial.printf("%s\033[K", row);
-            Serial.println();
+        while (true) {
+          hm01b0_read_frame(pixels, sizeof(pixels));
+          Serial.printf("\033[2J");
+          for (int y = 0; y < 120; y += 2)
+          {
+              // Map each pixel in the row to an ASCII character, and send the row over stdio
+              Serial.printf("\033[%dH", y / 2);
+              for (int x = 0; x < 160; x++)
+              {
+                  uint8_t pixel = pixels[160 * y + x];
+                  row[x] = REMAP[pixel];
+              }
+              Serial.printf("%s\033[K", row);
+              Serial.println();
+          }
+          Serial.printf("\033[J");
         }
-        Serial.printf("\033[J");
     }
     else
     {
