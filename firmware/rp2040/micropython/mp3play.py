@@ -9,8 +9,9 @@ import storage
 import adafruit_sdcard
 import audiomp3
 import audiobusio
+from audiocore import WaveFile
 
-board_id = "micromod"
+board_id = "pi"
 
 if board_id == "micromod":
     DATA = board.GP6
@@ -40,9 +41,11 @@ storage.mount(vfs, "/sd")
 print("Mounted SD card")
 
 
-wave_files = ["/sd/"+file for file in os.listdir('/sd') if file.endswith('.mp3') and not file.startswith('._')]
+wave_files = ["/sd/"+file for file in os.listdir('/sd') if not file.startswith('._')]
 print(wave_files)
 decoder = audiomp3.MP3Decoder(open("/sd/input.mp3", "rb"))
+#wave_file = open("/sd/nathik.wav", "rb")
+#wave = WaveFile(wave_file)
 print("playing")
 
 while True:

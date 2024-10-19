@@ -2,7 +2,7 @@
 #include <SPI.h>
 #include <SD.h>
 
-#define micro
+#define pico
 
 // GPIO pin numbers for SD card (SPI)
 #ifdef pico
@@ -40,6 +40,8 @@ File wavFile;
 
 void setup() {
   Serial.begin(115200);
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, HIGH); 
   while (!Serial) {
     delay(1); // wait for serial port to connect
   }
