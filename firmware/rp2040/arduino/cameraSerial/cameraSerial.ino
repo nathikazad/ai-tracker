@@ -6,7 +6,7 @@ const struct hm01b0_config hm01b0_config = {
     .sda_pin = PICO_DEFAULT_I2C_SDA_PIN,
     .scl_pin = PICO_DEFAULT_I2C_SCL_PIN,
 
-#ifndef SPARKFUN_MICROMOD
+#ifdef SPARKFUN_MICROMOD
     .vsync_pin = 25,
     .hsync_pin = 28,
     .pclk_pin = 11,
