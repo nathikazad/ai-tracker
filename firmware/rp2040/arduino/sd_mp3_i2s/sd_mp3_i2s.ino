@@ -26,12 +26,10 @@ File audioFile;
 
 void setup(){
   Serial.begin(115200);
-  while(!Serial) { delay(10); } // Wait for Serial to be ready
+  // while(!Serial) { delay(10); } // Wait for Serial to be ready
   Serial.println("Setup started");
 
   AudioLogger::instance().begin(Serial, AudioLogger::Info);
-
-  Serial.println("Initializing SD card...");
   // Initialize SPI for SD card
   SPSL.setRX(MISO);
   SPSL.setTX(MOSI);
@@ -41,32 +39,22 @@ void setup(){
     Serial.println("SD card initialization failed!");
     while (1);
   }
-  Serial.println("SD card initialized.");
-
-  Serial.println("Opening audio file...");
   audioFile = SD.open("/input.mp3");
   if (!audioFile) {
     Serial.println("Failed to open audio file!");
     while(1);
   }
-  Serial.println("Audio file opened successfully");
-
-  Serial.println("Setting up I2S...");
   auto config = i2s.defaultConfig(TX_MODE);
   if (!i2s.begin(config)) {
     Serial.println("Failed to initialize I2S!");
     while(1);
   }
-  Serial.println("I2S initialized successfully");
-
-  Serial.println("Setting up decoder...");
+  
   if (!decoder.begin()) {
     Serial.println("Failed to initialize decoder!");
     while(1);
   }
-  Serial.println("Decoder initialized successfully");
 
-  Serial.println("Beginning copy process...");
   copier.begin(decoder, audioFile);
   Serial.println("Setup completed");
 }
