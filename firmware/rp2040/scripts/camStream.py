@@ -11,13 +11,13 @@ def read_frame():
         pass
     
     # Read frame data
-    frame_data = ser.read(160 * 120)
+    frame_data = ser.read(320 * 320)
     
     # Wait for end marker
     while ser.read(2) != b'\xFF\xBB':
         pass
     
-    return np.frombuffer(frame_data, dtype=np.uint8).reshape((120, 160))
+    return np.frombuffer(frame_data, dtype=np.uint8).reshape((320, 320))
 
 # Main loop
 while True:

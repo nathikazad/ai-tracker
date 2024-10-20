@@ -1,17 +1,15 @@
-
 #include "hm01b0.h"
 
 const struct hm01b0_config hm01b0_config = {
     .i2c = i2c_default,
     .sda_pin = PICO_DEFAULT_I2C_SDA_PIN,
     .scl_pin = PICO_DEFAULT_I2C_SCL_PIN,
-
 #ifdef SPARKFUN_MICROMOD
     .vsync_pin = 25,
     .hsync_pin = 28,
     .pclk_pin = 11,
     .data_pin_base = 16, // Base data pin
-    .data_bits = 8,      // The SparkFun MicroMod ML Carrier Board has all 8 data pins connected
+    .data_bits = 8, // The SparkFun MicroMod ML Carrier Board has all 8 data pins connected
     .pio = pio0,
     .pio_sm = 0,
     .reset_pin = 24,
@@ -25,17 +23,16 @@ const struct hm01b0_config hm01b0_config = {
     .pio = pio0,
     .pio_sm = 0,
     .reset_pin = -1, // Not connected
-    .mclk_pin = -1,  // Not connected
+    .mclk_pin = -1, // Not connected
 #endif
-
-    .width = 160,
-    .height = 120,
+    .width = 320,
+    .height = 320,
 };
 
-uint8_t pixels[160 * 120];
+uint8_t pixels[320 * 320];
 
 void setup() {
-    Serial.begin(921600);  // Increase baud rate for faster transmission
+    Serial.begin(921600); // Increase baud rate for faster transmission
     Serial.println("Initializing");
     Serial.println("Initializing Camera");
     if (hm01b0_init(&hm01b0_config) != 0) {
