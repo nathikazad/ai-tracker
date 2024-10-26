@@ -39,7 +39,7 @@ void setup(){
     Serial.println("SD card initialization failed!");
     while (1);
   }
-  audioFile = SD.open("/input.mp3");
+  audioFile = SD.open("/received.mp3");
   if (!audioFile) {
     Serial.println("Failed to open audio file!");
     while(1);

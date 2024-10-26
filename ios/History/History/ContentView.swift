@@ -59,9 +59,7 @@ struct MainView: View {
     @State private var selectedTimelineType: TimelineType = .list
     @StateObject private var datePickerModel: TwoDatePickerModel = TwoDatePickerModel()
     @State var enteringTimelineDayTab: Bool = true
-    // Usage
-    let bleManager = BLEManager()
-    
+    // Usage    
     enum ExplorerType: String, CaseIterable {
         case actions = "Verbs"
         case objects = "Nouns"

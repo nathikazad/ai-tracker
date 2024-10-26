@@ -129,7 +129,6 @@
 		FE71C6852C8FFBFC00953D63 /* SupabaseOps.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C65D2C8FF61600953D63 /* SupabaseOps.swift */; };
 		FE71C6872C8FFC1100953D63 /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = FE71C6862C8FFC1100953D63 /* Storage */; };
 		FE71C68A2C909FFE00953D63 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = FE71C6892C909FFE00953D63 /* ZIPFoundation */; };
-		FE71C68C2C915DD700953D63 /* BLE.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C68B2C915DD700953D63 /* BLE.swift */; };
 		FE71C6962C94E3BD00953D63 /* FileOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C6952C94E3BD00953D63 /* FileOperations.swift */; };
 		FE71C6982C94F69C00953D63 /* SpeechViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C6972C94F69C00953D63 /* SpeechViewer.swift */; };
 		FE759E122C5DE432001A0FF4 /* DataTypeV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE759E112C5DE432001A0FF4 /* DataTypeV.swift */; };
@@ -368,7 +367,6 @@
 		FE71C6492C8FB21400953D63 /* StatusBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusBarView.swift; sourceTree = "<group>"; };
 		FE71C64F2C8FB21400953D63 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FE71C65D2C8FF61600953D63 /* SupabaseOps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SupabaseOps.swift; path = "Aspire-Mac/Views/SupabaseOps.swift"; sourceTree = SOURCE_ROOT; };
-		FE71C68B2C915DD700953D63 /* BLE.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLE.swift; sourceTree = "<group>"; };
 		FE71C6952C94E3BD00953D63 /* FileOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileOperations.swift; sourceTree = "<group>"; };
 		FE71C6972C94F69C00953D63 /* SpeechViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechViewer.swift; sourceTree = "<group>"; };
 		FE759E112C5DE432001A0FF4 /* DataTypeV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTypeV.swift; sourceTree = "<group>"; };
@@ -934,7 +932,6 @@
 				FE2074B72C5ADDCE00C58226 /* Timer.swift */,
 				FEBB198B2C65639300ECAC85 /* ColorHelper.swift */,
 				FE04A7F42C766CA3000F5C24 /* APNSTokenManager.swift */,
-				FE71C68B2C915DD700953D63 /* BLE.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -1418,7 +1415,6 @@
 				FE759E122C5DE432001A0FF4 /* DataTypeV.swift in Sources */,
 				FEBB19972C66D96100ECAC85 /* ObjectM.swift in Sources */,
 				FE7EBFC82C0A8F2200F720EB /* PersonAssociationsView.swift in Sources */,
-				FE71C68C2C915DD700953D63 /* BLE.swift in Sources */,
 				FE900C0A2BD363ED00F97050 /* LocationController.swift in Sources */,
 				FE04A7B42C6D909D000F5C24 /* ActionTObjectTConnM.swift in Sources */,
 				FE04A7D82C73C3E6000F5C24 /* AVChildren.swift in Sources */,
@@ -1706,7 +1702,7 @@
 				CODE_SIGN_ENTITLEMENTS = History/History.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 27;
 				DEVELOPMENT_ASSET_PATHS = "\"History/Preview Content\"";
 				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
@@ -1726,7 +1722,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.26;
+				MARKETING_VERSION = 0.27;
 				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1749,7 +1745,7 @@
 				CODE_SIGN_ENTITLEMENTS = History/History.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 27;
 				DEVELOPMENT_ASSET_PATHS = "\"History/Preview Content\"";
 				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
@@ -1769,7 +1765,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.26;
+				MARKETING_VERSION = 0.27;
 				PRODUCT_BUNDLE_IDENTIFIER = com.snow.aspire;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

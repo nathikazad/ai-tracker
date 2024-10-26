@@ -1,5 +1,5 @@
 #include "hm01b0.h"
-
+#define SPARKFUN_MICROMOD
 const struct hm01b0_config hm01b0_config = {
     .i2c = i2c_default,
     .sda_pin = PICO_DEFAULT_I2C_SDA_PIN,
@@ -9,7 +9,7 @@ const struct hm01b0_config hm01b0_config = {
     .hsync_pin = 28,
     .pclk_pin = 11,
     .data_pin_base = 16, // Base data pin
-    .data_bits = 8, // The SparkFun MicroMod ML Carrier Board has all 8 data pins connected
+    .data_bits = 4, // The SparkFun MicroMod ML Carrier Board has all 8 data pins connected
     .pio = pio0,
     .pio_sm = 0,
     .reset_pin = 24,
