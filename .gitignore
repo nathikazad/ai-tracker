@@ -1,5 +1,7 @@
 # Logs
 heroku_dump/*
+__pycache__/
+*.py[cod]
 logs
 *.log
 .DS_Store

@@ -5,7 +5,7 @@ from nrf.scripts.transcribe import BLEAudioTranscriber
 from openai import OpenAI
 import os
 from typing import List, Dict
-from rp2040.scripts.cmdmp3Transfer import send_file
+from rp2040.scripts.streamMp3 import playFile
 import tempfile
 from pathlib import Path
 
@@ -15,7 +15,7 @@ client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 class ConversationManager:
     def __init__(self, max_history: int = 10):
         self.messages: List[Dict[str, str]] = [
-            {"role": "system", "content": "You are a helpful assistant having a conversation. Keep your responses concise and natural."}
+            {"role": "system", "content": "Your name is Maximus, you are a helpful assistant having a conversation. Keep your responses concise and natural."}
         ]
         self.max_history = max_history
         self._lock = asyncio.Lock()
@@ -77,7 +77,7 @@ class ConversationManager:
                 # Convert response to speech
                 path = await self.text_to_speech(assistant_response)
                 print(f"Sending file: {path}")
-                await send_file(path)
+                await playFile(path)
                 
                 return assistant_response
                 

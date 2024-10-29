@@ -34,6 +34,7 @@ class MP3Streamer:
             
             # Send batch data
             self.serial.write(batch_data)
+            print(f"Sent batch {i//frames_per_batch + 1}")
             
             # Wait for acknowledgment
             while True:
@@ -47,15 +48,18 @@ class MP3Streamer:
     def close(self):
         self.serial.close()
 
-if __name__ == "__main__":
-    # Example usage
-    with open("/var/folders/kn/0df0rckn6qs4d34jch67_zf00000gn/T/tts_responses/response.mp3", 'rb') as f:
+
+def playFile(filename):
+    with open(filename, 'rb') as f:
         mp3_data = f.read()
     
     streamer = MP3Streamer()  # Change to your port
-    try:
-        while True:
-            streamer.stream_frames(mp3_data)
+    # try:
+    #     while True:
+    streamer.stream_frames(mp3_data)
             # time.sleep(2)
-    except KeyboardInterrupt:
-        streamer.close()
+    # except KeyboardInterrupt:
+    streamer.close()
+
+if __name__ == "__main__":
+    playFile("/var/folders/kn/0df0rckn6qs4d34jch67_zf00000gn/T/tts_responses/response.mp3")
