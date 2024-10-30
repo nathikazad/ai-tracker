@@ -24,8 +24,8 @@
 
 void setup() {
   // initialize both serial ports:
-  Serial.begin(9600);
-  Serial1.begin(9600);
+  Serial.begin(115200);
+  Serial1.begin(921600);
 }
 
 void loop() {

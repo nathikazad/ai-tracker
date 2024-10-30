@@ -20,7 +20,7 @@
 
   https://www.arduino.cc/en/Tutorial/BuiltInExamples/MultiSerialMega
 */
-
+#include <bluefruit.h>
 
 void setup() {
   // initialize both serial ports:

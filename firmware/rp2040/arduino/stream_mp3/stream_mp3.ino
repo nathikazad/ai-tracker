@@ -56,15 +56,16 @@ void core1_entry() {
 }
 
 void setup() {
-    Serial.begin(921600);
-    Serial.println("Initializing...");
+    Serial.begin(115200);
+    Serial1.begin(921600);
+    Serial1.println("Initializing...");
     
     // Initialize I2S
     i2s.setBCLK(pBCLK);
     i2s.setDATA(pDOUT);
     i2s.setBitsPerSample(16);
     if (!i2s.begin(sampleRate)) {
-        Serial.println("Failed to initialize I2S!");
+        Serial1.println("Failed to initialize I2S!");
         while (1);
     }
     
@@ -77,9 +78,10 @@ void setup() {
 }
 
 void loop() {
-    if (Serial.available() >= 2) {
+    if (Serial1.available() >= 2) {
+        Serial.println("Receiving");
         // Read batch size (2 bytes)
-        uint16_t batchSize = (Serial.read() << 8) | Serial.read();
+        uint16_t batchSize = (Serial1.read() << 8) | Serial1.read();
         
         // Find available buffer
         int bufferIndex = currentBuffer;
@@ -92,8 +94,8 @@ void loop() {
         
         // Read batch data
         while (dataIndex < batchSize) {
-            if (Serial.available()) {
-                buffers[bufferIndex].data[dataIndex++] = Serial.read();
+            if (Serial1.available()) {
+                buffers[bufferIndex].data[dataIndex++] = Serial1.read();
             }
         }
         
@@ -104,8 +106,8 @@ void loop() {
         
         // Switch to other buffer
         currentBuffer = (currentBuffer + 1) % 2;
-        
+        Serial.println("Received, sending ack now");
         // Send acknowledgment
-        Serial.write('A');
+        Serial1.write('A');
     }
 }
