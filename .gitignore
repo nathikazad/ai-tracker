@@ -4,6 +4,7 @@ __pycache__/
 *.py[cod]
 logs
 *.log
+*.mp3
 .DS_Store
 .vscode
 npm-debug.log*

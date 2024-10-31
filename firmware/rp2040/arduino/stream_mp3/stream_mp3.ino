@@ -29,7 +29,7 @@ using namespace libhelix;
 void dataCallback(MP3FrameInfo &info, int16_t *pcm_buffer, size_t len, void* ref) {
     for (size_t i = 0; i < len; i++) {
         int16_t sample = pcm_buffer[i];
-        float adjusted = sample * 5.0;
+        float adjusted = sample * 8.0;
         if (adjusted > 32767) adjusted = 32767;
         if (adjusted < -32768) adjusted = -32768;
         i2s.write((int16_t)adjusted);
