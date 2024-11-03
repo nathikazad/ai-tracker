@@ -13,7 +13,7 @@ int lastButtonState = 0;
 
 void setup() {
   Serial.begin(9600);
-  while (!Serial);
+  // while (!Serial);
 
   // Initialize button pin
   pinMode(BUTTON_PIN, INPUT);

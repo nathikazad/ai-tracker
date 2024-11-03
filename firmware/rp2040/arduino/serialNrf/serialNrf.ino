@@ -20,12 +20,12 @@
 
   https://www.arduino.cc/en/Tutorial/BuiltInExamples/MultiSerialMega
 */
-#include <bluefruit.h>
+// #include <bluefruit.h>
 
 void setup() {
   // initialize both serial ports:
-  Serial.begin(9600);
-  Serial1.begin(9600);
+  Serial.begin(921600);
+  Serial1.begin(921600);
 }
 
 void loop() {
