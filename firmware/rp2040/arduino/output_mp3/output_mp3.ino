@@ -7,9 +7,9 @@
 using namespace libhelix;
 
 // Define I2S pins
-#define pBCLK 26
-#define pWS 27
-#define pDOUT 28
+#define pBCLK 16
+#define pWS 17
+#define pDOUT 18
 
 MP3DecoderHelix mp3;
 I2S i2s(OUTPUT);
@@ -68,14 +68,14 @@ void core0_main() {
             char input = Serial.read();
             if (input == 'u') {
                 mutex_enter_blocking(&volumeMutex);
-                volumeFactor += 0.5;
+                volumeFactor += 1;
                 float currentVolume = volumeFactor;
                 mutex_exit(&volumeMutex);
                 Serial.print("Volume increased. Factor: ");
                 Serial.println(currentVolume);
             } else if (input == 'l') {
                 mutex_enter_blocking(&volumeMutex);
-                volumeFactor -= 0.5;
+                volumeFactor -= 1;
                 if (volumeFactor < 0) volumeFactor = 0;
                 float currentVolume = volumeFactor;
                 mutex_exit(&volumeMutex);

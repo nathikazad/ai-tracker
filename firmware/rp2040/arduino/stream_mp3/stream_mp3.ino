@@ -5,9 +5,9 @@
 
 using namespace libhelix;
 
-#define pBCLK 26
-#define pWS 27
-#define pDOUT 28
+#define pBCLK 16
+#define pWS 17
+#define pDOUT 18
 
 I2S i2s(OUTPUT);
 const int sampleRate = 24000; // Adjust if needed
@@ -57,15 +57,16 @@ void core1_entry() {
 
 void setup() {
     Serial.begin(115200);
+    while (!Serial);
     Serial1.begin(921600);
-    Serial1.println("Initializing...");
+    Serial.println("Initializing...");
     
     // Initialize I2S
     i2s.setBCLK(pBCLK);
     i2s.setDATA(pDOUT);
     i2s.setBitsPerSample(16);
     if (!i2s.begin(sampleRate)) {
-        Serial1.println("Failed to initialize I2S!");
+        Serial.println("Failed to initialize I2S!");
         while (1);
     }
     

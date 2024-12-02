@@ -3,7 +3,7 @@
 // #include "pico/binary_info.h"
 #include "hm01b0.h"
 
-
+#define ASP_NRF
 // // Data will be copied from src to dst
 const char src[] = "Hello, world! (from DMA)";
 char dst[count_of(src)];
@@ -13,17 +13,7 @@ const struct hm01b0_config hm01b0_config = {
     .sda_pin = PICO_DEFAULT_I2C_SDA_PIN,
     .scl_pin = PICO_DEFAULT_I2C_SCL_PIN,
 
-#ifndef SPARKFUN_MICROMOD
-    .vsync_pin = 25,
-    .hsync_pin = 28,
-    .pclk_pin = 11,
-    .data_pin_base = 16, // Base data pin
-    .data_bits = 8,      // The SparkFun MicroMod ML Carrier Board has all 8 data pins connected
-    .pio = pio0,
-    .pio_sm = 0,
-    .reset_pin = 24,
-    .mclk_pin = 10,
-#else
+#if defined SPARKFUN_MICROMOD
     .vsync_pin = 6,
     .hsync_pin = 7,
     .pclk_pin = 8,
@@ -33,6 +23,27 @@ const struct hm01b0_config hm01b0_config = {
     .pio_sm = 0,
     .reset_pin = -1, // Not connected
     .mclk_pin = -1,  // Not connected
+#elif defined ASP_NRF
+  .vsync_pin = 25,
+  .hsync_pin = 24,
+  .pclk_pin = 26,
+  .data_pin_base = 19,
+  .data_bits = 4,
+  .pio = pio0,
+  .pio_sm = 0,
+  .reset_pin = 23, // Not connected
+  .mclk_pin = 27,  // Not connected
+#else
+    .vsync_pin = 25,
+    .hsync_pin = 28,
+    .pclk_pin = 11,
+    .data_pin_base = 16, // Base data pin
+    .data_bits = 8,      // The SparkFun MicroMod ML Carrier Board has all 8 data pins connected
+    .pio = pio0,
+    .pio_sm = 0,
+    .reset_pin = 24,
+    .mclk_pin = 10,
+
 #endif
 
     .width = 160,
@@ -69,6 +80,7 @@ bool reserved_addr(uint8_t addr)
 
 void setup() {
   Serial.begin(115200);
+  while(!Serial);
   Serial.print("Initializing \n");
 
   Serial.print("Initializing Camera \n");
