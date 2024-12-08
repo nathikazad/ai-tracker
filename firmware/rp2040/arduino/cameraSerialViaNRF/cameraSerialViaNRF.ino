@@ -5,6 +5,9 @@ const struct hm01b0_config hm01b0_config = {
   .sda_pin = PICO_DEFAULT_I2C_SDA_PIN,
   .scl_pin = PICO_DEFAULT_I2C_SCL_PIN,
 
+
+#define WIDTH 160
+#define HEIGHT 120
 #if defined SPARKFUN_MICROMOD
   .vsync_pin = 6,
   .hsync_pin = 7,
@@ -36,11 +39,11 @@ const struct hm01b0_config hm01b0_config = {
   .reset_pin = 24,
   .mclk_pin = 10,
 #endif
-    .width = 160,
-    .height = 120,
+    .width = WIDTH,
+    .height = HEIGHT,
 };
 
-uint8_t pixels[160 * 120];
+uint8_t pixels[WIDTH * HEIGHT];
 
 void setup() {
     
@@ -52,14 +55,18 @@ void setup() {
         while(true) {}
     }
     Serial.println("Camera Initialized");
-    Serial1.begin(921600);
+    Serial1.begin(460800);
     while(!Serial1);
     Serial.println("Serial1 Initialized");
 }
 
 void loop() {
+    
+    int startTime = millis();
     hm01b0_read_frame(pixels, sizeof(pixels));
-
+    Serial.print("Captured in ");
+    Serial.println(millis()-startTime);
+    startTime = millis();
     // Send start marker
     Serial1.write(0xFF);
     Serial1.write(0xAA);
@@ -70,7 +77,10 @@ void loop() {
     // Send end marker
     Serial1.write(0xFF);
     Serial1.write(0xBB);
+
+    Serial.print("Sent in ");
+    Serial.println(millis()-startTime);
     
     // Optional: Add a small delay to control frame rate
-    delay(1000);
+    delay(5000);
 }
