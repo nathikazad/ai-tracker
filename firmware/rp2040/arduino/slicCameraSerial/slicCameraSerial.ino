@@ -4,6 +4,9 @@
 #define IMAGE_WIDTH 320
 #define IMAGE_HEIGHT 320
 #define BUFFER_SIZE (IMAGE_WIDTH * IMAGE_HEIGHT)
+#define CHUNK_SIZE 256
+#define ACK_TIMEOUT_MS 5
+#define ACK_RETRIES 5
 
 #define ASP_NRF
 const struct hm01b0_config hm01b0_config = {
@@ -75,23 +78,24 @@ void setup() {
 }
 
 bool writeChunked(uint8_t* buffer, size_t totalSize) {
-    const size_t CHUNK_SIZE = 1024;
-    const unsigned long ACK_TIMEOUT_MS = 5;
+    
     const uint8_t CHUNK_MARKER[] = {0xFF, 0xCC, 0xFF, 0xCC};
     
     size_t bytesRemaining = totalSize;
     size_t offset = 0;
     uint8_t ackByte;
-
     uint8_t chunk_index = 0;
+    int total_retries = 0;
 
-    Serial.printf("Sending %d bytes, 0x%08lX\n", totalSize, totalSize);
+    Serial.printf("Sending %d bytes\n", totalSize);
+    // Serial.printf("In hex 0x%08lX\n", totalSize, totalSize);
     while (bytesRemaining > 0) {
         // Calculate size of next chunk
         size_t chunkSize = min(CHUNK_SIZE, bytesRemaining);
         bool chunkAcked = false;
         // Serial.printf("Sending chunk %d, size: %d\n", chunk_index, chunkSize);
         int tries = 0;
+        
         while (!chunkAcked) {
             // Send chunk marker
             Serial1.write(CHUNK_MARKER, 4);
@@ -115,8 +119,9 @@ bool writeChunked(uint8_t* buffer, size_t totalSize) {
             if(!chunkAcked) {
               tries++;
               Serial.printf("Sending chunk %d again\n", chunk_index);
+              total_retries++;
             }
-            if(tries > 5) {
+            if(tries > ACK_RETRIES) {
               return false;
             }
         }
@@ -125,6 +130,7 @@ bool writeChunked(uint8_t* buffer, size_t totalSize) {
         offset += chunkSize;
         bytesRemaining -= chunkSize;
     }
+    Serial.printf("Total Retries: %d\n", total_retries);
     return true;
 }
 
@@ -140,8 +146,7 @@ void loop() {
     // Get the size of compressed data
     uint32_t compressedSize = slic.get_output_size();
 
-    Serial.print("Compressed size: ");
-    Serial.println(compressedSize);
+    Serial.printf("Compressed size: %d\n", compressedSize);
     delay(10);
     Serial1.write(0xFF);
     Serial1.write(0xAA);
@@ -168,5 +173,5 @@ void loop() {
     Serial.println(rc);
   }
   
-  delay(5000); 
+  delay(10000); 
 }

@@ -75,9 +75,6 @@ void setupBLE() {
 }
 
 void sendHandshake(uint32_t totalBytes, uint16_t numPackets, uint16_t width, uint16_t height) {
-    Serial.print("Sending ");
-    Serial.print(numPackets);
-    Serial.println(" packets");
     
     uint8_t handshakePacket[14];  // 2+4+2+2+2+2 bytes
     handshakePacket[0] = 0xFF;

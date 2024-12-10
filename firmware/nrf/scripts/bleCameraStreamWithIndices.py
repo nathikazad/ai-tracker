@@ -44,11 +44,13 @@ class BLEFrameReceiver:
                 # if len(payload) == expected_size:
                 self.frame_buffer[offset:offset + expected_size] = payload[:expected_size]
                 self.packets_received.add(packet_num)
-                print(f"Packet {packet_num} stored. {len(payload)}:{expected_size}  {len(self.packets_received)}/{self.num_packets} packets received.")
+                # print(f"Packet {packet_num} stored. {len(payload)}:{expected_size}  {len(self.packets_received)}/{self.num_packets} packets received.")
                 
                 # Check if we have all packets
                 if len(self.packets_received) == self.num_packets:
-                    self.process_complete_frame()
+                    print(f"All packets received, processing frame...{len(self.packets_received)}/{self.num_packets} packets received.")
+                    print(f"Bytes received: {len(self.frame_buffer)}/{self.total_bytes}")
+                    # self.process_complete_frame()
 
     def handle_handshake(self, data):
         """Process handshake packet"""

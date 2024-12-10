@@ -53,7 +53,6 @@ void processIncomingData() {
         switch(state) {
             case 0: // Looking for start marker
                 if (isStartMarker()) {
-                    Serial.println("Start marker received");
                     state = 1;
                     bufferIndex = 0;
                     chunkNumber = 0;
@@ -69,15 +68,14 @@ void processIncomingData() {
                 bufferIndex++;
                 if(bufferIndex == 3) {
                   overflowSize = expectedBytes + 20;
-                  Serial.print("Starting to receive ");
-                  Serial.print(expectedBytes);
-                  Serial.println(" bytes");
+                  Serial.printf("Starting to receive %d bytes\n", expectedBytes);
                   bufferIndex = 0;
                   state = 2;
                 }
                 break;
             case 2: // Collecting data
                 if (isChunkMarker()) {
+                    // Serial.printf("Receiving chunk: %d, last index in chunk:%d \n", chunkNumber, indexInChunk);
                     // Don't store marker bytes in buffer
                     bufferIndex -= 4;  // Remove marker bytes if they got in
                     bufferIndex -= (indexInChunk - 4);  // Remove incomplete chunk
@@ -93,6 +91,7 @@ void processIncomingData() {
                     state = 0;
                   } else if (indexInChunk == CHUNK_SIZE) {
                     Serial1.write(0xAC);
+                    // Serial.printf("Received chunk: %d \n", chunkNumber);
                     // Serial.printf("Received chunk: %d, bufferIndex: %d, expected bytes: %d, expected chunks: %d\n", chunkNumber, bufferIndex, expectedBytes, expectedBytes/CHUNK_SIZE);
                     indexInChunk = 0;
                     chunkNumber++;
@@ -107,18 +106,20 @@ void processIncomingData() {
     }
 
     if(state != 0 && (millis() - startMarkerReceivedTime) > RECEIVE_TIMEOUT) {
+      Serial.printf("Chunk Number: %d, Index in chunk: %d\n", chunkNumber, indexInChunk);
       Serial.println("Timed out 1");
       state = 0;
     }
 }
 
 void sendBufferInPackets() {
-  if (!isConnected() || !serialTxCharacteristic.notifyEnabled()) {
+  if (!isConnected()) {// || !serialTxCharacteristic.notifyEnabled()) {
     return;
   }
   
   uint16_t numPackets = (expectedBytes + PACKET_DATA_SIZE - 1) / PACKET_DATA_SIZE;
-  
+  Serial.printf("Sending %d packets\n", numPackets);
+  int startTime = millis();
   sendHandshake(expectedBytes, numPackets, IMAGE_WIDTH, IMAGE_HEIGHT);
   
   for (uint16_t i = 0; i < numPackets; i++) {
@@ -129,4 +130,5 @@ void sendBufferInPackets() {
     sendPacket(i, &buffer[offset], packetDataSize);
     delay(1);
   }
+  Serial.printf("Sent in %dms\n", millis()-startTime);
 }
