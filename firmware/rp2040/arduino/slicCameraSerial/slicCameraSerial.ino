@@ -52,6 +52,7 @@ uint8_t compressedBuffer[BUFFER_SIZE];
 
 void setup() {
   Serial.begin(921600);
+  while(!Serial);
   Serial.println("Initializing Camera");
   if (hm01b0_init(&hm01b0_config) != 0) {
     Serial.println("Failed to initialize camera!");
@@ -73,27 +74,58 @@ void setup() {
   }
 }
 
-void writeChunked(uint8_t* buffer, size_t totalSize) {
+bool writeChunked(uint8_t* buffer, size_t totalSize) {
     const size_t CHUNK_SIZE = 1024;
-    const unsigned long DELAY_MS = 0;
+    const unsigned long ACK_TIMEOUT_MS = 5;
+    const uint8_t CHUNK_MARKER[] = {0xFF, 0xCC, 0xFF, 0xCC};
     
     size_t bytesRemaining = totalSize;
     size_t offset = 0;
-    
+    uint8_t ackByte;
+
+    uint8_t chunk_index = 0;
+
+    Serial.printf("Sending %d bytes, 0x%08lX\n", totalSize, totalSize);
     while (bytesRemaining > 0) {
         // Calculate size of next chunk
         size_t chunkSize = min(CHUNK_SIZE, bytesRemaining);
-        
-        // Write chunk
-        Serial1.write(buffer + offset, chunkSize);
+        bool chunkAcked = false;
+        // Serial.printf("Sending chunk %d, size: %d\n", chunk_index, chunkSize);
+        int tries = 0;
+        while (!chunkAcked) {
+            // Send chunk marker
+            Serial1.write(CHUNK_MARKER, 4);
+            
+            // Write chunk
+            Serial1.write(buffer + offset, chunkSize);
+            
+            // Wait for ACK
+            unsigned long startTime = millis();
+            while (millis() - startTime < ACK_TIMEOUT_MS) {
+                if (Serial1.available()) {
+                    ackByte = Serial1.read();
+                    if (ackByte == 0xAC) {
+                        chunkAcked = true;
+                        // Serial.println("Ack received");
+                        chunk_index++;
+                        break;
+                    }
+                }
+            }
+            if(!chunkAcked) {
+              tries++;
+              Serial.printf("Sending chunk %d again\n", chunk_index);
+            }
+            if(tries > 5) {
+              return false;
+            }
+        }
         
         // Update tracking variables
         offset += chunkSize;
         bytesRemaining -= chunkSize;
-        
-        // Delay between chunks
-        delay(DELAY_MS);
     }
+    return true;
 }
 
 void loop() {
@@ -106,11 +138,10 @@ void loop() {
   if (rc == SLIC_DONE) {
     
     // Get the size of compressed data
-    int compressedSize = slic.get_output_size();
+    uint32_t compressedSize = slic.get_output_size();
 
     Serial.print("Compressed size: ");
-    Serial.print(compressedSize);
-    Serial.print(", ");
+    Serial.println(compressedSize);
     delay(10);
     Serial1.write(0xFF);
     Serial1.write(0xAA);
@@ -118,16 +149,19 @@ void loop() {
     Serial1.write(0xAA);
     
     Serial1.write((uint8_t*)&compressedSize, sizeof(compressedSize));
-    writeChunked(compressedBuffer, compressedSize);
+    bool written = writeChunked(compressedBuffer, compressedSize);
+    // compressedSize = BUFFER_SIZE;
+    // Serial1.write((uint8_t*)&compressedSize, sizeof(compressedSize));
+    // bool written = writeChunked(pixels, compressedSize);
 
-    delay(10);
-    Serial1.write(0xFF);
-    Serial1.write(0xBB);
-    Serial1.write(0xFF);
-    Serial1.write(0xBB);
+    if (written) {
+      delay(10);
+      Serial.print("Sent in ");
+      Serial.println(millis()-startTime);
+    } else {
+      Serial.println("Write failed, NRF isn't responding");
+    }
 
-    Serial.print("Sent in ");
-    Serial.println(millis()-startTime);
     
   } else {
     Serial.print("SLIC encoding failed with error: ");
