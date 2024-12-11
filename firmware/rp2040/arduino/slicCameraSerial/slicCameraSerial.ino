@@ -55,7 +55,9 @@ uint8_t compressedBuffer[BUFFER_SIZE];
 
 void setup() {
   Serial.begin(921600);
-  while(!Serial);
+  pinMode(8, OUTPUT);
+  digitalWrite(8, HIGH);
+  // while(!Serial);
   Serial.println("Initializing Camera");
   if (hm01b0_init(&hm01b0_config) != 0) {
     Serial.println("Failed to initialize camera!");
@@ -65,16 +67,8 @@ void setup() {
   Serial1.begin(1000000);
   while(!Serial1);
   Serial.println("Serial1 Initialized");
-
-    // Initialize SLIC encoder for grayscale image (8bpp)
-  int rc = slic.init_encode_ram(IMAGE_WIDTH, IMAGE_HEIGHT, 8, NULL, 
-                              compressedBuffer, BUFFER_SIZE);
-  
-  if (rc != SLIC_SUCCESS) {
-    Serial.print("SLIC initialization failed with error: ");
-    Serial.println(rc);
-    while(true) {}
-  }
+  delay(5000);
+  digitalWrite(8, LOW);
 }
 
 bool writeChunked(uint8_t* buffer, size_t totalSize) {
@@ -138,50 +132,60 @@ bool writeChunked(uint8_t* buffer, size_t totalSize) {
 }
 
 void loop() {
+  digitalWrite(8, HIGH);
   int startTime = millis();
   hm01b0_read_frame(pixels, sizeof(pixels));
 
-  // Encode the entire image
-  // int rc = slic.encode(pixels, IMAGE_WIDTH * IMAGE_HEIGHT);
-      
-  // if (rc == SLIC_DONE) {
-    
-  // //   // Get the size of compressed data
-  //   uint32_t compressedSize = slic.get_output_size();
-  //   Serial.printf("Compressed size: %d\n", compressedSize);
-
-    delay(10);
-    Serial1.write(0xFF);
-    Serial1.write(0xAA);
-    Serial1.write(0xFF);
-    Serial1.write(0xAA);
-    
-    // Serial1.write((uint8_t*)&compressedSize, sizeof(compressedSize));
-    // bool written = writeChunked(compressedBuffer, compressedSize);
-    // uint32_t checksum = fletcher32(compressedBuffer, compressedSize);
-    
-    uint32_t pixelSize = 102400;
-    Serial1.write((uint8_t*)&pixelSize, sizeof(pixelSize));
-    bool written = writeChunked(pixels, pixelSize);
-    uint32_t checksum = fletcher32(pixels, pixelSize);
-    
-    Serial.printf("Fletcher-32 checksum: 0x%08X\n", checksum);
-
-    if (written) {
-      delay(10);
-      Serial.print("Sent in ");
-      Serial.println(millis()-startTime);
-    } else {
-      Serial.println("Write failed, NRF isn't responding");
-    }
-
-    
-  // } else {
-  //   Serial.print("SLIC encoding failed with error: ");
-  //   Serial.println(rc);
-  // }
+   // Initialize SLIC encoder for grayscale image (8bpp)
+  int rc = slic.init_encode_ram(IMAGE_WIDTH, IMAGE_HEIGHT, 8, NULL, 
+                              compressedBuffer, BUFFER_SIZE);
   
-  delay(4000); 
+  if (rc != SLIC_SUCCESS) {
+    Serial.print("SLIC initialization failed with error: ");
+    Serial.println(rc);
+  } else {
+    // Encode the entire image
+    rc = slic.encode(pixels, IMAGE_WIDTH * IMAGE_HEIGHT);
+        
+    if (rc == SLIC_DONE) {
+      
+    //   // Get the size of compressed data
+      uint32_t compressedSize = slic.get_output_size();
+      Serial.printf("Compressed size: %d\n", compressedSize);
+
+      delay(10);
+      Serial1.write(0xFF);
+      Serial1.write(0xAA);
+      Serial1.write(0xFF);
+      Serial1.write(0xAA);
+      
+      Serial1.write((uint8_t*)&compressedSize, sizeof(compressedSize));
+      bool written = writeChunked(compressedBuffer, compressedSize);
+      uint32_t checksum = fletcher32(compressedBuffer, compressedSize);
+      
+      // uint32_t pixelSize = 102400;
+      // Serial1.write((uint8_t*)&pixelSize, sizeof(pixelSize));
+      // bool written = writeChunked(pixels, pixelSize);
+      // uint32_t checksum = fletcher32(pixels, pixelSize);
+      
+      Serial.printf("Fletcher-32 checksum: 0x%08X\n", checksum);
+
+      if (written) {
+        delay(10);
+        Serial.print("Sent in ");
+        Serial.println(millis()-startTime);
+      } else {
+        Serial.println("Write failed, NRF isn't responding");
+      }
+
+      
+    } else {
+      Serial.print("SLIC encoding failed with error: ");
+      Serial.println(rc);
+    }
+  }
+  digitalWrite(8, LOW);
+  delay(10000); 
 }
 
 

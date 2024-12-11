@@ -17,6 +17,7 @@ int startMarkerReceivedTime = 0;
 
 void setupCom() {
   Serial1.begin(1000000);
+  while(!Serial1);
 }
 
 bool isStartMarker() {
@@ -100,9 +101,10 @@ void processIncomingData() {
                     //     break;
                     //   }
                     // }
+                    
+                    sendBufferInPackets();
                     uint32_t checksum = fletcher32(buffer, expectedBytes);
                     Serial.printf("Fletcher-32 checksum: 0x%08X\n", checksum);
-                    sendBufferInPackets();
                     state = 0;
                   } else if (indexInChunk == CHUNK_SIZE+4 && isChunkEndMarker()) {
                     bufferIndex -= 4;
@@ -128,6 +130,8 @@ void processIncomingData() {
     }
 }
 
+
+
 void sendBufferInPackets() {
   if (!isConnected()) {// || !serialTxCharacteristic.notifyEnabled()) {
     return;
@@ -138,12 +142,13 @@ void sendBufferInPackets() {
   int startTime = millis();
   sendHandshake(expectedBytes, numPackets, IMAGE_WIDTH, IMAGE_HEIGHT);
   
-  for (uint16_t i = 0; i < numPackets; i++) {
-    uint32_t offset = i * PACKET_DATA_SIZE;
+  for (uint16_t pktNum = 0; pktNum < numPackets; pktNum++) {
+    uint32_t offset = pktNum * PACKET_DATA_SIZE;
     uint32_t remainingBytes = expectedBytes - offset;
     uint32_t packetDataSize = min(remainingBytes, PACKET_DATA_SIZE);
+
+    sendPacket(pktNum, &buffer[offset], packetDataSize);
     
-    sendPacket(i, &buffer[offset], packetDataSize);
     delay(1);
   }
   Serial.printf("Sent in %dms\n", millis()-startTime);

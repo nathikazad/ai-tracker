@@ -11,19 +11,62 @@ SERIAL_SERVICE_UUID = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E"
 SERIAL_TX_UUID = "6E400003-B5A3-F393-E0A9-E50E24DCCA9E"  # Notifications come from this characteristic
 
 def fletcher32(data):
+    """
+    Python implementation of Fletcher-32 checksum algorithm.
+    Exact port of the C implementation accounting for all numeric operations.
+    
+    Args:
+        data: bytearray or bytes object containing the data
+        
+    Returns:
+        32-bit Fletcher checksum as an integer
+    """
     sum1 = 0xffff
     sum2 = 0xffff
+    length = len(data)
+    index = 0
     
-    # Process data as 16-bit words
-    words = [(data[i] << 8) | data[i+1] if i+1 < len(data) else data[i] 
-             for i in range(0, len(data), 2)]
+    # Process pairs of bytes as 16-bit words
+    while length > 1:
+        # Calculate block size (max 718 bytes)
+        blocks = min(718, length)
+        length -= blocks
+        blocks //= 2  # Process two bytes at a time
+        
+        while blocks:
+            # Combine two bytes into a 16-bit word
+            word = (data[index] << 8) | data[index + 1]
+            sum1 = (sum1 + word) & 0xffffffff
+            sum2 = (sum2 + sum1) & 0xffffffff
+            index += 2
+            blocks -= 1
+            
+        # First reduction step
+        sum1 = (sum1 & 0xffff) + (sum1 >> 16)
+        sum2 = (sum2 & 0xffff) + (sum2 >> 16)
     
-    for word in words:
-        sum1 = (sum1 + word) % 65535
-        sum2 = (sum2 + sum1) % 65535
+    # Handle last byte if length is odd
+    if length:
+        word = data[index] << 8
+        sum1 = (sum1 + word) & 0xffffffff
+        sum2 = (sum2 + sum1) & 0xffffffff
+        sum1 = (sum1 & 0xffff) + (sum1 >> 16)
+        sum2 = (sum2 & 0xffff) + (sum2 >> 16)
     
-    # Return combined checksum
+    # Second reduction step to reduce sums to 16 bits
+    sum1 = (sum1 & 0xffff) + (sum1 >> 16)
+    sum2 = (sum2 & 0xffff) + (sum2 >> 16)
+    
+    # Combine the two 16-bit sums into one 32-bit value
     return (sum2 << 16) | sum1
+
+def print_hex(data, length):
+    for i in range(length):
+        # Print leading zero if needed
+        if data[i] < 0x10:
+            print('0', end='')
+        print(f'{data[i]:X}', end=' ')
+    print()  # New line at end
 
 
 class BLEFrameReceiver:
@@ -58,13 +101,19 @@ class BLEFrameReceiver:
                 expected_size = min(remaining_bytes, self.packet_data_size)
                 
                 # if len(payload) == expected_size:
-                self.frame_buffer[offset:offset + expected_size] = payload[:expected_size]
+                self.frame_buffer[offset:offset + expected_size] = payload[0:expected_size]
                 self.packets_received.add(packet_num)
+  
                 # print(f"Packet {packet_num} stored. {len(payload)}:{expected_size}  {len(self.packets_received)}/{self.num_packets} packets received.")
                 
-                # Check if we have all packets
+                # # Check if we have all packets
+                # if len(self.packets_received) > self.num_packets-3:
+                #     print_hex(payload, expected_size)
+                # checksum = fletcher32(payload[:expected_size])
+                # print(f"Fletcher-32 checksum: {packet_num} {expected_size} 0x{checksum:08X}")
                 
                 if len(self.packets_received) == self.num_packets:
+                    # print_hex(self.frame_buffer[offset:offset + expected_size], expected_size)
                     print(f"All packets received, processing frame...{len(self.packets_received)}/{self.num_packets} packets received.")
                     print(f"Bytes received: {len(self.frame_buffer)}/{self.total_bytes}")
                     checksum = fletcher32(self.frame_buffer)

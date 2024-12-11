@@ -89,12 +89,33 @@ void sendHandshake(uint32_t totalBytes, uint16_t numPackets, uint16_t width, uin
     serialTxCharacteristic.notify(handshakePacket, 14);
 }
 
+void printHex(uint8_t *data, size_t length) {
+  for (size_t i = 0; i < length; i++) {
+    // Print leading zero if needed
+    if (data[i] < 0x10) {
+      Serial.print('0');
+    }
+    Serial.print(data[i], HEX);
+    Serial.print(' '); // Space between bytes
+  }
+  Serial.println(); // New line at end
+}
+
 void sendPacket(uint16_t packetNum, uint8_t* data, uint16_t dataSize) {
+    // if (debug) {
+    //   Serial.println(packetNum);
+    //   printHex(data, dataSize);
+    // }
+    // uint32_t checksum = fletcher32(data, dataSize);
+    // Serial.printf("Fletcher-32 checksum: %d %d 0x%08X\n", packetNum, dataSize, checksum);
+    
     uint8_t packet[PACKET_SIZE];
     memcpy(packet, &packetNum, 2);
     memcpy(packet + 2, data, dataSize);
+
+
     
-    serialTxCharacteristic.notify(packet, PACKET_SIZE);
+    serialTxCharacteristic.notify(packet, dataSize+2);
 }
 
 uint32_t fletcher32(uint8_t const *data, size_t len) {
