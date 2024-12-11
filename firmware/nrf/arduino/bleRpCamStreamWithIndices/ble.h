@@ -24,5 +24,5 @@ void setupBLE();
 bool isConnected();
 void sendHandshake(uint32_t totalBytes, uint16_t numPackets, uint16_t width, uint16_t height);
 void sendPacket(uint16_t packetNum, uint8_t* data, uint16_t dataSize);
-
+uint32_t fletcher32(uint8_t const *data, size_t len);
 #endif

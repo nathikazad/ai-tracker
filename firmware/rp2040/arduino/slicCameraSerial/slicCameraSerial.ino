@@ -79,7 +79,8 @@ void setup() {
 
 bool writeChunked(uint8_t* buffer, size_t totalSize) {
     
-    const uint8_t CHUNK_MARKER[] = {0xFF, 0xCC, 0xFF, 0xCC};
+    const uint8_t CHUNK_START_MARKER[] = {0xFF, 0xCC, 0xFF, 0xCC};
+    const uint8_t CHUNK_END_MARKER[] = {0xFF, 0xDD, 0xFF, 0xDD};
     
     size_t bytesRemaining = totalSize;
     size_t offset = 0;
@@ -87,7 +88,7 @@ bool writeChunked(uint8_t* buffer, size_t totalSize) {
     uint8_t chunk_index = 0;
     int total_retries = 0;
 
-    Serial.printf("Sending %d bytes\n", totalSize);
+    Serial.printf("Sending %d bytes in %d chunks\n", totalSize, totalSize/CHUNK_SIZE);
     // Serial.printf("In hex 0x%08lX\n", totalSize, totalSize);
     while (bytesRemaining > 0) {
         // Calculate size of next chunk
@@ -98,10 +99,12 @@ bool writeChunked(uint8_t* buffer, size_t totalSize) {
         
         while (!chunkAcked) {
             // Send chunk marker
-            Serial1.write(CHUNK_MARKER, 4);
+            Serial1.write(CHUNK_START_MARKER, 4);
             
             // Write chunk
             Serial1.write(buffer + offset, chunkSize);
+
+            Serial1.write(CHUNK_END_MARKER, 4);
             
             // Wait for ACK
             unsigned long startTime = millis();
@@ -139,25 +142,30 @@ void loop() {
   hm01b0_read_frame(pixels, sizeof(pixels));
 
   // Encode the entire image
-  int rc = slic.encode(pixels, IMAGE_WIDTH * IMAGE_HEIGHT);
+  // int rc = slic.encode(pixels, IMAGE_WIDTH * IMAGE_HEIGHT);
       
-  if (rc == SLIC_DONE) {
+  // if (rc == SLIC_DONE) {
     
-    // Get the size of compressed data
-    uint32_t compressedSize = slic.get_output_size();
+  // //   // Get the size of compressed data
+  //   uint32_t compressedSize = slic.get_output_size();
+  //   Serial.printf("Compressed size: %d\n", compressedSize);
 
-    Serial.printf("Compressed size: %d\n", compressedSize);
     delay(10);
     Serial1.write(0xFF);
     Serial1.write(0xAA);
     Serial1.write(0xFF);
     Serial1.write(0xAA);
     
-    Serial1.write((uint8_t*)&compressedSize, sizeof(compressedSize));
-    bool written = writeChunked(compressedBuffer, compressedSize);
-    // compressedSize = BUFFER_SIZE;
     // Serial1.write((uint8_t*)&compressedSize, sizeof(compressedSize));
-    // bool written = writeChunked(pixels, compressedSize);
+    // bool written = writeChunked(compressedBuffer, compressedSize);
+    // uint32_t checksum = fletcher32(compressedBuffer, compressedSize);
+    
+    uint32_t pixelSize = 102400;
+    Serial1.write((uint8_t*)&pixelSize, sizeof(pixelSize));
+    bool written = writeChunked(pixels, pixelSize);
+    uint32_t checksum = fletcher32(pixels, pixelSize);
+    
+    Serial.printf("Fletcher-32 checksum: 0x%08X\n", checksum);
 
     if (written) {
       delay(10);
@@ -168,10 +176,50 @@ void loop() {
     }
 
     
-  } else {
-    Serial.print("SLIC encoding failed with error: ");
-    Serial.println(rc);
-  }
+  // } else {
+  //   Serial.print("SLIC encoding failed with error: ");
+  //   Serial.println(rc);
+  // }
   
-  delay(10000); 
+  delay(4000); 
+}
+
+
+// Fletcher checksum calculation for uint8_t array
+uint32_t fletcher32(uint8_t const *data, size_t len) {
+    uint32_t sum1 = 0xffff, sum2 = 0xffff;
+    size_t tlen = len;
+    
+    // Process pairs of bytes as 16-bit words
+    while (len > 1) {
+        size_t blocks = (len > 718) ? 718 : len;
+        len -= blocks;
+        blocks /= 2;  // Process two bytes at a time
+        
+        while (blocks) {
+            // Combine two bytes into a 16-bit word
+            uint16_t word = (data[0] << 8) | data[1];
+            sum1 += word;
+            sum2 += sum1;
+            data += 2;
+            blocks--;
+        }
+        
+        sum1 = (sum1 & 0xffff) + (sum1 >> 16);
+        sum2 = (sum2 & 0xffff) + (sum2 >> 16);
+    }
+    
+    // Handle last byte if length is odd
+    if (len) {
+        sum1 += (*data << 8);
+        sum2 += sum1;
+        sum1 = (sum1 & 0xffff) + (sum1 >> 16);
+        sum2 = (sum2 & 0xffff) + (sum2 >> 16);
+    }
+    
+    // Second reduction step to reduce sums to 16 bits
+    sum1 = (sum1 & 0xffff) + (sum1 >> 16);
+    sum2 = (sum2 & 0xffff) + (sum2 >> 16);
+    
+    return (sum2 << 16) | sum1;
 }

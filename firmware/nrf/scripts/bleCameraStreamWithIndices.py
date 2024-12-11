@@ -10,6 +10,22 @@ import sys
 SERIAL_SERVICE_UUID = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E"
 SERIAL_TX_UUID = "6E400003-B5A3-F393-E0A9-E50E24DCCA9E"  # Notifications come from this characteristic
 
+def fletcher32(data):
+    sum1 = 0xffff
+    sum2 = 0xffff
+    
+    # Process data as 16-bit words
+    words = [(data[i] << 8) | data[i+1] if i+1 < len(data) else data[i] 
+             for i in range(0, len(data), 2)]
+    
+    for word in words:
+        sum1 = (sum1 + word) % 65535
+        sum2 = (sum2 + sum1) % 65535
+    
+    # Return combined checksum
+    return (sum2 << 16) | sum1
+
+
 class BLEFrameReceiver:
     def __init__(self):
         self.frame_width = None
@@ -47,10 +63,13 @@ class BLEFrameReceiver:
                 # print(f"Packet {packet_num} stored. {len(payload)}:{expected_size}  {len(self.packets_received)}/{self.num_packets} packets received.")
                 
                 # Check if we have all packets
+                
                 if len(self.packets_received) == self.num_packets:
                     print(f"All packets received, processing frame...{len(self.packets_received)}/{self.num_packets} packets received.")
                     print(f"Bytes received: {len(self.frame_buffer)}/{self.total_bytes}")
-                    # self.process_complete_frame()
+                    checksum = fletcher32(self.frame_buffer)
+                    print(f"Fletcher-32 checksum: 0x{checksum:08X}")
+                    self.process_complete_frame()
 
     def handle_handshake(self, data):
         """Process handshake packet"""
