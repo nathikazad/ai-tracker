@@ -29,7 +29,7 @@ void loop() {
   buttonState = digitalRead(BUTTON_PIN);
 
   if (buttonState != lastButtonState) {
-    if (buttonState == HIGH) {
+    if (buttonState == LOW) {
       Serial.println("Button pressed - Starting recording");
       Serial.print("Counter: ");
       Serial.println(getCounter());

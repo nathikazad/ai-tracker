@@ -59,6 +59,8 @@ void setup() {
     Serial.begin(115200);
     while (!Serial);
     Serial1.begin(921600);
+    pinMode(15, OUTPUT);
+    digitalWrite(15, HIGH);
     Serial.println("Initializing...");
     
     // Initialize I2S
@@ -76,6 +78,7 @@ void setup() {
     
     // Launch core 1
     multicore_launch_core1(core1_entry);
+    Serial.println("Initialized");
 }
 
 void loop() {
