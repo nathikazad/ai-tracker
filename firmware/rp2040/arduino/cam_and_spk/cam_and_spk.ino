@@ -1,5 +1,5 @@
 #include "hm01b0.h"
-#include <slic.h>
+// #include <slic.h>
 #include "MP3DecoderHelix.h"
 #include <I2S.h>
 #include "pico/multicore.h"
@@ -40,7 +40,7 @@ const struct hm01b0_config hm01b0_config = {
 };
 
 // Camera variables
-static SLIC slic;
+// static SLIC slic;
 uint8_t pixels[BUFFER_SIZE];
 // uint8_t compressedBuffer[BUFFER_SIZE];
 
