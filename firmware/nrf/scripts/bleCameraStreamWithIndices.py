@@ -5,6 +5,9 @@ import numpy as np
 import struct
 import time
 import sys
+import sys
+from slic_decoder import SlicDecoder
+from PIL import Image
 
 # BLE UUIDs from the Arduino code
 SERIAL_SERVICE_UUID = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E"
@@ -119,6 +122,14 @@ class BLEFrameReceiver:
                     checksum = fletcher32(self.frame_buffer)
                     print(f"Fletcher-32 checksum: 0x{checksum:08X}")
                     self.process_complete_frame()
+                    # decoder = SlicDecoder()
+    
+                    # # Decode the image
+                    # img = decoder.decode_array(self.frame_buffer)
+                    
+                    # # Save the image using PIL
+                    # Image.fromarray(img).save('decompressed.png')
+                    # print(f"Image decoded successfully: {img.shape}")
 
     def handle_handshake(self, data):
         """Process handshake packet"""

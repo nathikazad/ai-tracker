@@ -159,14 +159,14 @@ void loop() {
       Serial1.write(0xFF);
       Serial1.write(0xAA);
       
-      Serial1.write((uint8_t*)&compressedSize, sizeof(compressedSize));
-      bool written = writeChunked(compressedBuffer, compressedSize);
-      uint32_t checksum = fletcher32(compressedBuffer, compressedSize);
+      // Serial1.write((uint8_t*)&compressedSize, sizeof(compressedSize));
+      // bool written = writeChunked(compressedBuffer, compressedSize);
+      // uint32_t checksum = fletcher32(compressedBuffer, compressedSize);
       
-      // uint32_t pixelSize = 102400;
-      // Serial1.write((uint8_t*)&pixelSize, sizeof(pixelSize));
-      // bool written = writeChunked(pixels, pixelSize);
-      // uint32_t checksum = fletcher32(pixels, pixelSize);
+      uint32_t pixelSize = 102400;
+      Serial1.write((uint8_t*)&pixelSize, sizeof(pixelSize));
+      bool written = writeChunked(pixels, pixelSize);
+      uint32_t checksum = fletcher32(pixels, pixelSize);
       
       Serial.printf("Fletcher-32 checksum: 0x%08X\n", checksum);
 
