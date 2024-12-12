@@ -17,34 +17,34 @@ byte state = 0;  // 0=looking for start, 1=reading size, 2=collecting data
 int lastDataReceivedTime = 0;
 
 bool isStartMarker() {
-    return (markerBuffer[0] == 0xFF && markerBuffer[1] == 0xAA && 
-            markerBuffer[2] == 0xFF && markerBuffer[3] == 0xAA);
+  return (markerBuffer[0] == 0xFF && markerBuffer[1] == 0xAA && 
+          markerBuffer[2] == 0xFF && markerBuffer[3] == 0xAA);
 }
 
 bool isEndMarker() {
-    return (markerBuffer[0] == 0xFF && markerBuffer[1] == 0xBB && 
-            markerBuffer[2] == 0xFF && markerBuffer[3] == 0xBB);
+  return (markerBuffer[0] == 0xFF && markerBuffer[1] == 0xBB && 
+          markerBuffer[2] == 0xFF && markerBuffer[3] == 0xBB);
 }
 
 bool isChunkStartMarker() {
-    return (markerBuffer[0] == 0xFF && markerBuffer[1] == 0xCC &&
-            markerBuffer[2] == 0xFF && markerBuffer[3] == 0xCC);
+  return (markerBuffer[0] == 0xFF && markerBuffer[1] == 0xCC &&
+          markerBuffer[2] == 0xFF && markerBuffer[3] == 0xCC);
 }
 
 bool isChunkEndMarker() {
-    return (markerBuffer[0] == 0xFF && markerBuffer[1] == 0xDD &&
-            markerBuffer[2] == 0xFF && markerBuffer[3] == 0xDD);
+  return (markerBuffer[0] == 0xFF && markerBuffer[1] == 0xDD &&
+          markerBuffer[2] == 0xFF && markerBuffer[3] == 0xDD);
 }
 
 
 void updateMarkerBuffer(uint8_t newByte) {
-    // Shift existing bytes left
-    for(int i = 0; i < 3; i++) {
-        markerBuffer[i] = markerBuffer[i + 1];
-    }
-    // Add new byte
-    markerBuffer[3] = newByte;
-    markerIndex = (markerIndex + 1) % 4;
+  // Shift existing bytes left
+  for(int i = 0; i < 3; i++) {
+    markerBuffer[i] = markerBuffer[i + 1];
+  }
+  // Add new byte
+  markerBuffer[3] = newByte;
+  markerIndex = (markerIndex + 1) % 4;
 }
 
 void processIncomingData() {
@@ -56,68 +56,68 @@ void processIncomingData() {
   lastDataReceivedTime = millis();
   while(receiving) {
     while (Serial1.available()) {
-        uint8_t inByte = Serial1.read();
-        lastDataReceivedTime = millis();
-        updateMarkerBuffer(inByte);
-        
-        switch(state) {
-            case 0: // Looking for start marker
-                if (isStartMarker()) {
-                    state = 1;
+      uint8_t inByte = Serial1.read();
+      lastDataReceivedTime = millis();
+      updateMarkerBuffer(inByte);
+      
+      switch(state) {
+        case 0: // Looking for start marker
+          if (isStartMarker()) {
+            state = 1;
 
-                }
-                break;
-                
-            case 1: // First size byte
-                expectedBytes |= (inByte << (8*bufferIndex));
-                // Serial.printf("Expected bytes: 0x%08lX\n", expectedBytes); 
-                bufferIndex++;
-                if(bufferIndex == 3) {
-                  overflowSize = expectedBytes + 20;
-                  Serial.printf("Starting to receive %d bytes\n", expectedBytes);
-                  bufferIndex = 0;
-                  state = 2;
-                }
-                break;
-            case 2: // Collecting data
-                if (isChunkStartMarker()) {
-                    // Serial.printf("Receiving chunk: %d, last index in chunk:%d \n", chunkNumber, indexInChunk);
-                    // Don't store marker bytes in buffer
-                    bufferIndex -= 4;  // Remove marker bytes if they got in
-                    bufferIndex -= indexInChunk - 4;  // Remove incomplete chunk
-                    // Serial.printf("Chunk %d, bufferIndex: %d, indexInChunk %d \n", chunkNumber, bufferIndex, indexInChunk);
-                    indexInChunk = 0;
-                } else {
-                  buffer[bufferIndex++] = inByte;
-                  indexInChunk++;
-                  
-                  if (bufferIndex == expectedBytes+4 && isChunkEndMarker()) {
-                    bufferIndex -= 4;
-                    Serial1.write(0xAC);
-                    Serial.printf("Received %d bytes\n", bufferIndex);
-                    // for (size_t i = 0; i < expectedBytes; i++) {
-                    //   if(buffer[i] != (uint8_t)i) {
-                    //     Serial.printf("Expected %02X, Actual %02X, Difference:%02X @ %d Chunk: %d\n", buffer[i], (uint8_t)i, buffer[i]-i, i, i/CHUNK_SIZE);
-                    //     break;
-                    //   }
-                    // }
-                    
-                    sendBufferInPackets();
-                    uint32_t checksum = fletcher32(buffer, expectedBytes);
-                    Serial.printf("Fletcher-32 checksum: 0x%08X\n", checksum);
-                    receiving = false;
-                    state = 0;
-                  } else if (indexInChunk == CHUNK_SIZE+4 && isChunkEndMarker()) {
-                    bufferIndex -= 4;
-                    Serial1.write(0xAC);
-                    // Serial.printf("Received chunk: %d \n", chunkNumber);
-                    // Serial.printf("Received chunk: %d, bufferIndex: %d, expected bytes: %d, expected chunks: %d\n", chunkNumber, bufferIndex, expectedBytes, expectedBytes/CHUNK_SIZE);
-                    indexInChunk = 0;
-                    chunkNumber++;
-                  }  
-                }
-                break;
-        }
+          }
+          break;
+            
+        case 1: // First size byte
+          expectedBytes |= (inByte << (8*bufferIndex));
+          // Serial.printf("Expected bytes: 0x%08lX\n", expectedBytes); 
+          bufferIndex++;
+          if(bufferIndex == 3) {
+            overflowSize = expectedBytes + 20;
+            Serial.printf("Starting to receive %d bytes\n", expectedBytes);
+            bufferIndex = 0;
+            state = 2;
+          }
+          break;
+        case 2: // Collecting data
+          if (isChunkStartMarker()) {
+              // Serial.printf("Receiving chunk: %d, last index in chunk:%d \n", chunkNumber, indexInChunk);
+              // Don't store marker bytes in buffer
+            bufferIndex -= 4;  // Remove marker bytes if they got in
+            bufferIndex -= indexInChunk - 4;  // Remove incomplete chunk
+            // Serial.printf("Chunk %d, bufferIndex: %d, indexInChunk %d \n", chunkNumber, bufferIndex, indexInChunk);
+            indexInChunk = 0;
+          } else {
+            buffer[bufferIndex++] = inByte;
+            indexInChunk++;
+            
+            if (bufferIndex == expectedBytes+4 && isChunkEndMarker()) {
+              bufferIndex -= 4;
+              Serial1.write(0xAC);
+              Serial.printf("Received %d bytes\n", bufferIndex);
+              // for (size_t i = 0; i < expectedBytes; i++) {
+              //   if(buffer[i] != (uint8_t)i) {
+              //     Serial.printf("Expected %02X, Actual %02X, Difference:%02X @ %d Chunk: %d\n", buffer[i], (uint8_t)i, buffer[i]-i, i, i/CHUNK_SIZE);
+              //     break;
+              //   }
+              // }
+              
+              sendBufferInPackets();
+              uint32_t checksum = fletcher32(buffer, expectedBytes);
+              Serial.printf("Fletcher-32 checksum: 0x%08X\n", checksum);
+              receiving = false;
+              state = 0;
+            } else if (indexInChunk == CHUNK_SIZE+4 && isChunkEndMarker()) {
+              bufferIndex -= 4;
+              Serial1.write(0xAC);
+              // Serial.printf("Received chunk: %d \n", chunkNumber);
+              // Serial.printf("Received chunk: %d, bufferIndex: %d, expected bytes: %d, expected chunks: %d\n", chunkNumber, bufferIndex, expectedBytes, expectedBytes/CHUNK_SIZE);
+              indexInChunk = 0;
+              chunkNumber++;
+            }  
+          }
+          break;
+      }
     }
 
     if((millis() - lastDataReceivedTime) > RECEIVE_TIMEOUT) {
