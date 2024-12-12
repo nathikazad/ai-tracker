@@ -133,6 +133,12 @@
 		FE71C6982C94F69C00953D63 /* SpeechViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71C6972C94F69C00953D63 /* SpeechViewer.swift */; };
 		FE759E122C5DE432001A0FF4 /* DataTypeV.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE759E112C5DE432001A0FF4 /* DataTypeV.swift */; };
 		FE759E142C5ECA0A001A0FF4 /* TimeSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE759E132C5ECA0A001A0FF4 /* TimeSelector.swift */; };
+		FE7E7F312D0B9998006BB22A /* device_testerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7E7F302D0B9998006BB22A /* device_testerApp.swift */; };
+		FE7E7F332D0B9998006BB22A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7E7F322D0B9998006BB22A /* ContentView.swift */; };
+		FE7E7F352D0B9998006BB22A /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7E7F342D0B9998006BB22A /* Item.swift */; };
+		FE7E7F372D0B9999006BB22A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE7E7F362D0B9999006BB22A /* Assets.xcassets */; };
+		FE7E7F3A2D0B9999006BB22A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE7E7F392D0B9999006BB22A /* Preview Assets.xcassets */; };
+		FE7E7F402D0B99CC006BB22A /* ble.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7E7F3F2D0B99CB006BB22A /* ble.swift */; };
 		FE7EBFC82C0A8F2200F720EB /* PersonAssociationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7EBFC72C0A8F2200F720EB /* PersonAssociationsView.swift */; };
 		FE8153722BD845B300D972C8 /* PolylineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8153712BD845B300D972C8 /* PolylineView.swift */; };
 		FE8811EB2BC799BF00B112A8 /* GoalsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8811E62BC799BE00B112A8 /* GoalsController.swift */; };
@@ -371,6 +377,13 @@
 		FE71C6972C94F69C00953D63 /* SpeechViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechViewer.swift; sourceTree = "<group>"; };
 		FE759E112C5DE432001A0FF4 /* DataTypeV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTypeV.swift; sourceTree = "<group>"; };
 		FE759E132C5ECA0A001A0FF4 /* TimeSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSelector.swift; sourceTree = "<group>"; };
+		FE7E7F2E2D0B9998006BB22A /* device-tester.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "device-tester.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FE7E7F302D0B9998006BB22A /* device_testerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = device_testerApp.swift; sourceTree = "<group>"; };
+		FE7E7F322D0B9998006BB22A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		FE7E7F342D0B9998006BB22A /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		FE7E7F362D0B9999006BB22A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FE7E7F392D0B9999006BB22A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		FE7E7F3F2D0B99CB006BB22A /* ble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ble.swift; sourceTree = "<group>"; };
 		FE7EBFC72C0A8F2200F720EB /* PersonAssociationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonAssociationsView.swift; sourceTree = "<group>"; };
 		FE8153712BD845B300D972C8 /* PolylineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolylineView.swift; sourceTree = "<group>"; };
 		FE8811E62BC799BE00B112A8 /* GoalsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoalsController.swift; sourceTree = "<group>"; };
@@ -481,6 +494,13 @@
 			files = (
 				FE71C6872C8FFC1100953D63 /* Storage in Frameworks */,
 				FE71C68A2C909FFE00953D63 /* ZIPFoundation in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE7E7F2B2D0B9998006BB22A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -718,6 +738,7 @@
 				FE4F7BB72BA7D7E60041CB6A /* MiniHistory Watch App */,
 				FE2074D62C5B3FD100C58226 /* Shortcut Extension */,
 				FE71C6122C8FAF7500953D63 /* Aspire-Mac */,
+				FE7E7F2F2D0B9998006BB22A /* device-tester */,
 				FE4F7BA02BA7D79E0041CB6A /* Products */,
 				FE4F7BCA2BA7DBB60041CB6A /* Frameworks */,
 			);
@@ -730,6 +751,7 @@
 				FE4F7BB62BA7D7E60041CB6A /* Aspire Watch.app */,
 				FE2074D32C5B3FD100C58226 /* Shortcut ExtensionExtension.appex */,
 				FE71C6112C8FAF7500953D63 /* Aspire-Mac.app */,
+				FE7E7F2E2D0B9998006BB22A /* device-tester.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -882,6 +904,35 @@
 				FE4AB3A72C52F99800A07749 /* AnyCodableM.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		FE7E7F2F2D0B9998006BB22A /* device-tester */ = {
+			isa = PBXGroup;
+			children = (
+				FE7E7F3E2D0B99C0006BB22A /* util */,
+				FE7E7F302D0B9998006BB22A /* device_testerApp.swift */,
+				FE7E7F322D0B9998006BB22A /* ContentView.swift */,
+				FE7E7F342D0B9998006BB22A /* Item.swift */,
+				FE7E7F362D0B9999006BB22A /* Assets.xcassets */,
+				FE7E7F382D0B9999006BB22A /* Preview Content */,
+			);
+			path = "device-tester";
+			sourceTree = "<group>";
+		};
+		FE7E7F382D0B9999006BB22A /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				FE7E7F392D0B9999006BB22A /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		FE7E7F3E2D0B99C0006BB22A /* util */ = {
+			isa = PBXGroup;
+			children = (
+				FE7E7F3F2D0B99CB006BB22A /* ble.swift */,
+			);
+			path = util;
 			sourceTree = "<group>";
 		};
 		FE7EF1DA2BBE0ECB00279E18 /* Views */ = {
@@ -1198,6 +1249,23 @@
 			productReference = FE71C6112C8FAF7500953D63 /* Aspire-Mac.app */;
 			productType = "com.apple.product-type.application";
 		};
+		FE7E7F2D2D0B9998006BB22A /* device-tester */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FE7E7F3D2D0B9999006BB22A /* Build configuration list for PBXNativeTarget "device-tester" */;
+			buildPhases = (
+				FE7E7F2A2D0B9998006BB22A /* Sources */,
+				FE7E7F2B2D0B9998006BB22A /* Frameworks */,
+				FE7E7F2C2D0B9998006BB22A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "device-tester";
+			productName = "device-tester";
+			productReference = FE7E7F2E2D0B9998006BB22A /* device-tester.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1218,6 +1286,9 @@
 						CreatedOnToolsVersion = 15.2;
 					};
 					FE71C6102C8FAF7500953D63 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+					FE7E7F2D2D0B9998006BB22A = {
 						CreatedOnToolsVersion = 15.4;
 					};
 				};
@@ -1244,6 +1315,7 @@
 				FE4F7BB52BA7D7E60041CB6A /* MiniHistory Watch App */,
 				FE2074D22C5B3FD100C58226 /* Shortcut ExtensionExtension */,
 				FE71C6102C8FAF7500953D63 /* Aspire-Mac */,
+				FE7E7F2D2D0B9998006BB22A /* device-tester */,
 			);
 		};
 /* End PBXProject section */
@@ -1281,6 +1353,15 @@
 			files = (
 				FE71C61D2C8FAF7600953D63 /* Preview Assets.xcassets in Resources */,
 				FE71C61A2C8FAF7600953D63 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE7E7F2C2D0B9998006BB22A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FE7E7F3A2D0B9999006BB22A /* Preview Assets.xcassets in Resources */,
+				FE7E7F372D0B9999006BB22A /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1495,6 +1576,17 @@
 				FE71C6502C8FB21400953D63 /* AppState.swift in Sources */,
 				FE71C6582C8FB44E00953D63 /* Authentication.swift in Sources */,
 				FE71C65B2C8FB4B400953D63 /* Constants.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE7E7F2A2D0B9998006BB22A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FE7E7F332D0B9998006BB22A /* ContentView.swift in Sources */,
+				FE7E7F352D0B9998006BB22A /* Item.swift in Sources */,
+				FE7E7F312D0B9998006BB22A /* device_testerApp.swift in Sources */,
+				FE7E7F402D0B99CC006BB22A /* ble.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1905,6 +1997,66 @@
 			};
 			name = Release;
 		};
+		FE7E7F3B2D0B9999006BB22A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"device-tester/Preview Content\"";
+				DEVELOPMENT_TEAM = F2W45BF2AV;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.snow.aspire.device-tester";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FE7E7F3C2D0B9999006BB22A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"device-tester/Preview Content\"";
+				DEVELOPMENT_TEAM = F2W45BF2AV;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.snow.aspire.device-tester";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1949,6 +2101,15 @@
 			buildConfigurations = (
 				FE71C61F2C8FAF7600953D63 /* Debug */,
 				FE71C6202C8FAF7600953D63 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FE7E7F3D2D0B9999006BB22A /* Build configuration list for PBXNativeTarget "device-tester" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FE7E7F3B2D0B9999006BB22A /* Debug */,
+				FE7E7F3C2D0B9999006BB22A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
