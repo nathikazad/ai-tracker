@@ -12,7 +12,8 @@ import CoreBluetooth
 // MARK: - BLE Service and Characteristic UUIDs
 struct BLEConstants {
     static let serialServiceUUID = CBUUID(string: "6E400001-B5A3-F393-E0A9-E50E24DCCA9E")
-    static let serialTxUUID = CBUUID(string: "6E400003-B5A3-F393-E0A9-E50E24DCCA9E")
+    static let camUUID = CBUUID(string: "6E400003-B5A3-F393-E0A9-E50E24DCCA9E")
+    static let micUUID = CBUUID(string: "19B10001-E8F2-537E-4F6C-D104768A1214")
 }
 
 // MARK: - Frame Receiver Class
@@ -31,6 +32,8 @@ class BLEFrameReceiver: NSObject, ObservableObject {
     private var peripheral: CBPeripheral?
     @Published var isConnected = false
     @Published var isScanning = false
+    
+    private let audioTranscriber = AudioTranscriber()
     
     override init() {
         super.init()
@@ -140,7 +143,7 @@ extension BLEFrameReceiver: CBCentralManagerDelegate {
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
                        advertisementData: [String: Any], rssi RSSI: NSNumber) {
-        guard let name = peripheral.name, name.contains("CameraRelay") else { return }
+        guard let name = peripheral.name, name.contains("Aspire") else { return }
         
         stopScanning()
         self.peripheral = peripheral
@@ -166,7 +169,7 @@ extension BLEFrameReceiver: CBPeripheralDelegate {
         guard let services = peripheral.services else { return }
         
         for service in services {
-            peripheral.discoverCharacteristics([BLEConstants.serialTxUUID], for: service)
+            peripheral.discoverCharacteristics([BLEConstants.camUUID, BLEConstants.micUUID], for: service)
         }
     }
     
@@ -174,7 +177,7 @@ extension BLEFrameReceiver: CBPeripheralDelegate {
         guard let characteristics = service.characteristics else { return }
         
         for characteristic in characteristics {
-            if characteristic.uuid == BLEConstants.serialTxUUID {
+            if characteristic.uuid == BLEConstants.camUUID || characteristic.uuid == BLEConstants.micUUID {
                 peripheral.setNotifyValue(true, for: characteristic)
             }
         }
@@ -183,11 +186,21 @@ extension BLEFrameReceiver: CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic,
                    error: Error?) {
         guard let data = characteristic.value else { return }
-        
-        if data.count >= 2 && data[0] == 0xFF && data[1] == 0xAA {
-            handleHandshake(data)
-        } else {
-            handleDataPacket(data)
-        }
+        switch characteristic.uuid {
+            case BLEConstants.micUUID:
+                DispatchQueue.main.async { [weak self] in
+                    self?.audioTranscriber.handleAudioData(data)
+                }
+                break;
+            case BLEConstants.camUUID:
+                if data.count >= 2 && data[0] == 0xFF && data[1] == 0xAA {
+                    handleHandshake(data)
+                } else {
+                    handleDataPacket(data)
+                }
+                break;
+            default:
+            print("Unknown characteristic \(characteristic.uuid)");
+            }
     }
 }
