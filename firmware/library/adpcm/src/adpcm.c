@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "adpcm-lib.h"
+#include "adpcm.h"
 
 /* This module encodes and decodes 4-bit ADPCM (DVI/IMA varient). ADPCM data is divided
  * into independently decodable blocks that can be relatively small. The most common

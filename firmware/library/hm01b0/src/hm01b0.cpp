@@ -145,6 +145,14 @@ int hm01b0_init(const struct hm01b0_config* config)
     }
 
     hm01b0_write_reg8(0x3059, bit_control_val);
+    // hm01b0_write_reg8(0x2101, 0x3C);
+    // hm01b0_write_reg8(0x2102, 0x0A);
+    // hm01b0_write_reg8(0x2103, 0x0F);
+    // hm01b0_write_reg8(0x2107, 0x02);
+    // hm01b0_write_reg8(0x210A, 0x00);
+    // hm01b0_write_reg8(0x210C, 0x40);
+    // hm01b0_write_reg8(0x210D, 0x00);
+    // hm01b0_write_reg8(0x210E, 0x00);
 
     hm01b0_write_reg8(0x0383, readout_x_val);
     hm01b0_write_reg8(0x0387, readout_y_val);

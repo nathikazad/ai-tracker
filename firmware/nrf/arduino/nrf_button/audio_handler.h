@@ -2,7 +2,7 @@
 #define AUDIO_HANDLER_H
 
 #include <PDM.h>
-#include "adpcm-lib.h"
+#include "adpcm.h"
 
 // Audio configuration
 #define RECORD_TIME 5 // seconds

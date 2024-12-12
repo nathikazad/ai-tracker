@@ -1,6 +1,6 @@
 #include <bluefruit.h>
 #include <PDM.h>
-#include "adpcm-lib.h"
+#include "adpcm.h"
 
 #define FAST
 #define CONN_PARAM 6
