@@ -1,6 +1,6 @@
 // com.h
-#ifndef COM_H
-#define COM_H
+#ifndef CAM_H
+#define CAM_H
 
 #include <Arduino.h>
 
@@ -10,7 +10,16 @@
 #define CHUNK_SIZE 256
 #define RECEIVE_TIMEOUT 3000
 
-void processIncomingData();
+enum CamReceptionState {
+  IDLE = 0,
+  WAITING_FOR_START = 1,
+  RECEIVING_SIZE = 2,
+  RECEIVING_CHUNKS = 3
+};
+
+
+
+void receiveCameraImage();
 void sendBufferInPackets();
 
 #endif

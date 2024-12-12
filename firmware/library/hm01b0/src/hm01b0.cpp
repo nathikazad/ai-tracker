@@ -36,7 +36,7 @@ static void hm01b0_write_reg16(uint16_t address, uint16_t value);
 
 int hm01b0_init(const struct hm01b0_config* config)
 {
-    Serial.print("hm01b0_init\n");
+    // Serial.print("hm01b0_init\n");
     memcpy(&hm01b0_inst.config, config, sizeof(hm01b0_inst.config));
 
     uint8_t readout_x_val;;          // 0x0383
@@ -81,7 +81,7 @@ int hm01b0_init(const struct hm01b0_config* config)
         return -1;
     }
 
-    Serial.print("hm01b0_init: resolution set\n");
+    // Serial.print("hm01b0_init: resolution set\n");
 
     if (config->data_bits == 8) {
         bit_control_val = 0x02;
@@ -97,7 +97,7 @@ int hm01b0_init(const struct hm01b0_config* config)
         return -1;
     }
 
-    Serial.print("hm01b0_init: data bits set\n");
+    // Serial.print("hm01b0_init: data bits set\n");
 
     if (config->reset_pin > -1) {
         gpio_init(config->reset_pin);
@@ -107,7 +107,7 @@ int hm01b0_init(const struct hm01b0_config* config)
         gpio_put(config->reset_pin, 1);
     }
 
-    Serial.print("hm01b0_init: reset pin set\n");
+    // Serial.print("hm01b0_init: reset pin set\n");
 
     if (config->mclk_pin > -1) {
         gpio_set_function(config->mclk_pin, GPIO_FUNC_PWM);
@@ -121,7 +121,7 @@ int hm01b0_init(const struct hm01b0_config* config)
         pwm_set_enabled(mclk_slice_num, true);
     }
 
-    Serial.print("hm01b0_init: mclk pin set\n");
+    // Serial.print("hm01b0_init: mclk pin set\n");
 
     gpio_set_function(config->sda_pin, GPIO_FUNC_I2C);
     gpio_set_function(config->scl_pin, GPIO_FUNC_I2C);
@@ -130,10 +130,10 @@ int hm01b0_init(const struct hm01b0_config* config)
 
     i2c_init(config->i2c, 100 * 1000);
 
-    Serial.print("hm01b0_init: i2c set\n");
+    // Serial.print("hm01b0_init: i2c set\n");
 
     uint16_t model_id = hm01b0_read_reg16(0x0000);
-    Serial.printf("hm01b0_init: model id = 0x%04x\n", model_id);
+    // Serial.printf("hm01b0_init: model id = 0x%04x\n", model_id);
     if (model_id != 0x01b0) {
         Serial.print("Invalid model id!\n");
         return -1;

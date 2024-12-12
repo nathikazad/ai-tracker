@@ -14,7 +14,9 @@ void setup() {
 }
 
 void loop() {
+  int startTime = millis();
   Serial1.write('c');
   processIncomingData();
-  delay(10000);
+  Serial.printf("Captured and sent in %d ms\n", millis()-startTime);
+  // delay(500);
 }
