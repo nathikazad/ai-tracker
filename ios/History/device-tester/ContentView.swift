@@ -18,23 +18,23 @@ struct ContentView: View {
 }
 
 struct BLECameraView: View {
-    @StateObject private var frameReceiver = BLEFrameReceiver()
+    @StateObject private var ble = BLEHandler()
     
     var body: some View {
         ZStack {
-            if let image = frameReceiver.currentImage {
+            if let image = ble.currentImage {
                 Image(uiImage: image)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
             } else {
                 VStack {
-                    if frameReceiver.isScanning {
+                    if ble.isScanning {
                         ProgressView()
                         Text("Scanning for camera...")
-                    } else if !frameReceiver.isConnected {
+                    } else if !ble.isConnected {
                         Text("No device connected")
                         Button("Scan") {
-                            frameReceiver.startScanning()
+                            ble.startScanning()
                         }
                     } else {
                         Text("Waiting for image...")

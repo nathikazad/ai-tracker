@@ -6,6 +6,7 @@
 
 
 #define LISTEN_BUTTON_PIN D0
+#define RP_SWITCH_PIN D5
 
 MainState mainState = READY;
 int lastImageCaptureTime = 0;
@@ -14,7 +15,12 @@ int buttonState;
 
 void setup() {
     Serial.begin(115200);
-    while(!Serial);
+    // while(!Serial);
+
+    pinMode(RP_SWITCH_PIN, OUTPUT);
+    digitalWrite(RP_SWITCH_PIN, HIGH);
+    delay(1000);
+    digitalWrite(RP_SWITCH_PIN, LOW);
 
     pinMode(LISTEN_BUTTON_PIN, INPUT);
     setupAudio();
@@ -33,14 +39,13 @@ void loop() {
       if (buttonState == LOW) {
         mainState = RECORDING_AUDIO;
         Serial.println("Button pressed - Starting recording");
-        Serial.print("Counter: ");
-        Serial.println(getCounter());
         startRecording();
-      }
-      if((millis() - lastImageCaptureTime) > IMAGE_CAPTURE_PERIOD) {
-        Serial1.write('c');
-        receiveCameraImage();
-        lastImageCaptureTime = millis();
+      } else {
+        if((millis() - lastImageCaptureTime) > IMAGE_CAPTURE_PERIOD) {
+          Serial1.write('c');
+          receiveCameraImage();
+          lastImageCaptureTime = millis();
+        }
       }
       break;
     case RECORDING_AUDIO:
@@ -54,7 +59,8 @@ void loop() {
         if (Bluefruit.connected() && isConnected()) {
           compressAndSendAudio();
         }
-        mainState = RECEIVING_AUDIO;
+        Serial.println("Audio sent, waiting for response");
+        mainState = READY;
       }
       break;
     case RECEIVING_AUDIO:

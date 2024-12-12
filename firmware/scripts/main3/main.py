@@ -14,7 +14,7 @@ class ChatManager:
         self.max_history = max_history
         self._lock = asyncio.Lock()
         self.client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
-        self.ble_manager = BLEManager()
+        self.ble_manager = BLEManager("Aspire")
         self.transcriber = AudioTranscriber(self.ble_manager)
         self.player = AudioPlayer(self.ble_manager)
 

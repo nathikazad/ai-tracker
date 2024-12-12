@@ -1,5 +1,7 @@
 # chat.py
-
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import asyncio
 from nrf.scripts.transcribe import BLEAudioTranscriber
 from openai import OpenAI
@@ -98,7 +100,7 @@ async def main():
             # print(f"GPT Response: {gpt_response}")
 
     # Create transcriber instance
-    transcriber = BLEAudioTranscriber()
+    transcriber = BLEAudioTranscriber("Aspire")
     
     # Set up callback
     transcriber.set_transcription_callback(on_transcription)
