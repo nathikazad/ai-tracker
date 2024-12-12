@@ -57,10 +57,12 @@ void core1_entry() {
 
 void setup() {
     Serial.begin(115200);
-    while (!Serial);
+    // while (!Serial);
     Serial1.begin(921600);
     pinMode(15, OUTPUT);
     digitalWrite(15, HIGH);
+    pinMode(8, OUTPUT);
+    digitalWrite(8, HIGH);
     Serial.println("Initializing...");
     
     // Initialize I2S
@@ -83,6 +85,7 @@ void setup() {
 
 void loop() {
     if (Serial1.available() >= 2) {
+      digitalWrite(8, LOW);
         Serial.println("Receiving");
         // Read batch size (2 bytes)
         uint16_t batchSize = (Serial1.read() << 8) | Serial1.read();
@@ -113,5 +116,6 @@ void loop() {
         Serial.println("Received, sending ack now");
         // Send acknowledgment
         Serial1.write('A');
+        digitalWrite(8, LOW);
     }
 }

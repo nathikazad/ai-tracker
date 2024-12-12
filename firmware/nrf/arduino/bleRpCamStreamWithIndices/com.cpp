@@ -1,3 +1,4 @@
+#include "Adafruit_USBD_CDC.h"
 // com.cpp
 #include "com.h"
 #include "ble.h"
@@ -13,7 +14,7 @@ int markerIndex = 0;
 static uint32_t expectedBytes = 0;
 static uint32_t overflowSize = 0;
 byte state = 0;  // 0=looking for start, 1=reading size, 2=collecting data
-int startMarkerReceivedTime = 0;
+int lastDataReceivedTime = 0;
 
 bool isStartMarker() {
     return (markerBuffer[0] == 0xFF && markerBuffer[1] == 0xAA && 
@@ -47,21 +48,23 @@ void updateMarkerBuffer(uint8_t newByte) {
 }
 
 void processIncomingData() {
+  bufferIndex = 0;
+  chunkNumber = 0;
+  indexInChunk = 0;
+  expectedBytes = 0;
   receiving = true;
+  lastDataReceivedTime = millis();
   while(receiving) {
     while (Serial1.available()) {
         uint8_t inByte = Serial1.read();
+        lastDataReceivedTime = millis();
         updateMarkerBuffer(inByte);
         
         switch(state) {
             case 0: // Looking for start marker
                 if (isStartMarker()) {
                     state = 1;
-                    bufferIndex = 0;
-                    chunkNumber = 0;
-                    indexInChunk = 0;
-                    expectedBytes = 0;
-                    startMarkerReceivedTime = millis();
+
                 }
                 break;
                 
@@ -111,18 +114,13 @@ void processIncomingData() {
                     // Serial.printf("Received chunk: %d, bufferIndex: %d, expected bytes: %d, expected chunks: %d\n", chunkNumber, bufferIndex, expectedBytes, expectedBytes/CHUNK_SIZE);
                     indexInChunk = 0;
                     chunkNumber++;
-                    if ((millis() - startMarkerReceivedTime) > RECEIVE_TIMEOUT) {
-                      Serial.println("Timed out 2");
-                      state = 0;
-                      receiving = false;
-                    }
                   }  
                 }
                 break;
         }
     }
 
-    if(state != 0 && (millis() - startMarkerReceivedTime) > RECEIVE_TIMEOUT) {
+    if((millis() - lastDataReceivedTime) > RECEIVE_TIMEOUT) {
       Serial.printf("Chunk Number: %d, Index in chunk: %d\n", chunkNumber, indexInChunk);
       Serial.println("Timed out 1");
       state = 0;
