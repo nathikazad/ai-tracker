@@ -10,7 +10,6 @@
 #define CHUNK_SIZE 256
 #define RECEIVE_TIMEOUT 3000
 
-void setupCom();
 void processIncomingData();
 void sendBufferInPackets();
 

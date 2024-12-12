@@ -79,7 +79,7 @@ bool writeChunked(uint8_t* buffer, size_t totalSize) {
     size_t bytesRemaining = totalSize;
     size_t offset = 0;
     uint8_t ackByte;
-    uint8_t chunk_index = 0;
+    uint16_t chunk_index = 0;
     int total_retries = 0;
 
     Serial.printf("Sending %d bytes in %d chunks\n", totalSize, totalSize/CHUNK_SIZE);
@@ -115,7 +115,7 @@ bool writeChunked(uint8_t* buffer, size_t totalSize) {
             }
             if(!chunkAcked) {
               tries++;
-              Serial.printf("Sending chunk %d again\n", chunk_index);
+              // Serial.printf("Sending chunk %d again\n", chunk_index);
               total_retries++;
             }
             if(tries > ACK_RETRIES) {
@@ -132,6 +132,17 @@ bool writeChunked(uint8_t* buffer, size_t totalSize) {
 }
 
 void loop() {
+  if(Serial1.available()) {
+    char c = Serial1.read();
+    if(c == 'c') {
+      Serial.printf("Received capture command\n", c);
+      sendImage();
+    }
+  }
+  delay(10); 
+}
+
+void sendImage() {
   digitalWrite(8, HIGH);
   int startTime = millis();
   hm01b0_read_frame(pixels, sizeof(pixels));
@@ -185,7 +196,6 @@ void loop() {
     }
   }
   digitalWrite(8, LOW);
-  delay(10000); 
 }
 
 

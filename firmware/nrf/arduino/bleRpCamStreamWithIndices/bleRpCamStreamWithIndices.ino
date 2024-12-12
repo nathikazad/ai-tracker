@@ -5,12 +5,16 @@
 void setup() {
     Serial.begin(115200);
     while(!Serial);
-    setupCom();
-    Serial.println("Comms Initialized");
+    
     setupBLE();
     Serial.println("BLE Initialized");
+    Serial1.begin(1000000);
+    while(!Serial1);
+    Serial.println("Comms Initialized");
 }
 
 void loop() {
-    processIncomingData();
+  Serial1.write('c');
+  processIncomingData();
+  delay(10000);
 }

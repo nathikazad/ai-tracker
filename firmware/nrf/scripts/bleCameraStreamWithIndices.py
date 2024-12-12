@@ -6,7 +6,7 @@ import struct
 import time
 import sys
 import sys
-from slic_decoder import SlicDecoder
+# from slic_decoder import SlicDecoder
 from PIL import Image
 
 # BLE UUIDs from the Arduino code

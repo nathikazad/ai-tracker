@@ -6,6 +6,7 @@ static uint8_t buffer[MAX_FRAME_SIZE+100];
 static uint32_t bufferIndex = 0;
 static uint16_t chunkNumber = 0;
 static uint16_t indexInChunk = 0;
+static bool receiving = false;
 
 uint8_t markerBuffer[4];  // To store the last 4 bytes for marker detection
 int markerIndex = 0;
@@ -13,12 +14,6 @@ static uint32_t expectedBytes = 0;
 static uint32_t overflowSize = 0;
 byte state = 0;  // 0=looking for start, 1=reading size, 2=collecting data
 int startMarkerReceivedTime = 0;
-
-
-void setupCom() {
-  Serial1.begin(1000000);
-  while(!Serial1);
-}
 
 bool isStartMarker() {
     return (markerBuffer[0] == 0xFF && markerBuffer[1] == 0xAA && 
@@ -52,6 +47,8 @@ void updateMarkerBuffer(uint8_t newByte) {
 }
 
 void processIncomingData() {
+  receiving = true;
+  while(receiving) {
     while (Serial1.available()) {
         uint8_t inByte = Serial1.read();
         updateMarkerBuffer(inByte);
@@ -105,6 +102,7 @@ void processIncomingData() {
                     sendBufferInPackets();
                     uint32_t checksum = fletcher32(buffer, expectedBytes);
                     Serial.printf("Fletcher-32 checksum: 0x%08X\n", checksum);
+                    receiving = false;
                     state = 0;
                   } else if (indexInChunk == CHUNK_SIZE+4 && isChunkEndMarker()) {
                     bufferIndex -= 4;
@@ -116,6 +114,7 @@ void processIncomingData() {
                     if ((millis() - startMarkerReceivedTime) > RECEIVE_TIMEOUT) {
                       Serial.println("Timed out 2");
                       state = 0;
+                      receiving = false;
                     }
                   }  
                 }
@@ -127,7 +126,9 @@ void processIncomingData() {
       Serial.printf("Chunk Number: %d, Index in chunk: %d\n", chunkNumber, indexInChunk);
       Serial.println("Timed out 1");
       state = 0;
+      receiving = false;
     }
+  }
 }
 
 
