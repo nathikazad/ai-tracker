@@ -1,5 +1,6 @@
 */*/*/build/*
 */*/*/dist/*
 esp32/scripts/audio_recordings/*
+esp32/scripts/received_images/*
 nrf/scripts/saved_frames/*
 rp2040/scripts/saved_frames/*
