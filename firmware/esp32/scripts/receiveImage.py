@@ -53,6 +53,17 @@ class ImageReceiver:
                 return False
         return False
 
+    async def send_ack(self):
+        if self.client and self.client.is_connected:
+            try:
+                await self.client.write_gatt_char(ACK_CHARACTERISTIC_UUID, b"ACK")
+                print("ACK sent successfully")
+                return True
+            except Exception as e:
+                print(f"Failed to send ACK: {str(e)}")
+                return False
+        return False
+
     async def process_packet(self, data):
         # Check for reset packet with 8-byte identifier
         IDENTIFIER = bytes([0xFF, 0xA5, 0x5A, 0xC3, 0x3C, 0x69, 0x96, 0xF0])
