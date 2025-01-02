@@ -7,7 +7,7 @@
 		<key>Aspire-Mac.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>9</integer>
+			<integer>3</integer>
 		</dict>
 		<key>History.xcscheme_^#shared#^_</key>
 		<dict>
@@ -64,7 +64,7 @@
 		<key>Shortcut ExtensionExtension.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>10</integer>
+			<integer>8</integer>
 		</dict>
 		<key>ShortcutExtension.xcscheme_^#shared#^_</key>
 		<dict>
@@ -74,7 +74,12 @@
 		<key>device-tester.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>11</integer>
+			<integer>5</integer>
+		</dict>
+		<key>esp-cam-stream.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>12</integer>
 		</dict>
 	</dict>
 </dict>

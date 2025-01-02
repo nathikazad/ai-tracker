@@ -1312,6 +1312,7 @@
 				FE4AB3912C51D94400A07749 /* XCRemoteSwiftPackageReference "WrappingHStack" */,
 				FE71C65F2C8FF73600953D63 /* XCRemoteSwiftPackageReference "supabase-swift" */,
 				FE71C6882C909FFE00953D63 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
+				FEB08CBC2D23B70500D71717 /* XCRemoteSwiftPackageReference "swift-nio" */,
 			);
 			productRefGroup = FE4F7BA02BA7D79E0041CB6A /* Products */;
 			projectDirPath = "";
@@ -2151,6 +2152,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 0.9.19;
+			};
+		};
+		FEB08CBC2D23B70500D71717 /* XCRemoteSwiftPackageReference "swift-nio" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-nio.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.77.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

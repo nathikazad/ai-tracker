@@ -1,55 +1,103 @@
-//
-//  ble.swift
-//  ble-test-2
-//
-//  Created by Nathik Azad on 12/11/24.
-//
-
-import Foundation
-import SwiftUI
 import CoreBluetooth
 
-// MARK: - BLE Service and Characteristic UUIDs
-struct BLEConstants {
-    static let serialServiceUUID = CBUUID(string: "6E400001-B5A3-F393-E0A9-E50E24DCCA9E")
-    static let camUUID = CBUUID(string: "6E400003-B5A3-F393-E0A9-E50E24DCCA9E")
-    static let micUUID = CBUUID(string: "19B10001-E8F2-537E-4F6C-D104768A1214")
-}
-
-// MARK: - Frame Receiver Class
-class BLEHandler: NSObject, ObservableObject, CBPeripheralDelegate {
+class BLEManager: NSObject, ObservableObject {
+    static let DEVICE_NAME = "XIAOESP32S3_BLE"
+    static let TRANSFER_CHARACTERISTIC_UUID = CBUUID(string: "00002a59-0000-1000-8000-00805f9b34fb")
+    static let ACK_CHARACTERISTIC_UUID = CBUUID(string: "00002a58-0000-1000-8000-00805f9b34fb")
+    static let TIME_CHARACTERISTIC_UUID = CBUUID(string: "00002a57-0000-1000-8000-00805f9b34fb")
+    
+    @Published var isConnected = false
+    @Published var isReceiving = false
+    @Published var receivedPackets = 0
+    @Published var totalPackets = 0
+    @Published var progressPercentage: Double = 0
+    
     private var centralManager: CBCentralManager!
     private var peripheral: CBPeripheral?
-    @Published var isConnected = false
-    @Published var isScanning = false
-    @Published var currentImage: UIImage?
+    private var transferCharacteristic: CBCharacteristic?
+    private var imageData = Data()
+    private var fileName: String?
+    private var fileSize: Int?
     
-    private let audioTranscriber = AudioTranscriber()
-    let imgCapture = ImgCapture()
+    private var lastPacketTime: Date?
+    private var timeoutTimer: Timer?
+    private var receivedPacketsSet = Set<Int>()
+    private let PACKET_TIMEOUT: TimeInterval = 1.0 // 1 second timeout
     
     override init() {
         super.init()
         centralManager = CBCentralManager(delegate: self, queue: nil)
-        imgCapture.$currentImage
-                    .receive(on: DispatchQueue.main)
-                    .assign(to: &$currentImage)
     }
     
-    func startScanning() {
+    private func startScanning() {
         guard centralManager.state == .poweredOn else { return }
-        isScanning = true
-        centralManager.scanForPeripherals(withServices: [BLEConstants.serialServiceUUID],
-                                        options: [CBCentralManagerScanOptionAllowDuplicatesKey: false])
+        
+        print("Starting scan for devices...")
+        centralManager.scanForPeripherals(withServices: nil, options: nil)
     }
     
-    func stopScanning() {
-        centralManager.stopScan()
-        isScanning = false
+    private func reset() {
+        imageData = Data()
+        fileName = nil
+        fileSize = nil
+        receivedPackets = 0
+        totalPackets = 0
+        progressPercentage = 0
+        isReceiving = false
+        receivedPacketsSet.removeAll()
+        lastPacketTime = nil
+        timeoutTimer?.invalidate()
+        timeoutTimer = nil
+    }
+    
+    private func sendAck() {
+        guard let peripheral = peripheral,
+              let ackCharacteristic = peripheral.services?
+                .flatMap({ $0.characteristics ?? [] })
+                .first(where: { $0.uuid == BLEManager.ACK_CHARACTERISTIC_UUID }) else {
+            print("Cannot send ACK: ACK characteristic not found")
+            return
+        }
+        
+        // For final ACK, send "ACK" string
+        let ackData = "ACK".data(using: .utf8)!
+        peripheral.writeValue(ackData, for: ackCharacteristic, type: .withResponse)
+        print("Final ACK sent")
+    }
+    
+    private func sendBitmapAck(receivedPackets: Set<Int>) {
+        guard let peripheral = peripheral,
+              let ackCharacteristic = peripheral.services?
+                .flatMap({ $0.characteristics ?? [] })
+                .first(where: { $0.uuid == BLEManager.ACK_CHARACTERISTIC_UUID }) else {
+            print("Cannot send bitmap ACK: ACK characteristic not found")
+            return
+        }
+        
+        // Calculate bitmap size in bytes (rounded up)
+        let bitmapSize = (totalPackets + 7) / 8
+        var bitmap = [UInt8](repeating: 0, count: bitmapSize)
+        
+        // Fill the bitmap - MSB first
+        for packetNum in receivedPackets {
+            if packetNum < totalPackets {
+                let byteIndex = packetNum / 8
+                let bitIndex = packetNum % 8
+                bitmap[byteIndex] |= UInt8(1 << (7 - bitIndex))
+            }
+        }
+        
+        // Calculate missing packets for debug output
+        let missingPackets = Set(0..<totalPackets).subtracting(receivedPackets)
+        
+        peripheral.writeValue(Data(bitmap), for: ackCharacteristic, type: .withResponse)
+        print("\nSent bitmap ACK: \(receivedPackets.count)/\(totalPackets) packets received")
+        print("Missing packets: \(missingPackets.sorted())")
     }
 }
 
-// MARK: - CBCentralManager Delegate
-extension BLEHandler: CBCentralManagerDelegate {
+// MARK: - CBCentralManagerDelegate
+extension BLEManager: CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         if central.state == .poweredOn {
             startScanning()
@@ -57,62 +105,178 @@ extension BLEHandler: CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
-                       advertisementData: [String: Any], rssi RSSI: NSNumber) {
-        guard let name = peripheral.name, name.contains("Aspire") else { return }
+                       advertisementData: [String : Any], rssi RSSI: NSNumber) {
+        guard peripheral.name == BLEManager.DEVICE_NAME else { return }
         
-        stopScanning()
         self.peripheral = peripheral
         central.connect(peripheral, options: nil)
-    }
-    
-    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        print("Connected to \(peripheral.name ?? "unknown device")")
-        isConnected = true
-        peripheral.delegate = self
-        peripheral.discoverServices([BLEConstants.serialServiceUUID])
+        central.stopScan()
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         isConnected = false
+        self.peripheral = nil
+        print("Disconnected from peripheral: \(peripheral)")
+        
+        // Start scanning again
         startScanning()
     }
     
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        guard let services = peripheral.services else { return }
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        isConnected = true
+        peripheral.delegate = self
+        peripheral.discoverServices(nil)
+    }
+    
+    private func syncTime() {
+        guard let peripheral = peripheral,
+              let timeCharacteristic = peripheral.services?
+                .flatMap({ $0.characteristics ?? [] })
+                .first(where: { $0.uuid == BLEManager.TIME_CHARACTERISTIC_UUID }) else {
+            print("Time characteristic not found")
+            return
+        }
         
+        // Get current timestamp as UInt64
+        let currentTime = UInt64(Date().timeIntervalSince1970)
+        var timeBytes = currentTime.littleEndian // Convert to little-endian
+        let data = Data(bytes: &timeBytes, count: MemoryLayout<UInt64>.size)
+        
+        peripheral.writeValue(data, for: timeCharacteristic, type: .withResponse)
+        print("Time sync sent: \(currentTime)")
+    }
+}
+
+// MARK: - CBPeripheralDelegate
+extension BLEManager: CBPeripheralDelegate {
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        if let error = error {
+            print("Error discovering services: \(error)")
+            return
+        }
+        
+        guard let services = peripheral.services else {
+            print("No services found")
+            return
+        }
+        
+//        print("Discovered services: \(services.map { $0.uuid })")
         for service in services {
-            peripheral.discoverCharacteristics([BLEConstants.camUUID, BLEConstants.micUUID], for: service)
+            peripheral.discoverCharacteristics([
+                BLEManager.TRANSFER_CHARACTERISTIC_UUID,
+                BLEManager.ACK_CHARACTERISTIC_UUID,
+                BLEManager.TIME_CHARACTERISTIC_UUID
+            ], for: service)
         }
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-        guard let characteristics = service.characteristics else { return }
+        if let error = error {
+            print("Error discovering characteristics: \(error)")
+            return
+        }
         
+        guard let characteristics = service.characteristics else {
+            print("No characteristics found for service: \(service.uuid)")
+            return
+        }
+        
+//        print("Discovered characteristics for service \(service.uuid):")
         for characteristic in characteristics {
-            if characteristic.uuid == BLEConstants.camUUID || characteristic.uuid == BLEConstants.micUUID {
+//            print("- \(characteristic.uuid)")
+            if characteristic.uuid == BLEManager.TRANSFER_CHARACTERISTIC_UUID {
+//                print("Found transfer characteristic")
+                transferCharacteristic = characteristic
                 peripheral.setNotifyValue(true, for: characteristic)
+            } else if characteristic.uuid == BLEManager.TIME_CHARACTERISTIC_UUID {
+                print("Found time characteristic")
+                // After discovering time characteristic, sync time
+                syncTime()
+            } else if characteristic.uuid == BLEManager.ACK_CHARACTERISTIC_UUID {
+//                print("Found ACK characteristic")
             }
         }
     }
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic,
                    error: Error?) {
-        guard let data = characteristic.value else { return }
-        switch characteristic.uuid {
-            case BLEConstants.micUUID:
-                DispatchQueue.main.async { [weak self] in
-                    self?.audioTranscriber.handleAudioData(data)
-                }
-                break;
-            case BLEConstants.camUUID:
-                if data.count >= 2 && data[0] == 0xFF && data[1] == 0xAA {
-                    imgCapture.handleHandshake(data)
-                } else {
-                    imgCapture.handleDataPacket(data)
-                }
-                break;
-            default:
-            print("Unknown characteristic \(characteristic.uuid)");
+        if let error = error {
+            print("Error receiving data: \(error)")
+            return
+        }
+        
+        guard let data = characteristic.value else {
+            print("Received empty data packet")
+            return
+        }
+        
+        // Check for reset packet (8-byte identifier)
+        let identifier: [UInt8] = [0xFF, 0xA5, 0x5A, 0xC3, 0x3C, 0x69, 0x96, 0xF0]
+        if data.count >= 8 && data.prefix(8).elementsEqual(identifier) {
+            print("\nReceived reset packet, starting new file reception")
+            reset()
+            
+            // Parse header information
+            fileSize = Int(data[8]) << 24 | Int(data[9]) << 16 | Int(data[10]) << 8 | Int(data[11])
+            totalPackets = Int(data[12]) << 24 | Int(data[13]) << 16 | Int(data[14]) << 8 | Int(data[15])
+            let filenameLength = Int(data[16])
+            
+            if data.count >= 17 + filenameLength {
+                fileName = String(data: data.subdata(in: 17..<17+filenameLength), encoding: .utf8)
             }
+            
+            isReceiving = true
+            print("Starting to receive file: \(fileName ?? "unknown")")
+            print("File size: \(fileSize ?? 0) bytes")
+            print("Expected number of packets: \(totalPackets)")
+            return
+        }
+        
+        guard isReceiving else {
+            print("Received data but not in receiving mode")
+            return
+        }
+        
+        // Parse packet number from header (3 bytes)
+        lastPacketTime = Date()
+        let packetNumber = (Int(data[0]) << 16) | (Int(data[1]) << 8) | Int(data[2])
+        if !receivedPacketsSet.contains(packetNumber) {
+          receivedPacketsSet.insert(packetNumber)
+          receivedPackets += 1
+          
+          // Calculate and update progress
+          progressPercentage = Double(receivedPackets) / Double(totalPackets) * 100
+        }
+        
+        // If transfer complete
+        if receivedPackets >= totalPackets {
+            print("\nTransfer complete!")
+            print("Total packets received: \(receivedPackets)")
+            isReceiving = false
+            timeoutTimer?.invalidate()
+            timeoutTimer = nil
+            sendAck() // Send final ACK
+        } else {
+            timeoutTimer?.invalidate()
+            
+            // Create new timer that fires every 0.5 seconds
+            timeoutTimer = Timer.scheduledTimer(withTimeInterval: PACKET_TIMEOUT, repeats: false) { [weak self] _ in
+                self?.checkTimeout()
+            }
+        }
+    }
+    
+    private func checkTimeout() {
+        guard let lastPacketTime = lastPacketTime,
+              isReceiving,
+              !receivedPacketsSet.isEmpty else {
+            return
+        }
+        
+
+        print("\nTimeout detected - sending bitmap ACK")
+        sendBitmapAck(receivedPackets: receivedPacketsSet)
+        // Update last packet time to prevent rapid retransmissions
+//        self.lastPacketTime =  Date().addingTimeInterval(5)
     }
 }
