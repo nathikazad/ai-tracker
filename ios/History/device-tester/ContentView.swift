@@ -19,7 +19,7 @@ struct ContentView: View {
 }
 
 // MARK: - Models
-struct ReceivedFile: Identifiable, Codable {
+struct ReceivedFile: Identifiable, Codable, Equatable {
     let id: UUID
     let filepath: String
     let dateReceived: Date
@@ -47,6 +47,13 @@ struct ReceivedFile: Identifiable, Codable {
         }
         return .jpg
     }
+    
+    static func == (lhs: ReceivedFile, rhs: ReceivedFile) -> Bool {
+            // Compare the properties that make a file unique
+            return lhs.dateReceived == rhs.dateReceived &&
+                   lhs.url == rhs.url &&
+                   lhs.fileType == rhs.fileType
+        }
 }
 
 
@@ -83,7 +90,7 @@ struct FileReceiverView: View {
     
     var body: some View {
         VStack {
-            FileExplorerView()
+            TimelineExplorerView()
                 .frame(maxHeight: .infinity)
             
             Divider()
