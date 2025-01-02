@@ -311,6 +311,31 @@ extension FileManager {
         
         return receivedFilesPath
     }
+    
+    // New helper function to get/create date-based directory
+    static func getDateBasedDirectory(for date: Date) -> URL? {
+        guard let baseDirectory = receivedFilesDirectory else {
+            return nil
+        }
+        
+        let calendar = Calendar.current
+        let dateComponents = calendar.dateComponents([.year, .month, .day], from: date)
+        
+        // Format folder name as YYMMDD
+        let folderName = String(format: "%02d%02d%02d",
+                              dateComponents.year! % 100,
+                              dateComponents.month!,
+                              dateComponents.day!)
+        
+        let dateDirectory = baseDirectory.appendingPathComponent(folderName, isDirectory: true)
+        
+        // Create directory if it doesn't exist
+        if !FileManager.default.fileExists(atPath: dateDirectory.path) {
+            try? FileManager.default.createDirectory(at: dateDirectory, withIntermediateDirectories: true)
+        }
+        
+        return dateDirectory
+    }
 }
 
 extension Notification.Name {
@@ -319,9 +344,27 @@ extension Notification.Name {
 
 extension BLEManager {
     private func saveFile() {
-        guard let fileName = fileName,
-              let directory = FileManager.receivedFilesDirectory else {
-            print("Error: Unable to access file directory")
+        guard let fileName = fileName else {
+            print("Error: No filename provided")
+            return
+        }
+        
+        // Parse date from filename or use current date
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyMMddHHmmss"
+        
+        let dateFromFilename: Date
+        if let baseFileName = fileName.split(separator: ".").first,
+           let timestamp = TimeInterval(baseFileName) {
+            dateFromFilename = Date(timeIntervalSince1970: timestamp)
+        } else {
+            dateFromFilename = Date()
+            print("Failed to parse timestamp from filename: \(fileName)")
+        }
+        
+        // Get the appropriate directory for this date
+        guard let directory = FileManager.getDateBasedDirectory(for: dateFromFilename) else {
+            print("Error: Unable to access or create date-based directory")
             return
         }
         
@@ -331,30 +374,16 @@ extension BLEManager {
             // Save the file
             try imageData.write(to: fileURL)
             
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyMMddHHmmss"
-            
-            let dateFromFilename: Date
-            if let baseFileName = fileName.split(separator: ".").first,
-               baseFileName.count >= 12,
-               let parsed = dateFormatter.date(from: String(baseFileName.prefix(12))) {
-                dateFromFilename = parsed
-            } else {
-                dateFromFilename = Date() // Fallback to current date if parsing fails
-                print("Failed to parse date from filename: \(fileName)")
-            }
-
-            
             // Create and save ReceivedFile metadata
             let newFile = ReceivedFile(
                 id: UUID(),
-                filepath: fileName,
+                filepath: "\(directory.lastPathComponent)/\(fileName)", // Update filepath to include date folder
                 dateReceived: dateFromFilename,
                 fileType: ReceivedFile.getFileType(from: fileName)
             )
             
             // Save metadata to UserDefaults
-            saveFileMetadata(newFile)
+            saveFileMetadata(newFile, date: dateFromFilename)
             
             print("File saved successfully at: \(fileURL.path)")
             NotificationCenter.default.post(name: .newFileReceived, object: nil)
@@ -364,8 +393,8 @@ extension BLEManager {
         }
     }
     
-    private func saveFileMetadata(_ file: ReceivedFile) {
-        var savedFiles = BLEManager.loadFileMetadata()
+    private func saveFileMetadata(_ file: ReceivedFile, date: Date) {
+        var savedFiles = BLEManager.loadFileMetadata(for: date)
         savedFiles.append(file)
         
         if let encoded = try? JSONEncoder().encode(savedFiles) {
@@ -373,11 +402,17 @@ extension BLEManager {
         }
     }
     
-    static func loadFileMetadata() -> [ReceivedFile] {
-        guard let data = UserDefaults.standard.data(forKey: "SavedFiles"),
-              let files = try? JSONDecoder().decode([ReceivedFile].self, from: data) else {
-            return []
+    static func loadFileMetadata(for date: Date) -> [ReceivedFile] {
+            guard let data = UserDefaults.standard.data(forKey: "SavedFiles"),
+                  let files = try? JSONDecoder().decode([ReceivedFile].self, from: data) else {
+                return []
+            }
+            
+
+            let calendar = Calendar.current
+            return files.filter { file in
+                calendar.isDate(file.dateReceived, inSameDayAs: date)
+            }
+            return files
         }
-        return files
-    }
 }

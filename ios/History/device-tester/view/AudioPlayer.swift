@@ -13,6 +13,7 @@ struct AudioPlayerView: View {
     @State private var isPlaying = false
     @State private var currentTime: TimeInterval = 0
     @State private var timer: Timer?
+    @State private var gain: Float = 10.0  // Add gain state
     
     var body: some View {
         VStack(spacing: 16) {
@@ -48,19 +49,9 @@ struct AudioPlayerView: View {
             
             // Playback Controls
             HStack(spacing: 20) {
-                Button(action: rewind) {
-                    Image(systemName: "backward.fill")
-                        .font(.title2)
-                }
-                
                 Button(action: togglePlayPause) {
                     Image(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill")
                         .font(.title)
-                }
-                
-                Button(action: forward) {
-                    Image(systemName: "forward.fill")
-                        .font(.title2)
                 }
             }
             .padding(.top, 8)
@@ -81,6 +72,7 @@ struct AudioPlayerView: View {
             
             player = try AVAudioPlayer(contentsOf: url)
             player?.prepareToPlay()
+            player?.volume = gain  // Set initial gain
             
             // Setup timer for progress updates
             timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
@@ -91,6 +83,10 @@ struct AudioPlayerView: View {
         } catch {
             print("Error setting up audio player: \(error)")
         }
+    }
+    
+    private func updateGain() {
+        player?.volume = gain
     }
     
     private func cleanup() {
@@ -112,24 +108,9 @@ struct AudioPlayerView: View {
         }
     }
     
-    private func rewind() {
-        guard let player = player else { return }
-        let newTime = max(0, currentTime - 5)
-        player.currentTime = newTime
-        currentTime = newTime
-    }
-    
-    private func forward() {
-        guard let player = player else { return }
-        let newTime = min(player.duration, currentTime + 5)
-        player.currentTime = newTime
-        currentTime = newTime
-    }
-    
     private func formatTime(_ time: TimeInterval) -> String {
         let minutes = Int(time) / 60
         let seconds = Int(time) % 60
         return String(format: "%d:%02d", minutes, seconds)
     }
 }
-

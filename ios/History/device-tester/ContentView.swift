@@ -49,59 +49,7 @@ struct ReceivedFile: Identifiable, Codable {
     }
 }
 
-// MARK: - File Explorer View
-// Update FileExplorerView to load files
-struct FileExplorerView: View {
-    @State private var files: [ReceivedFile] = []
-    @State private var selectedFile: ReceivedFile?
-    
-    var body: some View {
-        List(files) { file in
-            FileRow(file: file)
-                .onTapGesture {
-                    selectedFile = file
-                }
-        }
-        .sheet(item: $selectedFile) { file in
-            if let url = file.url {
-                if  file.fileType == .jpg {
-                    ImagePreviewView(file: file)
-                } else if  file.fileType == .wav {
-                    AudioPlayerView(url: url)
-                }
-            }
-        }
-        .onAppear {
-            loadFiles()
-        }
-        .onReceive(NotificationCenter.default.publisher(for: .newFileReceived)) { _ in
-            loadFiles()
-        }
-    }
-    
-    private func loadFiles() {
-        files = BLEManager.loadFileMetadata().sorted(by: { $0.dateReceived > $1.dateReceived })
-    }
-}
 
-struct FileRow: View {
-    let file: ReceivedFile
-    
-    var body: some View {
-        HStack {
-            Image(systemName: file.fileType.icon)
-            VStack(alignment: .leading) {
-                Text(file.url!.lastPathComponent)
-                HStack {
-                    Text(file.dateReceived, format: .dateTime.day().month().year())
-                    Text(file.dateReceived, format: .dateTime.hour().minute().second())
-                }
-                .font(.caption)
-                .foregroundColor(.secondary)
-            }
-        }
-    }
-}
 
 // MARK: - Bluetooth Console View
 struct BluetoothConsoleView: View {
@@ -141,7 +89,7 @@ struct FileReceiverView: View {
             Divider()
             
             BluetoothConsoleView(bleManager: bleManager)
-                .frame(height: 200)
+                .frame(height: 100)
         }
         .padding()
     }
