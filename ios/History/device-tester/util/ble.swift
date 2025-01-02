@@ -240,12 +240,28 @@ extension BLEManager: CBPeripheralDelegate {
         // Parse packet number from header (3 bytes)
         lastPacketTime = Date()
         let packetNumber = (Int(data[0]) << 16) | (Int(data[1]) << 8) | Int(data[2])
+
+        // Only increment if we haven't received this packet before
         if !receivedPacketsSet.contains(packetNumber) {
-          receivedPacketsSet.insert(packetNumber)
-          receivedPackets += 1
-          
-          // Calculate and update progress
-          progressPercentage = Double(receivedPackets) / Double(totalPackets) * 100
+            receivedPacketsSet.insert(packetNumber)
+            receivedPackets += 1
+            
+            // Get the data portion (excluding header)
+            let dataPortion = data.subdata(in: 3..<data.count)
+            
+            // Calculate write position
+            let writePosition = packetNumber * (512 - 3) // 512 is packet size, 3 is header size
+            
+            // Extend imageData if needed
+            if writePosition + dataPortion.count > imageData.count {
+                imageData.append(contentsOf: [UInt8](repeating: 0, count: writePosition + dataPortion.count - imageData.count))
+            }
+            
+            // Write data at correct position
+            imageData.replaceSubrange(writePosition..<writePosition + dataPortion.count, with: dataPortion)
+            
+            // Calculate and update progress
+            progressPercentage = Double(receivedPackets) / Double(totalPackets) * 100
         }
         
         // If transfer complete
@@ -256,6 +272,8 @@ extension BLEManager: CBPeripheralDelegate {
             timeoutTimer?.invalidate()
             timeoutTimer = nil
             sendAck() // Send final ACK
+            saveFile()
+            
         } else {
             timeoutTimer?.invalidate()
             
@@ -267,7 +285,7 @@ extension BLEManager: CBPeripheralDelegate {
     }
     
     private func checkTimeout() {
-        guard let lastPacketTime = lastPacketTime,
+        guard (lastPacketTime != nil),
               isReceiving,
               !receivedPacketsSet.isEmpty else {
             return
@@ -276,7 +294,90 @@ extension BLEManager: CBPeripheralDelegate {
 
         print("\nTimeout detected - sending bitmap ACK")
         sendBitmapAck(receivedPackets: receivedPacketsSet)
-        // Update last packet time to prevent rapid retransmissions
-//        self.lastPacketTime =  Date().addingTimeInterval(5)
+    }
+}
+
+extension FileManager {
+    static var receivedFilesDirectory: URL? {
+        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return nil
+        }
+        let receivedFilesPath = documentsDirectory.appendingPathComponent("ReceivedFiles", isDirectory: true)
+        
+        // Create directory if it doesn't exist
+        if !FileManager.default.fileExists(atPath: receivedFilesPath.path) {
+            try? FileManager.default.createDirectory(at: receivedFilesPath, withIntermediateDirectories: true)
+        }
+        
+        return receivedFilesPath
+    }
+}
+
+extension Notification.Name {
+    static let newFileReceived = Notification.Name("newFileReceived")
+}
+
+extension BLEManager {
+    private func saveFile() {
+        guard let fileName = fileName,
+              let directory = FileManager.receivedFilesDirectory else {
+            print("Error: Unable to access file directory")
+            return
+        }
+        
+        let fileURL = directory.appendingPathComponent(fileName)
+        
+        do {
+            // Save the file
+            try imageData.write(to: fileURL)
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyMMddHHmmss"
+            
+            let dateFromFilename: Date
+            if let baseFileName = fileName.split(separator: ".").first,
+               baseFileName.count >= 12,
+               let parsed = dateFormatter.date(from: String(baseFileName.prefix(12))) {
+                dateFromFilename = parsed
+            } else {
+                dateFromFilename = Date() // Fallback to current date if parsing fails
+                print("Failed to parse date from filename: \(fileName)")
+            }
+
+            
+            // Create and save ReceivedFile metadata
+            let newFile = ReceivedFile(
+                id: UUID(),
+                filepath: fileName,
+                dateReceived: dateFromFilename,
+                fileType: ReceivedFile.getFileType(from: fileName)
+            )
+            
+            // Save metadata to UserDefaults
+            saveFileMetadata(newFile)
+            
+            print("File saved successfully at: \(fileURL.path)")
+            NotificationCenter.default.post(name: .newFileReceived, object: nil)
+            
+        } catch {
+            print("Error saving file: \(error)")
+        }
+    }
+    
+    private func saveFileMetadata(_ file: ReceivedFile) {
+        var savedFiles = BLEManager.loadFileMetadata()
+        savedFiles.append(file)
+        
+        if let encoded = try? JSONEncoder().encode(savedFiles) {
+            UserDefaults.standard.set(encoded, forKey: "SavedFiles")
+        }
+    }
+    
+    static func loadFileMetadata() -> [ReceivedFile] {
+        guard let data = UserDefaults.standard.data(forKey: "SavedFiles"),
+              let files = try? JSONDecoder().decode([ReceivedFile].self, from: data) else {
+            return []
+        }
+        return files
     }
 }

@@ -18,18 +18,18 @@ struct ContentView: View {
     }
 }
 
-import SwiftUI
-
-import AVKit
-
 // MARK: - Models
-struct ReceivedFile: Identifiable {
-    let id = UUID()
-    let url: URL
+struct ReceivedFile: Identifiable, Codable {
+    let id: UUID
+    let filepath: String
     let dateReceived: Date
     let fileType: FileType
     
-    enum FileType {
+    var url: URL? {
+        FileManager.receivedFilesDirectory?.appendingPathComponent(filepath)
+    }
+    
+    enum FileType: String, Codable {
         case wav
         case jpg
         
@@ -40,9 +40,17 @@ struct ReceivedFile: Identifiable {
             }
         }
     }
+    
+    static func getFileType(from filename: String) -> FileType {
+        if filename.lowercased().hasSuffix(".wav") {
+            return .wav
+        }
+        return .jpg
+    }
 }
 
 // MARK: - File Explorer View
+// Update FileExplorerView to load files
 struct FileExplorerView: View {
     @State private var files: [ReceivedFile] = []
     @State private var selectedFile: ReceivedFile?
@@ -55,15 +63,24 @@ struct FileExplorerView: View {
                 }
         }
         .sheet(item: $selectedFile) { file in
-            FilePreviewView(file: file)
+            if let url = file.url {
+                if  file.fileType == .jpg {
+                    ImagePreviewView(file: file)
+                } else if  file.fileType == .wav {
+                    AudioPlayerView(url: url)
+                }
+            }
         }
         .onAppear {
+            loadFiles()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .newFileReceived)) { _ in
             loadFiles()
         }
     }
     
     private func loadFiles() {
-        // Implement file loading logic here
+        files = BLEManager.loadFileMetadata().sorted(by: { $0.dateReceived > $1.dateReceived })
     }
 }
 
@@ -74,10 +91,13 @@ struct FileRow: View {
         HStack {
             Image(systemName: file.fileType.icon)
             VStack(alignment: .leading) {
-                Text(file.url.lastPathComponent)
-                Text(file.dateReceived, style: .date)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                Text(file.url!.lastPathComponent)
+                HStack {
+                    Text(file.dateReceived, format: .dateTime.day().month().year())
+                    Text(file.dateReceived, format: .dateTime.hour().minute().second())
+                }
+                .font(.caption)
+                .foregroundColor(.secondary)
             }
         }
     }
@@ -128,43 +148,16 @@ struct FileReceiverView: View {
 }
 
 // MARK: - File Preview View
-struct FilePreviewView: View {
+struct ImagePreviewView: View {
     let file: ReceivedFile
     
     var body: some View {
         Group {
-            switch file.fileType {
-            case .jpg:
-                if let image = UIImage(contentsOfFile: file.url.path) {
-                    Image(uiImage: image)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                }
-            case .wav:
-                AudioPlayerView(url: file.url)
+            if let url = file.url, let image = UIImage(contentsOfFile: url.path) {
+                Image(uiImage: image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
             }
         }
     }
 }
-
-struct AudioPlayerView: View {
-    let url: URL
-    @State private var player: AVPlayer?
-    
-    var body: some View {
-        VStack {
-            if let player = player {
-                VideoPlayer(player: player)
-                    .frame(height: 50)
-            }
-        }
-        .onAppear {
-            player = AVPlayer(url: url)
-        }
-        .onDisappear {
-            player?.pause()
-            player = nil
-        }
-    }
-}
-
