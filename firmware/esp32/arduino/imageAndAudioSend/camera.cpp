@@ -1,7 +1,5 @@
 #include "config.h"
 
-unsigned long lastCaptureTime = 0;
-
 void setup_camera() {
     camera_config_t config;
     config.ledc_channel = LEDC_CHANNEL_0;
@@ -52,30 +50,22 @@ void setup_camera() {
     Serial.println("Camera initialized successfully");
 }
 
-void camera_loop(void * parameter) {
-    while(true) {
-        if (camera_initialized && sd_initialized && timeSync) {
-            unsigned long now = millis();
-            if ((now - lastCaptureTime) >= CAPTURE_INTERVAL) {
-                char filename[32];
-                get_timestamp_filename(filename, "/pix");
-                Serial.println("Capturing image");
-                camera_fb_t *fb = esp_camera_fb_get();
-                if (fb) {
-                    if (xSemaphoreTake(sdMutex, portMAX_DELAY)) {
-                        File file = SD.open(filename, FILE_WRITE);
-                        if (file) {
-                            file.write(fb->buf, fb->len);
-                            file.close();
-                            Serial.printf("Saved: %s\n", filename);
-                        }
-                        xSemaphoreGive(sdMutex);
-                    }
-                    esp_camera_fb_return(fb);
-                }
-                lastCaptureTime = now;
+void capture_image(const char* filename) {
+  if (camera_initialized) {
+    Serial.println("Capturing image");
+    camera_fb_t *fb = esp_camera_fb_get();
+    if (fb) {
+        if (xSemaphoreTake(sdMutex, portMAX_DELAY)) {
+            File file = SD.open(filename, FILE_WRITE);
+            if (file) {
+                file.write(fb->buf, fb->len);
+                file.close();
+                Serial.printf("Saved: %s\n", filename);
             }
+            xSemaphoreGive(sdMutex);
         }
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
+        esp_camera_fb_return(fb);
     }
+    Serial.println("Captured");
+  }
 }

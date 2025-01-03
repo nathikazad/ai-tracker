@@ -94,15 +94,15 @@ struct FileReceiverView: View {
     @StateObject private var bleManager = BLEManager()
     
     var body: some View {
-//        VStack {
+        VStack {
             TimelineExplorerView()
                 .frame(maxHeight: .infinity)
             
-//            Divider()
-//            
-//            BluetoothConsoleView(bleManager: bleManager)
-//                .frame(height: 100)
-//        }
+            Divider()
+            
+            BluetoothConsoleView(bleManager: bleManager)
+                .frame(height: 100)
+        }
         .padding()
     }
 }

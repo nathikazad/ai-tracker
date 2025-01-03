@@ -306,9 +306,9 @@ bool send_file_over_ble(const char* imagePath) {
     return false;
 }
 
-bool check_directory(const char* dir_name) {
+bool check_directory(const char*) {
     if (xSemaphoreTake(sdMutex, portMAX_DELAY)) {
-        String dirPath = String("/") + dir_name;
+        String dirPath = String("/toSend");
         File root = SD.open(dirPath);
         if (root && root.isDirectory()) {
             // Create a vector to store file information
@@ -359,8 +359,9 @@ bool check_directory(const char* dir_name) {
                 }
                 return true;
             } else {
-                xSemaphoreGive(sdMutex);
-                delay(5000); // No files to process
+              Serial.println("No more new files to send");
+              xSemaphoreGive(sdMutex);
+              delay(5000); // No files to process
             }
         } else {
             if (root) root.close();
@@ -374,13 +375,13 @@ bool check_directory(const char* dir_name) {
 void ble_loop(void * parameter) {
     while(true) {
         if (deviceConnected && timeSync) {
-            check_directory("pix");
-            check_directory("audio");
+            check_directory("toSend");
         } else {
             if (!deviceConnected) {
-                Serial.println("Waiting for BLE connection...");
-            } else if (!timeSync) {
-                Serial.println("Waiting for time synchronization...");
+              Serial.println("Waiting for BLE connection...");
+            }
+            if (!timeSync) {
+              Serial.println("Waiting for time synchronization...");
             }
             delay(5000);
         }

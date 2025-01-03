@@ -95,10 +95,20 @@ struct TimelineExplorerView: View {
             .sorted(by: { $0.dateReceived < $1.dateReceived })
     }
     
-    private var sortedTimestamps: [(file: ReceivedFile, timestamp: Double)] {
-        selectedFiles.map { file in
-            (file, file.dateReceived.timeIntervalSince1970)
+    // Group files by their prefix timestamp and ensure uniqueness
+    private var sortedTimestamps: [(timestamp: Double, imageFile: ReceivedFile?, audioFile: ReceivedFile?)] {
+        let groupedFiles = Dictionary(grouping: selectedFiles) { file -> String in
+            // Extract prefix before the period
+            String(file.url?.lastPathComponent.split(separator: ".").first ?? "")
         }
+        
+        return groupedFiles.map { prefix, files in
+            let imageFile = files.first { $0.fileType == .jpg }
+            let audioFile = files.first { $0.fileType == .wav }
+            // Use the timestamp from any file in the group since they share the same prefix
+            let timestamp = (imageFile ?? audioFile)?.dateReceived.timeIntervalSince1970 ?? 0
+            return (timestamp: timestamp, imageFile: imageFile, audioFile: audioFile)
+        }.sorted { $0.timestamp < $1.timestamp }
     }
     
     private var timeRange: ClosedRange<Double> {
@@ -114,8 +124,9 @@ struct TimelineExplorerView: View {
     private var minTime: Double { sortedTimestamps.first?.timestamp ?? 0 }
     private var maxTime: Double { sortedTimestamps.last?.timestamp ?? 0 }
     
-    private var currentTimeFile: ReceivedFile? {
-        sortedTimestamps.last { $0.timestamp <= currentTime }?.file
+    private var currentTimeFiles: (imageFile: ReceivedFile?, audioFile: ReceivedFile?)? {
+        sortedTimestamps.last { $0.timestamp <= currentTime }
+            .map { (imageFile: $0.imageFile, audioFile: $0.audioFile) }
     }
     
     private var visibleMarks: [Double] {
@@ -137,34 +148,26 @@ struct TimelineExplorerView: View {
                 GeometryReader { geometry in
                     VStack {
                         // Media Display Area
-                        let currentAudio = sortedTimestamps.first { file in
-                            guard file.file.fileType == .wav else { return false }
-                            let audioEndTime = file.timestamp + 20 // 20 seconds duration
-                            return currentTime >= file.timestamp && currentTime <= audioEndTime
-                        }
-
-                        let currentImage = sortedTimestamps.last { file in
-                            guard file.file.fileType == .jpg else { return false }
-                            return file.timestamp <= currentTime
-                        }
-
-                        VStack {
-                            if let audioFile = currentAudio?.file,
-                               let url = audioFile.url {
-                                AudioPlayerView(url: url)
-                                    .frame(height: currentImage != nil ? geometry.size.height * 0.4 : geometry.size.height * 0.8)
+                        if let current = currentTimeFiles {
+                            VStack {
+                                if let audioFile = current.audioFile,
+                                   let url = audioFile.url {
+                                    AudioPlayerView(url: url)
+                                        .id(url.absoluteString)
+                                        .frame(height: current.imageFile != nil ?
+                                            geometry.size.height * 0.4 : geometry.size.height * 0.8)
+                                }
+                                
+                                if let imageFile = current.imageFile {
+                                    ImagePreviewView(file: imageFile)
+                                        .frame(height: current.audioFile != nil ?
+                                            geometry.size.height * 0.4 : geometry.size.height * 0.8)
+                                }
                             }
-                            
-                            if let imageFile = currentImage?.file {
-                                ImagePreviewView(file: imageFile)
-                                    .frame(height: currentAudio != nil ? geometry.size.height * 0.4 : geometry.size.height * 0.8)
-                            }
-                            
-                            if currentAudio == nil && currentImage == nil {
-                                Text("No media selected")
-                                    .foregroundColor(.secondary)
-                                    .frame(height: geometry.size.height * 0.8)
-                            }
+                        } else {
+                            Text("No media selected")
+                                .foregroundColor(.secondary)
+                                .frame(height: geometry.size.height * 0.8)
                         }
                         
                         // Timeline Control
@@ -174,21 +177,16 @@ struct TimelineExplorerView: View {
                                          step: 1,
                                          marks: visibleMarks)
                                 .onChange(of: currentTime) {
-                                    if let file = currentTimeFile {
-                                        selectedIndex = selectedFiles.firstIndex(where: {
-                                            $0.dateReceived == file.dateReceived &&
-                                            $0.url == file.url &&
-                                            $0.fileType == file.fileType
-                                        }) ?? 0
+                                    if let index = sortedTimestamps.firstIndex(where: { $0.timestamp <= currentTime }) {
+                                        selectedIndex = index
                                     }
                                 }
                             
                             // Navigation Controls
-                            // Navigation Controls
                             HStack {
                                 Button(action: {
-                                    if let prevTimestamp = sortedTimestamps.last(where: { $0.timestamp < currentTime }) {
-                                        currentTime = prevTimestamp.timestamp
+                                    if let prevIndex = sortedTimestamps.lastIndex(where: { $0.timestamp < currentTime }) {
+                                        currentTime = sortedTimestamps[prevIndex].timestamp
                                     }
                                 }) {
                                     Image(systemName: "chevron.left")
@@ -207,7 +205,7 @@ struct TimelineExplorerView: View {
                                     Image(systemName: isZoomed ? "minus.magnifyingglass" : "plus.magnifyingglass")
                                         .imageScale(.large)
                                 }
-                                .disabled(selectedFiles.count < 2)
+                                .disabled(sortedTimestamps.count < 2)
                                 
                                 // Live Mode Button
                                 Button(action: {
@@ -229,8 +227,9 @@ struct TimelineExplorerView: View {
                                 Spacer()
                                 
                                 // Timestamp Display
-                                if let currentFile = currentTimeFile {
-                                    Text(currentFile.dateReceived, format: .dateTime.hour().minute().second())
+                                if let current = currentTimeFiles {
+                                    Text((current.imageFile ?? current.audioFile)?.dateReceived ?? Date(),
+                                         format: .dateTime.hour().minute().second())
                                         .font(.caption)
                                         .foregroundColor(.secondary)
                                 }
@@ -238,19 +237,19 @@ struct TimelineExplorerView: View {
                                 Spacer()
                                 
                                 Button(action: {
-                                    if let nextTimestamp = sortedTimestamps.first(where: { $0.timestamp > currentTime }) {
-                                        currentTime = nextTimestamp.timestamp
+                                    if let nextIndex = sortedTimestamps.firstIndex(where: { $0.timestamp > currentTime }) {
+                                        currentTime = sortedTimestamps[nextIndex].timestamp
                                     }
                                 }) {
                                     Image(systemName: "chevron.right")
                                         .imageScale(.large)
                                 }
-                                .disabled(currentTime >= maxTime || isLiveMode)
+                                .disabled(currentTime >= maxTime)// || isLiveMode)
                             }
                             .padding(.horizontal)
                             
                             // File counter
-                            Text("\(selectedIndex + 1) of \(selectedFiles.count)")
+                            Text("\(selectedIndex + 1) of \(sortedTimestamps.count)")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
@@ -290,7 +289,6 @@ struct TimelineExplorerView: View {
         files = BLEManager.loadFileMetadata(for: selectedDate)
     }
 }
-
 struct TimelineSlider: View {
     @Binding var value: Double
     let bounds: ClosedRange<Double>

@@ -51,18 +51,17 @@ void ble_loop(void * parameter);
 
 // Function declarations for Camera
 void setup_camera();
-void camera_loop(void * parameter);
+void capture_image(const char* filename);
 
 // Function declarations for Audio
 void setup_audio();
-void audio_loop(void * parameter);
+void record_audio(const char* filename);
 
 // Function declarations for SD
 void setup_sd();
 bool move_file(const char* sourcePath, const char* destPath);
-void get_timestamp_filename(char* filename, const char* prefix);
+void get_timestamp_filename(char* filename);
 
 // Task handles
-extern TaskHandle_t cameraTask;
-extern TaskHandle_t audioTask;
+extern TaskHandle_t sensorTask;
 extern TaskHandle_t bleTask;

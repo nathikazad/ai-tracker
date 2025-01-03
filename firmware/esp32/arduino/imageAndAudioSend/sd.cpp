@@ -7,8 +7,7 @@ void setup_sd() {
     }
     
     // Create required directories
-    if (!SD.exists("/pix")) SD.mkdir("/pix");
-    if (!SD.exists("/audio")) SD.mkdir("/audio");
+    if (!SD.exists("/toSend")) SD.mkdir("/toSend");
     if (!SD.exists("/sent")) SD.mkdir("/sent");
     
     sd_initialized = true;
@@ -26,12 +25,8 @@ bool move_file(const char* sourcePath, const char* destPath) {
     return false;
 }
 
-void get_timestamp_filename(char* filename, const char* prefix) {
+void get_timestamp_filename(char* filename) {
     time_t now;
     time(&now);
-    
-    sprintf(filename, "%s/%llu.%s",
-        prefix,
-        (unsigned long long)now,
-        strstr(prefix, "audio") ? "wav" : "jpg");
+    sprintf(filename, "/%s/%llu", "toSend", (unsigned long long)now);
 }

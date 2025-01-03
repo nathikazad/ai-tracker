@@ -1,7 +1,6 @@
 #include "config.h"
 
 I2SClass I2S;
-unsigned long lastAudioTime = 0;
 uint8_t *audioBuffer;
 size_t audioBufferSize;
 
@@ -20,7 +19,7 @@ void setup_audio() {
 }
 
 void record_audio(const char* filename) {
-    
+  if (audio_initialized) {
     // Record audio
     Serial.println("Recording audio...");
     audioBuffer = I2S.recordWAV(20, &audioBufferSize);
@@ -30,13 +29,12 @@ void record_audio(const char* filename) {
         return;
     }
     
-    Serial.printf("Recorded %d bytes\n", audioBufferSize);
+    Serial.printf("Recorded %d bytes, now saving to %s\n", audioBufferSize, filename);
     
     // // Increase volume
     // for (uint32_t i = 0; i < audioBufferSize; i += SAMPLE_BITS/8) {
     //     (*(uint16_t *)(audioBuffer+i)) <<= VOLUME_GAIN;
     // }
-
     // Save to SD card
     if (xSemaphoreTake(sdMutex, portMAX_DELAY)) {
         File file = SD.open(filename, FILE_WRITE);
@@ -46,20 +44,12 @@ void record_audio(const char* filename) {
             Serial.printf("Audio saved: %s\n", filename);
         }
         xSemaphoreGive(sdMutex);
+    } else {
+      Serial.println("Did not get mutex");
     }
-}
-
-void audio_loop(void * parameter) {
-    while(true) {
-        if (audio_initialized && sd_initialized && timeSync) {
-            unsigned long now = millis();
-            if ((now - lastAudioTime) >= CAPTURE_INTERVAL) {
-                char filename[32];
-                get_timestamp_filename(filename, "/audio");
-                record_audio(filename);
-                lastAudioTime = now;
-            }
-        }
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
+    if (audioBuffer) {
+        free(audioBuffer);
+        audioBuffer = nullptr;
     }
+  }
 }
