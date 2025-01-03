@@ -3,6 +3,7 @@ from bleak import BleakClient, BleakScanner
 import struct
 import time
 import os
+# from random import Random
 
 DEVICE_NAME = "XIAOESP32S3_BLE"
 # BLE characteristics UUIDs
@@ -14,15 +15,19 @@ TIME_CHARACTERISTIC_UUID = "00002a57-0000-1000-8000-00805f9b34fb"
 PACKET_SIZE = 512
 HEADER_SIZE = 3
 OUTPUT_DIR = "received_images"
+PACKET_TIMEOUT = 1  # 100ms timeout for packet reception
 
 class ImageReceiver:
     def __init__(self):
         self.reset()
-        self.client = None  # Store BLE client reference
+        self.client = None
         
         # Create output directory if it doesn't exist
         if not os.path.exists(OUTPUT_DIR):
             os.makedirs(OUTPUT_DIR)
+            
+        # For simulating packet loss
+        # self.random = Random()
 
     def reset(self):
         self.image_data = bytearray()
@@ -34,6 +39,9 @@ class ImageReceiver:
         self.received_bytes = 0
         self.received_packets = set()
         self.max_packet_number = 0
+        self.last_packet_time = None
+        self.transfer_complete = False
+        self.dropped_packets = []
 
     def get_packet_number(self, data):
         return (data[0] << 16) | (data[1] << 8) | data[2]
@@ -53,16 +61,58 @@ class ImageReceiver:
                 return False
         return False
 
-    async def send_ack(self):
+    async def send_bitmap_ack(self):
+        if not self.client or not self.client.is_connected or not self.total_packets:
+            return False
+        try:
+            # Calculate bitmap size in bytes (rounded up)
+            bitmap_size = (self.total_packets + 7) // 8
+            bitmap = bytearray(bitmap_size)
+            
+            # Fill the bitmap - MSB first
+            for packet_num in self.received_packets:
+                if packet_num < self.total_packets:  # Safety check
+                    byte_index = packet_num // 8
+                    bit_index = packet_num % 8
+                    bitmap[byte_index] |= (1 << (7 - bit_index))
+            
+            # Calculate missing packets
+            missing_packets = []
+            for i in range(self.total_packets):
+                if i not in self.received_packets:
+                    missing_packets.append(i)
+            
+            # Send the bitmap
+            await self.client.write_gatt_char(ACK_CHARACTERISTIC_UUID, bitmap)
+            print(f"\nSent bitmap ACK: {len(self.received_packets)}/{self.total_packets} packets received")
+            print(f"Missing packets: {missing_packets}")
+            return True
+        except Exception as e:
+            print(f"Failed to send bitmap ACK: {str(e)}")
+            return False
+
+    async def send_final_ack(self):
         if self.client and self.client.is_connected:
             try:
                 await self.client.write_gatt_char(ACK_CHARACTERISTIC_UUID, b"ACK")
-                print("ACK sent successfully")
+                print("Final ACK sent successfully")
                 return True
             except Exception as e:
-                print(f"Failed to send ACK: {str(e)}")
+                print(f"Failed to send final ACK: {str(e)}")
                 return False
         return False
+
+    async def check_timeout(self):
+        if not self.receiving or not self.last_packet_time or self.transfer_complete:
+            return
+        
+        current_time = time.time()
+        if current_time - self.last_packet_time > PACKET_TIMEOUT:
+            print(f"\n {current_time%1000:.2f} {self.last_packet_time%1000:.2f} {(current_time - self.last_packet_time)%1000:.2f} {PACKET_TIMEOUT} \n")
+            # print(f"\nTimed out, packets lost {self.dropped_packets}")
+            # if len(self.received_packets) > 0:
+            await self.send_bitmap_ack()
+            self.last_packet_time = current_time + 5
 
     async def process_packet(self, data):
         # Check for reset packet with 8-byte identifier
@@ -85,6 +135,7 @@ class ImageReceiver:
             
             self.receiving = True
             self.start_time = time.time()
+            self.last_packet_time = time.time()
             print(f"Starting to receive image: {self.filename}")
             print(f"File size: {self.file_size} bytes")
             print(f"Expected number of packets: {self.total_packets}")
@@ -93,8 +144,21 @@ class ImageReceiver:
         if not self.receiving:
             return False
 
+        # Update last packet time
+        self.last_packet_time = time.time()
+
         # Get packet number from header
         packet_number = self.get_packet_number(data)
+        
+        # Skip if we've already received this packet
+        if packet_number in self.received_packets:
+            return False
+            
+        # # Simulate random packet loss (5% chance)
+        # if self.random.randint(0, 100) > 95:
+        #     self.dropped_packets.append(packet_number)
+        #     return False
+            
         self.received_packets.add(packet_number)
         self.max_packet_number = max(self.max_packet_number, packet_number)
 
@@ -111,12 +175,13 @@ class ImageReceiver:
         self.received_bytes += len(data_portion)
 
         # Print progress
-        progress = (self.received_bytes / self.file_size) * 100
+        progress = (len(self.received_packets) / self.total_packets) * 100
         print(f"Progress: {progress:.1f}% | Packets received: {len(self.received_packets)}/{self.total_packets} | "
-              f"Max packet number: {self.max_packet_number}", end='\r')
+              f"Last Time: {self.last_packet_time%1000:.2f}", end='\r')
 
         # Check if we've received all packets
         if len(self.received_packets) >= self.total_packets:
+            self.transfer_complete = True
             await self.save_image()
             return True
         return False
@@ -137,12 +202,12 @@ class ImageReceiver:
         print(f"Average throughput: {throughput:.2f} KB/s")
         print(f"Total packets received: {len(self.received_packets)}")
         
-        # Send ACK
-        print("Sending ACK...")
-        if await self.send_ack():
-            print("ACK sent successfully")
+        # Send final ACK
+        print("Sending final ACK...")
+        if await self.send_final_ack():
+            print("Final ACK sent successfully")
         else:
-            print("Failed to send ACK")
+            print("Failed to send final ACK")
         
         self.reset()
 
@@ -165,7 +230,7 @@ async def run_ble_client():
             print(f"Connecting to {device.name}")
             async with BleakClient(device) as client:
                 print(f"Connected to {device.name}")
-                receiver.client = client  # Store client reference
+                receiver.client = client
                 
                 # First, synchronize time
                 print("Synchronizing time...")
@@ -180,7 +245,8 @@ async def run_ble_client():
                 
                 # Keep the connection alive
                 while True:
-                    await asyncio.sleep(0.1)
+                    await receiver.check_timeout()
+                    await asyncio.sleep(1)
                     
         except Exception as e:
             print(f"Error: {str(e)}")

@@ -1,9 +1,65 @@
+// #include "esp_gap_ble_api.h"
 #include "config.h"
 
 BLECharacteristic *pTransferCharacteristic;
 BLECharacteristic *pAckCharacteristic;
 BLECharacteristic *pTimeCharacteristic;
 bool ackReceived = false;
+
+#define MAX_PACKETS 1000
+uint8_t packetBitmap[MAX_PACKETS/8 + 1];  // Each bit represents a packet
+size_t currentFileSize = 0;
+uint32_t totalPackets = 0;
+
+void clear_bitmap() {
+    memset(packetBitmap, 0, sizeof(packetBitmap));
+}
+
+void update_bitmap_from_ack(const uint8_t* ackBitmap, size_t length) {
+    // Update our bitmap and check for missing packets
+    Serial.print("Missing packets: ");
+    for(size_t i = 0; i < length && i < sizeof(packetBitmap); i++) {
+        // Check each bit in this byte
+        for(int bit = 0; bit < 8; bit++) {
+            // Calculate actual packet number
+            size_t packet_num = i * 8 + bit;
+            if(packet_num >= totalPackets) break;  // Don't go beyond total packets
+            
+            // Check if this bit is 0 in the received bitmap (packet not received)
+            if(!(ackBitmap[i] & (1 << (7 - bit)))) {
+                Serial.printf("%d ", packet_num);
+            }
+        }
+        packetBitmap[i] |= ackBitmap[i];  // Update bitmap as before
+    }
+    Serial.println();  // New line after printing all missing packets
+}
+
+bool all_packets_sent() {
+    uint8_t fullByte = 0xFF;
+    size_t fullByteCount = totalPackets / 8;
+    size_t remainingBits = totalPackets % 8;
+    
+    // Check all complete bytes
+    for(size_t i = 0; i < fullByteCount; i++) {
+        if(packetBitmap[i] != fullByte) {
+            Serial.println("Not all packets received - full byte check failed");
+            return false;
+        }
+    }
+    
+    // Check remaining bits in last byte if any
+    if(remainingBits > 0) {
+        uint8_t lastByteMask = ((1 << remainingBits) - 1) << (8 - remainingBits);  // MSB-first
+        if((packetBitmap[fullByteCount] & lastByteMask) != lastByteMask) {
+            Serial.println("Not all packets received - remaining bits check failed");
+            return false;
+        }
+    }
+    
+    Serial.println("All packets received successfully");
+    return true;
+}
 
 // BLE Callbacks
 class TimeCharacteristicCallbacks: public BLECharacteristicCallbacks {
@@ -23,22 +79,80 @@ class TimeCharacteristicCallbacks: public BLECharacteristicCallbacks {
 };
 
 class MyServerCallbacks: public BLEServerCallbacks {
-    void onConnect(BLEServer* pServer) { deviceConnected = true; }
-    void onDisconnect(BLEServer* pServer) { deviceConnected = false; }
+    void onConnect(BLEServer* pServer) {
+        deviceConnected = true;
+        Serial.println("Device Connected");
+        
+        // Store the BLE address of the connected device
+        // esp_bd_addr_t remote_bda;
+        // uint16_t connId = pServer->getConnId();
+        
+        // // Get connection parameters
+        // esp_gap_conn_params_t curr_conn_params;
+        // esp_err_t err = esp_ble_get_current_conn_params(remote_bda, &curr_conn_params);
+        // if (err == ESP_OK) {
+        //     Serial.printf("Current Connection Parameters:\n");
+        //     Serial.printf("Interval: %d\n", curr_conn_params.interval);
+        //     Serial.printf("Latency: %d\n", curr_conn_params.latency);
+        //     Serial.printf("Timeout: %d\n", curr_conn_params.timeout);
+        // }
+        
+        // // Configure preferred connection parameters
+        // esp_ble_conn_update_params_t conn_params = {
+        //     .min_int = 0x06,    // min_int = 0x06*1.25ms = 7.5ms
+        //     .max_int = 0x0C,    // max_int = 0x0C*1.25ms = 15ms
+        //     .latency = 0,       // Number of skipped connection events
+        //     .timeout = 400      // Supervision timeout = 400*10ms = 4000ms
+        // };
+        // memcpy(conn_params.bda, remote_bda, sizeof(esp_bd_addr_t));
+        
+        // // Update connection parameters
+        // esp_ble_gap_update_conn_params(&conn_params);
+        
+        // // Set MTU size if needed
+        // if (connId != 0xFFFF) {
+        //     pServer->updatePeerMTU(connId, 512);
+        // }
+
+        // // Set preferred PHY for better range/throughput
+        // esp_ble_gap_set_preferred_default_phy(ESP_BLE_GAP_PHY_2M_PREF_MASK, ESP_BLE_GAP_PHY_2M_PREF_MASK);
+    }
+    
+    void onDisconnect(BLEServer* pServer) {
+        deviceConnected = false;
+        Serial.println("Device Disconnected");
+        
+        // Start advertising again after a short delay
+        delay(500);
+        BLEDevice::startAdvertising();
+        Serial.println("Started advertising again");
+    }
 };
 
 class AckCharacteristicCallbacks: public BLECharacteristicCallbacks {
     void onWrite(BLECharacteristic *pCharacteristic) {
-        String value = pCharacteristic->getValue();
-        if (value == "ACK") { 
-          ackReceived = true; 
-          Serial.println("Ack Received");
+        Serial.printf("Ack received %s\n", pCharacteristic->getValue());
+        if(pCharacteristic->getValue() == "ACK") {
+            // Final ACK received - set all bits to 1 in bitmap
+            memset(packetBitmap, 0xFF, sizeof(packetBitmap));
+            ackReceived = true;
+            Serial.println("Final ACK Received");
+        } else {
+            const uint8_t* rawData = pCharacteristic->getData();
+            size_t length = pCharacteristic->getLength();
+            update_bitmap_from_ack(rawData, length);
+            ackReceived = true;
+            Serial.println("Partial ACK received");
         }
     }
 };
 
 void setup_ble() {
     BLEDevice::init(bleServerName);
+
+    // esp_ble_tx_power_set(ESP_BLE_PWR_TYPE_DEFAULT, ESP_PWR_LVL_P9);
+    // esp_ble_gap_set_preferred_default_phy(ESP_BLE_GAP_PHY_2M_PREF_MASK, ESP_BLE_GAP_PHY_2M_PREF_MASK);
+
     BLEServer *pServer = BLEDevice::createServer();
     pServer->setCallbacks(new MyServerCallbacks());
 
@@ -74,6 +188,38 @@ void setup_ble() {
     Serial.println("BLE server initialized and advertising");
 }
 
+bool send_all_packets(File& file, size_t fileSize) {
+    uint8_t packet[PACKET_SIZE];
+    Serial.printf("Sending %d packets\n", totalPackets);
+    for(uint32_t packetIndex = 0; packetIndex < totalPackets; packetIndex++) {
+        // Check if packet needs to be sent
+        uint8_t byteIndex = packetIndex / 8;
+        uint8_t bitIndex = 7 - (packetIndex % 8);  // Changed to MSB-first
+        if(packetBitmap[byteIndex] & (1 << bitIndex)) {  // Changed bit mask to match
+            continue;  // Packet already received, skip it
+        }
+        // Prepare and send packet
+        packet[0] = (packetIndex >> 16) & 0xFF;
+        packet[1] = (packetIndex >> 8) & 0xFF;
+        packet[2] = packetIndex & 0xFF;
+
+        size_t filePosition = packetIndex * (PACKET_SIZE - HEADER_SIZE);
+        size_t bytesToRead = min(PACKET_SIZE - HEADER_SIZE, (int)(fileSize - filePosition));
+        
+        file.seek(filePosition);
+        size_t bytesRead = file.read(&packet[HEADER_SIZE], bytesToRead);
+        
+        if(bytesRead > 0) {
+            pTransferCharacteristic->setValue(packet, bytesRead + HEADER_SIZE);
+            pTransferCharacteristic->notify();
+            delay(20);  // Small delay to prevent flooding
+        } else {
+            return false;
+        }
+    }
+    return true;
+}
+
 bool send_file_over_ble(const char* imagePath) {
     if (!deviceConnected) return false;
 
@@ -84,17 +230,28 @@ bool send_file_over_ble(const char* imagePath) {
             return false;
         }
 
-        size_t fileSize = imageFile.size();
-        uint32_t totalPackets = (fileSize + (PACKET_SIZE - HEADER_SIZE) - 1) / (PACKET_SIZE - HEADER_SIZE);
-        uint8_t packet[PACKET_SIZE];
+        // Initialize transfer
+        currentFileSize = imageFile.size();
+        totalPackets = (currentFileSize + (PACKET_SIZE - HEADER_SIZE) - 1) / (PACKET_SIZE - HEADER_SIZE);
         
-        // Send metadata packet
+        if(totalPackets > MAX_PACKETS) {
+            Serial.println("File too large, too many packets required");
+            imageFile.close();
+            xSemaphoreGive(sdMutex);
+            return false;
+        }
+        
+        // Clear bitmap for fresh transfer
+        clear_bitmap();
+        
+        // Send metadata packet first
+        uint8_t packet[PACKET_SIZE];
         const uint8_t identifier[] = {0xFF, 0xA5, 0x5A, 0xC3, 0x3C, 0x69, 0x96, 0xF0};
         memcpy(packet, identifier, 8);
-        packet[8] = (fileSize >> 24) & 0xFF;
-        packet[9] = (fileSize >> 16) & 0xFF;
-        packet[10] = (fileSize >> 8) & 0xFF;
-        packet[11] = fileSize & 0xFF;
+        packet[8] = (currentFileSize >> 24) & 0xFF;
+        packet[9] = (currentFileSize >> 16) & 0xFF;
+        packet[10] = (currentFileSize >> 8) & 0xFF;
+        packet[11] = currentFileSize & 0xFF;
         packet[12] = (totalPackets >> 24) & 0xFF;
         packet[13] = (totalPackets >> 16) & 0xFF;
         packet[14] = (totalPackets >> 8) & 0xFF;
@@ -108,51 +265,41 @@ bool send_file_over_ble(const char* imagePath) {
         pTransferCharacteristic->setValue(packet, PACKET_SIZE);
         pTransferCharacteristic->notify();
         delay(20);
-
-        uint32_t packetIndex = 0;
-        size_t bytesRemaining = fileSize;
-
-        bool success = true;
-        while (bytesRemaining > 0 && success) {
-            packet[0] = (packetIndex >> 16) & 0xFF;
-            packet[1] = (packetIndex >> 8) & 0xFF;
-            packet[2] = packetIndex & 0xFF;
-
-            size_t bytesToRead = min(PACKET_SIZE - HEADER_SIZE, (int)bytesRemaining);
-            size_t bytesRead = imageFile.read(&packet[HEADER_SIZE], bytesToRead);
-            
-            if (bytesRead > 0) {
-                pTransferCharacteristic->setValue(packet, bytesRead + HEADER_SIZE);
-                pTransferCharacteristic->notify();
-                packetIndex++;
-                bytesRemaining -= bytesRead;
-                // Serial.printf("Sent packet %d of %d\n", packetIndex, totalPackets);
-                delay(20);
-            } else {
-                success = false;
+        
+        // Main transfer loop
+        while(!all_packets_sent()) {
+            // Send all unsent packets
+            if(!send_all_packets(imageFile, currentFileSize)) {
+                imageFile.close();
+                xSemaphoreGive(sdMutex);
+                return false;
             }
-        }
-        Serial.printf("Sent all packets \n");
 
-        imageFile.close();
-        xSemaphoreGive(sdMutex);
-
-        if (success) {
+            Serial.println("Waiting for Ack");
+            
+            // Wait for ACK (either partial or complete)
             ackReceived = false;
-            Serial.println("Waiting for ack");
             unsigned long startTime = millis();
-            while (!ackReceived && (millis() - startTime < ACK_TIMEOUT)) {
+            while(!ackReceived && (millis() - startTime < ACK_TIMEOUT)) {
                 delay(100);
             }
-
-            if (ackReceived) {
-                char destPath[64];
-                sprintf(destPath, "/sent/%s", filename);
-                if (move_file(imagePath, destPath)) {
-                    Serial.printf("File successfully transferred and moved to: %s\n", destPath);
-                    return true;
-                }
+            
+            if(!ackReceived) {
+                Serial.println("ACK timeout");
+                imageFile.close();
+                xSemaphoreGive(sdMutex);
+                return false;
             }
+        }
+
+        // Transfer complete, move file to sent directory
+        imageFile.close();
+        char destPath[64];
+        sprintf(destPath, "/sent/%s", filename);
+        xSemaphoreGive(sdMutex);
+        if(move_file(imagePath, destPath)) {
+            Serial.printf("File successfully transferred and moved to: %s\n", destPath);
+            return true;
         }
         return false;
     }

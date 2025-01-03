@@ -4,7 +4,7 @@
 #include <BLEUtils.h>
 #include <BLE2902.h>
 #include <BLEServer.h>
-#include <I2S.h>
+#include <ESP_I2S.h>
 #include "FS.h"
 #include "SD.h"
 #include "SPI.h"
@@ -14,9 +14,13 @@
 
 #define RECORD_TIME 5 // seconds
 #define SAMPLE_RATE 4000U
-#define SAMPLE_BITS 16
+#define SAMPLE_BITS I2S_DATA_BIT_WIDTH_16BIT
 #define VOLUME_GAIN 2
 #define CHUNK_SIZE 512
+
+I2SClass I2S;
+uint8_t *wav_buffer;
+size_t wav_size;
 
 BLECharacteristic *pCharacteristic;
 uint8_t *audioBuffer = NULL;
@@ -36,8 +40,8 @@ void setup() {
     Serial.begin(115200);
 
     // Initialize I2S
-    I2S.setAllPins(-1, 42, 41, -1, -1);
-    if (!I2S.begin(PDM_MONO_MODE, SAMPLE_RATE, SAMPLE_BITS)) {
+    I2S.setPinsPdmRx(42, 41);
+    if (!I2S.begin(I2S_MODE_PDM_RX, SAMPLE_RATE, SAMPLE_BITS, I2S_SLOT_MODE_MONO)) {
         Serial.println("Failed to initialize I2S!");
         while (1) ;
     }
@@ -76,36 +80,22 @@ void loop() {
 }
 
 void recordAndSendAudio() {
-  uint32_t recordSize = (SAMPLE_RATE * SAMPLE_BITS / 8) * RECORD_TIME;
-  
-  // Allocate buffer for audio data
-  if (audioBuffer == NULL) {
-    audioBuffer = (uint8_t *)ps_malloc(recordSize);
-    if (audioBuffer == NULL) {
-      Serial.println("Failed to allocate memory for audio buffer!");
-      return;
-    }
-  }
+
   
   // Record audio
   Serial.println("Recording audio...");
-  esp_i2s::i2s_read(esp_i2s::I2S_NUM_0, audioBuffer, recordSize, &audioBufferSize, portMAX_DELAY);
-  
-  if (audioBufferSize == 0) {
-    Serial.println("Failed to record audio!");
-    return;
-  }
+  wav_buffer = I2S.recordWAV(20, &wav_size);
   
   Serial.printf("Recorded %d bytes\n", audioBufferSize);
   
   // Increase volume
-  for (uint32_t i = 0; i < audioBufferSize; i += SAMPLE_BITS/8) {
-    (*(uint16_t *)(audioBuffer+i)) <<= VOLUME_GAIN;
+  for (uint32_t i = 0; i < wav_size; i += SAMPLE_BITS/8) {
+    (*(uint16_t *)(wav_size+i)) <<= VOLUME_GAIN;
   }
   // Start timing the BLE transmission
   unsigned long startTime = millis();
   // Send start packet
-  uint32_t numPackets = (audioBufferSize + CHUNK_SIZE - 1) / CHUNK_SIZE;
+  uint32_t numPackets = (wav_size + CHUNK_SIZE - 1) / CHUNK_SIZE;
   uint8_t startPacket[8] = {'S', 'T', 'A', 'R', 'T', 0, 0, 0};
   startPacket[5] = (numPackets >> 16) & 0xFF;
   startPacket[6] = (numPackets >> 8) & 0xFF;
@@ -115,12 +105,12 @@ void recordAndSendAudio() {
   delay(20);  // Give the client some time to process
   
   // Send audio data in chunks
-  for (uint32_t i = 0; i < audioBufferSize; i += CHUNK_SIZE) {
-    uint32_t chunkSize = (CHUNK_SIZE < audioBufferSize - i) ? CHUNK_SIZE : (audioBufferSize - i);
+  for (uint32_t i = 0; i < wav_size; i += CHUNK_SIZE) {
+    uint32_t chunkSize = (CHUNK_SIZE < wav_size - i) ? CHUNK_SIZE : (wav_size - i);
     uint8_t header[4] = {0xFF, 0xFF, (i >> 8) & 0xFF, i & 0xFF};
     uint8_t chunk[CHUNK_SIZE + 4];
     memcpy(chunk, header, 4);
-    memcpy(chunk + 4, audioBuffer + i, chunkSize);
+    memcpy(chunk + 4, wav_buffer + i, chunkSize);
     pCharacteristic->setValue(chunk, chunkSize + 4);
     pCharacteristic->notify();
     delay(20);  // Give the client some time to process

@@ -24,16 +24,40 @@ class BLEManager: NSObject, ObservableObject {
     private var receivedPacketsSet = Set<Int>()
     private let PACKET_TIMEOUT: TimeInterval = 1.0 // 1 second timeout
     
+    @Published var connectionState: ConnectionState = .disconnected
+    @Published var lastError: String?
+    private var reconnectTimer: Timer?
+    private let maxReconnectAttempts = 5
+    private var reconnectAttempts = 0
+    
+    enum ConnectionState: String {
+        case disconnected = "Disconnected"
+        case scanning = "Scanning"
+        case connecting = "Connecting"
+        case connected = "Connected"
+    }
+
     override init() {
         super.init()
         centralManager = CBCentralManager(delegate: self, queue: nil)
     }
     
     private func startScanning() {
-        guard centralManager.state == .poweredOn else { return }
+        guard centralManager.state == .poweredOn else {
+            lastError = "Bluetooth is not powered on"
+            return
+        }
         
-        print("Starting scan for devices...")
-        centralManager.scanForPeripherals(withServices: nil, options: nil)
+        connectionState = .scanning
+        print("Starting scan for devices... State: \(centralManager.state.rawValue)")
+        
+        // Use specific service UUID if possible
+        let options: [String: Any] = [
+            CBCentralManagerScanOptionAllowDuplicatesKey: false,
+            CBCentralManagerOptionShowPowerAlertKey: true
+        ]
+        
+        centralManager.scanForPeripherals(withServices: nil, options: options)
     }
     
     private func reset() {
@@ -113,13 +137,48 @@ extension BLEManager: CBCentralManagerDelegate {
         central.stopScan()
     }
     
-    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+    private func handleDisconnection() {
         isConnected = false
-        self.peripheral = nil
-        print("Disconnected from peripheral: \(peripheral)")
+        connectionState = .disconnected
         
-        // Start scanning again
-        startScanning()
+        // Only attempt reconnection if we haven't exceeded the maximum attempts
+        if reconnectAttempts < maxReconnectAttempts {
+            reconnectAttempts += 1
+            print("Attempting reconnection (\(reconnectAttempts)/\(maxReconnectAttempts))...")
+            
+            // Wait 2 seconds before trying to reconnect
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
+                self?.startScanning()
+            }
+        } else {
+            print("Max reconnection attempts reached. Please check device status or restart the app.")
+            lastError = "Failed to reconnect after \(maxReconnectAttempts) attempts"
+            reconnectAttempts = 0 // Reset for next time
+        }
+    }
+        
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        print("Disconnected from peripheral: \(peripheral)")
+        if let error = error {
+            print("Disconnection error: \(error.localizedDescription)")
+            lastError = "Disconnection error: \(error.localizedDescription)"
+        }
+        
+        // Handle MTU related disconnections
+        if let error = error as? CBError {
+            switch error.code {
+            case .connectionTimeout:
+                print("Connection timed out")
+            case .peripheralDisconnected:
+                print("Peripheral disconnected")
+//            case .:
+//                print("Invalid MTU size")
+            default:
+                print("Other error: \(error.code)")
+            }
+        }
+        
+        handleDisconnection()
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
@@ -144,6 +203,31 @@ extension BLEManager: CBCentralManagerDelegate {
         
         peripheral.writeValue(data, for: timeCharacteristic, type: .withResponse)
         print("Time sync sent: \(currentTime)")
+    }
+    
+    func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+            print("Failed to connect to peripheral: \(peripheral)")
+            if let error = error {
+                print("Connection error: \(error.localizedDescription)")
+                lastError = "Connection error: \(error.localizedDescription)"
+            }
+            handleDisconnection()
+        }
+        
+    func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
+        if let error = error {
+            print("Error changing notification state: \(error.localizedDescription)")
+            lastError = "Notification error: \(error.localizedDescription)"
+            return
+        }
+        
+        print("Notification state updated for characteristic: \(characteristic.uuid)")
+    }
+    
+    // Add method to manually trigger reconnection
+    func reconnect() {
+        reconnectAttempts = 0
+        startScanning()
     }
 }
 
@@ -314,28 +398,30 @@ extension FileManager {
     
     // New helper function to get/create date-based directory
     static func getDateBasedDirectory(for date: Date) -> URL? {
-        guard let baseDirectory = receivedFilesDirectory else {
-            return nil
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyMMdd"
+            let dateFolderName = formatter.string(from: date)
+            
+            guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+                return nil
+            }
+            
+            let dateDirectory = documentDirectory
+                .appendingPathComponent("ReceivedFiles")
+                .appendingPathComponent(dateFolderName)
+            
+            do {
+                try FileManager.default.createDirectory(
+                    at: dateDirectory,
+                    withIntermediateDirectories: true,
+                    attributes: nil
+                )
+                return dateDirectory
+            } catch {
+                print("Error creating directory: \(error)")
+                return nil
+            }
         }
-        
-        let calendar = Calendar.current
-        let dateComponents = calendar.dateComponents([.year, .month, .day], from: date)
-        
-        // Format folder name as YYMMDD
-        let folderName = String(format: "%02d%02d%02d",
-                              dateComponents.year! % 100,
-                              dateComponents.month!,
-                              dateComponents.day!)
-        
-        let dateDirectory = baseDirectory.appendingPathComponent(folderName, isDirectory: true)
-        
-        // Create directory if it doesn't exist
-        if !FileManager.default.fileExists(atPath: dateDirectory.path) {
-            try? FileManager.default.createDirectory(at: dateDirectory, withIntermediateDirectories: true)
-        }
-        
-        return dateDirectory
-    }
 }
 
 extension Notification.Name {

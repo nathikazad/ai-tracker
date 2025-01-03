@@ -67,6 +67,7 @@ struct BluetoothConsoleView: View {
             HStack {
                 Image(systemName: bleManager.isConnected ? "bluetooth.connected" : "bluetooth")
                 Text(bleManager.isConnected ? "Connected" : "Disconnected")
+                Text("\(bleManager.connectionState)")
             }
             
             if bleManager.isReceiving {
@@ -75,6 +76,10 @@ struct BluetoothConsoleView: View {
                     ProgressView(value: bleManager.progressPercentage, total: 100)
                     Text("\(bleManager.receivedPackets)/\(bleManager.totalPackets) packets")
                 }
+            }
+            
+            if bleManager.lastError != nil {
+                Text("Last Error: \(bleManager.lastError!)")
             }
         }
         .padding()
@@ -89,15 +94,15 @@ struct FileReceiverView: View {
     @StateObject private var bleManager = BLEManager()
     
     var body: some View {
-        VStack {
+//        VStack {
             TimelineExplorerView()
                 .frame(maxHeight: .infinity)
             
-            Divider()
-            
-            BluetoothConsoleView(bleManager: bleManager)
-                .frame(height: 100)
-        }
+//            Divider()
+//            
+//            BluetoothConsoleView(bleManager: bleManager)
+//                .frame(height: 100)
+//        }
         .padding()
     }
 }
