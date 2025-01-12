@@ -15,7 +15,7 @@ class BLEManager: NSObject, ObservableObject {
     private var centralManager: CBCentralManager!
     private var peripheral: CBPeripheral?
     private var transferCharacteristic: CBCharacteristic?
-    private var imageData = Data()
+    private var fileData = Data()
     private var fileName: String?
     private var fileSize: Int?
     
@@ -29,6 +29,8 @@ class BLEManager: NSObject, ObservableObject {
     private var reconnectTimer: Timer?
     private let maxReconnectAttempts = 5
     private var reconnectAttempts = 0
+    
+    private var transcriber:AudioTranscriber = AudioTranscriber();
     
     enum ConnectionState: String {
         case disconnected = "Disconnected"
@@ -61,7 +63,7 @@ class BLEManager: NSObject, ObservableObject {
     }
     
     private func reset() {
-        imageData = Data()
+        fileData = Data()
         fileName = nil
         fileSize = nil
         receivedPackets = 0
@@ -337,12 +339,12 @@ extension BLEManager: CBPeripheralDelegate {
             let writePosition = packetNumber * (512 - 3) // 512 is packet size, 3 is header size
             
             // Extend imageData if needed
-            if writePosition + dataPortion.count > imageData.count {
-                imageData.append(contentsOf: [UInt8](repeating: 0, count: writePosition + dataPortion.count - imageData.count))
+            if writePosition + dataPortion.count > fileData.count {
+                fileData.append(contentsOf: [UInt8](repeating: 0, count: writePosition + dataPortion.count - fileData.count))
             }
             
             // Write data at correct position
-            imageData.replaceSubrange(writePosition..<writePosition + dataPortion.count, with: dataPortion)
+            fileData.replaceSubrange(writePosition..<writePosition + dataPortion.count, with: dataPortion)
             
             // Calculate and update progress
             progressPercentage = Double(receivedPackets) / Double(totalPackets) * 100
@@ -458,7 +460,7 @@ extension BLEManager {
         
         do {
             // Save the file
-            try imageData.write(to: fileURL)
+            try fileData.write(to: fileURL)
             
             // Create and save ReceivedFile metadata
             let newFile = ReceivedFile(
@@ -473,6 +475,16 @@ extension BLEManager {
             
             print("File saved successfully at: \(fileURL.path)")
             NotificationCenter.default.post(name: .newFileReceived, object: nil)
+            
+//            if newFile.fileType == .wav {
+//                transcriber.transcribeWav(url: fileURL) { transcription in
+//                    if let transcription = transcription {
+//                        print("Transcription completed: \(transcription)")
+//                    } else {
+//                        print("Transcription failed")
+//                    }
+//                }
+//            }
             
         } catch {
             print("Error saving file: \(error)")

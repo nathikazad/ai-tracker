@@ -421,6 +421,7 @@
 		FEA98C122BFFEC70006BB857 /* TwoDatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoDatePicker.swift; sourceTree = "<group>"; };
 		FEB08CD92D2672D700D71717 /* AudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
 		FEB08CDB2D267A4000D71717 /* FileExplorer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileExplorer.swift; sourceTree = "<group>"; };
+		FEB08CDD2D28DE0600D71717 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		FEB366E22BDDEC5D000A48C0 /* SendBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendBar.swift; sourceTree = "<group>"; };
 		FEB366E52BDDF8F9000A48C0 /* Chart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chart.swift; sourceTree = "<group>"; };
 		FEB8FD1E2BAA253100EE9B68 /* Intents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intents.swift; sourceTree = "<group>"; };
@@ -917,6 +918,7 @@
 		FE7E7F2F2D0B9998006BB22A /* device-tester */ = {
 			isa = PBXGroup;
 			children = (
+				FEB08CDD2D28DE0600D71717 /* Info.plist */,
 				FEB08CD82D2672BA00D71717 /* view */,
 				FE7E7F3E2D0B99C0006BB22A /* util */,
 				FE7E7F302D0B9998006BB22A /* device_testerApp.swift */,
@@ -1828,7 +1830,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = Aspire;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "To communicate with peripherals";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "To get audio to log an event";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Aspire requires microphone access for voice note features.";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "To log an event";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -1871,7 +1873,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = Aspire;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "To communicate with peripherals";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "To get audio to log an event";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Aspire requires microphone access for voice note features.";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "To log an event";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -2033,6 +2035,7 @@
 				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "device-tester/Info.plist";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "To receive image and send audio";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "To understand what user is saying";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -2065,6 +2068,7 @@
 				DEVELOPMENT_TEAM = F2W45BF2AV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "device-tester/Info.plist";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "To receive image and send audio";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "To understand what user is saying";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

@@ -1,7 +1,12 @@
 #include "config.h"
 
 void setup_sd() {
-    if (!SD.begin(21)) {
+  // int sck = 36;
+  // int miso = 37;
+  // int mosi = 35;
+  // int cs = 3;
+  //   SPI.begin(sck, miso, mosi, cs);
+  if (!SD.begin(21)) {
         Serial.println("SD Card Mount Failed");
         return;
     }

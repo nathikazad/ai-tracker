@@ -17,7 +17,7 @@ void setup() {
     // Initialize components
     setup_sd();
     setup_camera();
-    setup_audio();
+    // setup_audio();
     setup_ble();
 
     // Create mutex for SD card access
@@ -58,9 +58,10 @@ void sensor_loop(void * parameter) {
       char fileaddress[32];
       get_timestamp_filename(fileaddress);
       char filename[32];
-      sprintf(filename, "%s.%s", fileaddress, "wav");
-      Serial.printf("Sensor loop, recording sound to %s\n", filename);
-      record_audio(filename);
+      // sprintf(filename, "%s.%s", fileaddress, "wav");
+      // Serial.printf("Sensor loop, recording sound to %s\n", filename);
+      // record_audio(filename);
+      delay(10000);
       sprintf(filename, "%s.%s", fileaddress, "jpg");
       Serial.printf("Sensor loop, capturing image to %s\n", filename);
       capture_image(filename);

@@ -290,7 +290,7 @@ class AudioTranscriber: NSObject, SFSpeechRecognizerDelegate {
 //        }
 //    }
     
-    private func transcribeWav(url: URL, completion: @escaping (String?) -> Void) {
+    func transcribeWav(url: URL, completion: @escaping (String?) -> Void) {
         guard let speechRecognizer = speechRecognizer, speechRecognizer.isAvailable else {
             print("Speech recognizer is not available")
             completion(nil)
