@@ -2,7 +2,9 @@ import express, { Express, Request, Response, NextFunction } from 'express';
 import { config } from "./config";
 import path from 'path';
 import { convertAudioToText } from './helper/audio';
-
+import { createServer } from 'http';
+import { WebSocketServer, WebSocket } from 'ws';
+import { ConnectionManager } from './socketManager';
 import { authorize, convertAppleJWTtoHasuraJWT, deleteUser } from './resources/authorization';
 import { parseUserRequest } from './resources/logic';
 import { getUserLanguage } from './resources/user';
@@ -13,6 +15,17 @@ import { log } from 'console';
 import { notifyOtherMembers } from './helper/notification';
 
 const app: Express = express();
+
+const server = createServer(app);
+
+// Create WebSocket server
+const wss = new WebSocketServer({ server });
+const wsManager = new ConnectionManager();
+
+// Set up WebSocket connection handling
+wss.on('connection', (ws: WebSocket) => {
+    wsManager.handleConnection(ws);
+});
 
 app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.json());
