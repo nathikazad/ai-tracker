@@ -354,3 +354,109 @@ struct TimelineSlider: View {
         return bounds.lowerBound + range * percentage
     }
 }
+
+struct ReceivedFoldersView: View {
+    @State private var selectedFolder: String?
+    @State private var folders: [String] = []
+    @State private var filesInSelectedFolder: [String] = []
+    
+    var body: some View {
+        NavigationView {
+            List {
+                if selectedFolder == nil {
+                    // Show folders
+                    ForEach(folders, id: \.self) { folder in
+                        Button(action: {
+                            selectedFolder = folder
+                            loadFilesInFolder(folder)
+                        }) {
+                            HStack {
+                                Image(systemName: "folder")
+                                    .foregroundColor(.blue)
+                                Text(folder)
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .foregroundColor(.gray)
+                            }
+                        }
+                    }
+                } else {
+                    // Show files in selected folder
+                    Button(action: {
+                        selectedFolder = nil
+                        filesInSelectedFolder = []
+                    }) {
+                        HStack {
+                            Image(systemName: "chevron.left")
+                            Text("Back to Folders")
+                        }
+                    }
+                    
+                    ForEach(filesInSelectedFolder, id: \.self) { file in
+                        HStack {
+                            Image(systemName: "doc")
+                                .foregroundColor(.gray)
+                            Text(file)
+                        }
+                    }
+                }
+            }
+            .navigationTitle(selectedFolder == nil ? "Received Files" : selectedFolder!)
+            .onAppear {
+                loadFolders()
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .newFileReceived)) { _ in
+            loadFolders()
+            if let selectedFolder = selectedFolder {
+                loadFilesInFolder(selectedFolder)
+            }
+//            if isLiveMode {
+//                if let lastTimestamp = sortedTimestamps.last?.timestamp {
+//                    currentTime = lastTimestamp
+//                }
+//            }
+        }
+    }
+    
+    private func loadFolders() {
+        guard let receivedFilesURL = FileManager.receivedFilesDirectory else {
+            return
+        }
+        
+        do {
+            let contents = try FileManager.default.contentsOfDirectory(
+                at: receivedFilesURL,
+                includingPropertiesForKeys: nil
+            )
+            
+            folders = contents
+                .filter { (try? $0.resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory == true }
+                .map { $0.lastPathComponent }
+                .sorted(by: >)  // Sort in descending order
+            
+        } catch {
+            print("Error loading folders: \(error)")
+        }
+    }
+    
+    private func loadFilesInFolder(_ folderName: String) {
+        guard let folderURL = FileManager.getDirectory(for: folderName) else {
+            return
+        }
+        
+        do {
+            let contents = try FileManager.default.contentsOfDirectory(
+                at: folderURL,
+                includingPropertiesForKeys: nil
+            )
+            
+            filesInSelectedFolder = contents
+                .map { $0.lastPathComponent }
+                .sorted()
+            
+        } catch {
+            print("Error loading files: \(error)")
+        }
+    }
+}

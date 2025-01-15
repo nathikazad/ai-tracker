@@ -18,7 +18,7 @@ class BLEManager: NSObject, ObservableObject {
     @Published var receivedPackets = 0
     @Published var totalPackets = 0
     @Published var progressPercentage: Double = 0
-    @Published var espState: ESPState = .listening
+    @Published var espState: ESPState = .idle
     
     private var centralManager: CBCentralManager!
     private var peripheral: CBPeripheral?
@@ -32,20 +32,13 @@ class BLEManager: NSObject, ObservableObject {
     private var receivedPacketsSet = Set<Int>()
     private let PACKET_TIMEOUT: TimeInterval = 1.0 // 1 second timeout
     
-    @Published var connectionState: ConnectionState = .disconnected
-//    @Published var lastError: String?
     private var reconnectTimer: Timer?
     private let maxReconnectAttempts = 5
     private var reconnectAttempts = 0
     
     private var transcriber:AudioTranscriber = AudioTranscriber();
     
-    enum ConnectionState: String {
-        case disconnected = "Disconnected"
-        case scanning = "Scanning"
-        case connecting = "Connecting"
-        case connected = "Connected"
-    }
+
     
     override init() {
         super.init()
@@ -54,7 +47,7 @@ class BLEManager: NSObject, ObservableObject {
             transcript in
             if(transcript.contains("record") && (transcript.contains("start") || transcript.contains("stop")) && self.espState == .listening) {
                 print("Start Recording!!!!")
-                self.sendCommand(command: 2)
+                self.startRecording()
             }
         }
     }
@@ -66,7 +59,7 @@ class BLEManager: NSObject, ObservableObject {
             return
         }
         
-        connectionState = .scanning
+//        connectionState = .scanning
         print("Starting scan for devices... State: \(centralManager.state.rawValue)")
         
         // Use specific service UUID if possible
@@ -147,7 +140,7 @@ extension BLEManager: CBCentralManagerDelegate {
         }
         
         isConnected = false
-        connectionState = .disconnected
+//        connectionState = .disconnected
         reset()
         
         reconnectAttempts = 1  // Start counting from 1 since this is first attempt
@@ -276,7 +269,27 @@ extension BLEManager {
         //        print("Final ACK sent")
     }
     
-    func sendCommand(command:UInt8) {
+    func startListening() {
+        print("Start Listening")
+        sendCommand(command: ESPState.listening.rawValue)
+    }
+    
+    func stopListening() {
+        sendCommand(command: ESPState.idle.rawValue)
+    }
+    
+    func startRecording() {
+        FileManager.createTimeBasedDirectory()
+        print("Start Recording")
+        sendCommand(command: ESPState.recording.rawValue)
+    }
+    
+    func stopRecording() {
+        print("Stop Recording")
+        sendCommand(command: ESPState.idle.rawValue)
+    }
+    
+    private func sendCommand(command:UInt8) {
         guard let peripheral = peripheral,
               let ackCharacteristic = peripheral.services?
             .flatMap({ $0.characteristics ?? [] })
@@ -286,7 +299,7 @@ extension BLEManager {
         }
         peripheral.writeValue(Data([UInt8(command)]), for: ackCharacteristic, type: .withResponse)
         espState = ESPState(rawValue: command) ?? .idle
-        print("Final CMD sent")
+        print("Final CMD sent \(command)")
     }
     
     private func sendBitmapAck(receivedPackets: Set<Int>) {
@@ -486,10 +499,14 @@ extension BLEManager {
         }
         let formatter = DateFormatter()
         formatter.dateFormat = "yyMMdd"
-        let folderName = formatter.string(from: dateFromFilename)
+//        let folderName = formatter.string(from: dateFromFilename)
+        
+        let name = fileName.components(separatedBy: ".")[0]
+        let folderName = FileManager.getLatestDirectoryBefore(epochTime: name)
+//        print("Folder name: \(folderName)")
         
         // Get the appropriate directory for this date
-        guard let directory = FileManager.getDirectory(for: folderName) else {
+        guard let directory = FileManager.getDirectory(for: folderName ?? "temp") else {
             print("Error: Unable to access or create date-based directory")
             return
         }
@@ -589,6 +606,53 @@ extension FileManager {
             return dateDirectory
         } catch {
             print("Error creating directory: \(error)")
+            return nil
+        }
+    }
+    
+    static func createTimeBasedDirectory() -> URL? {
+        // Get current epoch time
+        let currentEpochTime = String(Int(Date().timeIntervalSince1970)-60) // add minus 60 just in case of time sync error
+        
+        // Use existing getDirectory function to create the directory
+        print("Creating directory \(currentEpochTime)")
+        let directory = getDirectory(for: currentEpochTime)
+        NotificationCenter.default.post(name: .newFileReceived, object: nil)
+        return directory
+    }
+    
+    static func getLatestDirectoryBefore(epochTime: String) -> String? {
+        guard let receivedFilesURL = receivedFilesDirectory else {
+            return nil
+        }
+        
+        do {
+            // Get all directory contents
+            let contents = try FileManager.default.contentsOfDirectory(
+                at: receivedFilesURL,
+                includingPropertiesForKeys: nil
+            )
+            
+            // Filter only directories and map to their names
+            let directoryNames = contents
+                .filter { (try? $0.resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory == true }
+                .compactMap { Int($0.lastPathComponent) }
+                .sorted()
+            
+            // Convert input epochTime to Int for comparison
+            guard let targetTime = Int(epochTime) else {
+                return nil
+            }
+            
+            // Find the latest directory before the given time
+            let previousTime = directoryNames
+                .filter { $0 <= targetTime }
+                .last
+            
+            return previousTime.map { String($0) }
+            
+        } catch {
+            print("Error reading directory contents: \(error)")
             return nil
         }
     }

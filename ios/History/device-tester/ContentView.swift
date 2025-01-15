@@ -67,11 +67,28 @@ struct BluetoothConsoleView: View {
             HStack {
                 Image(systemName: bleManager.isConnected ? "bluetooth.connected" : "bluetooth")
                 Text(bleManager.isConnected ? "Connected" : "Disconnected")
-                Text("\(bleManager.connectionState)")
-                Button(bleManager.espState.rawValue.formatted()) {
-                    var nextState:UInt8 = (bleManager.espState.rawValue + 1)%3
-//                    var nextState:UInt8 = (bleManager.espState.rawValue == 1) ? 2 : 1
-                    bleManager.sendCommand(command: nextState)
+//                Text("\(bleManager.connectionState)")
+                if bleManager.isConnected {
+                    if bleManager.espState != .recording {
+                        Button(action: {
+                            bleManager.espState == .idle ? bleManager.startListening() : bleManager.stopListening()
+                        }) {
+                            Image(systemName: bleManager.espState == .idle ? "speaker.circle" : "speaker.circle.fill")
+                                .font(.title)
+                                .foregroundColor(bleManager.espState == .idle ? .gray : .green)
+                        }
+                    }
+                    
+                    // Play/Stop Button - Only shown when not idle
+//                    if bleManager.espState != .idle {
+                        Button(action: {
+                            bleManager.espState != .recording ? bleManager.startRecording() : bleManager.stopRecording()
+                        }) {
+                            Image(systemName: bleManager.espState == .recording ? "stop.circle.fill" : "record.circle.fill")
+                                .font(.title)
+                                .foregroundColor(.red)
+                        }
+//                    }
                 }
             }
             
@@ -96,7 +113,7 @@ struct FileReceiverView: View {
     
     var body: some View {
         VStack {
-            TimelineExplorerView()
+            ReceivedFoldersView()
                 .frame(maxHeight: .infinity)
             
             Divider()

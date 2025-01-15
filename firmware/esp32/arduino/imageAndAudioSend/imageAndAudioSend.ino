@@ -17,7 +17,6 @@ SemaphoreHandle_t audioBufferToSendMutex = NULL;
 
 void setup() {
   Serial.begin(115200);
-  pinMode(LED_BUILTIN, OUTPUT);
   // while(!Serial);
 
   // Initialize components
@@ -62,7 +61,6 @@ void sensor_loop(void* parameter) {
   while (true) {
     if (sd_initialized && timeSync) {
       if (mainState == RECORDING) {
-        digitalWrite(LED_BUILTIN, LOW);
         unsigned long now = millis();
         char fileaddress[32];
         get_timestamp_filename(fileaddress);
@@ -75,13 +73,9 @@ void sensor_loop(void* parameter) {
         Serial.printf("Sensor loop, capturing image to %s\n", filename);
         capture_image(filename);
       } else if (mainState == LISTENING && deviceConnected) {
-        digitalWrite(LED_BUILTIN, HIGH);
         Serial.println("Recording temporary audio");
         record_audio();
       }
-      // else {
-      //   digitalWrite(LED_BUILTIN, HIGH);
-      // }
     }
     vTaskDelay(10 / portTICK_PERIOD_MS);
   }
