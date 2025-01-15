@@ -37,7 +37,7 @@ class BLEManager: NSObject, ObservableObject {
     private var reconnectAttempts = 0
     
     private var transcriber:AudioTranscriber = AudioTranscriber();
-    
+    private var wsManager = WebSocketManager.shared
 
     
     override init() {
@@ -502,11 +502,11 @@ extension BLEManager {
 //        let folderName = formatter.string(from: dateFromFilename)
         
         let name = fileName.components(separatedBy: ".")[0]
-        let folderName = FileManager.getLatestDirectoryBefore(epochTime: name)
+        let folderName = FileManager.getLatestDirectoryBefore(epochTime: name) ?? "temp"
 //        print("Folder name: \(folderName)")
         
         // Get the appropriate directory for this date
-        guard let directory = FileManager.getDirectory(for: folderName ?? "temp") else {
+        guard let directory = FileManager.getDirectory(for: folderName) else {
             print("Error: Unable to access or create date-based directory")
             return
         }
@@ -520,7 +520,7 @@ extension BLEManager {
             // Create and save ReceivedFile metadata
             let newFile = ReceivedFile(
                 id: UUID(),
-                filepath: "\(directory.lastPathComponent)/\(fileName)", // Update filepath to include date folder
+                filepath: "ReceivedFiles/\(folderName)/\(fileName)", // Update filepath to include date folder
                 dateReceived: dateFromFilename,
                 fileType: ReceivedFile.getFileType(from: fileName)
             )
@@ -529,6 +529,7 @@ extension BLEManager {
             saveFileMetadata(newFile, date: dateFromFilename)
             
             print("File saved successfully at: \(fileURL.path)")
+            wsManager.sendFile(filepath: "\(folderName)/\(fileName)")
             NotificationCenter.default.post(name: .newFileReceived, object: nil)
             
             //            if newFile.fileType == .wav {

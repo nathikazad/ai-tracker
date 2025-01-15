@@ -2,6 +2,9 @@ import websockets
 import asyncio
 import json
 import logging
+import base64
+import os
+import datetime
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -42,22 +45,72 @@ class WorkstationClient:
     async def handle_message(self, websocket, message):
         try:
             data = json.loads(message)
-            logger.info(f"Received message: {data}")
-
-            # If it's a client message, send a response
-            if "clientId" in data:
+            logger.info(f"Received message")#: {data}")
+            
+            if data.get("type") == "file":
+                # Handle incoming file
+                await self.handle_file(websocket, data)
+            elif "clientId" in data:
+                # Handle regular messages as before
                 response = {
                     "type": "message",
                     "clientId": data["clientId"],
                     "content": f"Hey {data['clientId']}, I got your message."
                 }
                 await websocket.send(json.dumps(response))
-                logger.info(f"Sent response to client {data['clientId']}")
-
+                
         except json.JSONDecodeError:
             logger.error(f"Failed to parse message: {message}")
         except Exception as e:
             logger.error(f"Error handling message: {e}")
+
+    async def handle_file(self, websocket, data):
+        try:
+            client_id = data["clientId"]
+            filepath = data["filepath"]
+            content = data["content"]
+            
+            # Create the Files directory structure
+            full_path = os.path.join("Files", filepath)
+            #full_path = os.path.join("Files", client_id, filepath) for when multiple clients
+            os.makedirs(os.path.dirname(full_path), exist_ok=True)
+            
+            # Save the received file
+            file_data = base64.b64decode(content)
+            with open(full_path, "wb") as f:
+                f.write(file_data)
+            
+            logger.info(f"File saved: {full_path}")
+            
+            # Create and send response file
+            folder_name = os.path.dirname(filepath)
+            response_path = os.path.join(folder_name, "response.txt")
+            response_full_path = os.path.join("Files", response_path)
+            
+            # Create response content (you can modify this as needed)
+            response_content = f"Processed file: {filepath}\nTimestamp: {datetime.datetime.now()}"
+            
+            # Save response file
+            os.makedirs(os.path.dirname(response_full_path), exist_ok=True)
+            with open(response_full_path, "w") as f:
+                f.write(response_content)
+            
+            # Read and encode response file
+            with open(response_full_path, "rb") as f:
+                response_data = base64.b64encode(f.read()).decode()
+            
+            # Send response file
+            response = {
+                "type": "file_response",
+                "clientId": client_id,
+                "filepath": response_path,
+                "content": response_data
+            }
+            await websocket.send(json.dumps(response))
+            logger.info(f"Sent response file: {response_path}")
+            
+        except Exception as e:
+            logger.error(f"Error handling file: {e}")
 
 async def main():
     # Connect to your Heroku server

@@ -50,6 +50,13 @@ export class ConnectionManager {
         this.workstation = ws;
         console.log('Workstation connected');
 
+        this.clients.forEach(clientWs => {
+            clientWs.send(JSON.stringify({
+                type: 'system',
+                message: 'Workstation connected'
+            }));
+        });
+
         ws.on('message', (message: string) => {
             try {
                 const data = JSON.parse(message);
