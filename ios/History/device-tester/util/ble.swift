@@ -1,16 +1,24 @@
 import CoreBluetooth
 
+enum ESPState: UInt8 {
+    case idle = 0
+    case listening = 1
+    case recording = 2
+}
+
 class BLEManager: NSObject, ObservableObject {
     static let DEVICE_NAME = "XIAOESP32S3_BLE"
     static let TRANSFER_CHARACTERISTIC_UUID = CBUUID(string: "00002a59-0000-1000-8000-00805f9b34fb")
     static let ACK_CHARACTERISTIC_UUID = CBUUID(string: "00002a58-0000-1000-8000-00805f9b34fb")
     static let TIME_CHARACTERISTIC_UUID = CBUUID(string: "00002a57-0000-1000-8000-00805f9b34fb")
+    static let CMD_CHARACTERISTIC_UUID = CBUUID(string: "00002a56-0000-1000-8000-00805f9b34fb")
     
     @Published var isConnected = false
     @Published var isReceiving = false
     @Published var receivedPackets = 0
     @Published var totalPackets = 0
     @Published var progressPercentage: Double = 0
+    @Published var espState: ESPState = .listening
     
     private var centralManager: CBCentralManager!
     private var peripheral: CBPeripheral?
@@ -25,7 +33,7 @@ class BLEManager: NSObject, ObservableObject {
     private let PACKET_TIMEOUT: TimeInterval = 1.0 // 1 second timeout
     
     @Published var connectionState: ConnectionState = .disconnected
-    @Published var lastError: String?
+//    @Published var lastError: String?
     private var reconnectTimer: Timer?
     private let maxReconnectAttempts = 5
     private var reconnectAttempts = 0
@@ -38,15 +46,23 @@ class BLEManager: NSObject, ObservableObject {
         case connecting = "Connecting"
         case connected = "Connected"
     }
-
+    
     override init() {
         super.init()
         centralManager = CBCentralManager(delegate: self, queue: nil)
+        transcriber.setTranscriptionCallback() {
+            transcript in
+            if(transcript.contains("record") && (transcript.contains("start") || transcript.contains("stop")) && self.espState == .listening) {
+                print("Start Recording!!!!")
+                self.sendCommand(command: 2)
+            }
+        }
     }
     
     private func startScanning() {
         guard centralManager.state == .poweredOn else {
-            lastError = "Bluetooth is not powered on"
+            print("Bluetooth is not powered on")
+//            lastError = "Bluetooth is not powered on"
             return
         }
         
@@ -75,12 +91,181 @@ class BLEManager: NSObject, ObservableObject {
         timeoutTimer?.invalidate()
         timeoutTimer = nil
     }
+}
+
+// MARK: - CBCentralManagerDelegate
+extension BLEManager: CBCentralManagerDelegate {
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        isConnected = true
+        peripheral.delegate = self
+        peripheral.discoverServices(nil)
+    }
     
+    
+    func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
+        if let error = error {
+            print("Error changing notification state: \(error.localizedDescription)")
+//            lastError = "Notification error: \(error.localizedDescription)"
+            return
+        }
+        
+        print("Notification state updated for characteristic: \(characteristic.uuid)")
+    }
+    
+    func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        if central.state == .poweredOn {
+            startScanning()
+        }
+    }
+    
+    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
+                        advertisementData: [String : Any], rssi RSSI: NSNumber) {
+        guard peripheral.name == BLEManager.DEVICE_NAME else { return }
+        
+        self.peripheral = peripheral
+        central.connect(peripheral, options: nil)
+        central.stopScan()
+    }
+    
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        print("Disconnected from peripheral: \(peripheral)")
+        if let error = error {
+            print("Disconnection error: \(error.localizedDescription)")
+//            lastError = "Disconnection error: \(error.localizedDescription)"
+        }
+        
+        // Handle MTU related disconnections
+        if let error = error as? CBError {
+            switch error.code {
+            case .connectionTimeout:
+                print("Connection timed out")
+            case .peripheralDisconnected:
+                print("Peripheral disconnected")
+            default:
+                print("Other error: \(error.code)")
+            }
+        }
+        
+        isConnected = false
+        connectionState = .disconnected
+        reset()
+        
+        reconnectAttempts = 1  // Start counting from 1 since this is first attempt
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
+            guard let self = self else { return }
+            if self.reconnectAttempts <= self.maxReconnectAttempts {
+                central.connect(peripheral, options: nil)
+            }
+        }
+    }
+
+    func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+        print("Failed to connect to peripheral: \(peripheral)")
+        if let error = error {
+            print("Connection error: \(error.localizedDescription)")
+//            lastError = "Connection error: \(error.localizedDescription)"
+        }
+        
+        reconnectAttempts += 1
+        
+        // If we failed to connect and still have attempts remaining, try again
+        if reconnectAttempts < maxReconnectAttempts {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
+                guard let self = self else { return }
+                central.connect(peripheral, options: nil)
+            }
+        } else {
+            print("Direct reconnection failed after \(maxReconnectAttempts) attempts, starting scan...")
+            startScanning()
+        }
+    }
+    
+}
+
+// MARK: - CBPeripheralDelegate
+extension BLEManager: CBPeripheralDelegate {
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        if let error = error {
+            print("Error discovering services: \(error)")
+            return
+        }
+        
+        guard let services = peripheral.services else {
+            print("No services found")
+            return
+        }
+        
+        //        print("Discovered services: \(services.map { $0.uuid })")
+        for service in services {
+            peripheral.discoverCharacteristics([
+                BLEManager.TRANSFER_CHARACTERISTIC_UUID,
+                BLEManager.ACK_CHARACTERISTIC_UUID,
+                BLEManager.TIME_CHARACTERISTIC_UUID,
+                BLEManager.CMD_CHARACTERISTIC_UUID
+            ], for: service)
+        }
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+        if let error = error {
+            print("Error discovering characteristics: \(error)")
+            return
+        }
+        
+        guard let characteristics = service.characteristics else {
+            print("No characteristics found for service: \(service.uuid)")
+            return
+        }
+        
+        //        print("Discovered characteristics for service \(service.uuid):")
+        for characteristic in characteristics {
+            //            print("- \(characteristic.uuid)")
+            if characteristic.uuid == BLEManager.TRANSFER_CHARACTERISTIC_UUID {
+                //                print("Found transfer characteristic")
+                transferCharacteristic = characteristic
+                peripheral.setNotifyValue(true, for: characteristic)
+            } else if characteristic.uuid == BLEManager.TIME_CHARACTERISTIC_UUID {
+                print("Found time characteristic")
+                // After discovering time characteristic, sync time
+                syncTime()
+            } else if characteristic.uuid == BLEManager.CMD_CHARACTERISTIC_UUID {
+                print("Found CMD characteristic")
+                peripheral.readValue(for: characteristic)
+            }
+        }
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic,
+                    error: Error?) {
+        if let error = error {
+            print("Error receiving data: \(error)")
+            return
+        }
+        
+        guard let data = characteristic.value else {
+            print("Received empty data packet")
+            return
+        }
+        
+        if (characteristic.uuid == BLEManager.TRANSFER_CHARACTERISTIC_UUID) {
+            receiveData(data: data)
+        }
+        if (characteristic.uuid == BLEManager.CMD_CHARACTERISTIC_UUID) {
+            print("ESP data \(data) \(data.count)")
+            if(!data.isEmpty) {
+                espState = ESPState(rawValue: data[0]) ?? .idle
+            }
+        }
+    }
+}
+
+// MARK: - Data Exchange
+extension BLEManager {
     private func sendAck() {
         guard let peripheral = peripheral,
               let ackCharacteristic = peripheral.services?
-                .flatMap({ $0.characteristics ?? [] })
-                .first(where: { $0.uuid == BLEManager.ACK_CHARACTERISTIC_UUID }) else {
+            .flatMap({ $0.characteristics ?? [] })
+            .first(where: { $0.uuid == BLEManager.ACK_CHARACTERISTIC_UUID }) else {
             print("Cannot send ACK: ACK characteristic not found")
             return
         }
@@ -88,14 +273,27 @@ class BLEManager: NSObject, ObservableObject {
         // For final ACK, send "ACK" string
         let ackData = "ACK".data(using: .utf8)!
         peripheral.writeValue(ackData, for: ackCharacteristic, type: .withResponse)
-        print("Final ACK sent")
+        //        print("Final ACK sent")
+    }
+    
+    func sendCommand(command:UInt8) {
+        guard let peripheral = peripheral,
+              let ackCharacteristic = peripheral.services?
+            .flatMap({ $0.characteristics ?? [] })
+            .first(where: { $0.uuid == BLEManager.CMD_CHARACTERISTIC_UUID }) else {
+            print("Cannot send CMD: CMD characteristic not found")
+            return
+        }
+        peripheral.writeValue(Data([UInt8(command)]), for: ackCharacteristic, type: .withResponse)
+        espState = ESPState(rawValue: command) ?? .idle
+        print("Final CMD sent")
     }
     
     private func sendBitmapAck(receivedPackets: Set<Int>) {
         guard let peripheral = peripheral,
               let ackCharacteristic = peripheral.services?
-                .flatMap({ $0.characteristics ?? [] })
-                .first(where: { $0.uuid == BLEManager.ACK_CHARACTERISTIC_UUID }) else {
+            .flatMap({ $0.characteristics ?? [] })
+            .first(where: { $0.uuid == BLEManager.ACK_CHARACTERISTIC_UUID }) else {
             print("Cannot send bitmap ACK: ACK characteristic not found")
             return
         }
@@ -120,80 +318,26 @@ class BLEManager: NSObject, ObservableObject {
         print("\nSent bitmap ACK: \(receivedPackets.count)/\(totalPackets) packets received")
         print("Missing packets: \(missingPackets.sorted())")
     }
-}
-
-// MARK: - CBCentralManagerDelegate
-extension BLEManager: CBCentralManagerDelegate {
-    func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        if central.state == .poweredOn {
-            startScanning()
-        }
-    }
     
-    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
-                       advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        guard peripheral.name == BLEManager.DEVICE_NAME else { return }
-        
-        self.peripheral = peripheral
-        central.connect(peripheral, options: nil)
-        central.stopScan()
-    }
-    
-    private func handleDisconnection() {
-        isConnected = false
-        connectionState = .disconnected
-        
-        // Only attempt reconnection if we haven't exceeded the maximum attempts
-        if reconnectAttempts < maxReconnectAttempts {
-            reconnectAttempts += 1
-            print("Attempting reconnection (\(reconnectAttempts)/\(maxReconnectAttempts))...")
-            
-            // Wait 2 seconds before trying to reconnect
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
-                self?.startScanning()
-            }
-        } else {
-            print("Max reconnection attempts reached. Please check device status or restart the app.")
-            lastError = "Failed to reconnect after \(maxReconnectAttempts) attempts"
-            reconnectAttempts = 0 // Reset for next time
-        }
-    }
-        
-    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        print("Disconnected from peripheral: \(peripheral)")
-        if let error = error {
-            print("Disconnection error: \(error.localizedDescription)")
-            lastError = "Disconnection error: \(error.localizedDescription)"
+    private func checkTimeout() {
+        guard (lastPacketTime != nil),
+              isReceiving,
+              !receivedPacketsSet.isEmpty else {
+            return
         }
         
-        // Handle MTU related disconnections
-        if let error = error as? CBError {
-            switch error.code {
-            case .connectionTimeout:
-                print("Connection timed out")
-            case .peripheralDisconnected:
-                print("Peripheral disconnected")
-//            case .:
-//                print("Invalid MTU size")
-            default:
-                print("Other error: \(error.code)")
-            }
-        }
         
-        handleDisconnection()
+        print("\nTimeout detected - sending bitmap ACK")
+        sendBitmapAck(receivedPackets: receivedPacketsSet)
     }
     
-    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        isConnected = true
-        peripheral.delegate = self
-        peripheral.discoverServices(nil)
-    }
-    
-    private func syncTime() {
+    func syncTime() {
         guard let peripheral = peripheral,
               let timeCharacteristic = peripheral.services?
-                .flatMap({ $0.characteristics ?? [] })
-                .first(where: { $0.uuid == BLEManager.TIME_CHARACTERISTIC_UUID }) else {
+            .flatMap({ $0.characteristics ?? [] })
+            .first(where: { $0.uuid == BLEManager.TIME_CHARACTERISTIC_UUID })
+              
+        else {
             print("Time characteristic not found")
             return
         }
@@ -205,101 +349,16 @@ extension BLEManager: CBCentralManagerDelegate {
         
         peripheral.writeValue(data, for: timeCharacteristic, type: .withResponse)
         print("Time sync sent: \(currentTime)")
-    }
-    
-    func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-            print("Failed to connect to peripheral: \(peripheral)")
-            if let error = error {
-                print("Connection error: \(error.localizedDescription)")
-                lastError = "Connection error: \(error.localizedDescription)"
-            }
-            handleDisconnection()
-        }
         
-    func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
-        if let error = error {
-            print("Error changing notification state: \(error.localizedDescription)")
-            lastError = "Notification error: \(error.localizedDescription)"
-            return
-        }
-        
-        print("Notification state updated for characteristic: \(characteristic.uuid)")
     }
-    
-    // Add method to manually trigger reconnection
-    func reconnect() {
-        reconnectAttempts = 0
-        startScanning()
-    }
-}
 
-// MARK: - CBPeripheralDelegate
-extension BLEManager: CBPeripheralDelegate {
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        if let error = error {
-            print("Error discovering services: \(error)")
-            return
-        }
-        
-        guard let services = peripheral.services else {
-            print("No services found")
-            return
-        }
-        
-//        print("Discovered services: \(services.map { $0.uuid })")
-        for service in services {
-            peripheral.discoverCharacteristics([
-                BLEManager.TRANSFER_CHARACTERISTIC_UUID,
-                BLEManager.ACK_CHARACTERISTIC_UUID,
-                BLEManager.TIME_CHARACTERISTIC_UUID
-            ], for: service)
-        }
-    }
-    
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-        if let error = error {
-            print("Error discovering characteristics: \(error)")
-            return
-        }
-        
-        guard let characteristics = service.characteristics else {
-            print("No characteristics found for service: \(service.uuid)")
-            return
-        }
-        
-//        print("Discovered characteristics for service \(service.uuid):")
-        for characteristic in characteristics {
-//            print("- \(characteristic.uuid)")
-            if characteristic.uuid == BLEManager.TRANSFER_CHARACTERISTIC_UUID {
-//                print("Found transfer characteristic")
-                transferCharacteristic = characteristic
-                peripheral.setNotifyValue(true, for: characteristic)
-            } else if characteristic.uuid == BLEManager.TIME_CHARACTERISTIC_UUID {
-                print("Found time characteristic")
-                // After discovering time characteristic, sync time
-                syncTime()
-            } else if characteristic.uuid == BLEManager.ACK_CHARACTERISTIC_UUID {
-//                print("Found ACK characteristic")
-            }
-        }
-    }
-    
-    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic,
-                   error: Error?) {
-        if let error = error {
-            print("Error receiving data: \(error)")
-            return
-        }
-        
-        guard let data = characteristic.value else {
-            print("Received empty data packet")
-            return
-        }
-        
+    func receiveData(data: Data) {
+        let MAX_FILE_SIZE = 1 * 1024 * 1024
         // Check for reset packet (8-byte identifier)
         let identifier: [UInt8] = [0xFF, 0xA5, 0x5A, 0xC3, 0x3C, 0x69, 0x96, 0xF0]
         if data.count >= 8 && data.prefix(8).elementsEqual(identifier) {
-            print("\nReceived reset packet, starting new file reception")
+            //            print()
+            //            print("Received reset packet, starting new file reception")
             reset()
             
             // Parse header information
@@ -307,14 +366,16 @@ extension BLEManager: CBPeripheralDelegate {
             totalPackets = Int(data[12]) << 24 | Int(data[13]) << 16 | Int(data[14]) << 8 | Int(data[15])
             let filenameLength = Int(data[16])
             
-            if data.count >= 17 + filenameLength {
+            if filenameLength == 0 {
+                fileName = nil
+            } else if data.count >= 17 + filenameLength {
                 fileName = String(data: data.subdata(in: 17..<17+filenameLength), encoding: .utf8)
             }
             
             isReceiving = true
-            print("Starting to receive file: \(fileName ?? "unknown")")
-            print("File size: \(fileSize ?? 0) bytes")
-            print("Expected number of packets: \(totalPackets)")
+            //            print("Starting to receive file: \(fileName ?? "Temp")")
+            //            print("File size: \(fileSize ?? 0) bytes")
+            //            print("Expected number of packets: \(totalPackets)")
             return
         }
         
@@ -326,7 +387,9 @@ extension BLEManager: CBPeripheralDelegate {
         // Parse packet number from header (3 bytes)
         lastPacketTime = Date()
         let packetNumber = (Int(data[0]) << 16) | (Int(data[1]) << 8) | Int(data[2])
-
+        
+        
+        
         // Only increment if we haven't received this packet before
         if !receivedPacketsSet.contains(packetNumber) {
             receivedPacketsSet.insert(packetNumber)
@@ -338,9 +401,37 @@ extension BLEManager: CBPeripheralDelegate {
             // Calculate write position
             let writePosition = packetNumber * (512 - 3) // 512 is packet size, 3 is header size
             
-            // Extend imageData if needed
+            // Validate write position and required size
+            let requiredSize = writePosition + dataPortion.count
+            guard requiredSize > 0 && requiredSize <= MAX_FILE_SIZE else {
+                print("Required size \(requiredSize) exceeds maximum allowed size, packet number: \(packetNumber)")
+//                reset()
+                return
+            }
+            
+            // Safely extend fileData if needed
             if writePosition + dataPortion.count > fileData.count {
-                fileData.append(contentsOf: [UInt8](repeating: 0, count: writePosition + dataPortion.count - fileData.count))
+                let extensionSize = writePosition + dataPortion.count - fileData.count
+                guard extensionSize > 0 && extensionSize <= MAX_FILE_SIZE else {
+                    print("Invalid extension size required: \(extensionSize)")
+                    reset()
+                    return
+                }
+                
+                do {
+                    fileData.append(contentsOf: [UInt8](repeating: 0, count: extensionSize))
+                } catch {
+                    print("Failed to extend fileData: \(error)")
+                    reset()
+                    return
+                }
+            }
+            
+            // Validate final write operation
+            guard writePosition + dataPortion.count <= fileData.count else {
+                print("Write position \(writePosition) + data length \(dataPortion.count) exceeds file size")
+                reset()
+                return
             }
             
             // Write data at correct position
@@ -352,13 +443,18 @@ extension BLEManager: CBPeripheralDelegate {
         
         // If transfer complete
         if receivedPackets >= totalPackets {
-            print("\nTransfer complete!")
-            print("Total packets received: \(receivedPackets)")
+            //            print("\nTransfer complete!")
+            //            print("Total packets received: \(receivedPackets)")
             isReceiving = false
             timeoutTimer?.invalidate()
             timeoutTimer = nil
             sendAck() // Send final ACK
-            saveFile()
+            if fileName != nil {
+                saveFile()
+            } else {
+                //                print("Saving audio buffer")
+                transcriber.processAudio(fileData)
+            }
             
         } else {
             timeoutTimer?.invalidate()
@@ -370,67 +466,6 @@ extension BLEManager: CBPeripheralDelegate {
         }
     }
     
-    private func checkTimeout() {
-        guard (lastPacketTime != nil),
-              isReceiving,
-              !receivedPacketsSet.isEmpty else {
-            return
-        }
-        
-
-        print("\nTimeout detected - sending bitmap ACK")
-        sendBitmapAck(receivedPackets: receivedPacketsSet)
-    }
-}
-
-extension FileManager {
-    static var receivedFilesDirectory: URL? {
-        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            return nil
-        }
-        let receivedFilesPath = documentsDirectory.appendingPathComponent("ReceivedFiles", isDirectory: true)
-        
-        // Create directory if it doesn't exist
-        if !FileManager.default.fileExists(atPath: receivedFilesPath.path) {
-            try? FileManager.default.createDirectory(at: receivedFilesPath, withIntermediateDirectories: true)
-        }
-        
-        return receivedFilesPath
-    }
-    
-    // New helper function to get/create date-based directory
-    static func getDateBasedDirectory(for date: Date) -> URL? {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyMMdd"
-            let dateFolderName = formatter.string(from: date)
-            
-            guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-                return nil
-            }
-            
-            let dateDirectory = documentDirectory
-                .appendingPathComponent("ReceivedFiles")
-                .appendingPathComponent(dateFolderName)
-            
-            do {
-                try FileManager.default.createDirectory(
-                    at: dateDirectory,
-                    withIntermediateDirectories: true,
-                    attributes: nil
-                )
-                return dateDirectory
-            } catch {
-                print("Error creating directory: \(error)")
-                return nil
-            }
-        }
-}
-
-extension Notification.Name {
-    static let newFileReceived = Notification.Name("newFileReceived")
-}
-
-extension BLEManager {
     private func saveFile() {
         guard let fileName = fileName else {
             print("Error: No filename provided")
@@ -449,9 +484,12 @@ extension BLEManager {
             dateFromFilename = Date()
             print("Failed to parse timestamp from filename: \(fileName)")
         }
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyMMdd"
+        let folderName = formatter.string(from: dateFromFilename)
         
         // Get the appropriate directory for this date
-        guard let directory = FileManager.getDateBasedDirectory(for: dateFromFilename) else {
+        guard let directory = FileManager.getDirectory(for: folderName) else {
             print("Error: Unable to access or create date-based directory")
             return
         }
@@ -476,15 +514,15 @@ extension BLEManager {
             print("File saved successfully at: \(fileURL.path)")
             NotificationCenter.default.post(name: .newFileReceived, object: nil)
             
-//            if newFile.fileType == .wav {
-//                transcriber.transcribeWav(url: fileURL) { transcription in
-//                    if let transcription = transcription {
-//                        print("Transcription completed: \(transcription)")
-//                    } else {
-//                        print("Transcription failed")
-//                    }
-//                }
-//            }
+            //            if newFile.fileType == .wav {
+            //                transcriber.transcribeWav(url: fileURL) { transcription in
+            //                    if let transcription = transcription {
+            //                        print("Transcription completed: \(transcription)")
+            //                    } else {
+            //                        print("Transcription failed")
+            //                    }
+            //                }
+            //            }
             
         } catch {
             print("Error saving file: \(error)")
@@ -501,16 +539,61 @@ extension BLEManager {
     }
     
     static func loadFileMetadata(for date: Date) -> [ReceivedFile] {
-            guard let data = UserDefaults.standard.data(forKey: "SavedFiles"),
-                  let files = try? JSONDecoder().decode([ReceivedFile].self, from: data) else {
-                return []
-            }
-            
-
-            let calendar = Calendar.current
-            return files.filter { file in
-                calendar.isDate(file.dateReceived, inSameDayAs: date)
-            }
-            return files
+        guard let data = UserDefaults.standard.data(forKey: "SavedFiles"),
+              let files = try? JSONDecoder().decode([ReceivedFile].self, from: data) else {
+            return []
         }
+        
+        
+        let calendar = Calendar.current
+        return files.filter { file in
+            calendar.isDate(file.dateReceived, inSameDayAs: date)
+        }
+        return files
+    }
+}
+
+
+extension FileManager {
+    static var receivedFilesDirectory: URL? {
+        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return nil
+        }
+        let receivedFilesPath = documentsDirectory.appendingPathComponent("ReceivedFiles", isDirectory: true)
+        
+        // Create directory if it doesn't exist
+        if !FileManager.default.fileExists(atPath: receivedFilesPath.path) {
+            try? FileManager.default.createDirectory(at: receivedFilesPath, withIntermediateDirectories: true)
+        }
+        
+        return receivedFilesPath
+    }
+    
+    // New helper function to get/create date-based directory
+    static func getDirectory(for name: String) -> URL? {
+        
+        guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return nil
+        }
+        
+        let dateDirectory = documentDirectory
+            .appendingPathComponent("ReceivedFiles")
+            .appendingPathComponent(name)
+        
+        do {
+            try FileManager.default.createDirectory(
+                at: dateDirectory,
+                withIntermediateDirectories: true,
+                attributes: nil
+            )
+            return dateDirectory
+        } catch {
+            print("Error creating directory: \(error)")
+            return nil
+        }
+    }
+}
+
+extension Notification.Name {
+    static let newFileReceived = Notification.Name("newFileReceived")
 }
