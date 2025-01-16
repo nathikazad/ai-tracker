@@ -14,6 +14,8 @@ uint8_t compressedBuffer[2048 * RECORD_TIME];
 size_t compressedBufferSize = 0;
 volatile bool new_audio_available = false;
 SemaphoreHandle_t audioBufferToSendMutex = NULL;
+QueueHandle_t audioQueue = NULL;
+uint8_t noOfFilesRemaining = 0;
 
 void setup() {
   Serial.begin(115200);
@@ -28,6 +30,7 @@ void setup() {
   // Create mutex for SD card access
   sdMutex = xSemaphoreCreateMutex();
   audioBufferToSendMutex = xSemaphoreCreateMutex();
+  audioQueue = xQueueCreate(10, sizeof(AudioRecord));
 
   xTaskCreatePinnedToCore(
     sensor_loop,
@@ -49,6 +52,16 @@ void setup() {
     1  // BLE task on Core 1
   );
 
+  xTaskCreatePinnedToCore(
+    process_audios_task,
+    "processingAudioTask",
+    10000,
+    NULL,
+    1,
+    NULL,
+    1
+  );
+
   Serial.println("System initialized and ready!");
 }
 
@@ -61,17 +74,18 @@ void sensor_loop(void* parameter) {
   while (true) {
     if (sd_initialized && timeSync) {
       if (mainState == RECORDING) {
-        unsigned long now = millis();
-        char fileaddress[32];
-        get_timestamp_filename(fileaddress);
-        char filename[32];
-        sprintf(filename, "%s.%s", fileaddress, "wav");
-        Serial.printf("Sensor loop, recording sound to %s\n", filename);
-        record_audio(filename);
+        record_audio_to_queue();
+        // unsigned long now = millis();
+        // char fileaddress[32];
+        // get_timestamp_filename(fileaddress);
+        // char filename[32];
+        // sprintf(filename, "%s.%s", fileaddress, "wav");
+        // Serial.printf("Sensor loop, recording sound to %s\n", filename);
+        // record_audio(filename);
         // delay(10000);
-        sprintf(filename, "%s.%s", fileaddress, "jpg");
-        Serial.printf("Sensor loop, capturing image to %s\n", filename);
-        capture_image(filename);
+        // sprintf(filename, "%s.%s", fileaddress, "jpg");
+        // Serial.printf("Sensor loop, capturing image to %s\n", filename);
+        // capture_image(filename);
       } else if (mainState == LISTENING && deviceConnected) {
         Serial.println("Recording temporary audio");
         record_audio();

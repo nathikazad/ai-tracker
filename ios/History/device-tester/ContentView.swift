@@ -89,6 +89,8 @@ struct BluetoothConsoleView: View {
                                 .foregroundColor(.red)
                         }
 //                    }
+                    
+                    Text("\(bleManager.filesRemaining)")
                 }
             }
             
@@ -113,7 +115,8 @@ struct FileReceiverView: View {
     
     var body: some View {
         VStack {
-            ReceivedFoldersView()
+//            ReceivedFoldersView()
+            WebSocketView()
                 .frame(maxHeight: .infinity)
             
             Divider()

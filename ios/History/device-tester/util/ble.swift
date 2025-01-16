@@ -12,13 +12,16 @@ class BLEManager: NSObject, ObservableObject {
     static let ACK_CHARACTERISTIC_UUID = CBUUID(string: "00002a58-0000-1000-8000-00805f9b34fb")
     static let TIME_CHARACTERISTIC_UUID = CBUUID(string: "00002a57-0000-1000-8000-00805f9b34fb")
     static let CMD_CHARACTERISTIC_UUID = CBUUID(string: "00002a56-0000-1000-8000-00805f9b34fb")
+    static let NO_OF_FILES_REMAINING_CHARACTERISTIC_UUID = CBUUID(string: "00002a60-0000-1000-8000-00805f9b34fb")
     
     @Published var isConnected = false
     @Published var isReceiving = false
     @Published var receivedPackets = 0
     @Published var totalPackets = 0
+    @Published var filesRemaining = 0
     @Published var progressPercentage: Double = 0
     @Published var espState: ESPState = .idle
+    
     
     private var centralManager: CBCentralManager!
     private var peripheral: CBPeripheral?
@@ -194,7 +197,8 @@ extension BLEManager: CBPeripheralDelegate {
                 BLEManager.TRANSFER_CHARACTERISTIC_UUID,
                 BLEManager.ACK_CHARACTERISTIC_UUID,
                 BLEManager.TIME_CHARACTERISTIC_UUID,
-                BLEManager.CMD_CHARACTERISTIC_UUID
+                BLEManager.CMD_CHARACTERISTIC_UUID,
+                BLEManager.NO_OF_FILES_REMAINING_CHARACTERISTIC_UUID
             ], for: service)
         }
     }
@@ -224,6 +228,10 @@ extension BLEManager: CBPeripheralDelegate {
             } else if characteristic.uuid == BLEManager.CMD_CHARACTERISTIC_UUID {
                 print("Found CMD characteristic")
                 peripheral.readValue(for: characteristic)
+                peripheral.setNotifyValue(true, for: characteristic)
+            } else if characteristic.uuid == BLEManager.NO_OF_FILES_REMAINING_CHARACTERISTIC_UUID {
+                print("Found num of files characteristic")
+                peripheral.setNotifyValue(true, for: characteristic)
             }
         }
     }
@@ -247,6 +255,13 @@ extension BLEManager: CBPeripheralDelegate {
             print("ESP data \(data) \(data.count)")
             if(!data.isEmpty) {
                 espState = ESPState(rawValue: data[0]) ?? .idle
+            }
+        }
+        if (characteristic.uuid == BLEManager.NO_OF_FILES_REMAINING_CHARACTERISTIC_UUID) {
+            // print("ESP data \(data) \(data.count)")
+            if(!data.isEmpty) {
+                filesRemaining = Int(data[0])
+                print("Num of files remaining: \(filesRemaining)")
             }
         }
     }

@@ -1,3 +1,4 @@
+#include <sys/_stdint.h>
 // #include "esp_gap_ble_api.h"
 #include "config.h"
 
@@ -5,6 +6,7 @@ BLECharacteristic* pTransferCharacteristic;
 BLECharacteristic* pAckCharacteristic;
 BLECharacteristic* pTimeCharacteristic;
 BLECharacteristic* pCommandCharacteristic;
+BLECharacteristic* pFilesRemainingCharacteristic;
 bool ackReceived = false;
 
 #define MAX_PACKETS 1000
@@ -12,6 +14,12 @@ uint8_t packetBitmap[MAX_PACKETS / 8 + 1];  // Each bit represents a packet
 size_t currentFileSize = 0;
 uint32_t totalPackets = 0;
 
+void notify_of_files_remaining(uint8_t rem) {
+  Serial.println("Notifiying of remaining files");
+  uint8_t stateValue[] = {rem};  // Use curly braces instead of square brackets
+  pFilesRemainingCharacteristic->setValue(stateValue, 1);
+  pFilesRemainingCharacteristic->notify();
+}
 void clear_bitmap() {
   memset(packetBitmap, 0, sizeof(packetBitmap));
 }
@@ -156,9 +164,15 @@ void setup_ble() {
   pCommandCharacteristic = pService->createCharacteristic(
     BLEUUID((uint16_t)0x2A56),
     BLECharacteristic::PROPERTY_WRITE | BLECharacteristic::PROPERTY_NOTIFY | BLECharacteristic::PROPERTY_READ);
+  pCommandCharacteristic->addDescriptor(new BLE2902());
   pCommandCharacteristic->setCallbacks(new CommandCharacteristicCallbacks());
   uint8_t stateValue = static_cast<uint8_t>(mainState);
   pCommandCharacteristic->setValue(&stateValue, 1);
+
+  pFilesRemainingCharacteristic = pService->createCharacteristic(
+  BLEUUID((uint16_t)0x2A60),
+  BLECharacteristic::PROPERTY_NOTIFY);
+  pFilesRemainingCharacteristic->addDescriptor(new BLE2902());
 
   pService->start();
 
@@ -242,7 +256,7 @@ bool send_data_over_ble(const uint8_t* data, int dataLength, const char* filenam
   pTransferCharacteristic->setValue(packet, PACKET_SIZE);
   pTransferCharacteristic->notify();
   delay(20);
-
+  int attempts = 0;
   // Main transfer loop
   while (!all_packets_sent()) {
     // Send all unsent packets
@@ -279,6 +293,11 @@ bool send_data_over_ble(const uint8_t* data, int dataLength, const char* filenam
       return false;
     }
 
+    attempts++;
+    if(attempts >= 5) {
+      Serial.println("Too many tries for ble send, getting out");
+      return false;
+    }
     // release semaphore
   }
   Serial.println("All packets sent");
@@ -342,13 +361,18 @@ bool check_for_files_to_send() {
   }
   Serial.printf("Sending %s over BLE\n", fullPath.c_str());
   bool success = send_file_over_ble(fullPath.c_str());
+  if (success) {
+    noOfFilesRemaining--;
+    notify_of_files_remaining(noOfFilesRemaining);
+  }
+
   return success;
 }
 
 void ble_loop(void* parameter) {
   while (true) {
     if (deviceConnected && timeSync) {
-      Serial.println(mainState);
+      // Serial.println(mainState);
       if (mainState == LISTENING) {
         if (new_audio_available) {
           Serial.println("New audio available");
@@ -374,6 +398,6 @@ void ble_loop(void* parameter) {
       }
       delay(5000);
     }
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
+    vTaskDelay(100 / portTICK_PERIOD_MS);
   }
 }

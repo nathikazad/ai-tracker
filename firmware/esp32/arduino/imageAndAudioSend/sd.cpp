@@ -83,6 +83,10 @@ String get_latest_file(String dirPath) {
       file = root.openNextFile();
     }
     root.close();
+    if(files.size() != noOfFilesRemaining){
+      notify_of_files_remaining(files.size());
+    }
+    noOfFilesRemaining = files.size();
 
     // Sort files by timestamp, newest first
     std::sort(files.begin(), files.end(),
@@ -94,7 +98,7 @@ String get_latest_file(String dirPath) {
     if (!files.empty()) {
       result = dirPath + "/" + files[0].first;
     } else {
-      Serial.println("No more new files to send");
+      // Serial.println("No more new files to send");
       Serial.flush();
     }
 
@@ -104,4 +108,53 @@ String get_latest_file(String dirPath) {
     Serial.println("Time out Semaphore");
     return String("");
   }
+}
+
+void write_wav_header(File& file, uint32_t totalDataSize) {
+  // RIFF chunk
+  file.write((const uint8_t*)"RIFF", 4);
+
+  // Total file size - 8
+  uint32_t chunk_size = totalDataSize + 36;  // 36 = size of header minus first 8 bytes
+  file.write((const uint8_t*)&chunk_size, 4);
+
+  // WAVE header
+  file.write((const uint8_t*)"WAVE", 4);
+
+  // fmt chunk
+  file.write((const uint8_t*)"fmt ", 4);
+
+  // fmt chunk size (16 for PCM)
+  uint32_t fmt_size = 16;
+  file.write((const uint8_t*)&fmt_size, 4);
+
+  // Audio format (1 = PCM)
+  uint16_t audio_format = 1;
+  file.write((const uint8_t*)&audio_format, 2);
+
+  // Number of channels
+  uint16_t num_channels = NUM_CHANNELS;
+  file.write((const uint8_t*)&num_channels, 2);
+
+  // Sample rate
+  uint32_t sample_rate = SAMPLE_RATE;
+  file.write((const uint8_t*)&sample_rate, 4);
+
+  // Calculate and write byte rate
+  uint16_t block_align = NUM_CHANNELS * BITS_PER_SAMPLE / 8;
+  uint32_t byte_rate = SAMPLE_RATE * block_align;
+  file.write((const uint8_t*)&byte_rate, 4);
+
+  // Block align
+  file.write((const uint8_t*)&block_align, 2);
+
+  // Bits per sample
+  uint16_t bits_per_sample = BITS_PER_SAMPLE;
+  file.write((const uint8_t*)&bits_per_sample, 2);
+
+  // Data chunk
+  file.write((const uint8_t*)"data", 4);
+
+  // Data size
+  file.write((const uint8_t*)&totalDataSize, 4);
 }
