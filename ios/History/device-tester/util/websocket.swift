@@ -157,6 +157,12 @@ class WebSocketManager: ObservableObject {
             return
         }
         
+        // Print the contents of the decoded data
+        if let textContent = String(data: fileData, encoding: .utf8) {
+            print("File contents:")
+            print(textContent)
+        }
+        
         do {
             // Create directory if it doesn't exist
             let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
