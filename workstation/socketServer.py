@@ -8,7 +8,7 @@ import datetime
 import zmq
 from collections import deque
 from wavAssembler import combine_wav_files
-
+from adpcm import save_wav_file
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -133,17 +133,19 @@ class WorkstationClient:
     async def handle_file(self, websocket, data):
         try:
             client_id = data["clientId"]
-            filepath = data["filepath"]
+            adpcm_path = data["filepath"]
             content = data["content"]
-            folder_name = os.path.dirname(filepath)
+            folder_name = os.path.dirname(adpcm_path)
             # Create the Files directory structure
-            full_path = os.path.join("Files", filepath)
+            full_path = os.path.join("Files", adpcm_path)
             os.makedirs(os.path.dirname(full_path), exist_ok=True)
             
             # Save the received file
             file_data = base64.b64decode(content)
-            with open(full_path, "wb") as f:
-                f.write(file_data)
+            wav_path = full_path.replace("adpcm", "wav")
+            save_wav_file(wav_path, file_data)
+            # with open(full_path, "wb") as f:
+            #     f.write(file_data)
             
             logger.info(f"File saved: {full_path}")
 
@@ -160,7 +162,7 @@ class WorkstationClient:
             response = {
                 "type": "file_received",
                 "clientId": client_id,
-                "filepath": filepath,
+                "filepath": adpcm_path.replace("adpcm", "wav"),
                 "message": "File received and queued for processing"
             }
             await websocket.send(json.dumps(response))
@@ -170,7 +172,7 @@ class WorkstationClient:
             error_response = {
                 "type": "file_error",
                 "clientId": client_id,
-                "filepath": filepath,
+                "filepath": adpcm_path.replace("adpcm", "wav"),
                 "error": str(e)
             }
             await websocket.send(json.dumps(error_response))

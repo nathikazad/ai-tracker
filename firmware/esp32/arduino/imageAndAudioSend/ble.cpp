@@ -310,12 +310,20 @@ bool send_file_over_ble(const char* imagePath) {
   if (xSemaphoreTake(sdMutex, portMAX_DELAY)) {
     File file = SD.open(imagePath);
     if (!file) {
+      Serial.println("File send: Unable to open file");
       xSemaphoreGive(sdMutex);
       return false;
-    }
+    } 
 
     // Read entire file into buffer
     size_t fileSize = file.size();
+    if(fileSize == 0) {
+      file.close();
+      SD.remove(imagePath);
+      xSemaphoreGive(sdMutex);
+      return true;
+    }
+
     uint8_t* buffer = (uint8_t*)malloc(fileSize);
     if (!buffer) {
       file.close();
@@ -340,8 +348,14 @@ bool send_file_over_ble(const char* imagePath) {
       if (move_file(imagePath, destPath)) {
         Serial.printf("File successfully transferred and moved to: %s\n", destPath);
         return true;
+      } else {
+        Serial.println("File send: Unable to move file");
       }
+    } else {
+      Serial.println("File send: Unable to send data");
     }
+  } else {
+    Serial.println("File send: Semaphore unavailable");
   }
   return false;
 }
@@ -364,6 +378,8 @@ bool check_for_files_to_send() {
   if (success) {
     noOfFilesRemaining--;
     notify_of_files_remaining(noOfFilesRemaining);
+  } else {
+    Serial.println("Unable to send file");
   }
 
   return success;

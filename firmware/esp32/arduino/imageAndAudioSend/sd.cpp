@@ -91,7 +91,7 @@ String get_latest_file(String dirPath) {
     // Sort files by timestamp, newest first
     std::sort(files.begin(), files.end(),
               [](const auto& a, const auto& b) {
-                return a.second > b.second;
+                return a.second < b.second;
               });
 
     // Process files if any exist

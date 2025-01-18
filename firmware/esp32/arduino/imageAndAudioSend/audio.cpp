@@ -89,15 +89,24 @@ void process_audios_task(void *parameter) {
       if (xSemaphoreTake(sdMutex, portMAX_DELAY)) {
 
         char filename[32];
-        sprintf(filename, "/%s/%llu.%s", "toSend", (unsigned long long)record.timestamp, "wav");
+        sprintf(filename, "/%s/%llu.%s", "toSend", (unsigned long long)record.timestamp, "adpcm");
         File file = SD.open(filename, FILE_WRITE);
         if (!file) {
           Serial.println("Failed to open file for writing!");
           return;
         }
 
-        write_wav_header(file, record.buffer_size);
-        file.write(record.audio_buffer, record.buffer_size);
+        // write_wav_header(file, record.buffer_size);
+        // file.write(record.audio_buffer, record.buffer_size);
+
+        int16_t *samples = (int16_t *)record.audio_buffer;
+        int sampleCount = RECORD_SIZE / 2;
+        uint8_t *compressedBuffer = (uint8_t *)malloc(RECORD_SIZE / 4);
+        size_t compressedBufferSize = 0;
+        int result = adpcm_encode_block(adpcm_context, compressedBuffer, &compressedBufferSize,
+                                        samples, sampleCount);
+        file.write(compressedBuffer, compressedBufferSize);
+        free(compressedBuffer);
         file.close();
         xSemaphoreGive(sdMutex);
         Serial.printf("Audio %u written to file\n", record.timestamp);
