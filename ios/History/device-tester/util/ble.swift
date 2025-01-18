@@ -46,6 +46,7 @@ class BLEManager: NSObject, ObservableObject {
     override init() {
         super.init()
         centralManager = CBCentralManager(delegate: self, queue: nil)
+        wsManager.connect()
         transcriber.setTranscriptionCallback() {
             transcript in
             if(transcript.contains("record") && (transcript.contains("start") || transcript.contains("stop")) && self.espState == .listening) {

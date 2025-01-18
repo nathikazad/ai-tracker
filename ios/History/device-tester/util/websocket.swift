@@ -166,7 +166,7 @@ class WebSocketManager: ObservableObject {
         do {
             // Create directory if it doesn't exist
             let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            let filePath = documentsPath.appendingPathComponent(filepath)
+            let filePath = documentsPath.appendingPathComponent("ReceivedFiles").appendingPathComponent(filepath)
             let directoryPath = filePath.deletingLastPathComponent()
             
             try FileManager.default.createDirectory(at: directoryPath, withIntermediateDirectories: true)
@@ -174,6 +174,11 @@ class WebSocketManager: ObservableObject {
             // Save the file
             try fileData.write(to: filePath)
             print("File saved successfully at: \(filePath)")
+            NotificationCenter.default.post(
+                name: .transcriptDidUpdate,
+                object: nil,
+                userInfo: [TranscriptNotification.filePathKey: filepath]
+            )
         } catch {
             print("Error saving file: \(error)")
         }

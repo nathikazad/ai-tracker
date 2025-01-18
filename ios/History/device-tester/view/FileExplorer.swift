@@ -366,10 +366,21 @@ struct ReceivedFoldersView: View {
                 if selectedFolder == nil {
                     // Show folders
                     ForEach(folders, id: \.self) { folder in
-                        Button(action: {
-                            selectedFolder = folder
-                            loadFilesInFolder(folder)
-                        }) {
+//                        Button(action: {
+//                            selectedFolder = folder
+//                            loadFilesInFolder(folder)
+//                        }) {
+//                            HStack {
+//                                Image(systemName: "folder")
+//                                    .foregroundColor(.blue)
+//                                Text(folder)
+//                                Spacer()
+//                                Image(systemName: "chevron.right")
+//                                    .foregroundColor(.gray)
+//                            }
+//                        }
+                        
+                        NavigationLink(destination: TranscriptView(filePath: "\(folder)/transcript.txt")) {
                             HStack {
                                 Image(systemName: "folder")
                                     .foregroundColor(.blue)
@@ -378,6 +389,7 @@ struct ReceivedFoldersView: View {
                                 Image(systemName: "chevron.right")
                                     .foregroundColor(.gray)
                             }
+                            .padding(.vertical, 4)
                         }
                     }
                 } else {

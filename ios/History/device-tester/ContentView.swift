@@ -115,8 +115,8 @@ struct FileReceiverView: View {
     
     var body: some View {
         VStack {
-//            ReceivedFoldersView()
-            WebSocketView()
+            ReceivedFoldersView()
+//            WebSocketView()
                 .frame(maxHeight: .infinity)
             
             Divider()

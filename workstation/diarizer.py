@@ -118,19 +118,29 @@ def receive_and_process_audio(zmq_port=5555, hf_token=None):
         while True:
             # Receive message
             message = socket.recv_pyobj()
-            
-            print(f"Processing file {message['file_name']}")
+            filename = message['file_name']
+            base_epoch = int(filename.split('/')[-2]) 
+            print(f"Processing file {filename} {base_epoch}")
             
             # Process the chunk
             transcript = processor.process_file(
-                message['file_name'],
+                filename,
             )
-            dir_path = os.path.splitext(message['file_name'])[0] + os.sep
+            dir_path = os.path.splitext(filename)[0] + os.sep
             os.makedirs(dir_path, exist_ok=True)
             # Append to transcript file
+            # Convert and write transcript in new format
             with open(f'{dir_path}/transcript.txt', 'w', encoding='utf-8') as f:
                 for seg in transcript:
-                    transcript_line = f"{seg['speaker']} ({seg['start']} --> {seg['end']}): {seg['text']}\n"
+                    # Convert timestamp to seconds and add to base epoch
+                    time_parts = seg['start'].split(':')
+                    seconds = (int(time_parts[0]) * 3600 + 
+                             int(time_parts[1]) * 60 + 
+                             float(time_parts[2]))
+                    epoch_time = base_epoch + int(seconds)
+                    
+                    # Write in new format
+                    transcript_line = f"{seg['speaker']}:{epoch_time}:{seg['text']}\n"
                     f.write(transcript_line)
             
             average_embeddings = {}
@@ -146,7 +156,7 @@ def receive_and_process_audio(zmq_port=5555, hf_token=None):
             embedding_df.to_csv(f'{dir_path}/speaker_embeddings.csv', index=False)
             
             # Send acknowledgment back to sender
-            socket.send_string(f"Processed file {message['file_name']}")
+            socket.send_string(f"Processed file {filename}")
             
     
     finally:

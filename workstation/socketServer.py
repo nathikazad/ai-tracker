@@ -69,7 +69,7 @@ class WorkstationClient:
                         full_path = os.path.join("Files", folder_name)
                         combine_wav_files(full_path, "out.wav")
                         message = {
-                            'file_name': f"../../socketClient/{full_path}/out.wav",
+                            'file_name': f"{full_path}/out.wav",
                         }
                         
                         socket.send_pyobj(message)
