@@ -75,7 +75,7 @@ void notify_of_files_remaining(uint8_t rem);
 
 // Function declarations for Camera
 void setup_camera();
-void capture_image(const char* filename);
+void capture_image();
 
 // Function declarations for Audio
 void setup_audio();

@@ -545,7 +545,10 @@ extension BLEManager {
             saveFileMetadata(newFile, date: dateFromFilename)
             
             print("File saved successfully at: \(fileURL.path)")
-            wsManager.sendFile(filepath: "\(folderName)/\(fileName)")
+            if fileName.hasSuffix(".adpcm") {
+                wsManager.sendFile(filepath: "\(folderName)/\(fileName)")
+            }
+            
             NotificationCenter.default.post(name: .newFileReceived, object: nil)
             
             //            if newFile.fileType == .wav {

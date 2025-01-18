@@ -50,9 +50,14 @@ void setup_camera() {
   Serial.println("Camera initialized successfully");
 }
 
-void capture_image(const char* filename) {
+void capture_image() {
   if (camera_initialized) {
     Serial.println("Capturing image");
+    char fileaddress[32];
+    get_timestamp_filename(fileaddress);
+    char filename[32];
+    sprintf(filename, "%s.%s", fileaddress, "jpg");
+    Serial.printf("Capturing image to %s\n", filename);
     camera_fb_t* fb = esp_camera_fb_get();
     if (fb) {
       if (xSemaphoreTake(sdMutex, portMAX_DELAY)) {

@@ -33,7 +33,7 @@ void setup() {
   audioQueue = xQueueCreate(10, sizeof(AudioRecord));
 
   xTaskCreatePinnedToCore(
-    sensor_loop,
+    audio_loop,
     "sensorTask",
     10000,
     NULL,
@@ -62,6 +62,16 @@ void setup() {
     1
   );
 
+  xTaskCreatePinnedToCore(
+    camera_loop,
+    "cameraTask",
+    10000,
+    NULL,
+    1,
+    NULL,
+    1
+  );
+
   Serial.println("System initialized and ready!");
 }
 
@@ -70,27 +80,28 @@ void loop() {
   delay(1000);
 }
 
-void sensor_loop(void* parameter) {
+void audio_loop(void* parameter) {
   while (true) {
     if (sd_initialized && timeSync) {
       if (mainState == RECORDING) {
         record_audio_to_queue();
-        // unsigned long now = millis();
-        // char fileaddress[32];
-        // get_timestamp_filename(fileaddress);
-        // char filename[32];
-        // sprintf(filename, "%s.%s", fileaddress, "wav");
-        // Serial.printf("Sensor loop, recording sound to %s\n", filename);
-        // record_audio(filename);
-        // delay(10000);
-        // sprintf(filename, "%s.%s", fileaddress, "jpg");
-        // Serial.printf("Sensor loop, capturing image to %s\n", filename);
-        // capture_image(filename);
       } else if (mainState == LISTENING && deviceConnected) {
         Serial.println("Recording temporary audio");
         record_audio();
       }
     }
     vTaskDelay(10 / portTICK_PERIOD_MS);
+  }
+}
+
+void camera_loop(void* parameter) {
+  while (true) {
+    if (sd_initialized && timeSync) {
+      if (mainState == RECORDING) {
+        capture_image();
+        vTaskDelay(60000 / portTICK_PERIOD_MS);
+      }
+    }
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
   }
 }
