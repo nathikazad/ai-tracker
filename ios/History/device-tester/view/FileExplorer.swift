@@ -366,30 +366,23 @@ struct ReceivedFoldersView: View {
                 if selectedFolder == nil {
                     // Show folders
                     ForEach(folders, id: \.self) { folder in
-//                        Button(action: {
-//                            selectedFolder = folder
-//                            loadFilesInFolder(folder)
-//                        }) {
-//                            HStack {
-//                                Image(systemName: "folder")
-//                                    .foregroundColor(.blue)
-//                                Text(folder)
-//                                Spacer()
-//                                Image(systemName: "chevron.right")
-//                                    .foregroundColor(.gray)
-//                            }
-//                        }
-                        
-                        NavigationLink(destination: TranscriptView(filePath: "\(folder)/transcript.txt")) {
+                        NavigationLink(destination: TranscriptView(folderName: "\(folder)")) {
                             HStack {
                                 Image(systemName: "folder")
                                     .foregroundColor(.blue)
                                 Text(folder)
                                 Spacer()
-                                Image(systemName: "chevron.right")
-                                    .foregroundColor(.gray)
+//                                Image(systemName: "chevron.right")
+//                                    .foregroundColor(.gray)
                             }
                             .padding(.vertical, 4)
+                        }
+                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                            Button(role: .destructive) {
+                                deleteFolder(folder)
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
                         }
                     }
                 } else {
@@ -428,6 +421,20 @@ struct ReceivedFoldersView: View {
 //                    currentTime = lastTimestamp
 //                }
 //            }
+        }
+    }
+    
+    private func deleteFolder(_ folderName: String) {
+        guard let folderURL = FileManager.getDirectory(for: folderName) else {
+            return
+        }
+        
+        do {
+            try FileManager.default.removeItem(at: folderURL)
+            // Remove the folder from the list
+            folders.removeAll { $0 == folderName }
+        } catch {
+            print("Error deleting folder: \(error)")
         }
     }
     

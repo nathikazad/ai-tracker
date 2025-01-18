@@ -82,7 +82,7 @@ void loop() {
 
 void audio_loop(void* parameter) {
   while (true) {
-    if (sd_initialized && timeSync) {
+    if (sd_initialized && timeSync && audio_initialized) {
       if (mainState == RECORDING) {
         record_audio_to_queue();
       } else if (mainState == LISTENING && deviceConnected) {

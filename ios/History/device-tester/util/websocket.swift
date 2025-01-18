@@ -177,7 +177,7 @@ class WebSocketManager: ObservableObject {
             NotificationCenter.default.post(
                 name: .transcriptDidUpdate,
                 object: nil,
-                userInfo: [TranscriptNotification.filePathKey: filepath]
+                userInfo: [TranscriptNotification.filePathKey: filepath.components(separatedBy: "/").first!]
             )
         } catch {
             print("Error saving file: \(error)")

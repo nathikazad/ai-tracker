@@ -88,23 +88,6 @@ def adpcm_decode_block(inbuf, channels):
 
     return np.array(outbuf, dtype=np.int16)
 
-def generate_wav_header(sample_rate, bits_per_sample, channels, data_size):
-    print(f"Generating WAV header for {data_size} bytes")
-    header = bytearray(44)
-    header[0:4] = b'RIFF'
-    struct.pack_into('<I', header, 4, data_size + 36)
-    header[8:12] = b'WAVE'
-    header[12:16] = b'fmt '
-    struct.pack_into('<I', header, 16, 16)
-    struct.pack_into('<H', header, 20, 1)
-    struct.pack_into('<H', header, 22, channels)
-    struct.pack_into('<I', header, 24, sample_rate)
-    struct.pack_into('<I', header, 28, sample_rate * channels * (bits_per_sample // 8))
-    struct.pack_into('<H', header, 32, channels * (bits_per_sample // 8))
-    struct.pack_into('<H', header, 34, bits_per_sample)
-    header[36:40] = b'data'
-    struct.pack_into('<I', header, 40, data_size)
-    return header
 
 def save_wav_file(full_path, audio_data):
     sample_rate = 16000
@@ -117,13 +100,12 @@ def save_wav_file(full_path, audio_data):
     # Convert numpy array to bytes
     decoded_bytes = decoded_data.tobytes()
     
-
-    wav_header = generate_wav_header(sample_rate, bits_per_sample, channels, len(decoded_bytes))
+    # Use wave module to write the file - it will handle the header automatically
     with wave.open(full_path, "wb") as wav_file:
         wav_file.setnchannels(channels)
         wav_file.setsampwidth(bits_per_sample // 8)
         wav_file.setframerate(sample_rate)
-        wav_file.writeframes(wav_header + decoded_bytes)
-    print(f"Decoded audio saved at '{full_path}.wav'")
+        wav_file.writeframes(decoded_bytes)  # Remove wav_header +
+    print(f"Decoded audio saved at '{full_path}'")
 
 

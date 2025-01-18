@@ -44,13 +44,12 @@ class AudioTranscriber: NSObject, SFSpeechRecognizerDelegate {
     }
     
     func processAudio(_ audioData: Data) {
-        
         // Decode ADPCM data to PCM
         let decodedData = ADPCM.decodeBlock(audioData)
         
         // Create an audio buffer from the decoded data
         let format = AVAudioFormat(commonFormat: .pcmFormatInt16,
-                                 sampleRate: 4000,
+                                 sampleRate: 16000,
                                  channels: 1,
                                  interleaved: true)!
         
@@ -71,7 +70,7 @@ class AudioTranscriber: NSObject, SFSpeechRecognizerDelegate {
         
         transcribeAudio(buffer) { [weak self] result in
             if let transcript = result {
-                print("\(transcript)")
+                print("transcript: \(transcript)")
                 self?.transcriptionCallback?(transcript)
             }
         }

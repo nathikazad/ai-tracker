@@ -69,7 +69,7 @@ class WorkstationClient:
                         full_path = os.path.join("Files", folder_name)
                         combine_wav_files(full_path, "out.wav")
                         message = {
-                            'file_name': f"{full_path}/out.wav",
+                            'file_name': f"../../socketClient/{full_path}/out.wav",
                         }
                         
                         socket.send_pyobj(message)
@@ -133,36 +133,40 @@ class WorkstationClient:
     async def handle_file(self, websocket, data):
         try:
             client_id = data["clientId"]
-            adpcm_path = data["filepath"]
+            file_path = data["filepath"]
             content = data["content"]
-            folder_name = os.path.dirname(adpcm_path)
+            folder_name = os.path.dirname(file_path)
             # Create the Files directory structure
-            full_path = os.path.join("Files", adpcm_path)
+            full_path = os.path.join("Files", file_path)
             os.makedirs(os.path.dirname(full_path), exist_ok=True)
+
             
             # Save the received file
             file_data = base64.b64decode(content)
-            wav_path = full_path.replace("adpcm", "wav")
-            save_wav_file(wav_path, file_data)
-            # with open(full_path, "wb") as f:
-            #     f.write(file_data)
-            
-            logger.info(f"File saved: {full_path}")
+            if "adpcm" in file_path:
+                wav_path = full_path.replace("adpcm", "wav")
+                save_wav_file(wav_path, file_data)
 
-            # Add to processing queue with client_id
-            # Check if file is already in queue or processed
-            if any(task[0] == folder_name for task in self.queue):
-                logger.info(f"Folder {folder_name} is already queued or processed")
-                return
+                
+                logger.info(f"File saved: {full_path}")
+
+                # Add to processing queue with client_id
+                # Check if file is already in queue or processed
+                if any(task[0] == folder_name for task in self.queue):
+                    logger.info(f"Folder {folder_name} is already queued or processed")
+                    return
+                else:
+                    logger.info(f"Folder {folder_name} is queued")
+                    self.queue.append((folder_name, client_id))
             else:
-                logger.info(f"Folder {folder_name} is queued")
-                self.queue.append((folder_name, client_id))
+                with open(full_path, "wb") as f:
+                    f.write(file_data)
             
             # Send queued confirmation
             response = {
                 "type": "file_received",
                 "clientId": client_id,
-                "filepath": adpcm_path.replace("adpcm", "wav"),
+                "filepath": file_path.replace("adpcm", "wav"),
                 "message": "File received and queued for processing"
             }
             await websocket.send(json.dumps(response))
@@ -172,7 +176,7 @@ class WorkstationClient:
             error_response = {
                 "type": "file_error",
                 "clientId": client_id,
-                "filepath": adpcm_path.replace("adpcm", "wav"),
+                "filepath": file_path.replace("adpcm", "wav"),
                 "error": str(e)
             }
             await websocket.send(json.dumps(error_response))

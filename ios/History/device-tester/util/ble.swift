@@ -478,11 +478,15 @@ extension BLEManager {
             timeoutTimer?.invalidate()
             timeoutTimer = nil
             sendAck() // Send final ACK
-            if fileName != nil {
-                saveFile()
-            } else {
-                //                print("Saving audio buffer")
+            if fileName?.hasSuffix("adpcm") ?? false {
                 transcriber.processAudio(fileData)
+            }
+            if fileName != nil {
+                
+                saveFile()
+//            } else {
+                //                print("Saving audio buffer")
+                
             }
             
         } else {
@@ -545,9 +549,9 @@ extension BLEManager {
             saveFileMetadata(newFile, date: dateFromFilename)
             
             print("File saved successfully at: \(fileURL.path)")
-            if fileName.hasSuffix(".adpcm") {
+//            if fileName.hasSuffix(".adpcm") {
                 wsManager.sendFile(filepath: "\(folderName)/\(fileName)")
-            }
+//            }
             
             NotificationCenter.default.post(name: .newFileReceived, object: nil)
             
